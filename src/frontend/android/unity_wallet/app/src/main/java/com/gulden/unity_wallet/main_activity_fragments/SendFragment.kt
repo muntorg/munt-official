@@ -57,7 +57,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             val address = inputAddress.text.toString()
             val label = inputLabel.text.toString()
-            val record = AddressRecord(address, "Send", label)
+            val record = AddressRecord(address, label, "", "Send")
             UnityCore.instance.addAddressBookRecord(record)
             dialog.dismiss()
         }
@@ -128,7 +128,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
 
         val addresses = GuldenUnifiedBackend.getAddressBookRecords()
         val adapter = AddressBookAdapter(addresses) { position, address ->
-            val recipient = UriRecipient(true, address.address, address.name, 0)
+            val recipient = UriRecipient(true, address.address, address.name, address.desc, 0)
             SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
         }
 

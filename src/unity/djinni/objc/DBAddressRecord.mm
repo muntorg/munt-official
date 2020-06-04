@@ -7,29 +7,33 @@
 @implementation DBAddressRecord
 
 - (nonnull instancetype)initWithAddress:(nonnull NSString *)address
-                                purpose:(nonnull NSString *)purpose
                                    name:(nonnull NSString *)name
+                                   desc:(nonnull NSString *)desc
+                                purpose:(nonnull NSString *)purpose
 {
     if (self = [super init]) {
         _address = [address copy];
-        _purpose = [purpose copy];
         _name = [name copy];
+        _desc = [desc copy];
+        _purpose = [purpose copy];
     }
     return self;
 }
 
 + (nonnull instancetype)addressRecordWithAddress:(nonnull NSString *)address
-                                         purpose:(nonnull NSString *)purpose
                                             name:(nonnull NSString *)name
+                                            desc:(nonnull NSString *)desc
+                                         purpose:(nonnull NSString *)purpose
 {
     return [(DBAddressRecord*)[self alloc] initWithAddress:address
-                                                   purpose:purpose
-                                                      name:name];
+                                                      name:name
+                                                      desc:desc
+                                                   purpose:purpose];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p address:%@ purpose:%@ name:%@>", self.class, (void *)self, self.address, self.purpose, self.name];
+    return [NSString stringWithFormat:@"<%@ %p address:%@ name:%@ desc:%@ purpose:%@>", self.class, (void *)self, self.address, self.name, self.desc, self.purpose];
 }
 
 @end

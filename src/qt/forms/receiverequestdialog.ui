@@ -127,7 +127,7 @@
   <customwidget>
    <class>ClickableQRImage</class>
    <extends>QLabel</extends>
-   <header location="global">../_Gulden/clickableqrimage.h</header>
+   <header location="global">../clickableqrimage.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

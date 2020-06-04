@@ -25,7 +25,7 @@
 #include "wallet/coincontrol.h"
 #include "policy/policy.h"
 #include "policy/rbf.h"
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "alert.h"
 
 std::vector<CAccount*> CWallet::FindAccountsForTransaction(const CTxOut& out)
@@ -63,7 +63,7 @@ CAccount* CWallet::FindBestWitnessAccountForTransaction(const CTxOut& out)
     return witnessAccount;
 }
 
-bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, SignType type)
+bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, SignType type, CTxOut* prevOutOverride)
 {
     AssertLockHeld(cs_wallet); // mapWallet
 
@@ -79,15 +79,29 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
         }
 
         const CWalletTx* prev = GetWalletTx(input.prevout);
-        if(!prev || input.prevout.n >= prev->tx->vout.size()) {
-            return false;
+        const CTxOut* prevout = nullptr;
+        if(!prev || input.prevout.n >= prev->tx->vout.size())
+        {
+            if (prevOutOverride)
+            {
+                prevout = prevOutOverride;
+            }
+            else
+            {
+                return false;
+            }
         }
-        const CAmount& amount = prev->tx->vout[input.prevout.n].nValue;
-        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(prev->tx->vout[input.prevout.n], type);
+        else
+        {
+            prevout = &prev->tx->vout[input.prevout.n];
+        }
+        
+        const CAmount& amount = prevout->nValue;
+        CKeyID signingKeyID = ExtractSigningPubkeyFromTxOutput(*prevout, type);
         SignatureData sigdata;
         std::vector<CAccount*> accountsToTry;
         if (!fromAccount)
-            accountsToTry = FindAccountsForTransaction(prev->tx->vout[input.prevout.n]);
+            accountsToTry = FindAccountsForTransaction(*prevout);
         else
             accountsToTry.push_back(fromAccount);    
         if (accountsToTry.empty())
@@ -100,7 +114,8 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
             keystores.push_back(account);
         }
         
-        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, keystores, &txNewConst, nIn, amount, SIGHASH_ALL), prev->tx->vout[input.prevout.n], sigdata, type, txNewConst.nVersion)) {
+        if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, keystores, &txNewConst, nIn, amount, SIGHASH_ALL), *prevout, sigdata, type, txNewConst.nVersion))
+        {
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);
@@ -928,7 +943,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
 }
 
 
-bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction, CCoinControl* coinControl, bool* shouldUpgrade)
+bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction, CCoinControl* coinControl)
 {
     LOCK2(cs_main, cs_wallet); // cs_main required for ReadBlockFromDisk.
 
@@ -959,10 +974,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                     continue;
                 
                 addedAny = true;
-
-                if (shouldUpgrade && witCoin.coin.out.GetType() == CTxOutType::ScriptLegacyOutput)
-                    *shouldUpgrade = true;
-                
+               
                 // Add witness input
                 AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, allowIndexBased, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
 

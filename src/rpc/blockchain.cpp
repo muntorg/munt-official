@@ -843,11 +843,11 @@ static void ApplyStats(CCoinsStats &stats, CHashWriter& ss, const uint256& hash,
                     break;
                 case CTxOutType::StandardKeyHashOutput:
                     //fixme: (PHASE5) Handle 'nBogoSize' here
-                    stats.nTypeCount[TX_PUBKEYHASH_POW2WITNESS+1]++;
+                    stats.nTypeCount[TX_STANDARD_PUBKEY_HASH]++;
                     break;
                 case CTxOutType::PoW2WitnessOutput:
                     //fixme: (PHASE5) Handle 'nBogoSize' here
-                    stats.nTypeCount[TX_PUBKEYHASH_POW2WITNESS+2]++;
+                    stats.nTypeCount[TX_STANDARD_WITNESS]++;
                     break;
             }
         }

@@ -101,6 +101,8 @@ script: |
   BASEPREFIX=`pwd`/depends
 
   mkdir -p ${BASEPREFIX}/SDKs
+  export SDK_PATH=${BASEPREFIX}/SDKs
+  export OSX_SDK_VERSION=10.11
   tar -C ${BASEPREFIX}/SDKs -xf ${BUILD_DIR}/MacOSX10.11.sdk.tar.gz
 
   # Build dependencies for each host

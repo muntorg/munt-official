@@ -19,7 +19,7 @@
 #include "chain.h"
 #include "chainparams.h"
 #include "checkpoints.h"
-#include "Gulden/auto_checkpoints.h"
+#include "auto_checkpoints.h"
 #include "checkqueue.h"
 #include "consensus/consensus.h"
 #include "consensus/merkle.h"
@@ -31,8 +31,8 @@
 #include "init.h"
 #include "policy/fees.h"
 #include "policy/policy.h"
-#include "pow.h"
-#include <Gulden/Common/diff.h>
+#include "pow/pow.h"
+#include <pow/diff.h>
 #include "primitives/block.h"
 #include "primitives/transaction.h"
 #include "random.h"
@@ -47,6 +47,7 @@
 #include "ui_interface.h"
 #include "undo.h"
 #include "util.h"
+#include "guldenutil.h"
 #include "utilmoneystr.h"
 #include "utilstrencodings.h"
 #include "validation/validationinterface.h"
@@ -477,7 +478,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, uint32_t nHeig
 bool CScriptCheck::operator()() {
     const CScript &scriptSig = ptxTo->vin[nIn].scriptSig;
     const CSegregatedSignatureData *witness = &ptxTo->vin[nIn].segregatedSignatureData;
-    return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(signingKeyID, spendingKeyID, ptxTo, nIn, amount, cacheStore, *txdata), scriptVer, &error);
+    return VerifyScript(scriptSig, scriptPubKey, witness, nFlags, CachingTransactionSignatureChecker(signingKeyID, ptxTo, nIn, amount, cacheStore, *txdata), scriptVer, &error);
 }
 
 int GetSpendHeight(const CCoinsViewCache& inputs)
@@ -593,7 +594,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
 
                         //We extract the pubkey from the signatures so just pass in an empty pubkey for the checks.
                         std::vector<unsigned char> vchEmptyPubKey;
-                        CachingTransactionSignatureChecker check1(witnessSigningKeyID, CKeyID(), &tx, i, amount, cacheStore, txdata);
+                        CachingTransactionSignatureChecker check1(witnessSigningKeyID, &tx, i, amount, cacheStore, txdata);
                         if (!check1.CheckSig(tx.vin[i].segregatedSignatureData.stack[0], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
                         {
                             return false;
@@ -601,7 +602,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                         // For a witness spend operation we have a second key that also needs checking.
                         if (!spendSigningKeyID.IsNull())
                         {
-                            CachingTransactionSignatureChecker check2(spendSigningKeyID, CKeyID(), &tx, i, amount, cacheStore, txdata);
+                            CachingTransactionSignatureChecker check2(spendSigningKeyID, &tx, i, amount, cacheStore, txdata);
                             if (!check2.CheckSig(tx.vin[i].segregatedSignatureData.stack[1], vchEmptyPubKey, scriptCodePlaceHolder, SIGVERSION_SEGSIG))
                             {
                                 return false;
@@ -619,10 +620,6 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                 ScriptVersion scriptversion = IsOldTransactionVersion(tx.nVersion) ? SCRIPT_V1 : SCRIPT_V2;
                 const CScript& scriptPubKey = coin.out.output.scriptPubKey;
                 CScriptCheck check(witnessSigningKeyID, scriptPubKey, amount, tx, i, flags, cacheStore, &txdata, scriptversion);
-                if (scriptPubKey.IsPoW2Witness())
-                {
-                    check.spendingKeyID = ExtractSigningPubkeyFromTxOutput(coin.out, SignType::Spend);
-                }
                 if (pvChecks)
                 {
                     pvChecks->push_back(CScriptCheck());
@@ -903,13 +900,22 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
     // verify that the view's current state corresponds to the previous block
     uint256 hashPrevBlock = pindex->pprev == NULL ? uint256() : pindex->pprev->GetBlockHashPoW2();
-    assert(hashPrevBlock == view.GetBestBlock());
+    uint256 hashBestBlock = view.GetBestBlock();
+    assert(hashPrevBlock == hashBestBlock);
 
     // Special case for the genesis block, skipping connection of its transactions
     // (its coinbase is unspendable)
-    if (block.GetHashLegacy() == chainparams.GetConsensus().hashGenesisBlock) {
+    if (block.GetHashLegacy() == chainparams.GetConsensus().hashGenesisBlock)
+    {
         if (!fJustCheck)
-            view.SetBestBlock(pindex->GetBlockHashLegacy());
+        {
+            view.SetBestBlock(pindex->GetBlockHashPoW2());
+            if (block.vtx.size() == 1 && block.vtx[0]->vout.size()>1)
+            {
+                CTxUndo undoDummy;
+                UpdateCoins(*block.vtx[0], view, undoDummy, pindex->nHeight, 0);
+            }
+        }
         return true;
     }
 
@@ -980,7 +986,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     // before the first had been spent.  Since those coinbases are sufficiently buried its no longer possible to create further
     // duplicate transactions descending from the known pairs either.
     // If we're on the known chain at height greater than where BIP34 activated, we can save the db accesses needed for the BIP30 check.
-    CBlockIndex *pindexBIP34height = pindex->pprev->GetAncestor(chainparams.GetConsensus().BIP34Height);
+    CBlockIndex *pindexBIP34height = pindex->pprev ? pindex->pprev->GetAncestor(chainparams.GetConsensus().BIP34Height) : pindex;
     //Only continue to enforce if we're below BIP34 activation height or the block hash at that height doesn't correspond.
     fEnforceBIP30 = fEnforceBIP30 && (!pindexBIP34height || !(pindexBIP34height->GetBlockHashPoW2() == chainparams.GetConsensus().BIP34Hash));
 
@@ -1032,31 +1038,29 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     //fixme: (PHASE5) Ideally this would be placed lower down (just before CAmount blockReward = nFees + nSubsidy;) 
     //However GetWitness calls recursively into ConnectBlock and CCheckQueueControl has a non-recursive mutex - so we must call this before creating 
     // Witness block must have valid signature from witness.
-    if (block.nVersionPoW2Witness != 0)
+    if ((uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2Phase5FirstBlockHeight)
     {
-        CPubKey pubkey;
-        uint256 hash = block.GetHashPoW2();
-        if (!pubkey.RecoverCompact(hash, block.witnessHeaderPoW2Sig))
-            return state.DoS(50, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature validation failed");
-
-        if (fVerifyWitness)
+        if (block.nVersionPoW2Witness != 0)
         {
-            CGetWitnessInfo witInfo;
-            if (!GetWitness(chain, chainparams, &view, pindex->pprev, block, witInfo))
-                return state.DoS(100, false, REJECT_INVALID, "invalid-witness", false, "could not determine a valid witness for block");
-            if (witInfo.selectedWitnessTransaction.GetType() <= CTxOutType::ScriptLegacyOutput)
+            CPubKey pubkey;
+            uint256 hash = block.GetHashPoW2();
+            if (!pubkey.RecoverCompact(hash, block.witnessHeaderPoW2Sig))
+                return state.DoS(50, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature validation failed");
+
+            if (fVerifyWitness)
             {
-                if (CKeyID(uint160(witInfo.selectedWitnessTransaction.output.scriptPubKey.GetPow2WitnessHash())) != pubkey.GetID())
-                    return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "script witness signature incorrect for block");
-            }
-            else if(witInfo.selectedWitnessTransaction.GetType() == CTxOutType::PoW2WitnessOutput)
-            {
-                if (witInfo.selectedWitnessTransaction.output.witnessDetails.witnessKeyID != pubkey.GetID())
-                    return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature incorrect for block");
-            }
-            else
-            {
-                return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature missing for block");
+                CGetWitnessInfo witInfo;
+                if (!GetWitness(chain, chainparams, &view, pindex->pprev, block, witInfo))
+                    return state.DoS(100, false, REJECT_INVALID, "invalid-witness", false, "could not determine a valid witness for block");
+                if(witInfo.selectedWitnessTransaction.GetType() == CTxOutType::PoW2WitnessOutput)
+                {
+                    if (witInfo.selectedWitnessTransaction.output.witnessDetails.witnessKeyID != pubkey.GetID())
+                        return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature incorrect for block");
+                }
+                else
+                {
+                    return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature missing for block");
+                }
             }
         }
     }
@@ -1084,10 +1088,12 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                     break;
                 }
             }
-            //testme: (GULDEN) (PHASE5) I think this is a duplicate check so can probably be removed.
-            if (nWitnessCoinbaseIndex == 0)
+            if (pindex->nHeight > 0)
             {
-                return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase missing)"), REJECT_INVALID, "bad-witness-cb");
+                if (nWitnessCoinbaseIndex == 0)
+                {
+                    return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase missing)"), REJECT_INVALID, "bad-witness-cb");
+                }
             }
         }
     }
@@ -1178,18 +1184,21 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         txdata.emplace_back(tx);
 
         CWitnessBundles bundles;
-        if (!BuildWitnessBundles(tx, state, GetSpendHeight(view),
-                [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) -> bool {
-                    const Coin& coin = view.AccessCoin(outpoint);
-                    if (coin.IsSpent())
-                        return false;
-                    txOut = coin.out;
-                    txHeight = coin.nHeight;
-                    return true;
-                },
-                bundles))
+        if ((uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2Phase5FirstBlockHeight)
         {
-            return error("ConnectBlock(): BuildWitnessBundles on %s failed with %s", tx.GetHash().ToString(), FormatStateMessage(state));
+            if (!BuildWitnessBundles(tx, state, GetSpendHeight(view),
+                    [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) -> bool {
+                        const Coin& coin = view.AccessCoin(outpoint);
+                        if (coin.IsSpent())
+                            return false;
+                        txOut = coin.out;
+                        txHeight = coin.nHeight;
+                        return true;
+                    },
+                    bundles))
+            {
+                return error("ConnectBlock(): BuildWitnessBundles on %s failed with %s", tx.GetHash().ToString(), FormatStateMessage(state));
+            }
         }
 
         witnessBundles.push_back(std::make_shared<CWitnessBundles>(bundles));
@@ -1243,7 +1252,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         nSubsidy -= nSubsidyWitnessExpected;
     }
 
-    if (block.nVersionPoW2Witness == 0)
+    if (block.nVersionPoW2Witness == 0 || pindex->nHeight == 0)
     {
         // PoW block
         // Phase 4 + 5 - miner mines 80 reward instead of 100, so nothing to do here (GetBlockSubsidy returns correct amount)
@@ -1340,7 +1349,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         return true;
 
     // Write undo information to disk
-    if (pindex->GetUndoPos().IsNull() || !pindex->IsValid(BLOCK_VALID_SCRIPTS))
+    if (pindex->pprev &&(pindex->GetUndoPos().IsNull() || !pindex->IsValid(BLOCK_VALID_SCRIPTS)))
     {
         if (pindex->GetUndoPos().IsNull()) {
             CDiskBlockPos _pos;
@@ -2249,7 +2258,7 @@ static arith_uint256 CalculateChainWork(const CBlockIndex* pIndex, const CChainP
 
     arith_uint256 nBlockProof = GetBlockProof(*pIndex);
     arith_uint256 chainWork = (pIndex->pprev ? pIndex->pprev->nChainWork : 0) + nBlockProof;
-    if (pIndex->nVersionPoW2Witness != 0)
+    if (pIndex->nVersionPoW2Witness != 0 && pIndex->pprev)
     {
         // Note: (PoW2) If we wanted to include witness weight in the chain weight this would be the place to do it.
         // This would have the benefit of making it harder to mine a side chain using lots of small witnesses.
@@ -2276,7 +2285,10 @@ static arith_uint256 CalculateChainWork(const CBlockIndex* pIndex, const CChainP
                 nBlockProof += GetBlockProof(*pprev);
                 pprev = pprev->pprev;
             }
-            assert (nCount == 10);
+            if (!fSPV)
+            {
+                assert (pIndex->nHeight < 11 || nCount == 10);
+            }
             nBlockProof /= nCount;
             chainWork += nBlockProof;
         }
@@ -2838,7 +2850,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const CC
     }
     
     // And the same for witness coinbase. (Enforce rule that the coinbase starts with serialized block height)
-    if (block.nVersionPoW2Witness != 0)
+    if (nHeight!= 0 && block.nVersionPoW2Witness != 0)
     {
         unsigned int nWitnessCoinbaseIndex = 0;
         for (unsigned int i = 1; i < block.vtx.size(); i++)

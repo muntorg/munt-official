@@ -23,9 +23,9 @@
 #include <QLabel>
 
 #include "optionsmodel.h"
-#include "_Gulden/ticker.h"
-#include "_Gulden/GuldenGUI.h"
-#include "_Gulden/clickablelabel.h"
+#include "ticker.h"
+#include "GuldenGUI.h"
+#include "clickablelabel.h"
 #include <assert.h>
 
 const int DISPLAY_DECIMALS = 2;

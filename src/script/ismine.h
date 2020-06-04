@@ -49,6 +49,9 @@ isminetype IsMine(const CKeyStore& keystore, const CScript& scriptPubKey, SigVer
 isminetype IsMine(const CKeyStore& keystore, const CTxDestination& dest, bool& isInvalid, SigVersion = SIGVERSION_BASE);
 isminetype IsMine(const CKeyStore& keystore, const CTxDestination& dest, SigVersion = SIGVERSION_BASE);
 isminetype IsMine(const CKeyStore& keystore, const CTxOut& txout);
+isminetype IsMine(const CKeyStore& keystore, const CPoW2WitnessDestination& witnessDetails);
+isminetype IsMine(const CKeyStore& keystore, const CTxOutPoW2Witness& witnessDetails);
+isminetype IsMine(const CKeyStore& keystore, const CTxOutStandardKeyHash& standardKeyHash);
 
 isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& scriptPubKey, uint64_t time, bool& isInvalid, SigVersion = SIGVERSION_BASE);
 isminetype RemoveAddressFromKeypoolIfIsMine(CWallet& keystore, const CScript& scriptPubKey, uint64_t time, SigVersion = SIGVERSION_BASE);

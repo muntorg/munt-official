@@ -8,37 +8,46 @@ public final class AddressRecord implements android.os.Parcelable {
 
     /*package*/ final String mAddress;
 
-    /*package*/ final String mPurpose;
-
     /*package*/ final String mName;
+
+    /*package*/ final String mDesc;
+
+    /*package*/ final String mPurpose;
 
     public AddressRecord(
             String address,
-            String purpose,
-            String name) {
+            String name,
+            String desc,
+            String purpose) {
         this.mAddress = address;
-        this.mPurpose = purpose;
         this.mName = name;
+        this.mDesc = desc;
+        this.mPurpose = purpose;
     }
 
     public String getAddress() {
         return mAddress;
     }
 
-    public String getPurpose() {
-        return mPurpose;
-    }
-
     public String getName() {
         return mName;
+    }
+
+    public String getDesc() {
+        return mDesc;
+    }
+
+    public String getPurpose() {
+        return mPurpose;
     }
 
     @Override
     public String toString() {
         return "AddressRecord{" +
                 "mAddress=" + mAddress +
-                "," + "mPurpose=" + mPurpose +
                 "," + "mName=" + mName +
+                "," + "mDesc=" + mDesc +
+                "," + "mPurpose=" + mPurpose +
         "}";
     }
 
@@ -58,8 +67,9 @@ public final class AddressRecord implements android.os.Parcelable {
 
     public AddressRecord(android.os.Parcel in) {
         this.mAddress = in.readString();
-        this.mPurpose = in.readString();
         this.mName = in.readString();
+        this.mDesc = in.readString();
+        this.mPurpose = in.readString();
     }
 
     @Override
@@ -70,8 +80,9 @@ public final class AddressRecord implements android.os.Parcelable {
     @Override
     public void writeToParcel(android.os.Parcel out, int flags) {
         out.writeString(this.mAddress);
-        out.writeString(this.mPurpose);
         out.writeString(this.mName);
+        out.writeString(this.mDesc);
+        out.writeString(this.mPurpose);
     }
 
 }

@@ -22,6 +22,7 @@
 
 #include <cstdio>
 #include "chainparamsseeds.h"
+#include <validation/witnessvalidation.h>
 
 static CBlock CreateGenesisBlock(const std::vector<unsigned char>& timestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
@@ -110,8 +111,9 @@ public:
         consensus.pow2Phase2FirstBlockHeight=778177;
         consensus.pow2Phase3FirstBlockHeight=778301;
         consensus.devBlockSubsidyActivationHeight=1030001;
-        consensus.pow2Phase4FirstBlockHeight=1131652; // Approximately, 6th march @ 6pm
-        
+        consensus.pow2Phase4FirstBlockHeight=1131652;
+        consensus.pow2Phase5FirstBlockHeight=1140958;
+        consensus.deltaV3ActivationTime=1594044000;
 
         // Message start string to avoid accidental cross communication with other chains or software.
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
@@ -123,7 +125,7 @@ public:
         nPruneAfterHeight = 200000;
 
         genesis = CreateGenesisBlock(1009843200, 2200095, 0x1e0ffff0, 1, 0);
-        consensus.hashGenesisBlock = genesis.GetHashLegacy();
+        consensus.hashGenesisBlock = genesis.GetHashPoW2();
         assert(consensus.hashGenesisBlock == uint256S("0x6c5d71a461b5bff6742bb62e5be53978b8dec5103ce52d1aaab8c6a251582f92"));
         assert(genesis.hashMerkleRoot == uint256S("0x4bed0bcb3e6097445ae68d455137625bb66f0e7ba06d9db80290bf72e3d6dcf8"));
 
@@ -376,20 +378,21 @@ public:
             { 1120000, { uint256S("0xbcc3bcb3213bc9f88a74bda5b9f30044da262733d2678bc10811c987b17c71b7"), 1584388403 } },
             { 1125000, { uint256S("0xd3d0d507764229ef0c676c87a5df6f1963f6dfa2845330ef94955de0ecc60271"), 1585084828 } },
             { 1130000, { uint256S("0x3a4c11d187451f340d928bf487e5d942d11559cb38f889cf69f05510ae8ff299"), 1585791393 } },
-            { 1132294, { uint256S("0xfb0ca240756044b1cfa2ab0a3bdb783a12d99f9ad6a7d10bfe9e4fec538c618a"), 1586113936 } },
-            { 1133446, { uint256S("0xdf12457f700161bd19437051bd3a111e6da5ca0cd77a982a23012cefdc814464"), 1586273546 } },
+            { 1135000, { uint256S("0xbc68728519d04280048031d79e29e7f8595e68641349547491902b4d219d5f1a"), 1586491711 } },
+            { 1139096, { uint256S("0xc166ba902a06d4313b2a6ce7b15120a298b6202981f61975043cdc0e69709851"), 1587068148 } },
+            { 1140248, { uint256S("0xb15bbeb259bfe17cdb1ff8ba5ae20ba47ad733bddfb4ef7909cc63bd0221e6b1"), 1587231240 } },
         }
         };
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0xdf12457f700161bd19437051bd3a111e6da5ca0cd77a982a23012cefdc814464");
+        consensus.defaultAssumeValid = uint256S("0xb15bbeb259bfe17cdb1ff8ba5ae20ba47ad733bddfb4ef7909cc63bd0221e6b1");
         
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000013805beeac7c80f35");
         
         chainTxData = ChainTxData{
-            1586273546, // * UNIX timestamp of last checkpoint block
-            2876458,    // * total number of transactions between genesis and last checkpoint
+            1587231240, // * UNIX timestamp of last checkpoint block
+            2892631,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
@@ -446,6 +449,12 @@ public:
             consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
             consensus.vDeployments[Consensus::DEPLOYMENT_CSV].type = Consensus::DEPLOYMENT_POW;
 
+            // The best chain should have at least this much work.
+            consensus.nMinimumChainWork = uint256S("");
+
+            // By default assume that the signatures in ancestors of this block are valid.
+            consensus.defaultAssumeValid = uint256S("");
+
             if (fIsOfficialTestnetV1)
             {
                 consensus.fixedRewardReductionHeight=250001;
@@ -453,32 +462,84 @@ public:
                 consensus.pow2Phase3FirstBlockHeight=51;
                 consensus.devBlockSubsidyActivationHeight=528750;
                 consensus.pow2Phase4FirstBlockHeight=528762;
+                consensus.pow2Phase5FirstBlockHeight=528762;
+                consensus.deltaV3ActivationTime=1591372800;
+
+                genesis = CreateGenesisBlock(seedTimestamp, 0, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
+                genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
+                genesis.nNonce = 928;
+                genesis.nTime = 1534687770;
             }
             else
             {
-                consensus.fixedRewardReductionHeight=10;
-                consensus.pow2Phase2FirstBlockHeight=21;
-                consensus.pow2Phase3FirstBlockHeight=51;
-                consensus.devBlockSubsidyActivationHeight=90;
-                consensus.pow2Phase4FirstBlockHeight=100;
+                consensus.fixedRewardReductionHeight=1;
+                consensus.pow2Phase2FirstBlockHeight=0;
+                consensus.pow2Phase3FirstBlockHeight=0;
+                consensus.devBlockSubsidyActivationHeight=1;
+                consensus.pow2Phase4FirstBlockHeight=0;
+                consensus.pow2Phase5FirstBlockHeight=0;
+                consensus.deltaV3ActivationTime=1591188240;
+
+                numGenesisWitnesses = 10;
+                genesisWitnessWeightDivisor = 100;
+                
+                // Don't bother creating the genesis block if we haven't started ECC yet (e.g. we are being called from the help text)
+                // We can't initialise key anyway unless the app has first initialised ECC, and the help doesn't need the genesis block, creating it twice is a waste of cpu cycles
+                ECC_Start();
+                {
+                    CMutableTransaction txNew(CTransaction::CURRENT_VERSION);
+                    txNew.vin.resize(1);
+                    txNew.vin[0].prevout.SetNull();
+                    txNew.vin[0].segregatedSignatureData.stack.clear();
+                    txNew.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>());
+                    CVectorWriter(0, 0, txNew.vin[0].segregatedSignatureData.stack[0], 0) << VARINT(0);
+                    txNew.vin[0].segregatedSignatureData.stack.push_back(ParseHex("4f6e206a616e756172692031737420746865204475746368206c6f73742074686572652062656c6f7665642047756c64656e"));
+                    
+                    {
+                        std::string sKey = std::string(sTestnetParams, 1, 8);
+                        sKey += sKey;
+                        sKey += sKey;
+                        genesisWitnessPrivKey.Set((unsigned char*)&sTestnetParams[0],(unsigned char*)&sTestnetParams[0]+32, true);
+                        
+                        CTxOut renewedWitnessTxOutput;
+                        renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+                        renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = genesisWitnessPrivKey.GetPubKey().GetID();
+                        renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = genesisWitnessPrivKey.GetPubKey().GetID();
+                        renewedWitnessTxOutput.output.witnessDetails.lockFromBlock = 1;
+                        renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = 900000;
+                        renewedWitnessTxOutput.output.witnessDetails.failCount = 0;
+                        renewedWitnessTxOutput.output.witnessDetails.actionNonce = 1;
+                        renewedWitnessTxOutput.nValue=0;
+                        for (uint32_t i=0; i<numGenesisWitnesses;++i)
+                        {
+                            txNew.vout.push_back(renewedWitnessTxOutput);
+                        }
+                    }
+
+                    genesis.nTime    = seedTimestamp;
+                    genesis.nBits    = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
+                    genesis.nNonce   = 0;
+                    genesis.nVersion = 536870912;
+                    genesis.vtx.push_back(MakeTransactionRef(std::move(txNew)));
+                    genesis.hashPrevBlock.SetNull();
+                    genesis.hashMerkleRoot = BlockMerkleRoot(genesis.vtx.begin(), genesis.vtx.end());
+                    genesis.hashMerkleRootPoW2Witness = BlockMerkleRoot(genesis.vtx.begin(), genesis.vtx.end());
+                    genesis.witnessHeaderPoW2Sig.resize(65);
+
+                    uint256 foundBlockHash;
+                    std::atomic<uint64_t> halfHashCounter=0;
+                    std::atomic<uint64_t> nThreadCounter=0;
+                    bool interrupt=false;
+                    sigma_context generateContext(defaultSigmaSettings, defaultSigmaSettings.arenaSizeKb, std::max(GetNumCores(), 1));
+                    generateContext.prepareArenas(genesis);
+                    generateContext.mineBlock(&genesis, halfHashCounter, foundBlockHash, interrupt);
+                    
+                    genesis.nTimePoW2Witness = genesis.nTime+1;
+                    genesis.nVersionPoW2Witness = genesis.nVersion;
+                }
+                ECC_Stop();
             }
-
-            // The best chain should have at least this much work.
-            consensus.nMinimumChainWork = uint256S("");
-
-            // By default assume that the signatures in ancestors of this block are valid.
-            consensus.defaultAssumeValid = uint256S("");
-
-            genesis = CreateGenesisBlock(seedTimestamp, 0, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
-            genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
-
-            while(UintToArith256(genesis.GetPoWHash()) > UintToArith256(consensus.powLimit))
-            {
-                genesis.nNonce++;
-                if(genesis.nNonce == 0)
-                    genesis.nTime++;
-            }
-            consensus.hashGenesisBlock = genesis.GetHashLegacy();
+            consensus.hashGenesisBlock = genesis.GetHashPoW2();
             LogPrintf("genesis nonce: %d\n",genesis.nNonce);
             LogPrintf("genesis time: %d\n",genesis.nTime);
             LogPrintf("genesis bits: %d\n",genesis.nBits);
@@ -681,6 +742,8 @@ public:
         consensus.pow2Phase3FirstBlockHeight=50000;
         consensus.devBlockSubsidyActivationHeight=50100;
         consensus.pow2Phase4FirstBlockHeight=50500;
+        consensus.pow2Phase5FirstBlockHeight=50500;
+        consensus.deltaV3ActivationTime=1591188240;
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x00");
@@ -696,7 +759,7 @@ public:
         nPruneAfterHeight = 1000;
 
         genesis = CreateGenesisBlock(1296688602, 2, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
-        consensus.hashGenesisBlock = genesis.GetHashLegacy();
+        consensus.hashGenesisBlock = genesis.GetHashPoW2();
         assert(consensus.hashGenesisBlock == uint256S("0x3e4b830e0f75f7b72060ae5ebcc22fdf5df57c7e2350a2669ac4f8a2d734e1bc"));
         assert(genesis.hashMerkleRoot == uint256S("0x4bed0bcb3e6097445ae68d455137625bb66f0e7ba06d9db80290bf72e3d6dcf8"));
 
@@ -709,7 +772,7 @@ public:
         fUseSyncCheckpoints = false;
 
         checkpointData = {
-            { 0, { genesis.GetHashLegacy(), genesis.nTime } }
+            { 0, { genesis.GetHashPoW2(), genesis.nTime } }
         };
 
         chainTxData = ChainTxData{
@@ -748,6 +811,11 @@ void SelectParams(const std::string& network)
 {
     SelectBaseParams(network);
     globalChainParams = CreateChainParams(network);
+}
+
+void FreeParams()
+{
+    globalChainParams = nullptr;
 }
 
 void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout)

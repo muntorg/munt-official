@@ -14,8 +14,6 @@
 /** Global variable that points to the witness coins database (protected by cs_main) */
 extern CWitViewDB* ppow2witdbview;
 extern std::shared_ptr<CCoinsViewCache> ppow2witTip;
-extern bool haveStaticFundingAddress(std::string sLookupAddress, uint64_t nHeight);
-extern std::string getStaticFundingAddress(std::string sLookupAddress, uint64_t nHeight);
 
 struct RouletteItem
 {

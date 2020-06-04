@@ -12,13 +12,16 @@ $(package)_config_opts+=threading=multi link=static -sNO_BZIP2=1 -sNO_ZLIB=1
 $(package)_config_opts_linux=threadapi=pthread runtime-link=shared
 $(package)_config_opts_darwin=--toolset=clang-darwin runtime-link=shared
 $(package)_config_opts_mingw32=binary-format=pe target-os=windows threadapi=win32 runtime-link=static
+$(package)_config_opts_mingw64=binary-format=pe target-os=windows threadapi=win32 runtime-link=static
 $(package)_config_opts_x86_64_mingw32=address-model=64
-$(package)_config_opts_i686_mingw32=address-model=32
+$(package)_config_opts_x86_64_mingw64=address-model=64
+$(package)_config_opts_i686_mingw32=address-model=64
+$(package)_config_opts_i686_mingw64=address-model=64
 $(package)_config_opts_i686_linux=address-model=32 architecture=x86
 $(package)_config_opts_aarch64_ios=architecture=x86 target-os=iphone
 $(package)_toolset_$(host_os)=gcc
 $(package)_toolset_darwin=clang-darwin
-$(package)_toolset_ios=clang-darwin
+$(package)_toolset_ios=darwin
 $(package)_archiver_$(host_os)=$($(package)_ar)
 $(package)_archiver_darwin=$($(package)_ar)
 $(package)_archiver_ios=$($(package)_libtool)
@@ -27,9 +30,11 @@ $(package)_cxxflags=-std=c++17
 $(package)_cxxflags_$(host_os)=-fvisibility=hidden
 $(package)_cxxflags_linux+=-fPIC
 $(package)_cxxflags_ios=-fvisibility=default
+$(package)_patches=fix_clang_version.patch
 endef
 
 define $(package)_preprocess_cmds
+  patch -p1 < $($(package)_patch_dir)/fix_clang_version.patch && \
   echo "using $($(package)_toolset_$(host_os)) : : $($(package)_cxx) : <cxxflags>\"$($(package)_cxxflags) $($(package)_cppflags)\" <linkflags>\"$($(package)_ldflags)\" <archiver>\"$($(package)_archiver_$(host_os))\" <striper>\"$(host_STRIP)\"  <ranlib>\"$(host_RANLIB)\" <rc>\"$(host_WINDRES)\" : ;" > user-config.jam
 endef
 

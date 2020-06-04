@@ -15,7 +15,7 @@
 #include "keystore.h"
 #include "net.h"
 #include "net_processing.h"
-#include "pow.h"
+#include "pow/pow.h"
 #include "script/sign.h"
 #include "serialize.h"
 #include "util.h"

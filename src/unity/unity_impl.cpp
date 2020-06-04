@@ -3,13 +3,18 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+//Workaround braindamaged 'hack' in libtool.m4 that defines DLL_EXPORT when building a dll via libtool (this in turn imports unwanted symbols from e.g. pthread that breaks static pthread linkage)
+#ifdef DLL_EXPORT
+#undef DLL_EXPORT
+#endif
+
 // Unity specific includes
 #include "unity_impl.h"
 #include "libinit.h"
 
 // Standard gulden headers
 #include "util.h"
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "ui_interface.h"
 #include "wallet/wallet.h"
 #include "unity/appmanager.h"
@@ -17,7 +22,7 @@
 #include <chain.h>
 #include "consensus/validation.h"
 #include "net.h"
-#include "Gulden/mnemonic.h"
+#include "wallet/mnemonic.h"
 #include "net_processing.h"
 #include "wallet/spvscanner.h"
 #include "sync.h"
@@ -49,7 +54,7 @@
 #include <qrencode.h>
 #include <memory>
 
-#include "pow.h"
+#include "pow/pow.h"
 #include <crypto/hash/sigma/sigma.h>
 #include <algorithm>
 
@@ -201,8 +206,8 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
 
     std::vector<InputRecord> inputs;
     std::vector<OutputRecord> outputs;
-    
-    
+
+
     //fixme: (UNITY) - rather calculate this once and pass it in instead of for every call..
     std::vector<CAccount*> accountsToTry;
     accountsToTry.push_back(pactiveWallet->activeAccount);
@@ -215,8 +220,8 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         }
     }
 
-    int64_t subtracted;
-    int64_t added;
+    int64_t subtracted=0;
+    int64_t added=0;
     for (const auto& account : accountsToTry)
     {
         subtracted += wtx.GetDebit(ISMINE_SPENDABLE, account, true);
@@ -239,7 +244,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         // Try to extract destination, this is not possible in general. Only if the previous
         // ouput of our input happens to be in our wallet. Which will usually only be the case for
         // our own transactions.
-        
+
         uint256 txHash;
         if (txin.prevout.isHash)
         {
@@ -306,6 +311,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
             address = addr.ToString();
         }
         std::string label;
+        std::string description;
         if (pwallet->mapAddressBook.count(address))
         {
             const auto& data = pwallet->mapAddressBook[address];
@@ -332,36 +338,10 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
 }
 
 // rate limited balance change notifier
-static CRateLimit<int> balanceChangeNotifier([](int){
-    if (pactiveWallet && signalHandler)
-    {
-        WalletBalances balances;
-        pactiveWallet->GetBalances(balances, pactiveWallet->activeAccount, true);
-        signalHandler->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
-    }
-
-}, std::chrono::milliseconds(BALANCE_NOTIFY_THRESHOLD_MS));
+static CRateLimit<int>* balanceChangeNotifier=nullptr;
 
 // rate limited new mutations notifier
-static CRateLimit<std::pair<uint256, bool> > newMutationsNotifier([](const std::pair<uint256, bool>& txInfo){
-    if (pactiveWallet && signalHandler)
-    {
-        const uint256& txHash = txInfo.first;
-        const bool fSelfComitted = txInfo.second;
-
-        LOCK2(cs_main, pactiveWallet->cs_wallet);
-        if (pactiveWallet->mapWallet.find(txHash) != pactiveWallet->mapWallet.end())
-        {
-            const CWalletTx& wtx = pactiveWallet->mapWallet[txHash];
-            std::vector<MutationRecord> mutations;
-            addMutationsForTransaction(&wtx, mutations);
-            for (auto& m: mutations) {
-                LogPrintf("unity: notify new mutation for tx %s", txHash.ToString().c_str());
-                signalHandler->notifyNewMutation(m, fSelfComitted);
-            }
-        }
-    }
-}, std::chrono::milliseconds(NEW_MUTATIONS_NOTIFY_THRESHOLD_MS));
+static CRateLimit<std::pair<uint256, bool>>* newMutationsNotifier=nullptr;
 
 
 void terminateUnityFrontend()
@@ -481,7 +461,7 @@ void handlePostInitMain()
             if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
             {
                 if (status == CT_NEW) {
-                    newMutationsNotifier.trigger(std::make_pair(hash, fSelfComitted));
+                    newMutationsNotifier->trigger(std::make_pair(hash, fSelfComitted));
                 }
                 else if (status == CT_UPDATED && signalHandler)
                 {
@@ -493,11 +473,11 @@ void handlePostInitMain()
                 //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
                 // else if (status == CT_DELETED)
             }
-            balanceChangeNotifier.trigger(0);
+            balanceChangeNotifier->trigger(0);
         });
 
         // Fire once immediately to update with latest on load.
-        balanceChangeNotifier.trigger(0);
+        balanceChangeNotifier->trigger(0);
     }
 }
 
@@ -601,7 +581,7 @@ bool GuldenUnifiedBackend::ContinueWalletFromRecoveryPhrase(const std::string& p
 
     // Allow update of balance for deleted accounts/transactions
     LogPrintf("%s: Update balance and rescan", __func__);
-    balanceChangeNotifier.trigger(0);
+    balanceChangeNotifier->trigger(0);
 
     // Rescan for transactions on the linked account
     DoRescan();
@@ -668,7 +648,7 @@ bool GuldenUnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linke
 
     // Allow update of balance for deleted accounts/transactions
     LogPrintf("%s: Update balance and rescan", __func__);
-    balanceChangeNotifier.trigger(0);
+    balanceChangeNotifier->trigger(0);
 
     // Rescan for transactions on the linked account
     DoRescan();
@@ -771,7 +751,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
 
     // Allow update of balance for deleted accounts/transactions
     LogPrintf("ReplaceWalletLinkedFromURI: Update balance and rescan");
-    balanceChangeNotifier.trigger(0);
+    balanceChangeNotifier->trigger(0);
 
     // Rescan for transactions on the linked account
     DoRescan();
@@ -796,6 +776,38 @@ bool GuldenUnifiedBackend::IsValidLinkURI(const std::string& linked_uri)
 
 int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend>& signals, const std::string& extraArgs)
 {
+    balanceChangeNotifier = new CRateLimit<int>([](int)
+    {
+        if (pactiveWallet && signalHandler)
+        {
+            WalletBalances balances;
+            pactiveWallet->GetBalances(balances, pactiveWallet->activeAccount, true);
+            signalHandler->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
+        }
+    }, std::chrono::milliseconds(BALANCE_NOTIFY_THRESHOLD_MS));
+
+    newMutationsNotifier = new CRateLimit<std::pair<uint256, bool>>([](const std::pair<uint256, bool>& txInfo)
+    {
+        if (pactiveWallet && signalHandler)
+        {
+            const uint256& txHash = txInfo.first;
+            const bool fSelfComitted = txInfo.second;
+
+            LOCK2(cs_main, pactiveWallet->cs_wallet);
+            if (pactiveWallet->mapWallet.find(txHash) != pactiveWallet->mapWallet.end())
+            {
+                const CWalletTx& wtx = pactiveWallet->mapWallet[txHash];
+                std::vector<MutationRecord> mutations;
+                addMutationsForTransaction(&wtx, mutations);
+                for (auto& m: mutations)
+                {
+                    LogPrintf("unity: notify new mutation for tx %s", txHash.ToString().c_str());
+                    signalHandler->notifyNewMutation(m, fSelfComitted);
+                }
+            }
+        }
+    }, std::chrono::milliseconds(NEW_MUTATIONS_NOTIFY_THRESHOLD_MS));
+
     // Force the datadir to specific place on e.g. android devices
     if (!dataDir.empty())
         SoftSetArg("-datadir", dataDir);
@@ -1065,10 +1077,10 @@ UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
      // return if URI is not valid or is no Gulden: URI
     std::string lowerCaseScheme = boost::algorithm::to_lower_copy(request.scheme);
     if (lowerCaseScheme != "guldencoin" && lowerCaseScheme != "gulden")
-        return UriRecipient(false, "", "", 0);
+        return UriRecipient(false, "", "", "", 0);
 
     if (!CGuldenAddress(request.path).IsValid())
-        return UriRecipient(false, "", "", 0);
+        return UriRecipient(false, "", "", "", 0);
 
     std::string address = request.path;
     std::string label = "";
@@ -1266,7 +1278,7 @@ void GuldenUnifiedBackend::addAddressBookRecord(const AddressRecord& address)
 {
     if (pactiveWallet)
     {
-        pactiveWallet->SetAddressBook(address.address, address.name, address.description, address.purpose);
+        pactiveWallet->SetAddressBook(address.address, address.name, address.desc, address.purpose);
     }
 }
 

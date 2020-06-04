@@ -26,7 +26,7 @@
 #include "generation/miner.h"
 #include "net.h"
 #include "policy/fees.h"
-#include "pow.h"
+#include "pow/pow.h"
 #include "rpc/blockchain.h"
 #include "rpc/server.h"
 #include "txmempool.h"
@@ -34,7 +34,7 @@
 #include "utilstrencodings.h"
 #include "arith_uint256.h"
 #include "warnings.h"
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include <compat/sys.h>
 
 #include <memory>
@@ -42,13 +42,13 @@
 
 #include <univalue.h>
 #ifdef ENABLE_WALLET
-#include "account.h"
+#include "wallet/account.h"
 #include "wallet/wallet.h"
 #include "wallet/rpcwallet.h"
 #endif
 #include "generation/generation.h"
 #include "script/script.h"
-#include <Gulden/rpcgulden.h>
+#include <rpc/rpcgulden.h>
 #include <validation/witnessvalidation.h>
 
 #include <boost/algorithm/string/predicate.hpp> // for ends_with()
@@ -233,6 +233,9 @@ static UniValue generate(const JSONRPCRequest& request)
             "\nGenerate 11 blocks\n"
             + HelpExampleCli("generate", "11")
         );
+
+    if (!IsArgSet("-regtest"))
+        throw std::runtime_error("generate command only for regtest; for mainnet/testnet use setgenerate");
 
     int nGenerate = request.params[0].get_int();
     uint64_t nMaxTries = 1000000;
@@ -474,6 +477,9 @@ static UniValue generatetoaddress(const JSONRPCRequest& request)
             "\nGenerate 11 blocks to myaddress\n"
             + HelpExampleCli("generatetoaddress", "11 \"myaddress\"")
         );
+
+    if (!IsArgSet("-regtest"))
+        throw std::runtime_error("generatetoaddress command only for regtest; for mainnet/testnet use setgenerate");
 
     int nGenerate = request.params[0].get_int();
     uint64_t nMaxTries = 1000000;

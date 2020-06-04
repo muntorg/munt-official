@@ -13,7 +13,7 @@
 
 #include "addresstablemodel.h"
 #include "consensus/validation.h"
-#include "_Gulden/accounttablemodel.h"
+#include "accounttablemodel.h"
 #include "guiconstants.h"
 #include "guiutil.h"
 #include "optionsmodel.h"
@@ -44,7 +44,7 @@
 
 #include "askpassphrasedialog.h"
 
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "validation/validation.h"
 
 WalletModel::WalletModel(const QStyle *platformStyle, CWallet *_wallet, OptionsModel *_optionsModel, QObject *parent)

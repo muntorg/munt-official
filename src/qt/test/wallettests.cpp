@@ -5,7 +5,7 @@
 #include "qt/optionsmodel.h"
 #include "qt/qvalidatedlineedit.h"
 #include "qt/sendcoinsdialog.h"
-#include "qt/_Gulden/guldensendcoinsentry.h"
+#include "qt/guldensendcoinsentry.h"
 #include "qt/transactiontablemodel.h"
 #include "qt/transactionview.h"
 #include "qt/walletmodel.h"

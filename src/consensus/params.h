@@ -82,13 +82,14 @@ struct Params {
     uint64_t pow2Phase3FirstBlockHeight;
     uint64_t devBlockSubsidyActivationHeight;
     uint64_t pow2Phase4FirstBlockHeight;
+    uint64_t pow2Phase5FirstBlockHeight;
+    uint64_t deltaV3ActivationTime;
     /** Proof of work parameters */
     uint256 powLimit;
     bool fPowAllowMinDifficultyBlocks;
     bool fPowNoRetargeting;
     int64_t nPowTargetSpacing;
     int64_t nPowTargetTimespan;
-    int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
     uint256 nMinimumChainWork;
     uint256 defaultAssumeValid;
 };

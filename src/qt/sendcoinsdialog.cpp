@@ -18,8 +18,8 @@
 #include "coincontroldialog.h"
 #include "guiutil.h"
 #include "optionsmodel.h"
-#include "_Gulden/guldensendcoinsentry.h"
-#include "_Gulden/nocksrequest.h"
+#include "guldensendcoinsentry.h"
+#include "nocksrequest.h"
 #include "gui.h"
 #include "walletmodel.h"
 

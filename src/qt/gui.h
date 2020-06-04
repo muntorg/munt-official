@@ -25,7 +25,7 @@
 #include <QPoint>
 #include <QSystemTrayIcon>
 
-#include "_Gulden/GuldenGUI.h"
+#include "GuldenGUI.h"
 #include "updatecheck.h"
 #include "validation/validation.h"
 #ifdef ENABLE_WALLET

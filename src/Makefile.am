@@ -11,7 +11,8 @@
 
 DIST_SUBDIRS = secp256k1 univalue
 
-AM_LDFLAGS = $(PTHREAD_CFLAGS) $(LIBTOOL_LDFLAGS) $(HARDENED_LDFLAGS)
+AM_LDFLAGS_NO_THREADS = $(LIBTOOL_LDFLAGS) $(HARDENED_LDFLAGS)
+AM_LDFLAGS = $(PTHREAD_CFLAGS) $(AM_LDFLAGS_NO_THREADS)
 AM_CXXFLAGS = $(HARDENED_CXXFLAGS) $(ERROR_CXXFLAGS)
 AM_CPPFLAGS = $(HARDENED_CPPFLAGS)
 EXTRA_LIBRARIES =
@@ -117,21 +118,21 @@ endif
 .PHONY: FORCE check-symbols check-security
 
 # core #
-GULDEN_CORE_H = Gulden/rpcgulden.h \
-  Gulden/Common/diff.h \
-  Gulden/Common/diff_delta.h \
-  Gulden/Common/diff_old.h \
-  Gulden/Common/diff_common.h \
-  Gulden/Common/hash/hash.h \
-  Gulden/Common/hash/city.h \
-  Gulden/Common/hash/cityconfig.h \
-  Gulden/mnemonic.h \
-  Gulden/util.h \
-  Gulden/auto_checkpoints.h \
-  wallet/Gulden/guldenwallet.h \
+GULDEN_CORE_H = rpc/rpcgulden.h \
+  pow/diff.h \
+  pow/diff_delta.h \
+  pow/diff_old.h \
+  pow/diff_common.h \
+  crypto/hash/hash.h \
+  crypto/hash/city.h \
+  crypto/hash/cityconfig.h \
+  wallet/mnemonic.h \
+  guldenutil.h \
+  auto_checkpoints.h \
+  wallet/guldenwallet.h \
   LRUCache/LRUCache11.hpp \
   alert.h \
-  account.h \
+  wallet/account.h \
   addrdb.h \
   addrman.h \
   base58.h \
@@ -188,7 +189,7 @@ GULDEN_CORE_H = Gulden/rpcgulden.h \
   policy/fees.h \
   policy/policy.h \
   policy/rbf.h \
-  pow.h \
+  pow/pow.h \
   protocol.h \
   random.h \
   reverselock.h \
@@ -257,7 +258,7 @@ clientversion.cpp: obj/build.h
 libgulden_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libgulden_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_server_a_SOURCES = \
-  Gulden/rpcgulden.cpp \
+  rpc/rpcgulden.cpp \
   unity/generic/init_generic.cpp \
   httprpc.cpp \
   httpserver.cpp \
@@ -278,13 +279,13 @@ libgulden_server_a_SOURCES += \
 endif
 
 # node: shared between GuldenD, Gulden and unity libraries.
-libgulden_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
+libgulden_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) -I$(srcdir)/univalue/include
 libgulden_node_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_node_a_SOURCES = \
   addrdb.cpp \
   addrman.cpp \
   alert.cpp \
-  Gulden/auto_checkpoints.cpp \
+  auto_checkpoints.cpp \
   bloom.cpp \
   blockencodings.cpp \
   blockstore.cpp \
@@ -306,7 +307,7 @@ libgulden_node_a_SOURCES = \
   policy/rbf.cpp \
   txdb.cpp \
   txmempool.cpp \
-  Gulden/util.cpp \
+  guldenutil.cpp \
   ui_interface.cpp \
   validation/validation.cpp \
   validation/validation_mempool.cpp \
@@ -319,7 +320,7 @@ libgulden_node_a_SOURCES = \
   script/sigcache.cpp \
   script/ismine.cpp \
   timedata.cpp \
-  pow.cpp \
+  pow/pow.cpp \
   $(GULDEN_CORE_H)
 
 # zmq: shared between GuldenD and Gulden, only if zmq enabled
@@ -337,9 +338,9 @@ endif
 libgulden_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_wallet_a_SOURCES = \
-  account.cpp \
-  Gulden/mnemonic.cpp \
-  wallet/Gulden/guldenwallet.cpp \
+  wallet/account.cpp \
+  wallet/mnemonic.cpp \
+  wallet/guldenwallet.cpp \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/feebumper.cpp \
@@ -536,8 +537,8 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/bytevectorhash.cpp \
   crypto/chacha20.h \
   crypto/chacha20.cpp \
-  Gulden/Common/scrypt.h \
-  Gulden/Common/scrypt.cpp \
+  crypto/hash/scrypt.h \
+  crypto/hash/scrypt.cpp \
   crypto/scrypt/sha256_scrypt.h \
   crypto/scrypt/sha256_scrypt.cpp \
   crypto/scrypt/crypto_scrypt.h \
@@ -604,10 +605,10 @@ libgulden_android_compat_a_SOURCES = \
 libgulden_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_consensus_a_SOURCES = \
-  Gulden/Common/diff_delta.cpp \
-  Gulden/Common/diff_old.cpp \
-  Gulden/Common/diff_common.cpp \
-  Gulden/Common/hash/city.cpp \
+  pow/diff_delta.cpp \
+  pow/diff_old.cpp \
+  pow/diff_common.cpp \
+  crypto/hash/city.cpp \
   amount.h \
   arith_uint256.cpp \
   arith_uint256.h \
@@ -646,7 +647,6 @@ libgulden_common_a_SOURCES = \
   base58.cpp \
   chainparams.cpp \
   coins.cpp \
-  ui_interface.cpp \
   compressor.cpp \
   blockfilter.cpp \
   key.cpp \
@@ -743,8 +743,7 @@ DJINNI_NODE_JS_GEN = \
   unity/djinni/node_js/NJSGuldenUnifiedBackendCpp.cpp \
   unity/djinni/node_js/NJSGuldenUnifiedBackendCpp.hpp \
   unity/djinni/node_js/NJSGuldenUnifiedFrontend.cpp \
-  unity/djinni/node_js/NJSGuldenUnifiedFrontend.hpp \
-  unity/djinni/node_js/NJSObjectWrapper.hpp
+  unity/djinni/node_js/NJSGuldenUnifiedFrontend.hpp
 
 libgulden_unity_node_js_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_unity_node_js_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -754,21 +753,16 @@ libgulden_unity_node_js_la_SOURCES = \
   unity/libinit.h \
   unity/node_js/logging_node_js.cpp \
   unity/node_js/init_node_js.cpp \
-  $(libgulden_wallet_a_SOURCES) \
-  $(libgulden_common_a_SOURCES) \
-  $(libgulden_util_a_SOURCES) \
-  $(libgulden_node_a_SOURCES) \
-  $(libgulden_consensus_a_SOURCES) \
-  $(crypto_libgulden_crypto_a_SOURCES) \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
+  unity/djinni/support-lib/nodejs/win_delay_load_hook.cpp \
   $(DJINNI_CPP_GEN) \
-  $(DJINNI_NODE_JS_GEN) \
-  $(GULDEN_CORE_H)
+  $(DJINNI_NODE_JS_GEN)
 
 
-libgulden_unity_node_js_la_LDFLAGS = -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS)
-libgulden_unity_node_js_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBSECP256K1) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(LIBGULDEN_CRYPTO_ALL) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) -lqrencode
+GULDEN_NJS_DEPS = $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_NODE) $(LIBGULDEN_UTIL) $(LIBGULDEN_COMMON) $(LIBGULDEN_WALLET) $(LIBGULDEN_CRYPTO_ALL)
+libgulden_unity_node_js_la_LDFLAGS = -shared -module -no-undefined -export-dynamic $(AM_LDFLAGS) $(RELDFLAGS) -pthread
+libgulden_unity_node_js_la_LIBADD = $(GULDEN_NJS_DEPS) $(GULDEN_NJS_DEPS) $(LIBSECP256K1) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(SSL_LIBS) -lqrencode -lpthread -lcryptopp $(SSL_LIBS) -lcrypto
 libgulden_unity_node_js_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 libgulden_unity_node_js_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 endif
@@ -783,13 +777,6 @@ libgulden_unity_jni_la_SOURCES = \
   unity/libinit.h \
   unity/android/logging_android.cpp \
   unity/android/init_android.cpp \
-  $(libgulden_wallet_a_SOURCES) \
-  $(libgulden_common_a_SOURCES) \
-  $(libgulden_util_a_SOURCES) \
-  $(libgulden_node_a_SOURCES) \
-  $(libgulden_consensus_a_SOURCES) \
-  $(crypto_libgulden_crypto_a_SOURCES) \
-  $(libgulden_android_compat_a_SOURCES) \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
   unity/djinni/jni/NativeBlockInfoRecord.hpp \
@@ -831,14 +818,16 @@ libgulden_unity_jni_la_SOURCES = \
   $(GULDEN_CORE_H)
 
 nodist_libgulden_unity_jni_la_SOURCES = \
-  ../djinni/support-lib/jni/djinni_support.cpp \
-  ../djinni/support-lib/jni/djinni_main.cpp
+  unity/djinni/support-lib/jni/djinni_support.cpp \
+  unity/djinni/support-lib/jni/djinni_main.cpp
+
+ANDROID_DEPS = $(LIBGULDEN_COMPAT) $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_NODE) $(LIBGULDEN_UTIL) $(LIBGULDEN_COMMON) $(LIBGULDEN_WALLET) $(LIBGULDEN_CRYPTO_ALL) $(LIBGULDEN_ANDROID_COMPAT)
 
 
-libgulden_unity_jni_la_LDFLAGS = -shared -module -export-dynamic $(AM_LDFLAGS)  $(RELDFLAGS) -llog
-libgulden_unity_jni_la_LIBADD = $(LIBGULDEN_UNITY) $(LIBGULDEN_UNITY_CRYPTO_OBJ) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(PROTOBUF_LIBS) -lqrencode -lcryptopp
-libgulden_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/../djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
-libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/../djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
+libgulden_unity_jni_la_LDFLAGS = -shared -module -export-dynamic $(AM_LDFLAGS_NO_THREADS) $(RELDFLAGS) -llog
+libgulden_unity_jni_la_LIBADD = $(ANDROID_DEPS) $(ANDROID_DEPS) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(PROTOBUF_LIBS) -lqrencode -lcryptopp
+libgulden_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/unity/djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
+libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/unity/djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
 endif
 #
 

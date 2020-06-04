@@ -44,8 +44,8 @@ extern CWalletRef pactiveWallet;
 
 //Gulden specific includes
 #include "wallet/walletdberrors.h"
-#include "wallet/Gulden/guldenwallet.h"
-#include "account.h"
+#include "wallet/guldenwallet.h"
+#include "wallet/account.h"
 
 #include <boost/thread.hpp>
 #include <consensus/consensus.h>
@@ -729,7 +729,7 @@ public:
 
     void importPrivKey(const SecureString& sKey, std::string sAccountName);
     void importPrivKey(const CKey& privKey, std::string sAccountName);
-    bool importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate);
+    bool importPrivKeyIntoAccount(CAccount* targetAccount, const CKey& privKey, const CKeyID& importKeyID, uint64_t keyBirthDate, bool allowRescan=true);
     bool forceKeyIntoKeypool(CAccount* forAccount, const CKey& privKey);
 
     /** 
@@ -756,14 +756,17 @@ public:
     void ReacceptWalletTransactions();
     std::vector<uint256> ResendWalletTransactionsBefore(int64_t nTime, CConnman* connman);
     void GetBalances(WalletBalances& balances, const CAccount* forAccount = nullptr, bool includeChildren=false) const;
+    CAmount GetBalanceForDepth(int minDepth, const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
     CAmount GetBalance(const CAccount* forAccount = nullptr, bool useCache=true, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
     CAmount GetLockedBalance(const CAccount* forAccount = nullptr, bool includeChildren=false);
     CAmount GetUnconfirmedBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
     CAmount GetImmatureBalance(const CAccount* forAccount = nullptr, bool includePoW2LockedWitnesses=false, bool includeChildren=false) const;
-    CAmount GetWatchOnlyBalance() const;
+    CAmount GetWatchOnlyBalance(int minDepth=0, const CAccount* forAccount = nullptr, bool includeChildren=false) const;
     CAmount GetUnconfirmedWatchOnlyBalance() const;
     CAmount GetImmatureWatchOnlyBalance() const;
+    #if 0
     CAmount GetLegacyBalance(const isminefilter& filter, int minDepth, const boost::uuids::uuid* accountUUID, bool includeChildren=false) const;
+    #endif
     CAmount GetAvailableBalance(CAccount* forAccount, const CCoinControl* coinControl = nullptr) const;
 
     //! Fund a transaction that is otherwise already created
@@ -773,10 +776,12 @@ public:
     bool FundTransaction(CAccount* fundingAccount, CMutableTransaction& tx, CAmount& nFeeRet, int& nChangePosInOut, std::string& strFailReason, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, CCoinControl, CReserveKeyOrScript& reservekey);
 
     //! Sign a transaction that is already fully populated/funded
-    bool SignTransaction(CAccount* fromAccount, CMutableTransaction& tx, SignType type);
+    //! The transaction inputs must be in the wallet as SignTransaction will look these up and fail if the are not
+    //! For special cases of signing when not in wallet we provide prevOutOverride - however this only caters for one input to not be in the wallet...
+    bool SignTransaction(CAccount* fromAccount, CMutableTransaction& tx, SignType type, CTxOut* prevOutOverride=nullptr);
 
     //! Create a transaction that renews an expired witness account
-    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction=nullptr, CCoinControl* coinControl=nullptr, bool* shouldUpgrade=nullptr);
+    bool PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut, std::string& strError, uint64_t* skipPastTransaction=nullptr, CCoinControl* coinControl=nullptr);
 
     //! Create a transaction upgrades an old ScriptLegacyOutput witness to a new PoW2WitnessOutput
     void PrepareUpgradeWitnessAccountTransaction(CAccount* funderAccount, CAccount* targetWitnessAccount, CReserveKeyOrScript& changeReserveKey, CMutableTransaction& tx, CAmount& nFeeOut);

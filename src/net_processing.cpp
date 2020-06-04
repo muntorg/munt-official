@@ -34,13 +34,14 @@
 #include "txmempool.h"
 #include "ui_interface.h"
 #include "util.h"
+#include "guldenutil.h"
 #include "utilmoneystr.h"
 #include "utilstrencodings.h"
 #include "validation/validationinterface.h"
 
 #include "alert.h"
 #include "checkpoints.h"
-#include "Gulden/auto_checkpoints.h"
+#include "auto_checkpoints.h"
 
 #include <boost/foreach.hpp>
 
@@ -3244,6 +3245,10 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     // Consider aborting here.
                     vReverseHeaders.clear();
                     vReverseHeaders.shrink_to_fit();
+                    
+                    //fixme: We need to look into why this is happening so regularly, but in meantime work around it by disabling
+                    // Fall back to regular headers
+                    fReverseHeaders = false;
 
                     // Blame peer latest reverse headers came from
                     LOCK(cs_main);

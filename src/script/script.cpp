@@ -233,28 +233,6 @@ bool CScript::IsPayToScriptHash() const
 }
 
 //OP_0 [1 byte] 72 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] (74 bytes)
-bool CScript::IsPoW2Witness() const
-{
-    if (this->size() != 74)
-        return false;
-
-    if ((*this)[0] != OP_0 || (*this)[1] != 72)
-        return false;
-
-    return true;
-}
-
-//OP_0 [1 byte] 72 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] (74 bytes)
-std::vector<unsigned char> CScript::GetPow2WitnessHash() const
-{
-    assert(IsPoW2Witness());
-
-    std::vector<unsigned char> hashWitnessBytes(this->begin()+22, this->begin()+42);
-    return hashWitnessBytes;
-}
-
-
-//OP_0 [1 byte] 72 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] (74 bytes)
 bool CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
 {
     //fixme: (PHASE5) - Enable UI alert for failiure here, can't use CAlert directly because its undefined in test_gulden builds

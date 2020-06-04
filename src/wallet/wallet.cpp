@@ -53,11 +53,11 @@
 //Gulden specific includes
 #include "init.h"
 #include <unity/appmanager.h>
-#include <Gulden/mnemonic.h>
+#include <wallet/mnemonic.h>
 #include <script/ismine.h>
 
 //fixme: (PHASE5) - we can remove these includes after phase4 activation.
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "validation/validation.h"
 
 std::vector<CWalletRef> vpwallets;
@@ -642,10 +642,7 @@ bool CWallet::IsSpent(const COutPoint& outpoint) const
                         const auto& prevOut = prevtx->tx->vout[mit->second.tx->vin[0].prevout.n].output;
                         if ( prevOut.nType == ScriptLegacyOutput )
                         {
-                            if ( !prevOut.scriptPubKey.IsPoW2Witness() )
-                            {
-                                return true; // Spent
-                            }
+                            return true; // Spent
                         }
                         else if ( prevOut.nType != PoW2WitnessOutput )
                         {
@@ -1125,22 +1122,10 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 {
                     if (range.first->second != tx.GetHash())
                     {
-                        const CWalletTx* prev = GetWalletTx(txin.prevout);
-                        if (prev && GetPoW2Phase(chainActive.Tip()) == 3 && prev->tx->vout.size() > 0 && prev->tx->vout[txin.prevout.n].output.scriptPubKey.IsPoW2Witness())
-                        {
-                            LogPrintf("Updated phase 3 witness transaction %s (in block %s) replace wallet transaction %s\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString());
-                            if (mapWallet.find(range.first->second)->second.mapValue.count("replaced_by_txid") == 0)
-                            {
-                                markReplacements.push_back(std::pair(range.first->second, tx.GetHash()));
-                            }
-                        }
-                        else
-                        {
-                            uint256 txHash;
-                            CWallet::GetTxHash(range.first->first, txHash);
-                            LogPrintf("Transaction %s (in block %s) conflicts with wallet transaction %s (both spend %s:%i)\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString(), txHash.ToString(), range.first->first.n);
-                            MarkConflicted(pIndex->GetBlockHashPoW2(), range.first->second);
-                        }
+                        uint256 txHash;
+                        CWallet::GetTxHash(range.first->first, txHash);
+                        LogPrintf("Transaction %s (in block %s) conflicts with wallet transaction %s (both spend %s:%i)\n", tx.GetHash().ToString(), pIndex->GetBlockHashPoW2().ToString(), range.first->second.ToString(), txHash.ToString(), range.first->first.n);
+                        MarkConflicted(pIndex->GetBlockHashPoW2(), range.first->second);
                     }
                     range.first++;
                 }
@@ -1182,7 +1167,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             {
                 for (const auto& txOut : wtx.tx->vout)
                 {
-                    if ( txOut.GetType() == CTxOutType::PoW2WitnessOutput || (txOut.GetType() == CTxOutType::ScriptLegacyOutput && txOut.output.scriptPubKey.IsPoW2Witness()) )
+                    if (txOut.GetType() == CTxOutType::PoW2WitnessOutput)
                     {
                         CAccount* potentialWitnessAccount = pactiveWallet->FindBestWitnessAccountForTransaction(txOut);
                         if (potentialWitnessAccount && potentialWitnessAccount->m_Type == AccountType::PoW2Witness)
@@ -1207,14 +1192,13 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 MarkReplaced(wtx, newTx);
             }
 
-            return ret;
-            //fixme: (PHASE5) It is not clear if this is 100% necessary or not. See comment below for the original motivation.
+            //fixme: (Future) This is slow and should be made faster.
             //Add all incoming transactions to the wallet as well (even though they aren't from us necessarily) - so that we can always get 'incoming' address details.
             //Is there maybe a better way to do this?
             //
             //Note the below has large speed implications - if we do need this it would be better to maybe just serialise the "from address" as part of CWalletTx and not keep additional transactions (that aren't ours) around.
             //GetTransaction() is expensive and locks on mutexes that intefere with other parts of the code.
-            /*for(const auto& txin : tx.vin)
+            for(const auto& txin : tx.vin)
             {
                 uint256 txHash;
                 if (CWallet::GetTxHash(txin.prevout, txHash))
@@ -1223,13 +1207,14 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                     if (!fExistedIncoming)
                     {
                         uint256 hashBlock = uint256();
-                        if (GetTransaction(txHash, wtx.tx, Params().GetConsensus(), hashBlock, true))
+                        if (GetTransaction(txHash, wtx.tx, Params(), hashBlock, true))
                         {
                             AddToWallet(wtx, false);
                         }
                     }
                 }
-            }*/
+            }
+            return ret;
         }
     }
     return false;
@@ -1303,14 +1288,30 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
     return true;
 }
 
+static void forceRestart()
+{
+    // Immediately disable what we can so this is cleaner.
+    if (g_connman)
+    {
+        g_connman->SetNetworkActive(false);
+    }
+    fullyEraseDatadirOnShutdown=true;
+    
+    // Event loop will exit after current HTTP requests have been handled, so
+    // this reply will get back to the client.
+    GuldenAppManager::gApp->shutdown();
+}
+
 void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
 {
     LOCK2(cs_main, cs_wallet);
 
     int conflictconfirms = 0;
-    if (mapBlockIndex.count(hashBlock)) {
+    if (mapBlockIndex.count(hashBlock))
+    {
         CBlockIndex* pindex = mapBlockIndex[hashBlock];
-        if (partialChain.Contains(pindex) || chainActive.Contains(pindex)) {
+        if (partialChain.Contains(pindex) || chainActive.Contains(pindex))
+        {
             conflictconfirms = -(std::max(partialChain.Height(), chainActive.Height()) - pindex->nHeight + 1);
         }
     }
@@ -1329,15 +1330,22 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
 
     todo.insert(hashTx);
 
-    while (!todo.empty()) {
+    while (!todo.empty())
+    {
         uint256 now = *todo.begin();
         todo.erase(now);
         done.insert(now);
         auto it = mapWallet.find(now);
-        assert(it != mapWallet.end());
+        if (it == mapWallet.end())
+        {
+            forceRestart();
+            return;
+        }
+        //assert(it != mapWallet.end());
         CWalletTx& wtx = it->second;
         int currentconfirm = wtx.GetDepthInMainChain();
-        if (conflictconfirms < currentconfirm || (conflictconfirms == currentconfirm && wtx.nIndex >= 0)) {
+        if (conflictconfirms < currentconfirm || (conflictconfirms == currentconfirm && wtx.nIndex >= 0))
+        {
             // Block is 'more conflicted' than current confirm; update. Or tx not marked as conflicted yet.
             // Mark transaction as conflicted with this block.
             wtx.nIndex = -1;
@@ -1346,18 +1354,21 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
             walletdb.WriteTx(wtx);
             // Iterate over all its outputs, and mark transactions in the wallet that spend them conflicted too
             TxSpends::const_iterator iter = mapTxSpends.lower_bound(COutPoint(now, 0));
-            while (iter != mapTxSpends.end()) {
+            while (iter != mapTxSpends.end())
+            {
                 uint256 txHash;
                 if (!CWallet::GetTxHash(iter->first, txHash) || txHash != now)
                     break;
-                 if (!done.count(iter->second)) {
+                 if (!done.count(iter->second))
+                 {
                      todo.insert(iter->second);
                  }
                  iter++;
             }
             // If a transaction changes 'conflicted' state, that changes the balance
             // available of the outputs it spends. So force those to be recomputed
-            for (const CTxIn& txin : wtx.tx->vin) {
+            for (const CTxIn& txin : wtx.tx->vin)
+            {
                 CWalletTx* prev = GetWalletTx(txin.prevout);
                 if (prev)
                     prev->MarkDirty();

@@ -4,7 +4,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2020 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -25,6 +25,7 @@
 #include "policy/policy.h"
 #include "validation/validation.h" // For mempool
 #include "wallet/wallet.h"
+#include <wallet/account.h>
 
 #include <QApplication>
 #include <QCheckBox>
@@ -36,10 +37,6 @@
 #include <QString>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
-
-
-//Gulden specific includes
-#include <account.h>
 
 QList<CAmount> CoinControlDialog::payAmounts;
 CCoinControl* CoinControlDialog::coinControl = new CCoinControl();
@@ -439,7 +436,7 @@ void CoinControlDialog::updateLabelLocked()
 }
 
 //fixme: (PHASE5) - we can remove this header once phase 4 is active
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "validation/validation.h"
 
 void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)

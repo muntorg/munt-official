@@ -1,4 +1,8 @@
+ifeq (x86_64,$(findstring x86_64,$(build_arch)))
 mingw32_CFLAGS=-pipe
+else
+mingw32_CFLAGS=-pipe -m32
+endif
 mingw32_CXXFLAGS=$(mingw32_CFLAGS)
 
 mingw32_release_CFLAGS=-O2

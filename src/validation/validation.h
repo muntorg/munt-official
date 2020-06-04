@@ -452,8 +452,6 @@ private:
     ScriptVersion scriptVer;
 
 public:
-    //fixme: (PHASE5) - We can remove this after phase 4.
-    CKeyID spendingKeyID;
 
     CScriptCheck(): signingKeyID(CKeyID()), amount(0), ptxTo(0), nIn(0), nFlags(0), cacheStore(false), error(SCRIPT_ERR_UNKNOWN_ERROR), scriptVer(SCRIPT_V1) {}
     CScriptCheck(CKeyID signingKeyID_, const CScript& scriptPubKeyIn, const CAmount amountIn, const CTransaction& txToIn, unsigned int nInIn, unsigned int nFlagsIn, bool cacheIn, PrecomputedTransactionData* txdataIn, ScriptVersion scriptVerIn)
@@ -481,7 +479,6 @@ public:
         std::swap(error, check.error);
         std::swap(txdata, check.txdata);
         std::swap(signingKeyID, check.signingKeyID);
-        std::swap(spendingKeyID, check.spendingKeyID);
         std::swap(scriptVer, check.scriptVer);
     }
 

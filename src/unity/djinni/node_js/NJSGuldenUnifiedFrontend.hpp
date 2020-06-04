@@ -12,26 +12,18 @@
 #include "transaction_record.hpp"
 #include <string>
 
-#include <nan.h>
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <gulden_unified_frontend.hpp>
 
-using namespace v8;
-using namespace node;
 using namespace std;
 
-class NJSGuldenUnifiedFrontend: public ::GuldenUnifiedFrontend {
+class NJSGuldenUnifiedFrontend: public ::GuldenUnifiedFrontend, public Napi::ObjectWrap<NJSGuldenUnifiedFrontend> {
 public:
 
-    static void Initialize(Local<Object> target);
-
-    static Local<Object> wrap(const std::shared_ptr<::GuldenUnifiedFrontend> &object);
-    static Nan::Persistent<ObjectTemplate> GuldenUnifiedFrontend_prototype;
-    ~NJSGuldenUnifiedFrontend()
-    {
-        njs_impl.Reset();
-    };
-    NJSGuldenUnifiedFrontend(Local<Object> njs_implementation){njs_impl.Reset(njs_implementation);};
+    static Napi::FunctionReference constructor;
+    static Napi::Object Init(Napi::Env env, Napi::Object exports);
+    NJSGuldenUnifiedFrontend(const Napi::CallbackInfo& info) : Napi::ObjectWrap<NJSGuldenUnifiedFrontend>(info){};
 
     /**
      * Fraction of work done since session start or last progress reset [0..1]
@@ -67,10 +59,10 @@ private:
      * Fraction of work done since session start or last progress reset [0..1]
      * Unified progress combines connection state, header and block sync
      */
-    static NAN_METHOD(notifyUnifiedProgress);
+    void notifyUnifiedProgress(const Napi::CallbackInfo& info);
     void notifyUnifiedProgress_aimpl__(float progress);
 
-    static NAN_METHOD(notifyBalanceChange);
+    void notifyBalanceChange(const Napi::CallbackInfo& info);
     void notifyBalanceChange_aimpl__(const BalanceRecord & new_balance);
 
     /**
@@ -80,29 +72,26 @@ private:
      * also cases where funds is send from our wallet while !self_committed (for example by a linked desktop wallet
      * or another wallet instance using the same keys as ours).
      */
-    static NAN_METHOD(notifyNewMutation);
+    void notifyNewMutation(const Napi::CallbackInfo& info);
     void notifyNewMutation_aimpl__(const MutationRecord & mutation, bool self_committed);
 
-    static NAN_METHOD(notifyUpdatedTransaction);
+    void notifyUpdatedTransaction(const Napi::CallbackInfo& info);
     void notifyUpdatedTransaction_aimpl__(const TransactionRecord & transaction);
 
-    static NAN_METHOD(notifyInitWithExistingWallet);
+    void notifyInitWithExistingWallet(const Napi::CallbackInfo& info);
     void notifyInitWithExistingWallet_aimpl__();
 
-    static NAN_METHOD(notifyInitWithoutExistingWallet);
+    void notifyInitWithoutExistingWallet(const Napi::CallbackInfo& info);
     void notifyInitWithoutExistingWallet_aimpl__();
 
-    static NAN_METHOD(notifyShutdown);
+    void notifyShutdown(const Napi::CallbackInfo& info);
     void notifyShutdown_aimpl__();
 
-    static NAN_METHOD(notifyCoreReady);
+    void notifyCoreReady(const Napi::CallbackInfo& info);
     void notifyCoreReady_aimpl__();
 
-    static NAN_METHOD(logPrint);
+    void logPrint(const Napi::CallbackInfo& info);
     void logPrint_aimpl__(const std::string & str);
 
-    static NAN_METHOD(New);
-
-    Nan::Persistent<Object> njs_impl;
 };
 #endif //DJINNI_GENERATED_NJSGULDENUNIFIEDFRONTEND_HPP

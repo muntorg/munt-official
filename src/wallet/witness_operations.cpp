@@ -16,7 +16,7 @@
 #include "validation/witnessvalidation.h"
 #include "consensus/consensus.h"
 #include "consensus/validation.h"
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "coincontrol.h"
 #include "net.h"
 #include "alert.h"
@@ -301,44 +301,6 @@ void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* wi
         *pFee = transactionFee;
 }
 
-void upgradewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, std::string* pTxid, CAmount* pFee)
-{
-    if (pwallet == nullptr || witnessAccount == nullptr || fundingAccount == nullptr)
-        throw witness_error(witness::RPC_INVALID_PARAMETER, "Require non-null pwallet, fundingAccount, witnessAccount");
-
-    LOCK2(cs_main, pwallet->cs_wallet);
-
-    if (!IsSegSigEnabled(chainActive.TipPrev()))
-        throw std::runtime_error("Cannot use this command before segsig activates");
-
-    if (pwallet->IsLocked()) {
-        throw std::runtime_error("Wallet locked");
-    }
-
-    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
-    {
-        throw witness_error(witness::RPC_MISC_ERROR, "Cannot split a witness-only account as spend key is required to do this.");
-    }
-
-    std::string strError;
-    CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
-    CReserveKeyOrScript changeReserveKey(pactiveWallet, fundingAccount, KEYCHAIN_EXTERNAL);
-    CAmount transactionFee;
-    pwallet->PrepareUpgradeWitnessAccountTransaction(fundingAccount, witnessAccount, changeReserveKey, tx, transactionFee);
-
-    uint256 upgradeTransactionHash;
-    if (!pwallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &upgradeTransactionHash, SignType::WitnessUpdate))
-    {
-        throw std::runtime_error(strprintf("Failed to sign transaction [%s]", strError.c_str()));
-    }
-
-    // Set result parameters
-    if (pTxid != nullptr)
-        *pTxid = upgradeTransactionHash.GetHex();
-    if (pFee != nullptr)
-        *pFee = transactionFee;
-}
-
 void rotatewitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVector unspentWitnessOutputs, CWallet* pwallet, std::string* pTxid, CAmount* pFee)
 {
     if (unspentWitnessOutputs.size() == 0)
@@ -573,7 +535,7 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
 
     CGetWitnessInfo witnessInfo;
 
-    if (IsPow2Phase3Active(chainActive.Height())) {
+    if (IsPow2Phase5Active(chainActive.Height())) {
         witnessInfo = GetWitnessInfoWrapper();
     }
 
@@ -991,11 +953,14 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
     if (partMin < gMinimumWitnessAmount*COIN)
         partMin = gMinimumWitnessAmount*COIN+1;
 
-    // Divide int parts into 95% of maximum workable amount.
+    // Divide int parts into 96% of maximum workable amount.
     // Leaves some room for:
     // a) leaves some room for entwork weight fluctuatiopns
     // b) leaves some room when total network witness weight changes
-    CAmount partTarget = (95 * partMax) / 100;
+    CAmount partTarget = (96 * partMax) / 100;
+    
+    // Don't divide at all if parts are smaller than this
+    CAmount partTargetMin = (60 * partMax) / 100;
 
     // ensure minimum criterium is met (on mainnet this is not expected to happen)
     if (partTarget < partMin)
@@ -1003,7 +968,7 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
 
     int wholeParts = totalAmount / partTarget;
     
-    if (wholeParts > 0)
+    if (wholeParts > 1)
     {
         CAmount remainder = totalAmount - wholeParts * partTarget;
         CAmount partRemainder = remainder/wholeParts;
@@ -1016,6 +981,12 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
 
         // add any final remainder to first part
         distribution[0] += remainder;
+    }
+    else if (wholeParts == 1 && (totalAmount > partTarget) && (totalAmount / 2 > partTargetMin))
+    {
+        CAmount remainder = totalAmount - (totalAmount/2*2);
+        distribution.push_back((totalAmount/2)+remainder);
+        distribution.push_back(totalAmount/2);
     }
     else
     {

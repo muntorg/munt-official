@@ -23,7 +23,7 @@
 #include "chain.h"
 #include "chainparams.h"
 #include "checkpoints.h"
-#include <Gulden/auto_checkpoints.h>
+#include "auto_checkpoints.h"
 #include "compat/sanity.h"
 #include "consensus/validation.h"
 #include "validation/validation.h"
@@ -54,6 +54,7 @@
 #include "torcontrol.h"
 #include "ui_interface.h"
 #include "util.h"
+#include "guldenutil.h"
 #include "utilmoneystr.h"
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
@@ -307,6 +308,7 @@ void CoreShutdown(boost::thread_group& threadGroup)
     vpwallets.clear();
     MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
     #endif
+    FreeParams();
     globalVerifyHandle.reset();
     ECC_Stop();
     LogPrintf("Core shutdown: done.\n");
@@ -1114,20 +1116,21 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     // After daemonization get the data directory lock again and hold on to it until exit
     // This creates a slight window for a race condition to happen, however this condition is harmless: it
     // will at most make us exit without printing a message to console.
-    if (!LockDataDirectory(false)) {
+    if (!LockDataDirectory(false))
+    {
         // Detailed error printed inside LockDataDirectory
         return false;
     }
 
     //fixme: (SIGMA) Improve.
     // Select optimised algorithms for SIGMA
-    selected_argon2_echo_hash = argon2_echo_ctx_ref;
     selectOptimisedImplementations();
 
 #ifndef WIN32
     CreatePidFile(GetPidFile(), getpid());
 #endif
-    if (GetBoolArg("-shrinkdebugfile", logCategories == BCLog::NONE)) {
+    if (GetBoolArg("-shrinkdebugfile", logCategories == BCLog::NONE))
+    {
         // Do this first since it both loads a bunch of debug.log into memory,
         // and because this needs to happen before any other debug.log printing
         ShrinkDebugFile();
@@ -1146,9 +1149,12 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     InitSignatureCache();
 
     LogPrintf("Using %u threads for script verification\n", nScriptCheckThreads);
-    if (nScriptCheckThreads) {
+    if (nScriptCheckThreads)
+    {
         for (int i=0; i<nScriptCheckThreads-1; i++)
+        {
             threadGroup.create_thread(&ThreadScriptCheck);
+        }
     }
 
     //Gulden - private key for checkpoint system.
@@ -1212,7 +1218,8 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // sanitize comments per BIP-0014, format user agent and check total size
     std::vector<std::string> uacomments;
-    if (gArgs.IsArgSet("-uacomment")) {
+    if (gArgs.IsArgSet("-uacomment"))
+    {
         for(std::string cmt : gArgs.GetArgs("-uacomment"))
         {
             if (cmt != SanitizeString(cmt, SAFE_CHARS_UA_COMMENT))
@@ -1223,28 +1230,34 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     //fixme: (UNITY) - HIGH - Sanitize this in some way or handle this differently (e.g. allow unity to set this but not desktop users via command line)
     strSubVersion = FormatSubVersion(GetArg("-clientname", CLIENT_NAME), CLIENT_VERSION, uacomments);
-    if (strSubVersion.size() > MAX_SUBVERSION_LENGTH) {
+    if (strSubVersion.size() > MAX_SUBVERSION_LENGTH)
+    {
         return InitError(strprintf(errortr("Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments."),
             strSubVersion.size(), MAX_SUBVERSION_LENGTH));
     }
 
-    if (gArgs.IsArgSet("-onlynet")) {
+    if (gArgs.IsArgSet("-onlynet"))
+    {
         std::set<enum Network> nets;
-        for(const std::string& snet : gArgs.GetArgs("-onlynet")) {
+        for(const std::string& snet : gArgs.GetArgs("-onlynet"))
+        {
             enum Network net = ParseNetwork(snet);
             if (net == NET_UNROUTABLE)
                 return InitError(strprintf(errortr("Unknown network specified in -onlynet: '%s'"), snet));
             nets.insert(net);
         }
-        for (int n = 0; n < NET_MAX; n++) {
+        for (int n = 0; n < NET_MAX; n++)
+        {
             enum Network net = (enum Network)n;
             if (!nets.count(net))
                 SetLimited(net);
         }
     }
 
-    if (gArgs.IsArgSet("-whitelist")) {
-        for(const std::string& net : gArgs.GetArgs("-whitelist")) {
+    if (gArgs.IsArgSet("-whitelist"))
+    {
+        for(const std::string& net : gArgs.GetArgs("-whitelist"))
+        {
             CSubNet subnet;
             LookupSubNet(net.c_str(), subnet);
             if (!subnet.IsValid())
@@ -1261,9 +1274,11 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     // -noproxy (or -proxy=0) as well as the empty string can be used to not set a proxy, this is the default
     std::string proxyArg = GetArg("-proxy", "");
     SetLimited(NET_TOR);
-    if (proxyArg != "" && proxyArg != "0") {
+    if (proxyArg != "" && proxyArg != "0")
+    {
         CService proxyAddr;
-        if (!Lookup(proxyArg.c_str(), proxyAddr, 9050, fNameLookup)) {
+        if (!Lookup(proxyArg.c_str(), proxyAddr, 9050, fNameLookup))
+        {
             return InitError(strprintf(errortr("Invalid -proxy address or hostname: '%s'"), proxyArg));
         }
 
@@ -1282,12 +1297,18 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     // -noonion (or -onion=0) disables connecting to .onion entirely
     // An empty string is used to not override the onion proxy (in which case it defaults to -proxy set above, or none)
     std::string onionArg = GetArg("-onion", "");
-    if (onionArg != "") {
-        if (onionArg == "0") { // Handle -noonion/-onion=0
+    if (onionArg != "")
+    {
+        // Handle -noonion/-onion=0
+        if (onionArg == "0")
+        {
             SetLimited(NET_TOR); // set onions as unreachable
-        } else {
+        }
+        else
+        {
             CService onionProxy;
-            if (!Lookup(onionArg.c_str(), onionProxy, 9050, fNameLookup)) {
+            if (!Lookup(onionArg.c_str(), onionProxy, 9050, fNameLookup))
+            {
                 return InitError(strprintf(errortr("Invalid -onion address or hostname: '%s'"), onionArg));
             }
             proxyType addrOnion = proxyType(onionProxy, proxyRandomize);
@@ -1346,8 +1367,10 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         return InitError(errortr("Failed to listen on any port. Use -listen=0 if you want this."));
     }
 
-    if (gArgs.IsArgSet("-externalip")) {
-        for(const std::string& strAddr : gArgs.GetArgs("-externalip")) {
+    if (gArgs.IsArgSet("-externalip"))
+    {
+        for(const std::string& strAddr : gArgs.GetArgs("-externalip"))
+        {
             CService addrLocal;
             if (Lookup(strAddr.c_str(), addrLocal, GetListenPort(), fNameLookup) && addrLocal.IsValid())
                 AddLocal(addrLocal, LOCAL_MANUAL);
@@ -1359,14 +1382,16 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 #if ENABLE_ZMQ
     pzmqNotificationInterface = CZMQNotificationInterface::Create();
 
-    if (pzmqNotificationInterface) {
+    if (pzmqNotificationInterface)
+    {
         RegisterValidationInterface(pzmqNotificationInterface);
     }
 #endif
     uint64_t nMaxOutboundLimit = 0; //unlimited unless -maxuploadtarget is set
     uint64_t nMaxOutboundTimeframe = MAX_UPLOAD_TIMEFRAME;
 
-    if (IsArgSet("-maxuploadtarget")) {
+    if (IsArgSet("-maxuploadtarget"))
+    {
         nMaxOutboundLimit = GetArg("-maxuploadtarget", DEFAULT_MAX_UPLOAD_TARGET)*1024*1024;
     }
 
@@ -1401,7 +1426,8 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     }
 
     bool fLoaded = false;
-    while (!fLoaded) {
+    while (!fLoaded)
+    {
         bool fReset = fReindex;
         std::string strLoadError;
 
@@ -1409,8 +1435,10 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
         nStart = GetTimeMillis();
         bool fullResyncForUpgrade = IsArgSet("-resyncforblockindexupgrade");
-        do {
-            try {
+        do
+        {
+            try
+            {
                 static bool upgradeOnceOnly=true;
                 UnloadBlockIndex();
                 loadblockindex:
@@ -1482,7 +1510,8 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                     }
                 }
 
-                if (!LoadBlockIndex(chainparams)) {
+                if (!LoadBlockIndex(chainparams))
+                {
                     strLoadError = errortr("Error loading block database");
                     break;
                 }
@@ -1524,43 +1553,54 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                     return InitError(_("Incorrect or no genesis block found. Wrong datadir for network?"));
 
                 // Initialize the block index (no-op if non-empty database was already loaded)
-                if (!InitBlockIndex(chainparams)) {
+                if (!InitBlockIndex(chainparams))
+                {
                     strLoadError = errortr("Error initializing block database");
                     break;
                 }
 
                 // Check for changed -txindex state
-                if (fTxIndex != GetBoolArg("-txindex", DEFAULT_TXINDEX)) {
+                if (fTxIndex != GetBoolArg("-txindex", DEFAULT_TXINDEX))
+                {
+                    // Immediately force the arg to match the datadir setting, to prevent accidentally having the value get written into the datadir anywhere else in the code
+                    SoftSetBoolArg("-txindex", fTxIndex);
+
                     strLoadError = errortr("You need to rebuild the database using -reindex-chainstate to change -txindex");
                     break;
                 }
 
                 // Check for changed -prune state.  What we are concerned about is a user who has pruned blocks
                 // in the past, but is now trying to run unpruned.
-                if (fHavePruned && !fPruneMode) {
+                if (fHavePruned && !fPruneMode)
+                {
+                    // Immediately force the arg to match the datadir setting, to prevent accidentally having the value get written into the datadir anywhere else in the code
+                    fPruneMode = fHavePruned;
                     strLoadError = errortr("You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain");
                     break;
                 }
 
-                if (!fReindex && chainActive.Tip() != NULL) {
+                if (!fReindex && chainActive.Tip() != NULL)
+                {
                     uiInterface.InitMessage(_("Rewinding blocks..."));
-                    if (!RewindBlockIndex(chainparams)) {
+                    if (!RewindBlockIndex(chainparams))
+                    {
                         strLoadError = errortr("Unable to rewind the database to a pre-fork state. You will need to redownload the blockchain");
                         break;
                     }
                 }
 
                 uiInterface.InitMessage(_("Verifying blocks..."));
-                if (fHavePruned && GetArg("-checkblocks", DEFAULT_CHECKBLOCKS) > MIN_BLOCKS_TO_KEEP) {
-                    LogPrintf("Prune: pruned datadir may not have more than %d blocks; only checking available blocks",
-                        MIN_BLOCKS_TO_KEEP);
+                if (fHavePruned && GetArg("-checkblocks", DEFAULT_CHECKBLOCKS) > MIN_BLOCKS_TO_KEEP)
+                {
+                    LogPrintf("Prune: pruned datadir may not have more than %d blocks; only checking available blocks", MIN_BLOCKS_TO_KEEP);
                 }
 
                 {
                     LOCK(cs_main);
                     CBlockIndex* tip = chainActive.Tip();
                     RPCNotifyBlockChange(true, tip);
-                    if (tip && tip->nTime > GetAdjustedTime() + 2 * 60 * 60) {
+                    if (tip && tip->nTime > GetAdjustedTime() + 2 * 60 * 60)
+                    {
                         strLoadError = errortr("The block database contains a block which appears to be from the future. "
                                 "This may be due to your computer's date and time being set incorrectly. "
                                 "Only rebuild the block database if you are sure that your computer's date and time are correct");
@@ -1568,12 +1608,14 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                     }
                 }
 
-                if (!CVerifyDB().VerifyDB(chainparams, pcoinsdbview, GetArg("-checklevel", DEFAULT_CHECKLEVEL),
-                              GetArg("-checkblocks", DEFAULT_CHECKBLOCKS))) {
+                if (!CVerifyDB().VerifyDB(chainparams, pcoinsdbview, GetArg("-checklevel", DEFAULT_CHECKLEVEL), GetArg("-checkblocks", DEFAULT_CHECKBLOCKS)))
+                {
                     strLoadError = errortr("Corrupted block database detected");
                     break;
                 }
-            } catch (const std::exception& e) {
+            }
+            catch (const std::exception& e)
+            {
                 LogPrintf("%s\n", e.what());
                 strLoadError = errortr("Error opening block database");
                 break;
@@ -1582,20 +1624,27 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
             fLoaded = true;
         } while(false);
 
-        if (!fLoaded) {
+        if (!fLoaded)
+        {
             // first suggest a reindex
-            if (!fReset) {
+            if (!fReset)
+            {
                 auto fRet = uiInterface.ThreadSafeQuestion(
                     strLoadError + ".\n\n" + errortr("Do you want to rebuild the block database now?"),
                     strLoadError + ".\nPlease restart with -reindex or -reindex-chainstate to recover.",
                     "", CClientUIInterface::MSG_ERROR | CClientUIInterface::BTN_ABORT);
-                if (fRet.value_or(false)) {
+                if (fRet.value_or(false))
+                {
                     fReindex = true;
-                } else {
+                }
+                else
+                {
                     LogPrintf("Aborted block database rebuild. Exiting.\n");
                     return false;
                 }
-            } else {
+            }
+            else
+            {
                 return InitError(strLoadError);
             }
         }

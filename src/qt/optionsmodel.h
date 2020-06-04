@@ -13,8 +13,8 @@
 #define GULDEN_QT_OPTIONSMODEL_H
 
 #include "amount.h"
-#include "_Gulden/ticker.h"
-#include "_Gulden/nockssettings.h"
+#include "ticker.h"
+#include "nockssettings.h"
 
 #include <QAbstractListModel>
 

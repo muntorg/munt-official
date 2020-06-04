@@ -11,15 +11,18 @@ struct UriRecipient final {
     bool valid;
     std::string address;
     std::string label;
+    std::string desc;
     int64_t amount;
 
     UriRecipient(bool valid_,
                  std::string address_,
                  std::string label_,
+                 std::string desc_,
                  int64_t amount_)
     : valid(std::move(valid_))
     , address(std::move(address_))
     , label(std::move(label_))
+    , desc(std::move(desc_))
     , amount(std::move(amount_))
     {}
 };

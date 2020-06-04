@@ -144,73 +144,11 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
             ret.push_back(valtype()); // workaround CHECKMULTISIG bug
         }
         return (SignN(vSolutions, creator, scriptPubKey, ret, sigversion));
-
-    case TX_PUBKEYHASH_POW2WITNESS:
-    {
-        CKeyID spendingKeyID = CKeyID(uint160(vSolutions[0]));
-        CKeyID witnessKeyID = CKeyID(uint160(vSolutions[1]));
-
-        switch(type)
-        {
-            case Spend:
-            {
-                if (!Sign1(spendingKeyID, creator, scriptPubKey, ret, sigversion))
-                    return false;
-                else
-                {
-                    CPubKey vch;
-                    for (const auto& forAccount : creator.accounts())
-                    {
-                        if (forAccount->GetPubKey(spendingKeyID, vch))
-                        {
-                            ret.push_back(ToByteVector(vch));
-                            break;
-                        }
-                    }
-                }
-                if (!Sign1(witnessKeyID, creator, scriptPubKey, ret, sigversion))
-                    return false;
-                else
-                {
-                    CPubKey vch;
-                    for (const auto& forAccount : creator.accounts())
-                    {
-                        if (forAccount->GetPubKey(witnessKeyID, vch))
-                        {
-                            ret.push_back(ToByteVector(vch));
-                            break;
-                        }
-                    }
-                }
-                break;
-            }
-            case WitnessUpdate:
-            {
-                return true;
-                break;
-            }
-            case Witness:
-            {
-                if (!Sign1(witnessKeyID, creator, scriptPubKey, ret, sigversion))
-                    return false;
-                else
-                {
-                    CPubKey vch;
-                    for (const auto& forAccount : creator.accounts())
-                    {
-                        if (forAccount->GetPubKey(witnessKeyID, vch))
-                        {
-                            ret.push_back(ToByteVector(vch));
-                            break;
-                        }
-                    }
-                }
-                break;
-            }
-        }
-        return true;
-    }
-
+    case TX_STANDARD_WITNESS:
+    case TX_STANDARD_PUBKEY_HASH:
+        assert(0);
+        return false;
+        
     default:
         return false;
     }
@@ -236,10 +174,6 @@ static bool SignStep(const BaseSignatureCreator& creator, const CTxOutPoW2Witnes
             if (!Sign1(pow2Witness.spendingKeyID, creator, scriptSignatureDataPlaceholder, ret, SIGVERSION_SEGSIG))
                 return false;
             return true;
-        }
-        case WitnessUpdate:
-        {
-            return false;
         }
         case Witness:
         {
@@ -537,10 +471,6 @@ static Stacks CombineSignatures(const CScript& scriptPubKey, const BaseSignature
         if (sigs1.script.empty() || sigs1.script[0].empty())
             return sigs2;
         return sigs1;
-    case TX_PUBKEYHASH_POW2WITNESS:
-        //fixme: (PHASE5) Key renewal
-        //We need to devise a way to sign with the right key here (both keys if it is a spend, witness key if just witnessing)
-        return sigs1;
     case TX_SCRIPTHASH:
         if (sigs1.script.empty() || sigs1.script.back().empty())
             return sigs2;
@@ -563,6 +493,10 @@ static Stacks CombineSignatures(const CScript& scriptPubKey, const BaseSignature
         }
     case TX_MULTISIG:
         return Stacks(CombineMultisig(scriptPubKey, checker, vSolutions, sigs1.script, sigs2.script, sigversion));
+    case TX_STANDARD_WITNESS:
+    case TX_STANDARD_PUBKEY_HASH:
+        assert(0);
+        break;
     default:
         return Stacks();
     }

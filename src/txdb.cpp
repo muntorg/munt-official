@@ -14,10 +14,10 @@
 
 #include "chainparams.h"
 #include "hash.h"
-#include "pow.h"
+#include "pow/pow.h"
 #include "uint256.h"
 
-#include <Gulden/util.h>
+#include <guldenutil.h>
 #include <stdint.h>
 
 #include <boost/thread.hpp>

@@ -24,7 +24,7 @@
 #include "base58.h"
 
 //Gulden dependencies
-#include "Gulden/util.h"
+#include "guldenutil.h"
 
 bool IsFinalTx(const CTransaction &tx, int nBlockHeight, int64_t nBlockTime)
 {
@@ -277,7 +277,12 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
         if (IsPow2WitnessOutput(txout))
         {
             if ( txout.nValue < (gMinimumWitnessAmount * COIN) )
-                return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d NLG not allowed.", gMinimumWitnessAmount));
+            {
+                if (txout.output.witnessDetails.lockFromBlock != 1)
+                {
+                    return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d NLG not allowed.", gMinimumWitnessAmount));
+                }
+            }
 
             CTxOutPoW2Witness witnessDetails; GetPow2WitnessOutput(txout, witnessDetails);
             uint64_t nUnused1, nUnused2;
@@ -285,12 +290,20 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
             if (nLockLengthInBlocks < int64_t(MinimumWitnessLockLength()))
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for less than minimum of 1 month.");
             if (nLockLengthInBlocks - checkHeight > int64_t(MaximumWitnessLockLength()))
-                return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
+            {
+                if (txout.output.witnessDetails.lockFromBlock != 1)
+                {
+                    return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
+                }
+            }
 
             int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nLockLengthInBlocks);
             if (nWeight < gMinimumWitnessWeight)
             {
-                return state.DoS(10, false, REJECT_INVALID, "PoW² witness has insufficient weight.");
+                if (txout.output.witnessDetails.lockFromBlock != 1)
+                {
+                    return state.DoS(10, false, REJECT_INVALID, "PoW² witness has insufficient weight.");
+                }
             }
         }
     }
@@ -350,27 +363,10 @@ void IncrementWitnessFailCount(uint64_t& failCount)
 
 inline bool HasSpendKey(const CTxIn& input, uint64_t nSpendHeight)
 {
-    //fixme: (PHASE5) - We can remove the top code block here once we are in phase5.
-    if (input.segregatedSignatureData.stack.size() == 0)
-    {
-        // At this point we only need to check here that the scriptSig is push only and that it has 4 items as a result, the rest is checked by later parts of the code.
-        if (!input.scriptSig.IsPushOnly())
-            return false;
-        std::vector<std::vector<unsigned char>> stack;
-        if (!EvalScript(stack, input.scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), SCRIPT_V1))
-        {
-            return false;
-        }
-        if (stack.size() != 4)
-            return false;
-    }
-    else
-    {
-        // At this point we only need to check that there are 2 signatures, spending key and witness key.
-        // The rest is handled by later parts of the code.
-        if (input.segregatedSignatureData.stack.size() != 2)
-            return false;
-    }
+    // At this point we only need to check that there are 2 signatures, spending key and witness key.
+    // The rest is handled by later parts of the code.
+    if (input.segregatedSignatureData.stack.size() != 2)
+        return false;
     return true;
 }
 
@@ -392,8 +388,7 @@ inline bool IsWitnessBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
     //Phase 4, 1 signature - stack will have either 1 or 2 items depending on whether its a script or proper PoW2-witness address.
     if (isOldTransactionVersion)
     {
-        if (input.segregatedSignatureData.stack.size() != 0)
-            return false;
+        return false;
     }
     else
     {
@@ -445,45 +440,7 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight, const CT
     if (inputs[0].second.lockUntilBlock >= nCheckHeight)
         return false;
 
-    //fixme: (PHASE5) - Remove once phase4 fully activated
-    if (inputs[0].second.witnessKeyID == inputs[0].second.spendingKeyID)
-    {
-        if (tx.vout.size() != 1)
-            return false;
-        CTxDestination destIn;
-        if (!ExtractDestination(inputs[0].first, destIn))
-            return false;
-        CTxDestination destOut;
-        if (!ExtractDestination(tx.vout[0], destOut))
-            return false;
-        std::string sDest1 = CGuldenAddress(destIn).ToString();
-        std::string sDest2 = CGuldenAddress(destOut).ToString();
-        if (haveStaticFundingAddress(sDest1, nCheckHeight) <= 0)
-            return false;
-        if (sDest2 != getStaticFundingAddress(sDest1, nCheckHeight))
-            return false;
-    }
-
     return true;
-}
-
-//fixme: (PHASE5) - Remove this check once phase4 is active
-inline bool IsUnSigned(const CTxIn& input)
-{
-    if (input.segregatedSignatureData.stack.size() == 0)
-    {
-        // At this point we only need to check here that the scriptSig is push only and that it has 0 items as a result, the rest is checked by later parts of the code.
-        if (input.scriptSig.IsPushOnly())
-        {
-            std::vector<std::vector<unsigned char>> stack;
-            if (EvalScript(stack, input.scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), SCRIPT_V1))
-            {
-                if (stack.size() == 0)
-                    return true;
-            }
-        }
-    }
-    return false;
 }
 
 /*
@@ -494,51 +451,10 @@ inline bool IsUnSigned(const CTxIn& input)
 */
 inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, const CTxOut& prevOut, const CTxOut& output, uint64_t nInputHeight, uint64_t nSpendHeight)
 {
-    //fixme: (PHASE5) - Remove once all addresses dealt with
-    //Temporary renewal allowance to fix addresses that have identical witness and spending keys.
-    if (nSpendHeight > Params().GetConsensus().pow2Phase4FirstBlockHeight-150)
-    {
-        if (IsUnSigned(input))
-        {
-            if (inputDetails.witnessKeyID == inputDetails.spendingKeyID)
-            {
-                std::string sDest1 = CGuldenAddress(CPoW2WitnessDestination(inputDetails.witnessKeyID, inputDetails.spendingKeyID)).ToString();
-                std::string sDest2 = CGuldenAddress(outputDetails.spendingKeyID).ToString();
-                if (haveStaticFundingAddress(sDest1, nSpendHeight) <= 0)
-                    return false;
-
-                // Amount keys and lock unchanged.
-                if (prevOut.nValue != output.nValue)
-                    return false;
-                // Action nonce always increment
-                if (inputDetails.actionNonce+1 != outputDetails.actionNonce)
-                    return false;
-                if (getStaticFundingAddress(sDest1, nSpendHeight) != sDest2)
-                    return false;
-                if (inputDetails.witnessKeyID != outputDetails.witnessKeyID)
-                    return false;
-                if (inputDetails.lockUntilBlock != outputDetails.lockUntilBlock)
-                    return false;
-                if (!IsLockFromConsistent(inputDetails, outputDetails, nInputHeight))
-                    return false;
-                // Fail count must be incremented appropriately
-                uint64_t compFailCount = inputDetails.failCount;
-                IncrementWitnessFailCount(compFailCount);
-                if (compFailCount == outputDetails.failCount)
-                    return true;
-                return false;
-            }
-        }
-    }
-
     // Needs 2 signature (spending key)
     if (!HasSpendKey(input, nSpendHeight))
     {
-        //fixme: (PHASE5) - This is a temporary check to allow upgrading of phase3 accounts during phase4 - when we reach phase5 this can potentially be removed.
-        if (prevOut.GetType() != CTxOutType::ScriptLegacyOutput || output.GetType() != CTxOutType::PoW2WitnessOutput)
-        {
-            return false;
-        }
+        return false;
     }
 
     // Amount keys and lock unchanged.
@@ -964,12 +880,15 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
     {
         if (IsPow2WitnessOutput(txout))
         {
+            CTxOutPoW2Witness witnessDetails; GetPow2WitnessOutput(txout, witnessDetails);
             if ( txout.nValue < (gMinimumWitnessAmount * COIN) )
             {
-                return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d NLG not allowed.", gMinimumWitnessAmount));
+                if (witnessDetails.lockFromBlock != 1)
+                {
+                    return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d NLG not allowed.", gMinimumWitnessAmount));
+                }
             }
-
-            CTxOutPoW2Witness witnessDetails; GetPow2WitnessOutput(txout, witnessDetails);
+            
             uint64_t nUnused1, nUnused2;
             int64_t nLockLengthInBlocks = GetPoW2LockLengthInBlocksFromOutput(txout, nSpendHeight, nUnused1, nUnused2);
             if (nLockLengthInBlocks < int64_t(MinimumWitnessLockLength()))
@@ -978,13 +897,19 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
             }
             if (nLockLengthInBlocks - nSpendHeight > int64_t(MaximumWitnessLockLength()))
             {
-                return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
+                if (witnessDetails.lockFromBlock != 1)
+                {
+                    return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
+                }
             }
 
             int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nLockLengthInBlocks);
             if (nWeight < gMinimumWitnessWeight)
             {
-                return state.DoS(10, false, REJECT_INVALID, "PoW² witness has insufficient weight.");
+                if (witnessDetails.lockFromBlock != 1)
+                {
+                    return state.DoS(10, false, REJECT_INVALID, "PoW² witness has insufficient weight.");
+                }
             }
 
             if (tx.IsPoW2WitnessCoinBase())

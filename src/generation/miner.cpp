@@ -24,14 +24,14 @@
 #include "consensus/tx_verify.h"
 #include "consensus/merkle.h"
 #include "consensus/validation.h"
-#include "Gulden/auto_checkpoints.h"
+#include "auto_checkpoints.h"
 #include "hash.h"
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
 #include "net.h"
 #include "policy/feerate.h"
 #include "policy/policy.h"
-#include "pow.h"
+#include "pow/pow.h"
 #include "primitives/transaction.h"
 #include "script/standard.h"
 #include "timedata.h"
@@ -45,9 +45,9 @@
 #include <queue>
 #include <utility>
 
-#include <Gulden/Common/diff.h>
-#include <Gulden/Common/hash/hash.h>
-#include <Gulden/util.h>
+#include <pow/diff.h>
+#include <crypto/hash/hash.h>
+#include <guldenutil.h>
 #include <openssl/sha.h>
 
 #include <boost/thread.hpp>
@@ -314,7 +314,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
 
     int nParentPoW2Phase = GetPoW2Phase(pParent);
     int nGrandParentPoW2Phase = GetPoW2Phase(pParent->pprev);
-    bool bSegSigIsEnabled = IsSegSigEnabled(pParent);
+    bool bSegSigIsEnabled = IsSegSigEnabled(pParent->pprev?pParent->pprev:pParent);
 
     //Until PoW2 activates mining subsidy remains full, after it activates PoW part of subsidy is reduced.
     //fixme: (PHASE5) (CLEANUP) - We can remove this after phase4 becomes active.
@@ -373,7 +373,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         // -promiscuousmempoolflags is used.
         // TODO: replace this with a call to main to assess validity of a mempool
         // transaction (which in most cases can be a no-op).
-        fIncludeSegSig = IsSegSigEnabled(pParent) && fMineSegSig;
+        fIncludeSegSig = bSegSigIsEnabled && fMineSegSig;
 
         // If we are mining below the tip (orphaned tip due to absent witness) - it is desirable to include first all transactions that are in the tip.
         // If we do not do this we can end up creating invalid blocks, due to the fact that we don't rewind the mempool here
@@ -879,15 +879,8 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
 //
 bool ProcessBlockFound(const std::shared_ptr<const CBlock> pblock, const CChainParams& chainparams)
 {
-    CBlockIndex* pChainTip = nullptr;
-    {
-        LOCK(cs_main);
-        pChainTip = chainActive.Tip();
-    }
-    int nPoW2PhaseTip = GetPoW2Phase(pChainTip);
-    int nPoW2PhasePrev = GetPoW2Phase(pChainTip->pprev);
     LogPrintf("%s\n", pblock->ToString());
-    LogPrintf("Generated: hash=%s hashpow2=%s amt=%s [PoW2 phase: tip=%d tipprevious=%d]\n", pblock->GetHashLegacy().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue), nPoW2PhaseTip, nPoW2PhasePrev);
+    LogPrintf("Generated: hash=%s hashpow2=%s amt=%s\n", pblock->GetHashLegacy().ToString(), pblock->GetHashPoW2().ToString(), FormatMoney(pblock->vtx[0]->vout[0].nValue));
 
     //fixme: (POST-PHASE5) we should avoid submitting stale blocks here
     //but only if they are really stale (there are cases where we want to mine not on the tip (stalled chain)

@@ -25,26 +25,22 @@
 #include <string>
 #include <vector>
 
-#include <nan.h>
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <gulden_unified_backend.hpp>
 
-using namespace v8;
-using namespace node;
 using namespace std;
 
-class NJSGuldenUnifiedBackend final {
+class NJSGuldenUnifiedBackend: public Napi::ObjectWrap<NJSGuldenUnifiedBackend> {
 public:
 
-    static void Initialize(Local<Object> target);
-    NJSGuldenUnifiedBackend() = delete;
-
-    static Local<Object> wrap(const std::shared_ptr<::GuldenUnifiedBackend> &object);
-    static Nan::Persistent<ObjectTemplate> GuldenUnifiedBackend_prototype;
+    static Napi::FunctionReference constructor;
+    static Napi::Object Init(Napi::Env env, Napi::Object exports);
+    NJSGuldenUnifiedBackend(const Napi::CallbackInfo& info) : Napi::ObjectWrap<NJSGuldenUnifiedBackend>(info){};
 
 private:
     /** Get the build information (ie. commit id and status) */
-    static NAN_METHOD(BuildInfo);
+    Napi::Value BuildInfo(const Napi::CallbackInfo& info);
 
     /**
      * Start the library
@@ -52,122 +48,122 @@ private:
      * NB!!! This call blocks until the library is terminated, it is the callers responsibility to place it inside a thread or similar.
      * If you are in an environment where this is not possible (node.js for example use InitUnityLibThreaded instead which places it in a thread on your behalf)
      */
-    static NAN_METHOD(InitUnityLib);
+    Napi::Value InitUnityLib(const Napi::CallbackInfo& info);
 
     /** Threaded implementation of InitUnityLib */
-    static NAN_METHOD(InitUnityLibThreaded);
+    void InitUnityLibThreaded(const Napi::CallbackInfo& info);
 
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
-    static NAN_METHOD(InitWalletFromRecoveryPhrase);
+    Napi::Value InitWalletFromRecoveryPhrase(const Napi::CallbackInfo& info);
 
     /** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
-    static NAN_METHOD(ContinueWalletFromRecoveryPhrase);
+    Napi::Value ContinueWalletFromRecoveryPhrase(const Napi::CallbackInfo& info);
 
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
-    static NAN_METHOD(InitWalletLinkedFromURI);
+    Napi::Value InitWalletLinkedFromURI(const Napi::CallbackInfo& info);
 
     /** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */
-    static NAN_METHOD(ContinueWalletLinkedFromURI);
+    Napi::Value ContinueWalletLinkedFromURI(const Napi::CallbackInfo& info);
 
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
-    static NAN_METHOD(InitWalletFromAndroidLegacyProtoWallet);
+    Napi::Value InitWalletFromAndroidLegacyProtoWallet(const Napi::CallbackInfo& info);
 
     /** Check if a file is a valid legacy proto wallet */
-    static NAN_METHOD(isValidAndroidLegacyProtoWallet);
+    Napi::Value isValidAndroidLegacyProtoWallet(const Napi::CallbackInfo& info);
 
     /** Check link URI for validity */
-    static NAN_METHOD(IsValidLinkURI);
+    Napi::Value IsValidLinkURI(const Napi::CallbackInfo& info);
 
     /** Replace the existing wallet accounts with a new one from a linked URI - only after first emptying the wallet. */
-    static NAN_METHOD(ReplaceWalletLinkedFromURI);
+    Napi::Value ReplaceWalletLinkedFromURI(const Napi::CallbackInfo& info);
 
     /**
      * Erase the seeds and accounts of a wallet leaving an empty wallet (with things like the address book intact)
      * After calling this it will be necessary to create a new linked account or recovery phrase account again.
      * NB! This will empty a wallet regardless of whether it has funds in it or not and makes no provisions to check for this - it is the callers responsibility to ensure that erasing the wallet is safe to do in this regard.
      */
-    static NAN_METHOD(EraseWalletSeedsAndAccounts);
+    Napi::Value EraseWalletSeedsAndAccounts(const Napi::CallbackInfo& info);
 
     /**
      * Check recovery phrase for (syntactic) validity
      * Considered valid if the contained mnemonic is valid and the birth-number is either absent or passes Base-10 checksum
      */
-    static NAN_METHOD(IsValidRecoveryPhrase);
+    Napi::Value IsValidRecoveryPhrase(const Napi::CallbackInfo& info);
 
     /** Generate a new recovery mnemonic */
-    static NAN_METHOD(GenerateRecoveryMnemonic);
+    Napi::Value GenerateRecoveryMnemonic(const Napi::CallbackInfo& info);
 
     /** Compute recovery phrase with birth number */
-    static NAN_METHOD(ComposeRecoveryPhrase);
+    Napi::Value ComposeRecoveryPhrase(const Napi::CallbackInfo& info);
 
     /** Stop the library */
-    static NAN_METHOD(TerminateUnityLib);
+    void TerminateUnityLib(const Napi::CallbackInfo& info);
 
     /** Generate a QR code for a string, QR code will be as close to width_hint as possible when applying simple scaling. */
-    static NAN_METHOD(QRImageFromString);
+    Napi::Value QRImageFromString(const Napi::CallbackInfo& info);
 
     /** Get a receive address from the wallet */
-    static NAN_METHOD(GetReceiveAddress);
+    Napi::Value GetReceiveAddress(const Napi::CallbackInfo& info);
 
     /** Get the recovery phrase for the wallet */
-    static NAN_METHOD(GetRecoveryPhrase);
+    Napi::Value GetRecoveryPhrase(const Napi::CallbackInfo& info);
 
     /** Check if the wallet is using a mnemonic seed ie. recovery phrase (else it is a linked wallet) */
-    static NAN_METHOD(IsMnemonicWallet);
+    Napi::Value IsMnemonicWallet(const Napi::CallbackInfo& info);
 
     /** Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time) */
-    static NAN_METHOD(IsMnemonicCorrect);
+    Napi::Value IsMnemonicCorrect(const Napi::CallbackInfo& info);
 
     /** Unlock wallet */
-    static NAN_METHOD(UnlockWallet);
+    Napi::Value UnlockWallet(const Napi::CallbackInfo& info);
 
     /** Forcefully lock wallet again */
-    static NAN_METHOD(LockWallet);
+    Napi::Value LockWallet(const Napi::CallbackInfo& info);
 
     /** Change the waller password */
-    static NAN_METHOD(ChangePassword);
+    Napi::Value ChangePassword(const Napi::CallbackInfo& info);
 
     /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
-    static NAN_METHOD(HaveUnconfirmedFunds);
+    Napi::Value HaveUnconfirmedFunds(const Napi::CallbackInfo& info);
 
     /** Check current wallet balance (including unconfirmed funds) */
-    static NAN_METHOD(GetBalance);
+    Napi::Value GetBalance(const Napi::CallbackInfo& info);
 
     /** Rescan blockchain for wallet transactions */
-    static NAN_METHOD(DoRescan);
+    void DoRescan(const Napi::CallbackInfo& info);
 
     /** Check if text/address is something we are capable of sending money too */
-    static NAN_METHOD(IsValidRecipient);
+    Napi::Value IsValidRecipient(const Napi::CallbackInfo& info);
 
     /** Compute the fee required to send amount to given recipient */
-    static NAN_METHOD(feeForRecipient);
+    Napi::Value feeForRecipient(const Napi::CallbackInfo& info);
 
     /** Attempt to pay a recipient, will throw on failure with description */
-    static NAN_METHOD(performPaymentToRecipient);
+    Napi::Value performPaymentToRecipient(const Napi::CallbackInfo& info);
 
     /** Get list of all transactions wallet has been involved in */
-    static NAN_METHOD(getTransactionHistory);
+    Napi::Value getTransactionHistory(const Napi::CallbackInfo& info);
 
     /**
      * Get the wallet transaction for the hash
      * Will throw if not found
      */
-    static NAN_METHOD(getTransaction);
+    Napi::Value getTransaction(const Napi::CallbackInfo& info);
 
     /** Get list of wallet mutations */
-    static NAN_METHOD(getMutationHistory);
+    Napi::Value getMutationHistory(const Napi::CallbackInfo& info);
 
     /** Get list of all address book entries */
-    static NAN_METHOD(getAddressBookRecords);
+    Napi::Value getAddressBookRecords(const Napi::CallbackInfo& info);
 
     /** Add a record to the address book */
-    static NAN_METHOD(addAddressBookRecord);
+    void addAddressBookRecord(const Napi::CallbackInfo& info);
 
     /** Delete a record from the address book */
-    static NAN_METHOD(deleteAddressBookRecord);
+    void deleteAddressBookRecord(const Napi::CallbackInfo& info);
 
     /** Interim persist and prune of state. Use at key moments like app backgrounding. */
-    static NAN_METHOD(PersistAndPruneForSPV);
+    void PersistAndPruneForSPV(const Napi::CallbackInfo& info);
 
     /**
      * Reset progress notification. In cases where there has been no progress for a long time, but the process
@@ -175,24 +171,21 @@ private:
      * For example when the process is in the background on iOS for a long long time (but has not been terminated
      * by the OS) this might make more sense then to continue the progress from where it was a day or more ago.
      */
-    static NAN_METHOD(ResetUnifiedProgress);
+    void ResetUnifiedProgress(const Napi::CallbackInfo& info);
 
     /** Get connected peer info */
-    static NAN_METHOD(getPeers);
+    Napi::Value getPeers(const Napi::CallbackInfo& info);
 
     /** Get info of last blocks (at most 32) in SPV chain */
-    static NAN_METHOD(getLastSPVBlockInfos);
+    Napi::Value getLastSPVBlockInfos(const Napi::CallbackInfo& info);
 
-    static NAN_METHOD(getUnifiedProgress);
+    Napi::Value getUnifiedProgress(const Napi::CallbackInfo& info);
 
-    static NAN_METHOD(getMonitoringStats);
+    Napi::Value getMonitoringStats(const Napi::CallbackInfo& info);
 
-    static NAN_METHOD(RegisterMonitorListener);
+    void RegisterMonitorListener(const Napi::CallbackInfo& info);
 
-    static NAN_METHOD(UnregisterMonitorListener);
+    void UnregisterMonitorListener(const Napi::CallbackInfo& info);
 
-    static NAN_METHOD(New);
-
-    static NAN_METHOD(isNull);
 };
 #endif //DJINNI_GENERATED_NJSGULDENUNIFIEDBACKEND_HPP

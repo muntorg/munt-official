@@ -13,7 +13,7 @@
 #include "consensus/params.h"
 
 //Gulden
-#include "Gulden/util.h"
+#include "guldenutil.h"
 #include "validation/validation.h"
 
 const struct VBDeploymentInfo VersionBitsDeploymentInfo[Consensus::MAX_VERSION_BITS_DEPLOYMENTS] = {

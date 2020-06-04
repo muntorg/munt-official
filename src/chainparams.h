@@ -17,6 +17,7 @@
 #include "consensus/params.h"
 #include "primitives/block.h"
 #include "protocol.h"
+#include "key.h"
 
 #include <memory>
 #include <vector>
@@ -94,6 +95,15 @@ public:
 
     //fixme: (testnet) remove after official testnet restarted
     bool IsOfficialTestnetV1() const { return fIsOfficialTestnetV1; }
+    
+    // Testnet only variable (allow anyone to witness using genesis witness accounts)
+    CKey genesisWitnessPrivKey;
+    // Testnet only variable - specify number of 'genesis witness' accounts to create
+    uint32_t numGenesisWitnesses=0;
+    // Testnet only variable - specify how much each individual 'genesis witness' should be in terms of network weight
+    // NB! This is used as a divisor of the network weight. So '100' == 1% of network weight per account, with 'numGenesisWitnesses' of 10 this would result in 10% total over all accounts
+    uint32_t genesisWitnessWeightDivisor=0;
+    
 protected:
     CChainParams();
 
@@ -135,6 +145,11 @@ const CChainParams &Params();
  * @throws std::runtime_error when the chain is not supported.
  */
 void SelectParams(const std::string& chain);
+
+/**
+ * Free any globally stored chain params for app shutdown
+ */
+void FreeParams();
 
 /**
  * Allows modifying the Version Bits regtest parameters.

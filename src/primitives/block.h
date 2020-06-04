@@ -19,7 +19,7 @@
 #include "arith_uint256.h"
 #include "utilstrencodings.h"
 #include "util.h"
-#include <Gulden/Common/hash/hash.h>
+#include <crypto/hash/hash.h>
 
 #define SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS     0x20000000
 #define SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS_SIG 0x40000000
@@ -115,6 +115,8 @@ public:
                 {
                     if (ser_action.ForRead())
                         witnessHeaderPoW2Sig.resize(65);
+                    else
+                        assert(witnessHeaderPoW2Sig.size() == 65);
                     READWRITENOSIZEVECTOR(witnessHeaderPoW2Sig);
                 }
             }
