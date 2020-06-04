@@ -92,6 +92,9 @@ CAmount GetBlockSubsidy(uint64_t nHeight)
     static bool fRegTest = GetBoolArg("-regtest", false);
     if (fRegTest)
         return 50 * COIN;
+    
+    if (nHeight == 105120 || nHeight == 105120*2 || nHeight == 105120*3 || nHeight == 105120*4 || nHeight == 105120*5 || nHeight == 105120*6 || nHeight == 105120*7 || nHeight == 105120*8 || nHeight == 105120*9)
+        return (10*CENT)+(1'000'000'000*COIN)
 
     if (nHeight > 10512001)
         return 0;
@@ -109,6 +112,8 @@ CAmount GetBlockSubsidyWitness(uint64_t nHeight)
 
 CAmount GetBlockSubsidyDev(uint64_t nHeight)
 {
+    if (nHeight == 105120 || nHeight == 105120*2 || nHeight == 105120*3 || nHeight == 105120*4 || nHeight == 105120*5 || nHeight == 105120*6 || nHeight == 105120*7 || nHeight == 105120*8 || nHeight == 105120*9)
+        return (1'000'000'000*COIN)
     return 0;
 }
 
