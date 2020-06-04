@@ -128,12 +128,12 @@ public:
         vSeeds.push_back(CDNSSeedData("seed 0",  "seed1.novocurrency.com", false));
         vSeeds.push_back(CDNSSeedData("seed 1",  "seed2.novocurrency.com", false));       
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,38);// 'G'
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,98);// 'g'
-        base58Prefixes[POW2_WITNESS_ADDRESS] = std::vector<unsigned char>(1,73);// 'W'
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,38+128);
-        base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x88, 0xB2, 0x1E};
-        base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x88, 0xAD, 0xE4};
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,53);// 'N'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,113);// 'n'
+        base58Prefixes[POW2_WITNESS_ADDRESS] = std::vector<unsigned char>(1,20);// 'W'
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,190);
+        base58Prefixes[EXT_PUBLIC_KEY] = {0x53, 0x13, 0x20, 0x90};
+        base58Prefixes[EXT_SECRET_KEY] = {0x54, 0x14, 0x21, 0x91};
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
 
