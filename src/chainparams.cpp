@@ -125,11 +125,8 @@ public:
         assert(consensus.hashGenesisBlock == uint256S("0x6c5d71a461b5bff6742bb62e5be53978b8dec5103ce52d1aaab8c6a251582f92"));
         assert(genesis.hashMerkleRoot == uint256S("0x4bed0bcb3e6097445ae68d455137625bb66f0e7ba06d9db80290bf72e3d6dcf8"));
 
-        vSeeds.push_back(CDNSSeedData("seed 0",  "seed.gulden.com", false));
-        vSeeds.push_back(CDNSSeedData("seed 1",  "amsterdam.gulden.com", false));
-        vSeeds.push_back(CDNSSeedData("seed 2",  "rotterdam.gulden.network", false));
-        //vSeeds.push_back(CDNSSeedData("seed 3",  "seed.gulden.network"));
-        //vSeeds.push_back(CDNSSeedData("seed 4",  "seed.gulden.blue"));
+        vSeeds.push_back(CDNSSeedData("seed 0",  "seed1.novocurrency.com", false));
+        vSeeds.push_back(CDNSSeedData("seed 1",  "seed2.novocurrency.com", false));       
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,38);// 'G'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,98);// 'g'
