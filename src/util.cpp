@@ -97,8 +97,8 @@
 #include <openssl/conf.h>
 
 
-const char * const GULDEN_CONF_FILENAME = "Gulden.conf";
-const char * const GULDEN_PID_FILENAME = "GuldenD.pid";
+const char * const GULDEN_CONF_FILENAME = "novo.conf";
+const char * const GULDEN_PID_FILENAME = "novo.pid";
 
 ArgsManager gArgs;
 bool fPrintToConsole = false;
