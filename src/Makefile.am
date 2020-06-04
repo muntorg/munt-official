@@ -128,7 +128,6 @@ GULDEN_CORE_H = rpc/rpcgulden.h \
   crypto/hash/cityconfig.h \
   wallet/mnemonic.h \
   guldenutil.h \
-  auto_checkpoints.h \
   wallet/guldenwallet.h \
   LRUCache/LRUCache11.hpp \
   alert.h \
@@ -285,7 +284,6 @@ libgulden_node_a_SOURCES = \
   addrdb.cpp \
   addrman.cpp \
   alert.cpp \
-  auto_checkpoints.cpp \
   bloom.cpp \
   blockencodings.cpp \
   blockstore.cpp \

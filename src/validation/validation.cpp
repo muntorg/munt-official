@@ -19,7 +19,6 @@
 #include "chain.h"
 #include "chainparams.h"
 #include "checkpoints.h"
-#include "auto_checkpoints.h"
 #include "checkqueue.h"
 #include "consensus/consensus.h"
 #include "consensus/merkle.h"
@@ -2680,27 +2679,6 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
     return true;
 }
 
-static bool CheckIndexAgainstCheckpoint(const CBlockIndex* pindexPrev, CValidationState& state, const CChainParams& chainparams, const uint256& hash)
-{
-    if (*pindexPrev->phashBlock == chainparams.GetConsensus().hashGenesisBlock)
-        return true;
-
-    int nHeight = pindexPrev->nHeight+1;
-    // Gulden: check that the block satisfies synchronized checkpoint
-    if (!Checkpoints::CheckSync(hash, pindexPrev))
-        return error("AcceptBlock() : rejected by synchronized checkpoint");
-
-
-    // Don't accept any forks from the main chain prior to last checkpoint.
-    // GetLastCheckpoint finds the last checkpoint in MapCheckpoints that's in our
-    // MapBlockIndex.
-    CBlockIndex* pcheckpoint = Checkpoints::GetLastCheckpointIndex();
-    if (pcheckpoint && nHeight < pcheckpoint->nHeight)
-        return state.DoS(100, error("%s: forked chain older than last checkpoint (height %d)", __func__, nHeight), REJECT_CHECKPOINT, "bad-fork-prior-to-checkpoint");
-
-    return true;
-}
-
 // We go for a cheap check here, instead of checking for phase 4 (which can be expensive and lead to problems) 
 // We instead just check if the previous block is a witness block (if it is we are in phase 4 as this isn't allowed in other phases.
 bool IsSegSigEnabled(const CBlockIndex* pindexPrev)
@@ -2976,8 +2954,6 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
             return state.DoS(100, error("%s: prev block invalid", __func__), REJECT_INVALID, "bad-prevblk");
 
         assert(pindexPrev);
-        if (fCheckpointsEnabled && !CheckIndexAgainstCheckpoint(pindexPrev, state, chainparams, hash))
-            return error("%s: CheckIndexAgainstCheckpoint(): %s, %s", __func__, hash.ToString(), state.GetRejectReason().c_str());
 
         // do context check if block header connects to the full tree or when we have at least the required amount of partial tree available
         bool doContextCheck = pindexPrev->IsValid(BLOCK_VALID_TREE) || ((pindexPrev->IsPartialValid(BLOCK_PARTIAL_TREE)) && pindexPrev->nHeight - partialChain.HeightOffset() > 576);
@@ -3160,16 +3136,6 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
             return error("%s: ActivateBestChain failed", __func__);
     }
 
-    if (!IsInitialBlockDownload())
-    {
-        // Gulden: if responsible for sync-checkpoint send it
-        if (!CSyncCheckpoint::strMasterPrivKey.empty())
-            Checkpoints::SendSyncCheckpoint(Checkpoints::AutoSelectSyncCheckpoint(), chainparams);
-
-        // Gulden: check pending sync-checkpoint
-        Checkpoints::AcceptPendingSyncCheckpoint(chainparams);
-    }
-
     CheckAndNotifyHeaderTip();
 
     return true;
@@ -3181,9 +3147,6 @@ bool TestBlockValidity(CChain& chain, CValidationState& state, const CChainParam
 
     if(!pindexPrev || pindexPrev != chain.Tip())
         return false;
-
-    if (fCheckpointsEnabled && !CheckIndexAgainstCheckpoint(pindexPrev, state, chainparams, block.GetHashPoW2()))
-        return error("%s: CheckIndexAgainstCheckpoint(): %s", __func__, state.GetRejectReason().c_str());
 
     CCoinsViewCache viewNew(cacheOverride?cacheOverride:pcoinsTip);
     CBlockIndex indexDummy(block);
@@ -3636,16 +3599,6 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
 
     PruneBlockIndexCandidates();
 
-    //Temporary code to clean up old checkpoints database - We can remove this in future versions
-    if ( fs::exists(GetDataDir() / "checkpoints") )
-    {
-        fs::remove_all( GetDataDir() / "checkpoints" );
-    }
-
-    // Gulden: load hashSyncCheckpoint
-    Checkpoints::ReadSyncCheckpoint(Checkpoints::hashSyncCheckpoint);
-    LogPrintf("LoadBlockIndexDB(): using synchronized checkpoint %s\n", Checkpoints::hashSyncCheckpoint.ToString().c_str());
-
     LogPrintf("%s: hashBestChain=%s height=%d date=%s progress=%f\n", __func__,
         chainActive.Tip()->GetBlockHashPoW2().ToString(), chainActive.Height(),
         DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
@@ -3921,24 +3874,6 @@ bool InitBlockIndex(const CChainParams& chainparams)
             CBlockIndex *pindex = AddToBlockIndex(chainparams, block);
             if (!ReceivedBlockTransactions(block, state, pindex, blockPos, chainparams.GetConsensus()))
                 return error("LoadBlockIndex(): genesis block not accepted");
-
-            // Gulden: initialize synchronized checkpoint
-            if (!Checkpoints::WriteSyncCheckpoint(Params().GenesisBlock().GetHashLegacy()))
-                return error("LoadBlockIndex() : failed to init sync checkpoint");
-            std::string strPubKey;
-            std::string strPubKeyComp = IsArgSet("-testnet") ? CSyncCheckpoint::strMasterPubKeyTestnet : CSyncCheckpoint::strMasterPubKey;
-            if (chainparams.UseSyncCheckpoints())
-            {
-                if (!Checkpoints::ReadCheckpointPubKey(strPubKey) || strPubKey != strPubKeyComp)
-                {
-                    // write checkpoint master key to db
-                    if (!Checkpoints::WriteCheckpointPubKey(strPubKeyComp))
-                        return error("LoadBlockIndex() : failed to write new checkpoint master key to db");
-                    if (!Checkpoints::ResetSyncCheckpoint(chainparams))
-                        return error("LoadBlockIndex() : failed to reset sync-checkpoint");
-                }
-            }
-            LogPrintf("Wrote sync checkpoint...\n");
 
             // Force a chainstate write so that when we VerifyDB in a moment, it doesn't check stale data
             return FlushStateToDisk(chainparams, state, FLUSH_STATE_ALWAYS);

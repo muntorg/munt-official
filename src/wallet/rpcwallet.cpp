@@ -34,7 +34,6 @@
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h"
 #include "script/ismine.h"
-#include "auto_checkpoints.h"
 
 #include <stdint.h>
 
@@ -1546,12 +1545,6 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
     std::list<COutputEntry> listReceived;
     std::list<COutputEntry> listSent;
 
-    // If rpconlylistsecuredtransactions is present then only include if tx is secured by a checkpoint
-    bool securedTransaction = (Checkpoints::IsSecuredBySyncCheckpoint(wtx.hashBlock));
-    //fixme:(PHASE5) Remove after checkpointing is gone (once phase4 is active)
-    if (!ignorerpconlylistsecuredtransactions && GetBoolArg("-rpconlylistsecuredtransactions", true) && !securedTransaction && !IsArgSet("-testnet") && !IsArgSet("-regtest") )
-        return;
-
     std::vector<CAccount*> doForAccounts;
     if (strAccount == std::string("*"))
     {
@@ -1595,7 +1588,6 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
                 }
                 entry.push_back(Pair("vout", s.vout));
                 entry.push_back(Pair("fee", ValueFromAmount(-nFee)));
-                entry.push_back(Pair("secured_by_checkpoint",securedTransaction?"yes":"no"));
                 if (fLong)
                     WalletTxToJSON(wtx, entry);
                 entry.push_back(Pair("abandoned", wtx.isAbandoned()));
@@ -1633,7 +1625,6 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
                     entry.push_back(Pair("label", account));
                 }
                 entry.push_back(Pair("vout", r.vout));
-                entry.push_back(Pair("secured_by_checkpoint",securedTransaction?"yes":"no"));
                 if (fLong)
                     WalletTxToJSON(wtx, entry);
                 ret.push_back(entry);

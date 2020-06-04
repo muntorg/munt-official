@@ -93,11 +93,17 @@ CAmount GetBlockSubsidy(uint64_t nHeight)
     if (fRegTest)
         return 50 * COIN;
 
+    if (nHeight > 10512001)
+        return 0;
+
     return 10*CENT;
 }
 
 CAmount GetBlockSubsidyWitness(uint64_t nHeight)
 {
+    if (nHeight > 10512001)
+        return 0;
+
     return 4*CENT;
 }
 

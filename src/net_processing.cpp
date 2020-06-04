@@ -41,7 +41,6 @@
 
 #include "alert.h"
 #include "checkpoints.h"
-#include "auto_checkpoints.h"
 
 #include <boost/foreach.hpp>
 
@@ -721,9 +720,6 @@ bool FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
                         auto resetIndex = mapBlockIndex.find(pindex->GetBlockHashPoW2());
                         if (resetIndex != mapBlockIndex.end())
                         {
-                            // Reset sync checkpoints just in case.
-                            Checkpoints::hashSyncCheckpoint = uint256();
-                            Checkpoints::hashInvalidCheckpoint = uint256();
                             // Reset block failiure flags and give it another chance
                             ResetBlockFailureFlags(resetIndex->second);
                             // Only do this once though
@@ -1886,43 +1882,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             }
         }
     }
-
-    else if (strCommand == NetMsgType::CHECKPOINT)
-    {
-        if (!IsInitialBlockDownload())
-        {
-            CSyncCheckpoint checkpoint;
-            vRecv >> checkpoint;
-
-            if (checkpoint.ProcessSyncCheckpoint(pfrom, chainparams))
-            {
-                // Relay
-                pfrom->hashCheckpointKnown = checkpoint.hashCheckpoint;
-                g_connman->ForEachNode([checkpoint](CNode* pnode)
-                {
-                    checkpoint.RelayTo(pnode);
-                }); 
-            }
-        }
-    }
     
-    else if (strCommand == NetMsgType::CHECKPOINT_INVALIDATE)
-    {
-        CSyncCheckpointInvalidate invalidate;
-        vRecv >> invalidate;
-
-        if (invalidate.Process(pfrom, chainparams))
-        {
-            // Relay
-            pfrom->hashInvalidateKnown = invalidate.hashInvalidate;
-            g_connman->ForEachNode([invalidate](CNode* pnode)
-            {
-                invalidate.RelayTo(pnode);
-            }); 
-        }
-    }
-
-
     else if (pfrom->nVersion == 0)
     {
         // Must have a version message before anything else

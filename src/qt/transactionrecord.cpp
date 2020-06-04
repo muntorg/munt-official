@@ -13,9 +13,9 @@
 
 #include "base58.h"
 #include "consensus/consensus.h"
+#include "consensus/validation.h"
 #include "validation/validation.h"
 #include "timedata.h"
-#include "auto_checkpoints.h"
 #include "wallet/wallet.h"
 #include "wallet/account.h"
 #include "script/ismine.h"
@@ -902,9 +902,7 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
             if (wtx.isAbandoned())
                 status.status = TransactionStatus::Abandoned;
         }
-        //fixme: (PHASE5) (CHECKPOINTS)- Remove this when we remove checkpoints.
-        else if (   status.depth < RecommendedNumConfirmations
-                 || (!IsArgSet("-testnet") && !IsPartialSyncActive() && !Checkpoints::IsSecuredBySyncCheckpoint(wtx.hashBlock)))
+        else if ( status.depth < RecommendedNumConfirmations || (!IsArgSet("-testnet") && !IsPartialSyncActive() ))
         {
             status.status = TransactionStatus::Confirming;
         }
