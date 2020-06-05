@@ -463,7 +463,7 @@ public:
                 consensus.devBlockSubsidyActivationHeight=528750;
                 consensus.pow2Phase4FirstBlockHeight=528762;
                 consensus.pow2Phase5FirstBlockHeight=528762;
-                consensus.deltaV3ActivationTime=1591372800;
+                consensus.deltaV3ActivationTime=1591624800;
 
                 genesis = CreateGenesisBlock(seedTimestamp, 0, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
                 genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
