@@ -465,13 +465,13 @@ void PrintExceptionContinue(const std::exception* pex, const char* pszThread)
 
 fs::path GetDefaultDataDir()
 {
-    // Windows < Vista: C:\Documents and Settings\Username\Application Data\Gulden
-    // Windows >= Vista: C:\Users\Username\AppData\Roaming\Gulden
-    // Mac: ~/Library/Application Support/Gulden
-    // Unix: ~/.Gulden
+    // Windows < Vista: C:\Documents and Settings\Username\Application Data\novo
+    // Windows >= Vista: C:\Users\Username\AppData\Roaming\novo
+    // Mac: ~/Library/Application Support/novo
+    // Unix: ~/.novo
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "Gulden";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "novo";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -481,10 +481,10 @@ fs::path GetDefaultDataDir()
         pathRet = fs::path(pszHome);
 #ifdef MAC_OSX
     // Mac
-    return pathRet / "Library/Application Support/Gulden";
+    return pathRet / "Library/Application Support/novo";
 #else
     // Unix
-    return pathRet / ".Gulden";
+    return pathRet / ".novo";
 #endif
 #endif
 }
