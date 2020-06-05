@@ -120,10 +120,95 @@ public:
         nDefaultPort = 9233;
         nPruneAfterHeight = 200000;
 
-        genesis = CreateGenesisBlock(1009843200, 2200095, 0x1e0ffff0, 1, 0);
+        {
+            numGenesisWitnesses = 400;
+            genesisWitnessWeightDivisor = 2000;
+            
+            // Don't bother creating the genesis block if we haven't started ECC yet (e.g. we are being called from the help text)
+            // We can't initialise key anyway unless the app has first initialised ECC, and the help doesn't need the genesis block, creating it twice is a waste of cpu cycles
+            ECC_Start();
+            {
+                CMutableTransaction txNew(CTransaction::CURRENT_VERSION);
+                txNew.vin.resize(1);
+                txNew.vin[0].prevout.SetNull();
+                txNew.vin[0].segregatedSignatureData.stack.clear();
+                txNew.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>());
+                CVectorWriter(0, 0, txNew.vin[0].segregatedSignatureData.stack[0], 0) << VARINT(0);
+                txNew.vin[0].segregatedSignatureData.stack.push_back(ParseHex("4f6e206a616e756172692031737420746865204475746368206c6f73742074686572652062656c6f7665642047756c64656e"));
+                
+                {
+                    std::string sTestnetParams = "4f6e206a616e756172692031737420746865204475746368206c6f73742074686572652062656c6f7665642047756c64656e4f6e206a616e756172692031737420746865204475746368206c6f73742074686572652062656c6f7665642047756c64656e";
+                    genesisWitnessPrivKey.Set((unsigned char*)&sTestnetParams[0],(unsigned char*)&sTestnetParams[0]+32, true);
+                    
+                    CTxOut renewedWitnessTxOutput;
+                    renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
+                    renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = genesisWitnessPrivKey.GetPubKey().GetID();
+                    renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = genesisWitnessPrivKey.GetPubKey().GetID();
+                    renewedWitnessTxOutput.output.witnessDetails.lockFromBlock = 1;
+                    renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = 900000;
+                    renewedWitnessTxOutput.output.witnessDetails.failCount = 0;
+                    renewedWitnessTxOutput.output.witnessDetails.actionNonce = 1;
+                    renewedWitnessTxOutput.nValue=0;
+                    for (uint32_t i=0; i<numGenesisWitnesses;++i)
+                    {
+                        txNew.vout.push_back(renewedWitnessTxOutput);
+                    }
+                }
+                
+                {
+                    std::vector<unsigned char> data(ParseHex(devSubsidyAddress));
+                    CPubKey addressPubKey(data.begin(), data.end());
+                    
+                    // Premine; break into multiple parts so that its easier to use for ICO payouts (994.744.000 total)
+                    CTxOut subsidyOutput;
+                    subsidyOutput.SetType(CTxOutType::StandardKeyHashOutput);
+                    subsidyOutput.output.standardKeyHash = CTxOutStandardKeyHash(addressPubKey.GetID());
+                    subsidyOutput.nValue = 858'000'000*COIN;
+                    txNew.vout.push_back(subsidyOutput);
+                    subsidyOutput.nValue = 10000*COIN;
+                    for (int i=0;i<10000;++i)
+                    {
+                        txNew.vout.push_back(subsidyOutput);
+                    }
+                    subsidyOutput.nValue = 2000*COIN;
+                    for (int i=0;i<6000;++i)
+                    {
+                        txNew.vout.push_back(subsidyOutput);
+                    }
+                    subsidyOutput.nValue = 1000*COIN;
+                    for (int i=0;i<24744;++i)
+                    {
+                        txNew.vout.push_back(subsidyOutput);
+                    }
+                }
+
+                genesis.nTime    = 1591293102;
+                genesis.nBits    = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
+                genesis.nNonce   = 0;
+                genesis.nVersion = 536870912;
+                genesis.vtx.push_back(MakeTransactionRef(std::move(txNew)));
+                genesis.hashPrevBlock.SetNull();
+                genesis.hashMerkleRoot = BlockMerkleRoot(genesis.vtx.begin(), genesis.vtx.end());
+                genesis.hashMerkleRootPoW2Witness = BlockMerkleRoot(genesis.vtx.begin(), genesis.vtx.end());
+                genesis.witnessHeaderPoW2Sig.resize(65);
+
+                uint256 foundBlockHash;
+                std::atomic<uint64_t> halfHashCounter=0;
+                std::atomic<uint64_t> nThreadCounter=0;
+                bool interrupt=false;
+                sigma_context generateContext(defaultSigmaSettings, defaultSigmaSettings.arenaSizeKb, std::max(GetNumCores(), 1));
+                generateContext.prepareArenas(genesis);
+                generateContext.mineBlock(&genesis, halfHashCounter, foundBlockHash, interrupt);
+                
+                genesis.nTimePoW2Witness = genesis.nTime+1;
+                genesis.nVersionPoW2Witness = genesis.nVersion;
+            }
+            ECC_Stop();
+        }
+        
         consensus.hashGenesisBlock = genesis.GetHashPoW2();
-        assert(consensus.hashGenesisBlock == uint256S("0x6c5d71a461b5bff6742bb62e5be53978b8dec5103ce52d1aaab8c6a251582f92"));
-        assert(genesis.hashMerkleRoot == uint256S("0x4bed0bcb3e6097445ae68d455137625bb66f0e7ba06d9db80290bf72e3d6dcf8"));
+        //assert(consensus.hashGenesisBlock == uint256S("0x6c5d71a461b5bff6742bb62e5be53978b8dec5103ce52d1aaab8c6a251582f92"));
+        //assert(genesis.hashMerkleRoot == uint256S("0x4bed0bcb3e6097445ae68d455137625bb66f0e7ba06d9db80290bf72e3d6dcf8"));
 
         vSeeds.push_back(CDNSSeedData("seed 0",  "seed1.novocurrency.com", false));
         vSeeds.push_back(CDNSSeedData("seed 1",  "seed2.novocurrency.com", false));       

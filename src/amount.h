@@ -30,7 +30,7 @@ static const CAmount CENT = 1000000;
  * for the creation of coins out of thin air modification could lead to a fork.
  * */
 //fixme: (PHASE5) Relook at this constant - I don't think the value here is actually right/ideal.
-static const CAmount MAX_MONEY = 1680000000 * COIN;
+static const CAmount MAX_MONEY = 10'000'000'000 * COIN;
 inline bool MoneyRange(const CAmount& nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
 
 #endif //  GULDEN_AMOUNT_H
