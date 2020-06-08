@@ -166,7 +166,7 @@ CCloneChain::CCloneChain(const CChain& _origin, unsigned int _cloneFrom, const C
                 pNotInChain->pprev = new CBlockIndex(*pNotInChain->pprev);
                 pNotInChain = pNotInChain->pprev;
             }
-            while (pNotInChain->pprev != vChain[pNotInChain->pprev->nHeight - cloneFrom])
+            while (pNotInChain->pprev && pNotInChain->pprev != vChain[pNotInChain->pprev->nHeight - cloneFrom])
             {
                 pNotInChain->pskip = nullptr;
                 pNotInChain->pprev = vChain[pNotInChain->pprev->nHeight - cloneFrom];
