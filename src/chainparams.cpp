@@ -184,7 +184,7 @@ public:
 
                 genesis.nTime    = 1591293102;
                 genesis.nBits    = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
-                genesis.nNonce   = 0;
+                genesis.nNonce   = 274989066;
                 genesis.nVersion = 536870912;
                 genesis.vtx.push_back(MakeTransactionRef(std::move(txNew)));
                 genesis.hashPrevBlock.SetNull();
@@ -192,13 +192,13 @@ public:
                 genesis.hashMerkleRootPoW2Witness = BlockMerkleRoot(genesis.vtx.begin(), genesis.vtx.end());
                 genesis.witnessHeaderPoW2Sig.resize(65);
 
-                uint256 foundBlockHash;
-                std::atomic<uint64_t> halfHashCounter=0;
-                std::atomic<uint64_t> nThreadCounter=0;
-                bool interrupt=false;
-                sigma_context generateContext(defaultSigmaSettings, defaultSigmaSettings.arenaSizeKb, std::max(GetNumCores(), 1));
-                generateContext.prepareArenas(genesis);
-                generateContext.mineBlock(&genesis, halfHashCounter, foundBlockHash, interrupt);
+                //uint256 foundBlockHash;
+                //std::atomic<uint64_t> halfHashCounter=0;
+                //std::atomic<uint64_t> nThreadCounter=0;
+                //bool interrupt=false;
+                //sigma_context generateContext(defaultSigmaSettings, defaultSigmaSettings.arenaSizeKb, std::max(GetNumCores(), 1));
+                //generateContext.prepareArenas(genesis);
+                //generateContext.mineBlock(&genesis, halfHashCounter, foundBlockHash, interrupt);
                 
                 genesis.nTimePoW2Witness = genesis.nTime+1;
                 genesis.nVersionPoW2Witness = genesis.nVersion;
