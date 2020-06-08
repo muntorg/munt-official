@@ -1,0 +1,20 @@
+{
+  "name": "novo",
+  "version": "1.0.0",
+  "description": "Novo currency",
+  "author": "Malcolm MacLeod",
+  "license": "Gulden",
+  "main": "main.js",
+  "homepage": "https://www.novocurrency.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/novocurrency/novocurrency-core/"
+  },
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "8.2.3",
+    "electron-context-menu": ""
+  }
+}
