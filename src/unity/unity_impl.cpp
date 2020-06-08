@@ -819,8 +819,8 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     SoftSetArg("-debug", "0");
 
     // Turn SPV mode on
-    SoftSetArg("-fullsync", "0");
-    SoftSetArg("-spv", "1");
+//    SoftSetArg("-fullsync", "0");
+//    SoftSetArg("-spv", "1");
     SoftSetArg("-spvstaticfilterfile", staticFilterPath);
     SoftSetArg("-spvstaticfilterfileoffset", i64tostr(staticFilterOffset));
     SoftSetArg("-spvstaticfilterfilelength", i64tostr(staticFilterLength));
