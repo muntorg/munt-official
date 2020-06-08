@@ -11,10 +11,12 @@ PLATFORM=`./depends/config.guess`
 PLATFORM_VENDOR=`./depends/config.guess | cut -d- -f2`
 PLATFORM_OS=`./depends/config.guess | cut -d- -f3`
 
+source developer-tools/private.conf
+
 export CXXFLAGS="-fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer"
 export CFLAGS=${CXXFLAGS}
 if [ ${PLATFORM_VENDOR} = "apple" ]; then
-    export LDFLAGS="-fPIC -Bsymbolic"
+    export LDFLAGS="-fPIC -Bsymbolic -Wl,-undefined -Wl,dynamic_lookup"
 else
     if [ ${PLATFORM_OS} = "mingw32" ] ||  [ ${PLATFORM_OS} = "mingw64" ]; then
         export LDFLAGS="-fPIC -Bsymbolic -L${DIR}/../build_electron -lnode -Wl,--gc-sections"
