@@ -91,14 +91,21 @@ bool CCrypter::SetKey(const CKeyingMaterial& chNewKey, const std::vector<unsigne
     return true;
 }
 
+//fixme: See https://github.com/weidai11/cryptopp/issues/953
+//Ideally this should be resolved in cryptopp library, when it is remove this class
+template <typename T> class CryptoVectorSource : public CryptoPP::SourceTemplate<CryptoPP::StringStore>
+{
+public:
+    CryptoVectorSource(BufferedTransformation *attachment = NULLPTR)
+        : SourceTemplate<CryptoPP::StringStore>(attachment) {}
+    CryptoVectorSource(const T &vec, bool pumpAll, BufferedTransformation *attachment = NULLPTR)
+        : SourceTemplate<CryptoPP::StringStore>(attachment) {SourceInitialize(pumpAll, MakeParameters("InputBuffer", CryptoPP::ConstByteArrayParameter(vec)));}
+};
+
 bool CCrypter::Encrypt(const CKeyingMaterial& vchPlaintext, std::vector<unsigned char> &vchCiphertext) const
 {
     if (!fKeySet)
         return false;
-
-    // max ciphertext len for a n bytes of plaintext is
-    // n + AES_BLOCKSIZE bytes
-    //vchCiphertext.resize(vchPlaintext.size() + CryptoPP::AES::BLOCKSIZE);
 
     //NB! Some of our calling code (wallet password change) relies on us clearing the cipher text for it (i.e. passes in a non cleared variable) so don't remove this.
     vchCiphertext.clear();
@@ -107,7 +114,7 @@ bool CCrypter::Encrypt(const CKeyingMaterial& vchPlaintext, std::vector<unsigned
     enc.SetKeyWithIV(vchKey.data(), vchKey.size(), vchIV.data());
     try
     {
-        CryptoPP::ArraySource s(&vchPlaintext[0], vchPlaintext.size(), true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(vchCiphertext)));
+        CryptoVectorSource s(vchPlaintext, true, new CryptoPP::StreamTransformationFilter(enc, new CryptoPP::VectorSink(vchCiphertext)));
         if (vchCiphertext.size() < vchPlaintext.size())
             return false;
     }
@@ -124,22 +131,18 @@ bool CCrypter::Decrypt(const std::vector<unsigned char>& vchCiphertext, CKeyingM
     if (!fKeySet)
         return false;
 
-    // plaintext will always be equal to or lesser than length of ciphertext
-    int nLen = vchCiphertext.size();
-    vchPlaintext.resize(nLen);
+    //Always clear for symmetry with Encrypt function; see comment in Encrypt function for why Encrypt behaves in this manner
+    vchPlaintext.clear();
 
     CryptoPP::CBC_Mode<CryptoPP::AES>::Decryption dec;
     dec.SetKeyWithIV(vchKey.data(), vchKey.size(), vchIV.data());
     try
     {
-        auto sink = new CryptoPP::ArraySink(&vchPlaintext[0], vchPlaintext.size());
         {
-            CryptoPP::VectorSource s(vchCiphertext, true, new CryptoPP::StreamTransformationFilter(dec, sink));
+            CryptoVectorSource s(vchCiphertext, true, new CryptoPP::StreamTransformationFilter(dec, new CryptoPP::StringSinkTemplate<CKeyingMaterial>(vchPlaintext)));
         }
-        if (sink->TotalPutLength() == 0)
+        if (vchPlaintext.size() == 0)
             return false;
-        // Trim plaintext to original length
-        vchPlaintext.resize(sink->TotalPutLength());
     }
     catch(...)
     {
