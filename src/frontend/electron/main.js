@@ -77,7 +77,7 @@ function createWindow () {
 }
 
 function guldenUnitySetup() {
-    var basepath = app.getAppPath();
+    var basepath = app.getPath("userData");
     var balance = 0;
 
     global.libnovo = libnovo = require('./libnovo_unity_node_js')
@@ -133,8 +133,12 @@ function guldenUnitySetup() {
         app.quit()
     }
 
+    var fs = require('fs');
+    var walletpath=basepath+"/"+"wallet"
+    if (!fs.existsSync(walletpath)) fs.mkdir(walletpath, function(err){});
+
     // Start the Gulden unified backend
-    novobackend.InitUnityLibThreaded(basepath+"/"+"wallet", "", -1, -1, false, signalhandler, "")
+    novobackend.InitUnityLibThreaded(walletpath, "", -1, -1, false, signalhandler, "")
 }
 
 ipcMain.on('init-with-password', (event, phrase, password) => {
