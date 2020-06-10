@@ -12,15 +12,16 @@
   },
   "scripts": {
     "start": "electron .",
-    "publish": "build -p always"
+    "publish": "electron-builder -p always"
   },
   "devDependencies": {
-    "electron": "8.2.3",
-    "electron-builder": "^20.28.4"
+    "electron": "^9.0.3",
+    "electron-builder": "^21.0.0",
+    "electron-packager": "^14.2.1"
   },
   "dependencies": {
-    "electron-updater": "^4.0.6",
-    "electron-context-menu": ""
+    "electron-updater": "^4.3.1",
+    "electron-context-menu": "^2.0.1"
   },
   "build": {
     "files": [
@@ -35,7 +36,7 @@
     "mac": {
       "category": "public.app-category.finance",
       "target": [
-        "dmg"
+        "pkg"
       ]
     },
     "linux": {
