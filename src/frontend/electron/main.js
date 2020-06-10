@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, Menu, ipcMain} = require('electron')
+const {session, app, BrowserWindow, Menu, ipcMain} = require('electron')
 const contextMenu = require('electron-context-menu');
 
 // Keep global references of all these objects
@@ -33,9 +33,6 @@ function createWindow () {
         }
     ])
     Menu.setApplicationMenu(menu); 
-
-  // Start with splash screen loaded
-  mainWindow.loadFile('splash.html')
 
   // Open the DevTools.
   //mainWindow.webContents.openDevTools()
@@ -73,10 +70,23 @@ function createWindow () {
       }
   })
 
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+  callback({
+    responseHeaders: {
+      ...details.responseHeaders,
+      'Content-Security-Policy': ['default-src \'none\'']
+    }
+  })
+})
+  
   guldenUnitySetup();
 }
 
-function guldenUnitySetup() {
+//TODO: Handle this better in the backend, we shouldn't store this browser side at all
+var recoveryPhrase="";
+
+function guldenUnitySetup()
+{
     var basepath = app.getPath("userData");
     var balance = 0;
 
@@ -95,7 +105,7 @@ function guldenUnitySetup() {
         }
         else
         {
-            mainWindow.loadFile('index.html')
+            mainWindow.loadFile('html/app_balance.html')
             mainWindow.webContents.on('did-finish-load', () => {
                 mainWindow.webContents.send('notifyBalanceChange', balance)
             })
@@ -122,9 +132,10 @@ function guldenUnitySetup() {
     }
     signalhandler.notifyInitWithoutExistingWallet = function () {
         mainWindow.webContents.send('notifyInitWithoutExistingWallet')
-        mainWindow.loadFile('phrase.html')
+        mainWindow.loadFile('html/app_start.html')
         mainWindow.webContents.on('did-finish-load', () => {
-            mainWindow.webContents.send('notifyPhrase', novobackend.GenerateRecoveryMnemonic())
+            recoveryPhrase = novobackend.GenerateRecoveryMnemonic()
+            mainWindow.webContents.send('notifyPhrase', recoveryPhrase)
         })
     }
     signalhandler.notifyShutdown = function () {
@@ -141,8 +152,17 @@ function guldenUnitySetup() {
     novobackend.InitUnityLibThreaded(walletpath, "", -1, -1, false, signalhandler, "")
 }
 
-ipcMain.on('init-with-password', (event, phrase, password) => {
-  novobackend.InitWalletFromRecoveryPhrase(phrase, password)  
+ipcMain.on('acknowledgePhrase', (event) => {
+  mainWindow.loadFile('html/app_repeat_phrase.html')
+})
+
+ipcMain.on('verifiedPhrase', (event) => {
+  mainWindow.loadFile('html/app_password.html')
+})
+
+ipcMain.on('initWithPassword', (event, password) => {
+  novobackend.InitWalletFromRecoveryPhrase(recoveryPhrase, password)  
+  recoveryPhrase=""
 })
 
 // This method will be called when Electron has finished

@@ -24,11 +24,10 @@
   },
   "build": {
     "files": [
-      "main.js",
-      "renderer.js",
-      "index.html",
-      "phrase.html",
-      "splash.html",
+      "html/*",
+      "img/*",
+      "css/*",
+      "fonts/*",
       "libnovo_unity_node_js.node"
     ],
     "appId": "com.novocurrency.novo",
