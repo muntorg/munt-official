@@ -302,13 +302,13 @@ a:hover {
 .phrase-repeat {
 	float: left;
 	width: calc(100% + 10px);
-	margin: 0 -5px 40px -5px;
+	margin: -5px -5px 35px -5px;
 }
 
 .phrase-repeat input {
 	float: left;
-	width: calc(8.33% - 10px);
-	margin: 0 5px 0 5px;
+	width: calc(16.66% - 10px);
+	margin: 5px;
 	height: 40px;
 	font-family: euclid, Helvetica, sans-serif;
 	font-style: normal;
@@ -340,6 +340,13 @@ a:hover {
 	color: #009572;
 	border: 1px solid #009572;
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+@media (max-width: 960px) {
+	.phrase-repeat input {
+		float: left;
+		width: calc(25% - 10px);
+	}
 }
 
 /* -------------------------------------------------------------- Phrase */
