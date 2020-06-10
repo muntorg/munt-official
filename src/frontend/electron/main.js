@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
 const {session, app, BrowserWindow, Menu, ipcMain} = require('electron')
 const contextMenu = require('electron-context-menu');
+const os = require('os');
 
 // Keep global references of all these objects
 let libnovo
@@ -18,13 +19,17 @@ let mainWindow
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    icon: 'img/icon_512.png',
     width: 800,
     height: 600,
     webPreferences: {
       nodeIntegration: true
     }
   })
+  
+  if (os.platform() === "linux")
+  {
+        mainWindow.setIcon('img/icon_512.png')
+  }
   
   var menu = Menu.buildFromTemplate([{
             label: 'File',
