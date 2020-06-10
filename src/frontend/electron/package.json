@@ -28,6 +28,7 @@
       "img/*",
       "css/*",
       "fonts/*",
+      "main.js",
       "libnovo_unity_node_js.node"
     ],
     "appId": "com.novocurrency.novo",
