@@ -3,14 +3,14 @@
 <head>
     <title>Novo</title>
     <link rel="stylesheet" href="../css/application.css?v=00001">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-zrnmn8R8KkWl12rAZFt4yKjxplaDaT7/EUkKm7AovijfrQItFWR7O/JJn4DAa/gx" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/fontawesome/pro/5.11.2/all.css">
 </head>
 
 <body>
 <div class="top">
     <div class="wrapper">
         <div class="logo"></div>
-        <div class="balance">0</div>
+        <div id="balance" class="balance">0</div>
     </div>
 </div>
 <div class="section">
@@ -25,7 +25,7 @@
 <script>
     var address = require('electron').remote.getGlobal("novobackend").GetReceiveAddress()
     document.getElementById("address").innerHTML = address
-    document.getElementById("transfer").href = "http://novocurrency.com/transfer?receive_address="+address
+    document.getElementById("transfer").href = "https://novocurrency.com/transfer?receive_address="+address
 
     require('electron').ipcRenderer.on('notifyBalanceChange', (event, new_balance) => {
         if (new_balance > 0)
