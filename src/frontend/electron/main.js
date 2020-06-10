@@ -118,25 +118,32 @@ function guldenUnitySetup()
         }
     }
     signalhandler.logPrint  = function(message) {
-        mainWindow.webContents.send('logPrint', message)
+        if (mainWindow)
+            mainWindow.webContents.send('logPrint', message)
     }
     signalhandler.notifyUnifiedProgress  = function (progress) {
-        mainWindow.webContents.send('notifyUnifiedProgress', progress)
+        if (mainWindow)
+            mainWindow.webContents.send('notifyUnifiedProgress', progress)
     }
     signalhandler.notifyBalanceChange = function (new_balance) {
-        mainWindow.webContents.send('notifyBalanceChange', new_balance)
+        if (mainWindow)
+            mainWindow.webContents.send('notifyBalanceChange', new_balance)
         balance = new_balance
     }
     signalhandler.notifyNewMutation  = function (mutation, self_committed) {
-        mainWindow.webContents.send('notifyNewMutation', mutation, self_committed)
+        if (mainWindow)
+            mainWindow.webContents.send('notifyNewMutation', mutation, self_committed)
     }
     signalhandler.notifyUpdatedTransaction  = function (transaction) {
-        mainWindow.webContents.send('notifyUpdatedTransaction', transaction)
+        if (mainWindow)
+            mainWindow.webContents.send('notifyUpdatedTransaction', transaction)
     }
     signalhandler.notifyInitWithExistingWallet = function () {
-        mainWindow.webContents.send('notifyInitWithExistingWallet')
+        if (mainWindow)
+            mainWindow.webContents.send('notifyInitWithExistingWallet')
     }
     signalhandler.notifyInitWithoutExistingWallet = function () {
+        coreIsRunning = true
         recoveryPhrase = novobackend.GenerateRecoveryMnemonic()
         mainWindow.webContents.send('notifyInitWithoutExistingWallet')
         mainWindow.loadFile('html/app_start.html')
@@ -185,26 +192,26 @@ app.on('ready', createWindow)
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin')
-  {
-      if (coreIsRunning)
-      {
+    // On macOS it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
+    if (process.platform !== 'darwin')
+    {
+        if (coreIsRunning)
+        {
             console.log("terminate core from window-all-closed")
-          novobackend.TerminateUnityLib()
-      }
-      else
-      {
-          console.log("set core to terminate after init window-all-closed")
-          terminateCore=true
-      }
-  }
+            novobackend.TerminateUnityLib()
+        }
+        else
+        {
+            console.log("set core to terminate after init window-all-closed")
+            terminateCore=true
+        }
+    }
 })
 
 app.on('activate', function () {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) createWindow()
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (mainWindow === null) createWindow()
 })
 
