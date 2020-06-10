@@ -350,6 +350,14 @@ void terminateUnityFrontend()
     {
         signalHandler->notifyShutdown();
     }
+
+    // Allow frontend time to clean up and free any references to objects before unloading the library
+    // Otherwise we get a free after close (on macOS at least)
+    while (signalHandler.use_count() > 1)
+    {
+        MilliSleep(50);
+    }
+    signalHandler=nullptr;
 }
 
 #include <boost/chrono/thread_clock.hpp>
@@ -883,11 +891,15 @@ void GuldenUnifiedBackend::InitUnityLibThreaded(const std::string& dataDir, cons
 
 void GuldenUnifiedBackend::TerminateUnityLib()
 {
-    work.reset();
-    ioctx.stop();
-    GuldenAppManager::gApp->shutdown();
-    GuldenAppManager::gApp->waitForShutDown();
-    run_thread.join();
+    // Terminate in thread so we don't block interprocess communication
+    std::thread([=]
+    {
+        work.reset();
+        ioctx.stop();
+        GuldenAppManager::gApp->shutdown();
+        GuldenAppManager::gApp->waitForShutDown();
+        run_thread.join();
+    }).detach();
 }
 
 QrCodeRecord GuldenUnifiedBackend::QRImageFromString(const std::string& qr_string, int32_t width_hint)

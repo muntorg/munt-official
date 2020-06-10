@@ -1,7 +1,6 @@
 // Modules to control application life and create native browser window
 const {session, app, BrowserWindow, Menu, ipcMain} = require('electron')
 const contextMenu = require('electron-context-menu');
-const os = require('os');
 
 // Keep global references of all these objects
 let libnovo
@@ -14,7 +13,29 @@ let terminateCore=false
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+var mainWindow=null
+
+function showMainWindow() {
+    if (mainWindow)
+    {
+        if (mainWindow.isMinimized())
+            mainWindow.restore()
+        mainWindow.show()
+        mainWindow.focus()
+    }
+}
+
+const singleInstanceLock = app.requestSingleInstanceLock()
+
+if (!singleInstanceLock) {
+    app.quit()
+}
+else
+{
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+        showMainWindow()
+    })
+}
 
 function createWindow () {
   // Create the browser window.
@@ -26,7 +47,7 @@ function createWindow () {
     }
   })
   
-  if (os.platform() === "linux")
+  if (process.platform === "linux")
   {
         mainWindow.setIcon('img/icon_512.png')
   }
@@ -62,12 +83,14 @@ function createWindow () {
       {
           console.log("terminate core from mainWindow close")
           e.preventDefault();
+          mainWindow.hide()
           novobackend.TerminateUnityLib()
       }
       else if (!allowExit)
       {
           console.log("set core to terminate from mainWindow close")
           terminateCore=true
+          mainWindow.hide()
           e.preventDefault();
       }
       else
@@ -96,9 +119,9 @@ function guldenUnitySetup()
     var basepath = app.getPath("userData");
     var balance = 0;
 
-    global.libnovo = libnovo = require('./libnovo_unity_node_js')
-    global.novobackend = novobackend = new libnovo.NJSGuldenUnifiedBackend
-    signalhandler = global.signalhandler = new libnovo.NJSGuldenUnifiedFrontend();
+    libnovo = require('./libnovo_unity_node_js')
+    novobackend = new libnovo.NJSGuldenUnifiedBackend
+    signalhandler = new libnovo.NJSGuldenUnifiedFrontend();
 
     // Receive signals from the core and marshall them as needed to the main window
     signalhandler.notifyCoreReady = function() {
@@ -152,6 +175,7 @@ function guldenUnitySetup()
         })
     }
     signalhandler.notifyShutdown = function () {
+        console.log("notify shutdown")
         allowExit=true
         coreIsRunning=false
         app.quit()
@@ -188,30 +212,27 @@ ipcMain.on('initWithPassword', (event, password) => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', function() {
+    if (mainWindow === null)
+    {
+        createWindow()
+    }
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
-    // On macOS it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin')
+    if (coreIsRunning)
     {
-        if (coreIsRunning)
-        {
-            console.log("terminate core from window-all-closed")
-            novobackend.TerminateUnityLib()
-        }
-        else
-        {
-            console.log("set core to terminate after init window-all-closed")
-            terminateCore=true
-        }
+        console.log("terminate core from window-all-closed")
+        novobackend.TerminateUnityLib()
+    }
+    else
+    {
+        console.log("set core to terminate after init window-all-closed")
+        terminateCore=true
     }
 })
 
 app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (mainWindow === null) createWindow()
+    showMainWindow()
 })
-
