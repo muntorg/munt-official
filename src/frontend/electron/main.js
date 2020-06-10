@@ -132,10 +132,10 @@ function guldenUnitySetup()
         mainWindow.webContents.send('notifyInitWithExistingWallet')
     }
     signalhandler.notifyInitWithoutExistingWallet = function () {
+        recoveryPhrase = novobackend.GenerateRecoveryMnemonic()
         mainWindow.webContents.send('notifyInitWithoutExistingWallet')
         mainWindow.loadFile('html/app_start.html')
         mainWindow.webContents.on('did-finish-load', () => {
-            recoveryPhrase = novobackend.GenerateRecoveryMnemonic()
             mainWindow.webContents.send('notifyPhrase', recoveryPhrase)
         })
     }
@@ -157,8 +157,15 @@ ipcMain.on('acknowledgePhrase', (event) => {
   mainWindow.loadFile('html/app_repeat_phrase.html')
 })
 
-ipcMain.on('verifiedPhrase', (event) => {
-  mainWindow.loadFile('html/app_password.html')
+ipcMain.on('verifiedPhrase', (event, validatePhrase) => {
+  if (validatePhrase === recoveryPhrase)
+  {
+    mainWindow.loadFile('html/app_password.html')
+  }
+  else
+  {
+      mainWindow.webContents.send('notifyInvalidPhrase')
+  }
 })
 
 ipcMain.on('initWithPassword', (event, password) => {

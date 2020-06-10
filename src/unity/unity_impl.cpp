@@ -600,7 +600,12 @@ std::string GuldenUnifiedBackend::GenerateRecoveryMnemonic()
 {
     std::vector<unsigned char> entropy(16);
     GetStrongRandBytes(&entropy[0], 16);
-    return GuldenAppManager::gApp->composeRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8), GetAdjustedTime()).c_str();
+    #if 0
+    int64_t birthTime = GetAdjustedTime();
+    #else
+    int64_t birthTime = 0;
+    #endif
+    return GuldenAppManager::gApp->composeRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8), birthTime).c_str();
 }
 
 std::string GuldenUnifiedBackend::ComposeRecoveryPhrase(const std::string & mnemonic, int64_t birthTime)
@@ -948,7 +953,11 @@ std::string GuldenUnifiedBackend::GetRecoveryPhrase()
     //WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     //if (ctx.isValid())
     {
+        #if 0
         int64_t birthTime = pactiveWallet->birthTime();
+        #else
+        int64_t birthTime = 0;
+        #endif
 
         std::set<SecureString> allPhrases;
         for (const auto& seedIter : pactiveWallet->mapSeeds)

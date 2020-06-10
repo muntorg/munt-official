@@ -25,8 +25,24 @@
 <script>
     // Move to password screen
     document.getElementById("button_proceed").onclick = function(){
-        require('electron').ipcRenderer.send('verifiedPhrase')
+        var validatePhrase = document.getElementById("word1").value  + ' '
+                           + document.getElementById("word2").value  + ' '
+                           + document.getElementById("word3").value  + ' '
+                           + document.getElementById("word4").value  + ' '
+                           + document.getElementById("word5").value  + ' '
+                           + document.getElementById("word6").value  + ' '
+                           + document.getElementById("word7").value  + ' '
+                           + document.getElementById("word8").value  + ' '
+                           + document.getElementById("word9").value  + ' '
+                           + document.getElementById("word10").value + ' '
+                           + document.getElementById("word11").value + ' '
+                           + document.getElementById("word12").value;
+        require('electron').ipcRenderer.send('verifiedPhrase', validatePhrase)
     }
+    // Handle invalid phrase
+    require('electron').ipcRenderer.on('notifyInvalidPhrase', (event) => {
+        alert("This is not your recovery phrase")
+    })
 </script>
 </body>
 </html>
