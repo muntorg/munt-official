@@ -36,7 +36,8 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
      staticFilterOffset:(int64_t)staticFilterOffset
      staticFilterLength:(int64_t)staticFilterLength
                 testnet:(BOOL)testnet
-                signals:(nullable id<DBGuldenUnifiedFrontend>)signals
+                spvMode:(BOOL)spvMode
+          signalHandler:(nullable id<DBGuldenUnifiedFrontend>)signalHandler
               extraArgs:(nonnull NSString *)extraArgs;
 
 /** Threaded implementation of InitUnityLib */
@@ -45,7 +46,8 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
           staticFilterOffset:(int64_t)staticFilterOffset
           staticFilterLength:(int64_t)staticFilterLength
                      testnet:(BOOL)testnet
-                     signals:(nullable id<DBGuldenUnifiedFrontend>)signals
+                     spvMode:(BOOL)spvMode
+               signalHandler:(nullable id<DBGuldenUnifiedFrontend>)signalHandler
                    extraArgs:(nonnull NSString *)extraArgs;
 
 /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */

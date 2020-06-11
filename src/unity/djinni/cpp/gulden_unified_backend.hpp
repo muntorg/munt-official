@@ -39,10 +39,10 @@ public:
      * NB!!! This call blocks until the library is terminated, it is the callers responsibility to place it inside a thread or similar.
      * If you are in an environment where this is not possible (node.js for example use InitUnityLibThreaded instead which places it in a thread on your behalf)
      */
-    static int32_t InitUnityLib(const std::string & data_dir, const std::string & staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend> & signals, const std::string & extraArgs);
+    static int32_t InitUnityLib(const std::string & data_dir, const std::string & staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, bool spvMode, const std::shared_ptr<GuldenUnifiedFrontend> & signalHandler, const std::string & extraArgs);
 
     /** Threaded implementation of InitUnityLib */
-    static void InitUnityLibThreaded(const std::string & data_dir, const std::string & staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend> & signals, const std::string & extraArgs);
+    static void InitUnityLibThreaded(const std::string & data_dir, const std::string & staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, bool spvMode, const std::shared_ptr<GuldenUnifiedFrontend> & signalHandler, const std::string & extraArgs);
 
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
     static bool InitWalletFromRecoveryPhrase(const std::string & phrase, const std::string & password);

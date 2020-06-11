@@ -787,7 +787,7 @@ bool GuldenUnifiedBackend::IsValidLinkURI(const std::string& linked_uri)
 }
 
 
-int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend>& signals, const std::string& extraArgs)
+int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, bool spvMode, const std::shared_ptr<GuldenUnifiedFrontend>& signalHandler_, const std::string& extraArgs)
 {
     balanceChangeNotifier = new CRateLimit<int>([](int)
     {
@@ -825,36 +825,44 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     if (!dataDir.empty())
         SoftSetArg("-datadir", dataDir);
 
-    // SPV wallets definitely shouldn't be listening for incoming connections at all
-    SoftSetArg("-listen", "0");
+    if (spvMode)
+    {
+        // SPV wallets definitely shouldn't be listening for incoming connections at all
+        SoftSetArg("-listen", "0");
 
-    // Mininmise logging for performance reasons
-    SoftSetArg("-debug", "0");
+        // Minimise logging for performance reasons
+        SoftSetArg("-debug", "0");
 
-    // Turn SPV mode on
-//    SoftSetArg("-fullsync", "0");
-//    SoftSetArg("-spv", "1");
+        // Turn SPV mode on
+        SoftSetArg("-fullsync", "0");
+        SoftSetArg("-spv", "1");
+    
+        // Minimise lookahead size for performance reasons
+        SoftSetArg("-accountpool", "1");
+
+        // Minimise background threads and memory consumption
+        SoftSetArg("-par", "-100");
+        SoftSetArg("-maxsigcachesize", "0");
+        SoftSetArg("-dbcache", "4");
+        SoftSetArg("-maxmempool", "5");
+        SoftSetArg("-maxconnections", "8");
+        
+        //fixme: (FUT) (UNITY) Reverse headers
+        // Temporarily disable reverse headers for mobile until memory requirements can be reduced.
+        SoftSetArg("-reverseheaders", "false");
+    }
+    
     SoftSetArg("-spvstaticfilterfile", staticFilterPath);
     SoftSetArg("-spvstaticfilterfileoffset", i64tostr(staticFilterOffset));
     SoftSetArg("-spvstaticfilterfilelength", i64tostr(staticFilterLength));
 
-    // Minimise lookahead size for performance reasons
-    SoftSetArg("-accountpool", "1");
-
-    // Minimise background threads and memory consumption
-    SoftSetArg("-par", "-100");
-    SoftSetArg("-maxsigcachesize", "0");
-    SoftSetArg("-dbcache", "4");
-    SoftSetArg("-maxmempool", "5");
-    SoftSetArg("-maxconnections", "8");
-
     // Change client name
 #if defined(__APPLE__) && TARGET_OS_IPHONE == 1
-    SoftSetArg("-clientname", "Gulden ios");
+    SoftSetArg("-clientname", "Novo ios");
 #elif defined(__ANDROID__)
-    SoftSetArg("-clientname", "Gulden android");
+    SoftSetArg("-clientname", "Novo android");
 #else
-    SoftSetArg("-clientname", "Gulden unity");
+    SoftSetArg("-clientname", "Novo");
 #endif
 
     // Testnet
@@ -864,11 +872,7 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
         SoftSetArg("-addnode", "devbak.net");
     }
 
-    //fixme: (FUT) (UNITY) Reverse headers
-    // Temporarily disable reverse headers for mobile until memory requirements can be reduced.
-    SoftSetArg("-reverseheaders", "false");
-
-    signalHandler = signals;
+    signalHandler = signalHandler_;
 
     if (!extraArgs.empty()) {
         std::vector<const char*> args;
@@ -881,11 +885,11 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     return InitUnity();
 }
 
-void GuldenUnifiedBackend::InitUnityLibThreaded(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, const std::shared_ptr<GuldenUnifiedFrontend>& signals, const std::string& extraArgs)
+void GuldenUnifiedBackend::InitUnityLibThreaded(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, bool spvMode, const std::shared_ptr<GuldenUnifiedFrontend>& signalHandler_, const std::string& extraArgs)
 {
     std::thread([=]
     {
-        InitUnityLib(dataDir, staticFilterPath, staticFilterOffset, staticFilterLength, testnet, signals, extraArgs);
+        InitUnityLib(dataDir, staticFilterPath, staticFilterOffset, staticFilterLength, testnet, spvMode, signalHandler_, extraArgs);
     }).detach();
 }
 

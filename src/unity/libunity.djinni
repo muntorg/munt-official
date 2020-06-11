@@ -127,9 +127,9 @@ gulden_unified_backend = interface +c {
     # extraArgs - any additional commandline arguments as passed to GuldenD
     # NB!!! This call blocks until the library is terminated, it is the callers responsibility to place it inside a thread or similar.
     # If you are in an environment where this is not possible (node.js for example use InitUnityLibThreaded instead which places it in a thread on your behalf)
-    static InitUnityLib(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool, signals : gulden_unified_frontend, extraArgs : string): i32;
+    static InitUnityLib(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool,spvMode : bool, signalHandler : gulden_unified_frontend, extraArgs : string): i32;
     # Threaded implementation of InitUnityLib
-    static InitUnityLibThreaded(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool, signals : gulden_unified_frontend, extraArgs : string);
+    static InitUnityLibThreaded(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool,spvMode : bool, signalHandler : gulden_unified_frontend, extraArgs : string);
 
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletFromRecoveryPhrase(phrase : string, password : string): bool;

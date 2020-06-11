@@ -188,7 +188,7 @@ function guldenUnitySetup()
     if (!fs.existsSync(walletpath)) fs.mkdir(walletpath, function(err){});
 
     // Start the Gulden unified backend
-    novobackend.InitUnityLibThreaded(walletpath, "", -1, -1, false, signalhandler, "")
+    novobackend.InitUnityLibThreaded(walletpath, "", -1, -1, false, false, signalhandler, "")
 }
 
 ipcMain.on('acknowledgePhrase', (event) => {

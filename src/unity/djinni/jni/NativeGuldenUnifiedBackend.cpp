@@ -41,7 +41,7 @@ CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBacken
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jint JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_InitUnityLib(JNIEnv* jniEnv, jobject /*this*/, jstring j_dataDir, jstring j_staticFilterPath, jlong j_staticFilterOffset, jlong j_staticFilterLength, jboolean j_testnet, jobject j_signals, jstring j_extraArgs)
+CJNIEXPORT jint JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_InitUnityLib(JNIEnv* jniEnv, jobject /*this*/, jstring j_dataDir, jstring j_staticFilterPath, jlong j_staticFilterOffset, jlong j_staticFilterLength, jboolean j_testnet, jboolean j_spvMode, jobject j_signalHandler, jstring j_extraArgs)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -50,13 +50,14 @@ CJNIEXPORT jint JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_0
                                                       ::djinni::I64::toCpp(jniEnv, j_staticFilterOffset),
                                                       ::djinni::I64::toCpp(jniEnv, j_staticFilterLength),
                                                       ::djinni::Bool::toCpp(jniEnv, j_testnet),
-                                                      ::djinni_generated::NativeGuldenUnifiedFrontend::toCpp(jniEnv, j_signals),
+                                                      ::djinni::Bool::toCpp(jniEnv, j_spvMode),
+                                                      ::djinni_generated::NativeGuldenUnifiedFrontend::toCpp(jniEnv, j_signalHandler),
                                                       ::djinni::String::toCpp(jniEnv, j_extraArgs));
         return ::djinni::release(::djinni::I32::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_InitUnityLibThreaded(JNIEnv* jniEnv, jobject /*this*/, jstring j_dataDir, jstring j_staticFilterPath, jlong j_staticFilterOffset, jlong j_staticFilterLength, jboolean j_testnet, jobject j_signals, jstring j_extraArgs)
+CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_InitUnityLibThreaded(JNIEnv* jniEnv, jobject /*this*/, jstring j_dataDir, jstring j_staticFilterPath, jlong j_staticFilterOffset, jlong j_staticFilterLength, jboolean j_testnet, jboolean j_spvMode, jobject j_signalHandler, jstring j_extraArgs)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -65,7 +66,8 @@ CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_0
                                                      ::djinni::I64::toCpp(jniEnv, j_staticFilterOffset),
                                                      ::djinni::I64::toCpp(jniEnv, j_staticFilterLength),
                                                      ::djinni::Bool::toCpp(jniEnv, j_testnet),
-                                                     ::djinni_generated::NativeGuldenUnifiedFrontend::toCpp(jniEnv, j_signals),
+                                                     ::djinni::Bool::toCpp(jniEnv, j_spvMode),
+                                                     ::djinni_generated::NativeGuldenUnifiedFrontend::toCpp(jniEnv, j_signalHandler),
                                                      ::djinni::String::toCpp(jniEnv, j_extraArgs));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
