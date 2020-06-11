@@ -604,6 +604,21 @@ bool GuldenUnifiedBackend::IsValidRecoveryPhrase(const std::string & phrase)
     return ValidateAndSplitRecoveryPhrase(phrase, dummyMnemonic, dummyNumber);
 }
 
+#include "base58.h"
+std::string GuldenUnifiedBackend::GenerateGenesisKeys()
+{
+    CKey key;
+    key.MakeNewKey(true);
+
+    CPrivKey vchPrivKey = key.GetPrivKey();
+    CPubKey vchPubKey = key.GetPubKey();
+    std::string privkey = HexStr<CPrivKey::iterator>(vchPrivKey.begin(), vchPrivKey.end()).c_str();
+    std::string pubKey = HexStr(vchPubKey.begin(), vchPubKey.end()).c_str();
+    std::string witnessKeys = "novo://witnesskeys?keys=" + CGuldenSecret(key).ToString() + strprintf("#%s", GetAdjustedTime());
+    
+    return "privkey: "+privkey+"\n"+"pubkey: "+pubKey+"\n"+"witness: "+witnessKeys+"\n";
+}
+
 std::string GuldenUnifiedBackend::GenerateRecoveryMnemonic()
 {
     std::vector<unsigned char> entropy(16);

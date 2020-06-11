@@ -93,6 +93,8 @@ private:
     /** Generate a new recovery mnemonic */
     Napi::Value GenerateRecoveryMnemonic(const Napi::CallbackInfo& info);
 
+    Napi::Value GenerateGenesisKeys(const Napi::CallbackInfo& info);
+
     /** Compute recovery phrase with birth number */
     Napi::Value ComposeRecoveryPhrase(const Napi::CallbackInfo& info);
 

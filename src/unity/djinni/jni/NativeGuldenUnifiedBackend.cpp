@@ -179,6 +179,15 @@ CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBacken
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_GenerateGenesisKeys(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::GuldenUnifiedBackend::GenerateGenesisKeys();
+        return ::djinni::release(::djinni::String::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_GuldenUnifiedBackend_00024CppProxy_ComposeRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/, jstring j_mnemonic, jlong j_birthTime)
 {
     try {

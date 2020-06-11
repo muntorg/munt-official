@@ -59,7 +59,8 @@ function createWindow () {
   var menu = Menu.buildFromTemplate([{
             label: 'File',
             submenu: [
-                { label:'Exit', click() { app.quit() }}
+                { label:'Exit', click() { app.quit() }},
+                { label:'Generate genesis keys', click() { console.log(novobackend.GenerateGenesisKeys()) }}
             ]
         }
     ])

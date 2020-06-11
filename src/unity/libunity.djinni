@@ -166,6 +166,8 @@ gulden_unified_backend = interface +c {
 
     # Generate a new recovery mnemonic
     static GenerateRecoveryMnemonic(): string;
+    
+    static GenerateGenesisKeys(): string;
 
     # Compute recovery phrase with birth number
     static ComposeRecoveryPhrase(mnemonic: string, birthTime: i64): string;

@@ -299,6 +299,25 @@ Napi::Value NJSGuldenUnifiedBackend::GenerateRecoveryMnemonic(const Napi::Callba
 
     return arg_0;
 }
+Napi::Value NJSGuldenUnifiedBackend::GenerateGenesisKeys(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 0)
+    {
+        Napi::Error::New(env, "NJSGuldenUnifiedBackend::GenerateGenesisKeys needs 0 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+
+    auto result = GuldenUnifiedBackend::GenerateGenesisKeys();
+
+    //Wrap result in node object
+    auto arg_0 = Napi::String::New(env, result);
+
+    return arg_0;
+}
 Napi::Value NJSGuldenUnifiedBackend::ComposeRecoveryPhrase(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -1257,6 +1276,7 @@ Napi::Object NJSGuldenUnifiedBackend::Init(Napi::Env env, Napi::Object exports) 
     InstanceMethod("EraseWalletSeedsAndAccounts", &NJSGuldenUnifiedBackend::EraseWalletSeedsAndAccounts),
     InstanceMethod("IsValidRecoveryPhrase", &NJSGuldenUnifiedBackend::IsValidRecoveryPhrase),
     InstanceMethod("GenerateRecoveryMnemonic", &NJSGuldenUnifiedBackend::GenerateRecoveryMnemonic),
+    InstanceMethod("GenerateGenesisKeys", &NJSGuldenUnifiedBackend::GenerateGenesisKeys),
     InstanceMethod("ComposeRecoveryPhrase", &NJSGuldenUnifiedBackend::ComposeRecoveryPhrase),
     InstanceMethod("TerminateUnityLib", &NJSGuldenUnifiedBackend::TerminateUnityLib),
     InstanceMethod("QRImageFromString", &NJSGuldenUnifiedBackend::QRImageFromString),

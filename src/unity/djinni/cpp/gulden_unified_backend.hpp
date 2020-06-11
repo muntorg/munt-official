@@ -84,6 +84,8 @@ public:
     /** Generate a new recovery mnemonic */
     static std::string GenerateRecoveryMnemonic();
 
+    static std::string GenerateGenesisKeys();
+
     /** Compute recovery phrase with birth number */
     static std::string ComposeRecoveryPhrase(const std::string & mnemonic, int64_t birthTime);
 

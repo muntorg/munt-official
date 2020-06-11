@@ -129,6 +129,11 @@ public abstract class GuldenUnifiedBackend {
         return CppProxy.GenerateRecoveryMnemonic();
     }
 
+    public static String GenerateGenesisKeys()
+    {
+        return CppProxy.GenerateGenesisKeys();
+    }
+
     /** Compute recovery phrase with birth number */
     public static String ComposeRecoveryPhrase(String mnemonic, long birthTime)
     {
@@ -367,6 +372,8 @@ public abstract class GuldenUnifiedBackend {
         public static native boolean IsValidRecoveryPhrase(String phrase);
 
         public static native String GenerateRecoveryMnemonic();
+
+        public static native String GenerateGenesisKeys();
 
         public static native String ComposeRecoveryPhrase(String mnemonic, long birthTime);
 

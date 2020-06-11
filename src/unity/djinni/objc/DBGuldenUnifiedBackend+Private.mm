@@ -184,6 +184,13 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (nonnull NSString *)GenerateGenesisKeys {
+    try {
+        auto objcpp_result_ = ::GuldenUnifiedBackend::GenerateGenesisKeys();
+        return ::djinni::String::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (nonnull NSString *)ComposeRecoveryPhrase:(nonnull NSString *)mnemonic
                                   birthTime:(int64_t)birthTime {
     try {

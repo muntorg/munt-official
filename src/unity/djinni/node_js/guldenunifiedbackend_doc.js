@@ -44,6 +44,7 @@ declare class NJSGuldenUnifiedBackend
     static declare function IsValidRecoveryPhrase(phrase: string): boolean;
     /** Generate a new recovery mnemonic */
     static declare function GenerateRecoveryMnemonic(): string;
+    static declare function GenerateGenesisKeys(): string;
     /** Compute recovery phrase with birth number */
     static declare function ComposeRecoveryPhrase(mnemonic: string, birthTime: number): string;
     /** Stop the library */

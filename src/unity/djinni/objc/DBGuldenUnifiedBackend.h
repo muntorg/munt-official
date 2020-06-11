@@ -98,6 +98,8 @@ extern int32_t const DBGuldenUnifiedBackendVersion;
 /** Generate a new recovery mnemonic */
 + (nonnull NSString *)GenerateRecoveryMnemonic;
 
++ (nonnull NSString *)GenerateGenesisKeys;
+
 /** Compute recovery phrase with birth number */
 + (nonnull NSString *)ComposeRecoveryPhrase:(nonnull NSString *)mnemonic
                                   birthTime:(int64_t)birthTime;
