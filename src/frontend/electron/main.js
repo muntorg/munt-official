@@ -179,7 +179,7 @@ function guldenUnitySetup()
         console.log("notify shutdown")
         allowExit=true
         coreIsRunning=false
-        signalhandler=nullptr
+        signalhandler=null
         app.quit()
     }
 
