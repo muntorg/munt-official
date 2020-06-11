@@ -421,8 +421,8 @@ bool witnessingEnabled = true;
 
 void static GuldenWitness()
 {
-    LogPrintf("GuldenWitness started\n");
-    RenameThread("gulden-witness");
+    LogPrintf("Witness thread started\n");
+    RenameThread(GLOBAL_APPNAME"-witness");
     
     // Don't even try witness if we have no wallet (-disablewallet)
     if (!pactiveWallet)
@@ -742,13 +742,13 @@ void static GuldenWitness()
     catch (const boost::thread_interrupted&)
     {
         cacheAlreadySeenWitnessCandidates.clear();
-        LogPrintf("GuldenWitness terminated\n");
+        LogPrintf("Witness thread terminated\n");
         throw;
     }
     catch (const std::runtime_error &e)
     {
         cacheAlreadySeenWitnessCandidates.clear();
-        LogPrintf("GuldenWitness runtime error: %s\n", e.what());
+        LogPrintf("Witness thread runtime error: %s\n", e.what());
         return;
     }
 }

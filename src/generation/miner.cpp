@@ -1039,8 +1039,8 @@ static const unsigned int hashPSTimerInterval = 200;
 
 void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemoryKb)
 {
-    LogPrintf("GuldenGenerate started\n");
-    RenameThread("gulden-generate");
+    LogPrintf("Generate thread started\n");
+    RenameThread(GLOBAL_APPNAME"-generate");
 
     int64_t nUpdateTimeStart = GetTimeMillis();
 
@@ -1403,12 +1403,12 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
     }
     catch (const boost::thread_interrupted&)
     {
-        LogPrintf("GuldenGenerate terminated\n");
+        LogPrintf("Generate thread terminated\n");
         throw;
     }
     catch (const std::runtime_error &e)
     {
-        LogPrintf("GuldenGenerate runtime error: %s\n", e.what());
+        LogPrintf("Generate thread runtime error: %s\n", e.what());
         return;
     }
 }

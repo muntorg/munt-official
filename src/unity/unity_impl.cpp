@@ -858,11 +858,11 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
 
     // Change client name
 #if defined(__APPLE__) && TARGET_OS_IPHONE == 1
-    SoftSetArg("-clientname", "Novo ios");
+    SoftSetArg("-clientname", GLOBAL_APPNAME" ios");
 #elif defined(__ANDROID__)
-    SoftSetArg("-clientname", "Novo android");
+    SoftSetArg("-clientname", GLOBAL_APPNAME" android");
 #else
-    SoftSetArg("-clientname", "Novo");
+    SoftSetArg("-clientname", GLOBAL_APPNAME" desktop");
 #endif
 
     // Testnet

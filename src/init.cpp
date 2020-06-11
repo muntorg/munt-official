@@ -490,7 +490,7 @@ static void CleanupBlockRevFiles()
 static void ThreadImport(std::vector<fs::path> vImportFiles)
 {
     const CChainParams& chainparams = Params();
-    RenameThread("Gulden-loadblk");
+    RenameThread(GLOBAL_APPNAME"-loadblk");
 
     {
     CImportingNow imp;
@@ -673,7 +673,7 @@ void InitLogging()
     fLogIPs = GetBoolArg("-logips", DEFAULT_LOGIPS);
 
     LogPrintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    LogPrintf("Gulden version %s\n", FormatFullVersion());
+    LogPrintf("%s version %s\n", GLOBAL_APPNAME, FormatFullVersion());
 }
 
 namespace { // Variables internal to initialization process only

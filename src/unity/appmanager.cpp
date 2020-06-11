@@ -54,11 +54,11 @@ void GuldenAppManager::initialize()
 {
     std::thread([=]
     {
-        //RenameThread("Gulden-initialise");
+        //RenameThread(GLOBAL_APPNAME"-initialise");
         std::lock_guard<std::mutex> lock(appManagerInitShutDownMutex);
         try
         {
-            LogPrintf("GuldenAppManager::initialize: Running initialization in thread\n");
+            LogPrintf("AppManager::initialize: Running initialization in thread\n");
             if (fShutDownHasBeenInitiated)
                 return;
             if (!AppInitBasicSetup())
@@ -220,7 +220,7 @@ void GuldenAppManager::shutdownThread()
 
     std::thread([=]
     {
-        RenameThread("Gulden-shutdown");
+        RenameThread(GLOBAL_APPNAME"-shutdown");
 
         // Block until we are signalled to commence
         #ifdef WIN32
