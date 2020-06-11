@@ -12,9 +12,9 @@ declare class NJSGuldenUnifiedBackend
      * NB!!! This call blocks until the library is terminated, it is the callers responsibility to place it inside a thread or similar.
      * If you are in an environment where this is not possible (node.js for example use InitUnityLibThreaded instead which places it in a thread on your behalf)
      */
-    static declare function InitUnityLib(data_dir: string, staticFilterPath: string, staticFilterOffset: number, staticFilterLength: number, testnet: boolean, signals: NJSGuldenUnifiedFrontend, extraArgs: string): number;
+    static declare function InitUnityLib(data_dir: string, staticFilterPath: string, staticFilterOffset: number, staticFilterLength: number, testnet: boolean, spvMode: boolean, signalHandler: NJSGuldenUnifiedFrontend, extraArgs: string): number;
     /** Threaded implementation of InitUnityLib */
-    static declare function InitUnityLibThreaded(data_dir: string, staticFilterPath: string, staticFilterOffset: number, staticFilterLength: number, testnet: boolean, signals: NJSGuldenUnifiedFrontend, extraArgs: string);
+    static declare function InitUnityLibThreaded(data_dir: string, staticFilterPath: string, staticFilterOffset: number, staticFilterLength: number, testnet: boolean, spvMode: boolean, signalHandler: NJSGuldenUnifiedFrontend, extraArgs: string);
     /** Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib */
     static declare function InitWalletFromRecoveryPhrase(phrase: string, password: string): boolean;
     /** Continue creating wallet that was previously erased using EraseWalletSeedsAndAccounts */

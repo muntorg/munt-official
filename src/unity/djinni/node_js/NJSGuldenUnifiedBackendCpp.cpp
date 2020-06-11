@@ -28,9 +28,9 @@ Napi::Value NJSGuldenUnifiedBackend::InitUnityLib(const Napi::CallbackInfo& info
 
 
     //Check if method called with right number of arguments
-    if(info.Length() != 7)
+    if(info.Length() != 8)
     {
-        Napi::Error::New(env, "NJSGuldenUnifiedBackend::InitUnityLib needs 7 arguments").ThrowAsJavaScriptException();
+        Napi::Error::New(env, "NJSGuldenUnifiedBackend::InitUnityLib needs 8 arguments").ThrowAsJavaScriptException();
     }
 
     //Check if parameters have correct types
@@ -39,25 +39,26 @@ Napi::Value NJSGuldenUnifiedBackend::InitUnityLib(const Napi::CallbackInfo& info
     auto arg_2 = info[2].ToNumber().Int64Value();
     auto arg_3 = info[3].ToNumber().Int64Value();
     auto arg_4 = info[4].ToBoolean().Value();
-    std::shared_ptr<GuldenUnifiedFrontend> arg_5(Napi::ObjectWrap<GuldenUnifiedFrontend>::Unwrap(info[5].As<Napi::Object>()));
+    auto arg_5 = info[5].ToBoolean().Value();
+    std::shared_ptr<GuldenUnifiedFrontend> arg_6(Napi::ObjectWrap<GuldenUnifiedFrontend>::Unwrap(info[6].As<Napi::Object>()));
 
-    std::string arg_6 = info[6].As<Napi::String>();
+    std::string arg_7 = info[7].As<Napi::String>();
 
-    auto result = GuldenUnifiedBackend::InitUnityLib(arg_0,arg_1,arg_2,arg_3,arg_4,arg_5,arg_6);
+    auto result = GuldenUnifiedBackend::InitUnityLib(arg_0,arg_1,arg_2,arg_3,arg_4,arg_5,arg_6,arg_7);
 
     //Wrap result in node object
-    auto arg_7 = Napi::Number::New(env, result);
+    auto arg_8 = Napi::Number::New(env, result);
 
-    return arg_7;
+    return arg_8;
 }
 void NJSGuldenUnifiedBackend::InitUnityLibThreaded(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
 
     //Check if method called with right number of arguments
-    if(info.Length() != 7)
+    if(info.Length() != 8)
     {
-        Napi::Error::New(env, "NJSGuldenUnifiedBackend::InitUnityLibThreaded needs 7 arguments").ThrowAsJavaScriptException();
+        Napi::Error::New(env, "NJSGuldenUnifiedBackend::InitUnityLibThreaded needs 8 arguments").ThrowAsJavaScriptException();
     }
 
     //Check if parameters have correct types
@@ -66,10 +67,11 @@ void NJSGuldenUnifiedBackend::InitUnityLibThreaded(const Napi::CallbackInfo& inf
     auto arg_2 = info[2].ToNumber().Int64Value();
     auto arg_3 = info[3].ToNumber().Int64Value();
     auto arg_4 = info[4].ToBoolean().Value();
-    std::shared_ptr<GuldenUnifiedFrontend> arg_5(Napi::ObjectWrap<GuldenUnifiedFrontend>::Unwrap(info[5].As<Napi::Object>()));
+    auto arg_5 = info[5].ToBoolean().Value();
+    std::shared_ptr<GuldenUnifiedFrontend> arg_6(Napi::ObjectWrap<GuldenUnifiedFrontend>::Unwrap(info[6].As<Napi::Object>()));
 
-    std::string arg_6 = info[6].As<Napi::String>();
-    GuldenUnifiedBackend::InitUnityLibThreaded(arg_0,arg_1,arg_2,arg_3,arg_4,arg_5,arg_6);
+    std::string arg_7 = info[7].As<Napi::String>();
+    GuldenUnifiedBackend::InitUnityLibThreaded(arg_0,arg_1,arg_2,arg_3,arg_4,arg_5,arg_6,arg_7);
 }
 Napi::Value NJSGuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();

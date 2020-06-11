@@ -23,26 +23,28 @@ public abstract class GuldenUnifiedBackend {
      * NB!!! This call blocks until the library is terminated, it is the callers responsibility to place it inside a thread or similar.
      * If you are in an environment where this is not possible (node.js for example use InitUnityLibThreaded instead which places it in a thread on your behalf)
      */
-    public static int InitUnityLib(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, GuldenUnifiedFrontend signals, String extraArgs)
+    public static int InitUnityLib(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, boolean spvMode, GuldenUnifiedFrontend signalHandler, String extraArgs)
     {
         return CppProxy.InitUnityLib(dataDir,
                                      staticFilterPath,
                                      staticFilterOffset,
                                      staticFilterLength,
                                      testnet,
-                                     signals,
+                                     spvMode,
+                                     signalHandler,
                                      extraArgs);
     }
 
     /** Threaded implementation of InitUnityLib */
-    public static void InitUnityLibThreaded(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, GuldenUnifiedFrontend signals, String extraArgs)
+    public static void InitUnityLibThreaded(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, boolean spvMode, GuldenUnifiedFrontend signalHandler, String extraArgs)
     {
         CppProxy.InitUnityLibThreaded(dataDir,
                                       staticFilterPath,
                                       staticFilterOffset,
                                       staticFilterLength,
                                       testnet,
-                                      signals,
+                                      spvMode,
+                                      signalHandler,
                                       extraArgs);
     }
 
@@ -340,9 +342,9 @@ public abstract class GuldenUnifiedBackend {
 
         public static native String BuildInfo();
 
-        public static native int InitUnityLib(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, GuldenUnifiedFrontend signals, String extraArgs);
+        public static native int InitUnityLib(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, boolean spvMode, GuldenUnifiedFrontend signalHandler, String extraArgs);
 
-        public static native void InitUnityLibThreaded(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, GuldenUnifiedFrontend signals, String extraArgs);
+        public static native void InitUnityLibThreaded(String dataDir, String staticFilterPath, long staticFilterOffset, long staticFilterLength, boolean testnet, boolean spvMode, GuldenUnifiedFrontend signalHandler, String extraArgs);
 
         public static native boolean InitWalletFromRecoveryPhrase(String phrase, String password);
 
