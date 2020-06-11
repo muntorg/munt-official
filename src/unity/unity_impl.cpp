@@ -613,10 +613,10 @@ std::string GuldenUnifiedBackend::GenerateGenesisKeys()
     CPrivKey vchPrivKey = key.GetPrivKey();
     CPubKey vchPubKey = key.GetPubKey();
     std::string privkey = HexStr<CPrivKey::iterator>(vchPrivKey.begin(), vchPrivKey.end()).c_str();
-    std::string pubKey = HexStr(vchPubKey.begin(), vchPubKey.end()).c_str();
+    std::string pubKey = vchPubKey.GetID().GetHex();
     std::string witnessKeys = "novo://witnesskeys?keys=" + CGuldenSecret(key).ToString() + strprintf("#%s", GetAdjustedTime());
     
-    return "privkey: "+privkey+"\n"+"pubkey: "+pubKey+"\n"+"witness: "+witnessKeys+"\n";
+    return "privkey: "+privkey+"\n"+"pubkeyID: "+pubKey+"\n"+"witness: "+witnessKeys+"\n";
 }
 
 std::string GuldenUnifiedBackend::GenerateRecoveryMnemonic()
