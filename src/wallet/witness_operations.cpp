@@ -1056,7 +1056,7 @@ std::string witnessKeysLinkUrlForAccount(CWallet* pWallet, CAccount* account)
     if (!witnessAccountKeys.empty())
     {
         witnessAccountKeys.pop_back();
-        witnessAccountKeys = "gulden://witnesskeys?keys=" + witnessAccountKeys;
+        witnessAccountKeys = GLOBAL_APP_URIPREFIX"://witnesskeys?keys=" + witnessAccountKeys;
     }
 
     return witnessAccountKeys;

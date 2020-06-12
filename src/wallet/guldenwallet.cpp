@@ -992,7 +992,7 @@ bool CGuldenWallet::ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount
 
 std::vector<std::pair<CKey, uint64_t>> CGuldenWallet::ParseWitnessKeyURL(SecureString sEncodedPrivWitnessKeysURL)
 {
-    if (!boost::starts_with(sEncodedPrivWitnessKeysURL, "gulden://witnesskeys?keys="))
+    if (!boost::starts_with(sEncodedPrivWitnessKeysURL, GLOBAL_APP_URIPREFIX"://witnesskeys?keys="))
         throw std::runtime_error("Not a valid \"witness only\" witness account URI");
 
     std::vector<SecureString> encodedPrivateWitnessKeyStrings;

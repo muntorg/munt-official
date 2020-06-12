@@ -44,6 +44,7 @@ static const bool DEFAULT_LOGIPS        = false;
 static const bool DEFAULT_LOGTIMESTAMPS = true;
 
 #define GLOBAL_APPNAME "Novo"
+#define GLOBAL_APP_URIPREFIX "novo"
 
 /** Signals for translation. */
 class CTranslationInterface

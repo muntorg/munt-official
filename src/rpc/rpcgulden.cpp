@@ -3418,7 +3418,7 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Witness account has no active keys.");
 
     // FIXME: only unique keys in here using the earliest time for each (so need to introduce a map for this)
-    witnessAccountKeys = "gulden://witnesskeys?keys=" + witnessAccountKeys;
+    witnessAccountKeys = GLOBAL_APP_URIPREFIX"://witnesskeys?keys=" + witnessAccountKeys;
     return witnessAccountKeys;
 }
 
@@ -3445,8 +3445,8 @@ static UniValue importwitnesskeys(const JSONRPCRequest& request)
             "\nResult:\n"
             "\nReturn the UUID of account.\n"
             "\nExamples:\n"
-            + HelpExampleCli("importwitnesskeys \"my witness account\" \"gulden://witnesskeys?keys=Vd69eLAZ2r76C47xB3pDLa9Fx4Li8Xt5AHgzjJDuLbkP8eqUjToC#1529049773\"", "")
-            + HelpExampleRpc("importwitnesskeys \"my witness account\" \"gulden://witnesskeys?keys=Vd69eLAZ2r76C47xB3pDLa9Fx4Li8Xt5AHgzjJDuLbkP8eqUjToC#1529049773\"", ""));
+            + HelpExampleCli("importwitnesskeys \"my witness account\" \""GLOBAL_APP_URIPREFIX"://witnesskeys?keys=Vd69eLAZ2r76C47xB3pDLa9Fx4Li8Xt5AHgzjJDuLbkP8eqUjToC#1529049773\"", "")
+            + HelpExampleRpc("importwitnesskeys \"my witness account\" \""GLOBAL_APP_URIPREFIX"://witnesskeys?keys=Vd69eLAZ2r76C47xB3pDLa9Fx4Li8Xt5AHgzjJDuLbkP8eqUjToC#1529049773\"", ""));
 
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");
