@@ -60,11 +60,21 @@ function createWindow () {
         mainWindow.setIcon('img/icon_512.png')
   }
   
-  var menu = Menu.buildFromTemplate([{
+  var menu = Menu.buildFromTemplate(
+      [
+        {
             label: 'File',
             submenu: [
                 { label:'Exit', click() { app.quit() }},
                 { label:'Generate genesis keys', click() { console.log(novobackend.GenerateGenesisKeys()) }}
+            ]
+        },
+        {
+            label: 'Edit',
+            submenu: [
+                { role: 'cut' },
+                { role: 'copy' },
+                { role: 'paste' }
             ]
         }
     ])
