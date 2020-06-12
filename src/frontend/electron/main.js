@@ -2,6 +2,10 @@
 const {session, app, BrowserWindow, Menu, ipcMain} = require('electron')
 const contextMenu = require('electron-context-menu');
 
+contextMenu({
+
+});
+
 // Keep global references of all these objects
 let libnovo
 let novobackend
