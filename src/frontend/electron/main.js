@@ -139,6 +139,8 @@ function guldenUnitySetup()
             mainWindow.loadFile('html/app_balance.html')
             mainWindow.webContents.on('did-finish-load', () => {
                 mainWindow.webContents.send('notifyBalanceChange', balance)
+                var address = novobackend.GetReceiveAddress()
+                mainWindow.webContents.send('notifyAddressChange', address)
             })
         }
     }

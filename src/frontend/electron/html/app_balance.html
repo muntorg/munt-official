@@ -23,9 +23,10 @@
     </div>
 </div>
 <script>
-    var address = require('electron').remote.getGlobal("novobackend").GetReceiveAddress()
-    document.getElementById("address").innerHTML = address
-    document.getElementById("transfer").href = "https://novocurrency.com/transfer?receive_address="+address
+    require('electron').ipcRenderer.on('notifyAddressChange', (event, new_address) => {
+        document.getElementById("address").innerHTML = new_address
+        document.getElementById("transfer").href = "https://novocurrency.com/transfer?receive_address="+new_address
+    })
 
     require('electron').ipcRenderer.on('notifyBalanceChange', (event, new_balance) => {
         if (new_balance > 0)
