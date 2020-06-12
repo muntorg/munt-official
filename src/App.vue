@@ -1,0 +1,201 @@
+<template>
+  <div id="app">
+    <!-- app loader -->
+    <div id="app-loader" v-show="showLoader">
+      <div class="info"></div>
+      <img src="./img/icon_512.png" width="128" />
+      <div class="version-container">
+        <span>Unity: {{ unityVersion }}</span>
+        <span class="divider">|</span>
+        <span>Wallet: {{ walletVersion }}</span>
+        <span class="divider">|</span>
+        <span>Electron: {{ electronVersion }}</span>
+      </div>
+      <div class="info">
+        <p v-show="isShuttingDown">
+          {{ $t("loader.shutdown") }}
+        </p>
+        <div v-show="isSynchronizing">
+          <!-- todo: add progress bar -->
+          <div>{{ $t("loader.synchronizing") }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- main application -->
+    <div>
+      <div class="app-top wrapper">
+        <span class="app-logo"></span>
+        <span class="app-balance" v-show="computedBalance !== null">{{
+          computedBalance
+        }}</span>
+      </div>
+      <div class="app-main wrapper">
+        <router-view />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState } from "vuex";
+import { AppStatus } from "./store";
+import NovoBackend from "./libnovo/NovoBackend";
+
+let splashTimeout = 2500;
+let synchronizeTimeout = null;
+
+export default {
+  data() {
+    return {
+      splashReady: false,
+      electronVersion: process.versions.electron,
+      progress: 1
+    };
+  },
+  watch: {
+    status() {
+      if (this.status === AppStatus.synchronize) {
+        this.synchronize();
+      }
+    }
+  },
+  computed: {
+    ...mapState(["status", "unityVersion", "walletVersion", "balance"]),
+    computedBalance() {
+      if (this.balance === undefined || this.balance === null) return null;
+      return (
+        (this.balance.availableIncludingLocked +
+          this.balance.unconfirmedIncludingLocked) /
+        100000000
+      ).toFixed(2);
+    },
+    showLoader() {
+      return (
+        this.splashReady === false ||
+        (this.status !== AppStatus.ready && this.status !== AppStatus.setup)
+      );
+    },
+    isShuttingDown() {
+      return this.status === AppStatus.shutdown;
+    },
+    isSynchronizing() {
+      return this.status === AppStatus.synchronize;
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.splashReady = true;
+    }, splashTimeout);
+    if (this.status === AppStatus.synchronize) {
+      this.synchronize();
+    }
+  },
+  methods: {
+    synchronize() {
+      clearTimeout(synchronizeTimeout);
+
+      let progress = NovoBackend.GetUnifiedProgress();
+      progress = parseInt(parseFloat(progress) * 100);
+
+      if (this.progress < progress) {
+        this.progress = progress;
+      }
+      if (this.progress < 100) {
+        synchronizeTimeout = setTimeout(this.synchronize, 1000);
+      } else {
+        synchronizeTimeout = setTimeout(() => {
+          if (this.status !== AppStatus.shutdown) {
+            this.$store.dispatch({
+              type: "SET_STATUS",
+              status: AppStatus.ready
+            });
+          }
+        }, splashTimeout);
+      }
+    }
+  }
+};
+</script>
+
+<style lang="less">
+@import "./css/app.less";
+
+:root {
+  --top-height: 62px;
+}
+
+#app {
+  -webkit-text-size-adjust: none;
+  font-family: euclid, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.7em;
+  width: 100%;
+  height: 100%;
+  color: #000;
+  background-color: #fff;
+  text-rendering: optimizeLegibility;
+  font-variant-ligatures: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app-loader {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin-top: 0;
+  margin-left: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #fff;
+  z-index: 1;
+}
+
+#app-loader .version-container {
+  margin: 16px 0;
+}
+
+#app-loader .version-container .divider {
+  margin: 0 8px;
+}
+
+#app-loader .info {
+  min-height: 100px;
+}
+
+.app-top {
+  position: absolute;
+  top: 0;
+  height: var(--top-height);
+  line-height: var(--top-height);
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+}
+
+.app-main {
+  position: absolute;
+  top: var(--top-height);
+  height: calc(100% - var(--top-height));
+  width: 100%;
+}
+
+.app-logo {
+  display: inline-block;
+  vertical-align: middle;
+  width: 22px;
+  height: 22px;
+  background: url("./img/logo.png?v=00001") !important;
+  background: url("./img/logo.svg?v=00001"),
+    linear-gradient(transparent, transparent) !important;
+  background-size: cover;
+}
+
+.app-balance {
+  float: right;
+}
+</style>

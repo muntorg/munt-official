@@ -1,0 +1,27 @@
+{
+  "buttons": {
+    "Next": "Next",
+    "Finish": "Finish"
+  },
+  "loader": {
+    "synchronizing": "Your wallet is now synchronizing with the Novo network. This may take some time to complete.",
+    "shutdown": "Shutting down..."
+  },
+  "setup": {
+    "step1": {
+      "header": "This is your recovery phrase, write it down somewhere safe, don't lose it, don't share it, don't store it where hackers can get it. Lose phrase = Lose novo"
+    },
+    "step2": {
+      "header": "Enter recovery phrase"
+    },
+    "step3": {
+      "header": "Choose your password",
+      "password": "Password",
+      "repeat_password": "Repeat password"
+    }
+
+  },
+  "balance": {
+    "your_address": "Your address"
+  }
+}
