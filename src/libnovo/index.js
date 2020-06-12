@@ -58,7 +58,7 @@ class LibNovo {
       -1,
       -1,
       this.options.useTestNet,
-      true, // non spv mode
+      false, // non spv mode
       this.signalHandler,
       "" //"-sigmaalgo=ref"
     );
@@ -76,14 +76,15 @@ class LibNovo {
 
     signalHandler.notifyCoreReady = function() {
       console.log("received: notifyCoreReady");
-
+     
       store.dispatch({
         type: "SET_RECEIVE_ADDRESS",
         receiveAddress: backend.GetReceiveAddress()
       });
+      
       store.dispatch({
         type: "SET_MUTATIONS",
-        mutations: backend.getMutationHistory()
+        mutations: backend.getMutationHistory();
       });
       store.dispatch({ type: "SET_CORE_READY", coreReady: true });
     };
