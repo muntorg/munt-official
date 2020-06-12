@@ -28,8 +28,14 @@ export const AppStatus = {
 
 export default new Vuex.Store({
   state: {
+    balance: null,
+    coreReady: false,
+    mutations: null,
+    priceInfo: null,
+    receiveAddress: null,
     status: AppStatus.start,
-    coreReady: false
+    unityVersion: null,
+    walletVersion: null
   },
   mutations: {
     SET_BALANCE(state, payload) {
@@ -58,29 +64,29 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    SET_BALANCE({ commit }, payLoad) {
-      commit(payLoad);
+    SET_BALANCE({ commit }, payload) {
+      commit(payload);
     },
-    SET_CORE_READY({ commit }, payLoad) {
-      commit(payLoad);
+    SET_CORE_READY({ commit }, payload) {
+      commit(payload);
     },
-    SET_GULDEN_VERSION({ commit }, payLoad) {
-      commit(payLoad);
+    SET_GULDEN_VERSION({ commit }, payload) {
+      commit(payload);
     },
-    SET_MUTATIONS({ commit }, payLoad) {
-      commit(payLoad);
+    SET_MUTATIONS({ commit }, payload) {
+      commit(payload);
     },
-    SET_PRICE_INFO({ commit }, payLoad) {
-      commit(payLoad);
+    SET_PRICE_INFO({ commit }, payload) {
+      commit(payload);
     },
-    SET_RECEIVE_ADDRESS({ commit }, payLoad) {
-      commit(payLoad);
+    SET_RECEIVE_ADDRESS({ commit }, payload) {
+      commit(payload);
     },
-    SET_STATUS({ commit }, payLoad) {
-      commit(payLoad);
+    SET_STATUS({ commit }, payload) {
+      commit(payload);
     },
-    SET_WALLET_EXISTS({ commit }, payLoad) {
-      commit(payLoad);
+    SET_WALLET_EXISTS({ commit }, payload) {
+      commit(payload);
     },
     SET_UNITY_VERSION({ commit }, payload) {
       commit(payload);
