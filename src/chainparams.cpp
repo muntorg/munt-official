@@ -126,7 +126,6 @@ public:
             
             // Don't bother creating the genesis block if we haven't started ECC yet (e.g. we are being called from the help text)
             // We can't initialise key anyway unless the app has first initialised ECC, and the help doesn't need the genesis block, creating it twice is a waste of cpu cycles
-            ECC_Start();
             {
                 CMutableTransaction txNew(CTransaction::CURRENT_VERSION);
                 txNew.vin.resize(1);
@@ -134,16 +133,16 @@ public:
                 txNew.vin[0].segregatedSignatureData.stack.clear();
                 txNew.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>());
                 CVectorWriter(0, 0, txNew.vin[0].segregatedSignatureData.stack[0], 0) << VARINT(0);
-                txNew.vin[0].segregatedSignatureData.stack.push_back(ParseHex("4f6e206a616e756172692031737420746865204475746368206c6f73742074686572652062656c6f7665642047756c64656e"));
+                txNew.vin[0].segregatedSignatureData.stack.push_back({'F','M'});
                 
                 {
-                    std::string sTestnetParams = "4f6e206a616e756172692031737420746865204475746368206c6f73742074686572652062656c6f7665642047756c64656e4f6e206a616e756172692031737420746865204475746368206c6f73742074686572652062656c6f7665642047756c64656e";
-                    genesisWitnessPrivKey.Set((unsigned char*)&sTestnetParams[0],(unsigned char*)&sTestnetParams[0]+32, true);
-                    
+                    CKeyID pubKeyID;
+                    pubKeyID.SetHex("6f5f2fb2d112fbf2ed440e09f9373750ac8b8fe1");
+
                     CTxOut renewedWitnessTxOutput;
                     renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
-                    renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = genesisWitnessPrivKey.GetPubKey().GetID();
-                    renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = genesisWitnessPrivKey.GetPubKey().GetID();
+                    renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = pubKeyID;
+                    renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = pubKeyID;
                     renewedWitnessTxOutput.output.witnessDetails.lockFromBlock = 1;
                     renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = 900000;
                     renewedWitnessTxOutput.output.witnessDetails.failCount = 0;
@@ -182,9 +181,9 @@ public:
                     }
                 }
 
-                genesis.nTime    = 1591293102;
+                genesis.nTime    = 1591892927;
                 genesis.nBits    = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
-                genesis.nNonce   = 274989066;
+                genesis.nNonce   = 3224698900;
                 genesis.nVersion = 536870912;
                 genesis.vtx.push_back(MakeTransactionRef(std::move(txNew)));
                 genesis.hashPrevBlock.SetNull();
@@ -192,18 +191,17 @@ public:
                 genesis.hashMerkleRootPoW2Witness = BlockMerkleRoot(genesis.vtx.begin(), genesis.vtx.end());
                 genesis.witnessHeaderPoW2Sig.resize(65);
 
-                //uint256 foundBlockHash;
-                //std::atomic<uint64_t> halfHashCounter=0;
-                //std::atomic<uint64_t> nThreadCounter=0;
-                //bool interrupt=false;
-                //sigma_context generateContext(defaultSigmaSettings, defaultSigmaSettings.arenaSizeKb, std::max(GetNumCores(), 1));
-                //generateContext.prepareArenas(genesis);
-                //generateContext.mineBlock(&genesis, halfHashCounter, foundBlockHash, interrupt);
+                /*uint256 foundBlockHash;
+                std::atomic<uint64_t> halfHashCounter=0;
+                std::atomic<uint64_t> nThreadCounter=0;
+                bool interrupt=false;
+                sigma_context generateContext(defaultSigmaSettings, defaultSigmaSettings.arenaSizeKb, std::max(GetNumCores(), 1));
+                generateContext.prepareArenas(genesis);
+                generateContext.mineBlock(&genesis, halfHashCounter, foundBlockHash, interrupt);*/
                 
                 genesis.nTimePoW2Witness = genesis.nTime+1;
                 genesis.nVersionPoW2Witness = genesis.nVersion;
             }
-            ECC_Stop();
         }
         
         consensus.hashGenesisBlock = genesis.GetHashPoW2();
