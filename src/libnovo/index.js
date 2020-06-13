@@ -84,7 +84,7 @@ class LibNovo {
       
       store.dispatch({
         type: "SET_MUTATIONS",
-        mutations: backend.getMutationHistory();
+        mutations: backend.getMutationHistory()
       });
       store.dispatch({ type: "SET_CORE_READY", coreReady: true });
     };
