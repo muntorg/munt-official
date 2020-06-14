@@ -186,8 +186,9 @@ export default {
 }
 
 .app-logo {
+  float: left;
   display: inline-block;
-  vertical-align: middle;
+  margin-top: 20px;
   width: 22px;
   height: 22px;
   background: url("./img/logo.svg"),
@@ -215,6 +216,7 @@ export default {
 }
 
 .app-balance {
-  float: right;
+  float: left;
+  margin-left: 10px;
 }
 </style>
