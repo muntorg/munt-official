@@ -2,8 +2,9 @@
   <div id="app">
     <!-- app loader -->
     <div id="app-loader" v-show="showLoader">
-      <div class="info"></div>
-      <img src="./img/icon_512.png" width="128" />
+      <div class="logo-outer">
+        <div class="logo-inner"></div>
+      </div>
       <div class="version-container">
         <span>Unity: {{ unityVersion }}</span>
         <span class="divider">|</span>
@@ -189,10 +190,28 @@ export default {
   vertical-align: middle;
   width: 22px;
   height: 22px;
-  background: url("./img/logo.png?v=00001") !important;
-  background: url("./img/logo.svg?v=00001"),
-    linear-gradient(transparent, transparent) !important;
-  background-size: cover;
+  background: url("./img/logo.svg"),
+  linear-gradient(transparent, transparent);
+}
+
+.logo-outer {
+  margin: 24px;
+  background: #009572;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.logo-inner {
+  width: 64px;
+  height: 64px;
+  background: url('./img/logo.svg');
+	background-size: cover;
 }
 
 .app-balance {
