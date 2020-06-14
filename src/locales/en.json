@@ -23,5 +23,8 @@
   },
   "balance": {
     "your_address": "Your address"
+  },
+  "wallet": {
+    "receive_aquired_novo": "Receive your acquired Novo"
   }
 }
