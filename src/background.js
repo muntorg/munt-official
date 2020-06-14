@@ -50,21 +50,9 @@ function createWindow() {
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       enableRemoteModule: true
-    }
+    },
+    icon: path.join(__static, "icon.png")
   });
-
-  if (process.platform !== "darwin")
-  {
-    let iconPath = null;
-    if (isDevelopment) {
-      iconPath = path.join(__dirname.replace("\\dist_electron", ""), "/public/favicon.ico");
-    } else {
-      iconPath = path.join(__dirname, "favicon.ico");
-    }
-    if (fs.existsSync(iconPath)) {
-      win.setIcon(iconPath);
-    }
-  }
 
   var menu = Menu.buildFromTemplate(
     [
