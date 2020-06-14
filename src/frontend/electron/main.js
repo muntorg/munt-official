@@ -129,11 +129,11 @@ function createWindow () {
 
 //TODO: Handle this better in the backend, we shouldn't store this browser side at all
 var recoveryPhrase="";
+var balance = 0;
 
 function guldenUnitySetup()
 {
     var basepath = app.getPath("userData");
-    var balance = 0;
 
     libnovo = require('./libnovo_unity_node_js')
     novobackend = new libnovo.NJSGuldenUnifiedBackend
@@ -212,6 +212,10 @@ ipcMain.on('acknowledgePhrase', (event) => {
   mainWindow.loadFile('html/app_repeat_phrase.html')
 })
 
+ipcMain.on('doneViewingPhrase', (event) => {
+  mainWindow.loadFile('html/app_balance.html')
+})
+
 ipcMain.on('verifiedPhrase', (event, validatePhrase) => {
   if (validatePhrase === recoveryPhrase)
   {
@@ -226,6 +230,36 @@ ipcMain.on('verifiedPhrase', (event, validatePhrase) => {
 ipcMain.on('initWithPassword', (event, password) => {
   novobackend.InitWalletFromRecoveryPhrase(recoveryPhrase, password)  
   recoveryPhrase=""
+})
+
+ipcMain.on('changePassword', (event, passwordOld, passwordNew) => {
+  if (novobackend.ChangePassword(passwordOld, passwordNew))
+  {
+     mainWindow.loadFile('html/app_balance.html')
+     mainWindow.webContents.on('did-finish-load', () => {
+         mainWindow.webContents.send('notifyBalanceChange', balance)
+         var address = novobackend.GetReceiveAddress()
+         mainWindow.webContents.send('notifyAddressChange', address)
+     })
+  }
+  else
+  {
+      mainWindow.webContents.send('notifyInvalidPassword')
+  }
+})
+
+ipcMain.on('viewRecoveryPhrase', (event, password) => {
+  if (novobackend.UnlockWallet(password))
+  {
+     mainWindow.loadFile('html/app_view_phrase.html')
+     mainWindow.webContents.on('did-finish-load', () => {
+         mainWindow.webContents.send('notifyPhrase', novobackend.GetRecoveryPhrase())
+     })
+  }
+  else
+  {
+      mainWindow.webContents.send('notifyInvalidPassword')
+  }
 })
 
 // This method will be called when Electron has finished
