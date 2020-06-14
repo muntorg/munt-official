@@ -1,14 +1,20 @@
 "use strict";
 
-import { app, protocol, BrowserWindow } from "electron";
+import { app, protocol, Menu, BrowserWindow, nativeImage } from "electron";
 import {
   createProtocol
   /* installVueDevtools */
 } from "vue-cli-plugin-electron-builder/lib";
+
 const isDevelopment = process.env.NODE_ENV !== "production";
+
+import path from "path";
+import fs from "fs";
 
 import LibNovo from "./libnovo";
 import store, { AppStatus } from "./store";
+
+import contextMenu from "electron-context-menu";
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -33,6 +39,37 @@ function createWindow() {
       enableRemoteModule: true
     }
   });
+
+  if (process.platform !== "darwin")
+  {
+    let iconPath = null;
+    if (isDevelopment) {
+      iconPath = path.join(__dirname.replace("\\dist_electron", ""), "/public/favicon.ico");
+    } else {
+      iconPath = path.join(__dirname, "favicon.ico");
+    }
+    if (fs.existsSync(iconPath)) {
+      win.setIcon(iconPath);
+    }
+  }
+
+  var menu = Menu.buildFromTemplate(
+    [
+      {
+        label: 'File',
+        submenu: [
+            { role:'quit' }
+        ]
+      },
+      {
+        label: 'View',
+        visible: isDevelopment,
+        submenu: [
+          { role: 'toggleDevTools' }
+        ]
+      }   
+  ])
+  Menu.setApplicationMenu(menu); 
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode

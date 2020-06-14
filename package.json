@@ -17,6 +17,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "electron-better-ipc": "^1.0.1",
+    "electron-context-menu": "^2.0.1",
     "electron-store": "^5.2.0",
     "vue": "^2.6.11",
     "vue-i18n": "^8.17.3",
@@ -61,5 +62,7 @@
     },
     "rules": {}
   },
-  "browserslist": [ "Electron >= 9.0.0" ]
+  "browserslist": [
+    "Electron >= 9.0.0"
+  ]
 }

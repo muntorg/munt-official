@@ -6,7 +6,11 @@ module.exports = {
     electronBuilder: {
       nodeIntegration: true,
       mainProcessWatch: [],
-      mainProcessArgs: []
+      mainProcessArgs: [],
+      builderOptions: {
+        appId: "com.novocurrency.app",
+        extraFiles: []
+      }
     },
     i18n: {
       locale: "en",
