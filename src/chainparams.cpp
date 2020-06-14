@@ -119,6 +119,11 @@ public:
         vAlertPubKey = ParseHex("073513ffe7147aba88d33aea4da129d8a2829c545526d5d854ab51d5778f4d0625431ba1c5a3245bdfe8736b127fdfdb488de72640727d37355c4c3a66c547efad");
         nDefaultPort = 9233;
         nPruneAfterHeight = 200000;
+        
+        //PoW paramaters for SIGMA
+        defaultSigmaSettings.arenaSizeKb = 12*1024*1024;
+        defaultSigmaSettings.argonSlowHashRoundCost = 14;
+        defaultSigmaSettings.fastHashSizeBytes = 400;
 
         {
             numGenesisWitnesses = 400;
@@ -183,7 +188,7 @@ public:
 
                 genesis.nTime    = 1591892927;
                 genesis.nBits    = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
-                genesis.nNonce   = 3224698900;
+                genesis.nNonce   = 784597017;
                 genesis.nVersion = 536870912;
                 genesis.vtx.push_back(MakeTransactionRef(std::move(txNew)));
                 genesis.hashPrevBlock.SetNull();
