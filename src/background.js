@@ -1,6 +1,6 @@
 "use strict";
 
-import { app, protocol, Menu, BrowserWindow, nativeImage } from "electron";
+import { app, protocol, Menu, BrowserWindow, shell } from "electron";
 import {
   createProtocol
   /* installVueDevtools */
@@ -102,6 +102,12 @@ function createWindow() {
     console.log("win.on:closed");
     win = null;
   });
+
+  // Force external hrefs to open in external browser
+  win.webContents.on('new-window', function(e, url) {
+    e.preventDefault();
+    shell.openExternal(url);
+  })
 }
 
 app.on("will-quit", event => {
