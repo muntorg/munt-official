@@ -4,6 +4,8 @@ import store from "./store";
 import router from "./router";
 import i18n from "./i18n";
 
+import "./components";
+
 Vue.config.productionTip = false;
 
 new Vue({

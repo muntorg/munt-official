@@ -13,7 +13,7 @@
       <div v-else-if="current === 2">
         <h2>{{ $t("setup.step2.header") }}</h2>
         <div class="phrase-repeat">
-          <PhraseRepeatInput
+          <phrase-repeat-input
             v-for="word in recoveryPhraseWords"
             :key="word"
             :word="word"
@@ -57,7 +57,6 @@
 
 <script>
 import NovoBackend from "../libnovo/NovoBackend";
-import PhraseRepeatInput from "../components/PhraseRepeatInput";
 
 export default {
   data() {
@@ -69,9 +68,6 @@ export default {
       password2: null,
       initialized: false
     };
-  },
-  components: {
-    PhraseRepeatInput
   },
   async mounted() {
     this.recoveryPhrase = await NovoBackend.GenerateRecoveryMnemonicAsync();
