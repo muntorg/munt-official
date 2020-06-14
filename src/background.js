@@ -21,6 +21,19 @@ import contextMenu from "electron-context-menu";
 let win;
 let libNovo = new LibNovo();
 
+/* TODO: refactor into function and add option to libgulden to remove existing wallet folder */
+let args = process.argv.slice(2);
+for (var i = 0; i < args.length; i++) {
+  switch(args[i].toLowerCase()) {
+    case "new-wallet":
+      fs.rmdirSync(path.join(app.getPath("userData"), "wallet"), { recursive: true });
+      break;
+    default:
+      console.error(`unknown argument: ${args[i]}`);
+      break;
+  }
+}
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } }
