@@ -4,6 +4,8 @@
       <h4>{{ $t("balance.your_address") }}</h4>
       <div class="select-all">{{ receiveAddress }}</div>
       <button class="btn" @click="receiveNovo">{{ $t("wallet.receive_aquired_novo") }}</button>
+      <button class="btn" @click="viewPhrase">{{ "View recovery phrase" }}</button>
+      <button class="btn" @click="changePassword">{{ "Change password" }}</button>
     </div>
   </div>
 </template>
@@ -21,6 +23,12 @@ export default {
   methods: {
     receiveNovo() {
       window.open(this.receiveUrl, "_blank");
+    },
+    viewPhrase() {
+      this.$router.push({ name: "phrase" }); // maybe also route from backend
+    },
+    changePassword() {
+      this.$router.push({ name: "changepassword" }); // maybe also route from backend
     }
   }
 };
