@@ -1,8 +1,8 @@
 <table cellspacing="0" cellpadding="0" color="grey" border="1px">
   <tr border=0>
     <td border="0px" width="80%" rowspan="7">
-      <a href="https://www.Gulden.com">
-        <img align="left" src="./src/frontend/electron/img/icon_512.png" alt="Novo"/>
+      <a href="https://www.novocurrency.com">
+        <img align="left" src="./src/frontend/electron/img/icon_128.png" alt="Novo"/>
       </a>
       <p>Novocurrency; The climate friendly blockchain based currency with an even distribution<br/>
     </td>
@@ -51,7 +51,7 @@
 
 
 ### License
-All code, binaries and other assets in this repository are subject to [The Gulden license](https://github.com/Gulden/gulden-official/blob/master/COPYING_gulden) except where explicitely stated otherwise.
+All code, binaries and other assets in this repository are subject to [The Novo license](https://github.com/novocurrency/novocurrency-core/blob/master/COPYING_novo) except where explicitely stated otherwise.
 
 ### Branches
 `master` branch tracks the current public release; is generally updated only for each release (with accompanying tag) and very occasionally for minor documentation or other commits. If all you want is to build/track the current version of the sofrware than use the `master` branch.
@@ -94,12 +94,12 @@ For those who really need too or are technically inclined it is of course possib
 |:-----------|:---------|:---------|
 |Consensus algorithm:|PoW² SIGMA/Witness|PoW² SIGMA/Witness|
 |Recommended transaction confirmations:|2|2|
-|Block reward SIGMA:|50 NLG|1000 NLG|
-|Block reward witness:|30 NLG|20 NLG|
+|Block reward SIGMA:|0.10 Novo|0.10 Novo|
+|Block reward witness:|0.04 Novo|0.04 Novo|
 |Block interval target:|300 seconds (5 minutes)|Configurable|
 |Difficulty adjustment period:|Every block|Every block|
 |Difficulty adjustment algorithm:|Delta|Delta|
-|Total coins to be minted over time:|1680M|-|
+|Total coins to be minted over time:|10'000'000'000 Novo|-|
 |P2P Port|9233|9234|
 |RPC Port|9934|9235|
 |P2P Network Header|fcfdfcfd|Look in debug.log|
