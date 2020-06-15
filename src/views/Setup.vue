@@ -137,11 +137,6 @@ export default {
     },
     onMatchChanged(match) {
       this.matchingWords += match ? 1 : -1;
-      if (match && event.target.nextSibling && event.target.nextSibling.tagName === "INPUT") {
-          event.target.nextSibling.focus();
-      } else {
-          event.target.blur();
-      }
     },
     calculatePassword2Status() {
       //if (this.password1 === null || this.password1.length < 6) return "";

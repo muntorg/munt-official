@@ -16,7 +16,11 @@ export default {
     };
   },
   props: {
-    word: String
+    word: String,
+    tabOnMatch: {
+      type: Boolean,
+      default: true
+    }
   },
   methods: {
     onFocus() {
@@ -41,6 +45,13 @@ export default {
 
       if (match) {
         this.$emit("match-changed", true);
+
+        if (this.tabOnMatch) {
+          let nextEl = event.srcElement.nextSibling;
+          if (nextEl && nextEl.tagName === "INPUT") {
+            nextEl.focus();
+          }
+        }
       } else if (this.match) {
         this.$emit("match-changed", false);
       }
