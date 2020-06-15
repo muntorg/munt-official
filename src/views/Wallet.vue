@@ -5,7 +5,6 @@
       <div>{{ receiveAddress }}</div>
       <button class="btn" @click="receiveNovo">{{ $t("wallet.receive_aquired_novo") }}</button>
     </div>
-    <div class="transfer"><a target="_blank" href="https://novocurrency.com/transfer?receive_address={{ receiveAddress }}" id="transfer">Receive your acquired Novo</a></div>
   </div>
 </template>
 
