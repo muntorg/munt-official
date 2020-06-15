@@ -26,13 +26,13 @@ const routes = [
     path: "/phrase",
     name: "phrase",
     component: () =>
-      import(/* webpackChunkName: "wallet" */ "../views/Phrase.vue")
+      import(/* webpackChunkName: "phrase" */ "../views/Phrase.vue")
   },
   {
     path: "/changepassword",
     name: "changepassword",
     component: () =>
-      import(/* webpackChunkName: "wallet" */ "../views/ChangePassword.vue")
+      import(/* webpackChunkName: "changepassword" */ "../views/ChangePassword.vue")
   }
 ];
 
