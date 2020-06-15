@@ -1,6 +1,6 @@
 "use strict";
 
-import { app, protocol, Menu, BrowserWindow, nativeImage } from "electron";
+import { app, protocol, Menu, BrowserWindow, shell } from "electron";
 import {
   createProtocol
   /* installVueDevtools */
@@ -50,21 +50,9 @@ function createWindow() {
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       enableRemoteModule: true
-    }
+    },
+    icon: path.join(__static, "icon.png")
   });
-
-  if (process.platform !== "darwin")
-  {
-    let iconPath = null;
-    if (isDevelopment) {
-      iconPath = path.join(__dirname.replace("\\dist_electron", ""), "/public/favicon.ico");
-    } else {
-      iconPath = path.join(__dirname, "favicon.ico");
-    }
-    if (fs.existsSync(iconPath)) {
-      win.setIcon(iconPath);
-    }
-  }
 
   var menu = Menu.buildFromTemplate(
     [
@@ -102,6 +90,12 @@ function createWindow() {
     console.log("win.on:closed");
     win = null;
   });
+
+  // Force external hrefs to open in external browser
+  win.webContents.on('new-window', function(e, url) {
+    e.preventDefault();
+    shell.openExternal(url);
+  })
 }
 
 app.on("will-quit", event => {

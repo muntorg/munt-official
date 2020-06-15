@@ -2,6 +2,7 @@
   <input
     type="text"
     @keyup="onKeyUp"
+    @focus="onFocus"
     v-bind:class="{ match: match, error: match === false }"
   />
 </template>
@@ -18,9 +19,10 @@ export default {
     word: String
   },
   methods: {
+    onFocus() {
+      console.log(`${this.word}`);
+    },
     onKeyUp() {
-      console.log(`${this.$el.value} : ${this.word}`);
-
       let match = null;
       if (this.$el.value === this.word) {
         match = true;
@@ -70,7 +72,7 @@ input.match:focus {
 input.error,
 input:focus.error {
   color: var(--error-text-color, #fff);
-  border-color: var(--error-color, red);
-  background: var(--error-color, red);
+  border-color: var(--error-color, #dd3333);
+  background: var(--error-color, #dd3333);
 }
 </style>

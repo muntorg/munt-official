@@ -2,7 +2,8 @@
   <div id="wallet">
     <div class="section">
       <h4>{{ $t("balance.your_address") }}</h4>
-      <span id="address">{{ receiveAddress }}</span>
+      <div>{{ receiveAddress }}</div>
+      <button class="btn" @click="receiveNovo">{{ $t("wallet.receive_aquired_novo") }}</button>
     </div>
     <div class="transfer"><a target="_blank" href="https://novocurrency.com/transfer?receive_address={{ receiveAddress }}" id="transfer">Receive your acquired Novo</a></div>
   </div>
@@ -13,7 +14,15 @@ import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState(["receiveAddress"])
+    ...mapState(["receiveAddress"]),
+    receiveUrl() {
+      return `https://novocurrency.com/transfer?receive_address=${this.receiveAddress}`;
+    }
+  },
+  methods: {
+    receiveNovo() {
+      window.open(this.receiveUrl, "_blank");
+    }
   }
 };
 </script>
