@@ -63,6 +63,7 @@ export default {
 </script>
 
 <style lang="less">
+/* TODO: These styles aren't scoped so they will bleed throughout the app. Make sure this can be scoped */
 input {
   color: var(--success-color, #009572);
   border: 1px solid #ddd;
