@@ -13,12 +13,18 @@
       <div v-else-if="current === 2">
         <h2>{{ $t("setup.step2.header") }}</h2>
         <div class="phrase-repeat">
-          <phrase-repeat-input
-            v-for="word in recoveryPhraseWords"
-            :key="word"
-            :word="word"
-            v-on:match-changed="onMatchChanged"
-          />
+          <phrase-repeat-input :word="recoveryPhraseWords[0]" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[1]" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[2]" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[3]" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[4]" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[5]" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[6]" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[7]" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[8]" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[9]" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[10]" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[11]" @match-changed="onMatchChanged" />
         </div>
       </div>
 
