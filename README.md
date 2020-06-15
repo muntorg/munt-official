@@ -99,13 +99,13 @@ For those who really need too or are technically inclined it is of course possib
 |Block interval target:|300 seconds (5 minutes)|Configurable|
 |Difficulty adjustment period:|Every block|Every block|
 |Difficulty adjustment algorithm:|Delta|Delta|
-|Total coins to be minted over time:|10'000'000'000 Novo|-|
+|Total coins to be minted over time:|10'000'000'000 Novo|10'000'000'000 Novo|
 |P2P Port|9233|9234|
 |RPC Port|9934|9235|
-|P2P Network Header|fcfdfcfd|Look in debug.log|
-|Address version byte|38 (G)|65 (T)|
-|P2SH version byte|98 (g)|127 (t)|
-|BIP44 coin type|87 0x80000057|87 0x80000057|
+|P2P Network Header|fcfdfcfd|Configurable|
+|Address version byte|53 (N)|65 (T)|
+|P2SH version byte|113 (n)|127 (t)|
+|BIP44 coin type|530 0x80000212|530 0x80000212|
 |**Infrastructure**|**Main network**|**[Testnet](./technical_documentation/accelerated_testnet.md#official-testnet)**|
 |Official block explorer|blockchain.novocurrency.com|-|
 |Community block explorer||-|

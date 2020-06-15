@@ -128,13 +128,13 @@ void CHDSeed::Init()
         case BIP44:
             {
                 masterKeyPriv.Derive(purposeKeyPriv, 44 | BIP32_HARDENED_KEY_LIMIT);  //m/44'
-                purposeKeyPriv.Derive(cointypeKeyPriv, 87 | BIP32_HARDENED_KEY_LIMIT);  //m/44'/87'
+                purposeKeyPriv.Derive(cointypeKeyPriv, 530 | BIP32_HARDENED_KEY_LIMIT);  //m/44'/530'
             }
             break;
         case BIP44NoHardening:
             {
                 masterKeyPriv.Derive(purposeKeyPriv, 44);  //m/44
-                purposeKeyPriv.Derive(cointypeKeyPriv, 87);  //m/44/87
+                purposeKeyPriv.Derive(cointypeKeyPriv, 530);  //m/44/530
             }
             break;
         default:
@@ -154,7 +154,7 @@ void CHDSeed::InitReadOnly()
 {
     assert(m_type == BIP44NoHardening);
     masterKeyPub.Derive(purposeKeyPub, 44);  //m/44
-    purposeKeyPub.Derive(cointypeKeyPub, 87);  //m/44/87
+    purposeKeyPub.Derive(cointypeKeyPub, 530);  //m/44/530
 
     if(m_UUID.is_nil())
     {
@@ -220,7 +220,7 @@ CAccountHD* CHDSeed::GenerateAccount(int nAccountIndex, AccountType type)
     {
         //fixme: (FUT) (ACCOUNTS) (LOW) We should be able to combine this with IsLocked() (BIP44NoHardening) case below to simplify the code here.
         CExtPubKey accountKeyPub;
-        cointypeKeyPub.Derive(accountKeyPub, nAccountIndex);  // m/44/87/n (BIP44)
+        cointypeKeyPub.Derive(accountKeyPub, nAccountIndex);  // m/44/530/n (BIP44)
         return new CAccountHD(accountKeyPub, m_UUID, type);
     }
     else if (IsLocked())
@@ -254,10 +254,10 @@ bool CHDSeed::GetPrivKeyForAccountInternal(uint64_t nAccountIndex, CExtKey& acco
             break;
         case BIP44:
         case BIP44External:
-            cointypeKeyPriv.Derive(accountKeyPriv, nAccountIndex | BIP32_HARDENED_KEY_LIMIT);  // m/44'/87'/n' (BIP44)
+            cointypeKeyPriv.Derive(accountKeyPriv, nAccountIndex | BIP32_HARDENED_KEY_LIMIT);  // m/44'/530'/n' (BIP44)
             break;
         case BIP44NoHardening:
-            cointypeKeyPriv.Derive(accountKeyPriv, nAccountIndex);  // m/44'/87'/n (BIP44 without hardening (for read only sync))
+            cointypeKeyPriv.Derive(accountKeyPriv, nAccountIndex);  // m/44'/530'/n (BIP44 without hardening (for read only sync))
             break;
     }
     return true;
@@ -707,7 +707,7 @@ CPubKey CAccountHD::GenerateNewKey(CWallet& wallet, CKeyMetadata& metadata, int 
 
     //LogPrintf("CAccount::GenerateNewKey(): NewHDKey [%s]\n", CGuldenAddress(childKey.pubkey.GetID()).ToString());
 
-    metadata.hdKeypath = std::string("m/44'/87'/") +  std::to_string(m_nIndex)  + "/" + std::to_string(keyChain) + "/" + std::to_string(childKey.nChild) + "'";
+    metadata.hdKeypath = std::string("m/44'/530'/") +  std::to_string(m_nIndex)  + "/" + std::to_string(keyChain) + "/" + std::to_string(childKey.nChild) + "'";
     metadata.hdAccountUUID = getUUIDAsString(getUUID());
 
     if (!wallet.AddHDKeyPubKey(childKey.nChild, childKey.pubkey, *this, keyChain))

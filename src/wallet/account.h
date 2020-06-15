@@ -214,14 +214,14 @@ protected:
     //Always available
     CExtPubKey masterKeyPub;  //hd master key (m)      - BIP32 and BIP44
     CExtPubKey purposeKeyPub; //key at m/44'           - BIP44 only
-    CExtPubKey cointypeKeyPub;//key at m/44'/87'       - BIP44 only
+    CExtPubKey cointypeKeyPub;//key at m/44'/530'       - BIP44 only
 
     bool encrypted = false;
     // These members are only valid when the account is unlocked/unencrypted.
     SecureString unencryptedMnemonic;
     CExtKey masterKeyPriv;  //hd master key (m)      - BIP32 and BIP44
     CExtKey purposeKeyPriv; //key at m/44'           - BIP44 only
-    CExtKey cointypeKeyPriv;//key at m/44'/87'       - BIP44 only
+    CExtKey cointypeKeyPriv;//key at m/44'/530'       - BIP44 only
     CKeyingMaterial vMasterKey;//Memory only.
 
     bool m_readOnly=false;
@@ -519,9 +519,9 @@ private:
     bool encrypted = false;
 
     //These members are only valid when the account is unlocked/unencrypted.
-    CExtKey accountKeyPriv;         //key at m/0' (bip32) or m/44'/87'/n' (bip44)
-    CExtKey primaryChainKeyPriv;    //key at m/0'/0 (bip32) or m/44'/87'/0'/0 (bip44)
-    CExtKey changeChainKeyPriv;     //key at m/0'/1 (bip32) or m/44'/87'/0'/1 (bip44)
+    CExtKey accountKeyPriv;         //key at m/0' (bip32) or m/44'/530'/n' (bip44)
+    CExtKey primaryChainKeyPriv;    //key at m/0'/0 (bip32) or m/44'/530'/0'/0 (bip44)
+    CExtKey changeChainKeyPriv;     //key at m/0'/1 (bip32) or m/44'/530'/0'/1 (bip44)
 
     //Contains the encrypted versions of the above - only valid when the account is an encrypted one.
     std::vector<unsigned char> accountKeyPrivEncrypted;
