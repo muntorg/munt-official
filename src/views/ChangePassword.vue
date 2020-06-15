@@ -52,15 +52,10 @@ export default {
   data() {
     return {
       current: 1,
-      recoveryPhrase: null,
-      matchingWords: 0,
       password1: null,
       password2: null,
-      passwordold: null,
-      initialized: false
+      passwordold: null
     };
-  },
-  async mounted() {
   },
   computed: {
     computePassword1Help() {
@@ -107,8 +102,6 @@ export default {
           }
           break;
         case 2:
-          if (this.initialized) return;
-          this.initialized = true;
           if (NovoBackend.ChangePassword(this.passwordold, this.password2))
           {
             this.$router.push({ name: "wallet" }); // maybe also route from backend  
@@ -119,12 +112,6 @@ export default {
           }
           break;
       }
-    },
-    onAcceptChange() {
-      this.accepted = !this.accepted;
-    },
-    onMatchChanged(match) {
-      this.matchingWords += match ? 1 : -1;
     },
     calculatePassword2Status() {
       //if (this.password1 === null || this.password1.length < 6) return "";
@@ -145,32 +132,6 @@ export default {
   position: absolute;
   bottom: 20px;
   right: 0px;
-}
-
-.phrase {
-  padding: 20px;
-  margin: 0 0 40px 0;
-  font-size: 1.4em;
-  font-weight: 500;
-  text-align: center;
-  background-color: #f5f5f5;
-}
-
-.phrase-repeat {
-  width: calc(100% + 10px);
-  margin: -5px -5px 35px -5px;
-}
-
-.phrase-repeat input {
-  width: calc(25% - 10px);
-  margin: 5px;
-  height: 40px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 22px;
-  font-size: 16px;
-  padding: 10px;
-  border-radius: 0px;
 }
 
 .password {

@@ -7,7 +7,7 @@
         <div class="password">
           <div class="password-row">
             <h4>{{ $t("setup.step3.password") }}:</h4>
-            <input type="password" v-model="password1" />
+            <input type="password" v-model="password" />
           </div>
         </div>
       </div>
@@ -47,15 +47,8 @@ export default {
     return {
       current: 1,
       recoveryPhrase: null,
-      matchingWords: 0,
-      password1: null,
-      password2: null,
-      initialized: false
+      password: null
     };
-  },
-  async mounted() {
-  },
-  computed: {
   },
   methods: {
     isNextDisabled() {
@@ -64,9 +57,10 @@ export default {
     async nextStep() {
       switch (this.current) {
         case 1:
-          if (NovoBackend.UnlockWallet(this.password1))
+          if (NovoBackend.UnlockWallet(this.password))
           {
               this.recoveryPhrase = NovoBackend.GetRecoveryPhrase();
+              NovoBackend.LockWallet();
               this.current++;
           } 
           else
@@ -75,15 +69,9 @@ export default {
           }
           break;
         case 2:
-          this.$router.push({ name: "wallet" }); // maybe also route from backend
+          this.$router.push({ name: "wallet" });
           break;
       }
-    },
-    onAcceptChange() {
-      this.accepted = !this.accepted;
-    },
-    onMatchChanged(match) {
-      this.matchingWords += match ? 1 : -1;
     }
   }
 };
@@ -103,23 +91,6 @@ export default {
   font-weight: 500;
   text-align: center;
   background-color: #f5f5f5;
-}
-
-.phrase-repeat {
-  width: calc(100% + 10px);
-  margin: -5px -5px 35px -5px;
-}
-
-.phrase-repeat input {
-  width: calc(25% - 10px);
-  margin: 5px;
-  height: 40px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 22px;
-  font-size: 16px;
-  padding: 10px;
-  border-radius: 0px;
 }
 
 .password {
