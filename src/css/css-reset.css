@@ -20,7 +20,7 @@ body {
 	padding: 0;
 	background-repeat: no-repeat;
 	background-position: center center;
-	user-select: none;
+	user-select: none; /* remove user-select from all elements */
 }
 
 html, *, *:before, *:after {
@@ -28,10 +28,6 @@ html, *, *:before, *:after {
 }
 
 * :focus {outline: none;}
-
-* {
-    user-select: none;
-}
 
 html,
 body {
