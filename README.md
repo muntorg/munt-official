@@ -2,48 +2,46 @@
   <tr border=0>
     <td border="0px" width="80%" rowspan="7">
       <a href="https://www.Gulden.com">
-        <img align="left" src="https://gulden.com/img/design/g-111444.svg" alt="Gulden"/>
+        <img align="left" src="./src/frontend/electron/img/icon_512.png" alt="Novo"/>
       </a>
-      <p>Gulden is a <i>revolutionary</i> next generation blockchain based currency and payment system.<br/>
-      Gulden takes the blockchain concept to a whole new level; improving on multiple downsides and deficiencies in the earlier implementations of blockchain.</p>
-      <p>The project is driven at the core by a focus on key concepts like <i>usability</i> and <i>quality</i> which shows through in our software.</p><p>Join the Gulden project today and help build the future!</p>
+      <p>Novocurrency; The climate friendly blockchain based currency with an even distribution<br/>
     </td>
     <td width="20%" border=0>
       <a href="#">
-        <img height="20px" src="https://travis-ci.org/Gulden/gulden-official.svg?branch=master" alt="ci build status"/>
+        <img height="20px" src="https://travis-ci.org/novocurrency/novocurrency-core.svg?branch=master" alt="ci build status"/>
       </a>
     </td>
   </tr>
   <tr border=0>
     <td>
-      <a href="https://github.com/Gulden/gulden-official/issues">
-        <img  height="20px" src="https://img.shields.io/github/issues/gulden/gulden-official.svg?color=blue" alt="open issues"/>
+      <a href="https://github.com/novocurrency/novocurrency-core/issues">
+        <img  height="20px" src="https://img.shields.io/github/issues/novocurrency/novocurrency-core.svg?color=blue" alt="open issues"/>
     </td>
   </tr>
   <tr border=0>
     <td>
-      <a href="https://github.com/Gulden/gulden-official/issues?q=is%3Aissue+is%3Aclosed">
-        <img  height="20px" src="https://img.shields.io/github/issues-closed/gulden/gulden-official.svg?color=blue" alt="closed issues"/>
+      <a href="https://github.com/novocurrency/novocurrency-core/issues?q=is%3Aissue+is%3Aclosed">
+        <img  height="20px" src="https://img.shields.io/github/issues-closed/novocurrency/novocurrency-core.svg?color=blue" alt="closed issues"/>
       </a>
     </td>
   </tr>
   <tr border=0>
     <td border=0>
-      <a href="https://github.com/Gulden/gulden-official/releases">
-        <img height="20px" src="https://img.shields.io/github/downloads/gulden/gulden-official/total.svg?color=blue" alt="total downloads"/>
+      <a href="https://github.com/novocurrency/novocurrency-core/releases">
+        <img height="20px" src="https://img.shields.io/github/downloads/novocurrency/novocurrency-core/total.svg?color=blue" alt="total downloads"/>
       </a>
     </td>
   </tr>
   <tr border=0>
     <td>
-      <a href="https://github.com/Gulden/gulden-official/commits/master">
-        <img height="20px" src="https://img.shields.io/github/commit-activity/y/gulden/gulden-official.svg" alt="commits 1y"/>
+      <a href="https://github.com/novocurrency/novocurrency-core/commits/master">
+        <img height="20px" src="https://img.shields.io/github/commit-activity/y/novocurrency/novocurrency-core.svg" alt="commits 1y"/>
       </a>
     </td>
   </tr>
   <tr>
     <td>
-      <a href="https://github.com/Gulden/gulden-official/compare/master@%7B12month%7D...2.2_development">
+      <a href="https://github.com/novocurrency/novocurrency-core/compare/master@%7B12month%7D...2.2_development">
         <img height="20px" src="https://img.shields.io/badge/dev%20branch-2.2_development-blue.svg" alt="active_branch"/>
       </a>
     </td>
@@ -63,10 +61,10 @@ Each major version of the software gets its own branch e.g. `2.3_development`, `
 Major features are worked on in temporary feature branches until they can be merged back into one of the development branches. The currently most active branch, where most development that will go into the next major release is taking place is linked in the table at the top of this README as the `dev branch` and may be updated as development mandates seperate branches, for development changes you will generally want to work on this branch.
 
 ### Contributing
-If you are thinking about contributing toward the development of Gulden in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
+If you are thinking about contributing toward the development of Novo in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
 
 ### Technical documentation
-* [PoW² whitepaper](.//technical_documentation/Gulden_PoW2.pdf); [PoW² activation](./technical_documentation/PoW2_activation.md)
+* [PoW² whitepaper](./technical_documentation/Gulden_PoW2.pdf); [PoW² activation](./technical_documentation/PoW2_activation.md)
 * [Transaction format](./technical_documentation/transaction_format.md)
 * [Account system](./technical_documentation/account_system.md)
 * [Accelerated testnet](./technical_documentation/accelerated_testnet.md)
@@ -77,15 +75,15 @@ If you are thinking about contributing toward the development of Gulden in some 
 
 Connect with the community through one or more of the following:
 
-[Website](https://gulden.com) ◾ [Slack](https://gulden.com/join) ◾ [Twitter](http://twitter.com/gulden) ◾ [Facebook](http://facebook.com/gulden) ◾ [Meetup](https://www.meetup.com/gulden) ◾ [Reddit](https://www.reddit.com/r/GuldenCommunity) ◾ [IRC](https://webchat.freenode.net/?channels=Gulden)
+[Website](https://novocurrency.com) ◾ [Slack](https://novocurrency.com/join) ◾ [Twitter](http://twitter.com/novocurrency) ◾ [Facebook](http://facebook.com/novocurrency)
 
 
 ### Downloading
 
-The latest binaries and installers can be found [here](https://github.com/Gulden/gulden-official/releases) for all platforms, including raspbian.
+The latest binaries and installers can be found [here](https://github.com/novocurrency/novocurrency-core/releases) for all platforms, including raspbian.
 
 ### Building
-[Binaries](https://github.com/Gulden/gulden-official/releases) for both the UI as well as the daemon and command line interface for multiple architectures.
+[Binaries](https://github.com/novocurrency/novocurrency-core/releases) for both the UI as well as the daemon and command line interface for multiple architectures.
 
 For those who really need too or are technically inclined it is of course possible to build the software yourself. Please read the [build instructions](./doc/building.md) before attempting to build the software and/or seeking support.
 
@@ -109,8 +107,7 @@ For those who really need too or are technically inclined it is of course possib
 |P2SH version byte|98 (g)|127 (t)|
 |BIP44 coin type|87 0x80000057|87 0x80000057|
 |**Infrastructure**|**Main network**|**[Testnet](./technical_documentation/accelerated_testnet.md#official-testnet)**|
-|Official block explorer|blockchain.gulden.com|-|
-|Community block explorer|www.dactual.com|-|
-|DNS Seed 1|seed.gulden.com|-|
-|DNS Seed 2|amsterdam.gulden.com|-|
-|DNS Seed 3|rotterdam.gulden.network|-|
+|Official block explorer|blockchain.novocurrency.com|-|
+|Community block explorer||-|
+|DNS Seed 1|seed1.novocurrency.com|-|
+|DNS Seed 2|seed2.novocurrency.com|-|
