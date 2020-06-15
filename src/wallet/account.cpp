@@ -103,7 +103,7 @@ CHDSeed::CHDSeed(CExtPubKey& pubkey, SeedType type)
 void CHDSeed::Init()
 {
     unsigned char* seed = seedFromMnemonic(unencryptedMnemonic);
-    static const std::vector<unsigned char> hashkey = {'G','u','l','d','e','n',' ','b','i','p','3','2'};
+    static const std::vector<unsigned char> hashkey = {'N','o','v','o',' ','H','D',' ','s','e','e','d'};
     static const std::vector<unsigned char> hashkeylegacy = {'B','i','t','c','o','i','n',' ','s','e','e','d'};
 
     // Legacy support for old iOS and android 'Guldencoin' wallets.
