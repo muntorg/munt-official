@@ -28,6 +28,10 @@ html, *, *:before, *:after {
 
 * :focus {outline: none;}
 
+* {
+    user-select: none;
+}
+
 html,
 body {
   height: 100%;
