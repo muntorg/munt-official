@@ -55,8 +55,10 @@ All code, binaries and other assets in this repository are subject to [The Novo 
 
 ### Branches
 `master` branch tracks the current public release; is generally updated only for each release (with accompanying tag) and very occasionally for minor documentation or other commits. If all you want is to build/track the current version of the sofrware than use the `master` branch.
+
 `development` branch tracks the current ongoing development that has not yet been released. Individual features may have their own feature branch from time to time.
 Major features are worked on in temporary feature branches until they can be merged back into one of the development branches.
+
 The currently most active branch, where most development that will go into the next major release is taking place is linked in the table at the top of this README as the `dev branch` and may be updated as development mandates seperate branches, for development changes you will generally want to work on this branch.
 
 ### Contributing
