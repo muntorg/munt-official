@@ -41,8 +41,8 @@
   </tr>
   <tr>
     <td>
-      <a href="https://github.com/novocurrency/novocurrency-core/compare/master@%7B12month%7D...2.2_development">
-        <img height="20px" src="https://img.shields.io/badge/dev%20branch-2.2_development-blue.svg" alt="active_branch"/>
+      <a href="https://github.com/novocurrency/novocurrency-core/compare/master@%7B12month%7D...development">
+        <img height="20px" src="https://img.shields.io/badge/dev%20branch-development-blue.svg" alt="active_branch"/>
       </a>
     </td>
   </tr>
@@ -55,10 +55,9 @@ All code, binaries and other assets in this repository are subject to [The Novo 
 
 ### Branches
 `master` branch tracks the current public release; is generally updated only for each release (with accompanying tag) and very occasionally for minor documentation or other commits. If all you want is to build/track the current version of the sofrware than use the `master` branch.
-
-Each major version of the software gets its own branch e.g. `2.3_development`, `2.2_development` where if `2.3` were the next major release than both `2.3` and `2.2` may see some activity with `2.2` getting minor backports and updates while `2.3` development continues.
-
-Major features are worked on in temporary feature branches until they can be merged back into one of the development branches. The currently most active branch, where most development that will go into the next major release is taking place is linked in the table at the top of this README as the `dev branch` and may be updated as development mandates seperate branches, for development changes you will generally want to work on this branch.
+`development` branch tracks the current ongoing development that has not yet been released. Individual features may have their own feature branch from time to time.
+Major features are worked on in temporary feature branches until they can be merged back into one of the development branches.
+The currently most active branch, where most development that will go into the next major release is taking place is linked in the table at the top of this README as the `dev branch` and may be updated as development mandates seperate branches, for development changes you will generally want to work on this branch.
 
 ### Contributing
 If you are thinking about contributing toward the development of Novo in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
@@ -72,14 +71,11 @@ If you are thinking about contributing toward the development of Novo in some ca
 
 
 ### Community
-
 Connect with the community through one or more of the following:
-
 [Website](https://novocurrency.com) ◾ [Slack](https://novocurrency.com/join) ◾ [Twitter](http://twitter.com/novocurrency) ◾ [Facebook](http://facebook.com/novocurrency)
 
 
 ### Downloading
-
 The latest binaries and installers can be found [here](https://github.com/novocurrency/novocurrency-core/releases) for all platforms, including raspbian.
 
 ### Building
@@ -88,8 +84,6 @@ The latest binaries and installers can be found [here](https://github.com/novocu
 For those who really need too or are technically inclined it is of course possible to build the software yourself. Please read the [build instructions](./doc/building.md) before attempting to build the software and/or seeking support.
 
 ### Additional technical information
-
-
 |Technical specifications|Main network|[Testnet](./technical_documentation/accelerated_testnet.md#official-testnet)|
 |:-----------|:---------|:---------|
 |Consensus algorithm:|PoW² SIGMA/Witness|PoW² SIGMA/Witness|
