@@ -92,6 +92,7 @@ Section -Main SEC0000
     File /oname=COPYING.txt @abs_top_srcdir@/COPYING
     File /oname=COPYING.txt @abs_top_srcdir@/COPYING_upstream
     File /oname=COPYING.txt @abs_top_srcdir@/COPYING_gulden
+    File /oname=COPYING.txt @abs_top_srcdir@/COPYING_novo
     #SetOutPath $INSTDIR\platforms
     #File @abs_top_srcdir@/release/platforms/*
     #SetOutPath $INSTDIR\imageformats
