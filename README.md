@@ -65,7 +65,6 @@ The currently most active branch, where most development that will go into the n
 If you are thinking about contributing toward the development of Novo in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
 
 ### Technical documentation
-* [PoW² whitepaper](./technical_documentation/Gulden_PoW2.pdf); [PoW² activation](./technical_documentation/PoW2_activation.md)
 * [Transaction format](./technical_documentation/transaction_format.md)
 * [Account system](./technical_documentation/account_system.md)
 * [Accelerated testnet](./technical_documentation/accelerated_testnet.md)
