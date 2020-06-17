@@ -1,5 +1,5 @@
 <template>
-  <div id="setup-container">
+    <div id="setup-container">
     <div class="steps-container section">
       <!-- step 1: Enter old password -->
       <div v-if="current === 1">
@@ -45,8 +45,9 @@
   </div>
 </template>
 
+
 <script>
-import NovoBackend from "../libnovo/NovoBackend";
+import NovoBackend from "../../libnovo/NovoBackend";
 
 export default {
   data() {

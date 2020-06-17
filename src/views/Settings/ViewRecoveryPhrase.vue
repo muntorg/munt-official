@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import NovoBackend from "../libnovo/NovoBackend";
+import NovoBackend from "../../libnovo/NovoBackend";
 
 export default {
   data() {

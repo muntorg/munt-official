@@ -23,16 +23,22 @@ const routes = [
       import(/* webpackChunkName: "wallet" */ "../views/Wallet.vue")
   },
   {
-    path: "/phrase",
-    name: "phrase",
+    path: "/settings",
+    name: "settings",
     component: () =>
-      import(/* webpackChunkName: "phrase" */ "../views/Phrase.vue")
+      import(/* webpackChunkName: "settings" */ "../views/Settings.vue")
   },
   {
-    path: "/changepassword",
-    name: "changepassword",
+    path: "/settings/view-recovery-phrase",
+    name: "view-recovery-phrase",
     component: () =>
-      import(/* webpackChunkName: "changepassword" */ "../views/ChangePassword.vue")
+      import(/* webpackChunkName: "view-recovery-phrase" */ "./../views/Settings/ViewRecoveryPhrase.vue")
+  },
+  {
+    path: "/settings/change-password",
+    name: "change-password",
+    component: () =>
+    import(/* webpackChunkName: "change-password" */ "./../views/Settings/ChangePassword.vue")
   }
 ];
 
