@@ -30,6 +30,13 @@
         <span class="app-balance" v-show="computedBalance !== null">{{
           computedBalance
         }}</span>
+
+        <span class="top-menu">
+          <router-link :to="{ name: 'settings' }">
+            <fa-icon :icon="['fal', 'cog']" />
+            <span> Settings</span>
+          </router-link>
+        </span>
       </div>
       <div class="app-main wrapper">
         <router-view />
@@ -178,6 +185,28 @@ export default {
   color: #fff;
 }
 
+.top-menu {
+  float: right;
+  margin-right: -15px;
+ 
+}
+
+.top-menu a:hover {
+    background-color: #222;
+}
+
+.top-menu a,
+.top-menu a:active,
+.top-menu a:visited
+{
+  display: inline-block;
+  padding: 0 10px 0 10px;
+  font-size: .9em;
+  font-weight: 400;
+  line-height: 32px;
+  color: #fff;
+}
+
 .app-main {
   position: absolute;
   top: var(--top-height);
@@ -187,7 +216,6 @@ export default {
 
 .app-logo {
   float: left;
-  display: inline-block;
   margin-top: 20px;
   width: 22px;
   height: 22px;
