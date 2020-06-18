@@ -18,7 +18,7 @@
         <div v-if="current === 1" class="password">
           <div class="password-row">
             <h4>{{ $t("setup.step3.password") }}:</h4>
-            <input ref="password" type="password" v-model="passwordold" @keyup="onPasswordKeyUp" :class="{ error: isPasswordInvalid }" />
+            <input ref="password" type="password" v-model="passwordold" @keydown="onPasswordKeyDown" :class="{ error: isPasswordInvalid }" />
           </div>
         </div>
         <!-- step 2: enter new password -->
@@ -29,7 +29,7 @@
           </div>
           <div class="password-row">
             <h4>{{ $t("setup.step3.repeat_password") }}:</h4>
-            <input type="password" v-model="password2" />
+            <input type="password" v-model="password2" @keydown="onPasswordRepeatKeyDown" />
           </div>
         </div>
     </div>
@@ -65,6 +65,17 @@ export default {
       isPasswordInvalid: false
     };
   },
+  computed: {
+    passwordsValidated() {
+      //if (this.password1 === null || this.password1.length < 6) return false;
+      if (
+        this.password2 === null ||
+        this.password2.length < this.password1.length
+      ) return false;
+
+      return this.password1 === this.password2;
+    }
+  },
   mounted() {
     this.$refs.password.focus();
   },
@@ -74,7 +85,7 @@ export default {
         case 1:
           return false;
         case 2:
-          return this.calculatePassword2Status() !== "success";          
+          return this.passwordsValidated === false;          
       }
       return true;
     },
@@ -91,10 +102,14 @@ export default {
           break;
       }
     },
-    onPasswordKeyUp() {
+    onPasswordKeyDown() {
       this.isPasswordInvalid = false;
-      if (event.keyCode !== 13) return;
-      this.validatePassword();
+      if (event.keyCode === 13)
+        this.validatePassword();
+    },
+    onPasswordRepeatKeyDown() {
+      if (event.keyCode === 13 && this.passwordsValidated)
+        this.nextStep();
     },
     validatePassword() {
       if (NovoBackend.UnlockWallet(this.passwordold))
@@ -106,16 +121,6 @@ export default {
       {
         this.isPasswordInvalid = true;
       }
-    },
-    calculatePassword2Status() {
-      //if (this.password1 === null || this.password1.length < 6) return "";
-      if (
-        this.password2 === null ||
-        this.password2.length < this.password1.length
-      )
-        return "";
-
-      return this.password1 === this.password2 ? "success" : "error";
     }
   }
 };

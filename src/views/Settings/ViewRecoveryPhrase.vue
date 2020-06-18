@@ -17,7 +17,7 @@
       <div class="password" v-if="current === 1">
         <div class="password-row">
           <h4>{{ $t("setup.step3.password") }}:</h4>
-          <input ref="password" type="password" v-model="password" @keyup="onPasswordKeyUp" :class="{ error: isPasswordInvalid }" />
+          <input ref="password" type="password" v-model="password" @keydown="onPasswordKeyDown" :class="{ error: isPasswordInvalid }" />
         </div>
       </div>
 
@@ -66,7 +66,7 @@ export default {
           break;
       }
     },
-    onPasswordKeyUp() {
+    onPasswordKeyDown() {
       this.isPasswordInvalid = false;
       if (event.keyCode !== 13) return;
       this.validatePassword();
