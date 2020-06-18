@@ -1,21 +1,28 @@
 <template>
     <div id="setup-container">
-    <div class="steps-container section">
-      <!-- step 1: Enter old password -->
-      <div v-if="current === 1">
-        <h2>{{ "Enter your password" }}</h2>
-        <div class="password">
+    
+      <div class="section">
+        <div class="back">
+          <router-link :to="{ name: current === 1 ? 'settings' : 'wallet' }">
+            <fa-icon :icon="['fal', 'long-arrow-left']" />
+            <span> Back</span>
+          </router-link>
+        </div>
+
+        <h2>
+          <span v-if="current === 1">{{ "Enter your password" }}</span>
+          <span v-else>{{ $t("setup.step3.header") }}</span>
+        </h2>
+
+        <!-- step 1: Enter old password -->
+        <div v-if="current === 1" class="password">
           <div class="password-row">
             <h4>{{ $t("setup.step3.password") }}:</h4>
-            <input type="password" v-model="passwordold" />
+            <input ref="password" type="password" v-model="passwordold" @keyup="onPasswordKeyUp" :class="{ error: isPasswordInvalid }" />
           </div>
         </div>
-      </div>
-
-      <!-- step 2: enter new password -->
-      <div v-else-if="current === 2">
-        <h2>{{ $t("setup.step3.header") }}</h2>
-        <div class="password">
+        <!-- step 2: enter new password -->
+        <div v-else class="password">
           <div class="password-row">
             <h4>{{ $t("setup.step3.password") }}:</h4>
             <input type="password" v-model="password1" />
@@ -25,7 +32,6 @@
             <input type="password" v-model="password2" />
           </div>
         </div>
-      </div>
     </div>
     <div class="steps-buttons wrapper">
       <button
@@ -38,7 +44,7 @@
           {{ $t("buttons.Next") }}
         </span>
         <span v-else>
-          {{ $t("buttons.Finish") }}
+          Change password
         </span>
       </button>
     </div>
@@ -55,7 +61,8 @@ export default {
       current: 1,
       password1: null,
       password2: null,
-      passwordold: null
+      passwordold: null,
+      isPasswordInvalid: false
     };
   },
   computed: {
@@ -80,6 +87,9 @@ export default {
       return this.calculatePassword2Status();
     }
   },
+  mounted() {
+    this.$refs.password.focus();
+  },
   methods: {
     isNextDisabled() {
       switch (this.current) {
@@ -93,25 +103,30 @@ export default {
     async nextStep() {
       switch (this.current) {
         case 1:
-          if (NovoBackend.UnlockWallet(this.passwordold))
-          {
-            this.current++;
-          }
-          else
-          {
-            alert("Invalid password");
-          }
+          this.validatePassword();
           break;
         case 2:
           if (NovoBackend.ChangePassword(this.passwordold, this.password2))
           {
-            this.$router.push({ name: "wallet" }); // maybe also route from backend  
-          }
-          else
-          {
-            alert("Invalid password");
+            this.$router.push({ name: "wallet" });
           }
           break;
+      }
+    },
+    onPasswordKeyUp() {
+      this.isPasswordInvalid = false;
+      if (event.keyCode !== 13) return;
+      this.validatePassword();
+    },
+    validatePassword() {
+      if (NovoBackend.UnlockWallet(this.passwordold))
+      {
+        NovoBackend.LockWallet();
+        this.current++;
+      }
+      else
+      {
+        this.isPasswordInvalid = true;
       }
     },
     calculatePassword2Status() {
@@ -129,6 +144,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.back a {
+    padding: 4px 8px;
+    margin: 0 0 0 -8px;
+}
+.back {
+    margin-bottom: 20px;
+}
+
+.back a:hover {
+    background-color: #f5f5f5;
+}
+
+
 .steps-buttons {
   position: absolute;
   bottom: 20px;
@@ -162,4 +190,12 @@ export default {
   color: #009572;
   border: 1px solid #009572;
 }
+
+input.error,
+input:focus.error {
+  color: var(--error-text-color, #fff);
+  border-color: var(--error-color, #dd3333);
+  background: var(--error-color, #dd3333);
+}
+
 </style>

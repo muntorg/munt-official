@@ -17,12 +17,12 @@
       <div class="password" v-if="current === 1">
         <div class="password-row">
           <h4>{{ $t("setup.step3.password") }}:</h4>
-          <input ref="password" type="password" v-model="password" @keyup="onPasswordKeyUp" :class="{ error: isPasswordInvalid }"/>
+          <input ref="password" type="password" v-model="password" @keyup="onPasswordKeyUp" :class="{ error: isPasswordInvalid }" />
         </div>
       </div>
 
       <!-- step 2: Show recovery phrase -->
-      <div v-else-if="current === 2">
+      <div v-else>
         <div class="phrase">
           {{ recoveryPhrase }}
         </div>
