@@ -65,28 +65,6 @@ export default {
       isPasswordInvalid: false
     };
   },
-  computed: {
-    computePassword1Help() {
-      return this.password1 !== null &&
-        this.password1.length > 0 &&
-        this.password1.length < 6
-        ? "setup.step3.password1_placeholder"
-        : "";
-    },
-    computePassword1Status() {
-      return this.password1 !== null && this.password1.length >= 6
-        ? "success"
-        : "";
-    },
-    computePassword2Help() {
-      return this.calculatePassword2Status() === "error"
-        ? "setup.step3.passwords_dont_match_error"
-        : "";
-    },
-    computePassword2Status() {
-      return this.calculatePassword2Status();
-    }
-  },
   mounted() {
     this.$refs.password.focus();
   },
