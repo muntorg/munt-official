@@ -30,7 +30,7 @@
     </div>
     
     <div class="steps-buttons wrapper">
-      <button class="btn" v-if="current === 1">
+      <button class="btn" v-if="current === 1" @click="nextStep">
         {{ $t("buttons.Next") }}
       </button>
     </div>
