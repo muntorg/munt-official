@@ -13,18 +13,18 @@
       <div v-else-if="current === 2">
         <h2>{{ $t("setup.step2.header") }}</h2>
         <div class="phrase-repeat">
-          <phrase-repeat-input :word="recoveryPhraseWords[0]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[1]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[2]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[3]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[4]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[5]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[6]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[7]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[8]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[9]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[10]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[11]" @match-changed="onMatchChanged" />
+          <phrase-repeat-input ref="firstWord" :word="recoveryPhraseWords[0]" placeholder="word 1" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[1]" placeholder="word 2" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[2]" placeholder="word 3" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[3]" placeholder="word 4" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[4]" placeholder="word 5" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[5]" placeholder="word 6" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[6]" placeholder="word 7" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[7]" placeholder="word 8" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[8]" placeholder="word 9" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[9]" placeholder="word 10" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[10]" placeholder="word 11" @match-changed="onMatchChanged" />
+          <phrase-repeat-input :word="recoveryPhraseWords[11]" placeholder="word 12" @match-changed="onMatchChanged" />
         </div>
       </div>
 
@@ -82,26 +82,6 @@ export default {
     recoveryPhraseWords() {
       return this.recoveryPhrase === null ? [] : this.recoveryPhrase.split(" ");
     },
-    computePassword1Help() {
-      return this.password1 !== null &&
-        this.password1.length > 0 &&
-        this.password1.length < 6
-        ? "setup.step3.password1_placeholder"
-        : "";
-    },
-    computePassword1Status() {
-      return this.password1 !== null && this.password1.length >= 6
-        ? "success"
-        : "";
-    },
-    computePassword2Help() {
-      return this.calculatePassword2Status() === "error"
-        ? "setup.step3.passwords_dont_match_error"
-        : "";
-    },
-    computePassword2Status() {
-      return this.calculatePassword2Status();
-    },
     isRecoveryPhraseCorrect() {
       return (
         this.matchingWords > 0 &&
@@ -121,13 +101,18 @@ export default {
       }
       return true;
     },
-    async nextStep() {
+    nextStep() {
       switch (this.current) {
+        case 1:
+          setTimeout(() => {
+            this.$refs.firstWord.$el.focus();
+          }, 100);
+          break;
         case 3:
           if (this.initialized) return;
           this.initialized = true;
           if (
-            await NovoBackend.InitWalletFromRecoveryPhraseAsync(
+            NovoBackend.InitWalletFromRecoveryPhrase(
               this.recoveryPhrase,
               this.password1
             )
@@ -137,9 +122,6 @@ export default {
           break;
       }
       this.current++;
-    },
-    onAcceptChange() {
-      this.accepted = !this.accepted;
     },
     onMatchChanged(match) {
       this.matchingWords += match ? 1 : -1;
