@@ -1,39 +1,37 @@
 <template>
   <div id="setup-container">
-    <div class="steps-container section">
+    
+    <div class="section">
+      <div class="back">
+        <router-link :to="{ name: current === 1 ? 'settings' : 'wallet' }">
+            <fa-icon :icon="['fal', 'long-arrow-left']" />
+            <span> Back</span>
+        </router-link>
+      </div>
+      <h2>
+        <span v-if="current === 1">{{ "Enter your password" }}</span>
+        <span v-else>{{ $t("setup.step1.header") }}</span>
+      </h2>
+    
       <!-- step 1: Enter password -->
-      <div v-if="current === 1">
-        <h2>{{ "Enter your password" }}</h2>
-        <div class="password">
-          <div class="password-row">
-            <h4>{{ $t("setup.step3.password") }}:</h4>
-            <input type="password" v-model="password" />
-          </div>
+      <div class="password" v-if="current === 1">
+        <div class="password-row">
+          <h4>{{ $t("setup.step3.password") }}:</h4>
+          <input ref="password" type="password" v-model="password" @keyup="onPasswordKeyUp" :class="{ error: isPasswordInvalid }"/>
         </div>
       </div>
 
       <!-- step 2: Show recovery phrase -->
       <div v-else-if="current === 2">
-        <h2>{{ $t("setup.step1.header") }}</h2>
         <div class="phrase">
           {{ recoveryPhrase }}
         </div>
       </div>
-
     </div>
+    
     <div class="steps-buttons wrapper">
-      <button
-        class="btn"
-        v-if="current <= 2"
-        @click="nextStep"
-        :disabled="isNextDisabled()"
-      >
-        <span v-if="current < 2">
-          {{ $t("buttons.Next") }}
-        </span>
-        <span v-else>
-          {{ $t("buttons.Finish") }}
-        </span>
+      <button class="btn" v-if="current === 1">
+        {{ $t("buttons.Next") }}
       </button>
     </div>
   </div>
@@ -47,8 +45,12 @@ export default {
     return {
       current: 1,
       recoveryPhrase: null,
-      password: null
+      password: null,
+      isPasswordInvalid: false
     };
+  },
+  mounted() {
+    this.$refs.password.focus();
   },
   methods: {
     isNextDisabled() {
@@ -57,20 +59,28 @@ export default {
     async nextStep() {
       switch (this.current) {
         case 1:
-          if (NovoBackend.UnlockWallet(this.password))
-          {
-              this.recoveryPhrase = NovoBackend.GetRecoveryPhrase();
-              NovoBackend.LockWallet();
-              this.current++;
-          } 
-          else
-          {
-            alert("Invalid password");
-          }
+          this.validatePassword();
           break;
         case 2:
           this.$router.push({ name: "wallet" });
           break;
+      }
+    },
+    onPasswordKeyUp() {
+      this.isPasswordInvalid = false;
+      if (event.keyCode !== 13) return;
+      this.validatePassword();
+    },
+    validatePassword() {
+      if (NovoBackend.UnlockWallet(this.password))
+      {
+        this.recoveryPhrase = NovoBackend.GetRecoveryPhrase();
+        NovoBackend.LockWallet();
+        this.current++;
+      }
+      else
+      {
+        this.isPasswordInvalid = true;
       }
     }
   }
@@ -78,6 +88,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.back a {
+    padding: 4px 8px;
+    margin: 0 0 0 -8px;
+}
+.back {
+    margin-bottom: 20px;
+}
+
+.back a:hover {
+    background-color: #f5f5f5;
+}
+
 .steps-buttons {
   position: absolute;
   bottom: 20px;
@@ -120,4 +142,12 @@ export default {
   color: #009572;
   border: 1px solid #009572;
 }
+
+input.error,
+input:focus.error {
+  color: var(--error-text-color, #fff);
+  border-color: var(--error-color, #dd3333);
+  background: var(--error-color, #dd3333);
+}
+
 </style>
