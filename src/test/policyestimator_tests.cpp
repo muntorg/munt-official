@@ -15,7 +15,7 @@
 #include "uint256.h"
 #include "util.h"
 
-#include "test/test_gulden.h"
+#include "test/test.h"
 
 #include <boost/test/unit_test.hpp>
 
@@ -23,7 +23,7 @@ BOOST_FIXTURE_TEST_SUITE(policyestimator_tests, BasicTestingSetup)
 
 BOOST_AUTO_TEST_CASE(BlockPolicyEstimates)
 {
-    GULDEN_TEST_REWRITE;
+    TEST_REWRITE;
     #if 0
     CBlockPolicyEstimator feeEst;
     CTxMemPool mpool(&feeEst);

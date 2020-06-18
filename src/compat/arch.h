@@ -7,11 +7,11 @@
 // The rest of the codebase can just use 'ARCH_CPU_X86_FAMILY' for code that is specific to the x86 family (for instance) - e.g. Some code that contains SSE optimisations, note the file would still have to handle turning that on/off appropriately.
 // Or ARCH_X86_64 for code that is specific to 64 bit 'x86' processors only etc.
 
-#ifndef GULDEN_COMPAT_ARCH_H
-#define GULDEN_COMPAT_ARCH_H
+#ifndef COMPAT_ARCH_H
+#define COMPAT_ARCH_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #if defined(_M_X64) || defined(__x86_64__) || defined(__amd64__) || defined(_M_AMD64)

@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_MERKLE
-#define GULDEN_MERKLE
+#ifndef CONSENSUS_MERKLE_H
+#define CONSENSUS_MERKLE_H
 
 #include <stdint.h>
 #include <vector>

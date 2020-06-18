@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_BLOCKFILTER_H
-#define GULDEN_BLOCKFILTER_H
+#ifndef BLOCKFILTER_H
+#define BLOCKFILTER_H
 
 #include <stdint.h>
 #include <string>
@@ -192,4 +192,4 @@ private:
 
 void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthDate, const GCSFilter::ElementSet& walletAddresses, std::vector<std::tuple<uint64_t, uint64_t>>& blockFilterRanges);
 
-#endif // GULDEN_BLOCKFILTER_H
+#endif

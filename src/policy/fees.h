@@ -2,8 +2,8 @@
 // Copyright (c) 2009-2016 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-#ifndef GULDEN_POLICYESTIMATOR_H
-#define GULDEN_POLICYESTIMATOR_H
+#ifndef POLICYESTIMATOR_H
+#define POLICYESTIMATOR_H
 
 #include "amount.h"
 #include "feerate.h"
@@ -256,4 +256,4 @@ private:
     FastRandomContext insecure_rand;
 };
 
-#endif /*GULDEN_POLICYESTIMATOR_H */
+#endif

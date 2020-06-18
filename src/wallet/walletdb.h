@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_WALLET_WALLETDB_H
-#define GULDEN_WALLET_WALLETDB_H
+#ifndef WALLET_WALLETDB_H
+#define WALLET_WALLETDB_H
 
 #include "amount.h"
 #include "primitives/transaction.h"
@@ -279,4 +279,4 @@ private:
 //! Compacts BDB state so that wallet.dat is self-contained (if there are changes)
 void MaybeCompactWalletDB();
 
-#endif // GULDEN_WALLET_WALLETDB_H
+#endif

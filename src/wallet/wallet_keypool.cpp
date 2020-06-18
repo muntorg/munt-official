@@ -22,7 +22,7 @@
 #include "init.h"
 #include "key.h"
 #include "keystore.h"
-#include "guldenutil.h"
+#include "witnessutil.h"
 
 /**
  * Mark old keypool keys as used,

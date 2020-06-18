@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_CONSENSUS_CONSENSUS_H
-#define GULDEN_CONSENSUS_CONSENSUS_H
+#ifndef CONSENSUS_CONSENSUS_H
+#define CONSENSUS_CONSENSUS_H
 
 #include <stdint.h>
 
@@ -38,4 +38,4 @@ enum {
     LOCKTIME_MEDIAN_TIME_PAST = (1 << 1),
 };
 
-#endif // GULDEN_CONSENSUS_CONSENSUS_H
+#endif

@@ -46,7 +46,7 @@
 
 #include <pow/diff.h>
 #include <crypto/hash/hash.h>
-#include <guldenutil.h>
+#include <witnessutil.h>
 #include <openssl/sha.h>
 
 #include <boost/thread.hpp>
@@ -59,11 +59,6 @@
 
 #include "alert.h"
 #include "base58.h"
-
-//////////////////////////////////////////////////////////////////////////////
-//
-// GuldenGenerate
-//
 
 //
 // Unconfirmed transactions in the memory pool often depend on other
@@ -219,7 +214,7 @@ static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pind
     {
         LOCK(cs_main); // For ReadBlockFromDisk
         if (!ReadBlockFromDisk(*pWitnessBlock, pWitnessBlockToEmbed, params))
-            return error("GuldenGenerate: Could not read witness block in order to insert into coinbase. pindexprev=%s pWitnessBlockToEmbed=%s", pindexPrev->GetBlockHashPoW2().ToString(), pWitnessBlockToEmbed->GetBlockHashPoW2().ToString());
+            return error("PoWGenerate: Could not read witness block in order to insert into coinbase. pindexprev=%s pWitnessBlockToEmbed=%s", pindexPrev->GetBlockHashPoW2().ToString(), pWitnessBlockToEmbed->GetBlockHashPoW2().ToString());
     }
 
     if (commitpos == -1)
@@ -923,7 +918,7 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
 
                 if (!pIndexParent)
                 {
-                    strError = "GuldenGenerate: Stalled, unable to read the witness block we intend to embed.";
+                    strError = "PoWGenerate: Stalled, unable to read the witness block we intend to embed.";
                     return nullptr;
                 }
             }
@@ -982,7 +977,7 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
                     }
                     if (!pWitnessBlockToEmbed)
                     {
-                        strError = "GuldenGenerate: stalled, unable to locate suitable witness block to embed.\n";
+                        strError = "PoWGenerate: stalled, unable to locate suitable witness block to embed.\n";
                         return nullptr;
                     }
                     if (pIndexParent->nHeight != pWitnessBlockToEmbed->nHeight)
@@ -1001,7 +996,7 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
     {
         if (pIndexParent->nVersionPoW2Witness == 0)
         {
-            strError = "GuldenGenerate: stalled, unable to locate suitable witness tip on which to build.\n";
+            strError = "PoWGenerate: stalled, unable to locate suitable witness tip on which to build.\n";
             return nullptr;
         }
     }
@@ -1037,9 +1032,9 @@ inline void updateHashesPerSec(uint64_t& nStart, uint64_t nStop, uint64_t nCount
 
 static const unsigned int hashPSTimerInterval = 200;
 
-void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemoryKb)
+void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemoryKb)
 {
-    LogPrintf("Generate thread started\n");
+    LogPrintf("PoWGenerate thread started\n");
     RenameThread(GLOBAL_APPNAME"-generate");
 
     int64_t nUpdateTimeStart = GetTimeMillis();
@@ -1164,7 +1159,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                 pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pindexParent, coinbaseScript, true, pWitnessBlockToEmbed, nExtraNonce);
                 if (!pblocktemplate.get())
                 {
-                    LogPrintf("GuldenGenerate: Failed to create block-template.\n");
+                    LogPrintf("PoWGenerate: Failed to create block-template.\n");
                     if (GetTimeMillis() - nUpdateTimeStart > 5000)
                         dHashesPerSec = 0;
                     continue;
@@ -1430,7 +1425,7 @@ void PoWStopGeneration()
     }
 }
 
-void PoWGenerateGulden(bool fGenerate, int64_t nThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount, std::string generateAddress)
+void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount, std::string generateAddress)
 {
     LOCK(miningCS);
     if (nThreads < 0)
@@ -1442,7 +1437,7 @@ void PoWGenerateGulden(bool fGenerate, int64_t nThreads, int64_t nMemory, const 
         return;
 
     fixedGenerateAddress = generateAddress;
-    minerThread = new boost::thread(boost::bind(&GuldenGenerate, boost::cref(chainparams), forAccount, nThreads, nMemory));
+    minerThread = new boost::thread(boost::bind(&PoWGenerate, boost::cref(chainparams), forAccount, nThreads, nMemory));
 }
 
 bool PoWGenerationIsActive()

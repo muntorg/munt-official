@@ -12,7 +12,7 @@
 #include "crypto/scrypt/crypto_scrypt.h"
 #include "random.h"
 #include "utilstrencodings.h"
-#include "test/test_gulden.h"
+#include "test/test.h"
 
 #include <cryptopp/config.h>
 #include <cryptopp/aes.h>

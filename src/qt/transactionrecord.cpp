@@ -19,7 +19,7 @@
 #include "wallet/wallet.h"
 #include "wallet/account.h"
 #include "script/ismine.h"
-#include <guldenutil.h>
+#include <witnessutil.h>
 
 #include <stdint.h>
 
@@ -275,7 +275,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         for( const auto& [accountUUID, account] : wallet->mapAccounts )
                         {
                             (unused) accountUUID;
-                            isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, inputs[0]);
+                            isminetype mine = static_cast<const CExtWallet*>(wallet)->IsMine(*account, inputs[0]);
                             if (mine)
                             {
                                 AddAddressForOutPoint(wallet, inputs[0].prevout, subSend.address);
@@ -415,7 +415,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             isminetype mine = ISMINE_NO;
                             const CTxIn* myInput = nullptr;
                             for (const CTxIn& input: inputs) {
-                                isminetype isthismine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, input);
+                                isminetype isthismine = static_cast<const CExtWallet*>(wallet)->IsMine(*account, input);
                                 if (isthismine) {
                                     mine = isthismine;
                                     myInput = &input;
@@ -500,7 +500,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     for (const CTxIn& txin : inputs)
                     {
                         //fixme: (FUT) rather just have a CAccount::GetDebit function?
-                        isminetype txinMine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, txin);
+                        isminetype txinMine = static_cast<const CExtWallet*>(wallet)->IsMine(*account, txin);
                         if (txinMine == ISMINE_SPENDABLE)
                         {
                             sub.credit -= wallet->GetDebit(txin, ISMINE_SPENDABLE);
@@ -559,7 +559,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             std::vector<CTxIn> vNotFromMe;
             for(const CTxIn& txin : inputs)
             {
-                isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, txin);
+                isminetype mine = static_cast<const CExtWallet*>(wallet)->IsMine(*account, txin);
                 if(mine & ISMINE_WATCH_ONLY)
                 {
                     involvesWatchAddress = true;
@@ -725,7 +725,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 for (const CTxIn& txin : inputs)
                 {
                     //fixme: (FUT) rather just have a CAccount::GetDebit function?
-                    isminetype mine = static_cast<const CGuldenWallet*>(wallet)->IsMine(*account, txin);
+                    isminetype mine = static_cast<const CExtWallet*>(wallet)->IsMine(*account, txin);
                     if (mine == ISMINE_SPENDABLE)
                     {
                         nNetMixed -= wallet->GetDebit(txin, ISMINE_SPENDABLE);

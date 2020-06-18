@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_RPCPROTOCOL_H
-#define GULDEN_RPCPROTOCOL_H
+#ifndef RPCPROTOCOL_H
+#define RPCPROTOCOL_H
 
 #include "fs.h"
 
@@ -98,4 +98,4 @@ bool GetAuthCookie(std::string *cookie_out);
 /** Delete RPC authentication cookie from disk */
 void DeleteAuthCookie();
 
-#endif // GULDEN_RPCPROTOCOL_H
+#endif

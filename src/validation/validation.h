@@ -10,11 +10,11 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_VALIDATION_H
-#define GULDEN_VALIDATION_H
+#ifndef VALIDATION_VALIDATION_H
+#define VALIDATION_VALIDATION_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #include <compat/sys.h> // For PLATFORM_MOBILE define
@@ -679,4 +679,4 @@ void ComputeNewFilterRanges(uint64_t nWalletBirthBlockHard, uint64_t& nWalletBir
 /** Transaction hash from outpoint. Even if it is index based. */
 bool GetTxHash(const COutPoint& outpoint, uint256& txHash);
 
-#endif // GULDEN_VALIDATION_H
+#endif

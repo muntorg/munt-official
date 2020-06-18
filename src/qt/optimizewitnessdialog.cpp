@@ -11,7 +11,7 @@
 #include "gui.h"
 #include "wallet/witness_operations.h"
 #include "units.h"
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include "walletmodel.h"
 #include "optionsmodel.h"
 #include "validation/witnessvalidation.h"

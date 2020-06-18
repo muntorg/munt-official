@@ -10,7 +10,7 @@
 // file COPYING
 
 #include "netbase.h"
-#include "test/test_gulden.h"
+#include "test/test.h"
 
 #include <string>
 

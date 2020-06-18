@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_UINT256_H
-#define GULDEN_UINT256_H
+#ifndef UINT256_H
+#define UINT256_H
 
 #include <assert.h>
 #include <cstring>
@@ -158,4 +158,4 @@ inline uint256 uint256S(const std::string& str)
     return rv;
 }
 
-#endif // GULDEN_UINT256_H
+#endif

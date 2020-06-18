@@ -17,7 +17,7 @@
 #include "script/script.h"
 #include "serialize.h"
 #include "streams.h"
-#include "test/test_gulden.h"
+#include "test/test.h"
 #include "util.h"
 #include "utilstrencodings.h"
 #include "version.h"

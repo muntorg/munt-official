@@ -33,7 +33,7 @@
 #include <QIcon>
 #include <QList>
 
-#include <guldenutil.h>
+#include <witnessutil.h>
 
 // Amount column is right-aligned it contains numbers
 static int column_alignments[] = {

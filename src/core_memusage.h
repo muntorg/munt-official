@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_CORE_MEMUSAGE_H
-#define GULDEN_CORE_MEMUSAGE_H
+#ifndef CORE_MEMUSAGE_H
+#define CORE_MEMUSAGE_H
 
 #include "primitives/transaction.h"
 #include "primitives/block.h"
@@ -85,4 +85,4 @@ static inline size_t RecursiveDynamicUsage(const std::shared_ptr<X>& p) {
     return p ? memusage::DynamicUsage(p) + RecursiveDynamicUsage(*p) : 0;
 }
 
-#endif // GULDEN_CORE_MEMUSAGE_H
+#endif

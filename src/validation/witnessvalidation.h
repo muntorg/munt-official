@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_WITNESS_VALIDATION_H
-#define GULDEN_WITNESS_VALIDATION_H
+#ifndef WITNESS_VALIDATION_H
+#define WITNESS_VALIDATION_H
 
 #include "validation/validation.h"
 
@@ -103,4 +103,4 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
 
 bool witnessHasExpired(uint64_t nWitnessAge, uint64_t nWitnessWeight, uint64_t nNetworkTotalWitnessWeight);
 
-#endif // GULDEN_WITNESS_VALIDATION_H
+#endif

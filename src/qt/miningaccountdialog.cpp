@@ -3,7 +3,7 @@
 // Distributed under the GULDEN software license, see the accompanying file COPYING
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #include "miningaccountdialog.h"
@@ -158,7 +158,7 @@ void MiningAccountDialog::startMining(CAccount* forAccount, uint64_t numThreads,
     {
         try
         {
-            PoWGenerateGulden(true, numThreads, mineMemoryKb, Params(), forAccount, overrideAddress);
+            PoWGenerateBlocks(true, numThreads, mineMemoryKb, Params(), forAccount, overrideAddress);
         }
         catch(...)
         {

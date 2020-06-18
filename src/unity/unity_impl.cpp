@@ -14,7 +14,7 @@
 
 // Standard gulden headers
 #include "util.h"
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include "ui_interface.h"
 #include "wallet/wallet.h"
 #include "unity/appmanager.h"
@@ -28,8 +28,8 @@
 #include "sync.h"
 
 // Djinni generated files
-#include "gulden_unified_backend.hpp"
-#include "gulden_unified_frontend.hpp"
+#include "unified_backend.hpp"
+#include "unified_frontend.hpp"
 #include "qr_code_record.hpp"
 #include "balance_record.hpp"
 #include "uri_record.hpp"
@@ -42,7 +42,7 @@
 #include "peer_record.hpp"
 #include "block_info_record.hpp"
 #include "monitor_record.hpp"
-#include "gulden_monitor_listener.hpp"
+#include "monitor_listener.hpp"
 #include "payment_result_status.hpp"
 #ifdef __ANDROID__
 #include "djinni_support.hpp"
@@ -58,10 +58,10 @@
 #include <crypto/hash/sigma/sigma.h>
 #include <algorithm>
 
-std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
+std::shared_ptr<UnifiedFrontend> signalHandler;
 
 CCriticalSection cs_monitoringListeners;
-std::set<std::shared_ptr<GuldenMonitorListener> > monitoringListeners;
+std::set<std::shared_ptr<MonitorListener> > monitoringListeners;
 
 const int RECOMMENDED_CONFIRMATIONS = 3;
 const int BALANCE_NOTIFY_THRESHOLD_MS = 4000;
@@ -287,7 +287,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         bool isMine = false;
         for (const auto& account : accountsToTry)
         {
-            if (static_cast<const CGuldenWallet*>(pwallet)->IsMine(*account, txin))
+            if (static_cast<const CExtWallet*>(pwallet)->IsMine(*account, txin))
             {
                 isMine = true;
             }
@@ -503,7 +503,7 @@ void handleInitWithoutExistingWallet()
     signalHandler->notifyInitWithoutExistingWallet();
 }
 
-std::string GuldenUnifiedBackend::BuildInfo()
+std::string UnifiedBackend::BuildInfo()
 {
     std::string info = FormatFullVersion();
 
@@ -519,7 +519,7 @@ std::string GuldenUnifiedBackend::BuildInfo()
     return info;
 }
 
-bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phrase, const std::string& password)
+bool UnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phrase, const std::string& password)
 {
     // Refuse to acknowledge an empty recovery phrase, or one that doesn't pass even the most obvious requirement
     if (phrase.length() < 16)
@@ -560,7 +560,7 @@ bool ValidateAndSplitRecoveryPhrase(const std::string & phrase, SecureString& mn
     return checkMnemonic(mnemonic) && (birthNumber == 0 || Base10ChecksumDecode(birthNumber, nullptr));
 }
 
-bool GuldenUnifiedBackend::ContinueWalletFromRecoveryPhrase(const std::string& phrase, const std::string& password)
+bool UnifiedBackend::ContinueWalletFromRecoveryPhrase(const std::string& phrase, const std::string& password)
 {
     SecureString phraseOnly;
     int phraseBirthNumber;
@@ -597,7 +597,7 @@ bool GuldenUnifiedBackend::ContinueWalletFromRecoveryPhrase(const std::string& p
     return true;
 }
 
-bool GuldenUnifiedBackend::IsValidRecoveryPhrase(const std::string & phrase)
+bool UnifiedBackend::IsValidRecoveryPhrase(const std::string & phrase)
 {
     SecureString dummyMnemonic;
     int dummyNumber;
@@ -605,7 +605,7 @@ bool GuldenUnifiedBackend::IsValidRecoveryPhrase(const std::string & phrase)
 }
 
 #include "base58.h"
-std::string GuldenUnifiedBackend::GenerateGenesisKeys()
+std::string UnifiedBackend::GenerateGenesisKeys()
 {
     std::string address = GetReceiveAddress();
     CGuldenAddress addr(address);
@@ -625,7 +625,7 @@ std::string GuldenUnifiedBackend::GenerateGenesisKeys()
     return "privkey: "+privkey+"\n"+"pubkeyID: "+pubKey+"\n"+"witness: "+witnessKeys+"\n"+"dev subsidy addr: "+address+"\n"+"dev subsidy pubkey: "+devSubsidyPubKey+"\n";
 }
 
-std::string GuldenUnifiedBackend::GenerateRecoveryMnemonic()
+std::string UnifiedBackend::GenerateRecoveryMnemonic()
 {
     std::vector<unsigned char> entropy(16);
     GetStrongRandBytes(&entropy[0], 16);
@@ -637,12 +637,12 @@ std::string GuldenUnifiedBackend::GenerateRecoveryMnemonic()
     return GuldenAppManager::gApp->composeRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8), birthTime).c_str();
 }
 
-std::string GuldenUnifiedBackend::ComposeRecoveryPhrase(const std::string & mnemonic, int64_t birthTime)
+std::string UnifiedBackend::ComposeRecoveryPhrase(const std::string & mnemonic, int64_t birthTime)
 {
     return std::string(GuldenAppManager::composeRecoveryPhrase(SecureString(mnemonic), birthTime));
 }
 
-bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri, const std::string& password)
+bool UnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri, const std::string& password)
 {
     CGuldenSecretExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
@@ -657,7 +657,7 @@ bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri
     return true;
 }
 
-bool GuldenUnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linked_uri, const std::string& password)
+bool UnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linked_uri, const std::string& password)
 {
     if (!pactiveWallet)
     {
@@ -690,7 +690,7 @@ bool GuldenUnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linke
     return true;
 }
 
-bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_uri, const std::string& password)
+bool UnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_uri, const std::string& password)
 {
     LOCK2(cs_main, pactiveWallet->cs_wallet);
 
@@ -793,13 +793,13 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
     return true;
 }
 
-bool GuldenUnifiedBackend::EraseWalletSeedsAndAccounts()
+bool UnifiedBackend::EraseWalletSeedsAndAccounts()
 {
     pactiveWallet->EraseWalletSeedsAndAccounts();
     return true;
 }
 
-bool GuldenUnifiedBackend::IsValidLinkURI(const std::string& linked_uri)
+bool UnifiedBackend::IsValidLinkURI(const std::string& linked_uri)
 {
     CGuldenSecretExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
@@ -808,7 +808,7 @@ bool GuldenUnifiedBackend::IsValidLinkURI(const std::string& linked_uri)
 }
 
 
-int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, bool spvMode, const std::shared_ptr<GuldenUnifiedFrontend>& signalHandler_, const std::string& extraArgs)
+int32_t UnifiedBackend::InitUnityLib(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, bool spvMode, const std::shared_ptr<UnifiedFrontend>& signalHandler_, const std::string& extraArgs)
 {
     balanceChangeNotifier = new CRateLimit<int>([](int)
     {
@@ -906,7 +906,7 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     return InitUnity();
 }
 
-void GuldenUnifiedBackend::InitUnityLibThreaded(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, bool spvMode, const std::shared_ptr<GuldenUnifiedFrontend>& signalHandler_, const std::string& extraArgs)
+void UnifiedBackend::InitUnityLibThreaded(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, bool spvMode, const std::shared_ptr<UnifiedFrontend>& signalHandler_, const std::string& extraArgs)
 {
     std::thread([=]
     {
@@ -914,7 +914,7 @@ void GuldenUnifiedBackend::InitUnityLibThreaded(const std::string& dataDir, cons
     }).detach();
 }
 
-void GuldenUnifiedBackend::TerminateUnityLib()
+void UnifiedBackend::TerminateUnityLib()
 {
     // Terminate in thread so we don't block interprocess communication
     std::thread([=]
@@ -927,7 +927,7 @@ void GuldenUnifiedBackend::TerminateUnityLib()
     }).detach();
 }
 
-QrCodeRecord GuldenUnifiedBackend::QRImageFromString(const std::string& qr_string, int32_t width_hint)
+QrCodeRecord UnifiedBackend::QRImageFromString(const std::string& qr_string, int32_t width_hint)
 {
     QRcode* code = QRcode_encodeString(qr_string.c_str(), 0, QR_ECLEVEL_L, QR_MODE_8, 1);
     if (!code)
@@ -958,7 +958,7 @@ QrCodeRecord GuldenUnifiedBackend::QRImageFromString(const std::string& qr_strin
     }
 }
 
-std::string GuldenUnifiedBackend::GetReceiveAddress()
+std::string UnifiedBackend::GetReceiveAddress()
 {
     LOCK2(cs_main, pactiveWallet->cs_wallet);
 
@@ -981,7 +981,7 @@ std::string GuldenUnifiedBackend::GetReceiveAddress()
 }
 
 //fixme: (UNITY) - find a way to use char[] here as well as on the java side.
-std::string GuldenUnifiedBackend::GetRecoveryPhrase()
+std::string UnifiedBackend::GetRecoveryPhrase()
 {
     if (!pactiveWallet || !pactiveWallet->activeAccount)
         return "";
@@ -1005,7 +1005,7 @@ std::string GuldenUnifiedBackend::GetRecoveryPhrase()
     return "";
 }
 
-bool GuldenUnifiedBackend::IsMnemonicWallet()
+bool UnifiedBackend::IsMnemonicWallet()
 {
     if (!pactiveWallet || !pactiveWallet->activeAccount)
         throw std::runtime_error(_("No active internal wallet."));
@@ -1015,7 +1015,7 @@ bool GuldenUnifiedBackend::IsMnemonicWallet()
     return pactiveWallet->activeSeed != nullptr;
 }
 
-bool GuldenUnifiedBackend::IsMnemonicCorrect(const std::string & phrase)
+bool UnifiedBackend::IsMnemonicCorrect(const std::string & phrase)
 {
     if (!pactiveWallet || !pactiveWallet->activeAccount)
         throw std::runtime_error(_("No active internal wallet."));
@@ -1037,7 +1037,7 @@ bool GuldenUnifiedBackend::IsMnemonicCorrect(const std::string & phrase)
 
 
 //fixme: (UNITY) HIGH - take a timeout value and always lock again after timeout
-bool GuldenUnifiedBackend::UnlockWallet(const std::string& password)
+bool UnifiedBackend::UnlockWallet(const std::string& password)
 {
     if (!pactiveWallet)
     {
@@ -1045,7 +1045,7 @@ bool GuldenUnifiedBackend::UnlockWallet(const std::string& password)
         return false;
     }
 
-    if (!dynamic_cast<CGuldenWallet*>(pactiveWallet)->IsCrypted())
+    if (!dynamic_cast<CExtWallet*>(pactiveWallet)->IsCrypted())
     {
         LogPrintf("UnlockWallet: Wallet not encrypted");
         return false;
@@ -1054,7 +1054,7 @@ bool GuldenUnifiedBackend::UnlockWallet(const std::string& password)
     return pactiveWallet->Unlock(password.c_str());
 }
 
-bool GuldenUnifiedBackend::LockWallet()
+bool UnifiedBackend::LockWallet()
 {
     if (!pactiveWallet)
     {
@@ -1062,13 +1062,13 @@ bool GuldenUnifiedBackend::LockWallet()
         return false;
     }
 
-    if (dynamic_cast<CGuldenWallet*>(pactiveWallet)->IsLocked())
+    if (dynamic_cast<CExtWallet*>(pactiveWallet)->IsLocked())
         return true;
 
-    return dynamic_cast<CGuldenWallet*>(pactiveWallet)->Lock();
+    return dynamic_cast<CExtWallet*>(pactiveWallet)->Lock();
 }
 
-bool GuldenUnifiedBackend::ChangePassword(const std::string& oldPassword, const std::string& newPassword)
+bool UnifiedBackend::ChangePassword(const std::string& oldPassword, const std::string& newPassword)
 {
     if (!pactiveWallet)
     {
@@ -1085,7 +1085,7 @@ bool GuldenUnifiedBackend::ChangePassword(const std::string& oldPassword, const 
     return pactiveWallet->ChangeWalletPassphrase(oldPassword.c_str(), newPassword.c_str());
 }
 
-bool GuldenUnifiedBackend::HaveUnconfirmedFunds()
+bool UnifiedBackend::HaveUnconfirmedFunds()
 {
     if (!pactiveWallet)
         return true;
@@ -1100,7 +1100,7 @@ bool GuldenUnifiedBackend::HaveUnconfirmedFunds()
     return false;
 }
 
-int64_t GuldenUnifiedBackend::GetBalance()
+int64_t UnifiedBackend::GetBalance()
 {
     if (!pactiveWallet)
         return 0;
@@ -1110,7 +1110,7 @@ int64_t GuldenUnifiedBackend::GetBalance()
     return balances.availableIncludingLocked + balances.unconfirmedIncludingLocked + balances.immatureIncludingLocked;
 }
 
-void GuldenUnifiedBackend::DoRescan()
+void UnifiedBackend::DoRescan()
 {
     if (pactiveWallet)
     {
@@ -1118,7 +1118,7 @@ void GuldenUnifiedBackend::DoRescan()
     }
 }
 
-UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
+UriRecipient UnifiedBackend::IsValidRecipient(const UriRecord & request)
 {
      // return if URI is not valid or is no Gulden: URI
     std::string lowerCaseScheme = boost::algorithm::to_lower_copy(request.scheme);
@@ -1152,7 +1152,7 @@ UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
 }
 
 
-int64_t GuldenUnifiedBackend::feeForRecipient(const UriRecipient & request)
+int64_t UnifiedBackend::feeForRecipient(const UriRecipient & request)
 {
     if (!pactiveWallet)
         throw std::runtime_error(_("No active internal wallet."));
@@ -1193,7 +1193,7 @@ int64_t GuldenUnifiedBackend::feeForRecipient(const UriRecipient & request)
     return nFeeRequired;
 }
 
-PaymentResultStatus GuldenUnifiedBackend::performPaymentToRecipient(const UriRecipient & request, bool substract_fee)
+PaymentResultStatus UnifiedBackend::performPaymentToRecipient(const UriRecipient & request, bool substract_fee)
 {
     if (!pactiveWallet)
         throw std::runtime_error(_("No active internal wallet."));
@@ -1245,7 +1245,7 @@ PaymentResultStatus GuldenUnifiedBackend::performPaymentToRecipient(const UriRec
     return PaymentResultStatus::SUCCESS;
 }
 
-std::vector<TransactionRecord> GuldenUnifiedBackend::getTransactionHistory()
+std::vector<TransactionRecord> UnifiedBackend::getTransactionHistory()
 {
     std::vector<TransactionRecord> ret;
 
@@ -1263,7 +1263,7 @@ std::vector<TransactionRecord> GuldenUnifiedBackend::getTransactionHistory()
     return ret;
 }
 
-TransactionRecord GuldenUnifiedBackend::getTransaction(const std::string & txHash)
+TransactionRecord UnifiedBackend::getTransaction(const std::string & txHash)
 {
     if (!pactiveWallet)
         throw std::runtime_error(strprintf("No active wallet to query tx hash [%s]", txHash));
@@ -1279,7 +1279,7 @@ TransactionRecord GuldenUnifiedBackend::getTransaction(const std::string & txHas
     return calculateTransactionRecordForWalletTransaction(wtx);
 }
 
-std::vector<MutationRecord> GuldenUnifiedBackend::getMutationHistory()
+std::vector<MutationRecord> UnifiedBackend::getMutationHistory()
 {
     std::vector<MutationRecord> ret;
 
@@ -1305,7 +1305,7 @@ std::vector<MutationRecord> GuldenUnifiedBackend::getMutationHistory()
     return ret;
 }
 
-std::vector<AddressRecord> GuldenUnifiedBackend::getAddressBookRecords()
+std::vector<AddressRecord> UnifiedBackend::getAddressBookRecords()
 {
     std::vector<AddressRecord> ret;
     if (pactiveWallet)
@@ -1320,7 +1320,7 @@ std::vector<AddressRecord> GuldenUnifiedBackend::getAddressBookRecords()
     return ret;
 }
 
-void GuldenUnifiedBackend::addAddressBookRecord(const AddressRecord& address)
+void UnifiedBackend::addAddressBookRecord(const AddressRecord& address)
 {
     if (pactiveWallet)
     {
@@ -1328,7 +1328,7 @@ void GuldenUnifiedBackend::addAddressBookRecord(const AddressRecord& address)
     }
 }
 
-void GuldenUnifiedBackend::deleteAddressBookRecord(const AddressRecord& address)
+void UnifiedBackend::deleteAddressBookRecord(const AddressRecord& address)
 {
     if (pactiveWallet)
     {
@@ -1336,22 +1336,22 @@ void GuldenUnifiedBackend::deleteAddressBookRecord(const AddressRecord& address)
     }
 }
 
-void GuldenUnifiedBackend::PersistAndPruneForSPV()
+void UnifiedBackend::PersistAndPruneForSPV()
 {
     PersistAndPruneForPartialSync();
 }
 
-void GuldenUnifiedBackend::ResetUnifiedProgress()
+void UnifiedBackend::ResetUnifiedProgress()
 {
     CWallet::ResetUnifiedSPVProgressNotification();
 }
 
-float GuldenUnifiedBackend::getUnifiedProgress()
+float UnifiedBackend::getUnifiedProgress()
 {
     return CSPVScanner::lastProgressReported;
 }
 
-std::vector<PeerRecord> GuldenUnifiedBackend::getPeers()
+std::vector<PeerRecord> UnifiedBackend::getPeers()
 {
     std::vector<PeerRecord> ret;
 
@@ -1386,7 +1386,7 @@ std::vector<PeerRecord> GuldenUnifiedBackend::getPeers()
     return ret;
 }
 
-std::vector<BlockInfoRecord> GuldenUnifiedBackend::getLastSPVBlockInfos()
+std::vector<BlockInfoRecord> UnifiedBackend::getLastSPVBlockInfos()
 {
     std::vector<BlockInfoRecord> ret;
 
@@ -1402,7 +1402,7 @@ std::vector<BlockInfoRecord> GuldenUnifiedBackend::getLastSPVBlockInfos()
     return ret;
 }
 
-MonitorRecord GuldenUnifiedBackend::getMonitoringStats()
+MonitorRecord UnifiedBackend::getMonitoringStats()
 {
     LOCK(cs_main);
     int32_t partialHeight_ = partialChain.Height();
@@ -1418,13 +1418,13 @@ MonitorRecord GuldenUnifiedBackend::getMonitoringStats()
                          probableHeight_);
 }
 
-void GuldenUnifiedBackend::RegisterMonitorListener(const std::shared_ptr<GuldenMonitorListener> & listener)
+void UnifiedBackend::RegisterMonitorListener(const std::shared_ptr<MonitorListener> & listener)
 {
     LOCK(cs_monitoringListeners);
     monitoringListeners.insert(listener);
 }
 
-void GuldenUnifiedBackend::UnregisterMonitorListener(const std::shared_ptr<GuldenMonitorListener> & listener)
+void UnifiedBackend::UnregisterMonitorListener(const std::shared_ptr<MonitorListener> & listener)
 {
     LOCK(cs_monitoringListeners);
     monitoringListeners.erase(listener);

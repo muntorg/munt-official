@@ -118,18 +118,18 @@ payment_result_status = enum {
 }
 
 # This interface will be implemented in C++ and can be called from any language.
-gulden_unified_backend = interface +c {
+unified_backend = interface +c {
 
     # Get the build information (ie. commit id and status)
     static BuildInfo(): string;
 
     # Start the library
-    # extraArgs - any additional commandline arguments as passed to GuldenD
+    # extraArgs - any additional commandline arguments as could normally be passed to the daemon binary
     # NB!!! This call blocks until the library is terminated, it is the callers responsibility to place it inside a thread or similar.
     # If you are in an environment where this is not possible (node.js for example use InitUnityLibThreaded instead which places it in a thread on your behalf)
-    static InitUnityLib(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool,spvMode : bool, signalHandler : gulden_unified_frontend, extraArgs : string): i32;
+    static InitUnityLib(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool,spvMode : bool, signalHandler : unified_frontend, extraArgs : string): i32;
     # Threaded implementation of InitUnityLib
-    static InitUnityLibThreaded(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool,spvMode : bool, signalHandler : gulden_unified_frontend, extraArgs : string);
+    static InitUnityLibThreaded(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool,spvMode : bool, signalHandler : unified_frontend, extraArgs : string);
 
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletFromRecoveryPhrase(phrase : string, password : string): bool;
@@ -255,15 +255,15 @@ gulden_unified_backend = interface +c {
 
     static getMonitoringStats(): monitor_record;
 
-    static RegisterMonitorListener(listener : gulden_monitor_listener);
-    static UnregisterMonitorListener(listener : gulden_monitor_listener);
+    static RegisterMonitorListener(listener : monitor_listener);
+    static UnregisterMonitorListener(listener : monitor_listener);
 
     # Interface constants
     const version: i32 = 1;
 }
 
 # Interface to receive events from the core
-gulden_unified_frontend = interface +j +o +n {
+unified_frontend = interface +j +o +n {
     # Fraction of work done since session start or last progress reset [0..1]
     # Unified progress combines connection state, header and block sync
     notifyUnifiedProgress(progress : f32): &;
@@ -293,7 +293,7 @@ monitor_record = record {
 }
 
 # Monitoring events
-gulden_monitor_listener = interface +j +o +n {
+monitor_listener = interface +j +o +n {
     onPartialChain(height : i32, probable_height : i32, offset : i32);
     onPruned(height : i32);
     onProcessedSPVBlocks(height : i32);

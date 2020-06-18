@@ -1,23 +1,32 @@
 dnl require autoconf 2.60 (AS_ECHO/AS_ECHO_N)
 AC_PREREQ([2.60])
-define(_CLIENT_VERSION_MAJOR,       2)
-define(_CLIENT_VERSION_MINOR,       2)
+define(_CLIENT_VERSION_MAJOR,       1)
+define(_CLIENT_VERSION_MINOR,       0)
 define(_CLIENT_VERSION_REVISION, 0)
-define(_CLIENT_VERSION_BUILD,       7)
+define(_CLIENT_VERSION_BUILD,       0)
 define(_CLIENT_VERSION_IS_RELEASE, false)
 define(_COPYRIGHT_YEAR, 2020)
 define(_COPYRIGHT_HOLDERS,[The %s developers])
-define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[Gulden]])
-AC_INIT([Gulden],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[info@gulden.com],[Gulden])
+define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[Novo]])
+AC_INIT([Novo],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[info@novocurrency.com],[Novo])
 AC_CONFIG_SRCDIR([src/init.cpp])
-AC_CONFIG_HEADERS([src/config/gulden-config.h])
+AC_CONFIG_HEADERS([src/config/build-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
-GULDEN_DAEMON_NAME=GuldenD
-GULDEN_GUI_NAME=Gulden
-GULDEN_CLI_NAME=Gulden-cli
-GULDEN_TX_NAME=Gulden-tx
+m4_define([_DAEMON_NAME], [Novo-daemon])
+m4_define([_CLI_NAME], [Novo-cli])
+m4_define([_GUI_NAME], [Novo-ui])
+m4_define([_TX_NAME], [Novo-tx])
+[_DAEMON_NAME]=_DAEMON_NAME
+[_CLI_NAME]=_CLI_NAME
+[_GUI_NAME]=_GUI_NAME
+[_TX_NAME]=_TX_NAME
+AC_DEFINE(DAEMON_NAME, "_DAEMON_NAME", [Command name of the deamon binary])
+AC_DEFINE(CLI_NAME, "_CLI_NAME", [Command name of the cli binary])
+AC_DEFINE(GUI_NAME, "_GUI_NAME", [Command name of the gui binary])
+AC_DEFINE(TX_NAME, "_TX_NAME", [Command name of the tx binary])
+
 
 dnl Unless the user specified ARFLAGS, force it to be cr
 AC_ARG_VAR(ARFLAGS, [Flags for the archiver, defaults to <cr> if not set])
@@ -27,9 +36,9 @@ fi
 
 AC_CANONICAL_HOST
 
-AH_TOP([#ifndef GULDEN_CONFIG_H])
-AH_TOP([#define GULDEN_CONFIG_H])
-AH_BOTTOM([#endif //GULDEN_CONFIG_H])
+AH_TOP([#ifndef BUILD_CONFIG_H])
+AH_TOP([#define BUILD_CONFIG_H])
+AH_BOTTOM([#endif //BUILD_CONFIG_H])
 
 dnl faketime breaks configure and is only needed for make. Disable it here.
 unset FAKETIME
@@ -263,35 +272,35 @@ if test "x$strong_warnings" = "xyes"; then
 fi
 CPPFLAGS="$CPPFLAGS -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS"
 
-AC_ARG_WITH([utils],
-  [AS_HELP_STRING([--with-utils],
-  [build Gulden-cli Gulden-tx (default=yes)])],
-  [build_gulden_utils=$withval],
-  [build_gulden_utils=yes])
+AC_ARG_WITH([util],
+  [AS_HELP_STRING([--with-util],
+  [build ]_CLI_NAME[ ]_TX_NAME[ binaries (default=yes)])],
+  [build_utils=$withval],
+  [build_utils=yes])
 
 AC_ARG_WITH([node-js-libs],
   [AS_HELP_STRING([--with-node-js-libs],
-  [build node.js unity library (default=no)])],
-  [build_gulden_libs_node_js=yes],
-  [build_gulden_libs_node_js=no])
+  [build node.js library (default=no)])],
+  [build_libs_node_js=yes],
+  [build_libs_node_js=no])
 
 AC_ARG_WITH([jni-libs],
   [AS_HELP_STRING([--with-jni-libs],
-  [build jni unity library (default=no)])],
-  [build_gulden_libs_jni=yes],
-  [build_gulden_libs_jni=no])
+  [build jni library (default=no)])],
+  [build_libs_jni=yes],
+  [build_libs_jni=no])
 
 AC_ARG_WITH([objc-libs],
   [AS_HELP_STRING([--with-objc-libs],
-  [build objc unity library (default=no)])],
-  [build_gulden_libs_objc=yes],
-  [build_gulden_libs_objc=no])
+  [build objc library (default=no)])],
+  [build_libs_objc=yes],
+  [build_libs_objc=no])
 
 AC_ARG_WITH([daemon],
   [AS_HELP_STRING([--with-daemon],
-  [build GuldenD daemon (default=yes)])],
-  [build_GuldenD=$withval],
-  [build_GuldenD=yes])
+  [build ]_DAEMON_NAME[ daemon (default=yes)])],
+  [build_daemon=$withval],
+  [build_daemon=yes])
 
 use_pkgconfig=yes
 
@@ -508,7 +517,7 @@ AC_C_BIGENDIAN
 dnl Check for pthread compile/link requirements
 AX_PTHREAD
 
-# The following macro will add the necessary defines to gulden-config.h, but
+# The following macro will add the necessary defines to build-config.h, but
 # they also need to be passed down to any subprojects. Pull the results out of
 # the cache and add them to CPPFLAGS.
 AC_SYS_LARGEFILE
@@ -727,7 +736,7 @@ if test x$use_upnp != xno; then
 fi
 
 dnl Check for Djinni
-if test x$build_gulden_libs_objc != xno; then
+if test x$build_libs_objc != xno; then
   if test x$DJINNI_OBJCXXFLAGS = x; then
     DJINNI_OBJCXXFLAGS=-I$prefix/include/objc
   fi
@@ -739,7 +748,7 @@ GULDEN_QT_INIT
 dnl sets $gulden_enable_qt, $gulden_enable_qt_test, $gulden_enable_qt_dbus
 GULDEN_QT_CONFIGURE([$use_pkgconfig], [qt5])
 
-if test x$build_gulden_utils$build_gulden_libs_node_js$build_gulden_libs_jni$build_gulden_libs_objc$build_GuldenD$gulden_enable_qt$use_tests$use_bench = xnonononononono; then
+if test x$build_utils$build_libs_node_js$build_libs_jni$build_libs_objc$build_daemon$gulden_enable_qt$use_tests$use_bench = xnonononononono; then
     use_boost=no
 else
     use_boost=yes
@@ -927,7 +936,7 @@ if test x$use_pkgconfig = xyes; then
       if test x$use_qr != xno; then
         GULDEN_QT_CHECK([PKG_CHECK_MODULES([QR], [libqrencode], [have_qrencode=yes], [have_qrencode=no])])
       fi
-      if test x$build_gulden_utils$build_GuldenD$gulden_enable_qt$use_tests != xnononono; then
+      if test x$build_utils$build_daemon$gulden_enable_qt$use_tests != xnononono; then
         PKG_CHECK_MODULES([EVENT], [libevent],, [AC_MSG_ERROR(libevent not found.)])
         if test x$TARGET_OS != xwindows; then
           PKG_CHECK_MODULES([EVENT_PTHREADS], [libevent_pthreads],, [AC_MSG_ERROR(libevent_pthreads not found.)])
@@ -955,7 +964,7 @@ else
   AC_CHECK_HEADER([openssl/crypto.h],,AC_MSG_ERROR(libcrypto headers missing))
   AC_CHECK_LIB([crypto],      [main],CRYPTO_LIBS=-lcrypto, AC_MSG_ERROR(libcrypto missing))
 
-  if test x$build_gulden_utils$build_GuldenD$gulden_enable_qt$use_tests != xnononono; then
+  if test x$build_utils$build_daemon$gulden_enable_qt$use_tests != xnononono; then
     AC_CHECK_HEADER([event2/event.h],, AC_MSG_ERROR(libevent headers missing),)
     AC_CHECK_LIB([event],[main],EVENT_LIBS=-levent,AC_MSG_ERROR(libevent missing))
     if test x$TARGET_OS != xwindows; then
@@ -1020,7 +1029,7 @@ dnl univalue check
 
 need_bundled_univalue=yes
 
-if test x$build_gulden_utils$build_GuldenD$gulden_enable_qt$use_tests$use_bench = xnonononono; then
+if test x$build_utils$build_daemon$gulden_enable_qt$use_tests$use_bench = xnonononono; then
   need_bundled_univalue=no
 else
 
@@ -1066,26 +1075,26 @@ AC_SUBST(UNIVALUE_LIBS)
 
 GULDEN_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
 
-AC_MSG_CHECKING([whether to build GuldenD])
-AM_CONDITIONAL([BUILD_GULDEND], [test x$build_GuldenD = xyes])
-AC_MSG_RESULT($build_GuldenD)
+AC_MSG_CHECKING([whether to build _DAEMON_NAME])
+AM_CONDITIONAL([BUILD_DAEMON], [test x$build_daemon = xyes])
+AC_MSG_RESULT($build_daemon)
 
-AC_MSG_CHECKING([whether to build utils (Gulden-cli Gulden-tx)])
-AM_CONDITIONAL([BUILD_GULDEN_UTILS], [test x$build_gulden_utils = xyes])
-AC_MSG_RESULT($build_gulden_utils)
+AC_MSG_CHECKING([whether to build utils (_CLI_NAME _TX_NAME)])
+AM_CONDITIONAL([BUILD_UTILS], [test x$build_utils = xyes])
+AC_MSG_RESULT($build_utils)
 
 AC_MSG_CHECKING([whether to build node.js libraries])
-AM_CONDITIONAL([BUILD_GULDEN_LIBS_NODE_JS], [test x$build_gulden_libs_node_js = xyes])
-AC_MSG_RESULT($build_gulden_libs_node_js)
+AM_CONDITIONAL([BUILD_LIBS_NODE_JS], [test x$build_libs_node_js = xyes])
+AC_MSG_RESULT($build_libs_node_js)
 
 
 AC_MSG_CHECKING([whether to build jni libraries])
-AM_CONDITIONAL([BUILD_GULDEN_LIBS_JNI], [test x$build_gulden_libs_jni = xyes])
-AC_MSG_RESULT($build_gulden_libs_jni)
+AM_CONDITIONAL([BUILD_LIBS_JNI], [test x$build_libs_jni = xyes])
+AC_MSG_RESULT($build_libs_jni)
 
 AC_MSG_CHECKING([whether to build objc libraries])
-AM_CONDITIONAL([BUILD_GULDEN_LIBS_OBJC], [test x$build_gulden_libs_objc = xyes])
-AC_MSG_RESULT($build_gulden_libs_objc)
+AM_CONDITIONAL([BUILD_LIBS_OBJC], [test x$build_libs_objc = xyes])
+AC_MSG_RESULT($build_libs_objc)
 
 AC_LANG_POP
 
@@ -1215,7 +1224,7 @@ else
   AC_MSG_RESULT([no])
 fi
 
-if test x$build_gulden_utils$build_gulden_libs_node_js$build_gulden_libs_jni$build_gulden_libs_objc$build_GuldenD$gulden_enable_qt$use_bench$use_tests = xnononononononono; then
+if test x$build_utils$build_libs_node_js$build_libs_jni$build_libs_objc$build_daemon$gulden_enable_qt$use_bench$use_tests = xnononononononono; then
   AC_MSG_ERROR([No targets! Please specify at least one of: --with-utils --with-jni-libs --with-objc-libs --with-daemon --with-gui --enable-bench or --enable-tests])
 fi
 
@@ -1252,10 +1261,10 @@ AC_SUBST(COPYRIGHT_YEAR, _COPYRIGHT_YEAR)
 AC_SUBST(COPYRIGHT_HOLDERS, "_COPYRIGHT_HOLDERS")
 AC_SUBST(COPYRIGHT_HOLDERS_SUBSTITUTION, "_COPYRIGHT_HOLDERS_SUBSTITUTION")
 AC_SUBST(COPYRIGHT_HOLDERS_FINAL, "_COPYRIGHT_HOLDERS_FINAL")
-AC_SUBST(GULDEN_DAEMON_NAME)
-AC_SUBST(GULDEN_GUI_NAME)
-AC_SUBST(GULDEN_CLI_NAME)
-AC_SUBST(GULDEN_TX_NAME)
+AC_SUBST([_DAEMON_NAME])
+AC_SUBST([_GUI_NAME])
+AC_SUBST([_CLI_NAME])
+AC_SUBST([_TX_NAME])
 
 AC_SUBST(RELDFLAGS)
 AC_SUBST(COMPAT_LDFLAGS)
@@ -1287,7 +1296,7 @@ AC_CONFIG_FILES([Makefile src/Makefile doc/man/Makefile share/setup.nsi share/qt
 AC_CONFIG_FILES([contrib/devtools/split-debug.sh],[chmod +x contrib/devtools/split-debug.sh])
 AC_CONFIG_FILES([doc/Doxyfile])
 AC_CONFIG_LINKS([test/functional/test_runner.py:test/functional/test_runner.py])
-AC_CONFIG_LINKS([test/util/gulden-util-test.py:test/util/gulden-util-test.py])
+AC_CONFIG_LINKS([test/util/util-test.py:test/util/util-test.py])
 
 dnl boost's m4 checks do something really nasty: they export these vars. As a
 dnl result, they leak into secp256k1's configure and crazy things happen.
@@ -1367,6 +1376,6 @@ echo "  LDFLAGS       = $LDFLAGS"
 echo "  ARFLAGS       = $ARFLAGS"
 echo
 echo " Libraries:"
-echo "     jni:     $build_gulden_libs_jni"
-echo "     objc:    $build_gulden_libs_objc"
-echo "     node_js: $build_gulden_libs_node_js"
+echo "     jni:     $build_libs_jni"
+echo "     objc:    $build_libs_objc"
+echo "     node_js: $build_libs_node_js"

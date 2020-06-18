@@ -46,7 +46,7 @@
 #include "ui_interface.h"
 #include "undo.h"
 #include "util.h"
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include "utilmoneystr.h"
 #include "utilstrencodings.h"
 #include "validation/validationinterface.h"

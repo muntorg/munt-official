@@ -1,0 +1,33 @@
+# /etc/conf.d/Novo-daemon: config file for /etc/init.d/Novo-daemon
+
+# Config file location
+#DAEMON_CONFIGFILE="/etc/novo/novo.conf"
+
+# What directory to write pidfile to?  (created and owned by $DAEMON_USER)
+#DAEMON_PIDDIR="/var/run/Novo-daemon"
+
+# What filename to give the pidfile
+#DAEMON_PIDFILE="${DAEMON_PIDDIR}/Novo-daemon.pid"
+
+# Where to write data (be mindful that the blockchain is large)
+#DAEMON_DATADIR="/var/lib/Novo-daemon"
+
+# User and group to own process
+#DAEMON_USER="novo"
+#DAEMON_GROUP="novo"
+
+# Path to executable
+#DAEMON_BIN="/usr/bin/Novo-daemon"
+
+# Nice value to run under
+#DAEMON_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#DAEMON_OPTS=""
+
+# The timeout in seconds OpenRC will wait for daemon to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+DAEMON_SIGTERM_TIMEOUT=60

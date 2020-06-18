@@ -11,7 +11,7 @@
 // file COPYING
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #include "libinit.h"
@@ -96,7 +96,7 @@ int InitUnity()
         }
         try
         {
-            ReadConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME));
+            ReadConfigFile(GetArg("-conf", DEFAULT_CONF_FILENAME));
         }
         catch (const std::exception& e)
         {

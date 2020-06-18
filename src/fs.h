@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_FS_H
-#define GULDEN_FS_H
+#ifndef FS_BRIDGE_H
+#define FS_BRIDGE_H
 
 #include <stdio.h>
 #include <string>
@@ -21,4 +21,4 @@ namespace fsbridge {
     FILE *freopen(const fs::path& p, const char *mode, FILE *stream);
 };
 
-#endif // GULDEN_FS_H
+#endif

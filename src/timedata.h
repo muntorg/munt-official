@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_TIMEDATA_H
-#define GULDEN_TIMEDATA_H
+#ifndef TIMEDATA_H
+#define TIMEDATA_H
 
 #include <algorithm>
 #include <assert.h>
@@ -82,4 +82,4 @@ int64_t GetTimeOffset();
 int64_t GetAdjustedTime();
 void AddTimeData(const CNetAddr& ip, int64_t nTime);
 
-#endif // GULDEN_TIMEDATA_H
+#endif

@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_RPCSERVER_H
-#define GULDEN_RPCSERVER_H
+#ifndef RPCSERVER_H
+#define RPCSERVER_H
 
 #include "amount.h"
 #include "rpc/protocol.h"
@@ -210,4 +210,4 @@ std::string JSONRPCExecBatch(const UniValue& vReq);
 // Retrieves any serialization flags requested in command line argument
 int RPCSerializationFlags();
 
-#endif // GULDEN_RPCSERVER_H
+#endif

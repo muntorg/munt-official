@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_WALLET_WALLET_H
-#define GULDEN_WALLET_WALLET_H
+#ifndef WALLET_WALLET_H
+#define WALLET_WALLET_H
 
 #include "wallettx.h"
 
@@ -44,7 +44,7 @@ extern CWalletRef pactiveWallet;
 
 //Gulden specific includes
 #include "wallet/walletdberrors.h"
-#include "wallet/guldenwallet.h"
+#include "wallet/extwallet.h"
 #include "wallet/account.h"
 
 #include <boost/thread.hpp>
@@ -448,11 +448,12 @@ struct WalletBalances
     }
 };
 
+//fixme: (HIGH) Merge Cwallet and CExtWallet back into a single class
 /*
-All Gulden specific functionality goes in base class CGuldenWallet
+All Novo specific functionality goes in base class CExtWallet
 A little bit clumsy 
 */
-class CWallet : public CGuldenWallet
+class CWallet : public CExtWallet
 {
 private:
     static std::atomic<bool> fFlushScheduled;
@@ -1033,4 +1034,4 @@ bool CWallet::DummySignTx(std::vector<CKeyStore*>& accountsToTry, CMutableTransa
     }
     return true;
 }
-#endif // GULDEN_WALLET_WALLET_H
+#endif

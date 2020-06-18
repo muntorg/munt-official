@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_UNITY_APP_MANAGER_H
-#define GULDEN_UNITY_APP_MANAGER_H
+#ifndef UNITY_APP_MANAGER_H
+#define UNITY_APP_MANAGER_H
 
 #include "signals.h"
 #include "scheduler.h"

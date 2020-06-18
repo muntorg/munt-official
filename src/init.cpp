@@ -11,7 +11,7 @@
 // file COPYING
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #include "init.h"
@@ -53,7 +53,7 @@
 #include "torcontrol.h"
 #include "ui_interface.h"
 #include "util.h"
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include "utilmoneystr.h"
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
@@ -176,7 +176,7 @@ extern void ServerInterrupt(boost::thread_group& threadGroup);
 void CoreInterrupt(boost::thread_group& threadGroup)
 {
     LogPrintf("Core interrupt: commence core interrupt\n");
-    PoWGenerateGulden(false, 0, 0, Params());
+    PoWGenerateBlocks(false, 0, 0, Params());
     if (g_connman)
         g_connman->Interrupt();
     ServerInterrupt(threadGroup);
@@ -1142,7 +1142,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         LogPrintf("Startup time: %s\n", DateTimeStrFormat("%Y-%m-%d %H:%M:%S", GetTime()));
     LogPrintf("Default data directory %s\n", GetDefaultDataDir().string());
     LogPrintf("Using data directory %s\n", GetDataDir().string());
-    LogPrintf("Using config file %s\n", GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)).string());
+    LogPrintf("Using config file %s\n", GetConfigFile(GetArg("-conf", DEFAULT_CONF_FILENAME)).string());
     LogPrintf("Using at most %i automatic connections (%i file descriptors available)\n", nMaxConnections, nFD);
 
     InitSignatureCache();
@@ -1795,20 +1795,20 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                 if (nGenProcLimit > 0 && nGenMemoryLimitKilobytes > 0)
                 {
                     LogPrintf("Mine at startup using -gen into mining account\n");
-                    PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams, miningAccount, readOverrideAddress);
+                    PoWGenerateBlocks(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams, miningAccount, readOverrideAddress);
                 }
             }
             else
             {
                 LogPrintf("Mine at startup using -gen into regular account\n");
-                PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams);
+                PoWGenerateBlocks(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams);
             }
         }
         else
         #endif
         {
             LogPrintf("Mine at startup using -gen into regular account\n");
-            PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams);
+            PoWGenerateBlocks(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams);
         }
     }
     // ********************************************************* Step 12: finished

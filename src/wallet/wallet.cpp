@@ -57,7 +57,7 @@
 #include <script/ismine.h>
 
 //fixme: (PHASE5) - we can remove these includes after phase4 activation.
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include "validation/validation.h"
 
 std::vector<CWalletRef> vpwallets;
@@ -1175,7 +1175,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                             if (potentialWitnessAccount->GetWarningState() == AccountStatus::WitnessEmpty || potentialWitnessAccount->GetWarningState() == AccountStatus::WitnessPending)
                             {
                                 potentialWitnessAccount->SetWarningState(pIndex ? AccountStatus::Default : AccountStatus::WitnessPending);
-                                static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, potentialWitnessAccount);
+                                static_cast<const CExtWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, potentialWitnessAccount);
                                 // Set active so that witness account gains the focus immediately after funding.
                                 if (!pIndex) {
                                     CWalletDB walletdb(*pactiveWallet->dbw);

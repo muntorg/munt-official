@@ -10,7 +10,7 @@
 // file COPYING
 
 #include "addrman.h"
-#include "test/test_gulden.h"
+#include "test/test.h"
 #include <string>
 #include <boost/test/unit_test.hpp>
 

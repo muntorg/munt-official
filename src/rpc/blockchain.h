@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_RPC_BLOCKCHAIN_H
-#define GULDEN_RPC_BLOCKCHAIN_H
+#ifndef RPC_BLOCKCHAIN_H
+#define RPC_BLOCKCHAIN_H
 
 class CBlock;
 class CBlockIndex;

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_CRYPTO_RIPEMD160_H
-#define GULDEN_CRYPTO_RIPEMD160_H
+#ifndef CRYPTO_RIPEMD160_H
+#define CRYPTO_RIPEMD160_H
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -25,4 +25,4 @@ public:
     CRIPEMD160& Reset();
 };
 
-#endif // GULDEN_CRYPTO_RIPEMD160_H
+#endif

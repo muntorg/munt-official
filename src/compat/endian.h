@@ -2,11 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_COMPAT_ENDIAN_H
-#define GULDEN_COMPAT_ENDIAN_H
+#ifndef COMPAT_ENDIAN_H
+#define COMPAT_ENDIAN_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #include <stdint.h>
@@ -276,4 +276,4 @@ inline uint64_t le64toh(uint64_t little_endian_64bits)
 
 #endif // WORDS_BIGENDIAN
 
-#endif // GULDEN_COMPAT_ENDIAN_H
+#endif

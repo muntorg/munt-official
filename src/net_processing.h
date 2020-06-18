@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_NET_PROCESSING_H
-#define GULDEN_NET_PROCESSING_H
+#ifndef NET_PROCESSING_H
+#define NET_PROCESSING_H
 
 #include "net.h"
 #include "validation/validationinterface.h"
@@ -95,4 +95,4 @@ size_t CountPriorityDownloads();
 
 int GetProbableHeight();
 
-#endif // GULDEN_NET_PROCESSING_H
+#endif

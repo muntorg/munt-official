@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_ALERT_H
-#define GULDEN_ALERT_H
+#ifndef ALERT_H
+#define ALERT_H
 
 #include "serialize.h"
 #include "sync.h"
@@ -120,4 +120,4 @@ public:
     static CAlert getAlertByHash(const uint256 &hash);
 };
 
-#endif // GULDEN_ALERT_H
+#endif

@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_SYNC_H
-#define GULDEN_SYNC_H
+#ifndef CORE_SYNC_H
+#define CORE_SYNC_H
 
 #include "threadsafety.h"
 
@@ -316,4 +316,4 @@ public:
     }
 };
 
-#endif // GULDEN_SYNC_H
+#endif

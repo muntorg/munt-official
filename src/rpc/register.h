@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_RPCREGISTER_H
-#define GULDEN_RPCREGISTER_H
+#ifndef RPCREGISTER_H
+#define RPCREGISTER_H
 
 /** These are in one header file to avoid creating tons of single-function
  * headers for everything under src/rpc/ */

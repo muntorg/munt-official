@@ -5,11 +5,11 @@
 
 // This file defines various operating system level helpers to get information about the current system
 
-#ifndef GULDEN_COMPAT_SYS_H
-#define GULDEN_COMPAT_SYS_H
+#ifndef COMPAT_SYS_H
+#define COMPAT_SYS_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #include <stdint.h>

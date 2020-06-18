@@ -34,7 +34,7 @@
 #include "txmempool.h"
 #include "ui_interface.h"
 #include "util.h"
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include "utilmoneystr.h"
 #include "utilstrencodings.h"
 #include "validation/validationinterface.h"
@@ -47,7 +47,7 @@
 #include <algorithm>
 
 #if defined(NDEBUG)
-# error "Gulden cannot be compiled without assertions."
+# error "Cannot be compiled without assertions."
 #endif
 
 static std::atomic<bool> fPreventBlockDownloadDuringHeaderSync(false);

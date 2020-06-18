@@ -5,11 +5,11 @@
 /**
  * Utility functions shared by unit tests
  */
-#ifndef GULDEN_TEST_TESTUTIL_H
-#define GULDEN_TEST_TESTUTIL_H
+#ifndef TEST_TESTUTIL_H
+#define TEST_TESTUTIL_H
 
 #include "fs.h"
 
 fs::path GetTempPath();
 
-#endif // GULDEN_TEST_TESTUTIL_H
+#endif

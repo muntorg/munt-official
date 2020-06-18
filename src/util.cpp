@@ -11,7 +11,7 @@
 // file COPYING
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #include "util.h"
@@ -97,8 +97,8 @@
 #include <openssl/conf.h>
 
 
-const char * const GULDEN_CONF_FILENAME = "novo.conf";
-const char * const GULDEN_PID_FILENAME = "novo.pid";
+const char * const DEFAULT_CONF_FILENAME = "novo.conf";
+const char * const DEFAULT_PID_FILENAME = "novo.pid";
 
 ArgsManager gArgs;
 bool fPrintToConsole = false;
@@ -291,37 +291,6 @@ static void InterpretNegativeSetting(std::string& strKey, std::string& strValue)
 void ArgsManager::ParseParameters(int argc, const char* const argv[])
 {
     LOCK(cs_args);
-    //Temporary - migrate old 'guldencoin' wallets to new 'gulden' wallets.
-    fs::path newPath = GetDefaultDataDir();
-    if (!fs::exists(newPath.string()))
-    {
-        try
-        {
-            std::string newPathString = newPath.string();
-            boost::replace_all(newPathString, "Gulden", "Guldencoin");
-            fs::path oldPath(newPathString);
-            if (fs::exists( oldPath.string() ))
-            {
-                fs::rename(oldPath.string(), newPath.string());
-                fs::rename((newPath/"guldencoin.conf").string(), (newPath/"Gulden.conf").string());
-                fs::rename((newPath/"Guldencoin.conf").string(), (newPath/"Gulden.conf").string());
-            }
-        }
-        catch(...){}
-        try
-        {
-            std::string newPathString = newPath.string();
-            boost::replace_all(newPathString, "Gulden", "guldencoin");
-            fs::path oldPath(newPathString);
-            if (fs::exists( oldPath.string() ))
-            {
-                fs::rename(oldPath.string(), newPath.string());
-                fs::rename((newPath/"guldencoin.conf").string(), (newPath/"Gulden.conf").string());
-                fs::rename((newPath/"Guldencoin.conf").string(), (newPath/"Gulden.conf").string());
-            }
-        }
-        catch(...){}
-    }
 
     mapArgs.clear();
     mapMultiArgs.clear();
@@ -574,7 +543,7 @@ void ArgsManager::ReadConfigFile(const std::string& confPath)
 #ifndef WIN32
 fs::path GetPidFile()
 {
-    fs::path pathPidFile(GetArg("-pid", GULDEN_PID_FILENAME));
+    fs::path pathPidFile(GetArg("-pid", DEFAULT_PID_FILENAME));
     if (!pathPidFile.is_complete()) pathPidFile = GetDataDir() / pathPidFile;
     return pathPidFile;
 }

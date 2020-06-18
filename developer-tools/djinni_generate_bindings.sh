@@ -1,9 +1,9 @@
 #!/bin/bash
 
-GULDEN_DJINNI_REPO=https://github.com/mjmacleod/djinni.git
+DJINNI_REPO=https://github.com/mjmacleod/djinni.git
 
 if [ ! -d djinni ]; then
-	git clone --single-branch --branch gulden ${GULDEN_DJINNI_REPO}
+	git clone --single-branch --branch gulden ${DJINNI_REPO}
 else
 	cd djinni
 	git pull origin
@@ -12,8 +12,8 @@ fi
 rm -rf src/unity/djinni/*
 
 djinni/src/run \
- --java-out ./src/frontend/android/unity_wallet/app/src/main/java/com/gulden/jniunifiedbackend/ \
-   --java-package com.gulden.jniunifiedbackend \
+ --java-out ./src/frontend/android/unity_wallet/app/src/main/java/com/novocurrency/jniunifiedbackend/ \
+   --java-package com.novocurrency.jniunifiedbackend \
    --java-implement-android-os-parcelable true \
    --ident-java-field mFooBar \
    --jni-out src/unity/djinni/jni/ \
@@ -23,7 +23,7 @@ djinni/src/run \
    --objc-type-prefix DB \
    --objcpp-out src/unity/djinni/objc/ \
    --node-out src/unity/djinni/node_js/ \
-   --node-package guldenunifiedbackend \
+   --node-package unifiedbackend \
    --node-type-prefix NJS \
    --cpp-out src/unity/djinni/cpp/ \
    --idl src/unity/libunity.djinni

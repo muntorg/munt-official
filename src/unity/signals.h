@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_UNITY_SIGNAL_H
-#define GULDEN_UNITY_SIGNAL_H
+#ifndef UNITY_SIGNAL_H
+#define UNITY_SIGNAL_H
 
 // Return true if all slots return true (or no slots), return false otherwise.
 struct BooleanAndAllReturnValues

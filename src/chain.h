@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_CHAIN_H
-#define GULDEN_CHAIN_H
+#ifndef CHAIN_H
+#define CHAIN_H
 
 #include "arith_uint256.h"
 #include "primitives/block.h"
@@ -760,4 +760,4 @@ private:
     std::vector<CBlockIndex*> vFree;
 };
 
-#endif // GULDEN_CHAIN_H
+#endif

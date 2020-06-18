@@ -19,15 +19,15 @@ endif
 GZIP_ENV="-9n"
 export PYTHONPATH
 
-GULDEND_BIN=$(top_builddir)/src/$(GULDEN_DAEMON_NAME)$(EXEEXT)
-GULDEN_QT_BIN=$(top_builddir)/src/qt/$(GULDEN_GUI_NAME)$(EXEEXT)
-GULDEN_CLI_BIN=$(top_builddir)/src/$(GULDEN_CLI_NAME)$(EXEEXT)
-GULDEN_WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win$(WINDOWS_BITS)-setup$(EXEEXT)
+DAEMON_BIN=$(top_builddir)/src/$(_DAEMON_NAME)$(EXEEXT)
+QT_BIN=$(top_builddir)/src/qt/$(_GUI_NAME)$(EXEEXT)
+CLI_BIN=$(top_builddir)/src/$(_CLI_NAME)$(EXEEXT)
+WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win$(WINDOWS_BITS)-setup$(EXEEXT)
 
 empty :=
 space := $(empty) $(empty)
 
-OSX_APP=Gulden.app
+OSX_APP=Novo.app
 OSX_VOLNAME = $(subst $(space),-,$(PACKAGE_NAME))
 OSX_DMG = $(OSX_VOLNAME).dmg
 OSX_BACKGROUND_SVG=background.svg
@@ -36,20 +36,20 @@ OSX_BACKGROUND_IMAGE_DPIS=36 72
 OSX_DSSTORE_GEN=DS_Store
 OSX_DEPLOY_SCRIPT=$(top_srcdir)/contrib/macdeploy/macdeployqtplus
 OSX_FANCY_PLIST=$(top_srcdir)/contrib/macdeploy/fancy.plist
-OSX_INSTALLER_ICONS=$(top_srcdir)/src/qt/res/icons/Gulden.icns
+OSX_INSTALLER_ICONS=$(top_srcdir)/src/frontend/electron/build/icon.icns
 OSX_PLIST=$(top_builddir)/share/qt/Info.plist #not installed
 OSX_QT_TRANSLATIONS = da,de,es,hu,ru,uk,zh_CN,zh_TW
 
 DIST_DOCS = $(wildcard doc/*.md) $(wildcard doc/release-notes/*.md)
-DIST_CONTRIB = $(top_srcdir)/contrib/Gulden-cli.bash-completion \
-	       $(top_srcdir)/contrib/Gulden-tx.bash-completion \
-	       $(top_srcdir)/contrib/GuldenD.bash-completion \
+DIST_CONTRIB = $(top_srcdir)/contrib/Novo-cli.bash-completion \
+	       $(top_srcdir)/contrib/Novo-tx.bash-completion \
+	       $(top_srcdir)/contrib/Novo-daemon.bash-completion \
 	       $(top_srcdir)/contrib/init 
 
 BIN_CHECKS=$(top_srcdir)/contrib/devtools/symbol-check.py \
            $(top_srcdir)/contrib/devtools/security-check.py
 
-WINDOWS_PACKAGING = $(top_srcdir)/share/pixmaps/Gulden.ico \
+WINDOWS_PACKAGING = $(top_srcdir)/share/pixmaps/icon.ico \
   $(top_srcdir)/share/pixmaps/nsis-header.bmp \
   $(top_srcdir)/share/pixmaps/nsis-wizard.bmp
 
@@ -60,21 +60,21 @@ OSX_PACKAGING = $(OSX_DEPLOY_SCRIPT) $(OSX_FANCY_PLIST) $(OSX_INSTALLER_ICONS) \
   $(top_srcdir)/contrib/macdeploy/detached-sig-create.sh
 
 COVERAGE_INFO = baseline_filtered_combined.info baseline.info \
-  leveldb_baseline.info test_gulden_filtered.info total_coverage.info \
+  leveldb_baseline.info test_filtered.info total_coverage.info \
   baseline_filtered.info functional_test.info functional_test_filtered.info \
-  leveldb_baseline_filtered.info test_gulden_coverage.info test_gulden.info
+  leveldb_baseline_filtered.info test_coverage.info test.info
 
 dist-hook:
 	-$(GIT) archive --format=tar HEAD -- src/clientversion.cpp | $(AMTAR) -C $(top_distdir) -xf -
 
 strip: all-recursive
 	$(MKDIR_P) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(GULDEND_BIN) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(GULDEN_QT_BIN) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(GULDEN_CLI_BIN) $(top_builddir)/release
+	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(DAEMON_BIN) $(top_builddir)/release
+	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(QT_BIN) $(top_builddir)/release
+	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(CLI_BIN) $(top_builddir)/release
 
 
-$(GULDEN_WIN_INSTALLER): all-recursive
+$(WIN_INSTALLER): all-recursive
 	@test -f $(MAKENSIS) && $(MAKENSIS) -V2 $(top_builddir)/share/setup.nsi || \
 	  echo error: could not build $@
 	@echo built $@
@@ -91,11 +91,11 @@ $(OSX_APP)/Contents/Info.plist: $(OSX_PLIST)
 	$(MKDIR_P) $(@D)
 	$(INSTALL_DATA) $< $@
 
-$(OSX_APP)/Contents/Resources/Gulden.icns: $(OSX_INSTALLER_ICONS)
+$(OSX_APP)/Contents/Resources/Novo.icns: $(OSX_INSTALLER_ICONS)
 	$(MKDIR_P) $(@D)
 	$(INSTALL_DATA) $< $@
 
-$(OSX_APP)/Contents/MacOS/Gulden: $(GULDEN_QT_BIN)
+$(OSX_APP)/Contents/MacOS/Novo: $(QT_BIN)
 	$(MKDIR_P) $(@D)
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM)  $< $@
 
@@ -104,8 +104,8 @@ $(OSX_APP)/Contents/Resources/Base.lproj/InfoPlist.strings:
 	echo '{	CFBundleDisplayName = "$(PACKAGE_NAME)"; CFBundleName = "$(PACKAGE_NAME)"; }' > $@
 
 OSX_APP_BUILT=$(OSX_APP)/Contents/PkgInfo $(OSX_APP)/Contents/Resources/empty.lproj \
-  $(OSX_APP)/Contents/Resources/Gulden.icns $(OSX_APP)/Contents/Info.plist \
-  $(OSX_APP)/Contents/MacOS/Gulden $(OSX_APP)/Contents/Resources/Base.lproj/InfoPlist.strings
+  $(OSX_APP)/Contents/Resources/Novo.icns $(OSX_APP)/Contents/Info.plist \
+  $(OSX_APP)/Contents/MacOS/Novo $(OSX_APP)/Contents/Resources/Base.lproj/InfoPlist.strings
 
 osx_volname:
 	echo $(OSX_VOLNAME) >$@
@@ -130,7 +130,7 @@ $(APP_DIST_DIR)/Applications:
 	@rm -f $@
 	@cd $(@D); $(LN_S) /Applications $(@F)
 
-$(APP_DIST_EXTRAS): $(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Gulden
+$(APP_DIST_EXTRAS): $(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Novo-ui
 
 $(OSX_DMG): $(APP_DIST_EXTRAS)
 	$(GENISOIMAGE) -no-cache-inodes -D -l -probe -V "$(OSX_VOLNAME)" -no-pad -r -dir-mode 0755 -apple -o $@ dist
@@ -143,12 +143,12 @@ $(APP_DIST_DIR)/.background/$(OSX_BACKGROUND_IMAGE): $(OSX_BACKGROUND_IMAGE_DPIF
 	$(TIFFCP) -c none $(OSX_BACKGROUND_IMAGE_DPIFILES) $@
 
 $(APP_DIST_DIR)/.DS_Store: contrib/macdeploy/$(OSX_DSSTORE_GEN)
-$(APP_DIST_DIR)/.VolumeIcon.icns: $(top_srcdir)/src/qt/res/icons/Gulden.icns
+$(APP_DIST_DIR)/.VolumeIcon.icns: $(top_srcdir)/src/qt/res/icons/Icon.icns
 	$(INSTALL) $< $@
 
 
 
-$(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Gulden: $(OSX_APP_BUILT) $(OSX_PACKAGING)
+$(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Novo-ui: $(OSX_APP_BUILT) $(OSX_PACKAGING)
 	INSTALLNAMETOOL=$(INSTALLNAMETOOL)  OTOOL=$(OTOOL) STRIP=$(STRIP) $(PYTHON) $(OSX_DEPLOY_SCRIPT) $(OSX_APP) -translations-dir=$(QT_TRANSLATION_DIR) -add-qt-tr $(OSX_QT_TRANSLATIONS) -verbose 2
 
 deploydir: $(APP_DIST_EXTRAS)
@@ -159,16 +159,16 @@ appbundle: $(OSX_APP_BUILT)
 deploy: $(OSX_DMG)
 endif
 if TARGET_WINDOWS
-deploy: $(GULDEN_WIN_INSTALLER)
+deploy: $(WIN_INSTALLER)
 endif
 
-$(GULDEN_QT_BIN): FORCE
+$(QT_BIN): FORCE
 	$(MAKE) -C src qt/$(@F)
 
-$(GULDEND_BIN): FORCE
+$(DAEMON_BIN): FORCE
 	$(MAKE) -C src $(@F)
 
-$(GULDEN_CLI_BIN): FORCE
+$(CLI_BIN): FORCE
 	$(MAKE) -C src $(@F)
 
 if USE_LCOV
@@ -188,16 +188,16 @@ leveldb_baseline_filtered.info: leveldb_baseline.info
 baseline_filtered_combined.info: leveldb_baseline_filtered.info baseline_filtered.info
 	$(LCOV) -a leveldb_baseline_filtered.info -a baseline_filtered.info -o $@
 
-test_gulden.info: baseline_filtered_combined.info
+test.info: baseline_filtered_combined.info
 	$(MAKE) -C src/ check
-	$(LCOV) -c -d $(abs_builddir)/src -t test_gulden -o $@
+	$(LCOV) -c -d $(abs_builddir)/src -t test -o $@
 	$(LCOV) -z -d $(abs_builddir)/src
 	$(LCOV) -z -d $(abs_builddir)/src/leveldb
 
-test_gulden_filtered.info: test_gulden.info
+test_filtered.info: test.info
 	$(LCOV) -r $< "/usr/include/*" -o $@
 
-functional_test.info: test_gulden_filtered.info
+functional_test.info: test_filtered.info
 	-@TIMEOUT=15 python test/functional/test_runner.py $(EXTENDED_FUNCTIONAL_TESTS)
 	$(LCOV) -c -d $(abs_builddir)/src --t functional-tests -o $@
 	$(LCOV) -z -d $(abs_builddir)/src
@@ -206,13 +206,13 @@ functional_test.info: test_gulden_filtered.info
 functional_test_filtered.info: functional_test.info
 	$(LCOV) -r $< "/usr/include/*" -o $@
 
-test_gulden_coverage.info: baseline_filtered_combined.info test_gulden_filtered.info
-	$(LCOV) -a baseline_filtered.info -a leveldb_baseline_filtered.info -a test_gulden_filtered.info -o $@
+test_coverage.info: baseline_filtered_combined.info test_filtered.info
+	$(LCOV) -a baseline_filtered.info -a leveldb_baseline_filtered.info -a test_filtered.info -o $@
 
-total_coverage.info: baseline_filtered_combined.info test_gulden_filtered.info functional_test_filtered.info
-	$(LCOV) -a baseline_filtered.info -a leveldb_baseline_filtered.info -a test_gulden_filtered.info -a functional_test_filtered.info -o $@ | $(GREP) "\%" | $(AWK) '{ print substr($$3,2,50) "/" $$5 }' > coverage_percent.txt
+total_coverage.info: baseline_filtered_combined.info test_filtered.info functional_test_filtered.info
+	$(LCOV) -a baseline_filtered.info -a leveldb_baseline_filtered.info -a test_filtered.info -a functional_test_filtered.info -o $@ | $(GREP) "\%" | $(AWK) '{ print substr($$3,2,50) "/" $$5 }' > coverage_percent.txt
 
-test_gulden.coverage/.dirstamp:  test_gulden_coverage.info
+test.coverage/.dirstamp:  test_coverage.info
 	$(GENHTML) -s $< -o $(@D)
 	@touch $@
 
@@ -220,7 +220,7 @@ total.coverage/.dirstamp: total_coverage.info
 	$(GENHTML) -s $< -o $(@D)
 	@touch $@
 
-cov: test_gulden.coverage/.dirstamp total.coverage/.dirstamp
+cov: test.coverage/.dirstamp total.coverage/.dirstamp
 
 endif
 
@@ -229,8 +229,8 @@ dist_noinst_SCRIPTS = autogen.sh
 EXTRA_DIST = $(top_srcdir)/share/genbuild.sh test/functional/test_runner.py test/functional $(DIST_CONTRIB) $(DIST_DOCS) $(WINDOWS_PACKAGING) $(OSX_PACKAGING) $(BIN_CHECKS) COPYING COPYING_novo COPYING_gulden COPYING_upstream
 
 EXTRA_DIST += \
-    test/util/gulden-util-test.py \
-    test/util/data/gulden-util-test.json \
+    test/util/util-test.py \
+    test/util/data/util-test.json \
     test/util/data/blanktxv1.hex \
     test/util/data/blanktxv1.json \
     test/util/data/blanktxv2.hex \
@@ -280,12 +280,12 @@ EXTRA_DIST += \
     test/util/data/txcreatesignv1.json \
     test/util/data/txcreatesignv2.hex
 
-CLEANFILES = $(OSX_DMG) $(GULDEN_WIN_INSTALLER)
+CLEANFILES = $(OSX_DMG) $(WIN_INSTALLER)
 
 .INTERMEDIATE: $(COVERAGE_INFO)
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-man
 
 clean-local:
-	rm -rf coverage_percent.txt test_gulden.coverage/ total.coverage/ test/tmp/ cache/ $(OSX_APP)
+	rm -rf coverage_percent.txt test.coverage/ total.coverage/ test/tmp/ cache/ $(OSX_APP)
 	rm -rf test/functional/__pycache__

@@ -18,7 +18,7 @@
 #include "script/sign.h"
 #include "script/ismine.h"
 #include "uint256.h"
-#include "test/test_gulden.h"
+#include "test/test.h"
 
 
 

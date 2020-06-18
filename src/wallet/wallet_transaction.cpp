@@ -25,7 +25,7 @@
 #include "wallet/coincontrol.h"
 #include "policy/policy.h"
 #include "policy/rbf.h"
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include "alert.h"
 
 std::vector<CAccount*> CWallet::FindAccountsForTransaction(const CTxOut& out)

@@ -7,7 +7,7 @@
 #define GULDEN_QT_ACCOUNT_SUMMARY_WIDGET_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #ifdef ENABLE_WALLET

@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_MINER_H
-#define GULDEN_MINER_H
+#ifndef GENERATION_MINER_H
+#define GENERATION_MINER_H
 
 #include "primitives/block.h"
 #include "txmempool.h"
@@ -159,7 +159,7 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
 
 inline std::string fixedGenerateAddress="";
 //! Run the block generation threads
-void PoWGenerateGulden(bool fGenerate, int64_t nThreads, int64_t nMemoryKb, const CChainParams& chainparams, CAccount* forAccount = nullptr, std::string generateAddress="");
+void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nMemoryKb, const CChainParams& chainparams, CAccount* forAccount = nullptr, std::string generateAddress="");
 
 //! Stop the block generation threads if they are currently active
 void PoWStopGeneration();
@@ -247,4 +247,4 @@ private:
 void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned int& nExtraNonce);
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev);
 
-#endif // GULDEN_MINER_H
+#endif

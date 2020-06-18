@@ -28,13 +28,13 @@
 #include <future>
 
 CWallet::CWallet()
-    : CGuldenWallet()
+    : CExtWallet()
 {
     SetNull();
 }
 
 CWallet::CWallet(std::unique_ptr<CWalletDBWrapper> dbw_in)
-    : CGuldenWallet(std::move(dbw_in))
+    : CExtWallet(std::move(dbw_in))
 {
     SetNull();
 }

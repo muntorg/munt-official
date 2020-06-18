@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_ADDRDB_H
-#define GULDEN_ADDRDB_H
+#ifndef ADDRDB_H
+#define ADDRDB_H
 
 #include "fs.h"
 #include "serialize.h"
@@ -99,4 +99,4 @@ public:
     bool Read(banmap_t& banSet);
 };
 
-#endif // GULDEN_ADDRDB_H
+#endif

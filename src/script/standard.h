@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_SCRIPT_STANDARD_H
-#define GULDEN_SCRIPT_STANDARD_H
+#ifndef SCRIPT_STANDARD_H
+#define SCRIPT_STANDARD_H
 
 #include "script/interpreter.h"
 #include "uint256.h"
@@ -126,4 +126,4 @@ CScript GetScriptForRawPubKey(const CPubKey& pubkey);
 CScript GetScriptForMultisig(int nRequired, const std::vector<CPubKey>& keys);
 CScript GetScriptForWitness(const CScript& redeemscript);
 
-#endif // GULDEN_SCRIPT_STANDARD_H
+#endif

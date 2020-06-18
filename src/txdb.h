@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_TXDB_H
-#define GULDEN_TXDB_H
+#ifndef TXDB_H
+#define TXDB_H
 
 #include "coins.h"
 #include "dbwrapper.h"
@@ -172,4 +172,4 @@ public:
     bool LoadBlockIndexGuts(std::function<CBlockIndex*(const uint256&)> insertBlockIndex);
 };
 
-#endif // GULDEN_TXDB_H
+#endif

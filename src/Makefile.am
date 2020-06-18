@@ -5,7 +5,7 @@
 # File contains modifications by: The Gulden developers
 # All modifications:
 # Copyright (c) 2016-2018 The Gulden developers
-# Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+# Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 # Distributed under the GULDEN software license, see the accompanying
 # file COPYING
 
@@ -26,80 +26,80 @@ else
 LIBUNIVALUE = $(UNIVALUE_LIBS)
 endif
 
-GULDEN_CONFIG_INCLUDES=-I$(builddir)/config
-GULDEN_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BDB_CPPFLAGS) $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS) $(CRYPTOPP_CFLAGS)
+CONFIG_INCLUDES=-I$(builddir)/config
+COMMON_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BDB_CPPFLAGS) $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS) $(CRYPTOPP_CFLAGS)
 
-GULDEN_INCLUDES += -I$(srcdir)/secp256k1/include
-GULDEN_INCLUDES += $(UNIVALUE_CFLAGS)
+COMMON_INCLUDES += -I$(srcdir)/secp256k1/include
+COMMON_INCLUDES += $(UNIVALUE_CFLAGS)
 
-LIBGULDEN_SERVER=libgulden_server.a
-LIBGULDEN_NODE=libgulden_node.a
-LIBGULDEN_COMMON=libgulden_common.a
-LIBGULDEN_CONSENSUS=libgulden_consensus.a
-LIBGULDEN_CLI=libgulden_cli.a
-LIBGULDEN_UTIL=libgulden_util.a
-LIBGULDEN_GENERIC=libgulden_generic.a
-LIBGULDEN_CRYPTO_SSE3=crypto/libgulden_crypto_sse3.a
-LIBGULDEN_CRYPTO_SSE3_AES=crypto/libgulden_crypto_sse3_aes.a
-LIBGULDEN_CRYPTO_SSE4=crypto/libgulden_crypto_sse4.a
-LIBGULDEN_CRYPTO_SSE4_AES=crypto/libgulden_crypto_sse4_aes.a
-LIBGULDEN_CRYPTO_AVX=crypto/libgulden_crypto_avx.a
-LIBGULDEN_CRYPTO_AVX_AES=crypto/libgulden_crypto_avx_aes.a
-LIBGULDEN_CRYPTO_AVX2=crypto/libgulden_crypto_avx2.a
-LIBGULDEN_CRYPTO_AVX2_AES=crypto/libgulden_crypto_avx2_aes.a
-LIBGULDEN_CRYPTO_AVX512F=crypto/libgulden_crypto_avx512f.a
-LIBGULDEN_CRYPTO_AVX512F_AES=crypto/libgulden_crypto_avx512f_aes.a
-LIBGULDEN_CRYPTO_ARM_CORTEX_A53=crypto/libgulden_crypto_arm_cortex_a53.a
-LIBGULDEN_CRYPTO_ARM_CORTEX_A53_AES=crypto/libgulden_crypto_arm_cortex_a53_aes.a
-LIBGULDEN_CRYPTO_ARM_CORTEX_A57=crypto/libgulden_crypto_arm_cortex_a57.a
-LIBGULDEN_CRYPTO_ARM_CORTEX_A57_AES=crypto/libgulden_crypto_arm_cortex_a57_aes.a
-LIBGULDEN_CRYPTO_ARM_CORTEX_A72=crypto/libgulden_crypto_arm_cortex_a72.a
-LIBGULDEN_CRYPTO_ARM_CORTEX_A72_AES=crypto/libgulden_crypto_arm_cortex_a72_aes.a
-LIBGULDEN_CRYPTO_ARM_THUNDERX_AES=crypto/libgulden_crypto_arm_thunderx_aes.a
-LIBGULDEN_CRYPTO=crypto/libgulden_crypto.a
-LIBGULDEN_ANDROID_COMPAT=libgulden_android_compat.a
-LIBGULDENQT=qt/libguldenqt.a
+LIB_SERVER=lib_server.a
+LIB_NODE=lib_node.a
+LIB_COMMON=lib_common.a
+LIB_CONSENSUS=lib_consensus.a
+LIB_CLI=lib_cli.a
+LIB_UTIL=lib_util.a
+LIB_GENERIC=lib_generic.a
+LIB_CRYPTO_SSE3=crypto/lib_crypto_sse3.a
+LIB_CRYPTO_SSE3_AES=crypto/lib_crypto_sse3_aes.a
+LIB_CRYPTO_SSE4=crypto/lib_crypto_sse4.a
+LIB_CRYPTO_SSE4_AES=crypto/lib_crypto_sse4_aes.a
+LIB_CRYPTO_AVX=crypto/lib_crypto_avx.a
+LIB_CRYPTO_AVX_AES=crypto/lib_crypto_avx_aes.a
+LIB_CRYPTO_AVX2=crypto/lib_crypto_avx2.a
+LIB_CRYPTO_AVX2_AES=crypto/lib_crypto_avx2_aes.a
+LIB_CRYPTO_AVX512F=crypto/lib_crypto_avx512f.a
+LIB_CRYPTO_AVX512F_AES=crypto/lib_crypto_avx512f_aes.a
+LIB_CRYPTO_ARM_CORTEX_A53=crypto/lib_crypto_arm_cortex_a53.a
+LIB_CRYPTO_ARM_CORTEX_A53_AES=crypto/lib_crypto_arm_cortex_a53_aes.a
+LIB_CRYPTO_ARM_CORTEX_A57=crypto/lib_crypto_arm_cortex_a57.a
+LIB_CRYPTO_ARM_CORTEX_A57_AES=crypto/lib_crypto_arm_cortex_a57_aes.a
+LIB_CRYPTO_ARM_CORTEX_A72=crypto/lib_crypto_arm_cortex_a72.a
+LIB_CRYPTO_ARM_CORTEX_A72_AES=crypto/lib_crypto_arm_cortex_a72_aes.a
+LIB_CRYPTO_ARM_THUNDERX_AES=crypto/lib_crypto_arm_thunderx_aes.a
+LIB_CRYPTO=crypto/lib_crypto.a
+LIB_ANDROID_COMPAT=lib_android_compat.a
+LIBQT=qt/libqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 
 if ENABLE_ZMQ
-LIBGULDEN_ZMQ=libgulden_zmq.a
+LIB_ZMQ=lib_zmq.a
 endif
-if BUILD_GULDEN_LIBS_NODE_JS
-LIBGULDEN_UNITY_NODE_JS=libgulden_unity_node_js.la
+if BUILD_LIBS_NODE_JS
+LIB_UNITY_NODE_JS=lib_unity_node_js.la
 endif
-if BUILD_GULDEN_LIBS_JNI
-LIBGULDEN_UNITY_JNI=libgulden_unity_jni.la
+if BUILD_LIBS_JNI
+LIB_UNITY_JNI=lib_unity_jni.la
 endif
-if BUILD_GULDEN_LIBS_OBJC
-LIBGULDEN_UNITY_OBJC=libgulden_unity_objc.a
+if BUILD_LIBS_OBJC
+LIB_UNITY_OBJC=lib_unity_objc.a
 endif
 if ENABLE_WALLET
-LIBGULDEN_WALLET=libgulden_wallet.a
+LIB_WALLET=lib_wallet.a
 endif
 
 $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C $(@D) $(@F)
 
-LIBGULDEN_CRYPTO_ARM = $(LIBGULDEN_CRYPTO_ARM_CORTEX_A53) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A53_AES) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A57) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A57_AES) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A72) $(LIBGULDEN_CRYPTO_ARM_CORTEX_A72_AES) $(LIBGULDEN_CRYPTO_ARM_THUNDERX_AES)
-LIBGULDEN_CRYPTO_INTEL = $(LIBGULDEN_CRYPTO_SSE3) $(LIBGULDEN_CRYPTO_SSE3_AES) $(LIBGULDEN_CRYPTO_SSE4) $(LIBGULDEN_CRYPTO_SSE4_AES) $(LIBGULDEN_CRYPTO_AVX) $(LIBGULDEN_CRYPTO_AVX_AES) $(LIBGULDEN_CRYPTO_AVX2) $(LIBGULDEN_CRYPTO_AVX2_AES) $(LIBGULDEN_CRYPTO_AVX512F) $(LIBGULDEN_CRYPTO_AVX512F_AES)
-LIBGULDEN_CRYPTO_ALL = $(LIBGULDEN_CRYPTO) $(LIBGULDEN_CRYPTO_INTEL) $(LIBGULDEN_CRYPTO_ARM)
+LIB_CRYPTO_ARM = $(LIB_CRYPTO_ARM_CORTEX_A53) $(LIB_CRYPTO_ARM_CORTEX_A53_AES) $(LIB_CRYPTO_ARM_CORTEX_A57) $(LIB_CRYPTO_ARM_CORTEX_A57_AES) $(LIB_CRYPTO_ARM_CORTEX_A72) $(LIB_CRYPTO_ARM_CORTEX_A72_AES) $(LIB_CRYPTO_ARM_THUNDERX_AES)
+LIB_CRYPTO_INTEL = $(LIB_CRYPTO_SSE3) $(LIB_CRYPTO_SSE3_AES) $(LIB_CRYPTO_SSE4) $(LIB_CRYPTO_SSE4_AES) $(LIB_CRYPTO_AVX) $(LIB_CRYPTO_AVX_AES) $(LIB_CRYPTO_AVX2) $(LIB_CRYPTO_AVX2_AES) $(LIB_CRYPTO_AVX512F) $(LIB_CRYPTO_AVX512F_AES)
+LIB_CRYPTO_ALL = $(LIB_CRYPTO) $(LIB_CRYPTO_INTEL) $(LIB_CRYPTO_ARM)
 
 # Make is not made aware of per-object dependencies to avoid limiting building parallelization
 # But to build the less dependent modules first, we manually select their order here:
 EXTRA_LIBRARIES += \
-  $(LIBGULDEN_CRYPTO_ALL) \
-  $(LIBGULDEN_ANDROID_COMPAT) \
-  $(LIBGULDEN_UTIL) \
-  $(LIBGULDEN_GENERIC) \
-  $(LIBGULDEN_COMMON) \
-  $(LIBGULDEN_CONSENSUS) \
-  $(LIBGULDEN_SERVER) \
-  $(LIBGULDEN_NODE) \
-  $(LIBGULDEN_CLI) \
-  $(LIBGULDEN_WALLET) \
-  $(LIBGULDEN_ZMQ)
+  $(LIB_CRYPTO_ALL) \
+  $(LIB_ANDROID_COMPAT) \
+  $(LIB_UTIL) \
+  $(LIB_GENERIC) \
+  $(LIB_COMMON) \
+  $(LIB_CONSENSUS) \
+  $(LIB_SERVER) \
+  $(LIB_NODE) \
+  $(LIB_CLI) \
+  $(LIB_WALLET) \
+  $(LIB_ZMQ)
 
-lib_LTLIBRARIES = $(LIBGULDEN_UNITY_JNI) $(LIBGULDEN_UNITY_NODE_JS)
+lib_LTLIBRARIES = $(LIB_UNITY_JNI) $(LIB_UNITY_NODE_JS)
 
 bin_PROGRAMS =
 noinst_PROGRAMS =
@@ -107,18 +107,18 @@ noinst_LIBRARIES =
 TESTS =
 BENCHMARKS =
 
-if BUILD_GULDEND
-  bin_PROGRAMS += GuldenD
+if BUILD_DAEMON
+  bin_PROGRAMS += Novo-daemon
 endif
 
-if BUILD_GULDEN_UTILS
-  bin_PROGRAMS += Gulden-cli Gulden-tx
+if BUILD_UTILS
+  bin_PROGRAMS += Novo-cli Novo-tx
 endif
 
 .PHONY: FORCE check-symbols check-security
 
 # core #
-GULDEN_CORE_H = rpc/rpcgulden.h \
+CORE_H = rpc/accounts.h \
   pow/diff.h \
   pow/diff_delta.h \
   pow/diff_old.h \
@@ -127,8 +127,8 @@ GULDEN_CORE_H = rpc/rpcgulden.h \
   crypto/hash/city.h \
   crypto/hash/cityconfig.h \
   wallet/mnemonic.h \
-  guldenutil.h \
-  wallet/guldenwallet.h \
+  witnessutil.h \
+  wallet/extwallet.h \
   LRUCache/LRUCache11.hpp \
   alert.h \
   wallet/account.h \
@@ -253,11 +253,11 @@ obj/build.h: FORCE
 clientversion.cpp: obj/build.h
 
 
-# server: shared between GuldenD and Gulden
-libgulden_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
-libgulden_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libgulden_server_a_SOURCES = \
-  rpc/rpcgulden.cpp \
+# server: shared between Daemon and GUI client
+lib_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
+lib_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_server_a_SOURCES = \
+  rpc/accounts.cpp \
   unity/generic/init_generic.cpp \
   httprpc.cpp \
   httpserver.cpp \
@@ -269,18 +269,18 @@ libgulden_server_a_SOURCES = \
   rpc/rawtransaction.cpp \
   rpc/server.cpp \
   torcontrol.cpp \
-  $(GULDEN_CORE_H)
+  $(CORE_H)
 
 if ENABLE_WALLET
-libgulden_server_a_SOURCES += \
+lib_server_a_SOURCES += \
   wallet/rpcdump.cpp \
   wallet/rpcwallet.cpp
 endif
 
-# node: shared between GuldenD, Gulden and unity libraries.
-libgulden_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) -I$(srcdir)/univalue/include
-libgulden_node_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libgulden_node_a_SOURCES = \
+# node: shared between Daemon, GUI client and unity libraries.
+lib_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) -I$(srcdir)/univalue/include
+lib_node_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_node_a_SOURCES = \
   addrdb.cpp \
   addrman.cpp \
   alert.cpp \
@@ -305,7 +305,7 @@ libgulden_node_a_SOURCES = \
   policy/rbf.cpp \
   txdb.cpp \
   txmempool.cpp \
-  guldenutil.cpp \
+  witnessutil.cpp \
   ui_interface.cpp \
   validation/validation.cpp \
   validation/validation_mempool.cpp \
@@ -319,26 +319,26 @@ libgulden_node_a_SOURCES = \
   script/ismine.cpp \
   timedata.cpp \
   pow/pow.cpp \
-  $(GULDEN_CORE_H)
+  $(CORE_H)
 
-# zmq: shared between GuldenD and Gulden, only if zmq enabled
+# zmq: shared between Daemon and GUI client, only if zmq enabled
 if ENABLE_ZMQ
-libgulden_zmq_a_CPPFLAGS = $(GULDEN_INCLUDES) $(ZMQ_CFLAGS)
-libgulden_zmq_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libgulden_zmq_a_SOURCES = \
+lib_zmq_a_CPPFLAGS = $(COMMON_INCLUDES) $(ZMQ_CFLAGS)
+lib_zmq_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_zmq_a_SOURCES = \
   zmq/zmqabstractnotifier.cpp \
   zmq/zmqnotificationinterface.cpp \
   zmq/zmqpublishnotifier.cpp
 endif
 
 
-# wallet: shared between GuldenD, Gulden and unity libraries but only linked when wallet enabled
-libgulden_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
-libgulden_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libgulden_wallet_a_SOURCES = \
+# wallet: shared between Daemon, GUI client and unity libraries but only linked when wallet enabled
+lib_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+lib_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_wallet_a_SOURCES = \
   wallet/account.cpp \
   wallet/mnemonic.cpp \
-  wallet/guldenwallet.cpp \
+  wallet/extwallet.cpp \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/feebumper.cpp \
@@ -353,12 +353,12 @@ libgulden_wallet_a_SOURCES = \
   wallet/wallettx.cpp \
   wallet/walletdb.cpp \
   wallet/witness_operations.cpp \
-  $(GULDEN_CORE_H)
+  $(CORE_H)
 
 # crypto primitives library: Shared between all binaries and unity libraries
-crypto_libgulden_crypto_sse3_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE3_FLAGS)
-crypto_libgulden_crypto_sse3_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE3_FLAGS)
-crypto_libgulden_crypto_sse3_a_SOURCES = \
+crypto_lib_crypto_sse3_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE3_FLAGS)
+crypto_lib_crypto_sse3_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE3_FLAGS)
+crypto_lib_crypto_sse3_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_sse3.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_sse3.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_sse3.h \
@@ -366,9 +366,9 @@ crypto_libgulden_crypto_sse3_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_sse3.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_sse3.cpp
 
-crypto_libgulden_crypto_sse3_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE3_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
-crypto_libgulden_crypto_sse3_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE3_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
-crypto_libgulden_crypto_sse3_aes_a_SOURCES = \
+crypto_lib_crypto_sse3_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE3_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_lib_crypto_sse3_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE3_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_lib_crypto_sse3_aes_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_sse3_aes.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_sse3_aes.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_sse3_aes.h \
@@ -376,9 +376,9 @@ crypto_libgulden_crypto_sse3_aes_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_sse3_aes.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_sse3_aes.cpp
 
-crypto_libgulden_crypto_sse4_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE4_FLAGS)
-crypto_libgulden_crypto_sse4_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE4_FLAGS)
-crypto_libgulden_crypto_sse4_a_SOURCES = \
+crypto_lib_crypto_sse4_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE4_FLAGS)
+crypto_lib_crypto_sse4_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE4_FLAGS)
+crypto_lib_crypto_sse4_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_sse4.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_sse4.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_sse4.h \
@@ -386,9 +386,9 @@ crypto_libgulden_crypto_sse4_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_sse4.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_sse4.cpp
 
-crypto_libgulden_crypto_sse4_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE4_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
-crypto_libgulden_crypto_sse4_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE4_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
-crypto_libgulden_crypto_sse4_aes_a_SOURCES = \
+crypto_lib_crypto_sse4_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE4_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_lib_crypto_sse4_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE4_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_lib_crypto_sse4_aes_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_sse4_aes.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_sse4_aes.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_sse4_aes.h \
@@ -396,9 +396,9 @@ crypto_libgulden_crypto_sse4_aes_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_sse4_aes.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_sse4_aes.cpp
 
-crypto_libgulden_crypto_avx_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX_FLAGS)
-crypto_libgulden_crypto_avx_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX_FLAGS)
-crypto_libgulden_crypto_avx_a_SOURCES = \
+crypto_lib_crypto_avx_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX_FLAGS)
+crypto_lib_crypto_avx_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX_FLAGS)
+crypto_lib_crypto_avx_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_avx.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_avx.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_avx.h \
@@ -407,9 +407,9 @@ crypto_libgulden_crypto_avx_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_avx.cpp
 
 
-crypto_libgulden_crypto_avx_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
-crypto_libgulden_crypto_avx_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
-crypto_libgulden_crypto_avx_aes_a_SOURCES = \
+crypto_lib_crypto_avx_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_lib_crypto_avx_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_lib_crypto_avx_aes_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_avx_aes.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_avx_aes.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_avx_aes.h \
@@ -418,9 +418,9 @@ crypto_libgulden_crypto_avx_aes_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_avx_aes.cpp
 
 
-crypto_libgulden_crypto_avx2_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX2_FLAGS)
-crypto_libgulden_crypto_avx2_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX2_FLAGS)
-crypto_libgulden_crypto_avx2_a_SOURCES = \
+crypto_lib_crypto_avx2_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX2_FLAGS)
+crypto_lib_crypto_avx2_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX2_FLAGS)
+crypto_lib_crypto_avx2_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_avx2.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_avx2.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_avx2.h \
@@ -428,9 +428,9 @@ crypto_libgulden_crypto_avx2_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_avx2.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_avx2.cpp
 
-crypto_libgulden_crypto_avx2_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX2_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
-crypto_libgulden_crypto_avx2_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX2_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
-crypto_libgulden_crypto_avx2_aes_a_SOURCES = \
+crypto_lib_crypto_avx2_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX2_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_lib_crypto_avx2_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX2_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_lib_crypto_avx2_aes_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_avx2_aes.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_avx2_aes.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_avx2_aes.h \
@@ -438,9 +438,9 @@ crypto_libgulden_crypto_avx2_aes_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_avx2_aes.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_avx2_aes.cpp
 
-crypto_libgulden_crypto_avx512f_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX512F_FLAGS)
-crypto_libgulden_crypto_avx512f_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX512F_FLAGS)
-crypto_libgulden_crypto_avx512f_a_SOURCES = \
+crypto_lib_crypto_avx512f_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX512F_FLAGS)
+crypto_lib_crypto_avx512f_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX512F_FLAGS)
+crypto_lib_crypto_avx512f_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_avx512f.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_avx512f.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_avx512f.h \
@@ -448,9 +448,9 @@ crypto_libgulden_crypto_avx512f_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_avx512f.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_avx512f.cpp
 
-crypto_libgulden_crypto_avx512f_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX512F_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
-crypto_libgulden_crypto_avx512f_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX512F_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
-crypto_libgulden_crypto_avx512f_aes_a_SOURCES = \
+crypto_lib_crypto_avx512f_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_AVX512F_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_lib_crypto_avx512f_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_AVX512F_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
+crypto_lib_crypto_avx512f_aes_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_avx512f_aes.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_avx512f_aes.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_avx512f_aes.h \
@@ -458,9 +458,9 @@ crypto_libgulden_crypto_avx512f_aes_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_avx512f_aes.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_avx512f_aes.cpp
 
-crypto_libgulden_crypto_arm_cortex_a53_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_CORTEX53_FLAGS)
-crypto_libgulden_crypto_arm_cortex_a53_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_CORTEX53_FLAGS)
-crypto_libgulden_crypto_arm_cortex_a53_a_SOURCES = \
+crypto_lib_crypto_arm_cortex_a53_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_CORTEX53_FLAGS)
+crypto_lib_crypto_arm_cortex_a53_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_CORTEX53_FLAGS)
+crypto_lib_crypto_arm_cortex_a53_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_arm_cortex_a53.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_arm_cortex_a53.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_arm_cortex_a53.h \
@@ -468,9 +468,9 @@ crypto_libgulden_crypto_arm_cortex_a53_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_cortex_a53.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_cortex_a53.cpp
 
-crypto_libgulden_crypto_arm_cortex_a53_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_CORTEX53_AES_FLAGS)
-crypto_libgulden_crypto_arm_cortex_a53_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_CORTEX53_AES_FLAGS)
-crypto_libgulden_crypto_arm_cortex_a53_aes_a_SOURCES = \
+crypto_lib_crypto_arm_cortex_a53_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_CORTEX53_AES_FLAGS)
+crypto_lib_crypto_arm_cortex_a53_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_CORTEX53_AES_FLAGS)
+crypto_lib_crypto_arm_cortex_a53_aes_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_arm_cortex_a53_aes.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_arm_cortex_a53_aes.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_arm_cortex_a53_aes.h \
@@ -478,9 +478,9 @@ crypto_libgulden_crypto_arm_cortex_a53_aes_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_cortex_a53_aes.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_cortex_a53_aes.cpp
   
-crypto_libgulden_crypto_arm_cortex_a57_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_CORTEX57_FLAGS)
-crypto_libgulden_crypto_arm_cortex_a57_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_CORTEX57_FLAGS)
-crypto_libgulden_crypto_arm_cortex_a57_a_SOURCES = \
+crypto_lib_crypto_arm_cortex_a57_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_CORTEX57_FLAGS)
+crypto_lib_crypto_arm_cortex_a57_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_CORTEX57_FLAGS)
+crypto_lib_crypto_arm_cortex_a57_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_arm_cortex_a57.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_arm_cortex_a57.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_arm_cortex_a57.h \
@@ -488,9 +488,9 @@ crypto_libgulden_crypto_arm_cortex_a57_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_cortex_a57.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_cortex_a57.cpp
 
-crypto_libgulden_crypto_arm_cortex_a57_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_CORTEX57_AES_FLAGS)
-crypto_libgulden_crypto_arm_cortex_a57_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_CORTEX57_AES_FLAGS)
-crypto_libgulden_crypto_arm_cortex_a57_aes_a_SOURCES = \
+crypto_lib_crypto_arm_cortex_a57_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_CORTEX57_AES_FLAGS)
+crypto_lib_crypto_arm_cortex_a57_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_CORTEX57_AES_FLAGS)
+crypto_lib_crypto_arm_cortex_a57_aes_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_arm_cortex_a57_aes.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_arm_cortex_a57_aes.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_arm_cortex_a57_aes.h \
@@ -498,9 +498,9 @@ crypto_libgulden_crypto_arm_cortex_a57_aes_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_cortex_a57_aes.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_cortex_a57_aes.cpp
 
-crypto_libgulden_crypto_arm_cortex_a72_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_CORTEX72_FLAGS)
-crypto_libgulden_crypto_arm_cortex_a72_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_CORTEX72_FLAGS)
-crypto_libgulden_crypto_arm_cortex_a72_a_SOURCES = \
+crypto_lib_crypto_arm_cortex_a72_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_CORTEX72_FLAGS)
+crypto_lib_crypto_arm_cortex_a72_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_CORTEX72_FLAGS)
+crypto_lib_crypto_arm_cortex_a72_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_arm_cortex_a72.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_arm_cortex_a72.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_arm_cortex_a72.h \
@@ -508,9 +508,9 @@ crypto_libgulden_crypto_arm_cortex_a72_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_cortex_a72.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_cortex_a72.cpp
 
-crypto_libgulden_crypto_arm_cortex_a72_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_CORTEX72_AES_FLAGS)
-crypto_libgulden_crypto_arm_cortex_a72_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_CORTEX72_AES_FLAGS)
-crypto_libgulden_crypto_arm_cortex_a72_aes_a_SOURCES = \
+crypto_lib_crypto_arm_cortex_a72_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_CORTEX72_AES_FLAGS)
+crypto_lib_crypto_arm_cortex_a72_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_CORTEX72_AES_FLAGS)
+crypto_lib_crypto_arm_cortex_a72_aes_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_arm_cortex_a72_aes.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_arm_cortex_a72_aes.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_arm_cortex_a72_aes.h \
@@ -518,9 +518,9 @@ crypto_libgulden_crypto_arm_cortex_a72_aes_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_cortex_a72_aes.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_cortex_a72_aes.cpp
 
-crypto_libgulden_crypto_arm_thunderx_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_THUNDERX_AES_FLAGS)
-crypto_libgulden_crypto_arm_thunderx_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_THUNDERX_AES_FLAGS)
-crypto_libgulden_crypto_arm_thunderx_aes_a_SOURCES = \
+crypto_lib_crypto_arm_thunderx_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_THUNDERX_AES_FLAGS)
+crypto_lib_crypto_arm_thunderx_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_THUNDERX_AES_FLAGS)
+crypto_lib_crypto_arm_thunderx_aes_a_SOURCES = \
   crypto/hash/sigma/echo256/opt/echo256_opt_arm_thunderx_aes.h \
   crypto/hash/sigma/echo256/opt/echo256_opt_arm_thunderx_aes.cpp \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_arm_thunderx_aes.h \
@@ -528,9 +528,9 @@ crypto_libgulden_crypto_arm_thunderx_aes_a_SOURCES = \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_thunderx_aes.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_thunderx_aes.cpp
 
-crypto_libgulden_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES)
-crypto_libgulden_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-crypto_libgulden_crypto_a_SOURCES = \
+crypto_lib_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES)
+crypto_lib_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+crypto_lib_crypto_a_SOURCES = \
   crypto/bytevectorhash.h \
   crypto/bytevectorhash.cpp \
   crypto/chacha20.h \
@@ -585,7 +585,7 @@ crypto_libgulden_crypto_a_SOURCES = \
   crypto/sha512.cpp \
   crypto/sha512.h
 
-EXTRA_crypto_libgulden_crypto_a_SOURCES = \
+EXTRA_crypto_lib_crypto_a_SOURCES = \
   crypto/hash/sigma/echo256/echo256_opt.h \
   crypto/hash/sigma/echo256/echo256_opt.cpp \
   crypto/hash/sigma/shavite3_256/shavite3_256_opt.cpp \
@@ -593,16 +593,16 @@ EXTRA_crypto_libgulden_crypto_a_SOURCES = \
   llvm-cpumodel-hack.cpp
 
 # android compat library; shared between unity and testing framework.
-libgulden_android_compat_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_CONFIG_INCLUDES) $(PROTOBUF_CFLAGS)
-libgulden_android_compat_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libgulden_android_compat_a_SOURCES = \
+lib_android_compat_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PROTOBUF_CFLAGS)
+lib_android_compat_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_android_compat_a_SOURCES = \
   unity/compat/android_wallet.cpp \
   unity/compat/android_wallet.h
 
-# consensus: All executables except gulden-cli; all unity libraries
-libgulden_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
-libgulden_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libgulden_consensus_a_SOURCES = \
+# consensus: Included by all executables except CLI; also all unity libraries
+lib_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+lib_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_consensus_a_SOURCES = \
   pow/diff_delta.cpp \
   pow/diff_old.cpp \
   pow/diff_common.cpp \
@@ -623,8 +623,8 @@ libgulden_consensus_a_SOURCES = \
   primitives/transaction.h \
   pubkey.cpp \
   pubkey.h \
-  script/guldenconsensus.cpp \
-  script/guldenconsensus.h \
+  script/consensus.cpp \
+  script/consensus.h \
   script/interpreter.cpp \
   script/interpreter.h \
   script/script.cpp \
@@ -637,10 +637,10 @@ libgulden_consensus_a_SOURCES = \
   uint256.h \
   version.h
 
-# common: shared between GuldenD, and Gulden and non-server tools
-libgulden_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
-libgulden_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libgulden_common_a_SOURCES = \
+# common: shared between Daemon, GUI client and non-server tools
+lib_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+lib_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_common_a_SOURCES = \
   unity/appmanager.cpp \
   base58.cpp \
   chainparams.cpp \
@@ -655,14 +655,14 @@ libgulden_common_a_SOURCES = \
   scheduler.cpp \
   script/sign.cpp \
   script/standard.cpp \
-  $(GULDEN_CORE_H)
+  $(CORE_H)
 
 # util: shared between all executables and unity libraries.
 # This library *must* be included to make sure that the glibc
 # backward-compatibility objects and their sanity checks are linked.
-libgulden_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
-libgulden_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libgulden_util_a_SOURCES = \
+lib_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+lib_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_util_a_SOURCES = \
   support/lockedpool.cpp \
   chainparamsbase.cpp \
   clientversion.cpp \
@@ -678,51 +678,51 @@ libgulden_util_a_SOURCES = \
   utilmoneystr.cpp \
   utilstrencodings.cpp \
   utiltime.cpp \
-  $(GULDEN_CORE_H)
+  $(CORE_H)
 
 # generic: shared between everything except the unity libraries (which provide their own specialised implementations)
-libgulden_generic_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
-libgulden_generic_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libgulden_generic_a_SOURCES = \
+lib_generic_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+lib_generic_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_generic_a_SOURCES = \
   unity/generic/logging.cpp \
   core_read.cpp \
   core_write.cpp \
   rpc/protocol.cpp \
-  $(GULDEN_CORE_H)
+  $(CORE_H)
 
 if GLIBC_BACK_COMPAT
-libgulden_util_a_SOURCES += compat/glibc_compat.cpp
+lib_util_a_SOURCES += compat/glibc_compat.cpp
 AM_LDFLAGS += $(COMPAT_LDFLAGS)
 endif
 
-# cli: shared between Gulden-cli and Gulden
-libgulden_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
-libgulden_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libgulden_cli_a_SOURCES = \
+# cli: shared between CLI and CUI client
+lib_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+lib_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_cli_a_SOURCES = \
   rpc/client.cpp \
-  $(GULDEN_CORE_H)
+  $(CORE_H)
 
-nodist_libgulden_util_a_SOURCES = $(srcdir)/obj/build.h
+nodist_lib_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
 if TARGET_INTEL
-LIBGULDEN_UNITY_CRYPTO_OBJ=$(LIBGULDEN_CRYPTO_INTEL)
+LIB_UNITY_CRYPTO_OBJ=$(LIB_CRYPTO_INTEL)
 else
-LIBGULDEN_UNITY_CRYPTO_OBJ=$(LIBGULDEN_CRYPTO_ARM)
+LIB_UNITY_CRYPTO_OBJ=$(LIB_CRYPTO_ARM)
 endif
 
-# Gulden-unity library (for node.js)#
-if BUILD_GULDEN_LIBS_NODE_JS
+# unity library (for node.js)#
+if BUILD_LIBS_NODE_JS
 
 DJINNI_CPP_GEN = \
   unity/djinni/cpp/address_record.hpp \
   unity/djinni/cpp/balance_record.hpp \
   unity/djinni/cpp/block_info_record.hpp \
-  unity/djinni/cpp/gulden_unified_backend.cpp \
-  unity/djinni/cpp/gulden_unified_backend.hpp \
-  unity/djinni/cpp/gulden_unified_frontend.hpp \
+  unity/djinni/cpp/unified_backend.cpp \
+  unity/djinni/cpp/unified_backend.hpp \
+  unity/djinni/cpp/unified_frontend.hpp \
   unity/djinni/cpp/legacy_wallet_result.hpp \
-  unity/djinni/cpp/gulden_monitor_listener.hpp \
+  unity/djinni/cpp/monitor_listener.hpp \
   unity/djinni/cpp/monitor_record.hpp \
   unity/djinni/cpp/mutation_record.hpp \
   unity/djinni/cpp/peer_record.hpp \
@@ -735,18 +735,18 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/uri_record.hpp
 
 DJINNI_NODE_JS_GEN = \
-  unity/djinni/node_js/guldenunifiedbackend.cpp \
-  unity/djinni/node_js/NJSGuldenMonitorListener.cpp \
-  unity/djinni/node_js/NJSGuldenMonitorListener.hpp \
-  unity/djinni/node_js/NJSGuldenUnifiedBackendCpp.cpp \
-  unity/djinni/node_js/NJSGuldenUnifiedBackendCpp.hpp \
-  unity/djinni/node_js/NJSGuldenUnifiedFrontend.cpp \
-  unity/djinni/node_js/NJSGuldenUnifiedFrontend.hpp
+  unity/djinni/node_js/unifiedbackend.cpp \
+  unity/djinni/node_js/NJSMonitorListener.cpp \
+  unity/djinni/node_js/NJSMonitorListener.hpp \
+  unity/djinni/node_js/NJSUnifiedBackendCpp.cpp \
+  unity/djinni/node_js/NJSUnifiedBackendCpp.hpp \
+  unity/djinni/node_js/NJSUnifiedFrontend.cpp \
+  unity/djinni/node_js/NJSUnifiedFrontend.hpp
 
-libgulden_unity_node_js_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
-libgulden_unity_node_js_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_unity_node_js_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+lib_unity_node_js_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
-libgulden_unity_node_js_la_SOURCES = \
+lib_unity_node_js_la_SOURCES = \
   unity/libinit.cpp \
   unity/libinit.h \
   unity/node_js/logging_node_js.cpp \
@@ -758,19 +758,19 @@ libgulden_unity_node_js_la_SOURCES = \
   $(DJINNI_NODE_JS_GEN)
 
 
-GULDEN_NJS_DEPS = $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_NODE) $(LIBGULDEN_UTIL) $(LIBGULDEN_COMMON) $(LIBGULDEN_WALLET) $(LIBGULDEN_CRYPTO_ALL)
-libgulden_unity_node_js_la_LDFLAGS = -shared -module -no-undefined -export-dynamic $(AM_LDFLAGS) $(RELDFLAGS) -pthread
-libgulden_unity_node_js_la_LIBADD = $(GULDEN_NJS_DEPS) $(GULDEN_NJS_DEPS) $(LIBSECP256K1) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(SSL_LIBS) -lqrencode -lpthread -lcryptopp $(SSL_LIBS) -lcrypto
-libgulden_unity_node_js_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
-libgulden_unity_node_js_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
+NJS_DEPS = $(LIB_CONSENSUS) $(LIB_NODE) $(LIB_UTIL) $(LIB_COMMON) $(LIB_WALLET) $(LIB_CRYPTO_ALL)
+lib_unity_node_js_la_LDFLAGS = -shared -module -no-undefined -export-dynamic $(AM_LDFLAGS) $(RELDFLAGS) -pthread
+lib_unity_node_js_la_LIBADD = $(NJS_DEPS) $(NJS_DEPS) $(LIBSECP256K1) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(SSL_LIBS) -lqrencode -lpthread -lcryptopp $(SSL_LIBS) -lcrypto
+lib_unity_node_js_la_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
+lib_unity_node_js_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(COMMON_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
 endif
 
-# Gulden-unity library (for java)#
-if BUILD_GULDEN_LIBS_JNI
-libgulden_unity_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(PROTOBUF_CFLAGS)
-libgulden_unity_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+# unity library (for java)#
+if BUILD_LIBS_JNI
+lib_unity_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(PROTOBUF_CFLAGS)
+lib_unity_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
-libgulden_unity_jni_la_SOURCES = \
+lib_unity_jni_la_SOURCES = \
   unity/libinit.cpp \
   unity/libinit.h \
   unity/android/logging_android.cpp \
@@ -779,12 +779,12 @@ libgulden_unity_jni_la_SOURCES = \
   unity/unity_impl.cpp \
   unity/djinni/jni/NativeBlockInfoRecord.hpp \
   unity/djinni/jni/NativeBlockInfoRecord.cpp \
-  unity/djinni/jni/NativeGuldenMonitorListener.cpp \
-  unity/djinni/jni/NativeGuldenMonitorListener.hpp \
-  unity/djinni/jni/NativeGuldenUnifiedBackend.hpp \
-  unity/djinni/jni/NativeGuldenUnifiedBackend.cpp \
-  unity/djinni/jni/NativeGuldenUnifiedFrontend.hpp \
-  unity/djinni/jni/NativeGuldenUnifiedFrontend.cpp \
+  unity/djinni/jni/NativeMonitorListener.cpp \
+  unity/djinni/jni/NativeMonitorListener.hpp \
+  unity/djinni/jni/NativeUnifiedBackend.hpp \
+  unity/djinni/jni/NativeUnifiedBackend.cpp \
+  unity/djinni/jni/NativeUnifiedFrontend.hpp \
+  unity/djinni/jni/NativeUnifiedFrontend.cpp \
   unity/djinni/jni/NativeLegacyWalletResult.hpp \
   unity/djinni/jni/NativeMonitorRecord.cpp \
   unity/djinni/jni/NativeMonitorRecord.hpp \
@@ -810,43 +810,43 @@ libgulden_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeOutputRecord.cpp \
   unity/djinni/jni/NativeInputRecord.hpp \
   unity/djinni/jni/NativeInputRecord.cpp \
-  unity/djinni/cpp/gulden_unified_backend.hpp \
-  unity/djinni/cpp/gulden_unified_backend.cpp \
-  unity/djinni/cpp/gulden_unified_frontend.hpp \
-  $(GULDEN_CORE_H)
+  unity/djinni/cpp/unified_backend.hpp \
+  unity/djinni/cpp/unified_backend.cpp \
+  unity/djinni/cpp/unified_frontend.hpp \
+  $(CORE_H)
 
-nodist_libgulden_unity_jni_la_SOURCES = \
+nodist_lib_unity_jni_la_SOURCES = \
   unity/djinni/support-lib/jni/djinni_support.cpp \
   unity/djinni/support-lib/jni/djinni_main.cpp
 
-ANDROID_DEPS = $(LIBGULDEN_COMPAT) $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_NODE) $(LIBGULDEN_UTIL) $(LIBGULDEN_COMMON) $(LIBGULDEN_WALLET) $(LIBGULDEN_CRYPTO_ALL) $(LIBGULDEN_ANDROID_COMPAT)
+ANDROID_DEPS = $(LIB_COMPAT) $(LIB_CONSENSUS) $(LIB_NODE) $(LIB_UTIL) $(LIB_COMMON) $(LIB_WALLET) $(LIB_CRYPTO_ALL) $(LIB_ANDROID_COMPAT)
 
 
-libgulden_unity_jni_la_LDFLAGS = -shared -module -export-dynamic $(AM_LDFLAGS_NO_THREADS) $(RELDFLAGS) -llog
-libgulden_unity_jni_la_LIBADD = $(ANDROID_DEPS) $(ANDROID_DEPS) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(PROTOBUF_LIBS) -lqrencode -lcryptopp
-libgulden_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/unity/djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
-libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/unity/djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
+lib_unity_jni_la_LDFLAGS = -shared -module -export-dynamic $(AM_LDFLAGS_NO_THREADS) $(RELDFLAGS) -llog
+lib_unity_jni_la_LIBADD = $(ANDROID_DEPS) $(ANDROID_DEPS) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(PROTOBUF_LIBS) -lqrencode -lcryptopp
+lib_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/unity/djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
+lib_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(COMMON_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/unity/djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
 endif
 #
 
-# Gulden-unity library #
-if BUILD_GULDEN_LIBS_OBJC
+# unity library for objc #
+if BUILD_LIBS_OBJC
 
-noinst_LIBRARIES += $(LIBGULDEN_UNITY_OBJC)
+noinst_LIBRARIES += $(LIB_UNITY_OBJC)
 
-libgulden_unity_objc_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_GULDEN_INTERNAL
-libgulden_unity_objc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -I$(srcdir)/unity/djinni/cpp
-libgulden_unity_objc_a_OBJCXXFLAGS = -fobjc-arc  -I$(srcdir)/unity/djinni/cpp $(DJINNI_OBJCXXFLAGS)
+lib_unity_objc_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
+lib_unity_objc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -I$(srcdir)/unity/djinni/cpp
+lib_unity_objc_a_OBJCXXFLAGS = -fobjc-arc  -I$(srcdir)/unity/djinni/cpp $(DJINNI_OBJCXXFLAGS)
 
 DJINNI_CPP_GEN = \
   unity/djinni/cpp/address_record.hpp \
   unity/djinni/cpp/balance_record.hpp \
   unity/djinni/cpp/block_info_record.hpp \
-  unity/djinni/cpp/gulden_unified_backend.cpp \
-  unity/djinni/cpp/gulden_unified_backend.hpp \
-  unity/djinni/cpp/gulden_unified_frontend.hpp \
+  unity/djinni/cpp/unified_backend.cpp \
+  unity/djinni/cpp/unified_backend.hpp \
+  unity/djinni/cpp/unified_frontend.hpp \
   unity/djinni/cpp/legacy_wallet_result.hpp \
-  unity/djinni/cpp/gulden_monitor_listener.hpp \
+  unity/djinni/cpp/monitor_listener.hpp \
   unity/djinni/cpp/monitor_record.hpp \
   unity/djinni/cpp/mutation_record.hpp \
   unity/djinni/cpp/payment_result_status.hpp \
@@ -872,18 +872,18 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBBlockInfoRecord+Private.mm \
   unity/djinni/objc/DBBlockInfoRecord.h \
   unity/djinni/objc/DBBlockInfoRecord.mm \
-  unity/djinni/objc/DBGuldenUnifiedBackend+Private.h \
-  unity/djinni/objc/DBGuldenUnifiedBackend+Private.mm \
-  unity/djinni/objc/DBGuldenUnifiedBackend.h \
-  unity/djinni/objc/DBGuldenUnifiedBackend.mm \
-  unity/djinni/objc/DBGuldenUnifiedFrontend+Private.h \
-  unity/djinni/objc/DBGuldenUnifiedFrontend+Private.mm \
-  unity/djinni/objc/DBGuldenUnifiedFrontend.h \
+  unity/djinni/objc/DBUnifiedBackend+Private.h \
+  unity/djinni/objc/DBUnifiedBackend+Private.mm \
+  unity/djinni/objc/DBUnifiedBackend.h \
+  unity/djinni/objc/DBUnifiedBackend.mm \
+  unity/djinni/objc/DBUnifiedFrontend+Private.h \
+  unity/djinni/objc/DBUnifiedFrontend+Private.mm \
+  unity/djinni/objc/DBUnifiedFrontend.h \
   unity/djinni/objc/DBLegacyWalletResult.h \
   unity/djinni/objc/DBLegacyWalletResult+Private.h \
-  unity/djinni/objc/DBGuldenMonitorListener+Private.h \
-  unity/djinni/objc/DBGuldenMonitorListener+Private.mm \
-  unity/djinni/objc/DBGuldenMonitorListener.h \
+  unity/djinni/objc/DBMonitorListener+Private.h \
+  unity/djinni/objc/DBMonitorListener+Private.mm \
+  unity/djinni/objc/DBMonitorListener.h \
   unity/djinni/objc/DBMonitorRecord+Private.h \
   unity/djinni/objc/DBMonitorRecord+Private.mm \
   unity/djinni/objc/DBMutationRecord+Private.h \
@@ -925,107 +925,107 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBUriRecord.h \
   unity/djinni/objc/DBUriRecord.mm
 
-libgulden_unity_objc_a_SOURCES = \
+lib_unity_objc_a_SOURCES = \
   unity/libinit.cpp \
   unity/libinit.h \
   unity/ios/logging_ios.cpp \
   unity/ios/init_ios.cpp \
-  $(libgulden_wallet_a_SOURCES) \
-  $(libgulden_common_a_SOURCES) \
-  $(libgulden_util_a_SOURCES) \
-  $(libgulden_node_a_SOURCES) \
-  $(libgulden_consensus_a_SOURCES) \
-  $(crypto_libgulden_crypto_a_SOURCES) \
+  $(lib_wallet_a_SOURCES) \
+  $(lib_common_a_SOURCES) \
+  $(lib_util_a_SOURCES) \
+  $(lib_node_a_SOURCES) \
+  $(lib_consensus_a_SOURCES) \
+  $(crypto_lib_crypto_a_SOURCES) \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
   $(DJINNI_CPP_GEN) \
   $(DJINNI_OBJC_GEN) \
-  $(GULDEN_CORE_H)
+  $(CORE_H)
 
-LIBGULDEN_UNITY_CRYPTO=libgulden_unity_crypto.a
+LIB_UNITY_CRYPTO=lib_unity_crypto.a
 
-$(LIBGULDEN_UNITY_CRYPTO): $(LIBGULDEN_UNITY_CRYPTO_OBJ)
+$(LIB_UNITY_CRYPTO): $(LIB_UNITY_CRYPTO_OBJ)
 	libtool -static -o $@ $^
 
-$(LIBGULDEN_UNITY_OBJC): $(LIBSECP256K1) $(LIBLEVELDB) $(LIBMEMENV) $(LIBGULDEN_UNITY_CRYPTO)
+$(LIB_UNITY_OBJC): $(LIBSECP256K1) $(LIBLEVELDB) $(LIBMEMENV) $(LIB_UNITY_CRYPTO)
 
 endif
 
-# GuldenD binary #
-GuldenD_SOURCES = GuldenD.cpp
-GuldenD_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
-GuldenD_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-GuldenD_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# Daemon binary #
+Novo_daemon_SOURCES = daemon-main.cpp
+Novo_daemon_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+Novo_daemon_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+Novo_daemon_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-GuldenD_SOURCES += GuldenD-res.rc
+Novo_daemon_SOURCES += daemon-res.rc
 endif
 
-GuldenD_LDADD = \
-  $(LIBGULDEN_SERVER) \
-  $(LIBGULDEN_NODE) \
-  $(LIBGULDEN_SERVER) \
-  $(LIBGULDEN_NODE) \
-  $(LIBGULDEN_WALLET) \
-  $(LIBGULDEN_COMMON) \
+Novo_daemon_LDADD = \
+  $(LIB_SERVER) \
+  $(LIB_NODE) \
+  $(LIB_SERVER) \
+  $(LIB_NODE) \
+  $(LIB_WALLET) \
+  $(LIB_COMMON) \
   $(LIBUNIVALUE) \
-  $(LIBGULDEN_UTIL) \
-  $(LIBGULDEN_GENERIC) \
-  $(LIBGULDEN_ZMQ) \
-  $(LIBGULDEN_CONSENSUS) \
-  $(LIBGULDEN_CRYPTO_ALL) \
+  $(LIB_UTIL) \
+  $(LIB_GENERIC) \
+  $(LIB_ZMQ) \
+  $(LIB_CONSENSUS) \
+  $(LIB_CRYPTO_ALL) \
   $(LIBLEVELDB) \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-GuldenD_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(SSL_LIBS)
+Novo_daemon_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(SSL_LIBS)
 
-# Gulden-cli binary #
-Gulden_cli_SOURCES = Gulden-cli.cpp
-Gulden_cli_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(EVENT_CFLAGS)
-Gulden_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-Gulden_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# cli binary #
+Novo_cli_SOURCES = cli-main.cpp
+Novo_cli_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(EVENT_CFLAGS)
+Novo_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+Novo_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-Gulden_cli_SOURCES += Gulden-cli-res.rc
+Novo_cli_SOURCES += cli-res.rc
 endif
 
-Gulden_cli_LDADD = \
-  $(LIBGULDEN_CLI) \
+Novo_cli_LDADD = \
+  $(LIB_CLI) \
   $(LIBUNIVALUE) \
-  $(LIBGULDEN_UTIL) \
-  $(LIBGULDEN_GENERIC) \
-  $(LIBGULDEN_CRYPTO_ALL)
+  $(LIB_UTIL) \
+  $(LIB_GENERIC) \
+  $(LIB_CRYPTO_ALL)
 
-Gulden_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+Novo_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
-# Gulden-tx binary #
-Gulden_tx_SOURCES = Gulden-tx.cpp
-Gulden_tx_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
-Gulden_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-Gulden_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# tx binary #
+Novo_tx_SOURCES = tx-main.cpp
+Novo_tx_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+Novo_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+Novo_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-Gulden_tx_SOURCES += Gulden-tx-res.rc
+Novo_tx_SOURCES += tx-res.rc
 endif
 
-Gulden_tx_LDADD = \
+Novo_tx_LDADD = \
   $(LIBUNIVALUE) \
-  $(LIBGULDEN_COMMON) \
-  $(LIBGULDEN_UTIL) \
-  $(LIBGULDEN_GENERIC) \
-  $(LIBGULDEN_CONSENSUS) \
-  $(LIBGULDEN_CRYPTO_ALL) \
-  $(LIBGULDEN_COMMON) \
-  $(LIBGULDEN_UTIL) \
-  $(LIBGULDEN_GENERIC) \
-  $(LIBGULDEN_CONSENSUS) \
-  $(LIBGULDEN_CRYPTO_ALL) \
-  $(LIBGULDEN_COMMON) \
+  $(LIB_COMMON) \
+  $(LIB_UTIL) \
+  $(LIB_GENERIC) \
+  $(LIB_CONSENSUS) \
+  $(LIB_CRYPTO_ALL) \
+  $(LIB_COMMON) \
+  $(LIB_UTIL) \
+  $(LIB_GENERIC) \
+  $(LIB_CONSENSUS) \
+  $(LIB_CRYPTO_ALL) \
+  $(LIB_COMMON) \
   $(LIBSECP256K1)
 
-Gulden_tx_LDADD += $(BOOST_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS)
+Novo_tx_LDADD += $(BOOST_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS)
 #
 
 
@@ -1047,12 +1047,12 @@ CLEANFILES += zmq/*.gcda zmq/*.gcno
 DISTCLEANFILES = obj/build.h
 
 
-config/gulden-config.h: config/stamp-h1
+config/build-config.h: config/stamp-h1
 	@$(MAKE) -C $(top_builddir) $(subdir)/$(@)
-config/stamp-h1: $(top_srcdir)/$(subdir)/config/gulden-config.h.in $(top_builddir)/config.status
+config/stamp-h1: $(top_srcdir)/$(subdir)/config/build-config.h.in $(top_builddir)/config.status
 	$(AM_V_at)$(MAKE) -C $(top_builddir) $(subdir)/$(@)
-$(top_srcdir)/$(subdir)/config/gulden-config.h.in:  $(am__configure_deps)
-	$(AM_V_at)$(MAKE) -C $(top_srcdir) $(subdir)/config/gulden-config.h.in
+$(top_srcdir)/$(subdir)/config/build-config.h.in:  $(am__configure_deps)
+	$(AM_V_at)$(MAKE) -C $(top_srcdir) $(subdir)/config/build-config.h.in
 
 clean-local:
 	-$(MAKE) -C secp256k1 clean

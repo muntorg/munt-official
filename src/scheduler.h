@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_SCHEDULER_H
-#define GULDEN_SCHEDULER_H
+#ifndef SCHEDULER_H
+#define SCHEDULER_H
 
 //
 // NOTE:

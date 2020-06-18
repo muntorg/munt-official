@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_POW_H
-#define GULDEN_POW_H
+#ifndef POW_POW_H
+#define POW_POW_H
 
 #include "consensus/params.h"
 #include "crypto/hash/sigma/sigma.h"
@@ -27,4 +27,4 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params);
 
 extern uint64_t verifyFactor;
 
-#endif // GULDEN_POW_H
+#endif

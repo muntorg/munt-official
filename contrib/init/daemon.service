@@ -1,0 +1,22 @@
+[Unit]
+Description=Novo distributed currency daemon
+After=network.target
+
+[Service]
+User=novo
+Group=novo
+
+Type=forking
+PIDFile=/var/lib/Novo-daemon/Novo-daemon.pid
+ExecStart=/usr/bin/Novo-daemon -daemon -pid=/var/lib/Novo-daemon/Novo-daemon.pid \
+-conf=/etc/novo/novo.conf -datadir=/var/lib/Novo-daemon -disablewallet
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

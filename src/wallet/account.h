@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_ACCOUNT_H
-#define GULDEN_ACCOUNT_H
+#ifndef ACCOUNT_H
+#define ACCOUNT_H
 
 #include "amount.h"
 #include "streams.h"
@@ -419,7 +419,7 @@ protected:
     bool m_readOnly = false;
 
     CKeyingMaterial vMasterKey; // Memory only.
-    friend class CGuldenWallet;
+    friend class CExtWallet;
     friend class CWallet;
 
     AccountStatus nWarningState = AccountStatus::Default; // Memory only
@@ -530,4 +530,4 @@ private:
 };
 
 
-#endif // GULDEN_ACCOUNT_H
+#endif

@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_LIB_INIT
-#define GULDEN_LIB_INIT
+#ifndef UNITY_LIB_INIT_H
+#define UNITY_LIB_INIT_H
 
 int InitUnity();
 

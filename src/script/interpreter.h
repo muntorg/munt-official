@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_SCRIPT_INTERPRETER_H
-#define GULDEN_SCRIPT_INTERPRETER_H
+#ifndef SCRIPT_INTERPRETER_H
+#define SCRIPT_INTERPRETER_H
 
 #include "script_error.h"
 #include "primitives/transaction.h"
@@ -181,4 +181,4 @@ public:
 bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, ScriptVersion scriptversion, ScriptError* error = NULL);
 bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CSegregatedSignatureData* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptVersion scriptversion, ScriptError* serror = NULL);
 
-#endif // GULDEN_SCRIPT_INTERPRETER_H
+#endif

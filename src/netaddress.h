@@ -9,11 +9,11 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_NETADDRESS_H
-#define GULDEN_NETADDRESS_H
+#ifndef NETADDRESS_H
+#define NETADDRESS_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #include "compat.h"
@@ -189,4 +189,4 @@ class CService : public CNetAddr
         }
 };
 
-#endif // GULDEN_NETADDRESS_H
+#endif

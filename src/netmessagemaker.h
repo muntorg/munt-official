@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_NETMESSAGEMAKER_H
-#define GULDEN_NETMESSAGEMAKER_H
+#ifndef NETMESSAGEMAKER_H
+#define NETMESSAGEMAKER_H
 
 #include "net.h"
 #include "serialize.h"
@@ -41,4 +41,4 @@ private:
     const int nExtraFlags;
 };
 
-#endif // GULDEN_NETMESSAGEMAKER_H
+#endif

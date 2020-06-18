@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_CHECKPOINTS_H
-#define GULDEN_CHECKPOINTS_H
+#ifndef CHECKPOINTS_H
+#define CHECKPOINTS_H
 
 #include "chainparams.h"
 
@@ -39,4 +39,4 @@ int LastCheckpointBeforeTime(uint64_t atTime);
 
 } //namespace Checkpoints
 
-#endif // GULDEN_CHECKPOINTS_H
+#endif

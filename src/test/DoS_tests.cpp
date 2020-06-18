@@ -21,7 +21,7 @@
 #include "util.h"
 #include "validation/validation.h"
 
-#include "test/test_gulden.h"
+#include "test/test.h"
 
 #include <stdint.h>
 

@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_RANDOM_H
-#define GULDEN_RANDOM_H
+#ifndef RANDOM_H
+#define RANDOM_H
 
 #include "crypto/chacha20.h"
 #include "crypto/common.h"
@@ -140,4 +140,4 @@ void GetOSRand(unsigned char *ent32);
  */
 bool Random_SanityCheck();
 
-#endif // GULDEN_RANDOM_H
+#endif

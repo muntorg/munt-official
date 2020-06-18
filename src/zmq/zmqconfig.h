@@ -2,11 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_ZMQ_ZMQCONFIG_H
-#define GULDEN_ZMQ_ZMQCONFIG_H
+#ifndef ZMQ_ZMQCONFIG_H
+#define ZMQ_ZMQCONFIG_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #include <stdarg.h>
@@ -21,4 +21,4 @@
 
 void zmqError(const char *str);
 
-#endif // GULDEN_ZMQ_ZMQCONFIG_H
+#endif // ZMQ_ZMQCONFIG_H

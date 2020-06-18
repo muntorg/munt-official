@@ -10,7 +10,7 @@
 // file COPYING
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #include "gui.h"
@@ -80,7 +80,7 @@
 #include "walletview.h"
 #include "sendcoinsdialog.h"
 
-#include <guldenutil.h>
+#include <witnessutil.h>
 #include <accountsummarywidget.h>
 #include "receivecoinsdialog.h"
 

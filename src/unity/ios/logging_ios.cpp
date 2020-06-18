@@ -5,7 +5,7 @@
 
 #include <string>
 #include "../unity_impl.h"
-#include "gulden_unified_frontend.hpp"
+#include "unified_frontend.hpp"
 
 void OpenDebugLog()
 {

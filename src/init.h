@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_INIT_H
-#define GULDEN_INIT_H
+#ifndef CORE_INIT_H
+#define CORE_INIT_H
 
 #include <string>
 
@@ -72,4 +72,4 @@ std::string LicenseInfo();
 extern bool partiallyEraseDatadirOnShutdown;
 extern bool fullyEraseDatadirOnShutdown;
 
-#endif // GULDEN_INIT_H
+#endif

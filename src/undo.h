@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_UNDO_H
-#define GULDEN_UNDO_H
+#ifndef TRANSACTION_UNDO_H
+#define TRANSACTION_UNDO_H
 
 #include "coins.h"
 #include "compressor.h" 
@@ -69,4 +69,4 @@ public:
     }
 };
 
-#endif // GULDEN_UNDO_H
+#endif

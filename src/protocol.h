@@ -14,8 +14,8 @@
 #error This header can only be compiled as C++.
 #endif
 
-#ifndef GULDEN_PROTOCOL_H
-#define GULDEN_PROTOCOL_H
+#ifndef CORE_PROTOCOL_H
+#define CORE_PROTOCOL_H
 
 #include "netaddress.h"
 #include "serialize.h"
@@ -389,4 +389,4 @@ public:
     uint256 hash;
 };
 
-#endif // GULDEN_PROTOCOL_H
+#endif

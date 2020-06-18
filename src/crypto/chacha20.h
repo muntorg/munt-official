@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_CRYPTO_CHACHA20_H
-#define GULDEN_CRYPTO_CHACHA20_H
+#ifndef CRYPTO_CHACHA20_H
+#define CRYPTO_CHACHA20_H
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -23,4 +23,4 @@ public:
     void Output(unsigned char* output, size_t bytes);
 };
 
-#endif // GULDEN_CRYPTO_CHACHA20_H
+#endif

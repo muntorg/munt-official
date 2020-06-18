@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_WALLET_MERKLETX_H
-#define GULDEN_WALLET_MERKLETX_H
+#ifndef WALLET_MERKLETX_H
+#define WALLET_MERKLETX_H
 
 #include <uint256.h>
 #include "chain.h"
@@ -122,4 +122,4 @@ public:
     bool IsPoW2WitnessCoinBase() const { return tx->IsPoW2WitnessCoinBase(); }
 };
 
-#endif // GULDEN_WALLET_MERKLETX_H
+#endif

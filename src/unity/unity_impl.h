@@ -3,11 +3,11 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_UNITY_IMPL
-#define GULDEN_UNITY_IMPL
+#ifndef UNITY_IMPL
+#define UNITY_IMPL
 
-#include "gulden_unified_backend.hpp"
+#include "unified_backend.hpp"
 
-extern std::shared_ptr<GuldenUnifiedFrontend> signalHandler;
+extern std::shared_ptr<UnifiedFrontend> signalHandler;
 
 #endif

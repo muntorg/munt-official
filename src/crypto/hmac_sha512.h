@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_CRYPTO_HMAC_SHA512_H
-#define GULDEN_CRYPTO_HMAC_SHA512_H
+#ifndef CRYPTO_HMAC_SHA512_H
+#define CRYPTO_HMAC_SHA512_H
 
 #include "crypto/sha512.h"
 
@@ -29,4 +29,4 @@ public:
     void Finalize(unsigned char hash[OUTPUT_SIZE]);
 };
 
-#endif // GULDEN_CRYPTO_HMAC_SHA512_H
+#endif

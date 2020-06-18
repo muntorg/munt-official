@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_WALLET_WALLETTX_H
-#define GULDEN_WALLET_WALLETTX_H
+#ifndef WALLET_WALLETTX_H
+#define WALLET_WALLETTX_H
 
 #include "merkletx.h"
 #include <uint256.h>
@@ -281,4 +281,4 @@ public:
     std::set<uint256> GetConflicts() const;
 };
 
-#endif // GULDEN_WALLET_WALLETTX_H
+#endif

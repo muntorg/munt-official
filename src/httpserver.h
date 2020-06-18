@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_HTTPSERVER_H
-#define GULDEN_HTTPSERVER_H
+#ifndef CORE_HTTPSERVER_H
+#define CORE_HTTPSERVER_H
 
 #include <string>
 #include <stdint.h>

@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_WALLET_DB_H
-#define GULDEN_WALLET_DB_H
+#ifndef WALLET_DB_H
+#define WALLET_DB_H
 
 #include "clientversion.h"
 #include "fs.h"
@@ -376,4 +376,4 @@ public:
     bool static Rewrite(CWalletDBWrapper& dbw, const char* pszSkip = NULL);
 };
 
-#endif // GULDEN_WALLET_DB_H
+#endif

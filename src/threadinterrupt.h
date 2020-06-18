@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_THREADINTERRUPT_H
-#define GULDEN_THREADINTERRUPT_H
+#ifndef THREADINTERRUPT_H
+#define THREADINTERRUPT_H
 
 #include <atomic>
 #include <chrono>
@@ -31,4 +31,4 @@ private:
     std::atomic<bool> flag;
 };
 
-#endif //GULDEN_THREADINTERRUPT_H
+#endif

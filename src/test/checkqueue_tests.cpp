@@ -6,7 +6,7 @@
 #include "utiltime.h"
 #include "validation/validation.h"
 
-#include "test/test_gulden.h"
+#include "test/test.h"
 #include "checkqueue.h"
 #include <boost/test/unit_test.hpp>
 #include <boost/thread.hpp>

@@ -17,7 +17,7 @@
 #include "pow/pow.h"
 #include "uint256.h"
 
-#include <guldenutil.h>
+#include <witnessutil.h>
 #include <stdint.h>
 
 #include <boost/thread.hpp>

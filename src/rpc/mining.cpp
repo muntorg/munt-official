@@ -34,7 +34,7 @@
 #include "utilstrencodings.h"
 #include "arith_uint256.h"
 #include "warnings.h"
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include <compat/sys.h>
 
 #include <memory>
@@ -48,7 +48,7 @@
 #endif
 #include "generation/generation.h"
 #include "script/script.h"
-#include <rpc/rpcgulden.h>
+#include <rpc/accounts.h>
 #include <validation/witnessvalidation.h>
 
 #include <boost/algorithm/string/predicate.hpp> // for ends_with()
@@ -204,7 +204,7 @@ static UniValue getgenerate(const JSONRPCRequest& request)
         throw std::runtime_error(
             "getgenerate\n"
             "\nReturn if the server is set to generate coins or not. The default is false.\n"
-            "It is set with the command line argument -gen (or " + std::string(GULDEN_CONF_FILENAME) + " setting gen)\n"
+            "It is set with the command line argument -gen (or " + std::string(DEFAULT_CONF_FILENAME) + " setting gen)\n"
             "It can also be set with the setgenerate call.\n"
             "\nResult\n"
             "true|false      (boolean) If the server is set to generate coins or not\n"
@@ -440,7 +440,7 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     {
         try
         {
-            PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
+            PoWGenerateBlocks(true, nGenProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
         }
         catch(...)
         {

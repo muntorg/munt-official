@@ -44,7 +44,7 @@
 
 #include "askpassphrasedialog.h"
 
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include "validation/validation.h"
 
 WalletModel::WalletModel(const QStyle *platformStyle, CWallet *_wallet, OptionsModel *_optionsModel, QObject *parent)

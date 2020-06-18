@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_PRIMITIVES_BLOCK_H
-#define GULDEN_PRIMITIVES_BLOCK_H
+#ifndef PRIMITIVES_BLOCK_H
+#define PRIMITIVES_BLOCK_H
 
 #include "primitives/transaction.h"
 #include "serialize.h"
@@ -257,4 +257,4 @@ struct CBlockLocator
 /** Compute the consensus-critical block weight (see BIP 141). */
 int64_t GetBlockWeight(const CBlock& tx);
 
-#endif // GULDEN_PRIMITIVES_BLOCK_H
+#endif

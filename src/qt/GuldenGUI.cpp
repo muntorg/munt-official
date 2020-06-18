@@ -4,7 +4,7 @@
 // file COPYING
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #include "GuldenGUI.h"
@@ -58,7 +58,7 @@
 #include "accountsettingsdialog.h"
 #include "witnessdialog.h"
 #include "miningaccountdialog.h"
-#include <guldenutil.h>
+#include <witnessutil.h>
 #include <consensus/consensus.h>
 #include "sendcoinsdialog.h"
 #include "wallet/wallet.h"
@@ -321,7 +321,7 @@ void GUI::doRequestRenewWitness(CAccount* funderAccount, CAccount* targetWitness
 
     // Clear the failed flag in UI, and remove the 'renew' button for immediate user feedback.
     targetWitnessAccount->SetWarningState(AccountStatus::WitnessPending);
-    static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, targetWitnessAccount);
+    static_cast<const CExtWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, targetWitnessAccount);
     walletFrame->currentWalletView()->witnessDialogPage->update();
 }
 
@@ -1983,7 +1983,7 @@ void GUI::acceptNewAccount()
             if (newAccountType == NewAccountType::FixedDeposit)
             {
                 newAccount->SetWarningState(AccountStatus::WitnessEmpty);
-                static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, newAccount);
+                static_cast<const CExtWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, newAccount);
                 showWitnessDialog();
             }
             else
