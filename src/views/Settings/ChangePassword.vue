@@ -18,14 +18,14 @@
         <div v-if="current === 1" class="password">
           <div class="password-row">
             <h4>{{ $t("setup.step3.password") }}:</h4>
-            <input ref="password" type="password" v-model="passwordold" @keydown="onPasswordKeyDown" :class="{ error: isPasswordInvalid }" />
+            <input ref="passwordold" type="password" v-model="passwordold" @keydown="onPasswordKeyDown" :class="{ error: isPasswordInvalid }" />
           </div>
         </div>
         <!-- step 2: enter new password -->
         <div v-else class="password">
           <div class="password-row">
             <h4>{{ $t("setup.step3.password") }}:</h4>
-            <input type="password" v-model="password1" />
+            <input ref="password" type="password" v-model="password1" />
           </div>
           <div class="password-row">
             <h4>{{ $t("setup.step3.repeat_password") }}:</h4>
@@ -77,7 +77,7 @@ export default {
     }
   },
   mounted() {
-    this.$refs.password.focus();
+    this.$refs.passwordold.focus();
   },
   methods: {
     isNextDisabled() {
@@ -116,6 +116,9 @@ export default {
       {
         NovoBackend.LockWallet();
         this.current++;
+        setTimeout(() => {
+          this.$refs.password.focus();
+        }, 100);
       }
       else
       {
