@@ -31,7 +31,7 @@
           computedBalance
         }}</span>
 
-        <span class="top-menu">
+        <span class="top-menu" v-if="showSettings">
           <router-link :to="{ name: 'settings' }">
             <fa-icon :icon="['fal', 'cog']" />
             <span> Settings</span>
@@ -70,6 +70,9 @@ export default {
   },
   computed: {
     ...mapState(["status", "unityVersion", "walletVersion", "balance"]),
+    showSettings() {
+      return this.status === AppStatus.ready;
+    },
     computedBalance() {
       if (this.balance === undefined || this.balance === null) return null;
       return (
