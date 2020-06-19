@@ -34,7 +34,7 @@
         <span class="top-menu" v-if="showSettings">
           <router-link :to="{ name: 'settings' }">
             <fa-icon :icon="['fal', 'cog']" />
-            <span> Settings</span>
+            <span> {{ $t("settings.header") }}</span>
           </router-link>
         </span>
       </div>

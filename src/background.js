@@ -65,7 +65,6 @@ function createWindow() {
   ];
 
   if (isDevelopment) {
-    console.log("remove debug");
     menuTemplate.push({
       label: "Debug",
       submenu: [{ role: "toggleDevTools" }]

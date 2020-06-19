@@ -1,13 +1,13 @@
 <template>
   <div id="wallet">
     <div class="section">
-      <h4>{{ $t("balance.your_address") }}</h4>
+      <h4>{{ $t("wallet.your_address") }}</h4>
       <div class="address" @click="copyAddress">
         {{ receiveAddress }}
         <span class="copy"><fa-icon :icon="['fal', 'copy']"/></span>
       </div>
       <button class="btn" @click="receiveNovo">
-        {{ $t("wallet.receive_aquired_novo") }}
+        {{ $t("wallet.receive_acquired_novo") }}
       </button>
     </div>
   </div>

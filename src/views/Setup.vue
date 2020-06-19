@@ -3,8 +3,8 @@
     <div class="steps-container section">
       <!-- step 1: show recovery phrase -->
       <div v-if="current === 1">
-        <h2>{{ $t("setup.step1.header") }}</h2>
-        <p>{{ $t("setup.step1.content") }}</p>
+        <h2>{{ $t("common.important") }}</h2>
+        <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
         <div class="phrase">
           {{ recoveryPhrase }}
         </div>
@@ -12,7 +12,7 @@
 
       <!-- step 2: repeat recovery phrase -->
       <div v-else-if="current === 2">
-        <h2>{{ $t("setup.step2.header") }}</h2>
+        <h2>{{ $t("setup.enter_recovery_phrase") }}</h2>
         <div class="phrase-repeat">
           <phrase-repeat-input
             ref="firstWord"
@@ -68,14 +68,14 @@
 
       <!-- step 3: enter a password -->
       <div v-else-if="current === 3">
-        <h2>{{ $t("setup.step3.header") }}</h2>
+        <h2>{{ $t("setup.choose_password") }}</h2>
         <div class="password">
           <div class="password-row">
-            <h4>{{ $t("setup.step3.password") }}:</h4>
+            <h4>{{ $t("setup.password") }}:</h4>
             <input ref="password" type="password" v-model="password1" />
           </div>
           <div class="password-row">
-            <h4>{{ $t("setup.step3.repeat_password") }}:</h4>
+            <h4>{{ $t("setup.repeat_password") }}:</h4>
             <input
               type="password"
               v-model="password2"
@@ -93,10 +93,10 @@
         :disabled="isNextDisabled()"
       >
         <span v-if="current < 3">
-          {{ $t("buttons.Next") }}
+          {{ $t("buttons.next") }}
         </span>
         <span v-else>
-          {{ $t("buttons.Finish") }}
+          {{ $t("buttons.finish") }}
         </span>
       </button>
     </div>
@@ -176,7 +176,7 @@ export default {
               this.password1
             )
           ) {
-            this.$router.push({ name: "wallet" }); // maybe also route from backend
+            this.$router.push({ name: "wallet" });
           }
           break;
       }

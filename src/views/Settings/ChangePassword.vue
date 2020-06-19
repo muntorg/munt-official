@@ -4,19 +4,19 @@
       <div class="back">
         <router-link :to="{ name: current === 1 ? 'settings' : 'wallet' }">
           <fa-icon :icon="['fal', 'long-arrow-left']" />
-          <span>Back</span>
+          <span> {{ $t("buttons.back") }}</span>
         </router-link>
       </div>
 
       <h2>
-        <span v-if="current === 1">{{ "Enter your password" }}</span>
-        <span v-else>{{ $t("setup.step3.header") }}</span>
+        <span v-if="current === 1">{{ $t("setup.enter_your_password") }}</span>
+        <span v-else>{{ $t("setup.choose_password") }}</span>
       </h2>
 
       <!-- step 1: Enter old password -->
       <div v-if="current === 1" class="password">
         <div class="password-row">
-          <h4>{{ $t("setup.step3.password") }}:</h4>
+          <h4>{{ $t("setup.password") }}:</h4>
           <input
             ref="passwordold"
             type="password"
@@ -29,11 +29,11 @@
       <!-- step 2: enter new password -->
       <div v-else class="password">
         <div class="password-row">
-          <h4>{{ $t("setup.step3.password") }}:</h4>
+          <h4>{{ $t("setup.password") }}:</h4>
           <input ref="password" type="password" v-model="password1" />
         </div>
         <div class="password-row">
-          <h4>{{ $t("setup.step3.repeat_password") }}:</h4>
+          <h4>{{ $t("setup.repeat_password") }}:</h4>
           <input
             type="password"
             v-model="password2"
@@ -49,8 +49,8 @@
         @click="nextStep"
         :disabled="isNextDisabled()"
       >
-        <span v-if="current < 2">{{ $t("buttons.Next") }}</span>
-        <span v-else>Change password</span>
+        <span v-if="current < 2">{{ $t("buttons.next") }}</span>
+        <span v-else>{{ $t("buttons.change_password") }}</span>
       </button>
     </div>
   </div>

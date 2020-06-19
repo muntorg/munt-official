@@ -1,30 +1,32 @@
 {
   "buttons": {
-    "Next": "Next",
-    "Finish": "Finish"
+    "back": "Back",
+    "change_password": "Change password",
+    "finish": "Finish",
+    "next": "Next"
+  },
+  "common": {
+    "important": "Important"
   },
   "loader": {
-    "synchronizing": "Your wallet is now synchronizing with the Novo network. This may take some time to complete.",
-    "shutdown": "Shutting down..."
+    "shutdown": "Shutting down...",
+    "synchronizing": "Your wallet is now synchronizing with the Novo network. This may take some time to complete."
+  },
+  "settings": {
+    "header": "Settings",
+    "change_password": "Change password",
+    "view_recovery_phrase": "View recovery phrase"
   },
   "setup": {
-    "step1": {
-      "header": "Important",
-      "content": "This is your recovery phrase, write it down somewhere safe, don't lose it, don't share it, don't store it where hackers can get it. Lose phrase = Lose novo"
-    },
-    "step2": {
-      "header": "Enter recovery phrase"
-    },
-    "step3": {
-      "header": "Choose a password of at least 6 characters",
-      "password": "Password",
-      "repeat_password": "Repeat password"
-    }
-  },
-  "balance": {
-    "your_address": "Your address"
+    "choose_password": "Choose a password of at least 6 characters",
+    "enter_recovery_phrase": "Enter recovery phrase",
+    "enter_your_password": "Enter your password",
+    "password": "Password",
+    "repeat_password": "Repeat password",
+    "this_is_your_recovery_phrase": "This is your recovery phrase, write it down somewhere safe, don't lose it, don't share it, don't store it where hackers can get it. Lose phrase = Lose Novo"
   },
   "wallet": {
-    "receive_aquired_novo": "Receive your acquired Novo"
+    "receive_acquired_novo": "Receive your acquired Novo",
+    "your_address": "Your address"
   }
 }

@@ -4,20 +4,20 @@
       <div class="back">
         <router-link :to="{ name: 'wallet' }">
           <fa-icon :icon="['fal', 'long-arrow-left']" />
-          <span> Back</span>
+          <span> {{ $t("buttons.back") }}</span>
         </router-link>
       </div>
 
-      <h2>Settings</h2>
+      <h2>{{ $t("settings.header") }}</h2>
       <div class="settings-row">
         <router-link :to="{ name: 'view-recovery-phrase' }">
-          View recovery phrase
+          {{ $t("settings.view_recovery_phrase") }}
           <fa-icon :icon="['fal', 'long-arrow-right']" class="arrow" />
         </router-link>
       </div>
       <div class="settings-row">
         <router-link :to="{ name: 'change-password' }">
-          Change password
+          {{ $t("settings.change_password") }}
           <fa-icon :icon="['fal', 'long-arrow-right']" class="arrow" />
         </router-link>
       </div>
@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="less">
 .back a {
   padding: 4px 8px;
   margin: 0 0 0 -8px;
