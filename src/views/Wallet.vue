@@ -18,8 +18,7 @@
   font-size: .9em;
   line-height: 38px;
   border: 1px solid #ccc;
-  user-select: text;
-  cursor: pointer;
+  
 }
 
 .copy {
@@ -28,9 +27,9 @@
   right: 0;
   width: 40px;
   text-align: center;
+  cursor: pointer;
 }
 
-.address:hover,
 .copy:hover {
     background-color: #f5f5f5;
 }
