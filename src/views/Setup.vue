@@ -35,11 +35,11 @@
         <div class="password">
           <div class="password-row">
             <h4>{{ $t("setup.step3.password") }}:</h4>
-            <input ref="password" type="password" v-model="password1" />
+            <input ref="password" type="password" v-model="password1" placeholder="Choose a password of at least 6 characters" />
           </div>
           <div class="password-row">
             <h4>{{ $t("setup.step3.repeat_password") }}:</h4>
-            <input type="password" v-model="password2" @keydown="onPasswordRepeatKeyDown" />
+            <input type="password" v-model="password2" @keydown="onPasswordRepeatKeyDown" placeholder="Repeat your password" />
           </div>
         </div>
       </div>
@@ -94,7 +94,7 @@ export default {
       );
     },
     passwordsValidated() {
-      //if (this.password1 === null || this.password1.length < 6) return false;
+      if (this.password1 === null || this.password1.length < 6) return false;
       if (
         this.password2 === null ||
         this.password2.length < this.password1.length
