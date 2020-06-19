@@ -371,23 +371,23 @@ static std::pair<bool, CMutableTransaction> CreateWitnessCoinbase(int nWitnessHe
             {
                 compoundAmount = witnessBlockSubsidy;
                 // Subsidy and any overflow fees to compound
-                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), compoundAmount, 0.0, true, false));
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CNativeAddress(), compoundAmount, 0.0, true, false));
                 // Any compound overflow to script
-                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, false, true));
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CNativeAddress(), 0, 0.0, false, true));
             }
             else
             {
                 // Pay up until requested amount to compound
-                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), compoundAmount, 0.0, false, false));
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CNativeAddress(), compoundAmount, 0.0, false, false));
                 // Any remaining fees/overflow to script
-                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, true, true));
+                rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CNativeAddress(), 0, 0.0, true, true));
             }
         }
         else
         {
             // Compound nothing, all money into 'reward script'
-            rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CGuldenAddress(), 0, 0.0, false, false));
-            rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CGuldenAddress(), 0, 0.0, true, true));
+            rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Compound, CNativeAddress(), 0, 0.0, false, false));
+            rewardTemplate.destinations.push_back(CWitnessRewardDestination(CWitnessRewardDestination::DestType::Account, CNativeAddress(), 0, 0.0, true, true));
         }
     }
 

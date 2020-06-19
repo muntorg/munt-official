@@ -288,7 +288,7 @@ void CWallet::importWitnessOnlyAccountFromURL(const SecureString& sKey, const st
 
 void CWallet::importPrivKey(const SecureString& sKey, std::string sAccountName)
 {
-    CGuldenSecret vchSecret;
+    CEncodedSecretKey vchSecret;
     bool fGood = vchSecret.SetString(sKey.c_str());
 
     if (fGood)

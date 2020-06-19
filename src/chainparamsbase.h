@@ -10,7 +10,7 @@
 #include <vector>
 
 /**
- * CBaseChainParams defines the base parameters (shared between Gulden-cli and GuldenD)
+ * CBaseChainParams defines the base parameters (shared between CLI and daemon)
  * of a given instance of the Bitcoin system.
  */
 class CBaseChainParams

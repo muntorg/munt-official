@@ -238,7 +238,7 @@ bool WalletModel::validateAddress(const QString &address)
 {
     if (address.isEmpty())
         return false;
-    CGuldenAddress addressParsed(address.toStdString());
+    CNativeAddress addressParsed(address.toStdString());
     return addressParsed.IsValid();
 }
 
@@ -246,7 +246,7 @@ bool WalletModel::validateAddressBitcoin(const QString &address)
 {
     if (address.isEmpty())
         return false;
-    CGuldenAddress addressParsed(address.toStdString());
+    CNativeAddress addressParsed(address.toStdString());
     return addressParsed.IsValidBitcoin();
 }
 
@@ -322,7 +322,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             if (IsSegSigEnabled(chainActive.TipPrev()))
             {
                 CKeyID key;
-                if (!CGuldenAddress(rcp.address.toStdString()).GetKeyID(key))
+                if (!CNativeAddress(rcp.address.toStdString()).GetKeyID(key))
                     return InvalidAddress;
 
                 CRecipient recipient = CRecipient(CTxOutStandardKeyHash(key), rcp.amount, rcp.fSubtractFeeFromAmount);
@@ -330,7 +330,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(CAccount* forAccoun
             }
             else
             {
-                CScript scriptPubKey = GetScriptForDestination(CGuldenAddress(rcp.address.toStdString()).Get());
+                CScript scriptPubKey = GetScriptForDestination(CNativeAddress(rcp.address.toStdString()).Get());
                 CRecipient recipient = CRecipient(scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount);
                 vecSend.push_back(recipient);
             }
@@ -824,7 +824,7 @@ CAccount* WalletModel::getActiveAccount()
 void WalletModel::listCoins(CAccount* forAccount, std::map<QString, std::vector<COutput> >& mapCoins) const
 {
     for (auto& group : wallet->ListCoins(forAccount)) {
-        auto& resultGroup = mapCoins[QString::fromStdString(CGuldenAddress(group.first).ToString())];
+        auto& resultGroup = mapCoins[QString::fromStdString(CNativeAddress(group.first).ToString())];
         for (auto& coin : group.second) {
             resultGroup.emplace_back(std::move(coin));
         }
@@ -862,7 +862,7 @@ void WalletModel::loadReceiveRequests(std::vector<std::string>& vReceiveRequests
 
 bool WalletModel::saveReceiveRequest(const std::string &sAddress, const int64_t nId, const std::string &sRequest)
 {
-    CTxDestination dest = CGuldenAddress(sAddress).Get();
+    CTxDestination dest = CNativeAddress(sAddress).Get();
 
     std::stringstream ss;
     ss << nId;

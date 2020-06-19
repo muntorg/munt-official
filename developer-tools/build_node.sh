@@ -57,11 +57,11 @@ CONFIG_SITE='' ../configure --prefix=$PWD/../depends/${PLATFORM} --disable-bench
 make V=1 -j ${NUM_PROCS}
 cd ..
 
-if test -f "build_node/src/.libs/libgulden_unity_node_js-0.dll"; then
-    cp build_node/src/.libs/libgulden_unity_node_js-0.dll src/frontend/electron/libnovo_unity_node_js.node
-    cp build_node/src/.libs/libgulden_unity_node_js-0.dll src/frontend/electron_sample/libnovo_unity_node_js.node
-elif test -f "build_node/src/.libs/libgulden_unity_node_js.so"; then
-    cp build_node/src/.libs/libgulden_unity_node_js.so src/frontend/electron/libnovo_unity_node_js.node
-    cp build_node/src/.libs/libgulden_unity_node_js.so src/frontend/electron_sample/libnovo_unity_node_js.node
+if test -f "build_node/src/.libs/lib_unity_node_js-0.dll"; then
+    cp build_node/src/.libs/lib_unity_node_js-0.dll src/frontend/electron/libnovo_unity_node_js.node
+    cp build_node/src/.libs/lib_unity_node_js-0.dll src/frontend/electron_sample/libnovo_unity_node_js.node
+elif test -f "build_node/src/.libs/lib_unity_node_js.so"; then
+    cp build_node/src/.libs/lib_unity_node_js.so src/frontend/electron/libnovo_unity_node_js.node
+    cp build_node/src/.libs/lib_unity_node_js.so src/frontend/electron_sample/libnovo_unity_node_js.node
 fi
 

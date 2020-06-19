@@ -120,7 +120,7 @@ static std::string DummyAddress(const CChainParams &params)
     sourcedata.insert(sourcedata.end(), dummydata, dummydata + sizeof(dummydata));
     for(int i=0; i<256; ++i) { // Try every trailing byte
         std::string s = EncodeBase58(sourcedata.data(), sourcedata.data() + sourcedata.size());
-        if (!CGuldenAddress(s).IsValid())
+        if (!CNativeAddress(s).IsValid())
             return s;
         sourcedata[sourcedata.size()-1] += 1;
     }
@@ -283,7 +283,7 @@ QString formatGuldenURI(const SendCoinsRecipient &info)
 
 bool isDust(const QString& addressString, const CAmount& amount)
 {
-    CGuldenAddress address(addressString.toStdString());
+    CNativeAddress address(addressString.toStdString());
     if (IsSegSigEnabled(chainActive.TipPrev()))
     {
         CKeyID idPrimary;

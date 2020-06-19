@@ -106,13 +106,13 @@ public:
     bool operator> (const CBase58Data& b58) const { return CompareTo(b58) >  0; }
 };
 
-/** base58-encoded Gulden addresses.
+/** base58-encoded addresses.
  * Public-key-hash-addresses have version 0 (or 111 testnet).
  * The data vector contains RIPEMD160(SHA256(pubkey)), where pubkey is the serialized public key.
  * Script-hash-addresses have version 5 (or 196 testnet).
  * The data vector contains RIPEMD160(SHA256(cscript)), where cscript is the serialized redemption script.
  */
-class CGuldenAddress : public CBase58Data {
+class CNativeAddress : public CBase58Data {
 public:
     bool Set(const CKeyID& spendingKeyID, const CKeyID& witnessKeyID);
     bool Set(const CKeyID &id);
@@ -130,10 +130,10 @@ public:
     //! Returns whether the address represents a valid Bitcoin address, which is used by some of the nocks integration.
     bool IsValidBitcoin() const;
 
-    CGuldenAddress() {}
-    CGuldenAddress(const CTxDestination &dest) { Set(dest); }
-    CGuldenAddress(const std::string& strAddress) { SetString(strAddress); }
-    CGuldenAddress(const char* pszAddress) { SetString(pszAddress); }
+    CNativeAddress() {}
+    CNativeAddress(const CTxDestination &dest) { Set(dest); }
+    CNativeAddress(const std::string& strAddress) { SetString(strAddress); }
+    CNativeAddress(const char* pszAddress) { SetString(pszAddress); }
 
     CTxDestination Get() const;
 
@@ -144,7 +144,7 @@ public:
 
     bool IsScript() const;
 
-    bool operator==(const CGuldenAddress& otherAddress) const { return CBase58Data::CompareTo((CBase58Data)otherAddress) == 0; }
+    bool operator==(const CNativeAddress& otherAddress) const { return CBase58Data::CompareTo((CBase58Data)otherAddress) == 0; }
 
     ADD_SERIALIZE_METHODS;
 
@@ -159,7 +159,7 @@ public:
 /**
  * A base58-encoded secret key
  */
-class CGuldenSecret : public CBase58Data
+class CEncodedSecretKey : public CBase58Data
 {
 public:
     void SetKey(const CKey& vchSecret);
@@ -168,14 +168,14 @@ public:
     bool SetString(const char* pszSecret);
     bool SetString(const std::string& strSecret);
 
-    CGuldenSecret(const CKey& vchSecret) { SetKey(vchSecret); }
-    CGuldenSecret() {}
+    CEncodedSecretKey(const CKey& vchSecret) { SetKey(vchSecret); }
+    CEncodedSecretKey() {}
 };
 
 /**
  * A combination base58 and hex encoded secret extended key
  */
-template <typename KeyType> class CGuldenSecretExt 
+template <typename KeyType> class CEncodedSecretKeyExt 
 {
 public:
     void SetKey(const KeyType& vchSecret) { key = vchSecret; }
@@ -219,7 +219,7 @@ public:
         return true;
     }
 
-    CGuldenSecretExt<KeyType>& SetCreationTime(std::string newCreationTime)
+    CEncodedSecretKeyExt<KeyType>& SetCreationTime(std::string newCreationTime)
     {
         creationTime = newCreationTime;
         return *this;
@@ -237,7 +237,7 @@ public:
         }
     }
 
-    CGuldenSecretExt<KeyType>& SetPayAccount(std::string newPayAccount)
+    CEncodedSecretKeyExt<KeyType>& SetPayAccount(std::string newPayAccount)
     {
         payAccount = newPayAccount;
         return *this;
@@ -250,7 +250,7 @@ public:
 
     bool fromURIString(std::string uri)
     {
-        if (!boost::starts_with(uri, "guldensync:"))
+        if (!boost::starts_with(uri, GLOBAL_APPNAME"sync:"))
             return false;
 
         uri = std::string(uri.begin()+11,uri.end());
@@ -306,9 +306,9 @@ public:
     }
 
     KeyType getKeyRaw() { return key; }
-    CGuldenSecretExt(const KeyType& vchSecret) { SetKey(vchSecret); }
-    CGuldenSecretExt(const std::string& strSecret) { SetString(strSecret); }
-    CGuldenSecretExt() {}
+    CEncodedSecretKeyExt(const KeyType& vchSecret) { SetKey(vchSecret); }
+    CEncodedSecretKeyExt(const std::string& strSecret) { SetString(strSecret); }
+    CEncodedSecretKeyExt() {}
 
 private:
     KeyType key;
@@ -318,7 +318,7 @@ private:
     std::string creationTime;
 };
 
-template<typename K, int Size, CChainParams::Base58Type Type> class CGuldenExtKeyBase : public CBase58Data
+template<typename K, int Size, CChainParams::Base58Type Type> class CEncodedSecretExtKeyBase : public CBase58Data
 {
 public:
     void SetKey(const K &key) {
@@ -336,18 +336,18 @@ public:
         return ret;
     }
 
-    CGuldenExtKeyBase(const K &key) {
+    CEncodedSecretExtKeyBase(const K &key) {
         SetKey(key);
     }
 
-    CGuldenExtKeyBase(const std::string& strBase58c) {
+    CEncodedSecretExtKeyBase(const std::string& strBase58c) {
         SetString(strBase58c.c_str(), Params().Base58Prefix(Type).size());
     }
 
-    CGuldenExtKeyBase() {}
+    CEncodedSecretExtKeyBase() {}
 };
 
-typedef CGuldenExtKeyBase<CExtKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_SECRET_KEY> CGuldenExtKey;
-typedef CGuldenExtKeyBase<CExtPubKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_PUBLIC_KEY> CGuldenExtPubKey;
+typedef CEncodedSecretExtKeyBase<CExtKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_SECRET_KEY> CEncodedSecretExt;
+typedef CEncodedSecretExtKeyBase<CExtPubKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_PUBLIC_KEY> CEncodedSecretExtPubKey;
 
 #endif

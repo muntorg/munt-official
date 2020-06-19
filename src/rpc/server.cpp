@@ -266,7 +266,7 @@ static UniValue stop(const JSONRPCRequest& jsonRequest)
             "\nStop Gulden server.");
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
-    GuldenAppManager::gApp->shutdown();
+    AppLifecycleManager::gApp->shutdown();
     if (jsonRequest.params[0].isNum()) {
         MilliSleep(jsonRequest.params[0].get_int());
     }

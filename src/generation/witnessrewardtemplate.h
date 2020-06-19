@@ -18,14 +18,14 @@ struct CWitnessRewardDestination {
     };
 
     DestType type;
-    CGuldenAddress address;
+    CNativeAddress address;
     CAmount amount;
     double percent;
     bool takesRemainder;
     bool takesCompoundOverflow;
 
     CWitnessRewardDestination(): type(DestType::Account), amount(0), percent(0), takesRemainder(false), takesCompoundOverflow(false) {}
-    CWitnessRewardDestination(const DestType _type, const CGuldenAddress& _address, const CAmount _amount, const double _percent, const bool _takesRemainder, const bool _takesCompoundOverflow)
+    CWitnessRewardDestination(const DestType _type, const CNativeAddress& _address, const CAmount _amount, const double _percent, const bool _takesRemainder, const bool _takesCompoundOverflow)
         : type(_type), address(_address), amount(_amount), percent(_percent), takesRemainder(_takesRemainder), takesCompoundOverflow(_takesCompoundOverflow) {}
 
     ADD_SERIALIZE_METHODS;

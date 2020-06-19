@@ -99,7 +99,7 @@ QValidator::State GuldenAddressCheckValidator::validate(QString &input, int &pos
 {
     (unused)pos;
     // Validate the passed Gulden address
-    CGuldenAddress addr(input.toStdString());
+    CNativeAddress addr(input.toStdString());
     //fixme: (FUT) This is duplicate code
     QRegularExpression patternMatcherIBAN("^[a-zA-Z]{2,2}[0-9]{2,2}(?:[a-zA-Z0-9]{1,30})$");
     if (addr.IsValid() || addr.IsValidBitcoin() || patternMatcherIBAN.match(input).hasMatch())

@@ -22,9 +22,9 @@
 #include <unistd.h>
 #endif
 
-GuldenAppManager* GuldenAppManager::gApp = nullptr;
+AppLifecycleManager* AppLifecycleManager::gApp = nullptr;
 
-GuldenAppManager::GuldenAppManager()
+AppLifecycleManager::AppLifecycleManager()
 : fShutDownHasBeenInitiated(false),
   shutdownDidFinish(false),
   recoveryBirthNumber(0)
@@ -38,19 +38,19 @@ GuldenAppManager::GuldenAppManager()
     shutdownThread();
 }
 
-GuldenAppManager::~GuldenAppManager()
+AppLifecycleManager::~AppLifecycleManager()
 {
     // Refuse to close if initialize() or shutdown() is still busy.
     std::lock_guard<std::mutex> lock(appManagerInitShutDownMutex);
 }
 
-void GuldenAppManager::handleRunawayException(const std::exception *e)
+void AppLifecycleManager::handleRunawayException(const std::exception *e)
 {
     PrintExceptionContinue(e, "Runaway exception");
     signalRunawayException((GetWarnings("gui")));
 }
 
-void GuldenAppManager::initialize()
+void AppLifecycleManager::initialize()
 {
     std::thread([=]
     {
@@ -111,7 +111,7 @@ void GuldenAppManager::initialize()
 // We use a socket here to signal shutdown to the main app.
 // As we (may) have been called from sigterm it is not safe to do anything else here.
 // See http://doc.qt.io/qt-5/unix-signals.html for more information.
-void GuldenAppManager::shutdown()
+void AppLifecycleManager::shutdown()
 {
     // Let the core know that we are in the early process of shutting down.
     // Do this before the mutex so that if we are still in init we can abandon the init.
@@ -130,7 +130,7 @@ void GuldenAppManager::shutdown()
     #endif
 }
 
-void GuldenAppManager::waitForShutDown()
+void AppLifecycleManager::waitForShutDown()
 {
     std::unique_lock<std::mutex> lock(shutdownFinishMutex);
     shutdownFinishCondition.wait(lock, [&]{ return shutdownDidFinish; });
@@ -187,7 +187,7 @@ bool daemoniseUsingFork() {
 }
 #endif
 
-bool GuldenAppManager::daemonise()
+bool AppLifecycleManager::daemonise()
 {
     #if HAVE_DECL_FORK
     {
@@ -208,7 +208,7 @@ bool GuldenAppManager::daemonise()
     #endif
 }
 
-void GuldenAppManager::shutdownThread()
+void AppLifecycleManager::shutdownThread()
 {
     #ifndef WIN32
     if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigtermFd) == -1)
@@ -279,35 +279,35 @@ void GuldenAppManager::shutdownThread()
         }
         catch (const std::exception& e)
         {
-            LogPrintf("GuldenAppManager::shutdownThread: App shutdown exception [%s]\n", e.what());
+            LogPrintf("AppLifecycleManager::shutdownThread: App shutdown exception [%s]\n", e.what());
             handleRunawayException(&e);
         }
         catch (...)
         {
-            LogPrintf("GuldenAppManager::shutdownThread: App shutdown exception\n");
+            LogPrintf("AppLifecycleManager::shutdownThread: App shutdown exception\n");
             handleRunawayException(NULL);
         }
     }).detach();
 }
 
-void GuldenAppManager::setRecoveryPhrase(const SecureString& recoveryPhrase_)
+void AppLifecycleManager::setRecoveryPhrase(const SecureString& recoveryPhrase_)
 {
     recoveryPhrase = recoveryPhrase_;
 }
 
-SecureString GuldenAppManager::getRecoveryPhrase()
+SecureString AppLifecycleManager::getRecoveryPhrase()
 {
     return recoveryPhrase;
 }
 
-void GuldenAppManager::BurnRecoveryPhrase()
+void AppLifecycleManager::BurnRecoveryPhrase()
 {
     // The below is a 'SecureString' - so no memory burn necessary, it should burn itself.
     recoveryPhrase = "";
 }
 
 // if no birth number given or birth number is invalid the result will be zero
-void GuldenAppManager::splitRecoveryPhraseAndBirth(const SecureString& input, SecureString& phrase, int& birthNumber)
+void AppLifecycleManager::splitRecoveryPhraseAndBirth(const SecureString& input, SecureString& phrase, int& birthNumber)
 {
     phrase = input;
 
@@ -327,22 +327,22 @@ void GuldenAppManager::splitRecoveryPhraseAndBirth(const SecureString& input, Se
     }
 }
 
-int GuldenAppManager::getRecoveryBirth() const
+int AppLifecycleManager::getRecoveryBirth() const
 {
     return recoveryBirthNumber;
 }
 
-void GuldenAppManager::setRecoveryBirthNumber(int _recoveryBirth)
+void AppLifecycleManager::setRecoveryBirthNumber(int _recoveryBirth)
 {
     recoveryBirthNumber = _recoveryBirth;
 }
 
-int64_t GuldenAppManager::getRecoveryBirthTime() const
+int64_t AppLifecycleManager::getRecoveryBirthTime() const
 {
     return birthNumberToTime(recoveryBirthNumber);
 }
 
-void GuldenAppManager::setRecoveryBirthTime(int64_t birthTime)
+void AppLifecycleManager::setRecoveryBirthTime(int64_t birthTime)
 {
     if (birthTime >= Params().GenesisBlock().nTime) {
         recoveryBirthNumber = timeToBirthNumber(birthTime);
@@ -351,7 +351,7 @@ void GuldenAppManager::setRecoveryBirthTime(int64_t birthTime)
         recoveryBirthNumber = 0;
 }
 
-SecureString GuldenAppManager::getCombinedRecoveryPhrase() const
+SecureString AppLifecycleManager::getCombinedRecoveryPhrase() const
 {
     if (recoveryBirthNumber != 0)
         return recoveryPhrase + SecureString(" ") + SecureString(i64tostr(recoveryBirthNumber));
@@ -359,7 +359,7 @@ SecureString GuldenAppManager::getCombinedRecoveryPhrase() const
         return recoveryPhrase;
 }
 
-void GuldenAppManager::setCombinedRecoveryPhrase(const SecureString& combinedPhrase)
+void AppLifecycleManager::setCombinedRecoveryPhrase(const SecureString& combinedPhrase)
 {
     SecureString phrase;
     int birth;
@@ -368,7 +368,7 @@ void GuldenAppManager::setCombinedRecoveryPhrase(const SecureString& combinedPhr
     setRecoveryBirthNumber(birth);
 }
 
-SecureString GuldenAppManager::composeRecoveryPhrase(const SecureString& phrase, int64_t birthTime)
+SecureString AppLifecycleManager::composeRecoveryPhrase(const SecureString& phrase, int64_t birthTime)
 {
     if (birthTime != 0)
         return phrase + SecureString(" ") + SecureString(i64tostr(timeToBirthNumber(birthTime)));
@@ -376,37 +376,37 @@ SecureString GuldenAppManager::composeRecoveryPhrase(const SecureString& phrase,
         return phrase;
 }
 
-void GuldenAppManager::setLinkKey(CGuldenSecretExt<CExtKey> _linkKey)
+void AppLifecycleManager::setLinkKey(CEncodedSecretKeyExt<CExtKey> _linkKey)
 {
     linkKey = _linkKey;
 }
 
-int64_t GuldenAppManager::getLinkedBirthTime() const
+int64_t AppLifecycleManager::getLinkedBirthTime() const
 {
     return linkKey.getCreationTime();
 }
 
-CGuldenSecretExt<CExtKey> GuldenAppManager::getLinkedKey() const
+CEncodedSecretKeyExt<CExtKey> AppLifecycleManager::getLinkedKey() const
 {
     return linkKey;
 }
 
-void GuldenAppManager::setRecoveryPassword(const SecureString& password_)
+void AppLifecycleManager::setRecoveryPassword(const SecureString& password_)
 {
     recoveryPassword = password_;
 }
 
-SecureString GuldenAppManager::getRecoveryPassword()
+SecureString AppLifecycleManager::getRecoveryPassword()
 {
     return recoveryPassword;
 }
 
-void GuldenAppManager::SecureWipeRecoveryDetails()
+void AppLifecycleManager::SecureWipeRecoveryDetails()
 {
     //fixme: (UNITY) Burn all seeds/passwords etc. here.
 }
 
 bool ShutdownRequested()
 {
-    return GuldenAppManager::gApp ? (bool)GuldenAppManager::gApp->fShutDownHasBeenInitiated : false;
+    return AppLifecycleManager::gApp ? (bool)AppLifecycleManager::gApp->fShutDownHasBeenInitiated : false;
 }

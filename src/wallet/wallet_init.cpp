@@ -133,13 +133,13 @@ std::string CWallet::GetWalletHelpString(bool showDebug)
 
 void CWallet::CreateSeedAndAccountFromLink(CWallet *walletInstance)
 {
-    walletInstance->nTimeFirstKey = GuldenAppManager::gApp->getLinkedBirthTime();
+    walletInstance->nTimeFirstKey = AppLifecycleManager::gApp->getLinkedBirthTime();
 
     LogPrintf("%s: Creating new linked primary account, birth time [%d]\n", __func__, walletInstance->nTimeFirstKey);
 
-    walletInstance->activeAccount = walletInstance->CreateSeedlessHDAccount("My account", GuldenAppManager::gApp->getLinkedKey(), AccountState::Normal, AccountType::Mobi, false);
+    walletInstance->activeAccount = walletInstance->CreateSeedlessHDAccount("My account", AppLifecycleManager::gApp->getLinkedKey(), AccountState::Normal, AccountType::Mobi, false);
 
-    SecureString encryptUsingPassword = GuldenAppManager::gApp->getRecoveryPassword();
+    SecureString encryptUsingPassword = AppLifecycleManager::gApp->getRecoveryPassword();
     if (encryptUsingPassword.length() > 0)
     {
         LogPrintf("Encrypting wallet using passphrase\n");
@@ -167,7 +167,7 @@ void CWallet::CreateSeedAndAccountFromLink(CWallet *walletInstance)
         walletInstance->TopUpKeyPool(10);
     }
 
-    GuldenAppManager::gApp->SecureWipeRecoveryDetails();
+    AppLifecycleManager::gApp->SecureWipeRecoveryDetails();
 }
 
 CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
@@ -252,19 +252,19 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 //fixme: (UNITY) (SPV) decide if we want to keep this option
                 if (IsArgSet("-phrase")) {
                     SecureString phrase(GetArg("-phrase", ""));
-                    GuldenAppManager::gApp->setCombinedRecoveryPhrase(phrase);
+                    AppLifecycleManager::gApp->setCombinedRecoveryPhrase(phrase);
                     LogPrintf("Using phrase argument for new wallet seed\n");
                 }
-                else if (GuldenAppManager::gApp->getRecoveryPhrase().size() == 0)
+                else if (AppLifecycleManager::gApp->getRecoveryPhrase().size() == 0)
                 {
                     std::vector<unsigned char> entropy(16);
                     GetStrongRandBytes(&entropy[0], 16);
-                    GuldenAppManager::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
-                    GuldenAppManager::gApp->setRecoveryBirthTime(GetAdjustedTime());
+                    AppLifecycleManager::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
+                    AppLifecycleManager::gApp->setRecoveryBirthTime(GetAdjustedTime());
                 }
             }
 
-            if (GuldenAppManager::gApp->getRecoveryPhrase().size() == 0)
+            if (AppLifecycleManager::gApp->getRecoveryPhrase().size() == 0)
             {
                 //Work around an issue with "non HD" wallets from older versions where active account may not be set in the wallet.
                 if (!walletInstance->mapAccounts.empty()) {
@@ -274,7 +274,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 throw std::runtime_error("Invalid seed mnemonic");
             }
 
-            if (GuldenAppManager::gApp->isLink)
+            if (AppLifecycleManager::gApp->isLink)
             {
                 CreateSeedAndAccountFromLink(walletInstance);
             }
@@ -624,7 +624,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         throw std::runtime_error("Unknown wallet load state.");
     }
 
-    if (GuldenAppManager::gApp->isRecovery && GuldenAppManager::gApp->getRecoveryBirthTime() == 0)
+    if (AppLifecycleManager::gApp->isRecovery && AppLifecycleManager::gApp->getRecoveryBirthTime() == 0)
     {
         walletInstance->nTimeFirstKey = Params().GenesisBlock().nTime;
     }
@@ -634,7 +634,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
     RegisterValidationInterface(walletInstance);
 
     CBlockIndex *pindexRescan = chainActive.Tip();
-    if (GetBoolArg("-rescan", false) || GuldenAppManager::gApp->isRecovery || GuldenAppManager::gApp->isLink)
+    if (GetBoolArg("-rescan", false) || AppLifecycleManager::gApp->isRecovery || AppLifecycleManager::gApp->isLink)
     {
         //fixme: (FUT) (SPV) rescan from latest checkpoint before nTimeFirstKey
         pindexRescan = chainActive.Genesis();
@@ -719,10 +719,10 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 void CWallet::CreateSeedAndAccountFromPhrase(CWallet* walletInstance)
 {
     // Generate a new primary seed and account (BIP44)
-    walletInstance->activeSeed = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP44);
-    walletInstance->nTimeFirstKey = GuldenAppManager::gApp->getRecoveryBirthTime();
+    walletInstance->activeSeed = new CHDSeed(AppLifecycleManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP44);
+    walletInstance->nTimeFirstKey = AppLifecycleManager::gApp->getRecoveryBirthTime();
 
-    SecureString encryptUsingPassword = GuldenAppManager::gApp->getRecoveryPassword();
+    SecureString encryptUsingPassword = AppLifecycleManager::gApp->getRecoveryPassword();
     walletInstance->mapSeeds[walletInstance->activeSeed->getUUID()] = walletInstance->activeSeed;
     if (encryptUsingPassword.length() > 0)
     {
@@ -736,12 +736,12 @@ void CWallet::CreateSeedAndAccountFromPhrase(CWallet* walletInstance)
 
     // Now generate children shadow accounts to handle legacy transactions
     // Only for recovery wallets though, new ones don't need them
-    if (GuldenAppManager::gApp->isRecovery)
+    if (AppLifecycleManager::gApp->isRecovery)
     {
         //fixme: (UNITY) (SPV) extract firstkeytime from recovery
         //Temporary seeds for shadow children
-        CHDSeed* seedBip32 = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32);
-        CHDSeed* seedBip32Legacy = new CHDSeed(GuldenAppManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32Legacy);
+        CHDSeed* seedBip32 = new CHDSeed(AppLifecycleManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32);
+        CHDSeed* seedBip32Legacy = new CHDSeed(AppLifecycleManager::gApp->getRecoveryPhrase().c_str(), CHDSeed::CHDSeed::BIP32Legacy);
 
         // If wallet is encrypted we need to encrypt the seeds (even though they are temporary) to ensure that they produce properly encrypted accounts.
         if (walletInstance->IsCrypted())
@@ -775,7 +775,7 @@ void CWallet::CreateSeedAndAccountFromPhrase(CWallet* walletInstance)
         if (!walletdb.WritePrimaryAccount(walletInstance->activeAccount)) { throw std::runtime_error("Writing active account failed"); }
     }
 
-    GuldenAppManager::gApp->SecureWipeRecoveryDetails();
+    AppLifecycleManager::gApp->SecureWipeRecoveryDetails();
 
     //Assign the bare minimum keys here, let the rest take place in the background thread
     walletInstance->TopUpKeyPool(1);

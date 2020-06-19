@@ -952,6 +952,7 @@ $(LIB_UNITY_OBJC): $(LIBSECP256K1) $(LIBLEVELDB) $(LIBMEMENV) $(LIB_UNITY_CRYPTO
 endif
 
 # Daemon binary #
+if BUILD_DAEMON
 Novo_daemon_SOURCES = daemon-main.cpp
 Novo_daemon_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
 Novo_daemon_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -979,8 +980,11 @@ Novo_daemon_LDADD = \
   $(LIBSECP256K1)
 
 Novo_daemon_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(SSL_LIBS)
+endif
+#
 
 # cli binary #
+if BUILD_UTILS
 Novo_cli_SOURCES = cli-main.cpp
 Novo_cli_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(EVENT_CFLAGS)
 Novo_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -998,9 +1002,11 @@ Novo_cli_LDADD = \
   $(LIB_CRYPTO_ALL)
 
 Novo_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+endif
 #
 
 # tx binary #
+if BUILD_UTILS
 Novo_tx_SOURCES = tx-main.cpp
 Novo_tx_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
 Novo_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -1026,6 +1032,7 @@ Novo_tx_LDADD = \
   $(LIBSECP256K1)
 
 Novo_tx_LDADD += $(BOOST_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS)
+endif
 #
 
 

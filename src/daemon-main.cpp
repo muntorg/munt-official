@@ -80,7 +80,7 @@ static void handleAppInitResult(bool bResult)
     {
         // InitError will have been called with detailed error, which ends up on console
         exitStatus = EXIT_FAILURE;
-        GuldenAppManager::gApp->shutdown();
+        AppLifecycleManager::gApp->shutdown();
         return;
     }
     handlePostInitMain();
@@ -97,7 +97,7 @@ static bool handlePreInitMain()
 //
 static void AppInit(int argc, char* argv[])
 {
-    GuldenAppManager appManager; 
+    AppLifecycleManager appManager; 
     appManager.signalAppInitializeResult.connect(boost::bind(handleAppInitResult, _1));
     appManager.signalAboutToInitMain.connect(&handlePreInitMain);
     appManager.signalAppShutdownFinished.connect(&handleFinalShutdown);
@@ -194,7 +194,7 @@ static void AppInit(int argc, char* argv[])
                 {
                     fprintf(stderr, "ERROR: Cannot obtain a lock on data directory %s. %s is probably already running.", GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
                     exitStatus = EXIT_FAILURE;
-                    GuldenAppManager::gApp->shutdown();
+                    AppLifecycleManager::gApp->shutdown();
                     return;
                 }
             }
@@ -202,7 +202,7 @@ static void AppInit(int argc, char* argv[])
             {
                 fprintf(stderr, "ERROR: Cannot obtain a lock on data directory %s. %s is probably already running.", GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
                 exitStatus = EXIT_FAILURE;
-                GuldenAppManager::gApp->shutdown();
+                AppLifecycleManager::gApp->shutdown();
                 return;
             }
         }
@@ -210,7 +210,7 @@ static void AppInit(int argc, char* argv[])
         if (GetBoolArg("-daemon", false))
         {
             fprintf(stdout, "Gulden server starting\n");
-            if (!GuldenAppManager::gApp->daemonise())
+            if (!AppLifecycleManager::gApp->daemonise())
             {
                 LogPrintf("Failed to daemonise\n");
                 exitStatus = EXIT_FAILURE;

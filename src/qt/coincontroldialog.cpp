@@ -684,7 +684,7 @@ void CoinControlDialog::updateView(CAccount* forAccount)
             QString sAddress = "";
             if(ExtractDestination(out.tx->tx->vout[out.i], outputAddress))
             {
-                sAddress = QString::fromStdString(CGuldenAddress(outputAddress).ToString());
+                sAddress = QString::fromStdString(CNativeAddress(outputAddress).ToString());
 
                 // if listMode or change => show Gulden address. In tree mode, address is not shown again for direct wallet address outputs
                 if (!treeMode || (!(sAddress == sWalletAddress)))

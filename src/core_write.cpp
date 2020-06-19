@@ -146,7 +146,7 @@ void ScriptPubKeyToUniv(const CScript& scriptPubKey,
 
     UniValue a(UniValue::VARR);
     for(const CTxDestination& addr : addresses)
-        a.push_back(CGuldenAddress(addr).ToString());
+        a.push_back(CNativeAddress(addr).ToString());
     out.pushKV("addresses", a);
 }
 
@@ -155,7 +155,7 @@ void StandardKeyHashToUniv(const CTxOut& txout, UniValue& out, bool fIncludeHex)
     if (fIncludeHex)
         out.pushKV("hex", txout.output.GetHex());
 
-    out.pushKV("address", CGuldenAddress(txout.output.standardKeyHash.keyID).ToString());
+    out.pushKV("address", CNativeAddress(txout.output.standardKeyHash.keyID).ToString());
 }
 
 void PoW2WitnessToUniv(const CTxOut& txout, UniValue& out, bool fIncludeHex)
@@ -170,7 +170,7 @@ void PoW2WitnessToUniv(const CTxOut& txout, UniValue& out, bool fIncludeHex)
     out.pushKV("pubkey_spend", txout.output.witnessDetails.spendingKeyID.ToString());
     out.pushKV("pubkey_witness", txout.output.witnessDetails.witnessKeyID.ToString());
 
-    out.pushKV("address", CGuldenAddress(CPoW2WitnessDestination(txout.output.witnessDetails.spendingKeyID, txout.output.witnessDetails.witnessKeyID)).ToString());
+    out.pushKV("address", CNativeAddress(CPoW2WitnessDestination(txout.output.witnessDetails.spendingKeyID, txout.output.witnessDetails.witnessKeyID)).ToString());
 }
 
 

@@ -708,7 +708,7 @@ void GUI::setClientModel(ClientModel *_clientModel)
                         if (miningAddress->GetReservedKey(pubKey))
                         {
                             CKeyID keyID = pubKey.GetID();
-                            readOverrideAddress = CGuldenAddress(keyID).ToString();
+                            readOverrideAddress = CNativeAddress(keyID).ToString();
                         }
                     }
                     if (nGenProcLimit > 0 && nGenMemoryLimitKilobytes > 0)
@@ -1511,7 +1511,7 @@ void GUI::userWantsToQuit()
     {
         hideForClose();
         haveAlreadySignalledShutdown = true;
-        GuldenAppManager::gApp->shutdown();
+        AppLifecycleManager::gApp->shutdown();
     }
 }
 

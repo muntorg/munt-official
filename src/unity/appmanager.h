@@ -21,13 +21,13 @@
 /** Class encapsulating Gulden startup and shutdown.
  * Allows running startup and shutdown in a different thread from the UI thread.
  */
-class GuldenAppManager
+class AppLifecycleManager
 {
 public:
     //! NB! Only initialise once, afterwards refer to by gApp static instance.
-    GuldenAppManager();
-    ~GuldenAppManager();
-    static GuldenAppManager* gApp;
+    AppLifecycleManager();
+    ~AppLifecycleManager();
+    static AppLifecycleManager* gApp;
 
     //! NB! This runs in a detached thread
     void initialize();
@@ -67,7 +67,7 @@ private:
     void handleRunawayException(const std::exception *e);
     void shutdownThread();
 
-    // App globals, not used internally by GuldenAppManager.
+    // App globals, not used internally by AppLifecycleManager.
 public:
     void setRecoveryPhrase(const SecureString& recoveryPhrase);
     SecureString getRecoveryPhrase();
@@ -85,21 +85,21 @@ public:
     static SecureString composeRecoveryPhrase(const SecureString& phrase, int64_t birthTime);
     void setCombinedRecoveryPhrase(const SecureString& combinedPhrase);
     static void splitRecoveryPhraseAndBirth(const SecureString& input, SecureString& phrase, int& birthNumber);
-    void setLinkKey(CGuldenSecretExt<CExtKey> _linkKey);
+    void setLinkKey(CEncodedSecretKeyExt<CExtKey> _linkKey);
     int64_t getLinkedBirthTime() const;
     void setRecoveryPassword(const SecureString& password_);
     SecureString getRecoveryPassword();
-    CGuldenSecretExt<CExtKey> getLinkedKey() const;
+    CEncodedSecretKeyExt<CExtKey> getLinkedKey() const;
 
     void SecureWipeRecoveryDetails();
 private:
     void BurnRecoveryPhrase();
-    CGuldenSecretExt<CExtKey> linkKey;
+    CEncodedSecretKeyExt<CExtKey> linkKey;
     SecureString recoveryPhrase;
     SecureString recoveryPassword;
     int recoveryBirthNumber;
 
-    // Passed on to the rest of the app but not used internally by GuldenAppManager.
+    // Passed on to the rest of the app but not used internally by AppLifecycleManager.
     boost::thread_group threadGroup;
     CScheduler scheduler;
 };

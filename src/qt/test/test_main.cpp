@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 
     // Don't remove this, it's needed to access
     // QApplication:: and QCoreApplication:: in the tests
-    GuldenAppManager appManager;
+    AppLifecycleManager appManager;
     QApplication app(argc, argv);
     app.setApplicationName("Gulden-test");
 

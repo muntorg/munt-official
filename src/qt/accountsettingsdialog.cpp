@@ -119,9 +119,9 @@ void AccountSettingsDialog::showSyncQr()
             CPubKey vchPubKey;
             if (!reservekey.GetReservedKey(vchPubKey))
                 return;
-            payoutAddress = CGuldenAddress(vchPubKey.GetID()).ToString();
+            payoutAddress = CNativeAddress(vchPubKey.GetID()).ToString();
 
-            qrString = QString::fromStdString("guldensync:" + CGuldenSecretExt<CExtKey>(*(static_cast<CAccountHD*>(activeAccount)->GetAccountMasterPrivKey())).SetCreationTime(QString::number(currentTime).toStdString()).SetPayAccount(payoutAddress).ToURIString() );
+            qrString = QString::fromStdString("guldensync:" + CEncodedSecretKeyExt<CExtKey>(*(static_cast<CAccountHD*>(activeAccount)->GetAccountMasterPrivKey())).SetCreationTime(QString::number(currentTime).toStdString()).SetPayAccount(payoutAddress).ToURIString() );
             ui->addressQRContents->setVisible(false);
         }
         else if(activeAccount->IsPoW2Witness() && !activeAccount->IsFixedKeyPool())

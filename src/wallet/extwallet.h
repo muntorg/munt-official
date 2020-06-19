@@ -283,7 +283,7 @@ public:
     CAccountHD* CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey);
 
     //! Create an HD account directly from a key and not assosciated with any seed.
-    CAccountHD* CreateSeedlessHDAccount(std::string strAccount, CGuldenSecretExt<CExtKey> accountExtKey, AccountState state, AccountType type, bool generateKeys=true);
+    CAccountHD* CreateSeedlessHDAccount(std::string strAccount, CEncodedSecretKeyExt<CExtKey> accountExtKey, AccountState state, AccountType type, bool generateKeys=true);
 
     void setActiveAccount(CWalletDB& walletdb, CAccount* newActiveAccount);
 

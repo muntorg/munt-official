@@ -358,12 +358,12 @@ GuldenApplication::GuldenApplication(int &argc, char **argv)
     assert(platformStyle);
 
     /*  communication to and from initialisation/shutdown threads */
-    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL1(GuldenAppManager::gApp->signalRunawayException, std::string, this, "handleRunawayException");
-    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL1(GuldenAppManager::gApp->signalAppInitializeResult, bool, this, "initializeResult");
-    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(GuldenAppManager::gApp->signalAppShutdownStarted, this, "shutdown_hideUIForShutdown");
-    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(GuldenAppManager::gApp->signalAppShutdownAlertUser, this, "shutdown_InitialUINotification");
-    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(GuldenAppManager::gApp->signalAppShutdownCoreInterrupted, this, "shutdown_CloseModels");
-    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(GuldenAppManager::gApp->signalAppShutdownFinished, this, "shutdown_TerminateApp");
+    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL1(AppLifecycleManager::gApp->signalRunawayException, std::string, this, "handleRunawayException");
+    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL1(AppLifecycleManager::gApp->signalAppInitializeResult, bool, this, "initializeResult");
+    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(AppLifecycleManager::gApp->signalAppShutdownStarted, this, "shutdown_hideUIForShutdown");
+    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(AppLifecycleManager::gApp->signalAppShutdownAlertUser, this, "shutdown_InitialUINotification");
+    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(AppLifecycleManager::gApp->signalAppShutdownCoreInterrupted, this, "shutdown_CloseModels");
+    THREADSAFE_CONNECT_UI_SIGNAL_TO_CORE_SIGNAL0(AppLifecycleManager::gApp->signalAppShutdownFinished, this, "shutdown_TerminateApp");
 }
 
 GuldenApplication::~GuldenApplication()
@@ -432,7 +432,7 @@ void GuldenApplication::requestInitialize()
     logEvents = true;
     #endif
     qDebug() << __func__ << ": Requesting initialize";
-    GuldenAppManager::gApp->initialize();
+    AppLifecycleManager::gApp->initialize();
 }
 
 static int returnValue = EXIT_FAILURE;
@@ -608,7 +608,7 @@ int main(int argc, char *argv[])
     QApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
 #endif
 
-    GuldenAppManager appManager;
+    AppLifecycleManager appManager;
     GuldenApplication* app = new GuldenApplication(argc, argv);
 #if QT_VERSION >= 0x050500
     // Because of the POODLE attack it is recommended to disable SSLv3 (https://disablessl3.com/),

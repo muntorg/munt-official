@@ -107,10 +107,10 @@ void WelcomeDialog::newWallet()
 {
     std::vector<unsigned char> entropy(16);
     GetStrongRandBytes(&entropy[0], 16);
-    GuldenAppManager::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
-    GuldenAppManager::gApp->setRecoveryBirthTime(GetAdjustedTime());
+    AppLifecycleManager::gApp->setRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8));
+    AppLifecycleManager::gApp->setRecoveryBirthTime(GetAdjustedTime());
 
-    ui->edittextEnterRecoveryPhrase->setText(QString::fromStdString(GuldenAppManager::gApp->getCombinedRecoveryPhrase().c_str()));
+    ui->edittextEnterRecoveryPhrase->setText(QString::fromStdString(AppLifecycleManager::gApp->getCombinedRecoveryPhrase().c_str()));
     ui->edittextEnterRecoveryPhrase->setReadOnly(true);
     ui->checkboxConfirmRecoveryPhraseWrittenDown->setVisible(true);
     ui->checkboxConfirmRecoveryPhraseWrittenDown->setChecked(false);
@@ -120,7 +120,7 @@ void WelcomeDialog::newWallet()
     ui->labelEnterRecoveryPhrase->setVisible(false);
     ui->welcomeDialogActionStack->setCurrentWidget(ui->welcomeDialogRecoverWalletPage);
 
-    GuldenAppManager::gApp->isRecovery = false;
+    AppLifecycleManager::gApp->isRecovery = false;
 }
 
 void WelcomeDialog::recoverWallet()
@@ -128,8 +128,8 @@ void WelcomeDialog::recoverWallet()
     //fixme: (UNITY) (SPV) decide if we want to keep this option
     if (IsArgSet("-phrase")) {
         SecureString phrase(GetArg("-phrase", ""));
-        GuldenAppManager::gApp->setCombinedRecoveryPhrase(phrase);
-        ui->edittextEnterRecoveryPhrase->setText(QString::fromStdString(GuldenAppManager::gApp->getCombinedRecoveryPhrase().c_str()));
+        AppLifecycleManager::gApp->setCombinedRecoveryPhrase(phrase);
+        ui->edittextEnterRecoveryPhrase->setText(QString::fromStdString(AppLifecycleManager::gApp->getCombinedRecoveryPhrase().c_str()));
         LogPrintf("Using phrase argument for new wallet seed\n");
     }
 
@@ -141,7 +141,7 @@ void WelcomeDialog::recoverWallet()
     ui->labelEnterRecoveryPhrase->setVisible(true);
     ui->welcomeDialogActionStack->setCurrentWidget(ui->welcomeDialogRecoverWalletPage);
 
-    GuldenAppManager::gApp->isRecovery = true;
+    AppLifecycleManager::gApp->isRecovery = true;
 }
 
 void WelcomeDialog::processRecoveryPhrase()
@@ -154,7 +154,7 @@ void WelcomeDialog::processRecoveryPhrase()
     SecureString phrase;
     int birth;
 
-    GuldenAppManager::splitRecoveryPhraseAndBirth(SecureString(recoveryPhrase.toStdString()), phrase, birth);
+    AppLifecycleManager::splitRecoveryPhraseAndBirth(SecureString(recoveryPhrase.toStdString()), phrase, birth);
 
     if(ui->checkboxConfirmRecoveryPhraseWrittenDown->isChecked())
     {
@@ -183,8 +183,8 @@ void WelcomeDialog::processRecoveryPhrase()
                 phrase = ui->edittextEnterRecoveryPhrase->toPlainText().toStdString().c_str();
             }
 
-            GuldenAppManager::gApp->setRecoveryPhrase(phrase);
-            GuldenAppManager::gApp->setRecoveryBirthNumber(birth);
+            AppLifecycleManager::gApp->setRecoveryPhrase(phrase);
+            AppLifecycleManager::gApp->setRecoveryBirthNumber(birth);
 
             //Try burn memory - just in case - not guaranteed to work everywhere but better than doing nothing.
             burnTextEditMemory(ui->edittextEnterRecoveryPhrase);

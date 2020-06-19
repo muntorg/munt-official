@@ -313,7 +313,7 @@ void OptionsDialog::on_resetButton_clicked()
 
         /* reset all options and close GUI */
         model->Reset();
-        GuldenAppManager::gApp->shutdown();
+        AppLifecycleManager::gApp->shutdown();
     }
 }
 

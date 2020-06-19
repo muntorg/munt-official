@@ -523,7 +523,7 @@ SendCoinsRecipient GuldenSendCoinsEntry::getValue(bool showWarningDialogs)
                     //The key will be marked as used when the transaction is accepted anyway.
                     keySpending.ReturnKey();
                     CKeyID keyID = pubSpendingKey.GetID();
-                    recipient.address = QString::fromStdString(CGuldenAddress(keyID).ToString());
+                    recipient.address = QString::fromStdString(CNativeAddress(keyID).ToString());
                     recipient.label = QString::fromStdString(pactiveWallet->mapAccountLabels[accountUUID]);
                 }
             }

@@ -177,7 +177,7 @@ public:
             obj.push_back(Pair("hex", HexStr(subscript.begin(), subscript.end())));
             UniValue a(UniValue::VARR);
             for(const CTxDestination& addr : addresses)
-                a.push_back(CGuldenAddress(addr).ToString());
+                a.push_back(CNativeAddress(addr).ToString());
             obj.push_back(Pair("addresses", a));
             if (whichType == TX_MULTISIG)
                 obj.push_back(Pair("sigsrequired", nRequired));
@@ -221,7 +221,7 @@ UniValue validateaddress(const JSONRPCRequest& request)
     LOCK(cs_main);
 #endif
 
-    CGuldenAddress address(request.params[0].get_str());
+    CNativeAddress address(request.params[0].get_str());
     bool isValid = address.IsValid();
 
     UniValue ret(UniValue::VOBJ);
@@ -286,7 +286,7 @@ static UniValue getaddress(const JSONRPCRequest& request)
     CPubKey pubKey(data.begin(), data.end());
     if (pubKey.IsFullyValid())
     {
-        result.push_back(CGuldenAddress(pubKey.GetID()).ToString());
+        result.push_back(CNativeAddress(pubKey.GetID()).ToString());
     }
     else
     {
@@ -300,7 +300,7 @@ static UniValue getaddress(const JSONRPCRequest& request)
         {
             for(const CTxDestination& addr : addresses)
             {
-                result.push_back(CGuldenAddress(addr).ToString());
+                result.push_back(CNativeAddress(addr).ToString());
             }
         }
         //fixme: (PHASE5) Check that this handles p2sh correctly (handle ExtractDestinations failiure - look at decodescript to get an idea of what needs to be done)
@@ -331,7 +331,7 @@ CScript _createmultisig_redeemScript(CAccount* const forAccount, const UniValue&
     {
         const std::string& ks = keys[i].get_str();
         #ifdef ENABLE_WALLET
-        CGuldenAddress address(ks);
+        CNativeAddress address(ks);
         if (forAccount && address.IsValid())
         {
             // Case 1: Gulden address and we have full public key:
@@ -414,7 +414,7 @@ UniValue createmultisig(const JSONRPCRequest& request)
     CScript inner = _createmultisig_redeemScript(nullptr, request.params);
     #endif
     CScriptID innerID(inner);
-    CGuldenAddress address(innerID);
+    CNativeAddress address(innerID);
 
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair("address", address.ToString()));
@@ -452,7 +452,7 @@ UniValue verifymessage(const JSONRPCRequest& request)
     std::string strSign     = request.params[1].get_str();
     std::string strMessage  = request.params[2].get_str();
 
-    CGuldenAddress addr(strAddress);
+    CNativeAddress addr(strAddress);
     if (!addr.IsValid())
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid address");
 
@@ -500,7 +500,7 @@ UniValue signmessagewithprivkey(const JSONRPCRequest& request)
     std::string strPrivkey = request.params[0].get_str();
     std::string strMessage = request.params[1].get_str();
 
-    CGuldenSecret vchSecret;
+    CEncodedSecretKey vchSecret;
     bool fGood = vchSecret.SetString(strPrivkey);
     if (!fGood)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid private key");

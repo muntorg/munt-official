@@ -71,7 +71,7 @@ bool AddAddressForOutPoint(const CWallet *wallet, const COutPoint& outpoint, std
     {
         if (!address.empty())
             address += ", ";
-        address += CGuldenAddress(destination).ToString();
+        address += CNativeAddress(destination).ToString();
         return true;
     }
 
@@ -97,7 +97,7 @@ bool witnessOutputsToReceiveRecord(const CWallet *wallet, const CWalletTx &wtx, 
                 CTxDestination getAddress;
                 if (ExtractDestination(txOut, getAddress))
                 {
-                    subReceive.address = CGuldenAddress(getAddress).ToString();
+                    subReceive.address = CNativeAddress(getAddress).ToString();
                 }
                 subReceive.type = recType;
                 subReceive.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
@@ -166,7 +166,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         {
                             if (!outAddresses.empty())
                                 outAddresses += " ";
-                            outAddresses += CGuldenAddress(address).ToString();
+                            outAddresses += CNativeAddress(address).ToString();
                         }
                 }
             }
@@ -323,7 +323,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                 CTxDestination getAddress;
                                 if (ExtractDestination(output, getAddress))
                                 {
-                                    subReceive.address = CGuldenAddress(getAddress).ToString();
+                                    subReceive.address = CNativeAddress(getAddress).ToString();
                                 }
                                 subReceive.type = TransactionRecord::WitnessEmptyRecv;
                                 subReceive.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
@@ -359,7 +359,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                                     account = current_account;
                                     CTxDestination destination;
                                     ExtractDestination(txOut, destination);
-                                    subSend.address = CGuldenAddress(destination).ToString();
+                                    subSend.address = CNativeAddress(destination).ToString();
                                     subSend.type = TransactionRecord::WitnessEmptySend;
                                     subSend.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
                                     subSend.actionAccountUUID = subSend.fromAccountUUID = account->getUUID();
@@ -514,7 +514,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     {
                         // Received by Gulden Address
                         sub.type = TransactionRecord::RecvWithAddress;
-                        addressOut = CGuldenAddress(address).ToString();
+                        addressOut = CNativeAddress(address).ToString();
                     }
                     else
                     {
@@ -674,7 +674,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     {
                         // Sent to Gulden Address
                         sub.type = TransactionRecord::SendToAddress;
-                        sub.address = CGuldenAddress(address).ToString();
+                        sub.address = CNativeAddress(address).ToString();
                     }
                     else
                     {
@@ -719,7 +719,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         // Sent to Gulden Address
                         if (!outAddresses.empty())
                             outAddresses += " ";
-                        outAddresses += CGuldenAddress(address).ToString();
+                        outAddresses += CNativeAddress(address).ToString();
                     }
                 }
                 for (const CTxIn& txin : inputs)

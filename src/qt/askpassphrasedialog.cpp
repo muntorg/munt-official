@@ -159,7 +159,7 @@ void AskPassphraseDialog::accept()
                                          "For security reasons, previous backups of the unencrypted wallet file "
                                          "will become useless as soon as you start using the new, encrypted wallet.") +
                                          "</b></qt>");
-                    GuldenAppManager::gApp->shutdown();
+                    AppLifecycleManager::gApp->shutdown();
                 }
                 else
                 {

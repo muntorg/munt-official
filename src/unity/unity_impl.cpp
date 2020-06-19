@@ -238,7 +238,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
     for (const CTxIn& txin: tx.vin)
     {
         std::string address;
-        CGuldenAddress addr;
+        CNativeAddress addr;
         CTxDestination dest = CNoDestination();
 
         // Try to extract destination, this is not possible in general. Only if the previous
@@ -298,7 +298,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
     for (const CTxOut& txout: tx.vout)
     {
         std::string address;
-        CGuldenAddress addr;
+        CNativeAddress addr;
         CTxDestination dest;
         if (!ExtractDestination(txout, dest) && !txout.IsUnspendable())
         {
@@ -495,7 +495,7 @@ void handleInitWithExistingWallet()
     {
         signalHandler->notifyInitWithExistingWallet();
     }
-    GuldenAppManager::gApp->initialize();
+    AppLifecycleManager::gApp->initialize();
 }
 
 void handleInitWithoutExistingWallet()
@@ -530,7 +530,7 @@ bool UnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phrase, con
     //fixme: (UNITY) (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
     SecureString phraseOnly;
     int phraseBirthNumber = 0;
-    GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), phraseOnly, phraseBirthNumber);
+    AppLifecycleManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), phraseOnly, phraseBirthNumber);
     if (!checkMnemonic(phraseOnly))
     {
         return false;
@@ -542,11 +542,11 @@ bool UnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phrase, con
         phraseBirthNumber = timeToBirthNumber(1441212522L);
 
     //fixme: (UNITY) (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
-    GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
-    GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
-    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
-    GuldenAppManager::gApp->isRecovery = true;
-    GuldenAppManager::gApp->initialize();
+    AppLifecycleManager::gApp->setRecoveryPhrase(phraseOnly);
+    AppLifecycleManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
+    AppLifecycleManager::gApp->setRecoveryPassword(password.c_str());
+    AppLifecycleManager::gApp->isRecovery = true;
+    AppLifecycleManager::gApp->initialize();
 
     return true;
 }
@@ -556,7 +556,7 @@ bool ValidateAndSplitRecoveryPhrase(const std::string & phrase, SecureString& mn
     if (phrase.length() < 16)
         return false;
 
-    GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), mnemonic, birthNumber);
+    AppLifecycleManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), mnemonic, birthNumber);
     return checkMnemonic(mnemonic) && (birthNumber == 0 || Base10ChecksumDecode(birthNumber, nullptr));
 }
 
@@ -580,10 +580,10 @@ bool UnifiedBackend::ContinueWalletFromRecoveryPhrase(const std::string& phrase,
     }
 
     LOCK2(cs_main, pactiveWallet->cs_wallet);
-    GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
-    GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
-    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
-    GuldenAppManager::gApp->isRecovery = true;
+    AppLifecycleManager::gApp->setRecoveryPhrase(phraseOnly);
+    AppLifecycleManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
+    AppLifecycleManager::gApp->setRecoveryPassword(password.c_str());
+    AppLifecycleManager::gApp->isRecovery = true;
 
     CWallet::CreateSeedAndAccountFromPhrase(pactiveWallet);
 
@@ -608,7 +608,7 @@ bool UnifiedBackend::IsValidRecoveryPhrase(const std::string & phrase)
 std::string UnifiedBackend::GenerateGenesisKeys()
 {
     std::string address = GetReceiveAddress();
-    CGuldenAddress addr(address);
+    CNativeAddress addr(address);
     CTxDestination dest = addr.Get();
     CPubKey vchPubKeyDevSubsidy;
     pactiveWallet->GetPubKey(boost::get<CKeyID>(dest), vchPubKeyDevSubsidy);
@@ -620,7 +620,7 @@ std::string UnifiedBackend::GenerateGenesisKeys()
     CPubKey vchPubKey = key.GetPubKey();
     std::string privkey = HexStr<CPrivKey::iterator>(vchPrivKey.begin(), vchPrivKey.end()).c_str();
     std::string pubKey = vchPubKey.GetID().GetHex();
-    std::string witnessKeys = GLOBAL_APP_URIPREFIX"://witnesskeys?keys=" + CGuldenSecret(key).ToString() + strprintf("#%s", GetAdjustedTime());
+    std::string witnessKeys = GLOBAL_APP_URIPREFIX"://witnesskeys?keys=" + CEncodedSecretKey(key).ToString() + strprintf("#%s", GetAdjustedTime());
     
     return "privkey: "+privkey+"\n"+"pubkeyID: "+pubKey+"\n"+"witness: "+witnessKeys+"\n"+"dev subsidy addr: "+address+"\n"+"dev subsidy pubkey: "+devSubsidyPubKey+"\n";
 }
@@ -634,25 +634,25 @@ std::string UnifiedBackend::GenerateRecoveryMnemonic()
     #else
     int64_t birthTime = 0;
     #endif
-    return GuldenAppManager::gApp->composeRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8), birthTime).c_str();
+    return AppLifecycleManager::gApp->composeRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8), birthTime).c_str();
 }
 
 std::string UnifiedBackend::ComposeRecoveryPhrase(const std::string & mnemonic, int64_t birthTime)
 {
-    return std::string(GuldenAppManager::composeRecoveryPhrase(SecureString(mnemonic), birthTime));
+    return std::string(AppLifecycleManager::composeRecoveryPhrase(SecureString(mnemonic), birthTime));
 }
 
 bool UnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri, const std::string& password)
 {
-    CGuldenSecretExt<CExtKey> linkedKey;
+    CEncodedSecretKeyExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
     {
         return false;
     }
-    GuldenAppManager::gApp->setLinkKey(linkedKey);
-    GuldenAppManager::gApp->isLink = true;
-    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
-    GuldenAppManager::gApp->initialize();
+    AppLifecycleManager::gApp->setLinkKey(linkedKey);
+    AppLifecycleManager::gApp->isLink = true;
+    AppLifecycleManager::gApp->setRecoveryPassword(password.c_str());
+    AppLifecycleManager::gApp->initialize();
 
     return true;
 }
@@ -667,16 +667,16 @@ bool UnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linked_uri,
 
     LOCK2(cs_main, pactiveWallet->cs_wallet);
 
-    CGuldenSecretExt<CExtKey> linkedKey;
+    CEncodedSecretKeyExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
     {
         LogPrintf("%s: Failed to parse link URI", __func__);
         return false;
     }
 
-    GuldenAppManager::gApp->setLinkKey(linkedKey);
-    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
-    GuldenAppManager::gApp->isLink = true;
+    AppLifecycleManager::gApp->setLinkKey(linkedKey);
+    AppLifecycleManager::gApp->setRecoveryPassword(password.c_str());
+    AppLifecycleManager::gApp->isLink = true;
 
     CWallet::CreateSeedAndAccountFromLink(pactiveWallet);
 
@@ -701,7 +701,7 @@ bool UnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_uri, c
     }
 
     // Create ext key for new linked account from parsed data
-    CGuldenSecretExt<CExtKey> linkedKey;
+    CEncodedSecretKeyExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
     {
         LogPrintf("ReplaceWalletLinkedFromURI: Failed to parse link URI");
@@ -709,7 +709,7 @@ bool UnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_uri, c
     }
 
     // Ensure we have a valid location to send all the funds
-    CGuldenAddress address(linkedKey.getPayAccount());
+    CNativeAddress address(linkedKey.getPayAccount());
     if (!address.IsValid())
     {
         LogPrintf("ReplaceWalletLinkedFromURI: invalid address %s", linkedKey.getPayAccount().c_str());
@@ -763,9 +763,9 @@ bool UnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_uri, c
         return false;
     }
 
-    GuldenAppManager::gApp->setLinkKey(linkedKey);
-    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
-    GuldenAppManager::gApp->isLink = true;
+    AppLifecycleManager::gApp->setLinkKey(linkedKey);
+    AppLifecycleManager::gApp->setRecoveryPassword(password.c_str());
+    AppLifecycleManager::gApp->isLink = true;
 
     CWallet::CreateSeedAndAccountFromLink(pactiveWallet);
 
@@ -801,7 +801,7 @@ bool UnifiedBackend::EraseWalletSeedsAndAccounts()
 
 bool UnifiedBackend::IsValidLinkURI(const std::string& linked_uri)
 {
-    CGuldenSecretExt<CExtKey> linkedKey;
+    CEncodedSecretKeyExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
         return false;
     return true;
@@ -921,8 +921,8 @@ void UnifiedBackend::TerminateUnityLib()
     {
         work.reset();
         ioctx.stop();
-        GuldenAppManager::gApp->shutdown();
-        GuldenAppManager::gApp->waitForShutDown();
+        AppLifecycleManager::gApp->shutdown();
+        AppLifecycleManager::gApp->waitForShutDown();
         run_thread.join();
     }).detach();
 }
@@ -972,7 +972,7 @@ std::string UnifiedBackend::GetReceiveAddress()
         CKeyID keyID = pubKey.GetID();
         receiveAddress->ReturnKey();
         delete receiveAddress;
-        return CGuldenAddress(keyID).ToString();
+        return CNativeAddress(keyID).ToString();
     }
     else
     {
@@ -999,7 +999,7 @@ std::string UnifiedBackend::GetRecoveryPhrase()
         std::set<SecureString> allPhrases;
         for (const auto& seedIter : pactiveWallet->mapSeeds)
         {
-            return GuldenAppManager::composeRecoveryPhrase(seedIter.second->getMnemonic(), birthTime).c_str();
+            return AppLifecycleManager::composeRecoveryPhrase(seedIter.second->getMnemonic(), birthTime).c_str();
         }
     }
     return "";
@@ -1023,7 +1023,7 @@ bool UnifiedBackend::IsMnemonicCorrect(const std::string & phrase)
     SecureString mnemonicPhrase;
     int birthNumber;
 
-    GuldenAppManager::splitRecoveryPhraseAndBirth(SecureString(phrase), mnemonicPhrase, birthNumber);
+    AppLifecycleManager::splitRecoveryPhraseAndBirth(SecureString(phrase), mnemonicPhrase, birthNumber);
 
     LOCK2(cs_main, pactiveWallet->cs_wallet);
 
@@ -1125,7 +1125,7 @@ UriRecipient UnifiedBackend::IsValidRecipient(const UriRecord & request)
     if (lowerCaseScheme != "guldencoin" && lowerCaseScheme != "gulden")
         return UriRecipient(false, "", "", "", 0);
 
-    if (!CGuldenAddress(request.path).IsValid())
+    if (!CNativeAddress(request.path).IsValid())
         return UriRecipient(false, "", "", "", 0);
 
     std::string address = request.path;
@@ -1159,7 +1159,7 @@ int64_t UnifiedBackend::feeForRecipient(const UriRecipient & request)
 
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
 
-    CGuldenAddress address(request.address);
+    CNativeAddress address(request.address);
     if (!address.IsValid())
     {
         LogPrintf("feeForRecipient: invalid address %s", request.address.c_str());
@@ -1200,7 +1200,7 @@ PaymentResultStatus UnifiedBackend::performPaymentToRecipient(const UriRecipient
 
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
 
-    CGuldenAddress address(request.address);
+    CNativeAddress address(request.address);
     if (!address.IsValid())
     {
         LogPrintf("performPaymentToRecipient: invalid address %s", request.address.c_str());

@@ -97,18 +97,18 @@ void RunTest(const TestVector &test) {
         pubkey.Encode(data);
 
         // Test private key
-        CGuldenExtKey b58key; b58key.SetKey(key);
+        CEncodedSecretExt b58key; b58key.SetKey(key);
         BOOST_CHECK(b58key.ToString() == derive.prv);
 
-        CGuldenExtKey b58keyDecodeCheck(derive.prv);
+        CEncodedSecretExt b58keyDecodeCheck(derive.prv);
         CExtKey checkKey = b58keyDecodeCheck.GetKey();
         assert(checkKey == key); //ensure a base58 decoded key also matches
 
         // Test public key
-        CGuldenExtPubKey b58pubkey; b58pubkey.SetKey(pubkey);
+        CEncodedSecretExtPubKey b58pubkey; b58pubkey.SetKey(pubkey);
         BOOST_CHECK(b58pubkey.ToString() == derive.pub);
 
-        CGuldenExtPubKey b58PubkeyDecodeCheck(derive.pub);
+        CEncodedSecretExtPubKey b58PubkeyDecodeCheck(derive.pub);
         CExtPubKey checkPubKey = b58PubkeyDecodeCheck.GetKey();
         assert(checkPubKey == pubkey); //ensure a base58 decoded pubkey also matches
 

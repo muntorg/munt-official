@@ -40,7 +40,7 @@ bool WinShutdownMonitor::nativeEventFilter(const QByteArray &eventType, void *pM
                // Initiate a client shutdown after receiving a WM_QUERYENDSESSION and block
                // Windows session end until we have finished client shutdown.
                LogPrintf("%s: Handling WM_QUERYENDSESSION.\n", __func__);
-               GuldenAppManager::gApp->shutdown();
+               AppLifecycleManager::gApp->shutdown();
                *pnResult = FALSE;
                return true;
            }

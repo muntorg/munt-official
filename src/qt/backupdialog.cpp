@@ -53,7 +53,7 @@ void BackupDialog::showBackupPhrase()
         std::set<SecureString> allPhrases;
         for (const auto& seedIter : pactiveWallet->mapSeeds)
         {
-            SecureString phrase = GuldenAppManager::composeRecoveryPhrase(seedIter.second->getMnemonic(), birthTime);
+            SecureString phrase = AppLifecycleManager::composeRecoveryPhrase(seedIter.second->getMnemonic(), birthTime);
             allPhrases.insert(phrase);
         }
 

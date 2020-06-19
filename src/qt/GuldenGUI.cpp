@@ -395,7 +395,7 @@ void GUI::requestEmptyWitness()
                                 LogPrintf("%s", strErrorMessage.c_str());
                                 return;
                             }
-                            std::string sDestIn = CGuldenAddress(destIn).ToString();
+                            std::string sDestIn = CNativeAddress(destIn).ToString();
                         }
                     }
                 }
@@ -1464,7 +1464,7 @@ void GUI::updateAccount(CAccount* account)
         if (receiveAddress->GetReservedKey(pubKey))
         {
             CKeyID keyID = pubKey.GetID();
-            walletFrame->currentWalletView()->miningDialogPage->updateAddress(QString::fromStdString(CGuldenAddress(keyID).ToString()));
+            walletFrame->currentWalletView()->miningDialogPage->updateAddress(QString::fromStdString(CNativeAddress(keyID).ToString()));
         }
         else
         {
@@ -1485,7 +1485,7 @@ void GUI::updateAccount(CAccount* account)
         if (receiveAddress->GetReservedKey(pubKey))
         {
             CKeyID keyID = pubKey.GetID();
-            walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( QString::fromStdString(CGuldenAddress(keyID).ToString()) );
+            walletFrame->currentWalletView()->receiveCoinsPage->updateAddress( QString::fromStdString(CNativeAddress(keyID).ToString()) );
         }
         else
         {
