@@ -55,23 +55,30 @@ function createWindow() {
     },
     icon: path.join(__static, "icon.png")
   });
+  
+  var menuTemplate = [
+    {
+      label: 'File',
+      submenu: [
+          { role:'quit' }
+      ]
+    }
+  ];
 
-  var menu = Menu.buildFromTemplate(
-    [
+  if (isDevelopment) {
+    console.log("remove debug");
+    menuTemplate.push(
       {
-        label: 'File',
-        submenu: [
-            { role:'quit' }
-        ]
-      },
-      {
-        label: 'View',
-        visible: isDevelopment,
+        label: 'Debug',
         submenu: [
           { role: 'toggleDevTools' }
         ]
-      }   
-  ])
+      }
+    );
+  }
+
+  var menu = Menu.buildFromTemplate(menuTemplate);
+
   Menu.setApplicationMenu(menu); 
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
