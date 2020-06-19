@@ -17,8 +17,8 @@
   padding: 0 10px 0 10px;
   font-size: .9em;
   line-height: 38px;
+  height: 38px;
   border: 1px solid #ccc;
-  
 }
 
 .copy {
