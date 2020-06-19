@@ -5,7 +5,6 @@
 yarn
 ```
 
-```
 ### Copy os specific unity lib to src/unity folder
 ```
 yarn libunity:copy
