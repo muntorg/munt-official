@@ -7,10 +7,15 @@ import i18n from "./i18n";
 import "./components";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faCog, faLongArrowLeft, faLongArrowRight  } from "@fortawesome/pro-light-svg-icons";
+import { faCog, faCopy,faLongArrowLeft, faLongArrowRight  } from "@fortawesome/pro-light-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add([faCog, faLongArrowLeft, faLongArrowRight]);
+library.add([
+  faCog,
+  faCopy,
+  faLongArrowLeft,
+  faLongArrowRight
+]);
 
 Vue.component('fa-icon', FontAwesomeIcon);
 
