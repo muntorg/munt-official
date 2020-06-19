@@ -9,7 +9,8 @@
   },
   "setup": {
     "step1": {
-      "header": "This is your recovery phrase, write it down somewhere safe, don't lose it, don't share it, don't store it where hackers can get it. Lose phrase = Lose novo"
+      "header": "Important",
+      "content": "This is your recovery phrase, write it down somewhere safe, don't lose it, don't share it, don't store it where hackers can get it. Lose phrase = Lose novo"
     },
     "step2": {
       "header": "Enter recovery phrase"

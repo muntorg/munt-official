@@ -4,6 +4,7 @@
       <!-- step 1: show recovery phrase -->
       <div v-if="current === 1">
         <h2>{{ $t("setup.step1.header") }}</h2>
+        <p>{{ $t("setup.step1.content") }}</p>
         <div class="phrase">
           {{ recoveryPhrase }}
         </div>
@@ -158,11 +159,11 @@ export default {
 }
 
 .phrase {
-  padding: 20px;
-  margin: 0 0 40px 0;
-  font-size: 1.4em;
+  padding: 10px;
+  font-size: 1.05em;
   font-weight: 500;
   text-align: center;
+  word-spacing: 4px;
   background-color: #f5f5f5;
 }
 

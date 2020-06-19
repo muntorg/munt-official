@@ -39,7 +39,9 @@
         </span>
       </div>
       <div class="app-main wrapper">
-        <router-view />
+        <div class="holder">
+          <router-view />
+        </div>
       </div>
     </div>
   </div>
@@ -194,10 +196,6 @@ export default {
  
 }
 
-.top-menu a:hover {
-    background-color: #222;
-}
-
 .top-menu a,
 .top-menu a:active,
 .top-menu a:visited
@@ -210,11 +208,21 @@ export default {
   color: #fff;
 }
 
+.top-menu a:hover {
+    background-color: #222;
+}
+
 .app-main {
   position: absolute;
   top: var(--top-height);
   height: calc(100% - var(--top-height));
   width: 100%;
+}
+
+.holder {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 800px;
 }
 
 .app-logo {

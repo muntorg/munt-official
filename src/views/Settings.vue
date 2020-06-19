@@ -51,6 +51,7 @@
 
 .arrow {
     float: right;
+    margin: 6px 0 0 0;
     color: #fff;
 }
 

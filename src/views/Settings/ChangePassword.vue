@@ -142,7 +142,6 @@ export default {
     background-color: #f5f5f5;
 }
 
-
 .steps-buttons {
   position: absolute;
   bottom: 20px;
