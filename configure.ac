@@ -272,7 +272,7 @@ if test "x$strong_warnings" = "xyes"; then
 fi
 CPPFLAGS="$CPPFLAGS -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS"
 
-AC_ARG_WITH([util],
+AC_ARG_WITH([utils],
   [AS_HELP_STRING([--with-utils],
   [build ]_CLI_NAME[ ]_TX_NAME[ binaries (default=yes)])],
   [build_utils=$withval],
@@ -1374,6 +1374,11 @@ echo "  CXX           = $CXX"
 echo "  CXXFLAGS      = $CXXFLAGS"
 echo "  LDFLAGS       = $LDFLAGS"
 echo "  ARFLAGS       = $ARFLAGS"
+echo
+echo " Binaries:"
+echo "     daemon:  $build_daemon"
+echo "     cli:     $build_utils"
+echo "     tx:      $build_utils"
 echo
 echo " Libraries:"
 echo "     jni:     $build_libs_jni"
