@@ -16,7 +16,7 @@
       "header": "Enter recovery phrase"
     },
     "step3": {
-      "header": "Choose your password",
+      "header": "Choose a password of at least 6 characters",
       "password": "Password",
       "repeat_password": "Repeat password"
     }

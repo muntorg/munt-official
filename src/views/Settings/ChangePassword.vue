@@ -25,7 +25,7 @@
         <div v-else class="password">
           <div class="password-row">
             <h4>{{ $t("setup.step3.password") }}:</h4>
-            <input ref="password" type="password" v-model="password1" placeholder="Choose a password of at least 6 characters" />
+            <input ref="password" type="password" v-model="password1" />
           </div>
           <div class="password-row">
             <h4>{{ $t("setup.step3.repeat_password") }}:</h4>
