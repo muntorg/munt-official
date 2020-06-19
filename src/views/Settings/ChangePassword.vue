@@ -29,7 +29,7 @@
           </div>
           <div class="password-row">
             <h4>{{ $t("setup.step3.repeat_password") }}:</h4>
-            <input type="password" v-model="password2" @keydown="onPasswordRepeatKeyDown" placeholder="Repeat your password" />
+            <input type="password" v-model="password2" @keydown="onPasswordRepeatKeyDown" />
           </div>
         </div>
     </div>
