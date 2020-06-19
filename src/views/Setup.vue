@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import NovoBackend from "../libnovo/NovoBackend";
+import UnityBackend from "../unity/UnityBackend";
 
 export default {
   data() {
@@ -75,7 +75,7 @@ export default {
     };
   },
   async mounted() {
-    this.recoveryPhrase = await NovoBackend.GenerateRecoveryMnemonicAsync();
+    this.recoveryPhrase = await UnityBackend.GenerateRecoveryMnemonicAsync();
   },
   watch: {
     isRecoveryPhraseCorrect() {
@@ -129,7 +129,7 @@ export default {
           break;
         case 3:
           if (
-            NovoBackend.InitWalletFromRecoveryPhrase(
+            UnityBackend.InitWalletFromRecoveryPhrase(
               this.recoveryPhrase,
               this.password1
             )

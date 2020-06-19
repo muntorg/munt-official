@@ -5,9 +5,9 @@
 yarn
 ```
 
-### Copy osx specific Novo unity lib to libnovo folder
+### Copy os specific unity lib to src/unity folder
 ```
-yarn libnovo:copy
+yarn libunity:copy
 
 ### Compiles and hot-reloads for development
 ```

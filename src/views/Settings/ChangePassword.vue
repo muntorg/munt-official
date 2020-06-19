@@ -53,7 +53,7 @@
 
 
 <script>
-import NovoBackend from "../../libnovo/NovoBackend";
+import UnityBackend from "../../unity/UnityBackend";
 
 export default {
   data() {
@@ -95,7 +95,7 @@ export default {
           this.validatePassword();
           break;
         case 2:
-          if (NovoBackend.ChangePassword(this.passwordold, this.password2))
+          if (UnityBackend.ChangePassword(this.passwordold, this.password2))
           {
             this.$router.push({ name: "wallet" });
           }
@@ -112,9 +112,9 @@ export default {
         this.nextStep();
     },
     validatePassword() {
-      if (NovoBackend.UnlockWallet(this.passwordold))
+      if (UnityBackend.UnlockWallet(this.passwordold))
       {
-        NovoBackend.LockWallet();
+        UnityBackend.LockWallet();
         this.current++;
         setTimeout(() => {
           this.$refs.password.focus();

@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import NovoBackend from "../../libnovo/NovoBackend";
+import UnityBackend from "../../unity/UnityBackend";
 
 export default {
   data() {
@@ -72,10 +72,10 @@ export default {
       this.validatePassword();
     },
     validatePassword() {
-      if (NovoBackend.UnlockWallet(this.password))
+      if (UnityBackend.UnlockWallet(this.password))
       {
-        this.recoveryPhrase = NovoBackend.GetRecoveryPhrase();
-        NovoBackend.LockWallet();
+        this.recoveryPhrase = UnityBackend.GetRecoveryPhrase();
+        UnityBackend.LockWallet();
         this.current++;
       }
       else

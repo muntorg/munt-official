@@ -11,8 +11,8 @@
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "libnovo:copy": "node ./libnovo/copy.js",
-    "dev": "yarn libnovo:copy && yarn electron:serve"
+    "libunity:copy": "node ./libunity/copy.js",
+    "libunity:generate": "node ./libunity/generate.js"
   },
   "main": "background.js",
   "dependencies": {

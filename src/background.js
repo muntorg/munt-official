@@ -11,7 +11,7 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 import path from "path";
 import fs from "fs";
 
-import LibNovo from "./libnovo";
+import LibUnity from "./unity/LibUnity";
 import store, { AppStatus } from "./store";
 
 import contextMenu from "electron-context-menu";
@@ -19,7 +19,7 @@ import contextMenu from "electron-context-menu";
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
-let libNovo = new LibNovo();
+let libUnity = new LibUnity();
 
 /* TODO: refactor into function and add option to libgulden to remove existing wallet folder */
 let args = process.argv.slice(2);
@@ -102,10 +102,10 @@ function createWindow() {
 
 app.on("will-quit", event => {
   console.log("app.on:will-quit");
-  if (libNovo === null || libNovo.isTerminated) return;
+  if (libUnity === null || libUnity.isTerminated) return;
   store.dispatch({ type: "SET_STATUS", status: AppStatus.shutdown });
   event.preventDefault();
-  libNovo.TerminateUnityLib();
+  libUnity.TerminateUnityLib();
 });
 
 // Quit when all windows are closed.
@@ -115,9 +115,9 @@ app.on("window-all-closed", event => {
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
     store.dispatch({ type: "SET_STATUS", status: AppStatus.shutdown });
-    if (libNovo === null || libNovo.isTerminated) return;
+    if (libUnity === null || libUnity.isTerminated) return;
     event.preventDefault();
-    libNovo.TerminateUnityLib();
+    libUnity.TerminateUnityLib();
   }
 });
 
@@ -148,7 +148,7 @@ app.on("ready", async () => {
   }
 
   store.dispatch({ type: "SET_WALLET_VERSION", version: app.getVersion() });
-  libNovo.Initialize();
+  libUnity.Initialize();
 
   createWindow();
 });

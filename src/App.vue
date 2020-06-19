@@ -50,7 +50,7 @@
 <script>
 import { mapState } from "vuex";
 import { AppStatus } from "./store";
-import NovoBackend from "./libnovo/NovoBackend";
+import UnityBackend from "./unity/UnityBackend";
 
 let splashTimeout = 2500;
 let synchronizeTimeout = null;
@@ -108,7 +108,7 @@ export default {
     synchronize() {
       clearTimeout(synchronizeTimeout);
 
-      let progress = NovoBackend.GetUnifiedProgress();
+      let progress = UnityBackend.GetUnifiedProgress();
       progress = parseInt(parseFloat(progress) * 100);
 
       if (this.progress < progress) {
