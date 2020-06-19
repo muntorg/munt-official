@@ -1,9 +1,14 @@
 <template>
   <div id="wallet">
     <div class="section">
-      <h4>{{ $t("balance.your_address") }}</h4> 
-      <div class="address" @click="copyAddress">{{ receiveAddress }} <span class="copy"><fa-icon :icon="['fal', 'copy']" /></span></div>
-      <button class="btn" @click="receiveNovo">{{ $t("wallet.receive_aquired_novo") }}</button>
+      <h4>{{ $t("balance.your_address") }}</h4>
+      <div class="address" @click="copyAddress">
+        {{ receiveAddress }}
+        <span class="copy"><fa-icon :icon="['fal', 'copy']"/></span>
+      </div>
+      <button class="btn" @click="receiveNovo">
+        {{ $t("wallet.receive_aquired_novo") }}
+      </button>
     </div>
   </div>
 </template>
@@ -15,7 +20,7 @@
   width: 100%;
   margin: 0 0 20px 0;
   padding: 0 10px 0 10px;
-  font-size: .9em;
+  font-size: 0.9em;
   line-height: 38px;
   height: 38px;
   border: 1px solid #ccc;
@@ -31,7 +36,7 @@
 }
 
 .copy:hover {
-    background-color: #f5f5f5;
+  background-color: #f5f5f5;
 }
 .address:active,
 .copy:active {
@@ -63,7 +68,9 @@ export default {
     copyAddress() {
       this.copyActive = true;
       clipboard.writeText(this.receiveAddress);
-      setTimeout(() => { this.copyActive = false}, 500);
+      setTimeout(() => {
+        this.copyActive = false;
+      }, 500);
     }
   }
 };

@@ -32,13 +32,17 @@ const routes = [
     path: "/settings/view-recovery-phrase",
     name: "view-recovery-phrase",
     component: () =>
-      import(/* webpackChunkName: "view-recovery-phrase" */ "./../views/Settings/ViewRecoveryPhrase.vue")
+      import(
+        /* webpackChunkName: "view-recovery-phrase" */ "./../views/Settings/ViewRecoveryPhrase.vue"
+      )
   },
   {
     path: "/settings/change-password",
     name: "change-password",
     component: () =>
-    import(/* webpackChunkName: "change-password" */ "./../views/Settings/ChangePassword.vue")
+      import(
+        /* webpackChunkName: "change-password" */ "./../views/Settings/ChangePassword.vue"
+      )
   }
 ];
 

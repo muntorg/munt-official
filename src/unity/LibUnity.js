@@ -76,12 +76,12 @@ class LibUnity {
 
     signalHandler.notifyCoreReady = function() {
       console.log("received: notifyCoreReady");
-     
+
       store.dispatch({
         type: "SET_RECEIVE_ADDRESS",
         receiveAddress: backend.GetReceiveAddress()
       });
-      
+
       store.dispatch({
         type: "SET_MUTATIONS",
         mutations: backend.getMutationHistory()
@@ -197,7 +197,10 @@ class LibUnity {
     });
 
     ipc.answerRenderer("ChangePassword", async data => {
-      let result = this.backend.ChangePassword(data.oldPassword, data.newPassword);
+      let result = this.backend.ChangePassword(
+        data.oldPassword,
+        data.newPassword
+      );
       this._handleIpcInternal("ChangePassword", result);
       return result;
     });
@@ -209,31 +212,46 @@ class LibUnity {
     });
 
     ipc.answerRenderer("ComposeRecoveryPhrase", async data => {
-      let result = this.backend.ComposeRecoveryPhrase(data.mnemonic, data.birthTime);
+      let result = this.backend.ComposeRecoveryPhrase(
+        data.mnemonic,
+        data.birthTime
+      );
       this._handleIpcInternal("ComposeRecoveryPhrase", result);
       return result;
     });
 
     ipc.on("ContinueWalletFromRecoveryPhrase", (event, phrase, password) => {
-      let result = this.backend.ContinueWalletFromRecoveryPhrase(phrase, password);
+      let result = this.backend.ContinueWalletFromRecoveryPhrase(
+        phrase,
+        password
+      );
       this._handleIpcInternal("ContinueWalletFromRecoveryPhrase", result);
       event.returnValue = result;
     });
 
     ipc.answerRenderer("ContinueWalletFromRecoveryPhrase", async data => {
-      let result = this.backend.ContinueWalletFromRecoveryPhrase(data.phrase, data.password);
+      let result = this.backend.ContinueWalletFromRecoveryPhrase(
+        data.phrase,
+        data.password
+      );
       this._handleIpcInternal("ContinueWalletFromRecoveryPhrase", result);
       return result;
     });
 
     ipc.on("ContinueWalletLinkedFromURI", (event, linked_uri, password) => {
-      let result = this.backend.ContinueWalletLinkedFromURI(linked_uri, password);
+      let result = this.backend.ContinueWalletLinkedFromURI(
+        linked_uri,
+        password
+      );
       this._handleIpcInternal("ContinueWalletLinkedFromURI", result);
       event.returnValue = result;
     });
 
     ipc.answerRenderer("ContinueWalletLinkedFromURI", async data => {
-      let result = this.backend.ContinueWalletLinkedFromURI(data.linked_uri, data.password);
+      let result = this.backend.ContinueWalletLinkedFromURI(
+        data.linked_uri,
+        data.password
+      );
       this._handleIpcInternal("ContinueWalletLinkedFromURI", result);
       return result;
     });
@@ -461,7 +479,10 @@ class LibUnity {
     });
 
     ipc.answerRenderer("InitWalletFromRecoveryPhrase", async data => {
-      let result = this.backend.InitWalletFromRecoveryPhrase(data.phrase, data.password);
+      let result = this.backend.InitWalletFromRecoveryPhrase(
+        data.phrase,
+        data.password
+      );
       this._handleIpcInternal("InitWalletFromRecoveryPhrase", result);
       return result;
     });
@@ -539,13 +560,19 @@ class LibUnity {
     });
 
     ipc.on("PerformPaymentToRecipient", (event, request, substract_fee) => {
-      let result = this.backend.performPaymentToRecipient(request, substract_fee);
+      let result = this.backend.performPaymentToRecipient(
+        request,
+        substract_fee
+      );
       this._handleIpcInternal("PerformPaymentToRecipient", result);
       event.returnValue = result;
     });
 
     ipc.answerRenderer("PerformPaymentToRecipient", async data => {
-      let result = this.backend.performPaymentToRecipient(data.request, data.substract_fee);
+      let result = this.backend.performPaymentToRecipient(
+        data.request,
+        data.substract_fee
+      );
       this._handleIpcInternal("PerformPaymentToRecipient", result);
       return result;
     });
@@ -569,7 +596,10 @@ class LibUnity {
     });
 
     ipc.answerRenderer("QRImageFromString", async data => {
-      let result = this.backend.QRImageFromString(data.qr_string, data.width_hint);
+      let result = this.backend.QRImageFromString(
+        data.qr_string,
+        data.width_hint
+      );
       this._handleIpcInternal("QRImageFromString", result);
       return result;
     });
@@ -587,13 +617,19 @@ class LibUnity {
     });
 
     ipc.on("ReplaceWalletLinkedFromURI", (event, linked_uri, password) => {
-      let result = this.backend.ReplaceWalletLinkedFromURI(linked_uri, password);
+      let result = this.backend.ReplaceWalletLinkedFromURI(
+        linked_uri,
+        password
+      );
       this._handleIpcInternal("ReplaceWalletLinkedFromURI", result);
       event.returnValue = result;
     });
 
     ipc.answerRenderer("ReplaceWalletLinkedFromURI", async data => {
-      let result = this.backend.ReplaceWalletLinkedFromURI(data.linked_uri, data.password);
+      let result = this.backend.ReplaceWalletLinkedFromURI(
+        data.linked_uri,
+        data.password
+      );
       this._handleIpcInternal("ReplaceWalletLinkedFromURI", result);
       return result;
     });
@@ -645,7 +681,7 @@ class LibUnity {
       this._handleIpcInternal("UnregisterMonitorListener", result);
       return result;
     });
-  /* inject:code */
+    /* inject:code */
   }
 }
 

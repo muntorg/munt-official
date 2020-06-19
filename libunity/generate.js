@@ -10,10 +10,7 @@ const skipFunctions = [
 ];
 
 let inputFile = path.join(__dirname, "unifiedbackend_doc.js");
-let backendFile = path.join(
-  __dirname,
-  "/../src/unity/UnityBackend.js"
-);
+let backendFile = path.join(__dirname, "/../src/unity/UnityBackend.js");
 let libFile = path.join(__dirname, "/../src/unity/LibUnity.js");
 
 let dataToParse = fs.readFileSync(inputFile, "utf8").split("\n");
@@ -176,12 +173,7 @@ for (let i = 0; i < allFunctions.length; i++) {
     tabs + 1
   );
   txtLib = addLine(txtLib, `return result;`, tabs + 1);
-  txtLib = addLine(
-    txtLib,
-    `});`,
-    tabs,
-    i == allFunctions.length - 1 ? 1 : 2
-  );
+  txtLib = addLine(txtLib, `});`, tabs, i == allFunctions.length - 1 ? 1 : 2);
 }
 
 let replace = "";

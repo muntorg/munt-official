@@ -1,4 +1,5 @@
 "use strict";
+/* global __static */
 
 import { app, protocol, Menu, BrowserWindow, shell } from "electron";
 import {
@@ -14,8 +15,6 @@ import fs from "fs";
 import LibUnity from "./unity/LibUnity";
 import store, { AppStatus } from "./store";
 
-import contextMenu from "electron-context-menu";
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
@@ -24,9 +23,11 @@ let libUnity = new LibUnity();
 /* TODO: refactor into function and add option to libgulden to remove existing wallet folder */
 let args = process.argv.slice(2);
 for (var i = 0; i < args.length; i++) {
-  switch(args[i].toLowerCase()) {
+  switch (args[i].toLowerCase()) {
     case "new-wallet":
-      fs.rmdirSync(path.join(app.getPath("userData"), "wallet"), { recursive: true });
+      fs.rmdirSync(path.join(app.getPath("userData"), "wallet"), {
+        recursive: true
+      });
       break;
     default:
       console.error(`unknown argument: ${args[i]}`);
@@ -55,31 +56,25 @@ function createWindow() {
     },
     icon: path.join(__static, "icon.png")
   });
-  
+
   var menuTemplate = [
     {
-      label: 'File',
-      submenu: [
-          { role:'quit' }
-      ]
+      label: "File",
+      submenu: [{ role: "quit" }]
     }
   ];
 
   if (isDevelopment) {
     console.log("remove debug");
-    menuTemplate.push(
-      {
-        label: 'Debug',
-        submenu: [
-          { role: 'toggleDevTools' }
-        ]
-      }
-    );
+    menuTemplate.push({
+      label: "Debug",
+      submenu: [{ role: "toggleDevTools" }]
+    });
   }
 
   var menu = Menu.buildFromTemplate(menuTemplate);
 
-  Menu.setApplicationMenu(menu); 
+  Menu.setApplicationMenu(menu);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -101,10 +96,10 @@ function createWindow() {
   });
 
   // Force external hrefs to open in external browser
-  win.webContents.on('new-window', function(e, url) {
+  win.webContents.on("new-window", function(e, url) {
     e.preventDefault();
     shell.openExternal(url);
-  })
+  });
 }
 
 app.on("will-quit", event => {

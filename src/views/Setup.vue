@@ -14,18 +14,55 @@
       <div v-else-if="current === 2">
         <h2>{{ $t("setup.step2.header") }}</h2>
         <div class="phrase-repeat">
-          <phrase-repeat-input ref="firstWord" :word="recoveryPhraseWords[0]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[1]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[2]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[3]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[4]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[5]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[6]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[7]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[8]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[9]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[10]" @match-changed="onMatchChanged" />
-          <phrase-repeat-input :word="recoveryPhraseWords[11]" @match-changed="onMatchChanged" />
+          <phrase-repeat-input
+            ref="firstWord"
+            :word="recoveryPhraseWords[0]"
+            @match-changed="onMatchChanged"
+          />
+          <phrase-repeat-input
+            :word="recoveryPhraseWords[1]"
+            @match-changed="onMatchChanged"
+          />
+          <phrase-repeat-input
+            :word="recoveryPhraseWords[2]"
+            @match-changed="onMatchChanged"
+          />
+          <phrase-repeat-input
+            :word="recoveryPhraseWords[3]"
+            @match-changed="onMatchChanged"
+          />
+          <phrase-repeat-input
+            :word="recoveryPhraseWords[4]"
+            @match-changed="onMatchChanged"
+          />
+          <phrase-repeat-input
+            :word="recoveryPhraseWords[5]"
+            @match-changed="onMatchChanged"
+          />
+          <phrase-repeat-input
+            :word="recoveryPhraseWords[6]"
+            @match-changed="onMatchChanged"
+          />
+          <phrase-repeat-input
+            :word="recoveryPhraseWords[7]"
+            @match-changed="onMatchChanged"
+          />
+          <phrase-repeat-input
+            :word="recoveryPhraseWords[8]"
+            @match-changed="onMatchChanged"
+          />
+          <phrase-repeat-input
+            :word="recoveryPhraseWords[9]"
+            @match-changed="onMatchChanged"
+          />
+          <phrase-repeat-input
+            :word="recoveryPhraseWords[10]"
+            @match-changed="onMatchChanged"
+          />
+          <phrase-repeat-input
+            :word="recoveryPhraseWords[11]"
+            @match-changed="onMatchChanged"
+          />
         </div>
       </div>
 
@@ -39,13 +76,18 @@
           </div>
           <div class="password-row">
             <h4>{{ $t("setup.step3.repeat_password") }}:</h4>
-            <input type="password" v-model="password2" @keydown="onPasswordRepeatKeyDown" />
+            <input
+              type="password"
+              v-model="password2"
+              @keydown="onPasswordRepeatKeyDown"
+            />
           </div>
         </div>
       </div>
     </div>
     <div class="steps-buttons wrapper">
-      <button class="btn"
+      <button
+        class="btn"
         v-if="current !== 2"
         @click="nextStep"
         :disabled="isNextDisabled()"
@@ -79,8 +121,7 @@ export default {
   },
   watch: {
     isRecoveryPhraseCorrect() {
-      if (this.isRecoveryPhraseCorrect)
-        this.nextStep();
+      if (this.isRecoveryPhraseCorrect) this.nextStep();
     }
   },
   computed: {
@@ -98,7 +139,8 @@ export default {
       if (
         this.password2 === null ||
         this.password2.length < this.password1.length
-      ) return false;
+      )
+        return false;
 
       return this.password1 === this.password2;
     }
@@ -141,8 +183,7 @@ export default {
       this.current++;
     },
     onPasswordRepeatKeyDown() {
-      if (event.keyCode === 13 && this.passwordsValidated)
-        this.nextStep();
+      if (event.keyCode === 13 && this.passwordsValidated) this.nextStep();
     },
     onMatchChanged(match) {
       this.matchingWords += match ? 1 : -1;

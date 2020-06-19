@@ -1,23 +1,28 @@
 <template>
   <div id="setup-container">
-    
     <div class="section">
       <div class="back">
         <router-link :to="{ name: current === 1 ? 'settings' : 'wallet' }">
-            <fa-icon :icon="['fal', 'long-arrow-left']" />
-            <span> Back</span>
+          <fa-icon :icon="['fal', 'long-arrow-left']" />
+          <span> Back</span>
         </router-link>
       </div>
       <h2>
         <span v-if="current === 1">{{ "Enter your password" }}</span>
         <span v-else>{{ $t("setup.step1.header") }}</span>
       </h2>
-    
+
       <!-- step 1: Enter password -->
       <div class="password" v-if="current === 1">
         <div class="password-row">
           <h4>{{ $t("setup.step3.password") }}:</h4>
-          <input ref="password" type="password" v-model="password" @keydown="onPasswordKeyDown" :class="{ error: isPasswordInvalid }" />
+          <input
+            ref="password"
+            type="password"
+            v-model="password"
+            @keydown="onPasswordKeyDown"
+            :class="{ error: isPasswordInvalid }"
+          />
         </div>
       </div>
 
@@ -28,7 +33,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="steps-buttons wrapper">
       <button class="btn" v-if="current === 1" @click="nextStep">
         {{ $t("buttons.Next") }}
@@ -72,14 +77,11 @@ export default {
       this.validatePassword();
     },
     validatePassword() {
-      if (UnityBackend.UnlockWallet(this.password))
-      {
+      if (UnityBackend.UnlockWallet(this.password)) {
         this.recoveryPhrase = UnityBackend.GetRecoveryPhrase();
         UnityBackend.LockWallet();
         this.current++;
-      }
-      else
-      {
+      } else {
         this.isPasswordInvalid = true;
       }
     }
@@ -89,15 +91,15 @@ export default {
 
 <style lang="less" scoped>
 .back a {
-    padding: 4px 8px;
-    margin: 0 0 0 -8px;
+  padding: 4px 8px;
+  margin: 0 0 0 -8px;
 }
 .back {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .back a:hover {
-    background-color: #f5f5f5;
+  background-color: #f5f5f5;
 }
 
 .steps-buttons {
@@ -149,5 +151,4 @@ input:focus.error {
   border-color: var(--error-color, #dd3333);
   background: var(--error-color, #dd3333);
 }
-
 </style>

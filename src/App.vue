@@ -193,23 +193,21 @@ export default {
 .top-menu {
   float: right;
   margin-right: -15px;
- 
 }
 
 .top-menu a,
 .top-menu a:active,
-.top-menu a:visited
-{
+.top-menu a:visited {
   display: inline-block;
   padding: 0 10px 0 10px;
-  font-size: .9em;
+  font-size: 0.9em;
   font-weight: 400;
   line-height: 32px;
   color: #fff;
 }
 
 .top-menu a:hover {
-    background-color: #222;
+  background-color: #222;
 }
 
 .app-main {
@@ -230,8 +228,7 @@ export default {
   margin-top: 20px;
   width: 22px;
   height: 22px;
-  background: url("./img/logo.svg"),
-  linear-gradient(transparent, transparent);
+  background: url("./img/logo.svg"), linear-gradient(transparent, transparent);
 }
 
 .logo-outer {
@@ -250,8 +247,8 @@ export default {
 .logo-inner {
   width: 64px;
   height: 64px;
-  background: url('./img/logo.svg');
-	background-size: cover;
+  background: url("./img/logo.svg");
+  background-size: cover;
 }
 
 .app-balance {
