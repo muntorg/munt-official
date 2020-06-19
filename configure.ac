@@ -273,7 +273,7 @@ fi
 CPPFLAGS="$CPPFLAGS -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS"
 
 AC_ARG_WITH([util],
-  [AS_HELP_STRING([--with-util],
+  [AS_HELP_STRING([--with-utils],
   [build ]_CLI_NAME[ ]_TX_NAME[ binaries (default=yes)])],
   [build_utils=$withval],
   [build_utils=yes])
