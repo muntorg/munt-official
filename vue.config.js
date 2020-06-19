@@ -9,7 +9,6 @@ module.exports = {
       mainProcessArgs: [],
       builderOptions: {
         appId: "com.novocurrency.app",
-        productName: "NovoCurrency Wallet",
         extraFiles: []
       }
     },
