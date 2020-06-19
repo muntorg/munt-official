@@ -136,8 +136,8 @@ function guldenUnitySetup()
     var basepath = app.getPath("userData");
 
     libnovo = require('./libnovo_unity_node_js')
-    novobackend = new libnovo.NJSGuldenUnifiedBackend
-    signalhandler = new libnovo.NJSGuldenUnifiedFrontend();
+    novobackend = new libnovo.NJSUnifiedBackend
+    signalhandler = new libnovo.NJSUnifiedFrontend();
 
     // Receive signals from the core and marshall them as needed to the main window
     signalhandler.notifyCoreReady = function() {

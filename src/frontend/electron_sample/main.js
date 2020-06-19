@@ -63,9 +63,9 @@ function createWindow () {
 function guldenUnitySetup() {
     var basepath = app.getAppPath();
 
-    global.libgulden = libgulden = require('./libgulden_unity_node_js')
-    global.guldenbackend = guldenbackend = new libgulden.NJSGuldenUnifiedBackend
-    signalhandler = global.signalhandler = new libgulden.NJSGuldenUnifiedFrontend();
+    global.libgulden = libgulden = require('./libnovo_unity_node_js')
+    global.guldenbackend = guldenbackend = new libgulden.NJSUnifiedBackend
+    signalhandler = global.signalhandler = new libgulden.NJSUnifiedFrontend();
 
     // Receive signals from the core and marshall them as needed to the main window
     signalhandler.notifyCoreReady = function() {
@@ -117,7 +117,7 @@ function guldenUnitySetup() {
     }
 
     // Start the Gulden unified backend
-    guldenbackend.InitUnityLibThreaded(basepath+"/"+"wallet", "", -1, -1, false, signalhandler, "")
+    guldenbackend.InitUnityLibThreaded(basepath+"/"+"wallet", "", -1, -1, false, false, signalhandler, "")
 }
 
 // This method will be called when Electron has finished
