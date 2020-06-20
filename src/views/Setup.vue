@@ -86,8 +86,7 @@
       </div>
     </div>
     <div class="steps-buttons wrapper">
-      <button
-        class="btn"
+      <novo-button
         v-if="current !== 2"
         @click="nextStep"
         :disabled="isNextDisabled()"
@@ -98,7 +97,7 @@
         <span v-else>
           {{ $t("buttons.finish") }}
         </span>
-      </button>
+      </novo-button>
     </div>
   </div>
 </template>

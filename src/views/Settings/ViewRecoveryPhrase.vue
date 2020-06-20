@@ -36,9 +36,14 @@
     </div>
 
     <div class="steps-buttons wrapper">
-      <button class="btn" v-if="current === 1" @click="nextStep">
+      <novo-button
+        class="btn"
+        v-if="current === 1"
+        @click="validatePassword"
+        :disabled="isNextDisabled"
+      >
         {{ $t("buttons.next") }}
-      </button>
+      </novo-button>
     </div>
   </div>
 </template>
@@ -51,27 +56,19 @@ export default {
     return {
       current: 1,
       recoveryPhrase: null,
-      password: null,
+      password: "",
       isPasswordInvalid: false
     };
   },
   mounted() {
     this.$refs.password.focus();
   },
-  methods: {
+  computed: {
     isNextDisabled() {
-      return false;
-    },
-    async nextStep() {
-      switch (this.current) {
-        case 1:
-          this.validatePassword();
-          break;
-        case 2:
-          this.$router.push({ name: "wallet" });
-          break;
-      }
-    },
+      return this.password.trim().length === 0;
+    }
+  },
+  methods: {
     onPasswordKeyDown() {
       this.isPasswordInvalid = false;
       if (event.keyCode !== 13) return;

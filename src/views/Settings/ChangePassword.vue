@@ -43,15 +43,15 @@
       </div>
     </div>
     <div class="steps-buttons wrapper">
-      <button
+      <novo-button
         class="btn"
         v-if="current <= 2"
         @click="nextStep"
-        :disabled="isNextDisabled()"
+        :disabled="isNextDisabled"
       >
         <span v-if="current < 2">{{ $t("buttons.next") }}</span>
         <span v-else>{{ $t("buttons.change_password") }}</span>
-      </button>
+      </novo-button>
     </div>
   </div>
 </template>
@@ -63,9 +63,9 @@ export default {
   data() {
     return {
       current: 1,
-      password1: null,
-      password2: null,
-      passwordold: null,
+      password1: "",
+      password2: "",
+      passwordold: "",
       isPasswordInvalid: false
     };
   },
@@ -79,22 +79,22 @@ export default {
         return false;
 
       return this.password1 === this.password2;
+    },
+    isNextDisabled() {
+      switch (this.current) {
+        case 1:
+          return this.passwordold.trim().length === 0;
+        case 2:
+          return this.passwordsValidated === false;
+      }
+      return true;
     }
   },
   mounted() {
     this.$refs.passwordold.focus();
   },
   methods: {
-    isNextDisabled() {
-      switch (this.current) {
-        case 1:
-          return false;
-        case 2:
-          return this.passwordsValidated === false;
-      }
-      return true;
-    },
-    async nextStep() {
+    nextStep() {
       switch (this.current) {
         case 1:
           this.validatePassword();
