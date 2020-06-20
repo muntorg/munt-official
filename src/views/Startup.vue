@@ -12,18 +12,15 @@ export default {
     ...mapState(["status"])
   },
   mounted() {
-    console.log("startup mounted");
-    this.onStatusChanged();
+    this.routeOnStatusChange();
   },
   watch: {
     status() {
-      console.log("watch:status");
-      this.onStatusChanged();
+      this.routeOnStatusChange();
     }
   },
   methods: {
-    onStatusChanged() {
-      console.log(`startup:onStatusChanged -> ${this.status}`);
+    routeOnStatusChange() {
       switch (this.status) {
         case AppStatus.setup:
           this.routeTo("setup");
@@ -36,11 +33,7 @@ export default {
     },
     routeTo(name) {
       if (this.$router.name === name) return;
-      console.log(`routeTo -> ${name}`);
       this.$router.push({ name: name });
-    },
-    setStatus(status) {
-      this.$store.dispatch({ type: "SET_STATUS", status });
     }
   }
 };
