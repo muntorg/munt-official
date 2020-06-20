@@ -1,17 +1,21 @@
 <template>
-  <input
+  <app-input
+    class="phrase-repeat-input"
+    :status="status"
     type="text"
-    @keyup="onKeyUp"
+    v-model="input"
     @focus="onFocus"
-    v-bind:class="{ match: match, error: match === false }"
   />
 </template>
 
 <script>
+import AppInput from "./AppInput";
+
 export default {
   name: "PhraseRepeatInput",
   data() {
     return {
+      input: "",
       match: null
     };
   },
@@ -22,20 +26,34 @@ export default {
       default: true
     }
   },
+  components: {
+    AppInput
+  },
+  computed: {
+    status() {
+      return this.match ? "success" : this.match === false ? "error" : "";
+    }
+  },
+  watch: {
+    input() {
+      this.validate(this.input);
+    }
+  },
   methods: {
     onFocus() {
-      console.log(`${this.word}`);
+      console.log(this.word);
     },
-    onKeyUp() {
+    validate(value) {
       let match = null;
-      if (this.$el.value === this.word) {
+
+      if (value === this.word) {
         match = true;
-      } else if (this.$el.value.length > this.word.length) {
+      } else if (value.length > this.word.length) {
         match = false;
       } else {
         match = null;
-        for (var i = 0; i < this.$el.value.length; i++) {
-          if (this.$el.value.charAt(i) !== this.word.charAt(i)) {
+        for (var i = 0; i < value.length; i++) {
+          if (value.charAt(i) !== this.word.charAt(i)) {
             match = false;
             break;
           }
@@ -45,7 +63,6 @@ export default {
 
       if (match) {
         this.$emit("match-changed", true);
-
         if (this.tabOnMatch) {
           let nextEl = event.srcElement.nextSibling;
           if (nextEl && nextEl.tagName === "INPUT") {
@@ -62,29 +79,11 @@ export default {
 };
 </script>
 
-<style lang="less">
-/* TODO: These styles aren't scoped so they will bleed throughout the app. Make sure this can be scoped */
-input {
-  color: var(--success-color, #009572);
-  border: 1px solid #ccc;
-  background-color: #fff;
-}
-
-input:focus {
-  border: 1px solid var(--success-color, #009572);
-}
-
-input.match,
-input.match:focus {
-  color: var(--success-text-color, #009572);
-  border-color: var(--success-color, #ccc);
-  background: var(--success-color, #fff);
-}
-
-input.error,
-input:focus.error {
-  color: var(--error-text-color, #dd3333);
-  border-color: var(--error-color, #dd3333);
-  background: var(--error-color, #fff);
+<style lang="less" scoped>
+.phrase-repeat-input {
+  &.app-input.success,
+  &.app-input.success:focus {
+    border-color: #ccc;
+  }
 }
 </style>

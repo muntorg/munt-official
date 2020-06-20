@@ -17,31 +17,33 @@
       <div v-if="current === 1" class="password">
         <div class="password-row">
           <h4>{{ $t("setup.password") }}:</h4>
-          <input
+          <novo-input
             ref="passwordold"
             type="password"
             v-model="passwordold"
-            @keydown="onPasswordKeyDown"
-            :class="{ error: isPasswordInvalid }"
+            @keydown="validatePasswordOnEnter"
+            :status="computedStatus"
           />
         </div>
       </div>
+
       <!-- step 2: enter new password -->
       <div v-else class="password">
         <div class="password-row">
           <h4>{{ $t("setup.password") }}:</h4>
-          <input ref="password" type="password" v-model="password1" />
+          <novo-input ref="password1" type="password" v-model="password1" />
         </div>
         <div class="password-row">
           <h4>{{ $t("setup.repeat_password") }}:</h4>
-          <input
+          <novo-input
             type="password"
             v-model="password2"
-            @keydown="onPasswordRepeatKeyDown"
+            @keydown="validatePasswordRepeatOnEnter"
           />
         </div>
       </div>
     </div>
+
     <div class="steps-buttons wrapper">
       <novo-button
         class="btn"
@@ -70,6 +72,9 @@ export default {
     };
   },
   computed: {
+    computedStatus() {
+      return this.isPasswordInvalid ? "error" : "";
+    },
     passwordsValidated() {
       if (this.password1 === null || this.password1.length < 6) return false;
       if (
@@ -91,7 +96,7 @@ export default {
     }
   },
   mounted() {
-    this.$refs.passwordold.focus();
+    this.$refs.passwordold.$el.focus();
   },
   methods: {
     nextStep() {
@@ -106,11 +111,11 @@ export default {
           break;
       }
     },
-    onPasswordKeyDown() {
+    validatePasswordOnEnter() {
       this.isPasswordInvalid = false;
       if (event.keyCode === 13) this.validatePassword();
     },
-    onPasswordRepeatKeyDown() {
+    validatePasswordRepeatOnEnter() {
       if (event.keyCode === 13 && this.passwordsValidated) this.nextStep();
     },
     validatePassword() {
@@ -118,7 +123,7 @@ export default {
         UnityBackend.LockWallet();
         this.current++;
         setTimeout(() => {
-          this.$refs.password.focus();
+          this.$refs.password1.$el.focus();
         }, 100);
       } else {
         this.isPasswordInvalid = true;
@@ -153,32 +158,5 @@ export default {
 
 .password-row {
   margin: 0 0 20px 0;
-}
-
-.password input {
-  height: 40px;
-  width: 100%;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 22px;
-  font-size: 16px;
-  color: #000;
-  padding: 10px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  transition: all 0.3s;
-  border-radius: 0px;
-}
-
-.password input:focus {
-  color: #009572;
-  border: 1px solid #009572;
-}
-
-input.error,
-input:focus.error {
-  color: var(--error-text-color, #dd3333);
-  border-color: var(--error-color, #dd3333);
-  background: var(--error-color, #fff);
 }
 </style>

@@ -16,12 +16,12 @@
       <div class="password" v-if="current === 1">
         <div class="password-row">
           <h4>{{ $t("setup.password") }}:</h4>
-          <input
+          <novo-input
             ref="password"
             type="password"
             v-model="password"
-            @keydown="onPasswordKeyDown"
-            :class="{ error: isPasswordInvalid }"
+            @keydown="validatePasswordOnEnter"
+            :status="computedStatus"
           />
         </div>
       </div>
@@ -61,18 +61,20 @@ export default {
     };
   },
   mounted() {
-    this.$refs.password.focus();
+    this.$refs.password.$el.focus();
   },
   computed: {
+    computedStatus() {
+      return this.isPasswordInvalid ? "error" : "";
+    },
     isNextDisabled() {
       return this.password.trim().length === 0;
     }
   },
   methods: {
-    onPasswordKeyDown() {
+    validatePasswordOnEnter() {
       this.isPasswordInvalid = false;
-      if (event.keyCode !== 13) return;
-      this.validatePassword();
+      if (event.keyCode === 13) this.validatePassword();
     },
     validatePassword() {
       if (UnityBackend.UnlockWallet(this.password)) {
@@ -121,32 +123,5 @@ export default {
 
 .password-row {
   margin: 0 0 20px 0;
-}
-
-.password input {
-  height: 40px;
-  width: 100%;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 22px;
-  font-size: 16px;
-  color: #000;
-  padding: 10px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  transition: all 0.3s;
-  border-radius: 0px;
-}
-
-.password input:focus {
-  color: #009572;
-  border: 1px solid #009572;
-}
-
-input.error,
-input:focus.error {
-  color: var(--error-text-color, #dd3333);
-  border-color: var(--error-color, #dd3333);
-  background: var(--error-color, #fff);
 }
 </style>

@@ -72,14 +72,14 @@
         <div class="password">
           <div class="password-row">
             <h4>{{ $t("setup.password") }}:</h4>
-            <input ref="password" type="password" v-model="password1" />
+            <novo-input ref="password" type="password" v-model="password1" />
           </div>
           <div class="password-row">
             <h4>{{ $t("setup.repeat_password") }}:</h4>
-            <input
+            <novo-input
               type="password"
               v-model="password2"
-              @keydown="onPasswordRepeatKeyDown"
+              @keyup="onPasswordRepeatKeyup"
             />
           </div>
         </div>
@@ -165,7 +165,7 @@ export default {
           break;
         case 2:
           setTimeout(() => {
-            this.$refs.password.focus();
+            this.$refs.password.$el.focus();
           }, 100);
           break;
         case 3:
@@ -181,7 +181,7 @@ export default {
       }
       this.current++;
     },
-    onPasswordRepeatKeyDown() {
+    onPasswordRepeatKeyup() {
       if (event.keyCode === 13 && this.passwordsValidated) this.nextStep();
     },
     onMatchChanged(match) {
@@ -215,13 +215,6 @@ export default {
 .phrase-repeat input {
   width: calc(25% - 10px);
   margin: 5px;
-  height: 40px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 22px;
-  font-size: 16px;
-  padding: 10px;
-  border-radius: 0px;
 }
 
 .password {
@@ -230,25 +223,5 @@ export default {
 
 .password-row {
   margin: 0 0 20px 0;
-}
-
-.password input {
-  height: 40px;
-  width: 100%;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 22px;
-  font-size: 16px;
-  color: #000;
-  padding: 10px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  transition: all 0.3s;
-  border-radius: 0px;
-}
-
-.password input:focus {
-  color: #009572;
-  border: 1px solid #009572;
 }
 </style>
