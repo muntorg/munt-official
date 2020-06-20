@@ -66,7 +66,7 @@ export default {
 /* TODO: These styles aren't scoped so they will bleed throughout the app. Make sure this can be scoped */
 input {
   color: var(--success-color, #009572);
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   background-color: #fff;
 }
 
@@ -76,15 +76,15 @@ input:focus {
 
 input.match,
 input.match:focus {
-  color: var(--success-text-color, #fff);
-  border-color: var(--success-color, #009572);
-  background: var(--success-color, #009572);
+  color: var(--success-text-color, #009572);
+  border-color: var(--success-color, #ccc);
+  background: var(--success-color, #fff);
 }
 
 input.error,
 input:focus.error {
-  color: var(--error-text-color, #fff);
+  color: var(--error-text-color, #dd3333);
   border-color: var(--error-color, #dd3333);
-  background: var(--error-color, #dd3333);
+  background: var(--error-color, #fff);
 }
 </style>

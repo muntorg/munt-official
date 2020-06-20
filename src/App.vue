@@ -255,4 +255,15 @@ export default {
   float: left;
   margin-left: 10px;
 }
+
+input {
+  -webkit-text-size-adjust: none;
+  font-family: euclid, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  text-rendering: optimizeLegibility;
+  font-variant-ligatures: none;
+  -webkit-font-smoothing: antialiased;
+}
 </style>

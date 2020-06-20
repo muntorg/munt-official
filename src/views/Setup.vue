@@ -242,7 +242,7 @@ export default {
   font-size: 16px;
   color: #000;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   background-color: #fff;
   transition: all 0.3s;
   border-radius: 0px;

@@ -135,7 +135,7 @@ export default {
   font-size: 16px;
   color: #000;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   background-color: #fff;
   transition: all 0.3s;
   border-radius: 0px;
@@ -148,8 +148,8 @@ export default {
 
 input.error,
 input:focus.error {
-  color: var(--error-text-color, #fff);
+  color: var(--error-text-color, #dd3333);
   border-color: var(--error-color, #dd3333);
-  background: var(--error-color, #dd3333);
+  background: var(--error-color, #fff);
 }
 </style>
