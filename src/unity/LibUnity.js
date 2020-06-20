@@ -41,7 +41,7 @@ class LibUnity {
   }
 
   TerminateUnityLib() {
-    if (this.backend === null) return;
+    if (this.backend === null || this.isTerminated) return;
     console.log(`terminating unity lib`);
     this.backend.TerminateUnityLib();
   }
@@ -149,7 +149,6 @@ class LibUnity {
     signalHandler.notifyShutdown = function() {
       console.log("received: notifyShutdown");
       self.isTerminated = true;
-      self._setStatus(AppStatus.shutdown);
       app.quit();
     };
   }

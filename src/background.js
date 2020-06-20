@@ -87,7 +87,15 @@ function createWindow() {
   }
 
   win.on("ready-to-show", () => {
+    libUnity.SetWindow(win);
     win.show();
+  });
+
+  win.on("close", event => {
+    console.log("win.on:close");
+    if (process.platform !== "darwin") {
+      EnsureUnityLibTerminated(event);
+    }
   });
 
   win.on("closed", () => {
@@ -116,10 +124,7 @@ app.on("window-all-closed", event => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
-    store.dispatch({ type: "SET_STATUS", status: AppStatus.shutdown });
-    if (libUnity === null || libUnity.isTerminated) return;
-    event.preventDefault();
-    libUnity.TerminateUnityLib();
+    EnsureUnityLibTerminated(event);
   }
 });
 
@@ -154,6 +159,13 @@ app.on("ready", async () => {
 
   createWindow();
 });
+
+function EnsureUnityLibTerminated(event) {
+  if (libUnity === null || libUnity.isTerminated) return;
+  store.dispatch({ type: "SET_STATUS", status: AppStatus.shutdown });
+  event.preventDefault();
+  libUnity.TerminateUnityLib();
+}
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
