@@ -43,6 +43,9 @@ class LibUnity {
   TerminateUnityLib() {
     if (this.backend === null || this.isTerminated) return;
     console.log(`terminating unity lib`);
+    // TODO:
+    // Maybe the call to terminate comes before the core is ready.
+    // Then it's better to wait for the coreReady signal and then call TerminateUnityLib
     this.backend.TerminateUnityLib();
   }
 
