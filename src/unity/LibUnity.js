@@ -15,6 +15,9 @@ class LibUnity {
     this.options = {
       walletPath: path.join(app.getPath("userData"), "wallet"),
       useTestNet: false,
+      extraArgs: process.env.UNITY_EXTRA_ARGS
+        ? process.env.UNITY_EXTRA_ARGS
+        : "",
       ...options
     };
 
@@ -60,7 +63,7 @@ class LibUnity {
       this.options.useTestNet,
       false, // non spv mode
       this.signalHandler,
-      "" //"-sigmaalgo=ref"
+      this.options.extraArgs
     );
   }
 
