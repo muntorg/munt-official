@@ -6,9 +6,9 @@
         {{ receiveAddress }}
         <span class="copy"><fa-icon :icon="['fal', 'copy']"/></span>
       </div>
-      <button class="btn" @click="receiveNovo">
+      <novo-button class="btn" @click="receiveNovo">
         {{ $t("wallet.receive_acquired_novo") }}
-      </button>
+      </novo-button>
     </div>
   </div>
 </template>

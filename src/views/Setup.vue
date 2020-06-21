@@ -3,7 +3,7 @@
     <div class="steps-container section">
       <!-- step 1: show recovery phrase -->
       <div v-if="current === 1">
-        <h2>{{ $t("common.important") }}</h2>
+        <h2 class="important">{{ $t("common.important") }}</h2>
         <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
         <div class="phrase">
           {{ recoveryPhrase }}
@@ -13,57 +13,11 @@
       <!-- step 2: repeat recovery phrase -->
       <div v-else-if="current === 2">
         <h2>{{ $t("setup.enter_recovery_phrase") }}</h2>
-        <div class="phrase-repeat">
-          <phrase-repeat-input
-            ref="firstWord"
-            :word="recoveryPhraseWords[0]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[1]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[2]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[3]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[4]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[5]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[6]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[7]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[8]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[9]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[10]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[11]"
-            @match-changed="onMatchChanged"
-          />
-        </div>
+        <novo-phrase-validator
+          :phrase="recoveryPhrase"
+          :autofocus="true"
+          @validated="onPhraseValidated"
+        />
       </div>
 
       <!-- step 3: enter a password -->
@@ -72,22 +26,22 @@
         <div class="password">
           <div class="password-row">
             <h4>{{ $t("setup.password") }}:</h4>
-            <input ref="password" type="password" v-model="password1" />
+            <novo-input ref="password" type="password" v-model="password1" />
           </div>
           <div class="password-row">
             <h4>{{ $t("setup.repeat_password") }}:</h4>
-            <input
+            <novo-input
               type="password"
               v-model="password2"
-              @keydown="onPasswordRepeatKeyDown"
+              :status="password2Status"
+              @keyup="onPassword2Keyup"
             />
           </div>
         </div>
       </div>
     </div>
     <div class="steps-buttons wrapper">
-      <button
-        class="btn"
+      <novo-button
         v-if="current !== 2"
         @click="nextStep"
         :disabled="isNextDisabled()"
@@ -98,7 +52,7 @@
         <span v-else>
           {{ $t("buttons.finish") }}
         </span>
-      </button>
+      </novo-button>
     </div>
   </div>
 </template>
@@ -110,29 +64,23 @@ export default {
   data() {
     return {
       current: 1,
-      recoveryPhrase: null,
-      matchingWords: 0,
-      password1: null,
-      password2: null
+      recoveryPhrase: "",
+      password1: "",
+      password2: "",
+      isRecoveryPhraseCorrect: false
     };
   },
   async mounted() {
     this.recoveryPhrase = await UnityBackend.GenerateRecoveryMnemonicAsync();
   },
-  watch: {
-    isRecoveryPhraseCorrect() {
-      if (this.isRecoveryPhraseCorrect) this.nextStep();
-    }
-  },
   computed: {
     recoveryPhraseWords() {
-      return this.recoveryPhrase === null ? [] : this.recoveryPhrase.split(" ");
+      return this.recoveryPhrase.split(" ");
     },
-    isRecoveryPhraseCorrect() {
-      return (
-        this.matchingWords > 0 &&
-        this.matchingWords === this.recoveryPhraseWords.length
-      );
+    password2Status() {
+      if (this.password2.length === 0) return "";
+      if (this.password2.length > this.password1.length) return "error";
+      return this.password1.indexOf(this.password2) === 0 ? "" : "error";
     },
     passwordsValidated() {
       if (this.password1 === null || this.password1.length < 6) return false;
@@ -159,15 +107,10 @@ export default {
     },
     nextStep() {
       switch (this.current) {
-        case 1:
-          setTimeout(() => {
-            this.$refs.firstWord.$el.focus();
-          }, 100);
-          break;
         case 2:
-          setTimeout(() => {
-            this.$refs.password.focus();
-          }, 100);
+          this.$nextTick(() => {
+            this.$refs.password.$el.focus();
+          });
           break;
         case 3:
           if (
@@ -182,11 +125,12 @@ export default {
       }
       this.current++;
     },
-    onPasswordRepeatKeyDown() {
+    onPassword2Keyup() {
       if (event.keyCode === 13 && this.passwordsValidated) this.nextStep();
     },
-    onMatchChanged(match) {
-      this.matchingWords += match ? 1 : -1;
+    onPhraseValidated() {
+      this.isRecoveryPhraseCorrect = true;
+      this.nextStep();
     }
   }
 };
@@ -208,23 +152,6 @@ export default {
   background-color: #f5f5f5;
 }
 
-.phrase-repeat {
-  width: calc(100% + 10px);
-  margin: -5px -5px 35px -5px;
-}
-
-.phrase-repeat input {
-  width: calc(25% - 10px);
-  margin: 5px;
-  height: 40px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 22px;
-  font-size: 16px;
-  padding: 10px;
-  border-radius: 0px;
-}
-
 .password {
   margin: 0 0 20px 0;
 }
@@ -233,23 +160,7 @@ export default {
   margin: 0 0 20px 0;
 }
 
-.password input {
-  height: 40px;
-  width: 100%;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 22px;
-  font-size: 16px;
-  color: #000;
-  padding: 10px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  transition: all 0.3s;
-  border-radius: 0px;
-}
-
-.password input:focus {
-  color: #009572;
-  border: 1px solid #009572;
+.important {
+  color: #dd3333;
 }
 </style>
