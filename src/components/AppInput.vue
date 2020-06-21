@@ -43,6 +43,9 @@ export default {
   width: 100%;
   padding: 10px;
   transition: all 0.3s;
+  text-rendering: optimizeLegibility;
+  font-variant-ligatures: none;
+  -webkit-font-smoothing: antialiased;
   border-radius: 0px;
   border: 1px solid #ccc;
   color: #000;

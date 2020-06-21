@@ -138,20 +138,24 @@ export default {
   --top-height: 62px;
 }
 
+*,
 #app {
-  -webkit-text-size-adjust: none;
   font-family: euclid, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
   line-height: 1.7em;
+  -webkit-text-size-adjust: none;
+  text-rendering: optimizeLegibility;
+  font-variant-ligatures: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
   width: 100%;
   height: 100%;
   color: #000;
   background-color: #fff;
-  text-rendering: optimizeLegibility;
-  font-variant-ligatures: none;
-  -webkit-font-smoothing: antialiased;
 }
 
 #app-loader {
@@ -256,16 +260,5 @@ export default {
 .app-balance {
   float: left;
   margin-left: 10px;
-}
-
-input {
-  -webkit-text-size-adjust: none;
-  font-family: euclid, Helvetica, sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  text-rendering: optimizeLegibility;
-  font-variant-ligatures: none;
-  -webkit-font-smoothing: antialiased;
 }
 </style>
