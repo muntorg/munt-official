@@ -43,18 +43,18 @@
           />
         </div>
       </div>
-    </div>
 
-    <div class="steps-buttons wrapper">
-      <novo-button
-        class="btn"
-        v-if="current <= 2"
-        @click="nextStep"
-        :disabled="isNextDisabled"
-      >
-        <span v-if="current < 2">{{ $t("buttons.next") }}</span>
-        <span v-else>{{ $t("buttons.change_password") }}</span>
-      </novo-button>
+      <div class="button-wrapper">
+        <novo-button
+          class="btn"
+          v-if="current <= 2"
+          @click="nextStep"
+          :disabled="isNextDisabled"
+        >
+          <span v-if="current < 2">{{ $t("buttons.next") }}</span>
+          <span v-else>{{ $t("buttons.change_password") }}</span>
+        </novo-button>
+      </div>
     </div>
   </div>
 </template>
@@ -152,10 +152,9 @@ export default {
   background-color: #f5f5f5;
 }
 
-.steps-buttons {
-  position: absolute;
-  bottom: 40px;
-  right: 0px;
+.button-wrapper {
+  margin: 10px 0 0 0;
+  float: right;
 }
 
 .password {

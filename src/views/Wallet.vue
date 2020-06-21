@@ -6,9 +6,11 @@
         {{ receiveAddress }}
         <span class="copy"><fa-icon :icon="['fal', 'copy']"/></span>
       </div>
-      <novo-button class="btn" @click="receiveNovo">
-        {{ $t("wallet.receive_acquired_novo") }}
-      </novo-button>
+      <div class="button-wrapper">
+        <novo-button class="btn" @click="receiveNovo">
+          {{ $t("wallet.receive_acquired_novo") }}
+        </novo-button>
+      </div>
     </div>
   </div>
 </template>
@@ -41,6 +43,11 @@
 .copy:active {
   color: #009572;
   border-color: #009572;
+}
+
+.button-wrapper {
+  margin: 10px 0 0 0;
+  float: right;
 }
 </style>
 

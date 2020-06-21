@@ -13,6 +13,7 @@
       <!-- step 2: repeat recovery phrase -->
       <div v-else-if="current === 2">
         <h2>{{ $t("setup.enter_recovery_phrase") }}</h2>
+        <p>{{ $t("setup.repeat_your_recovery_phrase") }}</p>
         <novo-phrase-validator
           :phrase="recoveryPhrase"
           :autofocus="true"
@@ -23,6 +24,7 @@
       <!-- step 3: enter a password -->
       <div v-else-if="current === 3">
         <h2>{{ $t("setup.choose_password") }}</h2>
+        <p>{{ $t("setup.choose_password_information") }}</p>
         <div class="password">
           <div class="password-row">
             <h4>{{ $t("setup.password") }}:</h4>
@@ -39,20 +41,21 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="steps-buttons wrapper">
-      <novo-button
-        v-if="current !== 2"
-        @click="nextStep"
-        :disabled="isNextDisabled()"
-      >
-        <span v-if="current < 3">
-          {{ $t("buttons.next") }}
-        </span>
-        <span v-else>
-          {{ $t("buttons.finish") }}
-        </span>
-      </novo-button>
+
+      <div class="button-wrapper">
+        <novo-button
+          v-if="current !== 2"
+          @click="nextStep"
+          :disabled="isNextDisabled()"
+        >
+          <span v-if="current < 3">
+            {{ $t("buttons.next") }}
+          </span>
+          <span v-else>
+            {{ $t("buttons.finish") }}
+          </span>
+        </novo-button>
+      </div>
     </div>
   </div>
 </template>
@@ -137,10 +140,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.steps-buttons {
-  position: absolute;
-  bottom: 40px;
-  right: 0px;
+.button-wrapper {
+  margin: 10px 0 0 0;
+  float: right;
 }
 
 .phrase {
@@ -152,10 +154,8 @@ export default {
   background-color: #f5f5f5;
 }
 
-.password {
-  margin: 0 0 20px 0;
-}
-
+.phrase,
+.password,
 .password-row {
   margin: 0 0 20px 0;
 }
