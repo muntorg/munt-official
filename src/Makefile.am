@@ -58,7 +58,6 @@ LIB_CRYPTO_ARM_CORTEX_A72_AES=crypto/lib_crypto_arm_cortex_a72_aes.a
 LIB_CRYPTO_ARM_THUNDERX_AES=crypto/lib_crypto_arm_thunderx_aes.a
 LIB_CRYPTO=crypto/lib_crypto.a
 LIB_ANDROID_COMPAT=lib_android_compat.a
-LIBQT=qt/libqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 
 if ENABLE_ZMQ
@@ -1075,7 +1074,7 @@ clean-local:
 
 .mm.o:
 	$(AM_V_CXX) $(OBJCXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
-	  $(CPPFLAGS) $(AM_CXXFLAGS) $(QT_INCLUDES) $(AM_CXXFLAGS) $(PIE_FLAGS) $(CXXFLAGS) -c -o $@ $<
+	  $(CPPFLAGS) $(AM_CXXFLAGS) $(AM_CXXFLAGS) $(PIE_FLAGS) $(CXXFLAGS) -c -o $@ $<
 
 %.pb.cc %.pb.h: %.proto
 	@test -f $(PROTOC)
@@ -1091,12 +1090,4 @@ endif
 
 if ENABLE_BENCH
 #include Makefile.bench.include
-endif
-
-if ENABLE_QT
-include Makefile.qt.include
-endif
-
-if ENABLE_QT_TESTS
-include Makefile.qttest.include
 endif

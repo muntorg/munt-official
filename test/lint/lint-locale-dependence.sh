@@ -9,7 +9,6 @@ KNOWN_VIOLATIONS=(
     "src/httprpc.cpp.*trim"
     "src/init.cpp:.*atoi"
     "src/init.cpp:.*fprintf"
-    "src/qt/rpcconsole.cpp:.*atoi"
     "src/rest.cpp:.*strtol"
     "src/test/dbwrapper_tests.cpp:.*snprintf"
     "src/torcontrol.cpp:.*atoi"
