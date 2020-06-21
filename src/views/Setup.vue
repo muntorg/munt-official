@@ -13,57 +13,11 @@
       <!-- step 2: repeat recovery phrase -->
       <div v-else-if="current === 2">
         <h2>{{ $t("setup.enter_recovery_phrase") }}</h2>
-        <div class="phrase-repeat">
-          <phrase-repeat-input
-            ref="firstWord"
-            :word="recoveryPhraseWords[0]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[1]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[2]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[3]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[4]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[5]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[6]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[7]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[8]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[9]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[10]"
-            @match-changed="onMatchChanged"
-          />
-          <phrase-repeat-input
-            :word="recoveryPhraseWords[11]"
-            @match-changed="onMatchChanged"
-          />
-        </div>
+        <novo-phrase-validator
+          :phrase="recoveryPhrase"
+          :autofocus="true"
+          @validated="onPhraseValidated"
+        />
       </div>
 
       <!-- step 3: enter a password -->
@@ -110,28 +64,17 @@ export default {
     return {
       current: 1,
       recoveryPhrase: null,
-      matchingWords: 0,
       password1: null,
-      password2: null
+      password2: null,
+      isRecoveryPhraseCorrect: false
     };
   },
   async mounted() {
     this.recoveryPhrase = await UnityBackend.GenerateRecoveryMnemonicAsync();
   },
-  watch: {
-    isRecoveryPhraseCorrect() {
-      if (this.isRecoveryPhraseCorrect) this.nextStep();
-    }
-  },
   computed: {
     recoveryPhraseWords() {
       return this.recoveryPhrase === null ? [] : this.recoveryPhrase.split(" ");
-    },
-    isRecoveryPhraseCorrect() {
-      return (
-        this.matchingWords > 0 &&
-        this.matchingWords === this.recoveryPhraseWords.length
-      );
     },
     passwordsValidated() {
       if (this.password1 === null || this.password1.length < 6) return false;
@@ -158,15 +101,10 @@ export default {
     },
     nextStep() {
       switch (this.current) {
-        case 1:
-          setTimeout(() => {
-            this.$refs.firstWord.$el.focus();
-          }, 100);
-          break;
         case 2:
-          setTimeout(() => {
+          this.$nextTick(() => {
             this.$refs.password.$el.focus();
-          }, 100);
+          });
           break;
         case 3:
           if (
@@ -184,8 +122,9 @@ export default {
     onPasswordRepeatKeyup() {
       if (event.keyCode === 13 && this.passwordsValidated) this.nextStep();
     },
-    onMatchChanged(match) {
-      this.matchingWords += match ? 1 : -1;
+    onPhraseValidated() {
+      this.isRecoveryPhraseCorrect = true;
+      this.nextStep();
     }
   }
 };
@@ -205,16 +144,6 @@ export default {
   text-align: center;
   word-spacing: 4px;
   background-color: #f5f5f5;
-}
-
-.phrase-repeat {
-  width: calc(100% + 10px);
-  margin: -5px -5px 35px -5px;
-}
-
-.phrase-repeat input {
-  width: calc(25% - 10px);
-  margin: 5px;
 }
 
 .password {
