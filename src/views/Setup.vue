@@ -96,6 +96,13 @@ export default {
       return this.password1 === this.password2;
     }
   },
+  watch: {
+    isRecoveryPhraseCorrect() {
+      if (this.isRecoveryPhraseCorrect) {
+        this.nextStep();
+      }
+    }
+  },
   methods: {
     isNextDisabled() {
       switch (this.current) {
@@ -132,8 +139,9 @@ export default {
       if (event.keyCode === 13 && this.passwordsValidated) this.nextStep();
     },
     onPhraseValidated() {
-      this.isRecoveryPhraseCorrect = true;
-      this.nextStep();
+      setTimeout(() => {
+        this.isRecoveryPhraseCorrect = true;
+      }, 1000);
     }
   }
 };
