@@ -33,7 +33,8 @@
             <novo-input
               type="password"
               v-model="password2"
-              @keyup="onPasswordRepeatKeyup"
+              :status="password2Status"
+              @keyup="onPassword2Keyup"
             />
           </div>
         </div>
@@ -63,9 +64,9 @@ export default {
   data() {
     return {
       current: 1,
-      recoveryPhrase: null,
-      password1: null,
-      password2: null,
+      recoveryPhrase: "",
+      password1: "",
+      password2: "",
       isRecoveryPhraseCorrect: false
     };
   },
@@ -74,7 +75,12 @@ export default {
   },
   computed: {
     recoveryPhraseWords() {
-      return this.recoveryPhrase === null ? [] : this.recoveryPhrase.split(" ");
+      return this.recoveryPhrase.split(" ");
+    },
+    password2Status() {
+      if (this.password2.length === 0) return "";
+      if (this.password2.length > this.password1.length) return "error";
+      return this.password1.indexOf(this.password2) === 0 ? "" : "error";
     },
     passwordsValidated() {
       if (this.password1 === null || this.password1.length < 6) return false;
@@ -119,7 +125,7 @@ export default {
       }
       this.current++;
     },
-    onPasswordRepeatKeyup() {
+    onPassword2Keyup() {
       if (event.keyCode === 13 && this.passwordsValidated) this.nextStep();
     },
     onPhraseValidated() {

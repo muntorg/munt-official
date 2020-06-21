@@ -22,7 +22,7 @@
             type="password"
             v-model="passwordold"
             @keydown="validatePasswordOnEnter"
-            :status="computedStatus"
+            :status="passwordOldStatus"
           />
         </div>
       </div>
@@ -38,6 +38,7 @@
           <novo-input
             type="password"
             v-model="password2"
+            :status="password2Status"
             @keydown="validatePasswordRepeatOnEnter"
           />
         </div>
@@ -65,15 +66,20 @@ export default {
   data() {
     return {
       current: 1,
+      passwordold: "",
       password1: "",
       password2: "",
-      passwordold: "",
       isPasswordInvalid: false
     };
   },
   computed: {
-    computedStatus() {
+    passwordOldStatus() {
       return this.isPasswordInvalid ? "error" : "";
+    },
+    password2Status() {
+      if (this.password2.length === 0) return "";
+      if (this.password2.length > this.password1.length) return "error";
+      return this.password1.indexOf(this.password2) === 0 ? "" : "error";
     },
     passwordsValidated() {
       if (this.password1 === null || this.password1.length < 6) return false;
@@ -122,9 +128,9 @@ export default {
       if (UnityBackend.UnlockWallet(this.passwordold)) {
         UnityBackend.LockWallet();
         this.current++;
-        setTimeout(() => {
+        this.$nextTick(() => {
           this.$refs.password1.$el.focus();
-        }, 100);
+        });
       } else {
         this.isPasswordInvalid = true;
       }
