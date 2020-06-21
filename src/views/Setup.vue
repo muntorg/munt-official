@@ -3,7 +3,7 @@
     <div class="steps-container section">
       <!-- step 1: show recovery phrase -->
       <div v-if="current === 1">
-        <h2>{{ $t("common.important") }}</h2>
+        <h2 class="important">{{ $t("common.important") }}</h2>
         <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
         <div class="phrase">
           {{ recoveryPhrase }}
@@ -158,5 +158,9 @@ export default {
 
 .password-row {
   margin: 0 0 20px 0;
+}
+
+.important {
+  color: #dd3333;
 }
 </style>
