@@ -55,7 +55,7 @@ function createWindow() {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       enableRemoteModule: true
     },
-    icon: path.join(__static, "icon.png")
+    icon: path.join(__static, "icon.ico")
   });
 
   var menuTemplate = [
