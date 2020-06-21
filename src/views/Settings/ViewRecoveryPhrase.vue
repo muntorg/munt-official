@@ -9,7 +9,7 @@
       </div>
       <h2>
         <span v-if="current === 1">{{ $t("setup.enter_your_password") }}</span>
-        <span v-else>{{ $t("common.important") }}</span>
+        <span class="important" v-else>{{ $t("common.important") }}</span>
       </h2>
 
       <!-- step 1: Enter password -->
@@ -105,16 +105,20 @@ export default {
 
 .steps-buttons {
   position: absolute;
-  bottom: 20px;
+  bottom: 40px;
   right: 0px;
 }
 
+.important {
+  color: #dd3333;
+}
+
 .phrase {
-  padding: 20px;
-  margin: 0 0 40px 0;
-  font-size: 1.4em;
+  padding: 10px;
+  font-size: 1.05em;
   font-weight: 500;
   text-align: center;
+  word-spacing: 4px;
   background-color: #f5f5f5;
 }
 

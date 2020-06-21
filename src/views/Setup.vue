@@ -195,7 +195,7 @@ export default {
 <style lang="less" scoped>
 .steps-buttons {
   position: absolute;
-  bottom: 20px;
+  bottom: 40px;
   right: 0px;
 }
 
