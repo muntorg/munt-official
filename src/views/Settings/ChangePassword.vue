@@ -154,7 +154,7 @@ export default {
 
 .steps-buttons {
   position: absolute;
-  bottom: 20px;
+  bottom: 40px;
   right: 0px;
 }
 

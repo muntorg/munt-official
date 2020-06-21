@@ -25,7 +25,7 @@
 
     <!-- main application -->
     <div>
-      <div class="app-top wrapper">
+      <div class="app-top">
         <span class="app-logo"></span>
         <span class="app-balance" v-show="computedBalance !== null">{{
           computedBalance
@@ -38,7 +38,7 @@
           </router-link>
         </span>
       </div>
-      <div class="app-main wrapper">
+      <div class="app-main">
         <div class="holder">
           <router-view />
         </div>
@@ -186,6 +186,7 @@ export default {
   height: var(--top-height);
   line-height: var(--top-height);
   width: 100%;
+  padding: 0 40px 0 40px;
   background-color: #000;
   color: #fff;
 }
@@ -215,6 +216,7 @@ export default {
   top: var(--top-height);
   height: calc(100% - var(--top-height));
   width: 100%;
+  padding: 0 40px 100px 40px;
 }
 
 .holder {
