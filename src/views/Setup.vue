@@ -44,16 +44,21 @@
 
       <div class="button-wrapper">
         <novo-button
-          v-if="current !== 2"
+          v-if="current === 1"
           @click="nextStep"
-          :disabled="isNextDisabled()"
+          :disabled="isButtonDisabled()"
         >
-          <span v-if="current < 3">
-            {{ $t("buttons.next") }}
-          </span>
-          <span v-else>
-            {{ $t("buttons.finish") }}
-          </span>
+          {{ $t("buttons.next") }}
+        </novo-button>
+        <novo-button v-else-if="current === 2" @click="previousStep">
+          {{ $t("buttons.back") }}
+        </novo-button>
+        <novo-button
+          v-else-if="current === 3"
+          @click="nextStep"
+          :disabled="isButtonDisabled()"
+        >
+          {{ $t("buttons.finish") }}
         </novo-button>
       </div>
     </div>
@@ -104,7 +109,7 @@ export default {
     }
   },
   methods: {
-    isNextDisabled() {
+    isButtonDisabled() {
       switch (this.current) {
         case 1:
           return this.recoveryPhrase === null;
@@ -134,6 +139,11 @@ export default {
           break;
       }
       this.current++;
+    },
+    previousStep() {
+      if (this.current === 2) {
+        this.current--;
+      }
     },
     onPassword2Keyup() {
       if (event.keyCode === 13 && this.passwordsValidated) this.nextStep();
