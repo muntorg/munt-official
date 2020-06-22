@@ -18,20 +18,27 @@ import store, { AppStatus } from "./store";
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
-let libUnity = new LibUnity();
+let walletPath = path.join(
+  app.getPath("userData"),
+  isDevelopment ? "dev-wallet" : "wallet"
+);
+
+let libUnity = new LibUnity({ walletPath });
 
 /* TODO: refactor into function and add option to libgulden to remove existing wallet folder */
-let args = process.argv.slice(2);
-for (var i = 0; i < args.length; i++) {
-  switch (args[i].toLowerCase()) {
-    case "new-wallet":
-      fs.rmdirSync(path.join(app.getPath("userData"), "wallet"), {
-        recursive: true
-      });
-      break;
-    default:
-      console.error(`unknown argument: ${args[i]}`);
-      break;
+if (isDevelopment) {
+  let args = process.argv.slice(2);
+  for (var i = 0; i < args.length; i++) {
+    switch (args[i].toLowerCase()) {
+      case "new-wallet":
+        fs.rmdirSync(walletPath, {
+          recursive: true
+        });
+        break;
+      default:
+        console.error(`unknown argument: ${args[i]}`);
+        break;
+    }
   }
 }
 

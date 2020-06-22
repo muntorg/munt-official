@@ -1,6 +1,5 @@
 import { app } from "electron";
 import { ipcMain as ipc } from "electron-better-ipc";
-import path from "path";
 import fs from "fs";
 
 import store, { AppStatus } from "../store";
@@ -13,7 +12,6 @@ class LibUnity {
     this.isTerminated = false;
 
     this.options = {
-      walletPath: path.join(app.getPath("userData"), "wallet"),
       useTestNet: false,
       extraArgs: process.env.UNITY_EXTRA_ARGS
         ? process.env.UNITY_EXTRA_ARGS
