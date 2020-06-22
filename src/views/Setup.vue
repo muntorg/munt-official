@@ -50,7 +50,11 @@
         >
           {{ $t("buttons.next") }}
         </novo-button>
-        <novo-button v-else-if="current === 2" @click="previousStep">
+        <novo-button
+          v-else-if="current === 2"
+          @click="previousStep"
+          :disabled="isButtonDisabled()"
+        >
           {{ $t("buttons.back") }}
         </novo-button>
         <novo-button
@@ -75,7 +79,8 @@ export default {
       recoveryPhrase: "",
       password1: "",
       password2: "",
-      isRecoveryPhraseCorrect: false
+      isRecoveryPhraseCorrect: false,
+      isBackDisabled: false
     };
   },
   async mounted() {
@@ -114,7 +119,7 @@ export default {
         case 1:
           return this.recoveryPhrase === null;
         case 2:
-          return this.isRecoveryPhraseCorrect === false;
+          return this.isBackDisabled;
         case 3:
           return this.passwordsValidated === false;
       }
@@ -149,9 +154,12 @@ export default {
       if (event.keyCode === 13 && this.passwordsValidated) this.nextStep();
     },
     onPhraseValidated() {
-      setTimeout(() => {
-        this.isRecoveryPhraseCorrect = true;
-      }, 1000);
+      this.isBackDisabled = true;
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.isRecoveryPhraseCorrect = true;
+        }, 1000);
+      });
     }
   }
 };
