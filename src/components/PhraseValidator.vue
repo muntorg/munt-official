@@ -88,10 +88,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.phrase-validator-wrapper {
+  width: calc(100% + 10px);
+  margin: 0 0 0 -5px;
+}
+
 .repeater-input {
   width: calc(25% - 10px);
   margin: 5px;
-  text-align: center;
 
   &.success,
   &.success:focus {

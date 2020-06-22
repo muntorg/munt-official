@@ -47,7 +47,6 @@
 
 .button-wrapper {
   margin: 10px 0 0 0;
-  float: right;
 }
 </style>
 
