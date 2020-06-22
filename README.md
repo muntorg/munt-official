@@ -1,4 +1,4 @@
-# novo-test
+# Novo Electron Wallet
 
 ## Project setup
 ```
