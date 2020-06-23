@@ -43,27 +43,33 @@
       </div>
 
       <div class="button-wrapper">
-        <novo-button
-          v-if="current === 1"
-          @click="nextStep"
-          :disabled="isButtonDisabled()"
-        >
-          {{ $t("buttons.next") }}
-        </novo-button>
-        <novo-button
-          v-else-if="current === 2"
-          @click="previousStep"
-          :disabled="isButtonDisabled()"
-        >
-          {{ $t("buttons.back") }}
-        </novo-button>
-        <novo-button
-          v-else-if="current === 3"
-          @click="nextStep"
-          :disabled="isButtonDisabled()"
-        >
-          {{ $t("buttons.finish") }}
-        </novo-button>
+        <div class="left">
+          <novo-button
+            v-if="current === 2"
+            @click="previousStep"
+            :disabled="isButtonDisabled()"
+          >
+            {{ $t("buttons.back") }}
+          </novo-button>
+        </div>
+
+        <div class="right">
+          <novo-button
+            v-if="current === 1"
+            @click="nextStep"
+            :disabled="isButtonDisabled()"
+          >
+            {{ $t("buttons.next") }}
+          </novo-button>
+
+          <novo-button
+            v-else-if="current === 3"
+            @click="nextStep"
+            :disabled="isButtonDisabled()"
+          >
+            {{ $t("buttons.finish") }}
+          </novo-button>
+        </div>
       </div>
     </div>
   </div>
@@ -168,7 +174,14 @@ export default {
 <style lang="less" scoped>
 .button-wrapper {
   margin: 10px 0 0 0;
-  float: right;
+
+  & .left {
+    float: left;
+  }
+
+  & .right {
+    float: right;
+  }
 }
 
 .phrase {
