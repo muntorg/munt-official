@@ -33,6 +33,7 @@ export default new Vuex.Store({
     mutations: null,
     priceInfo: null,
     receiveAddress: null,
+    newRecoveryPhrase: null,
     status: AppStatus.start,
     unityVersion: null,
     walletVersion: null
@@ -46,6 +47,9 @@ export default new Vuex.Store({
     },
     SET_MUTATIONS(state, payload) {
       state.mutations = payload.mutations;
+    },
+    SET_NEW_RECOVERY_PHRASE(state, payload) {
+      state.newRecoveryPhrase = payload.newRecoveryPhrase;
     },
     SET_PRICE_INFO(state, payload) {
       state.priceInfo = payload.priceInfo;
@@ -76,6 +80,9 @@ export default new Vuex.Store({
     SET_MUTATIONS({ commit }, payload) {
       commit(payload);
     },
+    SET_NEW_RECOVERY_PHRASE({ commit }, payload) {
+      commit(payload);
+    },
     SET_PRICE_INFO({ commit }, payload) {
       commit(payload);
     },
@@ -83,6 +90,12 @@ export default new Vuex.Store({
       commit(payload);
     },
     SET_STATUS({ commit }, payload) {
+      if (
+        payload.status === AppStatus.ready ||
+        payload.status === AppStatus.synchronize
+      ) {
+        commit({ type: "SET_NEW_RECOVERY_PHRASE", newRecoveryPhrase: null });
+      }
       commit(payload);
     },
     SET_WALLET_EXISTS({ commit }, payload) {

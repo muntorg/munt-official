@@ -144,6 +144,10 @@ class LibUnity {
 
     signalHandler.notifyInitWithoutExistingWallet = function() {
       console.log("received: notifyInitWithoutExistingWallet");
+      store.dispatch({
+        type: "SET_NEW_RECOVERY_PHRASE",
+        newRecoveryPhrase: backend.GenerateRecoveryMnemonic()
+      });
       self._setStatus(AppStatus.setup);
     };
 
