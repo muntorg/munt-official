@@ -142,12 +142,19 @@ for (let i = 0; i < allFunctions.length; i++) {
   );
   txtLib = addLine(
     txtLib,
-    `let result = this.backend.${f.name}(${f.args});`,
+    `let result = this._tryGetResultBeforeBackendCall("${f.functionName}");`,
     tabs + 1
   );
+  txtLib = addLine(txtLib, `if (result === undefined) {`, tabs + 1);
   txtLib = addLine(
     txtLib,
-    `this._handleIpcInternal("${f.functionName}", result);`,
+    `result = this.backend.${f.name}(${f.args});`,
+    tabs + 2
+  );
+  txtLib = addLine(txtLib, `}`, tabs + 1);
+  txtLib = addLine(
+    txtLib,
+    `this._handleIpcInternalAfterBackendCall("${f.functionName}", result);`,
     tabs + 1
   );
   txtLib = addLine(txtLib, `event.returnValue = result;`, tabs + 1);
@@ -162,14 +169,21 @@ for (let i = 0; i < allFunctions.length; i++) {
   );
   txtLib = addLine(
     txtLib,
-    `let result = this.backend.${f.name}(${
-      f.args.length > 0 ? "data." + f.args.split(", ").join(", data.") : ""
-    });`,
+    `let result = this._tryGetResultBeforeBackendCall("${f.functionName}");`,
     tabs + 1
   );
+  txtLib = addLine(txtLib, `if (result === undefined) {`, tabs + 1);
   txtLib = addLine(
     txtLib,
-    `this._handleIpcInternal("${f.functionName}", result);`,
+    `result = this.backend.${f.name}(${
+      f.args.length > 0 ? "data." + f.args.split(", ").join(", data.") : ""
+    });`,
+    tabs + 2
+  );
+  txtLib = addLine(txtLib, `}`, tabs + 1);
+  txtLib = addLine(
+    txtLib,
+    `this._handleIpcInternalAfterBackendCall("${f.functionName}", result);`,
     tabs + 1
   );
   txtLib = addLine(txtLib, `return result;`, tabs + 1);

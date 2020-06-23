@@ -6,7 +6,7 @@
         <h2 class="important">{{ $t("common.important") }}</h2>
         <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
         <div class="phrase">
-          {{ newRecoveryPhrase }}
+          {{ recoveryPhrase }}
         </div>
       </div>
 
@@ -15,7 +15,7 @@
         <h2>{{ $t("setup.enter_recovery_phrase") }}</h2>
         <p>{{ $t("setup.repeat_your_recovery_phrase") }}</p>
         <novo-phrase-validator
-          :phrase="newRecoveryPhrase"
+          :phrase="recoveryPhrase"
           :autofocus="true"
           @validated="onPhraseValidated"
         />
@@ -77,7 +77,6 @@
 
 <script>
 import UnityBackend from "../unity/UnityBackend";
-import { mapState } from "vuex";
 
 export default {
   data() {
@@ -85,14 +84,19 @@ export default {
       current: 1,
       password1: "",
       password2: "",
+      recoveryPhrase: "",
       isRecoveryPhraseCorrect: false,
       isBackDisabled: false
     };
   },
+  created() {
+    this.$nextTick(() => {
+      this.recoveryPhrase = UnityBackend.GenerateRecoveryMnemonic();
+    });
+  },
   computed: {
-    ...mapState(["newRecoveryPhrase"]),
     recoveryPhraseWords() {
-      return this.newRecoveryPhrase.split(" ");
+      return this.recoveryPhrase.split(" ");
     },
     password2Status() {
       if (this.password2.length === 0) return "";
@@ -121,7 +125,7 @@ export default {
     isButtonDisabled() {
       switch (this.current) {
         case 1:
-          return this.newRecoveryPhrase === null;
+          return this.recoveryPhrase === null;
         case 2:
           return this.isBackDisabled;
         case 3:
@@ -139,7 +143,7 @@ export default {
         case 3:
           if (
             UnityBackend.InitWalletFromRecoveryPhrase(
-              this.newRecoveryPhrase,
+              this.recoveryPhrase,
               this.password1
             )
           ) {
