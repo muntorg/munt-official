@@ -40,7 +40,7 @@ files:
 - "node-addon-api-2.0.0.tgz"
 script: |
   WRAP_DIR=$HOME/wrapped
-  HOSTS="i686-w64-mingw32"
+  HOSTS="x86_64-w64-mingw32 i686-w64-mingw32"
   CONFIGFLAGS="--enable-reduce-exports --disable-gui-tests --disable-bench --disable-tests --disable-man --disable-zmq --without-utils  --without-daemon --with-node-js-libs --with-qrencode --with-gui=no"
   FAKETIME_HOST_PROGS="ar ranlib nm windres strip objcopy"
   FAKETIME_PROGS="date makensis zip"
@@ -257,7 +257,6 @@ script: |
 
     #Copy library to build host
     mkdir $OUTDIR/libs || true
-    mkdir $OUTDIR/libs/${i}
     cp -f release/*.dll $OUTDIR/libs/${i}/
 
   done
