@@ -257,6 +257,6 @@ script: |
 
     #Copy library to build host
     mkdir $OUTDIR/libs || true
-    cp -f release/*.dll $OUTDIR/libs/${i}/
+    cp -f release/lib_unity_node_js-0.dll $OUTDIR/libs/libnovo_win_${i}.node
 
   done
