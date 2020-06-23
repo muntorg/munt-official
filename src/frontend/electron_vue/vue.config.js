@@ -10,7 +10,8 @@ module.exports = {
       builderOptions: {
         appId: "com.novocurrency.app",
         productName: "Novo",
-        extraFiles: []
+        extraFiles: [],
+        publish: null
       }
     },
     i18n: {
