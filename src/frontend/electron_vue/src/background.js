@@ -22,7 +22,7 @@ let win;
 let walletPath;
 if (os.platform() === "linux")
 {
-  walletPath = path.join(app.getPath("home")+"/.Novo", isDevelopment ? "dev-wallet" : "wallet");
+  walletPath = path.join(app.getPath("home")+"/.novo", isDevelopment ? "dev-wallet" : "wallet");
 }
 else
 {
