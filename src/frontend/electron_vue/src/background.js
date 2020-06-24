@@ -22,11 +22,13 @@ let win;
 let walletPath;
 if (os.platform() === "linux")
 {
-  walletPath = path.join(app.getPath("home")+"/.novo", isDevelopment ? "dev-wallet" : "wallet");
+  walletPath = path.join(app.getPath("home"), isDevelopment ? ".novo_dev" : ".novo");
 }
 else
 {
-  walletPath = path.join(app.getPath("userData"), isDevelopment ? "dev-wallet" : "wallet");
+  walletPath = app.getPath("userData");
+  if (isDevelopment)
+    walletPath=walletPath+"_dev"
 }
 
 let libUnity = new LibUnity({ walletPath });
