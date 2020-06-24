@@ -45,7 +45,7 @@ script: |
 
   WRAP_DIR=$HOME/wrapped
   HOSTS="i686-pc-linux-gnu x86_64-linux-gnu arm-linux-gnueabihf aarch64-linux-gnu riscv64-linux-gnu"
-  CONFIGFLAGS="--enable-glibc-back-compat --enable-reduce-exports --disable-gui-tests --disable-bench --disable-tests --disable-man --disable-zmq --without-utils  --without-daemon --with-node-js-libs --with-qrencode --with-gui=no"
+  CONFIGFLAGS="--enable-glibc-back-compat --enable-reduce-exports --disable-gui-tests --disable-bench --disable-tests --disable-man --disable-zmq --with-utils  --with-daemon --with-node-js-libs --with-qrencode --with-gui=no"
   FAKETIME_HOST_PROGS="gcc g++"
   FAKETIME_PROGS="date ar ranlib nm"
   HOST_CFLAGS="-O2 -g"
@@ -190,35 +190,30 @@ script: |
     echo '#!/bin/true' >share/genbuild.sh
     mkdir src/obj
     cp ../../src/obj/build.h src/obj/
-    
+
     make ${MAKEOPTS}
     make ${MAKEOPTS} -C src check-security
     make ${MAKEOPTS} -C src check-symbols
-    
-    # Move library into release folder
+
+    # Move results into release folder
     mkdir release
-    cp -f src/.libs/lib_unity_node_js.so.0.0.0 release/
+    make install DESTDIR=`pwd`/release
+    rm -rf release/lib/*
+    cp -f src/.libs/lib_unity_node_js.so.0.0.0 release/lib/
     # Strip
-    find release -type f -print0 | xargs -0 -n1 -I{} ../../contrib/devtools/split-debug.sh {} {} {}.dbg
-    #Move results to outdir
+    find release/bin -type f -executable -print0 | xargs -0 -n1 -I{} ../../contrib/devtools/split-debug.sh {} {} {}.dbg
+    if [ -d release/lib ]; then
+        find release/lib -type f -print0 | xargs -0 -n1 -I{} ../../contrib/devtools/split-debug.sh {} {} {}.dbg
+    fi
+
+    #Move lib results to outdir
     mkdir $OUTDIR/libs || true
-    cp -f release/lib_unity_node_js.so.0.0.0 $OUTDIR/libs/libnovo_linux_${i}.node
-    cp -f release/lib_unity_node_js.so.0.0.0.dbg $OUTDIR/libs/libnovo_linux_${i}.node.dbg
+    mv -f release/lib/lib_unity_node_js.so.0.0.0 $OUTDIR/libs/libnovo_linux_${i}.node
+    mv -f release/lib/lib_unity_node_js.so.0.0.0.dbg $OUTDIR/libs/libnovo_linux_${i}.node.dbg
+    rm -rf release/lib
 
-
-    #make install DESTDIR=${INSTALLPATH}
-    #cd installed
-    #find . -name "lib*.la" -delete
-    #find . -name "lib*.a" -delete
-    #rm -rf ${DISTNAME}/lib/pkgconfig
-    #find ${DISTNAME}/bin -type f -executable -print0 | xargs -0 -n1 -I{} ../contrib/devtools/split-debug.sh {} {} {}.dbg
-    #if [ -d ${DISTNAME}/lib ]; then
-        #find ${DISTNAME}/lib -type f -print0 | xargs -0 -n1 -I{} ../contrib/devtools/split-debug.sh {} {} {}.dbg
-    #fi
-    #find ${DISTNAME} -not -name "*.dbg" | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ${OUTDIR}/${DISTNAME}-${i}.tar.gz
-    #find ${DISTNAME} -name "*.dbg" | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ${OUTDIR}/${DISTNAME}-${i}-debug.tar.gz
-    #cd ../../
-    #rm -rf distsrc-${i}
+    # Make tarballs
+    cd release/bin
+    find . -not -name "*.dbg" | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ${OUTDIR}/${DISTNAME}-${i}.tar.gz
+    find . -name "*.dbg" | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ${OUTDIR}/${DISTNAME}-${i}-debug.tar.gz
   done
-  #mkdir -p $OUTDIR/src
-  #mv $SOURCEDIST $OUTDIR/src
