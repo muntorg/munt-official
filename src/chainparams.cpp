@@ -142,14 +142,14 @@ public:
                 
                 {
                     CKeyID pubKeyID;
-                    pubKeyID.SetHex("6f5f2fb2d112fbf2ed440e09f9373750ac8b8fe1");
+                    pubKeyID.SetHex("b3a447d0cbdd174893d1e52df169c703583e8339");
 
                     CTxOut renewedWitnessTxOutput;
                     renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
                     renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = pubKeyID;
                     renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = pubKeyID;
                     renewedWitnessTxOutput.output.witnessDetails.lockFromBlock = 1;
-                    renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = 900000;
+                    renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = std::numeric_limits<uint64_t>::max();
                     renewedWitnessTxOutput.output.witnessDetails.failCount = 0;
                     renewedWitnessTxOutput.output.witnessDetails.actionNonce = 1;
                     renewedWitnessTxOutput.nValue=0;
@@ -186,23 +186,15 @@ public:
                     }
                 }
 
-                genesis.nTime    = 1591892927;
+                genesis.nTime    = 1592990387;
                 genesis.nBits    = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
-                genesis.nNonce   = 784597017;
+                genesis.nNonce   = 465305602;
                 genesis.nVersion = 536870912;
                 genesis.vtx.push_back(MakeTransactionRef(std::move(txNew)));
                 genesis.hashPrevBlock.SetNull();
                 genesis.hashMerkleRoot = BlockMerkleRoot(genesis.vtx.begin(), genesis.vtx.end());
                 genesis.hashMerkleRootPoW2Witness = BlockMerkleRoot(genesis.vtx.begin(), genesis.vtx.end());
                 genesis.witnessHeaderPoW2Sig.resize(65);
-
-                /*uint256 foundBlockHash;
-                std::atomic<uint64_t> halfHashCounter=0;
-                std::atomic<uint64_t> nThreadCounter=0;
-                bool interrupt=false;
-                sigma_context generateContext(defaultSigmaSettings, defaultSigmaSettings.arenaSizeKb, std::max(GetNumCores(), 1));
-                generateContext.prepareArenas(genesis);
-                generateContext.mineBlock(&genesis, halfHashCounter, foundBlockHash, interrupt);*/
                 
                 genesis.nTimePoW2Witness = genesis.nTime+1;
                 genesis.nVersionPoW2Witness = genesis.nVersion;
@@ -210,8 +202,9 @@ public:
         }
         
         consensus.hashGenesisBlock = genesis.GetHashPoW2();
-        //assert(consensus.hashGenesisBlock == uint256S("0x6c5d71a461b5bff6742bb62e5be53978b8dec5103ce52d1aaab8c6a251582f92"));
-        //assert(genesis.hashMerkleRoot == uint256S("0x4bed0bcb3e6097445ae68d455137625bb66f0e7ba06d9db80290bf72e3d6dcf8"));
+        assert(consensus.hashGenesisBlock == uint256S("0x4d3e8d58df656808efbdd6eafe18ac5ad0678303be1cfdac0a0e0b8fdc6da9e3"));
+        assert(genesis.hashMerkleRoot == uint256S("0x3cfac9091626d7f3bf25fdb9829e8df001a59a45f0d2426c0cf76e2a7a3d0c46"));
+        assert(genesis.hashMerkleRootPoW2Witness == uint256S("0x3cfac9091626d7f3bf25fdb9829e8df001a59a45f0d2426c0cf76e2a7a3d0c46"));
 
         vSeeds.push_back(CDNSSeedData("seed 0",  "seed1.novocurrency.com", false));
         vSeeds.push_back(CDNSSeedData("seed 1",  "seed2.novocurrency.com", false));       

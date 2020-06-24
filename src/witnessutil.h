@@ -38,7 +38,7 @@ int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks);
 
 //! Calculate how many blocks a witness transaction is locked for from an output
 //! Always use this helper instead of attempting to calculate directly - to avoid off by 1 errors.
-int64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockNumber, uint64_t& nFromBlockOut, uint64_t& nUntilBlockOut);
+uint64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockNumber, uint64_t& nFromBlockOut, uint64_t& nUntilBlockOut);
 
 //! Calculate how many blocks are left from `tipHeight` until a witness output unlocks, given inputs 'lockUntilBlock' and 'tipHeight'
 //! Though this is a relatively simple calculation, always use this helper instead of attempting to calculate directly - to avoid off by 1 errors.
