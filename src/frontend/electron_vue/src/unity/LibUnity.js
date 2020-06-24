@@ -50,7 +50,7 @@ class LibUnity {
   _startUnityLib() {
     if (!fs.existsSync(this.options.walletPath)) {
       console.log(`create wallet folder ${this.options.walletPath}`);
-      fs.mkdirSync(this.options.walletPath);
+      fs.mkdirSync(this.options.walletPath, { recursive: true });
     } else {
       console.log(`wallet folder ${this.options.walletPath} already exists`);
     }
