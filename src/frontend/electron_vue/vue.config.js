@@ -14,8 +14,15 @@ module.exports = {
         publish: null,
         "afterSign": "@oshell/vue-cli-plugin-electron-builder-notarize",
         "mac": {
+          "category": "public.app-category.finance",
           "asar": false,
           "hardenedRuntime": true
+        },
+        "win": {
+          "sign": "./sign.js"
+        },
+        "linux": {
+          "category": "public.app-category.finance"
         }
       }
     },
