@@ -33,6 +33,7 @@
     "vuex-electron": "^1.0.3"
   },
   "devDependencies": {
+    "@oshell/vue-cli-plugin-electron-builder-notarize": "^1.0.2",
     "@vue/cli-plugin-babel": "~4.4.0",
     "@vue/cli-plugin-eslint": "~4.4.0",
     "@vue/cli-plugin-router": "~4.4.0",

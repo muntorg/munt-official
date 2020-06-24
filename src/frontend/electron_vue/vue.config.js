@@ -11,7 +11,12 @@ module.exports = {
         appId: "com.novocurrency.app",
         productName: "Novo",
         extraFiles: [],
-        publish: null
+        publish: null,
+        "afterSign": "@oshell/vue-cli-plugin-electron-builder-notarize",
+        "mac": {
+          "asar": false,
+          "hardenedRuntime": true
+        }
       }
     },
     i18n: {
