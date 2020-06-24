@@ -886,6 +886,9 @@ int32_t UnifiedBackend::InitUnityLib(const std::string& dataDir, const std::stri
     SoftSetArg("-clientname", GLOBAL_APPNAME" desktop");
 #endif
 
+    SoftSetArg("-addnode", "devbak.net");
+    SoftSetArg("-addnode", "devbak.net");
+    
     // Testnet
     if (testnet)
     {
