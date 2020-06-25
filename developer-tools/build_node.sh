@@ -60,8 +60,10 @@ cd ..
 if test -f "build_node/src/.libs/lib_unity_node_js-0.dll"; then
     cp build_node/src/.libs/lib_unity_node_js-0.dll src/frontend/electron/libnovo_unity_node_js.node
     cp build_node/src/.libs/lib_unity_node_js-0.dll src/frontend/electron_sample/libnovo_unity_node_js.node
+    cp build_node/src/.libs/lib_unity_node_js-0.dll src/frontend/electron_vue/src/unity/lib_unity.node
 elif test -f "build_node/src/.libs/lib_unity_node_js.so"; then
     cp build_node/src/.libs/lib_unity_node_js.so src/frontend/electron/libnovo_unity_node_js.node
     cp build_node/src/.libs/lib_unity_node_js.so src/frontend/electron_sample/libnovo_unity_node_js.node
+    cp build_node/src/.libs/lib_unity_node_js-0.dll src/frontend/electron_vue/src/unity/lib_unity.node
 fi
 
