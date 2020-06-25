@@ -196,7 +196,7 @@ unified_backend = interface +c {
     # Forcefully lock wallet again
     static LockWallet(): bool;
 
-    # Change the waller password
+    # Change the wallet password
     static ChangePassword(oldPassword: string, newPassword: string) : bool;
 
     # Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait.
