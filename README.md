@@ -87,7 +87,7 @@ For those who really need too or are technically inclined it is of course possib
 ### Additional technical information
 |Technical specifications|Main network|[Testnet](./technical_documentation/accelerated_testnet.md#official-testnet)|
 |:-----------|:---------|:---------|
-|Consensus algorithm:|PoW² SIGMA/Witness|PoW² SIGMA/Witness|
+|Consensus algorithm:|PoW² SIGMA/Holding|PoW² SIGMA/Holding|
 |Recommended transaction confirmations:|2|2|
 |Block reward SIGMA:|0.10 Novo|0.10 Novo|
 |Block reward witness:|0.04 Novo|0.04 Novo|
