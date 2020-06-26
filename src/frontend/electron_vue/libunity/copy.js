@@ -16,24 +16,27 @@ if (os.platform() === "win32") {
 
 const fs = require("fs");
 const request = require("request");
-const download = (uri, filename, callback) => {
-  request.head(uri, (err, res) => {
-    if (err) {
-      return console.error(err);
-    }
-    if (res.statusCode !== 200) {
-      return console.error(`Error downloading ${filename}: ${res.statusCode}`);
-    }
-
-    request(uri)
-      .pipe(fs.createWriteStream(filename))
-      .on("close", callback);
-  });
+let error;
+const download = (uri, filename) => {
+  request(uri)
+    .on("error", err => {
+      error = err;
+    })
+    .on("response", response => {
+      if (response.statusCode !== 200) {
+        error = `error downloading ${uri} : ${response.statusCode}`;
+      } else {
+        console.log(`downloading ${uri}...`);
+      }
+    })
+    .pipe(fs.createWriteStream(filename))
+    .on("close", () => {
+      if (error !== undefined) console.error(error);
+      else console.log(`fetched ${src} -> ${dst}`);
+    });
 };
 
 const path = require("path");
 let src = repo + file;
 let dst = path.join(__dirname, `../src/unity/lib_unity.node`);
-download(src, dst, () => {
-  console.log(`fetched ${src} -> ${dst}`);
-});
+download(src, dst);
