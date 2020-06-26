@@ -90,7 +90,7 @@ For those who really need too or are technically inclined it is of course possib
 |Consensus algorithm:|PoW² SIGMA/Holding|PoW² SIGMA/Holding|
 |Recommended transaction confirmations:|2|2|
 |Block reward SIGMA:|0.10 Novo|0.10 Novo|
-|Block reward witness:|0.04 Novo|0.04 Novo|
+|Block reward holder:|0.40 Novo|0.40 Novo|
 |Block interval target:|300 seconds (5 minutes)|Configurable|
 |Difficulty adjustment period:|Every block|Every block|
 |Difficulty adjustment algorithm:|Delta|Delta|

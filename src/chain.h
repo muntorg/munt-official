@@ -374,7 +374,7 @@ public:
             nMedianTimeSpan = 3;
 
         //fixme: (PHASE5) - This needs unit tests
-        if (this->nTimePoW2Witness != 0)
+        if (this->nTimePoW2Witness != 0 && nHeight > 20)
         {
             nMedianTimeSpan *= 2;
             int nMid = nMedianTimeSpan/2;

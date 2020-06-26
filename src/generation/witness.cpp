@@ -585,9 +585,11 @@ void static GuldenWitness()
                             LogPrintf("%s", strErrorMessage.c_str());
                             continue;
                         }
+                        
+                        bool isGenesisWitness = (witnessInfo.selectedWitnessTransaction.output.witnessDetails.lockFromBlock == 1);
 
                         boost::this_thread::interruption_point();
-                        CAmount witnessBlockSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight);
+                        CAmount witnessBlockSubsidy = isGenesisWitness ? 0 : GetBlockSubsidyWitness(candidateIter->nHeight);
                         CAmount witnessFeesSubsidy = 0;
 
                         bool isMineAny = (pactiveWallet->IsMine(witnessInfo.selectedWitnessTransaction) == ISMINE_WITNESS);
@@ -654,7 +656,7 @@ void static GuldenWitness()
                             int nPoW2PhaseParent = GetPoW2Phase(candidateIter->pprev);
 
                             /** Now add any additional transactions if there is space left **/
-                            if (nPoW2PhaseParent >= 4)
+                            if (!isGenesisWitness && nPoW2PhaseParent >= 4)
                             {
                                 // Piggy back off existing block assembler code to grab the transactions we want to include.
                                 // Setup maximum size for assembler so that size of existing (PoW) block transactions are subtracted from overall maximum.

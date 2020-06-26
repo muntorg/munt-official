@@ -141,13 +141,13 @@ public:
                 txNew.vin[0].segregatedSignatureData.stack.push_back({'F','M'});
                 
                 {
-                    CKeyID pubKeyID;
-                    pubKeyID.SetHex("b3a447d0cbdd174893d1e52df169c703583e8339");
+                    CKeyID pubKeyIDWitness;
+                    pubKeyIDWitness.SetHex("b3a447d0cbdd174893d1e52df169c703583e8339");
 
                     CTxOut renewedWitnessTxOutput;
                     renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
-                    renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = pubKeyID;
-                    renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = pubKeyID;
+                    renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = pubKeyIDWitness;
+                    renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = pubKeyIDWitness;
                     renewedWitnessTxOutput.output.witnessDetails.lockFromBlock = 1;
                     renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = std::numeric_limits<uint64_t>::max();
                     renewedWitnessTxOutput.output.witnessDetails.failCount = 0;
