@@ -9,8 +9,7 @@
       :isSynchronizing="isSynchronizing"
     />
 
-    <!-- main application -->
-    <div>
+    <div v-show="!showLoader">
       <div class="app-top">
         <span class="app-logo"></span>
         <span class="app-balance" v-show="computedBalance !== null">{{
