@@ -7,12 +7,10 @@
         <span class="copy"><fa-icon :icon="['fal', 'copy']"/></span>
       </div>
       <div class="button-wrapper">
-        <novo-button class="btn" @click="receiveNovo">
+        <novo-button @click="receiveNovo">
           {{ $t("wallet.receive_acquired_novo") }}
         </novo-button>
-      </div>
-      <div class="button-wrapper">
-        <novo-button class="btn" @click="sendNovo">
+        <novo-button @click="sendNovo">
           {{ $t("wallet.send_novo") }}
         </novo-button>
       </div>
@@ -20,7 +18,7 @@
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="less">
 .address {
   position: relative;
   float: left;
@@ -52,6 +50,9 @@
 
 .button-wrapper {
   margin: 10px 0 0 0;
+  & > button:not(:first-child) {
+    margin: 0 20px;
+  }
 }
 </style>
 

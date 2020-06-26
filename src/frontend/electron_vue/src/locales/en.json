@@ -29,6 +29,7 @@
   },
   "wallet": {
     "receive_acquired_novo": "Receive your acquired Novo",
-    "your_address": "Your address"
+    "your_address": "Your address",
+    "send_novo": "Send Novo"
   }
 }
