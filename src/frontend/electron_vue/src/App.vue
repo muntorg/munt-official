@@ -50,10 +50,6 @@
 <script>
 import { mapState } from "vuex";
 import { AppStatus } from "./store";
-import UnityBackend from "./unity/UnityBackend";
-
-let splashTimeout = 2500;
-let synchronizeTimeout = null;
 
 export default {
   data() {
@@ -65,9 +61,7 @@ export default {
   },
   watch: {
     status() {
-      if (this.status === AppStatus.synchronize) {
-        this.synchronize();
-      }
+      this.handleStatusChanged();
     }
   },
   computed: {
@@ -77,9 +71,10 @@ export default {
     },
     computedBalance() {
       if (this.balance === undefined || this.balance === null) return null;
-      return ( 
+      return (
         (this.balance.availableIncludingLocked +
-          this.balance.unconfirmedIncludingLocked + this.balance.immatureIncludingLocked) /
+          this.balance.unconfirmedIncludingLocked +
+          this.balance.immatureIncludingLocked) /
         100000000
       ).toFixed(2);
     },
@@ -96,36 +91,28 @@ export default {
       return this.status === AppStatus.synchronize;
     }
   },
+  created() {
+    this.handleStatusChanged();
+  },
   mounted() {
     setTimeout(() => {
       this.splashReady = true;
-    }, splashTimeout);
-    if (this.status === AppStatus.synchronize) {
-      this.synchronize();
-    }
+    }, 2500);
   },
   methods: {
-    synchronize() {
-      clearTimeout(synchronizeTimeout);
-
-      let progress = UnityBackend.GetUnifiedProgress();
-      progress = parseInt(parseFloat(progress) * 100);
-
-      if (this.progress < progress) {
-        this.progress = progress;
+    handleStatusChanged() {
+      let routeName;
+      switch (this.status) {
+        case AppStatus.setup:
+          routeName = "setup";
+          break;
+        case AppStatus.synchronize:
+        case AppStatus.ready:
+          routeName = "wallet";
+          break;
       }
-      if (this.progress < 100) {
-        synchronizeTimeout = setTimeout(this.synchronize, 1000);
-      } else {
-        synchronizeTimeout = setTimeout(() => {
-          if (this.status !== AppStatus.shutdown) {
-            this.$store.dispatch({
-              type: "SET_STATUS",
-              status: AppStatus.ready
-            });
-          }
-        }, splashTimeout);
-      }
+      if (routeName === undefined || this.$route.name === routeName) return;
+      this.$router.push({ name: routeName });
     }
   }
 };

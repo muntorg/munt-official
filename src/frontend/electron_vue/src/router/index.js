@@ -1,6 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Startup from "../views/Startup.vue";
 import Wallet from "../views/Wallet.vue";
 
 Vue.use(VueRouter);
@@ -8,19 +7,14 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "startup",
-    component: Startup
+    name: "wallet",
+    component: Wallet
   },
   {
     path: "/setup",
     name: "setup",
     component: () =>
       import(/* webpackChunkName: "setup" */ "../views/Setup.vue")
-  },
-  {
-    path: "/wallet",
-    name: "wallet",
-    component: Wallet
   },
   {
     path: "/send",
