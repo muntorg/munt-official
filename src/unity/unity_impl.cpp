@@ -613,16 +613,17 @@ std::string UnifiedBackend::GenerateGenesisKeys()
     CPubKey vchPubKeyDevSubsidy;
     pactiveWallet->GetPubKey(boost::get<CKeyID>(dest), vchPubKeyDevSubsidy);
     std::string devSubsidyPubKey = HexStr(vchPubKeyDevSubsidy);
+    std::string devSubsidyPubKeyID = boost::get<CKeyID>(dest).GetHex();
 
     CKey key;
     key.MakeNewKey(true);    
     CPrivKey vchPrivKey = key.GetPrivKey();
     CPubKey vchPubKey = key.GetPubKey();
     std::string privkey = HexStr<CPrivKey::iterator>(vchPrivKey.begin(), vchPrivKey.end()).c_str();
-    std::string pubKey = vchPubKey.GetID().GetHex();
+    std::string pubKeyID = vchPubKey.GetID().GetHex();
     std::string witnessKeys = GLOBAL_APP_URIPREFIX"://witnesskeys?keys=" + CEncodedSecretKey(key).ToString() + strprintf("#%s", GetAdjustedTime());
     
-    return "privkey: "+privkey+"\n"+"pubkeyID: "+pubKey+"\n"+"witness: "+witnessKeys+"\n"+"dev subsidy addr: "+address+"\n"+"dev subsidy pubkey: "+devSubsidyPubKey+"\n";
+    return "privkey: "+privkey+"\n"+"pubkeyID: "+pubKeyID+"\n"+"witness: "+witnessKeys+"\n"+"dev subsidy addr: "+address+"\n"+"dev subsidy pubkey: "+devSubsidyPubKey+"\n"+"dev subsidy pubkey ID: "+devSubsidyPubKeyID+"\n";
 }
 
 std::string UnifiedBackend::GenerateRecoveryMnemonic()
