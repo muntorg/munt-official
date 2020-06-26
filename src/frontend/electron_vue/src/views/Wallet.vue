@@ -11,11 +11,6 @@
           {{ $t("wallet.receive_acquired_novo") }}
         </novo-button>
       </div>
-      <div class="button-wrapper">
-        <novo-button class="btn" @click="sendNovo">
-          {{ $t("wallet.send_novo") }}
-        </novo-button>
-      </div>
     </div>
   </div>
 </template>
@@ -74,9 +69,6 @@ export default {
   methods: {
     receiveNovo() {
       window.open(this.receiveUrl, "_blank");
-    },
-    sendNovo() {
-      this.$router.push({ name: "send" });
     },
     copyAddress() {
       this.copyActive = true;

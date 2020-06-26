@@ -23,11 +23,6 @@ const routes = [
     component: Wallet
   },
   {
-    path: "/send",
-    name: "send",
-    component: () => import(/* webpackChunkName: "send" */ "../views/Send.vue")
-  },
-  {
     path: "/settings",
     name: "settings",
     component: () =>

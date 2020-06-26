@@ -12,31 +12,31 @@ module.exports = {
         productName: "Novo",
         extraFiles: [],
         publish: null,
-        afterSign: "@oshell/vue-cli-plugin-electron-builder-notarize",
-        mac: {
-          category: "public.app-category.finance",
-          asar: false,
-          hardenedRuntime: true
+        "afterSign": "@oshell/vue-cli-plugin-electron-builder-notarize",
+        "mac": {
+          "category": "public.app-category.finance",
+          "asar": false,
+          "hardenedRuntime": true
         },
-        win: {
-          sign: "./sign.js"
+        "win": {
+          "sign": "./sign.js"
         },
-        linux: {
-          category: "public.app-category.finance"
+        "linux": {
+          "category": "public.app-category.finance"
         },
-        dmg: {
-          background: "./build/background.tiff",
-          contents: [
+        "dmg": {
+          "background": "./build/background.tiff",
+          "contents": [
             {
-              x: 410,
-              y: 190,
-              type: "link",
-              path: "/Applications"
+              "x": 410,
+              "y": 190,
+              "type": "link",
+              "path": "/Applications"
             },
             {
-              x: 130,
-              y: 190,
-              type: "file"
+              "x": 130,
+              "y": 190,
+              "type": "file"
             }
           ]
         }
