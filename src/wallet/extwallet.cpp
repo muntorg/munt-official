@@ -996,7 +996,7 @@ std::vector<std::pair<CKey, uint64_t>> CExtWallet::ParseWitnessKeyURL(SecureStri
         throw std::runtime_error("Not a valid \"witness only\" witness account URI");
 
     std::vector<SecureString> encodedPrivateWitnessKeyStrings;
-    SecureString encPrivWitnessKeyWithoutPrefix(sEncodedPrivWitnessKeysURL.begin()+26, sEncodedPrivWitnessKeysURL.end());
+    SecureString encPrivWitnessKeyWithoutPrefix(sEncodedPrivWitnessKeysURL.begin()+24, sEncodedPrivWitnessKeysURL.end());
     boost::split(encodedPrivateWitnessKeyStrings, encPrivWitnessKeyWithoutPrefix, boost::is_any_of(":"));
 
     std::vector<std::pair<CKey, uint64_t>> privateWitnessKeys;
