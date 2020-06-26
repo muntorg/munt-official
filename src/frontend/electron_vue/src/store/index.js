@@ -35,6 +35,7 @@ export default new Vuex.Store({
     receiveAddress: null,
     status: AppStatus.start,
     unityVersion: null,
+    walletExists: null,
     walletVersion: null
   },
   mutations: {
@@ -53,11 +54,19 @@ export default new Vuex.Store({
     SET_RECEIVE_ADDRESS(state, payload) {
       state.receiveAddress = payload.receiveAddress;
     },
-    SET_STATUS(state, payload) {
-      state.status = payload.status;
+    SET_STATUS(state, status) {
+      if (state.status === AppStatus.shutdown) return;
+      if (status === AppStatus.synchronize) {
+        console.log(`skip synchronization for now`);
+        status = AppStatus.ready;
+      }
+      state.status = status;
     },
     SET_UNITY_VERSION(state, payload) {
       state.unityVersion = payload.version;
+    },
+    SET_WALLET_EXISTS(state, walletExists) {
+      state.walletExists = walletExists;
     },
     SET_WALLET_VERSION(state, payload) {
       state.walletVersion = payload.version;
@@ -83,18 +92,21 @@ export default new Vuex.Store({
       commit(payload);
     },
     SET_STATUS({ commit }, payload) {
-      commit(payload);
-    },
-    SET_WALLET_EXISTS({ commit }, payload) {
-      commit(payload);
+      commit("SET_STATUS", payload.status);
     },
     SET_UNITY_VERSION({ commit }, payload) {
       commit(payload);
+    },
+    SET_WALLET_EXISTS({ commit }, payload) {
+      let status = payload.walletExists
+        ? AppStatus.synchronize
+        : AppStatus.setup;
+      commit("SET_STATUS", status);
+      commit("SET_WALLET_EXISTS", payload.walletExists);
     },
     SET_WALLET_VERSION({ commit }, payload) {
       commit(payload);
     }
   },
-  modules: {},
   plugins: [createPersistedState({ storage: store }), createSharedMutations()]
 });
