@@ -17,12 +17,12 @@
       <div v-if="current === 1" class="password">
         <div class="password-row">
           <h4>{{ $t("setup.password") }}:</h4>
-          <novo-input
+          <input
             ref="passwordold"
             type="password"
             v-model="passwordold"
             @keydown="validatePasswordOnEnter"
-            :status="passwordOldStatus"
+            :class="passwordOldStatus"
           />
         </div>
       </div>
@@ -31,21 +31,21 @@
       <div v-else class="password">
         <div class="password-row">
           <h4>{{ $t("setup.password") }}:</h4>
-          <novo-input ref="password1" type="password" v-model="password1" />
+          <input ref="password1" type="password" v-model="password1" />
         </div>
         <div class="password-row">
           <h4>{{ $t("setup.repeat_password") }}:</h4>
-          <novo-input
+          <input
             type="password"
             v-model="password2"
-            :status="password2Status"
+            :class="password2Status"
             @keydown="validatePasswordRepeatOnEnter"
           />
         </div>
       </div>
 
       <div class="button-wrapper">
-        <novo-button
+        <button
           class="btn"
           v-if="current <= 2"
           @click="nextStep"
@@ -53,7 +53,7 @@
         >
           <span v-if="current < 2">{{ $t("buttons.next") }}</span>
           <span v-else>{{ $t("buttons.change_password") }}</span>
-        </novo-button>
+        </button>
       </div>
     </div>
   </div>
@@ -102,7 +102,7 @@ export default {
     }
   },
   mounted() {
-    this.$refs.passwordold.$el.focus();
+    this.$refs.passwordold.focus();
   },
   methods: {
     nextStep() {
@@ -129,7 +129,7 @@ export default {
         UnityBackend.LockWallet();
         this.current++;
         this.$nextTick(() => {
-          this.$refs.password1.$el.focus();
+          this.$refs.password1.focus();
         });
       } else {
         this.isPasswordInvalid = true;

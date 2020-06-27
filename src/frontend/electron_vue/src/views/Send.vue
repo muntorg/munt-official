@@ -12,7 +12,7 @@
       <div class="password">
         <div class="password-row">
           <h4>{{ "address" }}:</h4>
-          <novo-input v-model="address" />
+          <input v-model="address" />
         </div>
         <div class="password-row">
           <h4>{{ "amount" }}:</h4>
@@ -23,14 +23,12 @@
       <div class="password">
         <div class="password-row">
           <h4>{{ "Password" }}:</h4>
-          <novo-input ref="password" type="password" v-model="password" />
+          <input ref="password" type="password" v-model="password" />
         </div>
       </div>
 
       <div class="button-wrapper">
-        <novo-button class="btn" @click="sendCoins"
-          >{{ "Send coins" }}
-        </novo-button>
+        <button class="btn" @click="sendCoins">{{ "Send coins" }}</button>
       </div>
     </div>
   </div>

@@ -14,7 +14,7 @@
       <div v-else-if="current === 2">
         <h2>{{ $t("setup.enter_recovery_phrase") }}</h2>
         <p>{{ $t("setup.repeat_your_recovery_phrase") }}</p>
-        <novo-phrase-validator
+        <phrase-validator
           :phrase="recoveryPhrase"
           :autofocus="true"
           @validated="onPhraseValidated"
@@ -28,14 +28,14 @@
         <div class="password">
           <div class="password-row">
             <h4>{{ $t("setup.password") }}:</h4>
-            <novo-input ref="password" type="password" v-model="password1" />
+            <input ref="password" type="password" v-model="password1" />
           </div>
           <div class="password-row">
             <h4>{{ $t("setup.repeat_password") }}:</h4>
-            <novo-input
+            <input
               type="password"
               v-model="password2"
-              :status="password2Status"
+              :class="password2Status"
               @keyup="onPassword2Keyup"
             />
           </div>
@@ -44,31 +44,31 @@
 
       <div class="button-wrapper">
         <div class="left">
-          <novo-button
+          <button
             v-if="current === 2"
             @click="previousStep"
             :disabled="isButtonDisabled()"
           >
             {{ $t("buttons.back") }}
-          </novo-button>
+          </button>
         </div>
 
         <div class="right">
-          <novo-button
+          <button
             v-if="current === 1"
             @click="nextStep"
             :disabled="isButtonDisabled()"
           >
             {{ $t("buttons.next") }}
-          </novo-button>
+          </button>
 
-          <novo-button
+          <button
             v-else-if="current === 3"
             @click="nextStep"
             :disabled="isButtonDisabled()"
           >
             {{ $t("buttons.finish") }}
-          </novo-button>
+          </button>
         </div>
       </div>
     </div>
@@ -77,6 +77,7 @@
 
 <script>
 import UnityBackend from "../unity/UnityBackend";
+import PhraseValidator from "../components/PhraseValidator";
 
 export default {
   data() {
@@ -88,6 +89,9 @@ export default {
       isRecoveryPhraseCorrect: false,
       isBackDisabled: false
     };
+  },
+  components: {
+    PhraseValidator
   },
   created() {
     this.$nextTick(() => {
@@ -137,7 +141,7 @@ export default {
       switch (this.current) {
         case 2:
           this.$nextTick(() => {
-            this.$refs.password.$el.focus();
+            this.$refs.password.focus();
           });
           break;
         case 3:

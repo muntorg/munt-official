@@ -1,6 +1,6 @@
 <template>
   <div class="phrase-validator-wrapper">
-    <app-input
+    <input
       v-for="(word, index) in words"
       :key="index"
       class="repeater-input"
@@ -8,15 +8,13 @@
       @input="validateWord(index, $event)"
       @focus="onFocus(index)"
       v-model="repeaterWords[index]"
-      :status="getStatus(index)"
+      :class="getStatus(index)"
       :readonly="isValid(index)"
     />
   </div>
 </template>
 
 <script>
-import AppInput from "./AppInput";
-
 export default {
   name: "PhraseValidator",
   props: {
@@ -37,12 +35,9 @@ export default {
   mounted() {
     if (this.autofocus) {
       this.$nextTick(() => {
-        this.$refs.repeater[0].$el.focus();
+        this.$refs.repeater[0].focus();
       });
     }
-  },
-  components: {
-    AppInput
   },
   computed: {
     words() {
@@ -63,9 +58,9 @@ export default {
     },
     validateWord(index, e) {
       let word = this.words[index];
-      if (word === e) {
+      if (word === e.target.value) {
         let next = this.$refs.repeater[index + 1];
-        if (next) next.$el.focus();
+        if (next) next.focus();
         if (this.phrase === this.phraseRepeat)
           this.$emit("validated", this.phraseRepeat);
       }

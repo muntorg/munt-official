@@ -7,12 +7,12 @@
         <span class="copy"><fa-icon :icon="['fal', 'copy']"/></span>
       </div>
       <div class="button-wrapper">
-        <novo-button @click="receiveNovo">
+        <button @click="receiveNovo">
           {{ $t("wallet.receive_acquired_novo") }}
-        </novo-button>
-        <novo-button @click="sendNovo">
+        </button>
+        <button @click="sendNovo">
           {{ $t("wallet.send_novo") }}
-        </novo-button>
+        </button>
       </div>
     </div>
   </div>

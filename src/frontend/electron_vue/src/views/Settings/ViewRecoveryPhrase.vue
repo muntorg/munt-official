@@ -16,12 +16,12 @@
       <div class="password" v-if="current === 1">
         <div class="password-row">
           <h4>{{ $t("setup.password") }}:</h4>
-          <novo-input
+          <input
             ref="password"
             type="password"
             v-model="password"
             @keydown="validatePasswordOnEnter"
-            :status="computedStatus"
+            :class="computedStatus"
           />
         </div>
       </div>
@@ -35,14 +35,14 @@
       </div>
 
       <div class="button-wrapper">
-        <novo-button
+        <button
           class="btn"
           v-if="current === 1"
           @click="validatePassword"
           :disabled="isNextDisabled"
         >
           {{ $t("buttons.next") }}
-        </novo-button>
+        </button>
       </div>
     </div>
   </div>
@@ -61,7 +61,7 @@ export default {
     };
   },
   mounted() {
-    this.$refs.password.$el.focus();
+    this.$refs.password.focus();
   },
   computed: {
     computedStatus() {
