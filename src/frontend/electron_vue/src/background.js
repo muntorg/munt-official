@@ -82,7 +82,7 @@ function createWindow() {
   if (isDevelopment) {
     menuTemplate.push({
       label: "Debug",
-      submenu: [{ role: "toggleDevTools" }]
+      submenu: [{ role: "toggleDevTools"}, { label:'Generate genesis keys', click() { console.log(libUnity.backend.GenerateGenesisKeys()) }}]
     });
   }
 
