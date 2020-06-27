@@ -27,7 +27,7 @@
         <p>{{ $t("setup.choose_password_information") }}</p>
         <div class="password">
           <div class="password-row">
-            <h4>{{ $t("setup.password") }}:</h4>
+            <h4>{{ $t("common.password") }}:</h4>
             <input ref="password" type="password" v-model="password1" />
           </div>
           <div class="password-row">

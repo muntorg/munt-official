@@ -16,7 +16,7 @@
       <!-- step 1: Enter old password -->
       <div v-if="current === 1" class="password">
         <div class="password-row">
-          <h4>{{ $t("setup.password") }}:</h4>
+          <h4>{{ $t("common.password") }}:</h4>
           <input
             ref="passwordold"
             type="password"
@@ -30,7 +30,7 @@
       <!-- step 2: enter new password -->
       <div v-else class="password">
         <div class="password-row">
-          <h4>{{ $t("setup.password") }}:</h4>
+          <h4>{{ $t("common.password") }}:</h4>
           <input ref="password1" type="password" v-model="password1" />
         </div>
         <div class="password-row">

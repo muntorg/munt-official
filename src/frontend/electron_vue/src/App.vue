@@ -114,6 +114,11 @@ export default {
   --top-height: 62px;
 }
 
+body,
+#app {
+  overflow: hidden;
+}
+
 *,
 #app {
   font-family: euclid, Helvetica, sans-serif;

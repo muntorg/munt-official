@@ -3,10 +3,14 @@
     "back": "Back",
     "change_password": "Change password",
     "finish": "Finish",
-    "next": "Next"
+    "next": "Next",
+    "send": "Send"
   },
   "common": {
-    "important": "Important"
+    "amount": "Amount",
+    "important": "Important",
+    "password": "Password",
+    "receiving_address": "Receiving address"
   },
   "loader": {
     "shutdown": "Shutting down...",
@@ -22,7 +26,6 @@
     "choose_password_information": "You will need your password to unlock your wallet. Make sure it is not easy to guess because anyone who knows your password can access your funds.",
     "enter_recovery_phrase": "Enter recovery phrase",
     "enter_your_password": "Enter your password",
-    "password": "Password",
     "repeat_password": "Repeat password",
     "repeat_your_recovery_phrase": "To make sure you have correctly written down your recovery phrase, enter your phrase in the boxes below.",
     "this_is_your_recovery_phrase": "This is your recovery phrase, write it down somewhere safe, don't lose it, don't share it, don't store it where hackers can get it. Lose phrase = Lose Novo"

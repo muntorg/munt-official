@@ -15,7 +15,7 @@
       <!-- step 1: Enter password -->
       <div class="password" v-if="current === 1">
         <div class="password-row">
-          <h4>{{ $t("setup.password") }}:</h4>
+          <h4>{{ $t("common.password") }}:</h4>
           <input
             ref="password"
             type="password"
