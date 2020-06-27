@@ -242,7 +242,7 @@ void CoreShutdown(boost::thread_group& threadGroup)
 
         if (!isFullSyncMode() && IsPartialSyncActive())
             PersistAndPruneForPartialSync();
-        else
+        else if(pcoinsTip)
             FlushStateToDisk();
 
         blockStore.CloseBlockFiles();
