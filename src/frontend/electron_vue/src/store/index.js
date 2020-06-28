@@ -108,5 +108,17 @@ export default new Vuex.Store({
       commit(payload);
     }
   },
+  getters: {
+    totalBalance: state => {
+      let balance = state.balance;
+      if (balance === undefined || balance === null) return null;
+      return (
+        (balance.availableIncludingLocked +
+          balance.unconfirmedIncludingLocked +
+          balance.immatureIncludingLocked) /
+        100000000
+      ).toFixed(2);
+    }
+  },
   plugins: [createPersistedState({ storage: store }), createSharedMutations()]
 });

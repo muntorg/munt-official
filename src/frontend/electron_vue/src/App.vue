@@ -12,8 +12,8 @@
     <div v-show="!showLoader">
       <div class="app-top">
         <span class="app-logo"></span>
-        <span class="app-balance" v-show="computedBalance !== null">{{
-          computedBalance
+        <span class="app-balance" v-show="totalBalance !== null">{{
+          totalBalance
         }}</span>
 
         <span class="top-menu" v-if="showSettings">
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import { AppStatus } from "./store";
 import AppLoader from "./components/AppLoader";
 
@@ -55,17 +55,9 @@ export default {
   },
   computed: {
     ...mapState(["status", "unityVersion", "walletVersion", "balance"]),
+    ...mapGetters(["totalBalance"]),
     showSettings() {
       return this.status === AppStatus.ready;
-    },
-    computedBalance() {
-      if (this.balance === undefined || this.balance === null) return null;
-      return (
-        (this.balance.availableIncludingLocked +
-          this.balance.unconfirmedIncludingLocked +
-          this.balance.immatureIncludingLocked) /
-        100000000
-      ).toFixed(2);
     },
     showLoader() {
       return (
