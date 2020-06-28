@@ -1,49 +1,47 @@
 <template>
   <div class="view-recovery-phrase-view">
-    <div class="section">
-      <div class="back">
-        <router-link :to="{ name: current === 1 ? 'settings' : 'wallet' }">
-          <fa-icon :icon="['fal', 'long-arrow-left']" />
-          <span> {{ $t("buttons.back") }}</span>
-        </router-link>
-      </div>
-      <h2>
-        <span v-if="current === 1">{{ $t("setup.enter_your_password") }}</span>
-        <span class="important" v-else>{{ $t("common.important") }}</span>
-      </h2>
+    <div class="back">
+      <router-link :to="{ name: current === 1 ? 'settings' : 'wallet' }">
+        <fa-icon :icon="['fal', 'long-arrow-left']" />
+        <span> {{ $t("buttons.back") }}</span>
+      </router-link>
+    </div>
+    <h2>
+      <span v-if="current === 1">{{ $t("setup.enter_your_password") }}</span>
+      <span class="important" v-else>{{ $t("common.important") }}</span>
+    </h2>
 
-      <!-- step 1: Enter password -->
-      <div class="password" v-if="current === 1">
-        <div class="password-row">
-          <h4>{{ $t("common.password") }}:</h4>
-          <input
-            ref="password"
-            type="password"
-            v-model="password"
-            @keydown="validatePasswordOnEnter"
-            :class="computedStatus"
-          />
-        </div>
+    <!-- step 1: Enter password -->
+    <div class="password" v-if="current === 1">
+      <div class="password-row">
+        <h4>{{ $t("common.password") }}:</h4>
+        <input
+          ref="password"
+          type="password"
+          v-model="password"
+          @keydown="validatePasswordOnEnter"
+          :class="computedStatus"
+        />
       </div>
+    </div>
 
-      <!-- step 2: Show recovery phrase -->
-      <div v-else>
-        <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
-        <div class="phrase">
-          {{ recoveryPhrase }}
-        </div>
+    <!-- step 2: Show recovery phrase -->
+    <div v-else>
+      <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
+      <div class="phrase">
+        {{ recoveryPhrase }}
       </div>
+    </div>
 
-      <div class="button-wrapper">
-        <button
-          class="btn"
-          v-if="current === 1"
-          @click="validatePassword"
-          :disabled="isNextDisabled"
-        >
-          {{ $t("buttons.next") }}
-        </button>
-      </div>
+    <div class="button-wrapper">
+      <button
+        class="btn"
+        v-if="current === 1"
+        @click="validatePassword"
+        :disabled="isNextDisabled"
+      >
+        {{ $t("buttons.next") }}
+      </button>
     </div>
   </div>
 </template>

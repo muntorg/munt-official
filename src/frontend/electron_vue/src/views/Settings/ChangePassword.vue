@@ -1,60 +1,58 @@
 <template>
   <div class="change-password-view">
-    <div class="section">
-      <div class="back">
-        <router-link :to="{ name: current === 1 ? 'settings' : 'wallet' }">
-          <fa-icon :icon="['fal', 'long-arrow-left']" />
-          <span> {{ $t("buttons.back") }}</span>
-        </router-link>
-      </div>
+    <div class="back">
+      <router-link :to="{ name: current === 1 ? 'settings' : 'wallet' }">
+        <fa-icon :icon="['fal', 'long-arrow-left']" />
+        <span> {{ $t("buttons.back") }}</span>
+      </router-link>
+    </div>
 
-      <h2>
-        <span v-if="current === 1">{{ $t("setup.enter_your_password") }}</span>
-        <span v-else>{{ $t("setup.choose_password") }}</span>
-      </h2>
+    <h2>
+      <span v-if="current === 1">{{ $t("setup.enter_your_password") }}</span>
+      <span v-else>{{ $t("setup.choose_password") }}</span>
+    </h2>
 
-      <!-- step 1: Enter old password -->
-      <div v-if="current === 1" class="password">
-        <div class="password-row">
-          <h4>{{ $t("common.password") }}:</h4>
-          <input
-            ref="passwordold"
-            type="password"
-            v-model="passwordold"
-            @keydown="validatePasswordOnEnter"
-            :class="passwordOldStatus"
-          />
-        </div>
+    <!-- step 1: Enter old password -->
+    <div v-if="current === 1" class="password">
+      <div class="password-row">
+        <h4>{{ $t("common.password") }}:</h4>
+        <input
+          ref="passwordold"
+          type="password"
+          v-model="passwordold"
+          @keydown="validatePasswordOnEnter"
+          :class="passwordOldStatus"
+        />
       </div>
+    </div>
 
-      <!-- step 2: enter new password -->
-      <div v-else class="password">
-        <div class="password-row">
-          <h4>{{ $t("common.password") }}:</h4>
-          <input ref="password1" type="password" v-model="password1" />
-        </div>
-        <div class="password-row">
-          <h4>{{ $t("setup.repeat_password") }}:</h4>
-          <input
-            type="password"
-            v-model="password2"
-            :class="password2Status"
-            @keydown="validatePasswordRepeatOnEnter"
-          />
-        </div>
+    <!-- step 2: enter new password -->
+    <div v-else class="password">
+      <div class="password-row">
+        <h4>{{ $t("common.password") }}:</h4>
+        <input ref="password1" type="password" v-model="password1" />
       </div>
+      <div class="password-row">
+        <h4>{{ $t("setup.repeat_password") }}:</h4>
+        <input
+          type="password"
+          v-model="password2"
+          :class="password2Status"
+          @keydown="validatePasswordRepeatOnEnter"
+        />
+      </div>
+    </div>
 
-      <div class="button-wrapper">
-        <button
-          class="btn"
-          v-if="current <= 2"
-          @click="nextStep"
-          :disabled="isNextDisabled"
-        >
-          <span v-if="current < 2">{{ $t("buttons.next") }}</span>
-          <span v-else>{{ $t("buttons.change_password") }}</span>
-        </button>
-      </div>
+    <div class="button-wrapper">
+      <button
+        class="btn"
+        v-if="current <= 2"
+        @click="nextStep"
+        :disabled="isNextDisabled"
+      >
+        <span v-if="current < 2">{{ $t("buttons.next") }}</span>
+        <span v-else>{{ $t("buttons.change_password") }}</span>
+      </button>
     </div>
   </div>
 </template>

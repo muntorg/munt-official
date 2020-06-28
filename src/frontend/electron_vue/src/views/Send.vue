@@ -1,42 +1,36 @@
 <template>
   <div class="send-view">
-    <div class="section">
-      <div class="back">
-        <router-link :to="{ name: 'wallet' }">
-          <fa-icon :icon="['fal', 'long-arrow-left']" />
-          <span> {{ $t("buttons.back") }}</span>
-        </router-link>
-      </div>
+    <div class="back">
+      <router-link :to="{ name: 'wallet' }">
+        <fa-icon :icon="['fal', 'long-arrow-left']" />
+        <span> {{ $t("buttons.back") }}</span>
+      </router-link>
+    </div>
 
-      <h2>{{ $t("wallet.send_novo") }}</h2>
+    <h2>{{ $t("wallet.send_novo") }}</h2>
 
-      <div class="row">
-        <h4>{{ $t("common.receiving_address") }}:</h4>
-        <input
-          v-model="address"
-          :class="addressClass"
-          @input="onAddressInput"
-        />
-      </div>
-      <div class="row">
-        <h4>{{ $t("common.amount") }}:</h4>
-        <currency-input v-model="amount" currency="N" />
-      </div>
+    <div class="row">
+      <h4>{{ $t("common.receiving_address") }}:</h4>
+      <input v-model="address" :class="addressClass" @input="onAddressInput" />
+    </div>
+    <div class="row">
+      <h4>{{ $t("common.amount") }}:</h4>
+      <currency-input v-model="amount" currency="N" />
+    </div>
 
-      <div class="row">
-        <h4>{{ $t("common.password") }}:</h4>
-        <input
-          ref="password"
-          type="password"
-          v-model="password"
-          :class="passwordClass"
-          @input="onPasswordInput"
-        />
-      </div>
+    <div class="row">
+      <h4>{{ $t("common.password") }}:</h4>
+      <input
+        ref="password"
+        type="password"
+        v-model="password"
+        :class="passwordClass"
+        @input="onPasswordInput"
+      />
+    </div>
 
-      <div class="button-wrapper">
-        <button class="btn" @click="sendCoins">{{ $t("buttons.send") }}</button>
-      </div>
+    <div class="button-wrapper">
+      <button class="btn" @click="sendCoins">{{ $t("buttons.send") }}</button>
     </div>
   </div>
 </template>

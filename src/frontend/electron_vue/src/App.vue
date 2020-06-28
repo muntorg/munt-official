@@ -182,7 +182,7 @@ body,
   padding: 0 40px 100px 40px;
 
   & .app-main--wrapper {
-    margin: 0 auto;
+    margin: 40px auto;
     width: 100%;
     max-width: 800px;
   }

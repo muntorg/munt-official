@@ -1,19 +1,17 @@
 <template>
   <div class="wallet-view">
-    <div class="section">
-      <h4>{{ $t("wallet.your_address") }}</h4>
-      <div class="address" @click="copyAddress">
-        {{ receiveAddress }}
-        <span class="copy"><fa-icon :icon="['fal', 'copy']"/></span>
-      </div>
-      <div class="button-wrapper">
-        <button @click="receiveNovo">
-          {{ $t("wallet.receive_acquired_novo") }}
-        </button>
-        <button @click="sendNovo">
-          {{ $t("wallet.send_novo") }}
-        </button>
-      </div>
+    <h4>{{ $t("wallet.your_address") }}</h4>
+    <div class="address" @click="copyAddress">
+      {{ receiveAddress }}
+      <span class="copy"><fa-icon :icon="['fal', 'copy']"/></span>
+    </div>
+    <div class="button-wrapper">
+      <button @click="receiveNovo">
+        {{ $t("wallet.receive_acquired_novo") }}
+      </button>
+      <button @click="sendNovo">
+        {{ $t("wallet.send_novo") }}
+      </button>
     </div>
   </div>
 </template>

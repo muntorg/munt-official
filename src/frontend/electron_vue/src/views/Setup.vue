@@ -1,6 +1,6 @@
 <template>
   <div class="setup-view">
-    <div class="steps-container section">
+    <div class="steps-container">
       <!-- step 1: show recovery phrase -->
       <div v-if="current === 1">
         <h2 class="important">{{ $t("common.important") }}</h2>
