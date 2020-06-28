@@ -20,7 +20,7 @@
       </div>
       <div class="row">
         <h4>{{ $t("common.amount") }}:</h4>
-        <input v-model="amount" v-currency="{ currency: null }" />
+        <currency-input v-model="amount" currency="N" />
       </div>
 
       <div class="row">
@@ -79,7 +79,7 @@ export default {
   data() {
     return {
       address: "",
-      amount: 0,
+      amount: null,
       password: "",
       isAddressInvalid: false,
       isPasswordInvalid: false

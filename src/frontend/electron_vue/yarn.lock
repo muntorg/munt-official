@@ -10053,11 +10053,6 @@ vue-cli-plugin-i18n@~1.0.1:
     vue-i18n "^8.17.0"
     vue-i18n-extract "1.0.2"
 
-vue-currency-input@^1.19.1:
-  version "1.19.1"
-  resolved "https://registry.yarnpkg.com/vue-currency-input/-/vue-currency-input-1.19.1.tgz#2118db1d2dafaa543bd7b8afabcea02c4662c638"
-  integrity sha512-gj8JIVqJQOAX7CWIwVoXZiK/PIOaCvAFtG/Gw06JpV2DTjaMqE/XEQ6eVphFrp8VSEg+k4RrXixgjC8MbnTicQ==
-
 vue-eslint-parser@^7.0.0:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-7.1.0.tgz#9cdbcc823e656b087507a1911732b867ac101e83"
