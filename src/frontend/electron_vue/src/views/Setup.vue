@@ -1,5 +1,5 @@
 <template>
-  <div id="setup-container">
+  <div class="setup-view">
     <div class="steps-container section">
       <!-- step 1: show recovery phrase -->
       <div v-if="current === 1">

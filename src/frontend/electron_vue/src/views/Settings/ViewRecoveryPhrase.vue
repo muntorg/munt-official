@@ -1,5 +1,5 @@
 <template>
-  <div id="setup-container">
+  <div class="view-recovery-phrase-view">
     <div class="section">
       <div class="back">
         <router-link :to="{ name: current === 1 ? 'settings' : 'wallet' }">

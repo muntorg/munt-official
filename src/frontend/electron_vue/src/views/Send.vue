@@ -1,5 +1,5 @@
 <template>
-  <div class="settings">
+  <div class="send-view">
     <div class="section">
       <div class="back">
         <router-link :to="{ name: 'wallet' }">

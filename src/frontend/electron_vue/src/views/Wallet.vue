@@ -1,5 +1,5 @@
 <template>
-  <div id="wallet">
+  <div class="wallet-view">
     <div class="section">
       <h4>{{ $t("wallet.your_address") }}</h4>
       <div class="address" @click="copyAddress">
