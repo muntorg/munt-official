@@ -832,7 +832,7 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
             else if (coin.IsCoinBase())
             {
                 // NB! If we ever change the maturity depth here to a different one than that of prevout-index maturity (control block above this one) - then we also need to change the above 'else if' for this control block into an 'if' instead.
-                if (nSpendHeight - coin.nHeight < COINBASE_MATURITY)
+                if (coin.nHeight != 0 && nSpendHeight - coin.nHeight < COINBASE_MATURITY)
                 {
                     return state.Invalid(false, REJECT_INVALID, "bad-txns-premature-spend-of-coinbase", strprintf("tried to spend coinbase at depth %d", nSpendHeight - coin.nHeight));
                 }
