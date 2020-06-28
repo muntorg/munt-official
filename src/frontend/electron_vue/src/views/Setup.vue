@@ -204,8 +204,4 @@ export default {
 .password-row {
   margin: 0 0 20px 0;
 }
-
-.important {
-  color: #dd3333;
-}
 </style>

@@ -105,10 +105,6 @@ export default {
   float: right;
 }
 
-.important {
-  color: #dd3333;
-}
-
 .phrase {
   padding: 10px;
   font-size: 1.05em;

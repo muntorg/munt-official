@@ -86,14 +86,14 @@ input {
   &:focus,
   &.success,
   &:focus.success {
-    color: #009572;
-    border-color: #009572;
+    color: var(--success-color);
+    border-color: var(--success-color);
   }
 
   &.error,
   &:focus.error {
-    color: #dd3333;
-    border-color: #dd3333;
+    color: var(--error-color);
+    border-color: var(--error-color);
   }
 }
 
@@ -115,15 +115,19 @@ button {
   transition: all 0.3s;
   border-radius: 0px;
   color: #fff;
-  background-color: #009572;
+  background-color: var(--button-color);
 
   &:hover {
-    background-color: #00a880;
+    background-color: var(--button-hover-color);
   }
 
   &[disabled="disabled"],
   &[disabled="disabled"]:hover {
-    background-color: #eee;
+    background-color: var(--disabled-color);
     cursor: default;
   }
+}
+
+.important {
+  color: var(--error-color);
 }
