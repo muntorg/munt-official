@@ -1,12 +1,5 @@
 <template>
   <div class="change-password-view">
-    <div class="back">
-      <router-link :to="{ name: current === 1 ? 'settings' : 'wallet' }">
-        <fa-icon :icon="['fal', 'long-arrow-left']" />
-        <span> {{ $t("buttons.back") }}</span>
-      </router-link>
-    </div>
-
     <h2>
       <span v-if="current === 1">{{ $t("setup.enter_your_password") }}</span>
       <span v-else>{{ $t("setup.choose_password") }}</span>
@@ -138,18 +131,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.back a {
-  padding: 4px 8px;
-  margin: 0 0 0 -8px;
-}
-.back {
-  margin-bottom: 20px;
-}
-
-.back a:hover {
-  background-color: #f5f5f5;
-}
-
 .button-wrapper {
   margin: 10px 0 0 0;
   float: right;

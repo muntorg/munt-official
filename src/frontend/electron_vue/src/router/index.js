@@ -23,25 +23,34 @@ const routes = [
   },
   {
     path: "/settings",
-    name: "settings",
     component: () =>
-      import(/* webpackChunkName: "settings" */ "../views/Settings.vue")
-  },
-  {
-    path: "/settings/view-recovery-phrase",
-    name: "view-recovery-phrase",
-    component: () =>
-      import(
-        /* webpackChunkName: "view-recovery-phrase" */ "./../views/Settings/ViewRecoveryPhrase.vue"
-      )
-  },
-  {
-    path: "/settings/change-password",
-    name: "change-password",
-    component: () =>
-      import(
-        /* webpackChunkName: "change-password" */ "./../views/Settings/ChangePassword.vue"
-      )
+      import(/* webpackChunkName: "settings" */ "../views/Settings.vue"),
+    children: [
+      {
+        path: "",
+        name: "settings",
+        component: () =>
+          import(
+            /* webpackChunkName: "settings-list" */ "../views/Settings/SettingsList.vue"
+          )
+      },
+      {
+        path: "view-recovery-phrase",
+        name: "view-recovery-phrase",
+        component: () =>
+          import(
+            /* webpackChunkName: "view-recovery-phrase" */ "../views/Settings/ViewRecoveryPhrase.vue"
+          )
+      },
+      {
+        path: "change-password",
+        name: "change-password",
+        component: () =>
+          import(
+            /* webpackChunkName: "change-password" */ "../views/Settings/ChangePassword.vue"
+          )
+      }
+    ]
   }
 ];
 
