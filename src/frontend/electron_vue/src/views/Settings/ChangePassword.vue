@@ -31,17 +31,14 @@
       </novo-form-field>
     </div>
 
-    <div class="button-wrapper">
-      <button
-        class="btn"
-        v-if="current <= 2"
-        @click="nextStep"
-        :disabled="isNextDisabled"
-      >
-        <span v-if="current < 2">{{ $t("buttons.next") }}</span>
-        <span v-else>{{ $t("buttons.change_password") }}</span>
+    <novo-button-section>
+      <button v-if="current === 1" @click="nextStep" :disabled="isNextDisabled">
+        {{ $t("buttons.next") }}
       </button>
-    </div>
+      <button v-if="current === 2" @click="nextStep" :disabled="isNextDisabled">
+        {{ $t("buttons.change_password") }}
+      </button>
+    </novo-button-section>
   </div>
 </template>
 
@@ -124,10 +121,3 @@ export default {
   }
 };
 </script>
-
-<style lang="less" scoped>
-.button-wrapper {
-  margin: 10px 0 0 0;
-  float: right;
-}
-</style>

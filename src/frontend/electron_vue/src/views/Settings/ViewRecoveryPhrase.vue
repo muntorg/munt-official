@@ -6,17 +6,15 @@
     </h2>
 
     <!-- step 1: Enter password -->
-    <div class="password" v-if="current === 1">
-      <novo-form-field :title="$t('common.password')">
-        <input
-          ref="password"
-          type="password"
-          v-model="password"
-          @keydown="validatePasswordOnEnter"
-          :class="computedStatus"
-        />
-      </novo-form-field>
-    </div>
+    <novo-form-field :title="$t('common.password')" v-if="current === 1">
+      <input
+        ref="password"
+        type="password"
+        v-model="password"
+        @keydown="validatePasswordOnEnter"
+        :class="computedStatus"
+      />
+    </novo-form-field>
 
     <!-- step 2: Show recovery phrase -->
     <div v-else>
@@ -26,16 +24,15 @@
       </novo-section>
     </div>
 
-    <div class="button-wrapper">
+    <novo-button-section>
       <button
-        class="btn"
         v-if="current === 1"
         @click="validatePassword"
         :disabled="isNextDisabled"
       >
         {{ $t("buttons.next") }}
       </button>
-    </div>
+    </novo-button-section>
   </div>
 </template>
 
@@ -81,11 +78,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.button-wrapper {
-  margin: 10px 0 0 0;
-  float: right;
-}
-
 .phrase {
   padding: 10px;
   font-size: 1.05em;

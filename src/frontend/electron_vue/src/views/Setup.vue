@@ -2,16 +2,16 @@
   <div class="setup-view">
     <div class="steps-container">
       <!-- step 1: show recovery phrase -->
-      <div v-if="current === 1">
+      <novo-section v-if="current === 1">
         <h2 class="important">{{ $t("common.important") }}</h2>
         <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
         <novo-section class="phrase">
           {{ recoveryPhrase }}
         </novo-section>
-      </div>
+      </novo-section>
 
       <!-- step 2: repeat recovery phrase -->
-      <div v-else-if="current === 2">
+      <novo-section v-else-if="current === 2">
         <h2>{{ $t("setup.enter_recovery_phrase") }}</h2>
         <p>{{ $t("setup.repeat_your_recovery_phrase") }}</p>
         <phrase-validator
@@ -19,7 +19,7 @@
           :autofocus="true"
           @validated="onPhraseValidated"
         />
-      </div>
+      </novo-section>
 
       <!-- step 3: enter a password -->
       <div v-else-if="current === 3">
@@ -38,8 +38,8 @@
         </novo-form-field>
       </div>
 
-      <div class="button-wrapper">
-        <div class="left">
+      <novo-button-section>
+        <template v-slot:left>
           <button
             v-if="current === 2"
             @click="previousStep"
@@ -47,9 +47,8 @@
           >
             {{ $t("buttons.back") }}
           </button>
-        </div>
-
-        <div class="right">
+        </template>
+        <template v-slot:right>
           <button
             v-if="current === 1"
             @click="nextStep"
@@ -65,8 +64,8 @@
           >
             {{ $t("buttons.finish") }}
           </button>
-        </div>
-      </div>
+        </template>
+      </novo-button-section>
     </div>
   </div>
 </template>
@@ -174,18 +173,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.button-wrapper {
-  margin: 10px 0 0 0;
-
-  & .left {
-    float: left;
-  }
-
-  & .right {
-    float: right;
-  }
-}
-
 .phrase {
   padding: 10px;
   font-size: 1.05em;

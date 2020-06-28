@@ -1,11 +1,11 @@
 <template>
   <div class="settings-view">
-    <div class="back">
+    <novo-section class="back">
       <router-link :to="{ name: 'wallet' }">
         <fa-icon :icon="['fal', 'long-arrow-left']" />
         <span> {{ $t("buttons.back") }}</span>
       </router-link>
-    </div>
+    </novo-section>
     <router-view />
   </div>
 </template>
@@ -14,16 +14,9 @@
 .back a {
   padding: 4px 8px;
   margin: 0 0 0 -8px;
-}
-.back {
-  margin-bottom: 20px;
-}
 
-.back a:hover {
-  background-color: #f5f5f5;
+  &:hover {
+    background-color: #f5f5f5;
+  }
 }
 </style>
-
-<script>
-export default {};
-</script>

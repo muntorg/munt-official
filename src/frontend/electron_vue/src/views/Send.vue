@@ -1,25 +1,22 @@
 <template>
   <div class="send-view">
-    <div class="back">
+    <novo-section class="back">
       <router-link :to="{ name: 'wallet' }">
         <fa-icon :icon="['fal', 'long-arrow-left']" />
         <span> {{ $t("buttons.back") }}</span>
       </router-link>
-    </div>
+    </novo-section>
 
     <h2>{{ $t("wallet.send_novo") }}</h2>
 
-    <div class="row">
-      <h4>{{ $t("common.receiving_address") }}:</h4>
+    <novo-form-field :title="$t('common.receiving_address')">
       <input v-model="address" :class="addressClass" @input="onAddressInput" />
-    </div>
-    <div class="row">
-      <h4>{{ $t("common.amount") }}:</h4>
+    </novo-form-field>
+    <novo-form-field :title="$t('common.amount')">
       <currency-input v-model="amount" currency="N" />
-    </div>
+    </novo-form-field>
 
-    <div class="row">
-      <h4>{{ $t("common.password") }}:</h4>
+    <novo-form-field :title="$t('common.password')">
       <input
         ref="password"
         type="password"
@@ -27,11 +24,11 @@
         :class="passwordClass"
         @input="onPasswordInput"
       />
-    </div>
+    </novo-form-field>
 
-    <div class="button-wrapper">
-      <button class="btn" @click="sendCoins">{{ $t("buttons.send") }}</button>
-    </div>
+    <novo-button-section>
+      <button @click="sendCoins">{{ $t("buttons.send") }}</button>
+    </novo-button-section>
   </div>
 </template>
 
@@ -39,27 +36,16 @@
 .back a {
   padding: 4px 8px;
   margin: 0 0 0 -8px;
-}
-.back {
-  margin-bottom: 20px;
-}
 
-.back a:hover {
-  background-color: #f5f5f5;
-}
-
-.row {
-  margin: 0 0 20px 0;
+  &:hover {
+    background-color: #f5f5f5;
+  }
 }
 
 .arrow {
   float: right;
   margin: 6px 0 0 0;
   color: #fff;
-}
-
-.button-wrapper {
-  float: right;
 }
 
 a:hover > .arrow {

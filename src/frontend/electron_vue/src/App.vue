@@ -17,7 +17,7 @@
       <span class="app-topbar--settings" v-if="showSettings">
         <router-link :to="{ name: 'settings' }">
           <fa-icon :icon="['fal', 'cog']" />
-          <span>{{ $t("settings.header") }}</span>
+          <span> {{ $t("settings.header") }}</span>
         </router-link>
       </span>
     </div>
@@ -163,10 +163,6 @@ body,
     font-weight: 400;
     line-height: 32px;
     color: #fff;
-
-    & span {
-      margin-left: 5px;
-    }
   }
 
   .app-topbar--settings a:hover {
