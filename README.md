@@ -73,7 +73,7 @@ If you are thinking about contributing toward the development of Novo in some ca
 
 ### Community
 Connect with the community through one or more of the following:
-[Website](https://novocurrency.com) ◾ [Slack](https://novocurrency.com/join) ◾ [Twitter](http://twitter.com/novocurrency) ◾ [Facebook](http://facebook.com/novocurrency)
+[Website](https://novocurrency.com) ◾ [Slack](https://novocurrency.slack.com) ◾ [Twitter](http://twitter.com/novocurrency) ◾ [Facebook](http://facebook.com/novocurrency)
 
 
 ### Downloading
