@@ -6,34 +6,29 @@
     </h2>
 
     <!-- step 1: Enter old password -->
-    <div v-if="current === 1" class="password">
-      <div class="password-row">
-        <h4>{{ $t("common.password") }}:</h4>
-        <input
-          ref="passwordold"
-          type="password"
-          v-model="passwordold"
-          @keydown="validatePasswordOnEnter"
-          :class="passwordOldStatus"
-        />
-      </div>
-    </div>
+    <novo-form-field v-if="current === 1" :title="$t('common.password')">
+      <input
+        ref="passwordold"
+        type="password"
+        v-model="passwordold"
+        @keydown="validatePasswordOnEnter"
+        :class="passwordOldStatus"
+      />
+    </novo-form-field>
 
     <!-- step 2: enter new password -->
-    <div v-else class="password">
-      <div class="password-row">
-        <h4>{{ $t("common.password") }}:</h4>
+    <div v-else>
+      <novo-form-field :title="$t('common.password')">
         <input ref="password1" type="password" v-model="password1" />
-      </div>
-      <div class="password-row">
-        <h4>{{ $t("setup.repeat_password") }}:</h4>
+      </novo-form-field>
+      <novo-form-field :title="$t('setup.repeat_password')">
         <input
           type="password"
           v-model="password2"
           :class="password2Status"
           @keydown="validatePasswordRepeatOnEnter"
         />
-      </div>
+      </novo-form-field>
     </div>
 
     <div class="button-wrapper">
@@ -134,13 +129,5 @@ export default {
 .button-wrapper {
   margin: 10px 0 0 0;
   float: right;
-}
-
-.password {
-  margin: 0 0 20px 0;
-}
-
-.password-row {
-  margin: 0 0 20px 0;
 }
 </style>

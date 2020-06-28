@@ -4,8 +4,7 @@ import store from "./store";
 import router from "./router";
 import i18n from "./i18n";
 
-import CurrencyInput from "./components/CurrencyInput";
-Vue.component(CurrencyInput.name, CurrencyInput);
+import "./components";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";

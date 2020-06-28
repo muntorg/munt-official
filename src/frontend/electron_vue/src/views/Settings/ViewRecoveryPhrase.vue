@@ -7,8 +7,7 @@
 
     <!-- step 1: Enter password -->
     <div class="password" v-if="current === 1">
-      <div class="password-row">
-        <h4>{{ $t("common.password") }}:</h4>
+      <novo-form-field :title="$t('common.password')">
         <input
           ref="password"
           type="password"
@@ -16,15 +15,15 @@
           @keydown="validatePasswordOnEnter"
           :class="computedStatus"
         />
-      </div>
+      </novo-form-field>
     </div>
 
     <!-- step 2: Show recovery phrase -->
     <div v-else>
       <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
-      <div class="phrase">
+      <novo-section class="phrase">
         {{ recoveryPhrase }}
-      </div>
+      </novo-section>
     </div>
 
     <div class="button-wrapper">
@@ -94,13 +93,5 @@ export default {
   text-align: center;
   word-spacing: 4px;
   background-color: #f5f5f5;
-}
-
-.password {
-  margin: 0 0 20px 0;
-}
-
-.password-row {
-  margin: 0 0 20px 0;
 }
 </style>

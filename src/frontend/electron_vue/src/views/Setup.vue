@@ -5,9 +5,9 @@
       <div v-if="current === 1">
         <h2 class="important">{{ $t("common.important") }}</h2>
         <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
-        <div class="phrase">
+        <novo-section class="phrase">
           {{ recoveryPhrase }}
-        </div>
+        </novo-section>
       </div>
 
       <!-- step 2: repeat recovery phrase -->
@@ -25,21 +25,17 @@
       <div v-else-if="current === 3">
         <h2>{{ $t("setup.choose_password") }}</h2>
         <p>{{ $t("setup.choose_password_information") }}</p>
-        <div class="password">
-          <div class="password-row">
-            <h4>{{ $t("common.password") }}:</h4>
-            <input ref="password" type="password" v-model="password1" />
-          </div>
-          <div class="password-row">
-            <h4>{{ $t("setup.repeat_password") }}:</h4>
-            <input
-              type="password"
-              v-model="password2"
-              :class="password2Status"
-              @keyup="onPassword2Keyup"
-            />
-          </div>
-        </div>
+        <novo-form-field :title="$t('common.password')">
+          <input ref="password" type="password" v-model="password1" />
+        </novo-form-field>
+        <novo-form-field :title="$t('setup.repeat_password')">
+          <input
+            type="password"
+            v-model="password2"
+            :class="password2Status"
+            @keyup="onPassword2Keyup"
+          />
+        </novo-form-field>
       </div>
 
       <div class="button-wrapper">
@@ -197,11 +193,5 @@ export default {
   text-align: center;
   word-spacing: 4px;
   background-color: #f5f5f5;
-}
-
-.phrase,
-.password,
-.password-row {
-  margin: 0 0 20px 0;
 }
 </style>
