@@ -21,5 +21,6 @@ extern unsigned char* seedFromMnemonic(const SecureString& mnemonic, const Secur
 extern SecureString mnemonicFromEntropy(std::vector<unsigned char> entropyIn, int entropySizeInBytes);
 extern std::vector<unsigned char> entropyFromMnemonic(const SecureString& mnemonic);
 extern bool checkMnemonic(const SecureString& mnemonic);
+extern std::vector<std::string> getMnemonicDictionary();
 
 #endif

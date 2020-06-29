@@ -243,6 +243,13 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (nonnull NSArray<NSString *> *)GetMnemonicDictionary {
+    try {
+        auto objcpp_result_ = ::UnifiedBackend::GetMnemonicDictionary();
+        return ::djinni::List<::djinni::String>::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (BOOL)UnlockWallet:(nonnull NSString *)password {
     try {
         auto objcpp_result_ = ::UnifiedBackend::UnlockWallet(::djinni::String::toCpp(password));

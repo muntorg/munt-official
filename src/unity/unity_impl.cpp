@@ -1039,6 +1039,11 @@ bool UnifiedBackend::IsMnemonicCorrect(const std::string & phrase)
     return false;
 }
 
+std::vector<std::string> UnifiedBackend::GetMnemonicDictionary()
+{
+    return getMnemonicDictionary();
+}
+
 
 //fixme: (UNITY) HIGH - take a timeout value and always lock again after timeout
 bool UnifiedBackend::UnlockWallet(const std::string& password)

@@ -461,6 +461,31 @@ Napi::Value NJSUnifiedBackend::IsMnemonicCorrect(const Napi::CallbackInfo& info)
 
     return arg_1;
 }
+Napi::Value NJSUnifiedBackend::GetMnemonicDictionary(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 0)
+    {
+        Napi::Error::New(env, "NJSUnifiedBackend::GetMnemonicDictionary needs 0 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+
+    auto result = UnifiedBackend::GetMnemonicDictionary();
+
+    //Wrap result in node object
+    auto arg_0 = Napi::Array::New(env);
+    for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+    {
+        auto arg_0_elem = Napi::String::New(env, result[arg_0_id]);
+        arg_0.Set((int)arg_0_id,arg_0_elem);
+    }
+
+
+    return arg_0;
+}
 Napi::Value NJSUnifiedBackend::UnlockWallet(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -1284,6 +1309,7 @@ Napi::Object NJSUnifiedBackend::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("GetRecoveryPhrase", &NJSUnifiedBackend::GetRecoveryPhrase),
     InstanceMethod("IsMnemonicWallet", &NJSUnifiedBackend::IsMnemonicWallet),
     InstanceMethod("IsMnemonicCorrect", &NJSUnifiedBackend::IsMnemonicCorrect),
+    InstanceMethod("GetMnemonicDictionary", &NJSUnifiedBackend::GetMnemonicDictionary),
     InstanceMethod("UnlockWallet", &NJSUnifiedBackend::UnlockWallet),
     InstanceMethod("LockWallet", &NJSUnifiedBackend::LockWallet),
     InstanceMethod("ChangePassword", &NJSUnifiedBackend::ChangePassword),

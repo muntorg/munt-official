@@ -59,11 +59,18 @@ declare class NJSUnifiedBackend
     static declare function IsMnemonicWallet(): boolean;
     /** Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time) */
     static declare function IsMnemonicCorrect(phrase: string): boolean;
+    /**
+     * Get the 'dictionary' of valid words that a recovery phrase can be composed of
+     * NB! Not all combinations of these words are valid
+     * Do not use this to generate/compose your own phrases - always use 'GenerateRecoveryMnemonic' for this
+     * This function should only be used for input validation/auto-completion
+     */
+    static declare function GetMnemonicDictionary(): Array<string>;
     /** Unlock wallet */
     static declare function UnlockWallet(password: string): boolean;
     /** Forcefully lock wallet again */
     static declare function LockWallet(): boolean;
-    /** Change the waller password */
+    /** Change the wallet password */
     static declare function ChangePassword(oldPassword: string, newPassword: string): boolean;
     /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
     static declare function HaveUnconfirmedFunds(): boolean;
