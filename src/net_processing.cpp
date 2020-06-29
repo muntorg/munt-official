@@ -4202,7 +4202,8 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
         }
 
         // Check partial sync header request/response timeout
-        if (state.fPartialSyncStarted && state.nPartialHeadersSyncTimeout < std::numeric_limits<int64_t>::max() && nNow > state.nPartialHeadersSyncTimeout)
+        //fixme: (NOVO1.0) - Temporarily disable until chain starts to move
+        /*if (state.fPartialSyncStarted && state.nPartialHeadersSyncTimeout < std::numeric_limits<int64_t>::max() && nNow > state.nPartialHeadersSyncTimeout)
         {
             LogPrintf("Timeout downloading headers from peer=%d, disconnecting\n", pto->GetId());
             pto->fDisconnect = true;
@@ -4217,7 +4218,7 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
             pto->fDisconnect = true;
             state.nHeadersSyncTimeout = std::numeric_limits<int64_t>::max();
             return true;
-        }
+        }*/
 
         //
         // Message: getdata (blocks)
