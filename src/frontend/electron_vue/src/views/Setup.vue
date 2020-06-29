@@ -170,7 +170,7 @@ export default {
       if (event.keyCode === 13 && this.passwordsValidated) this.nextStep();
     },
     onPhraseValidated(validatedPhrase) {
-      console.log("<<<INITWITHPHRASE:"+validatedPhrase);
+      console.log("<<<INITWITHPHRASE:" + validatedPhrase);
       if (this.isRecovery) this.recoveryPhrase = validatedPhrase;
       this.isBackDisabled = true;
       this.$nextTick(() => {

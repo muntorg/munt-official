@@ -2,7 +2,7 @@ import { app } from "electron";
 import { ipcMain as ipc } from "electron-better-ipc";
 import fs from "fs";
 
-import store, { AppStatus } from "../store";
+import store from "../store";
 
 import libUnity from "native-ext-loader!./lib_unity.node";
 
