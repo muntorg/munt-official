@@ -511,6 +511,24 @@ class LibUnity {
       return result;
     });
 
+    ipc.on("GetMnemonicDictionary", event => {
+      let result = this._tryGetResultBeforeBackendCall("GetMnemonicDictionary");
+      if (result === undefined) {
+        result = this.backend.GetMnemonicDictionary();
+      }
+      this._handleIpcInternalAfterBackendCall("GetMnemonicDictionary", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("GetMnemonicDictionary", async () => {
+      let result = this._tryGetResultBeforeBackendCall("GetMnemonicDictionary");
+      if (result === undefined) {
+        result = this.backend.GetMnemonicDictionary();
+      }
+      this._handleIpcInternalAfterBackendCall("GetMnemonicDictionary", result);
+      return result;
+    });
+
     ipc.on("GetMonitoringStats", event => {
       let result = this._tryGetResultBeforeBackendCall("GetMonitoringStats");
       if (result === undefined) {

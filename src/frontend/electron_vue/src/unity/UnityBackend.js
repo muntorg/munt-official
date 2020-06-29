@@ -20,7 +20,7 @@ class UnityBackend {
     return ipc.callMain("BuildInfo");
   }
 
-  /** Change the waller password */
+  /** Change the wallet password */
   static ChangePassword(oldPassword, newPassword) {
     return ipc.sendSync("ChangePassword", oldPassword, newPassword);
   }
@@ -144,6 +144,20 @@ class UnityBackend {
 
   static GetLastSPVBlockInfosAsync() {
     return ipc.callMain("GetLastSPVBlockInfos");
+  }
+
+  /**
+   * Get the 'dictionary' of valid words that a recovery phrase can be composed of
+   * NB! Not all combinations of these words are valid
+   * Do not use this to generate/compose your own phrases - always use 'GenerateRecoveryMnemonic' for this
+   * This function should only be used for input validation/auto-completion
+   */
+  static GetMnemonicDictionary() {
+    return ipc.sendSync("GetMnemonicDictionary");
+  }
+
+  static GetMnemonicDictionaryAsync() {
+    return ipc.callMain("GetMnemonicDictionary");
   }
 
   static GetMonitoringStats() {

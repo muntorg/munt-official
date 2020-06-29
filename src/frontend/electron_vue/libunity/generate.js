@@ -9,7 +9,10 @@ const skipFunctions = [
   "isValidAndroidLegacyProtoWallet"
 ];
 
-let inputFile = path.join(__dirname, "unifiedbackend_doc.js");
+let inputFile = path.join(
+  __dirname,
+  "../../../unity/djinni/node_js/unifiedbackend_doc.js"
+);
 let backendFile = path.join(__dirname, "/../src/unity/UnityBackend.js");
 let libFile = path.join(__dirname, "/../src/unity/LibUnity.js");
 
