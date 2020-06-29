@@ -55,8 +55,7 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 function createWindow() {
-  // Create the browser window.
-  win = new BrowserWindow({
+  let options = {
     width: 800,
     minWidth: 800,
     height: 600,
@@ -68,9 +67,14 @@ function createWindow() {
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       enableRemoteModule: true
-    },
-    icon: path.join(__static, "icon.png")
-  });
+    }
+  };
+  if (os.platform() === "linux") {
+    options = Object.assign({}, options, {
+      icon: path.join(__static, "icon.png")
+    });
+  }
+  win = new BrowserWindow(options);
 
   var menuTemplate = [
     {
