@@ -116,13 +116,21 @@ private:
     /** Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time) */
     Napi::Value IsMnemonicCorrect(const Napi::CallbackInfo& info);
 
+    /**
+     * Get the 'dictionary' of valid words that a recovery phrase can be composed of
+     * NB! Not all combinations of these words are valid
+     * Do not use this to generate/compose your own phrases - always use 'GenerateRecoveryMnemonic' for this
+     * This function should only be used for input validation/auto-completion
+     */
+    Napi::Value GetMnemonicDictionary(const Napi::CallbackInfo& info);
+
     /** Unlock wallet */
     Napi::Value UnlockWallet(const Napi::CallbackInfo& info);
 
     /** Forcefully lock wallet again */
     Napi::Value LockWallet(const Napi::CallbackInfo& info);
 
-    /** Change the waller password */
+    /** Change the wallet password */
     Napi::Value ChangePassword(const Napi::CallbackInfo& info);
 
     /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */

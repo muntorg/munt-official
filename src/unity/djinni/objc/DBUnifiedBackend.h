@@ -123,13 +123,21 @@ extern int32_t const DBUnifiedBackendVersion;
 /** Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time) */
 + (BOOL)IsMnemonicCorrect:(nonnull NSString *)phrase;
 
+/**
+ * Get the 'dictionary' of valid words that a recovery phrase can be composed of
+ * NB! Not all combinations of these words are valid
+ * Do not use this to generate/compose your own phrases - always use 'GenerateRecoveryMnemonic' for this
+ * This function should only be used for input validation/auto-completion
+ */
++ (nonnull NSArray<NSString *> *)GetMnemonicDictionary;
+
 /** Unlock wallet */
 + (BOOL)UnlockWallet:(nonnull NSString *)password;
 
 /** Forcefully lock wallet again */
 + (BOOL)LockWallet;
 
-/** Change the waller password */
+/** Change the wallet password */
 + (BOOL)ChangePassword:(nonnull NSString *)oldPassword
            newPassword:(nonnull NSString *)newPassword;
 
