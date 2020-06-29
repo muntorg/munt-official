@@ -9,3 +9,7 @@ Vue.component(CurrencyInput.name, CurrencyInput);
 Vue.component(NovoButtonSection.name, NovoButtonSection);
 Vue.component(NovoFormField.name, NovoFormField);
 Vue.component(NovoSection.name, NovoSection);
+
+import NovoSettings from "./dialog/NovoSettings";
+
+Vue.component(NovoSettings.name, NovoSettings);

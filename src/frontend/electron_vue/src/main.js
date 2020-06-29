@@ -12,10 +12,11 @@ import {
   faCog,
   faCopy,
   faLongArrowLeft,
-  faLongArrowRight
+  faLongArrowRight,
+  faTimes
 } from "@fortawesome/pro-light-svg-icons";
 
-library.add([faCog, faCopy, faLongArrowLeft, faLongArrowRight]);
+library.add([faCog, faCopy, faLongArrowLeft, faLongArrowRight, faTimes]);
 
 Vue.component("fa-icon", FontAwesomeIcon);
 
