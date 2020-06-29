@@ -145,7 +145,7 @@ class LibUnity {
 
     signalHandler.notifyShutdown = function() {
       //NB! It is important to set the signalHandler to null here as this is the last thing the core lib is waiting on for clean exit; once we set this to null we are free to quit the app
-      signalHandler = null
+      signalHandler = null;
       console.log("received: notifyShutdown");
       self.isTerminated = true;
       app.quit();

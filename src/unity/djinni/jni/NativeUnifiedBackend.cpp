@@ -252,6 +252,15 @@ CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_UnifiedBacke
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_UnifiedBackend_00024CppProxy_GetMnemonicDictionary(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::UnifiedBackend::GetMnemonicDictionary();
+        return ::djinni::release(::djinni::List<::djinni::String>::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_UnifiedBackend_00024CppProxy_UnlockWallet(JNIEnv* jniEnv, jobject /*this*/, jstring j_password)
 {
     try {

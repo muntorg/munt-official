@@ -15,12 +15,17 @@
 </template>
 
 <script>
+import UnityBackend from "../unity/UnityBackend";
 export default {
   name: "PhraseValidator",
   props: {
     phrase: {
       type: String,
       default: ""
+    },
+    isRecovery: {
+      type: Boolean,
+      default: false
     },
     autofocus: {
       type: Boolean,
@@ -57,6 +62,11 @@ export default {
       return word === repeaterWord;
     },
     validateWord(index, e) {
+      if (this.isRecovery) {
+        if (UnityBackend.IsValidRecoveryPhrase(this.phraseRepeat)) {
+          this.$emit("validated", this.phraseRepeat);
+        }
+      }
       let word = this.words[index];
       if (word === e.target.value) {
         let next = this.$refs.repeater[index + 1];
@@ -66,6 +76,8 @@ export default {
       }
     },
     getStatus(index) {
+      if (this.isRecovery) return "success";
+
       let repeaterWord = this.repeaterWords[index];
       if (repeaterWord === undefined) return "";
 

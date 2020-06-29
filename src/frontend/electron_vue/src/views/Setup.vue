@@ -16,6 +16,7 @@
         <p>{{ $t("setup.repeat_your_recovery_phrase") }}</p>
         <phrase-validator
           :phrase="recoveryPhrase"
+          :isRecovery="isRecovery"
           :autofocus="true"
           @validated="onPhraseValidated"
         />
@@ -46,6 +47,9 @@
             :disabled="isButtonDisabled()"
           >
             {{ $t("buttons.back") }}
+          </button>
+          <button v-if="current === 1" @click="recoverFromPhrase">
+            {{ "Recover from phrase" }}
           </button>
         </template>
         <template v-slot:right>
@@ -82,7 +86,8 @@ export default {
       password2: "",
       recoveryPhrase: "",
       isRecoveryPhraseCorrect: false,
-      isBackDisabled: false
+      isBackDisabled: false,
+      isRecovery: false
     };
   },
   components: {
@@ -157,10 +162,16 @@ export default {
         this.current--;
       }
     },
+    recoverFromPhrase() {
+      this.isRecovery = true;
+      this.current++;
+    },
     onPassword2Keyup() {
       if (event.keyCode === 13 && this.passwordsValidated) this.nextStep();
     },
-    onPhraseValidated() {
+    onPhraseValidated(validatedPhrase) {
+      console.log("<<<INITWITHPHRASE:"+validatedPhrase);
+      if (this.isRecovery) this.recoveryPhrase = validatedPhrase;
       this.isBackDisabled = true;
       this.$nextTick(() => {
         setTimeout(() => {

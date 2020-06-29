@@ -73,7 +73,7 @@ If you are thinking about contributing toward the development of Novo in some ca
 
 ### Community
 Connect with the community through one or more of the following:
-[Website](https://novocurrency.com) ◾ [Slack](https://novocurrency.com/join) ◾ [Twitter](http://twitter.com/novocurrency) ◾ [Facebook](http://facebook.com/novocurrency)
+[Website](https://novocurrency.com) ◾ [Slack](https://novocurrency.slack.com) ◾ [Twitter](http://twitter.com/novocurrency) ◾ [Facebook](http://facebook.com/novocurrency)
 
 
 ### Downloading
@@ -90,7 +90,7 @@ For those who really need too or are technically inclined it is of course possib
 |Consensus algorithm:|PoW² SIGMA/Holding|PoW² SIGMA/Holding|
 |Recommended transaction confirmations:|2|2|
 |Block reward SIGMA:|0.10 Novo|0.10 Novo|
-|Block reward holder:|0.40 Novo|0.40 Novo|
+|Block reward holder:|0.10 Novo|0.10 Novo|
 |Block interval target:|300 seconds (5 minutes)|Configurable|
 |Difficulty adjustment period:|Every block|Every block|
 |Difficulty adjustment algorithm:|Delta|Delta|

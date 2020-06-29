@@ -189,6 +189,12 @@ unified_backend = interface +c {
 
     # Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time)
     static IsMnemonicCorrect(phrase: string): bool;
+    
+    # Get the 'dictionary' of valid words that a recovery phrase can be composed of
+    # NB! Not all combinations of these words are valid
+    # Do not use this to generate/compose your own phrases - always use 'GenerateRecoveryMnemonic' for this
+    # This function should only be used for input validation/auto-completion
+    static GetMnemonicDictionary(): list<string>;
 
     # Unlock wallet
     static UnlockWallet(password: string): bool;

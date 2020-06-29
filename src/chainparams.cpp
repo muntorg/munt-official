@@ -143,10 +143,12 @@ public:
                 {
                     CKeyID pubKeyIDWitness;
                     pubKeyIDWitness.SetHex("b3a447d0cbdd174893d1e52df169c703583e8339");
+                    CKeyID pubKeyIDSpend;
+                    pubKeyIDSpend.SetHex("6bfcc1aeb7ad56709e4411ab8775170516d38677");
 
                     CTxOut renewedWitnessTxOutput;
                     renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
-                    renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = pubKeyIDWitness;
+                    renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = pubKeyIDSpend;
                     renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = pubKeyIDWitness;
                     renewedWitnessTxOutput.output.witnessDetails.lockFromBlock = 1;
                     renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = std::numeric_limits<uint64_t>::max();
@@ -188,7 +190,7 @@ public:
 
                 genesis.nTime    = 1592990387;
                 genesis.nBits    = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
-                genesis.nNonce   = 465305602;
+                genesis.nNonce   = 900005926;
                 genesis.nVersion = 536870912;
                 genesis.vtx.push_back(MakeTransactionRef(std::move(txNew)));
                 genesis.hashPrevBlock.SetNull();
@@ -202,9 +204,9 @@ public:
         }
         
         consensus.hashGenesisBlock = genesis.GetHashPoW2();
-        assert(consensus.hashGenesisBlock == uint256S("0x4d3e8d58df656808efbdd6eafe18ac5ad0678303be1cfdac0a0e0b8fdc6da9e3"));
-        assert(genesis.hashMerkleRoot == uint256S("0x3cfac9091626d7f3bf25fdb9829e8df001a59a45f0d2426c0cf76e2a7a3d0c46"));
-        assert(genesis.hashMerkleRootPoW2Witness == uint256S("0x3cfac9091626d7f3bf25fdb9829e8df001a59a45f0d2426c0cf76e2a7a3d0c46"));
+        assert(consensus.hashGenesisBlock == uint256S("0xfab06ab3c03d08ded1d7be79a21bf639fccfc404eb19d7c4e18fe825760987ae"));
+        assert(genesis.hashMerkleRoot == uint256S("0xf5e1fdb14b062cf6b79b5e37a5a0fd6b4c9e0ed14f2f20bbd43e021feea4d6fb"));
+        assert(genesis.hashMerkleRootPoW2Witness == uint256S("0xf5e1fdb14b062cf6b79b5e37a5a0fd6b4c9e0ed14f2f20bbd43e021feea4d6fb"));
 
         vSeeds.push_back(CDNSSeedData("seed 0",  "seed1.novocurrency.com", false));
         vSeeds.push_back(CDNSSeedData("seed 1",  "seed2.novocurrency.com", false));       
