@@ -2684,11 +2684,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
 bool IsSegSigEnabled(const CBlockIndex* pindexPrev)
 {
     LOCK(cs_main);
-    if (!pindexPrev)
-        return false;
-    if (pindexPrev->nVersionPoW2Witness != 0)
-        return true;
-    return false;
+    return true;
 }
 
 

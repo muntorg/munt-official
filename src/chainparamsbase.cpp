@@ -51,7 +51,7 @@ class CBaseTestNetParams : public CBaseChainParams
 public:
     CBaseTestNetParams()
     {
-        nRPCPort = 9235;
+        nRPCPort = 9236;
         std::string testnetArgs = GetArg("-testnet", "");
         std::replace( testnetArgs.begin(), testnetArgs.end(), ':', '_');
         strDataDir = (fs::path("testnet") / testnetArgs).string();
