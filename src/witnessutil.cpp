@@ -197,7 +197,7 @@ int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks)
     // We rebase back to 10 at the end for the final weight.
     static const arith_uint256 base = arith_uint256(COIN);
     static const arith_uint256 base3 = base*base*base;
-    static const arith_uint256 BlocksPerYear = arith_uint256(365 * 576);
+    static const arith_uint256 BlocksPerYear = arith_uint256(365 * 288);
     #define BASE(x) (arith_uint256(x)*base)
     arith_uint256 Quantity = arith_uint256(nAmount);
     arith_uint256 nWeight = ((BASE(Quantity)) + ((Quantity*Quantity) / arith_uint256(100000))) * (BASE(1) + (BASE(nLockLengthInBlocks) / BlocksPerYear));

@@ -18,7 +18,7 @@
 //fixme: this constant exists to support gradually factoring out the literal "576" used throughout
 // Any literal "576" encountered can be replaced by this at any time (assuming this literal is used as daily block target)
 // At any convenient time comment this const and resolve compiler errors the right way, for example using DailyBlocksTarget() where apprapriate
-static const int gRefactorDailyBlocksUsage = 576;
+static const int gRefactorDailyBlocksUsage = 288;
 
 static const int gMinimumWitnessAmount = 5000;
 static const int gMinimumWitnessWeight = 10000;
@@ -27,7 +27,7 @@ static const int gMaximumParticipationAge = 365 * gRefactorDailyBlocksUsage; // 
                                                     // We try to balance this in such a way that it allows smaller witness accounts but not ones so absurdly small that they force witnesses to unnecessarily keep years of data around.
                                                     // Currently set at - 1 year (365 days * daily blocks).
 
-static const int gStartingWitnessNetworkWeightEstimate    = 260000000;
+static const int gStartingWitnessNetworkWeightEstimate  = 260000000;
 static const int gMinimumWitnessLockDays                = 30;
 static const int gMaximumWitnessLockDays                = 3 * 365;
 static const int gMaximumWitnessCompoundAmount = 40;
