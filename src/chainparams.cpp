@@ -142,9 +142,9 @@ public:
                 
                 {
                     CKeyID pubKeyIDWitness;
-                    pubKeyIDWitness.SetHex("b3a447d0cbdd174893d1e52df169c703583e8339");
+                    pubKeyIDWitness.SetHex("86cd9223dd76fcc70c897db31f6716036e00b9ce");
                     CKeyID pubKeyIDSpend;
-                    pubKeyIDSpend.SetHex("6bfcc1aeb7ad56709e4411ab8775170516d38677");
+                    pubKeyIDSpend.SetHex("1584c90cb7e3f4703be87ec643fc6f53a933ce43");
 
                     CTxOut renewedWitnessTxOutput;
                     renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
@@ -188,7 +188,7 @@ public:
                     }
                 }
 
-                genesis.nTime    = 1592990387;
+                genesis.nTime    = 1593524095;
                 genesis.nBits    = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
                 genesis.nNonce   = 900005926;
                 genesis.nVersion = 536870912;
