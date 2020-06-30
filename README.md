@@ -95,8 +95,8 @@ For those who really need too or are technically inclined it is of course possib
 |Difficulty adjustment period:|Every block|Every block|
 |Difficulty adjustment algorithm:|Delta|Delta|
 |Total coins to be minted over time:|10'000'000'000 Novo|10'000'000'000 Novo|
-|P2P Port|9233|9234|
-|RPC Port|9934|9235|
+|P2P Port|9233|9235|
+|RPC Port|9234|9236|
 |P2P Network Header|fcfdfcfd|Configurable|
 |Address version byte|53 (N)|65 (T)|
 |P2SH version byte|113 (n)|127 (t)|
