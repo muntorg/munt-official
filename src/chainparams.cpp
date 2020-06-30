@@ -204,9 +204,9 @@ public:
         }
         
         consensus.hashGenesisBlock = genesis.GetHashPoW2();
-        assert(consensus.hashGenesisBlock == uint256S("0xfab06ab3c03d08ded1d7be79a21bf639fccfc404eb19d7c4e18fe825760987ae"));
-        assert(genesis.hashMerkleRoot == uint256S("0xf5e1fdb14b062cf6b79b5e37a5a0fd6b4c9e0ed14f2f20bbd43e021feea4d6fb"));
-        assert(genesis.hashMerkleRootPoW2Witness == uint256S("0xf5e1fdb14b062cf6b79b5e37a5a0fd6b4c9e0ed14f2f20bbd43e021feea4d6fb"));
+        assert(consensus.hashGenesisBlock == uint256S("0xc866fdd44f0451466f20789210e1d53585ae94959f30d82ed2d6f02abab7711f"));
+        assert(genesis.hashMerkleRoot == uint256S("0x2cb5137e16879fbe4f1180a0805f58d0acb75e55c1b2097f6d86fb2320b7f012"));
+        assert(genesis.hashMerkleRootPoW2Witness == uint256S("0x2cb5137e16879fbe4f1180a0805f58d0acb75e55c1b2097f6d86fb2320b7f012"));
 
         vSeeds.push_back(CDNSSeedData("seed 0",  "seed1.novocurrency.com", false));
         vSeeds.push_back(CDNSSeedData("seed 1",  "seed2.novocurrency.com", false));       
