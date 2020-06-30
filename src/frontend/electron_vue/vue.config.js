@@ -8,7 +8,7 @@ module.exports = {
       mainProcessWatch: [],
       mainProcessArgs: [],
       builderOptions: {
-        appId: "com.novocurrency.app",
+        appId: "com.novocurrency.desktop_wallet",
         productName: "Novo",
         extraFiles: [],
         publish: null,
