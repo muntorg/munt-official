@@ -959,6 +959,24 @@ class LibUnity {
       return result;
     });
 
+    ipc.on("ResendTransaction", (event, txHash) => {
+      let result = this._tryGetResultBeforeBackendCall("ResendTransaction");
+      if (result === undefined) {
+        result = this.backend.resendTransaction(txHash);
+      }
+      this._handleIpcInternalAfterBackendCall("ResendTransaction", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("ResendTransaction", async data => {
+      let result = this._tryGetResultBeforeBackendCall("ResendTransaction");
+      if (result === undefined) {
+        result = this.backend.resendTransaction(data.txHash);
+      }
+      this._handleIpcInternalAfterBackendCall("ResendTransaction", result);
+      return result;
+    });
+
     ipc.on("ResetUnifiedProgress", event => {
       let result = this._tryGetResultBeforeBackendCall("ResetUnifiedProgress");
       if (result === undefined) {

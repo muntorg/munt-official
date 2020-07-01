@@ -9,6 +9,7 @@
 
     <div class="transactions">
       <div class="transactions-header">
+        <span class="resend-transaction"></span>
         <span class="transactions-address">recipient</span>
         <span class="transactions-amount">amount</span>
         <span class="transactions-hash">hash</span>
@@ -16,6 +17,7 @@
         <span class="transactions-status">status</span>
       </div>
         <div class="transaction" v-for="row in transactions" v-bind:key="row.txHash">
+          <span class="resend-transaction"><button @click="resubmitTransaction(row.txHash)">resend</button></span>
           <span class="transactions-address">{{ getRecipients(row.inputs, row.outputs) }}</span>
           <span class="transactions-amount">{{ row.amount / 100000000 }}</span>
           <span class="transactions-hash">{{ row.txHash }}</span>
@@ -115,6 +117,10 @@ export default {
   },
   computed: {},
   methods: {
+    resubmitTransaction(txHash) {
+      UnityBackend.ResendTransaction(txHash);
+      //console.log("Resent transaction: ["+rawTx+"]")
+    },
     getRecipients(inputs, outputs) {
       let ret = "";
       let i;

@@ -355,6 +355,15 @@ class UnityBackend {
     return ipc.callMain("ReplaceWalletLinkedFromURI", { linked_uri, password });
   }
 
+  /** resubmit a transaction to the network, returns the raw hex of the transaction as a string or empty on fail */
+  static ResendTransaction(txHash) {
+    return ipc.sendSync("ResendTransaction", txHash);
+  }
+
+  static ResendTransactionAsync(txHash) {
+    return ipc.callMain("ResendTransaction", { txHash });
+  }
+
   /**
    * Reset progress notification. In cases where there has been no progress for a long time, but the process
    * is still running the progress can be reset and will represent work to be done from this reset onwards.
