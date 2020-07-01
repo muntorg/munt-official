@@ -58,7 +58,7 @@ export default {
     isPhraseComplete() {
       let phraseComplete = true;
       for (var i = 0; i < this.words.length; i++) {
-        if (this.isExactMatch(i) == false) {
+        if (this.isMatch(i) == false) {
           phraseComplete = false;
           break;
         }
