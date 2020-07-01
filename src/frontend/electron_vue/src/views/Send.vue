@@ -10,7 +10,12 @@
     <h2>{{ $t("wallet.send_novo") }}</h2>
 
     <novo-form-field :title="$t('common.receiving_address')">
-      <input v-model="address" :class="addressClass" @input="onAddressInput" />
+      <input
+        type="text"
+        v-model="address"
+        :class="addressClass"
+        @input="onAddressInput"
+      />
     </novo-form-field>
     <novo-form-field :title="$t('common.amount')">
       <currency-input v-model="amount" currency="N" />
