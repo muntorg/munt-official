@@ -29,7 +29,7 @@
 #endif
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h" /* for USE_QRCODE */
+#include "config/build-config.h" /* for USE_QRCODE */
 #endif
 
 

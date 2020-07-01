@@ -7,7 +7,7 @@
 #define GULDEN_COMPAT_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #ifdef WIN32

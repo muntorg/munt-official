@@ -14,7 +14,7 @@
 #define GULDEN_VALIDATION_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #include <compat/sys.h> // For PLATFORM_MOBILE define

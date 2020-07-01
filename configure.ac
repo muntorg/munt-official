@@ -10,7 +10,7 @@ define(_COPYRIGHT_HOLDERS,[The %s developers])
 define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[Gulden]])
 AC_INIT([Gulden],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[info@gulden.com],[Gulden])
 AC_CONFIG_SRCDIR([src/init.cpp])
-AC_CONFIG_HEADERS([src/config/gulden-config.h])
+AC_CONFIG_HEADERS([src/config/build-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
@@ -27,9 +27,9 @@ fi
 
 AC_CANONICAL_HOST
 
-AH_TOP([#ifndef GULDEN_CONFIG_H])
-AH_TOP([#define GULDEN_CONFIG_H])
-AH_BOTTOM([#endif //GULDEN_CONFIG_H])
+AH_TOP([#ifndef BUILD_CONFIG_H])
+AH_TOP([#define BUILD_CONFIG_H])
+AH_BOTTOM([#endif //BUILD_CONFIG_H])
 
 dnl faketime breaks configure and is only needed for make. Disable it here.
 unset FAKETIME
@@ -508,7 +508,7 @@ AC_C_BIGENDIAN
 dnl Check for pthread compile/link requirements
 AX_PTHREAD
 
-# The following macro will add the necessary defines to gulden-config.h, but
+# The following macro will add the necessary defines to build-config.h, but
 # they also need to be passed down to any subprojects. Pull the results out of
 # the cache and add them to CPPFLAGS.
 AC_SYS_LARGEFILE

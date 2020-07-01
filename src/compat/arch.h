@@ -11,7 +11,7 @@
 #define GULDEN_COMPAT_ARCH_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #if defined(_M_X64) || defined(__x86_64__) || defined(__amd64__) || defined(_M_AMD64)

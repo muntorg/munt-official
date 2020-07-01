@@ -13,7 +13,7 @@
 #define GULDEN_QT_GUI_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
 #endif
 
 #include "amount.h"

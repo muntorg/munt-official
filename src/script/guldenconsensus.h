@@ -9,7 +9,7 @@
 #include <stdint.h>
 
 #if defined(BUILD_GULDEN_INTERNAL) && defined(HAVE_CONFIG_H)
-#include "config/gulden-config.h"
+#include "config/build-config.h"
   #if defined(_WIN32)
     #if defined(DLL_EXPORT)
       #if defined(HAVE_FUNC_ATTRIBUTE_DLLEXPORT)
