@@ -12,7 +12,7 @@ module.exports = {
         productName: "Novo",
         extraFiles: [],
         publish: null,
-        afterSign: "@oshell/vue-cli-plugin-electron-builder-notarize",
+        afterSign: "./notarize.js",
         mac: {
           category: "public.app-category.finance",
           asar: false,

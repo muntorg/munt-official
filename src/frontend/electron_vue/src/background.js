@@ -77,18 +77,14 @@ function createWindow() {
   win = new BrowserWindow(options);
 
   var menuTemplate = [
-    { 
+    {
       label: "File",
       submenu: [{ role: "quit" }]
     },
-   {
-            label: 'Edit',
-            submenu: [
-                { role: 'cut' },
-                { role: 'copy' },
-                { role: 'paste' }
-            ]
-        }
+    {
+      label: "Edit",
+      submenu: [{ role: "cut" }, { role: "copy" }, { role: "paste" }]
+    }
   ];
 
   if (isDevelopment) {
