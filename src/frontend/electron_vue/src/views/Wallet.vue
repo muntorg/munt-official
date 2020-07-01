@@ -14,6 +14,9 @@
         <button @click="sendNovo">
           {{ $t("wallet.send_novo") }}
         </button>
+        <button @click="viewHistory">
+          {{ "transaction history" }}
+        </button>
       </template>
     </novo-button-section>
   </div>
@@ -41,6 +44,9 @@ export default {
     },
     sendNovo() {
       this.$router.push({ name: "send" });
+    },
+    viewHistory() {
+      this.$router.push({ name: "history" });
     },
     copyAddress() {
       this.copyActive = true;
