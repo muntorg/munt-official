@@ -7,25 +7,26 @@
       </router-link>
     </novo-section>
 
-    <table id="secondTable">
-    <thead>
+    <table id="transactionTable">
+      <thead>
         <tr>
-        <th>hash</th>
-        <th>amount</th>
-        <th>depth</th>
-        <th>status</th>
+          <th>recipient</th>
+          <th>amount</th>
+          <th>hash</th>
+          <th>depth</th>
+          <th>status</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         <tr v-for="row in transactions" v-bind:key="row.txHash">
-        <td>{{row.txHash}}</td>
-        <td>{{row.amount/100000000}}</td>
-        <td>{{row.depth}}</td>
-        <td>{{row.status}}</td>
+          <td>{{ getRecipients(row.inputs, row.outputs) }}</td>
+          <td>{{ row.amount / 100000000 }}</td>
+          <td>{{ row.txHash }}</td>
+          <td>{{ row.depth }}</td>
+          <td>{{ row.status }}</td>
         </tr>
-    </tbody>
+      </tbody>
     </table>
-
   </div>
 </template>
 
@@ -58,57 +59,28 @@ export default {
       transactions: UnityBackend.GetTransactionHistory()
     };
   },
-  computed: {
-    addressClass() {
-      return this.isAddressInvalid ? "error" : "";
-    },
-    passwordClass() {
-      return this.isPasswordInvalid ? "error" : "";
-    }
-  },
+  computed: {},
   methods: {
-    sendCoins() {
-      var check = UnityBackend.IsValidRecipient({
-        scheme: "gulden",
-        path: this.address,
-        items: []
-      });
-      if (check.valid === false) {
-        this.isAddressInvalid = true;
-        return;
+    getRecipients(inputs, outputs) {
+      let ret = "";
+      let i;
+      let didISend = false;
+      for (i = 0; i < inputs.length; i++) {
+        if (inputs[i].isMine === true) {
+          didISend = true;
+        }
+      }
+      if (didISend === false) {
+        return "n/a";
       }
 
-      if (this.password.length === 0) {
-        this.isPasswordInvalid = true;
-        return;
+      for (i = 0; i < outputs.length; i++) {
+        if (outputs[i].isMine === false) {
+          if (ret === "") ret = ret + outputs[i].address;
+          else ret = ret + ", " + outputs[i].address;
+        }
       }
-      if (!UnityBackend.UnlockWallet(this.password)) {
-        this.isPasswordInvalid = true;
-        return;
-      }
-
-      var request = {
-        valid: "true",
-        address: this.address,
-        label: "",
-        desc: "",
-        amount: this.amount * 100000000.0
-      };
-      var ret = UnityBackend.PerformPaymentToRecipient(request, false);
-      if (ret !== 0) {
-        alert("failed to make payment");
-        UnityBackend.LockWallet();
-        return;
-      } else {
-        this.address = "";
-      }
-      UnityBackend.LockWallet();
-    },
-    onAddressInput() {
-      this.isAddressInvalid = false;
-    },
-    onPasswordInput() {
-      this.isPasswordInvalid = false;
+      return ret;
     }
   }
 };
