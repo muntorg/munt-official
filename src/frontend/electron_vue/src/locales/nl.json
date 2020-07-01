@@ -1,44 +1,44 @@
 {
   "buttons": {
-    "back": "Back",
-    "change_password": "Change password",
-    "finish": "Finish",
-    "invalid_recovery_phrase": "Invalid recovery phrase. Try again",
-    "next": "Next",
-    "previous": "Previous",
-    "send": "Send"
+    "back": "Terug",
+    "change_password": "Verander wachtwoord",
+    "finish": "Klaar",
+    "invalid_recovery_phrase": "Onjuiste herstelzin. Probeer opnieuw",
+    "next": "Volgende",
+    "previous": "Vorige",
+    "send": "Versturen"
   },
   "common": {
-    "amount": "Amount",
-    "important": "Important",
-    "password": "Password",
-    "receiving_address": "Receiving address"
+    "amount": "Bedrag",
+    "important": "Belangrijk",
+    "password": "Wachtwoord",
+    "receiving_address": "Ontvangstadres"
   },
   "loader": {
-    "shutdown": "Shutting down...",
-    "synchronizing": "Your wallet is now synchronizing with the Novo network. This may take some time to complete."
+    "shutdown": "Bezig met afsluiten...",
+    "synchronizing": "Jouw portemonnee is aan het synchroniseren met het Novo netwerk. Dit kan enige tijd duren."
   },
   "settings": {
-    "header": "Settings",
-    "change_password": "Change password",
-    "view_recovery_phrase": "View recovery phrase"
+    "header": "Instellingen",
+    "change_password": "Verander wachtwoord",
+    "view_recovery_phrase": "Bekijk herstelzin"
   },
   "setup": {
-    "choose_password": "Choose a password of at least 6 characters",
-    "choose_password_information": "You will need your password to unlock your wallet. Make sure it is not easy to guess because anyone who knows your password can access your funds.",
-    "create_new": "I want to create a new wallet",
-    "enter_existing_recovery_phrase": "Enter your recovery phrase in the boxes below to restore your wallet.",
-    "enter_recovery_phrase": "Enter recovery phrase",
-    "enter_your_password": "Enter your password",
-    "recover_existing": "I want to recover my wallet using my recovery phrase",
-    "repeat_password": "Repeat password",
-    "repeat_your_recovery_phrase": "To make sure you have correctly written down your recovery phrase, enter your phrase in the boxes below.",
-    "setup_novo_wallet": "Setup your Novo wallet",
-    "this_is_your_recovery_phrase": "This is your recovery phrase, write it down somewhere safe, don't lose it, don't share it, don't store it where hackers can get it. Lose phrase = Lose Novo"
+    "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
+    "choose_password_information": "Een wachtwoord is vereist voor het ontgrendelen van jouw portemonnee. Kies een sterk wachtwoord, zodat niemand anders toegang kan krijgen tot jouw Novo.",
+    "create_new": "Ik wil een nieuwe portemonnee starten",
+    "enter_existing_recovery_phrase": "Voer jouw herstelzin in om jouw portemonnee te herstellen.",
+    "enter_recovery_phrase": "Voer herstelzin in",
+    "enter_your_password": "Voer jouw wachtwoord in",
+    "recover_existing": "Ik wil mijn portemonnee herstellen met mijn herstelzin",
+    "repeat_password": "Herhaal wachtwoord",
+    "repeat_your_recovery_phrase": "Voer jouw herstelzin in om te controleren dat je deze goed hebt opgeschreven.",
+    "setup_novo_wallet": "Installeer jouw Novo portemonnee",
+    "this_is_your_recovery_phrase": "Dit is jouw herstelzin. Bewaar de herstelzin op een veilige plek. Zin kwijt of iemand toegang tot je zin = Novo weg."
   },
   "wallet": {
-    "receive_acquired_novo": "Receive your acquired Novo",
-    "your_address": "Your address",
-    "send_novo": "Send Novo"
+    "receive_acquired_novo": "Ontvang jouw verkregen Novo",
+    "your_address": "Jouw adres",
+    "send_novo": "Verstuur Novo"
   }
 }
