@@ -207,7 +207,7 @@ export default {
       );
       if (!this.isRecoveryPhraseInvalid) {
         this.recoveryPhrase = phrase;
-        this.current++
+        this.current++;
       }
     },
     validatePasswordsOnEnter() {
