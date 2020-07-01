@@ -7,26 +7,22 @@
       </router-link>
     </novo-section>
 
-    <table id="transactionTable">
-      <thead>
-        <tr>
-          <th>recipient</th>
-          <th>amount</th>
-          <th>hash</th>
-          <th>depth</th>
-          <th>status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="row in transactions" v-bind:key="row.txHash">
-          <td>{{ getRecipients(row.inputs, row.outputs) }}</td>
-          <td>{{ row.amount / 100000000 }}</td>
-          <td>{{ row.txHash }}</td>
-          <td>{{ row.depth }}</td>
-          <td>{{ row.status }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="transactions">
+      <div class="transactions-header">
+        <span class="transactions-address">recipient</span>
+        <span class="transactions-amount">amount</span>
+        <span class="transactions-hash">hash</span>
+        <span class="transactions-depth">depth</span>
+        <span class="transactions-status">status</span>
+      </div>
+        <div class="transaction" v-for="row in transactions" v-bind:key="row.txHash">
+          <span class="transactions-address">{{ getRecipients(row.inputs, row.outputs) }}</span>
+          <span class="transactions-amount">{{ row.amount / 100000000 }}</span>
+          <span class="transactions-hash">{{ row.txHash }}</span>
+          <span class="transactions-depth">{{ row.depth }}</span>
+          <span class="transactions-status">{{ row.status }}</span>
+        </div>
+    </div>
   </div>
 </template>
 
@@ -48,6 +44,64 @@
 
 a:hover > .arrow {
   color: #000;
+}
+
+.transactions {
+  float: left;
+  width: 100%;
+  overflow: scroll;
+}
+
+.transactions-header {
+  float: left;
+  width: 100%;
+  font-size: .8em;
+  font-weight: 500;
+}
+
+.transaction {
+  float: left;
+  width: 100%;
+  padding: 10px 0 10px 0;
+  user-select: text;
+  font-size: .8em;
+  line-height: 1.2em;
+}
+
+.transactions-address {
+  float: left;
+  width: 45%;
+  user-select: text;
+  overflow-wrap: break-word;
+}
+
+.transactions-amount {
+  float: left;
+  width: 15%;
+  user-select: text;
+}
+
+.transactions-hash {
+  float: left;
+  width: 20%;
+  overflow-wrap: break-word;
+  user-select: text;
+}
+
+.transactions-depth {
+  float: left;
+  width: 10%;
+  text-align: right;
+}
+
+.transactions-status {
+  float: left;
+  width: 10%;
+  text-align: right;
+}
+
+.selectall {
+  user-select: all;
 }
 </style>
 

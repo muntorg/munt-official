@@ -101,7 +101,6 @@ export default {
 
 body,
 #app {
-  overflow: hidden;
 }
 
 *,
@@ -127,7 +126,7 @@ body,
 }
 
 .app-topbar {
-  position: absolute;
+  position: fixed;
   top: 0;
   height: var(--top-height);
   line-height: var(--top-height);
@@ -135,6 +134,7 @@ body,
   padding: 0 40px 0 40px;
   background-color: #000;
   color: #fff;
+  z-index: 999;
 
   & .app-topbar--logo {
     float: left;
