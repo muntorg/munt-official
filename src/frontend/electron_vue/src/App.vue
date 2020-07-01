@@ -1,38 +1,59 @@
 <template>
   <div id="app">
-    <app-loader
-      v-show="showLoader"
-      :unityVersion="unityVersion"
-      :walletVersion="walletVersion"
-      :electronVersion="electronVersion"
-      :isShuttingDown="isShuttingDown"
-      :isSynchronizing="isSynchronizing"
-    />
-
-    <div class="app-topbar">
-      <span class="app-topbar--logo"></span>
-      <span class="app-topbar--balance" v-show="totalBalance !== null">{{
-        totalBalance
-      }}</span>
-      <span class="app-topbar--settings" v-if="showSettings">
-        <router-link :to="{ name: 'settings' }">
-          <fa-icon :icon="['fal', 'cog']" />
-          <span> {{ $t("settings.header") }}</span>
-        </router-link>
-      </span>
+    <!-- app loader -->
+    <div id="app-loader" v-show="showLoader">
+      <div class="logo-outer">
+        <div class="logo-inner"></div>
+      </div>
+      <div class="version-container">
+        <span>Unity: {{ unityVersion }}</span>
+        <span class="divider">|</span>
+        <span>Wallet: {{ walletVersion }}</span>
+        <span class="divider">|</span>
+        <span>Electron: {{ electronVersion }}</span>
+      </div>
+      <div class="info">
+        <p v-show="isShuttingDown">
+          {{ $t("loader.shutdown") }}
+        </p>
+        <div v-show="isSynchronizing">
+          <!-- todo: add progress bar -->
+          <div>{{ $t("loader.synchronizing") }}</div>
+        </div>
+      </div>
     </div>
-    <div class="app-main">
-      <div class="app-main--wrapper">
-        <router-view />
+
+    <!-- main application -->
+    <div>
+      <div class="app-top">
+        <span class="app-logo"></span>
+        <span class="app-balance" v-show="computedBalance !== null">{{
+          computedBalance
+        }}</span>
+
+        <span class="top-menu" v-if="showSettings">
+          <router-link :to="{ name: 'settings' }">
+            <fa-icon :icon="['fal', 'cog']" />
+            <span> {{ $t("settings.header") }}</span>
+          </router-link>
+        </span>
+      </div>
+      <div class="app-main">
+        <div class="holder">
+          <router-view />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState } from "vuex";
 import { AppStatus } from "./store";
-import AppLoader from "./components/AppLoader";
+import UnityBackend from "./unity/UnityBackend";
+
+let splashTimeout = 2500;
+let synchronizeTimeout = null;
 
 export default {
   data() {
@@ -42,19 +63,26 @@ export default {
       progress: 1
     };
   },
-  components: {
-    AppLoader
-  },
   watch: {
     status() {
-      this.handleStatusChanged();
+      if (this.status === AppStatus.synchronize) {
+        this.synchronize();
+      }
     }
   },
   computed: {
     ...mapState(["status", "unityVersion", "walletVersion", "balance"]),
-    ...mapGetters(["totalBalance"]),
     showSettings() {
       return this.status === AppStatus.ready;
+    },
+    computedBalance() {
+      if (this.balance === undefined || this.balance === null) return null;
+      return (
+        (this.balance.availableIncludingLocked +
+          this.balance.unconfirmedIncludingLocked +
+          this.balance.immatureIncludingLocked) /
+        100000000
+      ).toFixed(2);
     },
     showLoader() {
       return (
@@ -69,28 +97,36 @@ export default {
       return this.status === AppStatus.synchronize;
     }
   },
-  created() {
-    this.handleStatusChanged();
-  },
   mounted() {
     setTimeout(() => {
       this.splashReady = true;
-    }, 2500);
+    }, splashTimeout);
+    if (this.status === AppStatus.synchronize) {
+      this.synchronize();
+    }
   },
   methods: {
-    handleStatusChanged() {
-      let routeName;
-      switch (this.status) {
-        case AppStatus.setup:
-          routeName = "setup";
-          break;
-        case AppStatus.synchronize:
-        case AppStatus.ready:
-          routeName = "wallet";
-          break;
+    synchronize() {
+      clearTimeout(synchronizeTimeout);
+
+      let progress = UnityBackend.GetUnifiedProgress();
+      progress = parseInt(parseFloat(progress) * 100);
+
+      if (this.progress < progress) {
+        this.progress = progress;
       }
-      if (routeName === undefined || this.$route.name === routeName) return;
-      this.$router.push({ name: routeName });
+      if (this.progress < 100) {
+        synchronizeTimeout = setTimeout(this.synchronize, 1000);
+      } else {
+        synchronizeTimeout = setTimeout(() => {
+          if (this.status !== AppStatus.shutdown) {
+            this.$store.dispatch({
+              type: "SET_STATUS",
+              status: AppStatus.ready
+            });
+          }
+        }, splashTimeout);
+      }
     }
   }
 };
@@ -99,9 +135,8 @@ export default {
 <style lang="less">
 @import "./css/app.less";
 
-body,
-#app {
-  overflow: hidden;
+:root {
+  --top-height: 62px;
 }
 
 *,
@@ -118,15 +153,39 @@ body,
 }
 
 #app {
-  --top-height: 62px;
-
   width: 100%;
   height: 100%;
   color: #000;
   background-color: #fff;
 }
 
-.app-topbar {
+#app-loader {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin-top: 0;
+  margin-left: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #fff;
+  z-index: 1;
+}
+
+#app-loader .version-container {
+  margin: 16px 0;
+}
+
+#app-loader .version-container .divider {
+  margin: 0 8px;
+}
+
+#app-loader .info {
+  min-height: 100px;
+}
+
+.app-top {
   position: absolute;
   top: 0;
   height: var(--top-height);
@@ -135,39 +194,26 @@ body,
   padding: 0 40px 0 40px;
   background-color: #000;
   color: #fff;
+}
 
-  & .app-topbar--logo {
-    float: left;
-    margin-top: 20px;
-    width: 22px;
-    height: 22px;
-    background: url("./img/logo.svg"), linear-gradient(transparent, transparent);
-  }
+.top-menu {
+  float: right;
+  margin-right: -15px;
+}
 
-  & .app-topbar--balance {
-    float: left;
-    margin-left: 10px;
-  }
+.top-menu a,
+.top-menu a:active,
+.top-menu a:visited {
+  display: inline-block;
+  padding: 0 10px 0 10px;
+  font-size: 0.9em;
+  font-weight: 400;
+  line-height: 32px;
+  color: #fff;
+}
 
-  & .app-topbar--settings {
-    float: right;
-    margin-right: -10px;
-  }
-
-  & .app-topbar--settings a,
-  .app-topbar--settings a:active,
-  .app-topbar--settings a:visited {
-    display: inline-block;
-    padding: 0 10px 0 10px;
-    font-size: 0.9em;
-    font-weight: 400;
-    line-height: 32px;
-    color: #fff;
-  }
-
-  .app-topbar--settings a:hover {
-    background-color: #222;
-  }
+.top-menu a:hover {
+  background-color: #222;
 }
 
 .app-main {
@@ -176,11 +222,44 @@ body,
   height: calc(100% - var(--top-height));
   width: 100%;
   padding: 0 40px 100px 40px;
+}
 
-  & .app-main--wrapper {
-    margin: 40px auto;
-    width: 100%;
-    max-width: 800px;
-  }
+.holder {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 800px;
+}
+
+.app-logo {
+  float: left;
+  margin-top: 20px;
+  width: 22px;
+  height: 22px;
+  background: url("./img/logo.svg"), linear-gradient(transparent, transparent);
+}
+
+.logo-outer {
+  margin: 24px;
+  background: #009572;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.logo-inner {
+  width: 64px;
+  height: 64px;
+  background: url("./img/logo.svg");
+  background-size: cover;
+}
+
+.app-balance {
+  float: left;
+  margin-left: 10px;
 }
 </style>
