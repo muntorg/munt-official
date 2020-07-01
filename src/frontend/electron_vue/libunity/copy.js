@@ -1,7 +1,7 @@
 var os = require("os");
 
 let repo =
-  "https://github.com/novocurrency/novocurrency-core/releases/download/develop/";
+  "https://github.com/novocurrency/novocurrency-core/releases/download/development/";
 
 let file = "";
 if (os.platform() === "win32") {
