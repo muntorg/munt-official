@@ -1250,6 +1250,12 @@ PaymentResultStatus UnifiedBackend::performPaymentToRecipient(const UriRecipient
         LogPrintf("performPaymentToRecipient: failed to commit transaction %s",strError.c_str());
         throw std::runtime_error(strprintf(_("Transaction rejected, reason: %s"), state.GetRejectReason()));
     }
+    
+    // Prevent accidental double spends
+    for (const auto &txin : wtx.tx->vin)
+    {
+        pactiveWallet->LockCoin(txin.prevout);
+    }
 
     return PaymentResultStatus::SUCCESS;
 }
@@ -1285,7 +1291,37 @@ TransactionRecord UnifiedBackend::getTransaction(const std::string & txHash)
         throw std::runtime_error(strprintf("No transaction found for hash [%s]", txHash));
 
     const CWalletTx& wtx = pactiveWallet->mapWallet[hash];
-    return calculateTransactionRecordForWalletTransaction(wtx);
+//     return calculateTransactionRecordForWalletTransaction(wtx);
+}
+
+std::string UnifiedBackend::resendTransaction(const std::string& txHash)
+{
+    if (!pactiveWallet)
+        throw std::runtime_error(strprintf("No active wallet to query tx hash [%s]", txHash));
+
+    uint256 hash = uint256S(txHash);
+
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+    if (pactiveWallet->mapWallet.find(hash) == pactiveWallet->mapWallet.end())
+        return "";
+
+    const CWalletTx& wtx = pactiveWallet->mapWallet[hash];
+    
+    CDataStream ssTx(SER_NETWORK, PROTOCOL_VERSION);
+    ssTx << *wtx.tx;
+    std::string strHex = HexStr(ssTx.begin(), ssTx.end());
+    if(!g_connman)
+        return "";
+
+    const uint256& hashTx = wtx.tx->GetHash();
+    CInv inv(MSG_TX, hashTx);
+    g_connman->ForEachNode([&inv](CNode* pnode)
+    {
+        pnode->PushInventory(inv);
+    });
+    
+    return strHex;
 }
 
 std::vector<MutationRecord> UnifiedBackend::getMutationHistory()

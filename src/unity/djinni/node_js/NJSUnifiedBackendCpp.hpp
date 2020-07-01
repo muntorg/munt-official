@@ -160,6 +160,9 @@ private:
      */
     Napi::Value getTransaction(const Napi::CallbackInfo& info);
 
+    /** resubmit a transaction to the network, returns the raw hex of the transaction as a string or empty on fail */
+    Napi::Value resendTransaction(const Napi::CallbackInfo& info);
+
     /** Get list of wallet mutations */
     Napi::Value getMutationHistory(const Napi::CallbackInfo& info);
 

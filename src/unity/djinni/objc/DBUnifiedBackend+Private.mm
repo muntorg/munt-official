@@ -330,6 +330,13 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (nonnull NSString *)resendTransaction:(nonnull NSString *)txHash {
+    try {
+        auto objcpp_result_ = ::UnifiedBackend::resendTransaction(::djinni::String::toCpp(txHash));
+        return ::djinni::String::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (nonnull NSArray<DBMutationRecord *> *)getMutationHistory {
     try {
         auto objcpp_result_ = ::UnifiedBackend::getMutationHistory();

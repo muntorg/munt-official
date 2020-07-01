@@ -151,6 +151,9 @@ public:
      */
     static TransactionRecord getTransaction(const std::string & txHash);
 
+    /** resubmit a transaction to the network, returns the raw hex of the transaction as a string or empty on fail */
+    static std::string resendTransaction(const std::string & txHash);
+
     /** Get list of wallet mutations */
     static std::vector<MutationRecord> getMutationHistory();
 

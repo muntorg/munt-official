@@ -361,6 +361,15 @@ CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_UnifiedBacken
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_UnifiedBackend_00024CppProxy_resendTransaction(JNIEnv* jniEnv, jobject /*this*/, jstring j_txHash)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::UnifiedBackend::resendTransaction(::djinni::String::toCpp(jniEnv, j_txHash));
+        return ::djinni::release(::djinni::String::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_UnifiedBackend_00024CppProxy_getMutationHistory(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {

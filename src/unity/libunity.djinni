@@ -229,6 +229,9 @@ unified_backend = interface +c {
     # Get the wallet transaction for the hash
     # Will throw if not found
     static getTransaction(txHash : string) :  transaction_record;
+    
+    # resubmit a transaction to the network, returns the raw hex of the transaction as a string or empty on fail
+    static resendTransaction(txHash : string) : string;
 
     # Get list of wallet mutations
     static getMutationHistory() : list<mutation_record>;

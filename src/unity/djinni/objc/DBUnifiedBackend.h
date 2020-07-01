@@ -169,6 +169,9 @@ extern int32_t const DBUnifiedBackendVersion;
  */
 + (nonnull DBTransactionRecord *)getTransaction:(nonnull NSString *)txHash;
 
+/** resubmit a transaction to the network, returns the raw hex of the transaction as a string or empty on fail */
++ (nonnull NSString *)resendTransaction:(nonnull NSString *)txHash;
+
 /** Get list of wallet mutations */
 + (nonnull NSArray<DBMutationRecord *> *)getMutationHistory;
 

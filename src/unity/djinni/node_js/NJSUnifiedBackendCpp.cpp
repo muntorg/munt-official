@@ -935,6 +935,26 @@ Napi::Value NJSUnifiedBackend::getTransaction(const Napi::CallbackInfo& info) {
 
     return arg_1;
 }
+Napi::Value NJSUnifiedBackend::resendTransaction(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 1)
+    {
+        Napi::Error::New(env, "NJSUnifiedBackend::resendTransaction needs 1 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+
+    auto result = UnifiedBackend::resendTransaction(arg_0);
+
+    //Wrap result in node object
+    auto arg_1 = Napi::String::New(env, result);
+
+    return arg_1;
+}
 Napi::Value NJSUnifiedBackend::getMutationHistory(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -1321,6 +1341,7 @@ Napi::Object NJSUnifiedBackend::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("performPaymentToRecipient", &NJSUnifiedBackend::performPaymentToRecipient),
     InstanceMethod("getTransactionHistory", &NJSUnifiedBackend::getTransactionHistory),
     InstanceMethod("getTransaction", &NJSUnifiedBackend::getTransaction),
+    InstanceMethod("resendTransaction", &NJSUnifiedBackend::resendTransaction),
     InstanceMethod("getMutationHistory", &NJSUnifiedBackend::getMutationHistory),
     InstanceMethod("getAddressBookRecords", &NJSUnifiedBackend::getAddressBookRecords),
     InstanceMethod("addAddressBookRecord", &NJSUnifiedBackend::addAddressBookRecord),

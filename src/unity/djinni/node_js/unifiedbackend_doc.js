@@ -91,6 +91,8 @@ declare class NJSUnifiedBackend
      * Will throw if not found
      */
     static declare function getTransaction(txHash: string): TransactionRecord;
+    /** resubmit a transaction to the network, returns the raw hex of the transaction as a string or empty on fail */
+    static declare function resendTransaction(txHash: string): string;
     /** Get list of wallet mutations */
     static declare function getMutationHistory(): Array<MutationRecord>;
     /** Get list of all address book entries */
