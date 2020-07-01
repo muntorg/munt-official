@@ -141,11 +141,6 @@ export default {
     }
   },
   watch: {
-    isRecoveryPhraseCorrect() {
-      if (this.isRecoveryPhraseInvalid === false) {
-        this.nextStep();
-      }
-    },
     isRecovery() {
       if (this.isRecovery === null) return;
       this.nextStep();
@@ -199,7 +194,7 @@ export default {
     },
     recoverFromPhrase() {
       this.isRecovery = true;
-      this.current++;
+      this.nextStep();
     },
     validatePhrase(phrase) {
       this.isRecoveryPhraseInvalid = !UnityBackend.IsValidRecoveryPhrase(
@@ -207,7 +202,7 @@ export default {
       );
       if (!this.isRecoveryPhraseInvalid) {
         this.recoveryPhrase = phrase;
-        this.current++
+        this.nextStep();
       }
     },
     validatePasswordsOnEnter() {
