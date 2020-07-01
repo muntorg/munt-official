@@ -77,9 +77,10 @@ export default {
     },
     computedBalance() {
       if (this.balance === undefined || this.balance === null) return null;
-      return ( 
+      return (
         (this.balance.availableIncludingLocked +
-          this.balance.unconfirmedIncludingLocked + this.balance.immatureIncludingLocked) /
+          this.balance.unconfirmedIncludingLocked +
+          this.balance.immatureIncludingLocked) /
         100000000
       ).toFixed(2);
     },
