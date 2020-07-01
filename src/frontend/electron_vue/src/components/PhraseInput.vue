@@ -76,7 +76,7 @@ export default {
     onFocus(index) {
       let newIndex = 0;
       for (var i = 0; i <= index; i++) {
-        if (this.isExactMatch(i) === false) {
+        if (this.isMatch(i) === false) {
           newIndex = i;
           break;
         }
@@ -101,7 +101,7 @@ export default {
     },
     getCssClass(index) {
       if (this.isPhraseInvalid) return "";
-      if (this.isExactMatch(index)) return "success";
+      if (this.isMatch(index)) return "success";
       return this.isInvalid(index) ? "error" : "";
     },
     isExactMatch(index) {
@@ -114,6 +114,14 @@ export default {
       } else {
         return inputWord === this.words[index];
       }
+    },
+    isMatch(index) {
+      if (this.isRecovery) {
+        let inputWord = this.inputWords[index];
+        if (inputWord === undefined || inputWord.length === 0) return false;
+        let validWords = this.getValidWords(index);
+        return validWords.indexOf(inputWord) !== -1;
+      } else return this.isExactMatch(index);
     },
     isInvalid(index) {
       let inputWord = this.inputWords[index];
