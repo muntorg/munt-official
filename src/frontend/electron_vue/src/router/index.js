@@ -17,11 +17,6 @@ const routes = [
       import(/* webpackChunkName: "setup" */ "../views/Setup.vue")
   },
   {
-    path: "/send",
-    name: "send",
-    component: () => import(/* webpackChunkName: "send" */ "../views/Send.vue")
-  },
-  {
     path: "/settings",
     component: () =>
       import(/* webpackChunkName: "settings" */ "../views/Settings.vue"),
