@@ -953,14 +953,14 @@ $(LIBGULDEN_UNITY_OBJC): $(LIBSECP256K1) $(LIBLEVELDB) $(LIBMEMENV) $(LIBGULDEN_
 
 endif
 
-# GuldenD binary #
-GuldenD_SOURCES = GuldenD.cpp
+# Daemon binary #
+GuldenD_SOURCES = daemon-main.cpp
 GuldenD_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 GuldenD_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 GuldenD_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-GuldenD_SOURCES += GuldenD-res.rc
+GuldenD_SOURCES += daemon-res.rc
 endif
 
 GuldenD_LDADD = \
@@ -982,14 +982,14 @@ GuldenD_LDADD = \
 
 GuldenD_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(SSL_LIBS)
 
-# Gulden-cli binary #
-Gulden_cli_SOURCES = Gulden-cli.cpp
+# cli binary #
+Gulden_cli_SOURCES = cli-main.cpp
 Gulden_cli_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(EVENT_CFLAGS)
 Gulden_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 Gulden_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-Gulden_cli_SOURCES += Gulden-cli-res.rc
+Gulden_cli_SOURCES += cli-res.rc
 endif
 
 Gulden_cli_LDADD = \
@@ -1002,14 +1002,14 @@ Gulden_cli_LDADD = \
 Gulden_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
-# Gulden-tx binary #
-Gulden_tx_SOURCES = Gulden-tx.cpp
+# tx binary #
+Gulden_tx_SOURCES = tx-main.cpp
 Gulden_tx_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 Gulden_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 Gulden_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-Gulden_tx_SOURCES += Gulden-tx-res.rc
+Gulden_tx_SOURCES += tx-res.rc
 endif
 
 Gulden_tx_LDADD = \
