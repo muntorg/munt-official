@@ -226,7 +226,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-rpcthreads=<n>", strprintf(helptr("Set the number of threads to service RPC calls (default: %d)"), DEFAULT_HTTP_THREADS));
     strUsage += HelpMessageOpt("-rpconlylistsecuredtransactions=<bool>", strprintf(helptr("When enabled RPC listtransactions command only returns transactions that have been secured by a checkpoint and therefore are safe from double spend (default: %u)"), true));
 
-    strUsage += HelpMessageGroup(helptr("Gulden developer options:"));
+    strUsage += HelpMessageGroup(helptr("Developer options:"));
     strUsage += HelpMessageOpt("-genkeypair", helptr("Generate a random public/private keypair for use with alert system and other similar functionality."));
     strUsage += HelpMessageOpt("-setwindowtitle", helptr("Change the window title name, useful for distinguishing multiple program instances during testing."));
     strUsage += HelpMessageOpt("-coinbasesignature", helptr("Insert value into coinbase of generated blocks, useful during testing."));

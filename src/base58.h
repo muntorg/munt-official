@@ -106,7 +106,7 @@ public:
     bool operator> (const CBase58Data& b58) const { return CompareTo(b58) >  0; }
 };
 
-/** base58-encoded Gulden addresses.
+/** base58-encoded addresses.
  * Public-key-hash-addresses have version 0 (or 111 testnet).
  * The data vector contains RIPEMD160(SHA256(pubkey)), where pubkey is the serialized public key.
  * Script-hash-addresses have version 5 (or 196 testnet).
@@ -318,7 +318,7 @@ private:
     std::string creationTime;
 };
 
-template<typename K, int Size, CChainParams::Base58Type Type> class CGuldenExtKeyBase : public CBase58Data
+template<typename K, int Size, CChainParams::Base58Type Type> class CEncodedSecretExtKeyBase : public CBase58Data
 {
 public:
     void SetKey(const K &key) {
@@ -336,18 +336,18 @@ public:
         return ret;
     }
 
-    CGuldenExtKeyBase(const K &key) {
+    CEncodedSecretExtKeyBase(const K &key) {
         SetKey(key);
     }
 
-    CGuldenExtKeyBase(const std::string& strBase58c) {
+    CEncodedSecretExtKeyBase(const std::string& strBase58c) {
         SetString(strBase58c.c_str(), Params().Base58Prefix(Type).size());
     }
 
-    CGuldenExtKeyBase() {}
+    CEncodedSecretExtKeyBase() {}
 };
 
-typedef CGuldenExtKeyBase<CExtKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_SECRET_KEY> CGuldenExtKey;
-typedef CGuldenExtKeyBase<CExtPubKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_PUBLIC_KEY> CGuldenExtPubKey;
+typedef CEncodedSecretExtKeyBase<CExtKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_SECRET_KEY> CEncodedSecretExt;
+typedef CEncodedSecretExtKeyBase<CExtPubKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_PUBLIC_KEY> CEncodedSecretExtPubKey;
 
 #endif

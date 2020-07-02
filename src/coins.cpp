@@ -19,7 +19,6 @@
 
 #include "txmempool.h"
 
-// Gulden specific includes
 #include "witnessutil.h"
 
 #include <alert.h>

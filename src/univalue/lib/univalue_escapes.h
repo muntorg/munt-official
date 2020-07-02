@@ -259,4 +259,4 @@ static const char *escapes[256] = {
 	NULL,
 	NULL,
 };
-#endif // GULDEN_UNIVALUE_UNIVALUE_ESCAPES_H
+#endif

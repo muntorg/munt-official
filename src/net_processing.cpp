@@ -48,7 +48,7 @@
 #include <algorithm>
 
 #if defined(NDEBUG)
-# error "Gulden cannot be compiled without assertions."
+# error "Cannot be compiled without assertions."
 #endif
 
 static std::atomic<bool> fPreventBlockDownloadDuringHeaderSync(false);

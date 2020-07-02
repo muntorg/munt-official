@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_GULDEN_UTIL_H
-#define GULDEN_GULDEN_UTIL_H
+#ifndef WITNESS_UTIL_H
+#define WITNESS_UTIL_H
 
 #include <string>
 #ifdef ENABLE_WALLET
