@@ -11,6 +11,9 @@
         <button @click="receiveNovo">
           {{ $t("wallet.receive_acquired_novo") }}
         </button>
+        <button @click="buyNovo">
+          {{ $t("wallet.buy_novo") }}
+        </button>
       </template>
     </novo-button-section>
   </div>
@@ -30,11 +33,17 @@ export default {
     ...mapState(["receiveAddress"]),
     receiveUrl() {
       return `https://novocurrency.com/transfer?receive_address=${this.receiveAddress}`;
+    },
+    buyUrl() {
+      return `https://novocurrency.com/purchase?receive_address=${this.receiveAddress}`;
     }
   },
   methods: {
     receiveNovo() {
       window.open(this.receiveUrl, "_blank");
+    },
+    buyNovo() {
+      window.open(this.buyUrl, "_blank");
     },
     copyAddress() {
       this.copyActive = true;
