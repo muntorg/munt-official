@@ -307,7 +307,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             if (!ExtractDestination(witInfo.selectedWitnessTransaction, selectedWitnessAddress))
                 throw std::runtime_error("Could not extract PoW² witness for block.");
 
-            sWitnessAddress = CGuldenAddress(selectedWitnessAddress).ToString();
+            sWitnessAddress = CNativeAddress(selectedWitnessAddress).ToString();
         }
     }
 
@@ -378,7 +378,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
 
             bool fLockPeriodExpired = (GetPoW2RemainingLockLengthInBlocks(nLockUntilBlock, pTipIndex_->nHeight) == 0);
 
-            std::string strAddress = CGuldenAddress(address).ToString();
+            std::string strAddress = CNativeAddress(address).ToString();
             #ifdef ENABLE_WALLET
             std::string accountName = accountNameForAddress(*pwallet, address);
             #endif
@@ -1085,7 +1085,7 @@ static UniValue setminingrewardaddress(const JSONRPCRequest& request)
     std::string strWriteOverrideAddress = request.params[0].get_str();
     if (!strWriteOverrideAddress.empty())
     {
-        CGuldenAddress address(strWriteOverrideAddress);
+        CNativeAddress address(strWriteOverrideAddress);
         if (!address.IsValid())
         {
             throw std::runtime_error("Invalid mining address.");
@@ -1149,7 +1149,7 @@ static UniValue getminingrewardaddress(const JSONRPCRequest& request)
         if (miningAddress->GetReservedKey(pubKey))
         {
             CKeyID keyID = pubKey.GetID();
-            strMiningAddress = CGuldenAddress(keyID).ToString();
+            strMiningAddress = CNativeAddress(keyID).ToString();
         }
         result.push_back(Pair("address",strMiningAddress));
         result.push_back(Pair("is_default", true));
@@ -1163,7 +1163,7 @@ static UniValue getminingrewardaddress(const JSONRPCRequest& request)
     return result;
 }
 
-static witnessOutputsInfoVector getCurrentOutputsForWitnessAddress(CGuldenAddress& searchAddress)
+static witnessOutputsInfoVector getCurrentOutputsForWitnessAddress(CNativeAddress& searchAddress)
 {
     std::map<COutPoint, Coin> allWitnessCoins;
     if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
@@ -1175,7 +1175,7 @@ static witnessOutputsInfoVector getCurrentOutputsForWitnessAddress(CGuldenAddres
         CTxDestination compareDestination;
         bool fValidAddress = ExtractDestination(coin.out, compareDestination);
 
-        if (fValidAddress && (CGuldenAddress(compareDestination) == searchAddress))
+        if (fValidAddress && (CNativeAddress(compareDestination) == searchAddress))
         {
             matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, coin.nTxIndex, outpoint));
         }
@@ -1373,7 +1373,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
         throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
 
     // arg2 - 'to' address.
-    CGuldenAddress witnessAddress(request.params[1].get_str());
+    CNativeAddress witnessAddress(request.params[1].get_str());
     bool isValid = witnessAddress.IsValidWitness(Params());
 
     if (!isValid)
@@ -2230,7 +2230,7 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
         throw std::runtime_error(strprintf("Unable to locate funding account [%s].",  request.params[0].get_str()));
 
     // arg2 - 'to' address.
-    CGuldenAddress witnessAddress(request.params[1].get_str());
+    CNativeAddress witnessAddress(request.params[1].get_str());
     bool isValid = witnessAddress.IsValidWitness(Params());
 
     if (!isValid)
@@ -2305,7 +2305,7 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
     }
 
     // arg1 - 'to' address.
-    CGuldenAddress witnessAddress(request.params[1].get_str());
+    CNativeAddress witnessAddress(request.params[1].get_str());
     bool isValid = witnessAddress.IsValidWitness(Params());
 
     if (!isValid)
@@ -3081,7 +3081,7 @@ static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
 
     CScript scriptForNonCompoundPayments;
 
-    CGuldenAddress address(pubKeyOrScript);
+    CNativeAddress address(pubKeyOrScript);
     if (address.IsValid()) {
         scriptForNonCompoundPayments = GetScriptForDestination(address.Get());
     }
@@ -3240,7 +3240,7 @@ static UniValue setwitnessrewardtemplate(const JSONRPCRequest& request)
         }
         else {
             rewardDestination.type = CWitnessRewardDestination::DestType::Address;
-            rewardDestination.address = CGuldenAddress(destSpec);
+            rewardDestination.address = CNativeAddress(destSpec);
         }
 
         for (auto it = ++dstArr.begin(); it != dstArr.end(); it++) {
@@ -3429,7 +3429,7 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
             + HelpExampleCli("getwitnessaddresskeys \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\"", "")
             + HelpExampleRpc("getwitnessaddresskeys \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\"", ""));
 
-    CGuldenAddress forAddress(request.params[0].get_str());
+    CNativeAddress forAddress(request.params[0].get_str());
     bool isValid = forAddress.IsValidWitness(Params());
 
     if (!isValid)

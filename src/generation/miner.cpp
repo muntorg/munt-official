@@ -1053,7 +1053,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
     std::shared_ptr<CReserveKeyOrScript> coinbaseScript;
     if (fixedGenerateAddress.size() > 0)
     {
-        CGuldenAddress address(fixedGenerateAddress);
+        CNativeAddress address(fixedGenerateAddress);
         if (!address.IsValid())
         {
             CAlert::Notify("Invalid mining address", true, true);

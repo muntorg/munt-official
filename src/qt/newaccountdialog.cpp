@@ -169,7 +169,7 @@ void NewAccountDialog::showSyncQr()
             CPubKey vchPubKey;
             if (!reservekey.GetReservedKey(vchPubKey))
                 return;
-            payoutAddress = CGuldenAddress(vchPubKey.GetID()).ToString();
+            payoutAddress = CNativeAddress(vchPubKey.GetID()).ToString();
 
             QString qrString = QString::fromStdString("guldensync:" + CGuldenSecretExt<CExtKey>(*newAccount->GetAccountMasterPrivKey()).SetCreationTime(QString::number(currentTime).toStdString()).SetPayAccount(payoutAddress).ToURIString() );
             ui->scanQRCode->setCode(qrString);

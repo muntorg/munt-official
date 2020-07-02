@@ -112,7 +112,7 @@ public:
  * Script-hash-addresses have version 5 (or 196 testnet).
  * The data vector contains RIPEMD160(SHA256(cscript)), where cscript is the serialized redemption script.
  */
-class CGuldenAddress : public CBase58Data {
+class CNativeAddress : public CBase58Data {
 public:
     bool Set(const CKeyID& spendingKeyID, const CKeyID& witnessKeyID);
     bool Set(const CKeyID &id);
@@ -130,10 +130,10 @@ public:
     //! Returns whether the address represents a valid Bitcoin address, which is used by some of the nocks integration.
     bool IsValidBitcoin() const;
 
-    CGuldenAddress() {}
-    CGuldenAddress(const CTxDestination &dest) { Set(dest); }
-    CGuldenAddress(const std::string& strAddress) { SetString(strAddress); }
-    CGuldenAddress(const char* pszAddress) { SetString(pszAddress); }
+    CNativeAddress() {}
+    CNativeAddress(const CTxDestination &dest) { Set(dest); }
+    CNativeAddress(const std::string& strAddress) { SetString(strAddress); }
+    CNativeAddress(const char* pszAddress) { SetString(pszAddress); }
 
     CTxDestination Get() const;
 
@@ -144,7 +144,7 @@ public:
 
     bool IsScript() const;
 
-    bool operator==(const CGuldenAddress& otherAddress) const { return CBase58Data::CompareTo((CBase58Data)otherAddress) == 0; }
+    bool operator==(const CNativeAddress& otherAddress) const { return CBase58Data::CompareTo((CBase58Data)otherAddress) == 0; }
 
     ADD_SERIALIZE_METHODS;
 

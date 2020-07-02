@@ -238,7 +238,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
     for (const CTxIn& txin: tx.vin)
     {
         std::string address;
-        CGuldenAddress addr;
+        CNativeAddress addr;
         CTxDestination dest = CNoDestination();
 
         // Try to extract destination, this is not possible in general. Only if the previous
@@ -298,7 +298,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
     for (const CTxOut& txout: tx.vout)
     {
         std::string address;
-        CGuldenAddress addr;
+        CNativeAddress addr;
         CTxDestination dest;
         if (!ExtractDestination(txout, dest) && !txout.IsUnspendable())
         {
@@ -675,7 +675,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
     }
 
     // Ensure we have a valid location to send all the funds
-    CGuldenAddress address(linkedKey.getPayAccount());
+    CNativeAddress address(linkedKey.getPayAccount());
     if (!address.IsValid())
     {
         LogPrintf("ReplaceWalletLinkedFromURI: invalid address %s", linkedKey.getPayAccount().c_str());
@@ -934,7 +934,7 @@ std::string GuldenUnifiedBackend::GetReceiveAddress()
         CKeyID keyID = pubKey.GetID();
         receiveAddress->ReturnKey();
         delete receiveAddress;
-        return CGuldenAddress(keyID).ToString();
+        return CNativeAddress(keyID).ToString();
     }
     else
     {
@@ -1083,7 +1083,7 @@ UriRecipient GuldenUnifiedBackend::IsValidRecipient(const UriRecord & request)
     if (lowerCaseScheme != "guldencoin" && lowerCaseScheme != "gulden")
         return UriRecipient(false, "", "", "", 0);
 
-    if (!CGuldenAddress(request.path).IsValid())
+    if (!CNativeAddress(request.path).IsValid())
         return UriRecipient(false, "", "", "", 0);
 
     std::string address = request.path;
@@ -1117,7 +1117,7 @@ int64_t GuldenUnifiedBackend::feeForRecipient(const UriRecipient & request)
 
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
 
-    CGuldenAddress address(request.address);
+    CNativeAddress address(request.address);
     if (!address.IsValid())
     {
         LogPrintf("feeForRecipient: invalid address %s", request.address.c_str());
@@ -1158,7 +1158,7 @@ PaymentResultStatus GuldenUnifiedBackend::performPaymentToRecipient(const UriRec
 
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
 
-    CGuldenAddress address(request.address);
+    CNativeAddress address(request.address);
     if (!address.IsValid())
     {
         LogPrintf("performPaymentToRecipient: invalid address %s", request.address.c_str());

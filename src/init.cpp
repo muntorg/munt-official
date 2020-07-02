@@ -1800,7 +1800,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                     if (miningAddress->GetReservedKey(pubKey))
                     {
                         CKeyID keyID = pubKey.GetID();
-                        readOverrideAddress = CGuldenAddress(keyID).ToString();
+                        readOverrideAddress = CNativeAddress(keyID).ToString();
                     }
                 }
                 if (nGenProcLimit > 0 && nGenMemoryLimitKilobytes > 0)

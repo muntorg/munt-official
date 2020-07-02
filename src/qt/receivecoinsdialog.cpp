@@ -216,7 +216,7 @@ void ReceiveCoinsDialog::showBuyGuldenDialog()
     else
     {
         CKeyID keyID = pubKey.GetID();
-        guldenAddress = QString::fromStdString(CGuldenAddress(keyID).ToString());
+        guldenAddress = QString::fromStdString(CNativeAddress(keyID).ToString());
     }
 
     QUrl purchasePage("https://gulden.com/purchase");
@@ -313,7 +313,7 @@ void ReceiveCoinsDialog::generateRequest()
         args = "?" + label;
     }
 
-    QString uri = QString("Gulden:") + QString::fromStdString(CGuldenAddress(vchPubKey.GetID()).ToString()) + args;
+    QString uri = QString("Gulden:") + QString::fromStdString(CNativeAddress(vchPubKey.GetID()).ToString()) + args;
     ui->labelPaymentRequest->setText( uri );
     if(!uri.isEmpty())
     {
@@ -332,7 +332,7 @@ void ReceiveCoinsDialog::generateRequest()
         }
     }
 
-    pactiveWallet->SetAddressBook(CGuldenAddress(vchPubKey.GetID()).ToString(), ui->requestLabel->text().toStdString(), "", "receive");
+    pactiveWallet->SetAddressBook(CNativeAddress(vchPubKey.GetID()).ToString(), ui->requestLabel->text().toStdString(), "", "receive");
 }
 
 

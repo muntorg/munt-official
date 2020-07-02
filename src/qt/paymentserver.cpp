@@ -229,7 +229,7 @@ void PaymentServer::ipcParseCommandLine(int argc, char* argv[])
             SendCoinsRecipient r;
             if (GUIUtil::parseGuldenURI(arg, &r) && !r.address.isEmpty())
             {
-                CGuldenAddress address(r.address.toStdString());
+                CNativeAddress address(r.address.toStdString());
                 auto tempChainParams = CreateChainParams(CBaseChainParams::MAIN);
 
                 if (address.IsValid(*tempChainParams))
@@ -453,7 +453,7 @@ void PaymentServer::handleURIOrFile(const QString& s)
             SendCoinsRecipient recipient;
             if (GUIUtil::parseGuldenURI(s, &recipient))
             {
-                CGuldenAddress address(recipient.address.toStdString());
+                CNativeAddress address(recipient.address.toStdString());
                 if (!address.IsValid()) {
                     Q_EMIT message(tr("URI handling"), tr("Invalid payment address %1").arg(recipient.address),
                         CClientUIInterface::MSG_ERROR);
@@ -572,7 +572,7 @@ bool PaymentServer::processPaymentRequest(const PaymentRequestPlus& request, Sen
         CTxDestination dest;
         if (ExtractDestination(sendingTo.first, dest)) {
             // Append destination address
-            addresses.append(QString::fromStdString(CGuldenAddress(dest).ToString()));
+            addresses.append(QString::fromStdString(CNativeAddress(dest).ToString()));
         }
         else if (!recipient.authenticatedMerchant.isEmpty()) {
             // Unauthenticated payment requests to custom Gulden addresses are not supported
@@ -664,7 +664,7 @@ void PaymentServer::fetchPaymentACK(CWallet* wallet, SendCoinsRecipient recipien
         //fixme: (PHASE5)
         if (wallet->GetKeyFromPool(newKey, wallet->activeAccount, KEYCHAIN_EXTERNAL)) {
             CKeyID keyID = newKey.GetID();
-            wallet->SetAddressBook(CGuldenAddress(keyID).ToString(), strAccount, "", "refund");
+            wallet->SetAddressBook(CNativeAddress(keyID).ToString(), strAccount, "", "refund");
 
             CScript s = GetScriptForDestination(keyID);
             payments::Output* refund_to = payment.add_refund_to();

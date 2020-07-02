@@ -87,17 +87,17 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
         if (nNet > 0)
         {
             // Credit
-            if (CGuldenAddress(rec->address).IsValid())
+            if (CNativeAddress(rec->address).IsValid())
             {
-                CTxDestination address = CGuldenAddress(rec->address).Get();
+                CTxDestination address = CNativeAddress(rec->address).Get();
                 if (wallet->mapAddressBook.count(rec->address))
                 {
                     strHTML += "<b>" + tr("From") + ":</b> " + tr("unknown") + "<br>";
                     strHTML += "<b>" + tr("To") + ":</b> ";
                     strHTML += GUIUtil::HtmlEscape(rec->address);
                     QString addressOwned = (::IsMine(*wallet, address) == ISMINE_SPENDABLE) ? tr("own address") : tr("watch-only");
-                    if (!wallet->mapAddressBook[CGuldenAddress(address).ToString()].name.empty())
-                        strHTML += " (" + addressOwned + ", " + tr("label") + ": " + GUIUtil::HtmlEscape(wallet->mapAddressBook[CGuldenAddress(address).ToString()].name) + ")";
+                    if (!wallet->mapAddressBook[CNativeAddress(address).ToString()].name.empty())
+                        strHTML += " (" + addressOwned + ", " + tr("label") + ": " + GUIUtil::HtmlEscape(wallet->mapAddressBook[CNativeAddress(address).ToString()].name) + ")";
                     else
                         strHTML += " (" + addressOwned + ")";
                     strHTML += "<br>";
@@ -191,9 +191,9 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
                     if (ExtractDestination(txout, address))
                     {
                         strHTML += "<b>" + tr("To") + ":</b> ";
-                        if (wallet->mapAddressBook.count(CGuldenAddress(address).ToString()) && !wallet->mapAddressBook[CGuldenAddress(address).ToString()].name.empty())
-                            strHTML += GUIUtil::HtmlEscape(wallet->mapAddressBook[CGuldenAddress(address).ToString()].name) + " ";
-                        strHTML += GUIUtil::HtmlEscape(CGuldenAddress(address).ToString());
+                        if (wallet->mapAddressBook.count(CNativeAddress(address).ToString()) && !wallet->mapAddressBook[CNativeAddress(address).ToString()].name.empty())
+                            strHTML += GUIUtil::HtmlEscape(wallet->mapAddressBook[CNativeAddress(address).ToString()].name) + " ";
+                        strHTML += GUIUtil::HtmlEscape(CNativeAddress(address).ToString());
                         if(toSelf == ISMINE_SPENDABLE)
                             strHTML += " (own address)";
                         else if(toSelf & ISMINE_WATCH_ONLY)
@@ -317,9 +317,9 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
                     CTxDestination address;
                     if (ExtractDestination(vout, address))
                     {
-                        if (wallet->mapAddressBook.count(CGuldenAddress(address).ToString()) && !wallet->mapAddressBook[CGuldenAddress(address).ToString()].name.empty())
-                            strHTML += GUIUtil::HtmlEscape(wallet->mapAddressBook[CGuldenAddress(address).ToString()].name) + " ";
-                        strHTML += QString::fromStdString(CGuldenAddress(address).ToString());
+                        if (wallet->mapAddressBook.count(CNativeAddress(address).ToString()) && !wallet->mapAddressBook[CNativeAddress(address).ToString()].name.empty())
+                            strHTML += GUIUtil::HtmlEscape(wallet->mapAddressBook[CNativeAddress(address).ToString()].name) + " ";
+                        strHTML += QString::fromStdString(CNativeAddress(address).ToString());
                     }
                     strHTML = strHTML + " " + tr("Amount") + "=" + GuldenUnits::formatHtmlWithUnit(unit, vout.nValue);
                     strHTML = strHTML + " IsMine=" + (wallet->IsMine(vout) & ISMINE_SPENDABLE ? tr("true") : tr("false")) + "</li>";

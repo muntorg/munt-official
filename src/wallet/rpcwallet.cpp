@@ -202,7 +202,7 @@ UniValue getnewaddress(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
     CKeyID keyID = newKey.GetID();
 
-    return CGuldenAddress(keyID).ToString();
+    return CNativeAddress(keyID).ToString();
 }
 
 UniValue getaccountaddress(const JSONRPCRequest& request)
@@ -242,7 +242,7 @@ UniValue getaccountaddress(const JSONRPCRequest& request)
 
     CKeyID keyID = vchPubKey.GetID();
 
-    return CGuldenAddress(keyID).ToString();
+    return CNativeAddress(keyID).ToString();
 }
 
 UniValue getrawchangeaddress(const JSONRPCRequest& request)
@@ -290,7 +290,7 @@ UniValue getrawchangeaddress(const JSONRPCRequest& request)
 
     CKeyID keyID = vchPubKey.GetID();
 
-    return CGuldenAddress(keyID).ToString();
+    return CNativeAddress(keyID).ToString();
 }
 
 
@@ -319,7 +319,7 @@ UniValue getaccount(const JSONRPCRequest& request)
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    CGuldenAddress address(request.params[0].get_str());
+    CNativeAddress address(request.params[0].get_str());
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address");
 
@@ -400,7 +400,7 @@ UniValue getaddressesbyaccount(const JSONRPCRequest& request)
         {
             for (const auto& internalKey : setAddressInternal)
             {
-                ret.push_back(CGuldenAddress(CPoW2WitnessDestination(externalKey, internalKey)).ToString());
+                ret.push_back(CNativeAddress(CPoW2WitnessDestination(externalKey, internalKey)).ToString());
             }
         }
     }
@@ -409,7 +409,7 @@ UniValue getaddressesbyaccount(const JSONRPCRequest& request)
     {
         for(const auto& key : setAddresses)
         {
-            ret.push_back(CGuldenAddress(key).ToString());
+            ret.push_back(CNativeAddress(key).ToString());
         }
     }
     return ret;
@@ -496,7 +496,7 @@ UniValue sendtoaddress(const JSONRPCRequest& request)
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    CGuldenAddress address(request.params[0].get_str());
+    CNativeAddress address(request.params[0].get_str());
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address");
 
@@ -563,7 +563,7 @@ UniValue sendtoaddressfromaccount(const JSONRPCRequest& request)
 
     CAccount* fromAccount = AccountFromValue(pwallet, request.params[0], true);
 
-    CGuldenAddress address(request.params[1].get_str());
+    CNativeAddress address(request.params[1].get_str());
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address");
 
@@ -629,7 +629,7 @@ UniValue listaddressgroupings(const JSONRPCRequest& request)
         for(CTxDestination address : grouping)
         {
             UniValue addressInfo(UniValue::VARR);
-            addressInfo.push_back(CGuldenAddress(address).ToString());
+            addressInfo.push_back(CNativeAddress(address).ToString());
             addressInfo.push_back(ValueFromAmount(balances[address]));
             //fixme: (FUT) CBSU - Rather do this inside GetAddressGroupings
             for(const auto& [accountUUID, account] : pwallet->mapAccounts)
@@ -682,7 +682,7 @@ UniValue signmessage(const JSONRPCRequest& request)
     std::string strAddress = request.params[0].get_str();
     std::string strMessage = request.params[1].get_str();
 
-    CGuldenAddress addr(strAddress);
+    CNativeAddress addr(strAddress);
     if (!addr.IsValid())
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid address");
 
@@ -737,7 +737,7 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     // Gulden address
-    CGuldenAddress address = CGuldenAddress(request.params[0].get_str());
+    CNativeAddress address = CNativeAddress(request.params[0].get_str());
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address");
 
@@ -1081,7 +1081,7 @@ UniValue sendfrom(const JSONRPCRequest& request)
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     CAccount* fromAccount = AccountFromValue(pwallet, request.params[0], true);
-    CGuldenAddress address(request.params[1].get_str());
+    CNativeAddress address(request.params[1].get_str());
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address");
     CAmount nAmount = AmountFromValue(request.params[2]);
@@ -1175,7 +1175,7 @@ UniValue sendmany(const JSONRPCRequest& request)
     if (request.params.size() > 4)
         subtractFeeFromAmount = request.params[4].get_array();
 
-    std::set<CGuldenAddress> setAddress;
+    std::set<CNativeAddress> setAddress;
     std::vector<CRecipient> vecSend;
 
     CAmount totalAmount = 0;
@@ -1183,7 +1183,7 @@ UniValue sendmany(const JSONRPCRequest& request)
     std::vector<CReserveKeyOrScript> reservedKeys;
     for(const std::string& name_ : keys)
     {
-        CGuldenAddress address(name_);
+        CNativeAddress address(name_);
 
         CAccount* toAccount = nullptr;
         try{ toAccount = AccountFromValue(pwallet, name_, false); } catch(...) {}
@@ -1194,7 +1194,7 @@ UniValue sendmany(const JSONRPCRequest& request)
             if (!receiveKey.GetReservedKey(vchPubKey))
                 throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
 
-            address = CGuldenAddress(vchPubKey.GetID());
+            address = CNativeAddress(vchPubKey.GetID());
 
             reservedKeys.emplace_back(std::move(receiveKey));
         }
@@ -1300,7 +1300,7 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
     CScriptID innerID(inner);
     forAccount->AddCScript(inner);
 
-    return CGuldenAddress(innerID).ToString();
+    return CNativeAddress(innerID).ToString();
 }
 
 struct tallyitem
@@ -1335,7 +1335,7 @@ UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bool fByA
             filter = filter | ISMINE_WATCH_ONLY;
 
     // Tally
-    std::map<CGuldenAddress, tallyitem> mapTally;
+    std::map<CNativeAddress, tallyitem> mapTally;
     for (const std::pair<uint256, CWalletTx>& pairWtx : pwallet->mapWallet) {
         const CWalletTx& wtx = pairWtx.second;
 
@@ -1382,8 +1382,8 @@ UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bool fByA
         account->GetKeys(setAddress);
         for(const auto& key : setAddress)
         {
-            CGuldenAddress address(key);
-            std::map<CGuldenAddress, tallyitem>::iterator it = mapTally.find(address);
+            CNativeAddress address(key);
+            std::map<CNativeAddress, tallyitem>::iterator it = mapTally.find(address);
             if (it == mapTally.end() && !fIncludeEmpty)
                 continue;
 
@@ -1534,7 +1534,7 @@ UniValue listreceivedbyaccount(const JSONRPCRequest& request)
 
 static void MaybePushAddress(UniValue & entry, const CTxDestination &dest)
 {
-    CGuldenAddress addr;
+    CNativeAddress addr;
     if (addr.Set(dest))
         entry.push_back(Pair("address", addr.ToString()));
 }
@@ -1590,8 +1590,8 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
                 MaybePushAddress(entry, s.destination);
                 entry.push_back(Pair("category", "send"));
                 entry.push_back(Pair("amount", ValueFromAmount(-s.amount)));
-                if (pwallet->mapAddressBook.count(CGuldenAddress(s.destination).ToString())) {
-                    entry.push_back(Pair("label", pwallet->mapAddressBook[CGuldenAddress(s.destination).ToString()].name));
+                if (pwallet->mapAddressBook.count(CNativeAddress(s.destination).ToString())) {
+                    entry.push_back(Pair("label", pwallet->mapAddressBook[CNativeAddress(s.destination).ToString()].name));
                 }
                 entry.push_back(Pair("vout", s.vout));
                 entry.push_back(Pair("fee", ValueFromAmount(-nFee)));
@@ -1629,7 +1629,7 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
                     entry.push_back(Pair("category", "receive"));
                 }
                 entry.push_back(Pair("amount", ValueFromAmount(r.amount)));
-                if (pwallet->mapAddressBook.count(CGuldenAddress(r.destination).ToString())) {
+                if (pwallet->mapAddressBook.count(CNativeAddress(r.destination).ToString())) {
                     entry.push_back(Pair("label", account));
                 }
                 entry.push_back(Pair("vout", r.vout));
@@ -2653,7 +2653,7 @@ UniValue listunspentforaccounts(CWallet* pWallet, std::vector<CAccount*>& doForA
         nMaxDepth = pMaxDepth->get_int();
     }
 
-    std::set<CGuldenAddress> setAddress;
+    std::set<CNativeAddress> setAddress;
     if (pFilterAddresses)
     {
         RPCTypeCheckArgument(*pFilterAddresses, UniValue::VARR);
@@ -2661,7 +2661,7 @@ UniValue listunspentforaccounts(CWallet* pWallet, std::vector<CAccount*>& doForA
         for (unsigned int idx = 0; idx < inputs.size(); idx++)
         {
             const UniValue& input = inputs[idx];
-            CGuldenAddress address(input.get_str());
+            CNativeAddress address(input.get_str());
             if (!address.IsValid())
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Gulden address: ")+input.get_str());
             if (setAddress.count(address))
@@ -2718,7 +2718,7 @@ UniValue listunspentforaccounts(CWallet* pWallet, std::vector<CAccount*>& doForA
 
             if (fValidAddress)
             {
-                entry.push_back(Pair("address", CGuldenAddress(address).ToString()));
+                entry.push_back(Pair("address", CNativeAddress(address).ToString()));
 
                 entry.push_back(Pair("account", getUUIDAsString(account->getUUID())));
                 entry.push_back(Pair("accountlabel", account->getLabel()));
@@ -3026,7 +3026,7 @@ UniValue fundrawtransaction(const JSONRPCRequest& request)
             true, true);
 
         if (options.exists("changeAddress")) {
-            CGuldenAddress address(options["changeAddress"].get_str());
+            CNativeAddress address(options["changeAddress"].get_str());
 
             if (!address.IsValid())
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "changeAddress must be a valid Gulden address");

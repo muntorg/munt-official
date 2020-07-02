@@ -999,7 +999,7 @@ void SendCoinsDialog::coinControlChangeEdited(const QString& text)
         CoinControlDialog::coinControl->destChange = CNoDestination();
         ui->labelCoinControlChangeLabel->setStyleSheet("QLabel{color:red;}");
 
-        CGuldenAddress addr = CGuldenAddress(text.toStdString());
+        CNativeAddress addr = CNativeAddress(text.toStdString());
 
         if (text.isEmpty()) // Nothing entered
         {

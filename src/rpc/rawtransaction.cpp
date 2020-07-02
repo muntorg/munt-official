@@ -417,7 +417,7 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
         rawTx.vin.push_back(in);
     }
 
-    std::set<CGuldenAddress> setAddress;
+    std::set<CNativeAddress> setAddress;
     std::vector<std::string> addrList = sendTo.getKeys();
     for(const std::string& name_ : addrList)
     {
@@ -430,7 +430,7 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
         }
         else
         {
-            CGuldenAddress address(name_);
+            CNativeAddress address(name_);
             if (!address.IsValid())
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Gulden address: ")+name_);
 
@@ -577,7 +577,7 @@ UniValue decodescript(const JSONRPCRequest& request)
     if (type.isStr() && type.get_str() != "scripthash") {
         // P2SH cannot be wrapped in a P2SH. If this script is already a P2SH,
         // don't return the address for a P2SH of the P2SH.
-        r.push_back(Pair("p2sh", CGuldenAddress(CScriptID(script)).ToString()));
+        r.push_back(Pair("p2sh", CNativeAddress(CScriptID(script)).ToString()));
     }
 
     return r;

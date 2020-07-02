@@ -97,7 +97,7 @@ public:
             LOCK(wallet->cs_wallet);
             for(const auto&[address, data] : wallet->mapAddressBook)
             {
-                bool fMine = IsMine(*wallet, CGuldenAddress(address).Get());
+                bool fMine = IsMine(*wallet, CNativeAddress(address).Get());
                 AddressTableEntry::Type addressType = translateTransactionType(QString::fromStdString(data.purpose), fMine);
                 cachedAddressTable.append(AddressTableEntry(QString::fromStdString(address), QString::fromStdString(data.name), QString::fromStdString(data.description), addressType));
             }
@@ -451,7 +451,7 @@ QString AddressTableModel::addRow(const QString& address, const QString& label, 
                 return QString();
             }
         }
-        strAddress = CGuldenAddress(newKey.GetID()).ToString();
+        strAddress = CNativeAddress(newKey.GetID()).ToString();
     }
     else
     {

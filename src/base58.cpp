@@ -219,13 +219,13 @@ int CBase58Data::CompareTo(const CBase58Data& b58) const
 
 namespace
 {
-class CGuldenAddressVisitor : public boost::static_visitor<bool>
+class CNativeAddressVisitor : public boost::static_visitor<bool>
 {
 private:
-    CGuldenAddress* addr;
+    CNativeAddress* addr;
 
 public:
-    CGuldenAddressVisitor(CGuldenAddress* addrIn) : addr(addrIn) {}
+    CNativeAddressVisitor(CNativeAddress* addrIn) : addr(addrIn) {}
 
     bool operator()(const CKeyID& id) const { return addr->Set(id); }
     bool operator()(const CScriptID& id) const { return addr->Set(id); }
@@ -235,7 +235,7 @@ public:
 
 } // anon namespace
 
-bool CGuldenAddress::Set(const CKeyID& spendingKeyID, const CKeyID& witnessKeyID)
+bool CNativeAddress::Set(const CKeyID& spendingKeyID, const CKeyID& witnessKeyID)
 {
     std::vector<unsigned char> vchData;
     vchData.reserve(40);
@@ -246,29 +246,29 @@ bool CGuldenAddress::Set(const CKeyID& spendingKeyID, const CKeyID& witnessKeyID
     return true;
 }
 
-bool CGuldenAddress::Set(const CKeyID& id)
+bool CNativeAddress::Set(const CKeyID& id)
 {
     SetData(Params().Base58Prefix(CChainParams::PUBKEY_ADDRESS), &id, 20);
     return true;
 }
 
-bool CGuldenAddress::Set(const CScriptID& id)
+bool CNativeAddress::Set(const CScriptID& id)
 {
     SetData(Params().Base58Prefix(CChainParams::SCRIPT_ADDRESS), &id, 20);
     return true;
 }
 
-bool CGuldenAddress::Set(const CTxDestination& dest)
+bool CNativeAddress::Set(const CTxDestination& dest)
 {
-    return boost::apply_visitor(CGuldenAddressVisitor(this), dest);
+    return boost::apply_visitor(CNativeAddressVisitor(this), dest);
 }
 
-bool CGuldenAddress::IsValid() const
+bool CNativeAddress::IsValid() const
 {
     return IsValid(Params());
 }
 
-bool CGuldenAddress::IsValid(const CChainParams& params) const
+bool CNativeAddress::IsValid(const CChainParams& params) const
 {
     if (IsValidWitness(params))
         return true;
@@ -279,26 +279,26 @@ bool CGuldenAddress::IsValid(const CChainParams& params) const
     return fCorrectSize && fKnownVersion;
 }
 
-bool CGuldenAddress::IsValidWitness() const
+bool CNativeAddress::IsValidWitness() const
 {
     return IsValidWitness(Params());
 }
 
-bool CGuldenAddress::IsValidWitness(const CChainParams& params) const
+bool CNativeAddress::IsValidWitness(const CChainParams& params) const
 {
     if (vchData.size() == 40 && vchVersion == params.Base58Prefix(CChainParams::POW2_WITNESS_ADDRESS))
         return true;
     return false;
 }
 
-bool CGuldenAddress::IsValidBitcoin() const
+bool CNativeAddress::IsValidBitcoin() const
 {
     bool fCorrectSize = vchData.size() == 20;
     bool fKnownVersion = (vchVersion == std::vector<unsigned char>(1, 0) || vchVersion == std::vector<unsigned char>(1, 5));
     return fCorrectSize && fKnownVersion;
 }
 
-CTxDestination CGuldenAddress::Get() const
+CTxDestination CNativeAddress::Get() const
 {
     if (!IsValid())
         return CNoDestination();
@@ -318,7 +318,7 @@ CTxDestination CGuldenAddress::Get() const
         return CNoDestination();
 }
 
-bool CGuldenAddress::GetKeyID(CKeyID& keyID, CKeyID* pSecondaryKeyID) const
+bool CNativeAddress::GetKeyID(CKeyID& keyID, CKeyID* pSecondaryKeyID) const
 {
     if (!IsValid())
         return false;
@@ -345,7 +345,7 @@ bool CGuldenAddress::GetKeyID(CKeyID& keyID, CKeyID* pSecondaryKeyID) const
     return false;
 }
 
-bool CGuldenAddress::IsScript() const
+bool CNativeAddress::IsScript() const
 {
     return IsValid() && (vchVersion == Params().Base58Prefix(CChainParams::SCRIPT_ADDRESS));
 }

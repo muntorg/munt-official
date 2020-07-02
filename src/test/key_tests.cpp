@@ -27,10 +27,10 @@ static const std::string strSecret1     ("6a2UyrZS129AKTcfehHprFcongim2vK88nvpdb
 static const std::string strSecret2     ("6aDvMh1RCTWjjSL6qBrkAzejMGPMtWeNt1ZL2CtbkWXSXK3mZQj");
 static const std::string strSecret1C    ("RamYVwk9M6328UURbNqGCPX3WeKKMUJzVPiZEXyomiWsgBaWgMkY");
 static const std::string strSecret2C    ("Rbe2WKaqoa2FcJoJjgvZZ7TXvSuhCMqya9TgxKUkP3KMeaPtEeVy");
-static const CGuldenAddress addr1       ("GfTG81CusFHEPSbxhbqhcWqmh9nxRyyXjs");
-static const CGuldenAddress addr2       ("GeezUtUnnU8k7H1Ri8rYUfN8o3pbFJqrWL");
-static const CGuldenAddress addr1C      ("GXpEs9RdwjWqbV3mu5Hm5S8sCQZX5XfGhJ");
-static const CGuldenAddress addr2C      ("GRn6YVVQSENt6rg3XnoFtHvnkxiBZvnaj1");
+static const CNativeAddress addr1       ("GfTG81CusFHEPSbxhbqhcWqmh9nxRyyXjs");
+static const CNativeAddress addr2       ("GeezUtUnnU8k7H1Ri8rYUfN8o3pbFJqrWL");
+static const CNativeAddress addr1C      ("GXpEs9RdwjWqbV3mu5Hm5S8sCQZX5XfGhJ");
+static const CNativeAddress addr2C      ("GRn6YVVQSENt6rg3XnoFtHvnkxiBZvnaj1");
 static const std::string strAddressBad  ("GWusmV4SGS9LRM3B2oCj7c58D2n8KCGhr8");
 
 
