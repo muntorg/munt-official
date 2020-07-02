@@ -37,7 +37,7 @@ RAW_TEST_FILES =
 GENERATED_TEST_FILES = $(JSON_TEST_FILES:.json=.json.h) $(RAW_TEST_FILES:.raw=.raw.h)
 
 # test_gulden binary #
-GULDEN_TESTS =\
+TEST_SOURCES =\
   test/arith_uint256_tests.cpp \
   test/scriptnum10.h \
   test/addrman_tests.cpp \
@@ -86,9 +86,9 @@ GULDEN_TESTS =\
   test/sigopcount_tests.cpp \
   test/skiplist_tests.cpp \
   test/streams_tests.cpp \
-  test/test_gulden.cpp \
-  test/test_gulden.h \
-  test/test_gulden_main.cpp \
+  test/test.cpp \
+  test/test.h \
+  test/test_main.cpp \
   test/testutil.cpp \
   test/testutil.h \
   test/timedata_tests.cpp \
@@ -102,7 +102,7 @@ GULDEN_TESTS =\
   test/unity_tests.cpp
 
 if ENABLE_WALLET
-GULDEN_TESTS += \
+TEST_SOURCES += \
   wallet/test/wallet_test_fixture.cpp \
   wallet/test/wallet_test_fixture.h \
   wallet/test/accounting_tests.cpp \
@@ -110,7 +110,7 @@ GULDEN_TESTS += \
   wallet/test/crypto_tests.cpp
 endif
 
-test_test_gulden_SOURCES = $(GULDEN_TESTS) $(JSON_TEST_FILES) $(RAW_TEST_FILES)
+test_test_gulden_SOURCES = $(TEST_SOURCES) $(JSON_TEST_FILES) $(RAW_TEST_FILES)
 test_test_gulden_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -DTESTDATADIR=\"$(abs_top_srcdir)/src/test/data/\" -I$(builddir)/test/ $(TESTDEFS) $(EVENT_CFLAGS)
 test_test_gulden_LDADD = $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE) $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE)
 if ENABLE_WALLET
@@ -130,7 +130,7 @@ test_test_gulden_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) -st
 #
 
 # test_gulden_fuzzy binary #
-test_test_gulden_fuzzy_SOURCES = test/test_gulden_fuzzy.cpp
+test_test_gulden_fuzzy_SOURCES = test/test_fuzzy.cpp
 test_test_gulden_fuzzy_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 test_test_gulden_fuzzy_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 test_test_gulden_fuzzy_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
@@ -171,11 +171,11 @@ test_test_gulden_fuzzy_LDADD += \
 
 nodist_test_test_gulden_SOURCES = $(GENERATED_TEST_FILES)
 
-$(GULDEN_TESTS): $(GENERATED_TEST_FILES)
+$(TEST_SOURCES): $(GENERATED_TEST_FILES)
 
-CLEAN_GULDEN_TEST = test/*.gcda test/*.gcno $(GENERATED_TEST_FILES)
+CLEAN_TEST = test/*.gcda test/*.gcno $(GENERATED_TEST_FILES)
 
-CLEANFILES += $(CLEAN_GULDEN_TEST)
+CLEANFILES += $(CLEAN_TEST)
 
 gulden_test: $(TEST_BINARY)
 
@@ -183,7 +183,7 @@ gulden_test_check: $(TEST_BINARY) FORCE
 	$(MAKE) check-TESTS TESTS=$^
 
 gulden_test_clean : FORCE
-	rm -f $(CLEAN_GULDEN_TEST) $(test_test_gulden_OBJECTS) $(TEST_BINARY)
+	rm -f $(CLEAN_TEST) $(test_test_gulden_OBJECTS) $(TEST_BINARY)
 
 check-local:
 	@echo "Running test/util/gulden-util-test.py..."

@@ -19,7 +19,7 @@
 #include "script/sign.h"
 #include "util.h"
 #include "utilstrencodings.h"
-#include "test/test_gulden.h"
+#include "test/test.h"
 #include "rpc/server.h"
 
 #if defined(HAVE_CONSENSUS_LIB)

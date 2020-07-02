@@ -17,7 +17,7 @@
 #include "txmempool.h"
 #include "random.h"
 #include "script/standard.h"
-#include "test/test_gulden.h"
+#include "test/test.h"
 #include "utiltime.h"
 
 #ifdef ENABLE_WALLET

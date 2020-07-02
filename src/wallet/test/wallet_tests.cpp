@@ -18,7 +18,7 @@
 
 #include "consensus/validation.h"
 #include "rpc/server.h"
-#include "test/test_gulden.h"
+#include "test/test.h"
 #include "validation/validation.h"
 #include "blockstore.h"
 #include "wallet/test/wallet_test_fixture.h"

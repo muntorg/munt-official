@@ -14,7 +14,7 @@
 #include "pow/pow.h"
 #include "random.h"
 #include "util.h"
-#include "test/test_gulden.h"
+#include "test/test.h"
 
 #include <boost/test/unit_test.hpp>
 

@@ -9,7 +9,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "test_gulden.h"
+#include "test.h"
 
 #include "chainparams.h"
 #include "consensus/consensus.h"

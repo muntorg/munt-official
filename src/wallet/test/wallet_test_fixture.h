@@ -5,7 +5,7 @@
 #ifndef WALLET_TEST_FIXTURE_H
 #define WALLET_TEST_FIXTURE_H
 
-#include "test/test_gulden.h"
+#include "test/test.h"
 
 /** Testing setup and teardown for wallet.
  */
