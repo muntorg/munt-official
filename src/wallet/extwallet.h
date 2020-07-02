@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_WALLET_GULDEN_H
-#define GULDEN_WALLET_GULDEN_H
+#ifndef EXT_WALLET_H
+#define EXT_WALLET_H
 
 #include "amount.h"
 #include "streams.h"
@@ -340,4 +340,4 @@ protected:
     // automatically lock when nUnlockSessions becomes 0
     mutable bool fAutoLock;
 };
-#endif // GULDEN_WALLET_GULDEN_H
+#endif

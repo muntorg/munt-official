@@ -129,7 +129,7 @@ GULDEN_CORE_H = rpc/accounts.h \
   wallet/mnemonic.h \
   witnessutil.h \
   auto_checkpoints.h \
-  wallet/guldenwallet.h \
+  wallet/extwallet.h \
   LRUCache/LRUCache11.hpp \
   alert.h \
   wallet/account.h \
@@ -340,7 +340,7 @@ libgulden_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_wallet_a_SOURCES = \
   wallet/account.cpp \
   wallet/mnemonic.cpp \
-  wallet/guldenwallet.cpp \
+  wallet/extwallet.cpp \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/feebumper.cpp \
