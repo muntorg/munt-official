@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_SCRIPT_SIGCACHE_H
-#define GULDEN_SCRIPT_SIGCACHE_H
+#ifndef SCRIPT_SIGCACHE_H
+#define SCRIPT_SIGCACHE_H
 
 #include "script/interpreter.h"
 
@@ -60,4 +60,4 @@ public:
 
 void InitSignatureCache();
 
-#endif // GULDEN_SCRIPT_SIGCACHE_H
+#endif

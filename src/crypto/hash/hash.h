@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_COMMON_HASH_H
-#define GULDEN_COMMON_HASH_H
+#ifndef CRYPTO_HASH_HASH_H
+#define CRYPTO_HASH_HASH_H
 
 #include <hash.h>
 #include <uint256.h>

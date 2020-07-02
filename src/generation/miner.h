@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_MINER_H
-#define GULDEN_MINER_H
+#ifndef GENERATION_MINER_H
+#define GENERATION_MINER_H
 
 #include "primitives/block.h"
 #include "txmempool.h"
@@ -247,4 +247,4 @@ private:
 void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned int& nExtraNonce);
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev);
 
-#endif // GULDEN_MINER_H
+#endif

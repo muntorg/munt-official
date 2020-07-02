@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_ZMQ_ZMQABSTRACTNOTIFIER_H
-#define GULDEN_ZMQ_ZMQABSTRACTNOTIFIER_H
+#ifndef ZMQ_ZMQABSTRACTNOTIFIER_H
+#define ZMQ_ZMQABSTRACTNOTIFIER_H
 
 #include "zmqconfig.h"
 
@@ -42,4 +42,4 @@ protected:
     std::string address;
 };
 
-#endif // GULDEN_ZMQ_ZMQABSTRACTNOTIFIER_H
+#endif // ZMQ_ZMQABSTRACTNOTIFIER_H

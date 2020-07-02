@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_SIGMA_HASH_H
-#define GULDEN_SIGMA_HASH_H
+#ifndef CRYPTO_HASH_SIGMA_HASH_H
+#define CRYPTO_HASH_SIGMA_HASH_H
 
 #include <stdint.h>
 #include <primitives/block.h>

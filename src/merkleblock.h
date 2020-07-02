@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_MERKLEBLOCK_H
-#define GULDEN_MERKLEBLOCK_H
+#ifndef MERKLEBLOCK_H
+#define MERKLEBLOCK_H
 
 #include "serialize.h"
 #include "uint256.h"
@@ -154,4 +154,4 @@ public:
     }
 };
 
-#endif // GULDEN_MERKLEBLOCK_H
+#endif

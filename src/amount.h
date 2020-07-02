@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_AMOUNT_H
-#define GULDEN_AMOUNT_H
+#ifndef AMOUNT_H
+#define AMOUNT_H
 
 #include <stdint.h>
 
@@ -33,4 +33,4 @@ static const CAmount CENT = 1000000;
 static const CAmount MAX_MONEY = 1680000000 * COIN;
 inline bool MoneyRange(const CAmount& nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
 
-#endif //  GULDEN_AMOUNT_H
+#endif

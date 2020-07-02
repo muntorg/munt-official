@@ -14,8 +14,8 @@
  * Server/client environment: argument handling, config file parsing,
  * logging, thread wrappers
  */
-#ifndef GULDEN_UTIL_H
-#define GULDEN_UTIL_H
+#ifndef UTIL_H
+#define UTIL_H
 
 #if defined(HAVE_CONFIG_H)
 #include "config/build-config.h"
@@ -478,4 +478,4 @@ private:
 #define UNLIKELY(x) (x)
 #endif
 
-#endif // GULDEN_UTIL_H
+#endif

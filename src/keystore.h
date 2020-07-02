@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_KEYSTORE_H
-#define GULDEN_KEYSTORE_H
+#ifndef CORE_KEYSTORE_H
+#define CORE_KEYSTORE_H
 
 #include "key.h"
 #include "pubkey.h"
@@ -170,4 +170,4 @@ public:
 typedef std::vector<unsigned char, secure_allocator<unsigned char> > CKeyingMaterial;
 typedef std::map<CKeyID, std::pair<CPubKey, std::vector<unsigned char> > > CryptedKeyMap;
 
-#endif // GULDEN_KEYSTORE_H
+#endif

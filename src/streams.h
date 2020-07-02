@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_STREAMS_H
-#define GULDEN_STREAMS_H
+#ifndef CORE_STREAMS_H
+#define CORE_STREAMS_H
 
 #include "support/allocators/zeroafterfree.h"
 #include "serialize.h"
@@ -957,4 +957,4 @@ public:
     }
 };
 
-#endif // GULDEN_STREAMS_H
+#endif

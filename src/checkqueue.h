@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_CHECKQUEUE_H
-#define GULDEN_CHECKQUEUE_H
+#ifndef CHECKQUEUE_H
+#define CHECKQUEUE_H
 
 #include "sync.h"
 
@@ -216,4 +216,4 @@ public:
     }
 };
 
-#endif // GULDEN_CHECKQUEUE_H
+#endif

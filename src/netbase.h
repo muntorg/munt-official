@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_NETBASE_H
-#define GULDEN_NETBASE_H
+#ifndef NETBASE_H
+#define NETBASE_H
 
 #if defined(HAVE_CONFIG_H)
 #include "config/build-config.h"
@@ -86,4 +86,4 @@ void InterruptSocks5(bool interrupt);
 
 boost::asio::io_context& get_io_context();
 
-#endif // GULDEN_NETBASE_H
+#endif

@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_BLOOM_H
-#define GULDEN_BLOOM_H
+#ifndef BLOOM_H
+#define BLOOM_H
 
 #include "serialize.h"
 
@@ -142,4 +142,4 @@ private:
     int nHashFuncs;
 };
 
-#endif // GULDEN_BLOOM_H
+#endif

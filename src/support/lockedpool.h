@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_SUPPORT_LOCKEDPOOL_H
-#define GULDEN_SUPPORT_LOCKEDPOOL_H
+#ifndef SUPPORT_LOCKEDPOOL_H
+#define SUPPORT_LOCKEDPOOL_H
 
 #include <stdint.h>
 #include <list>
@@ -228,4 +228,4 @@ private:
     static std::once_flag init_flag;
 };
 
-#endif // GULDEN_SUPPORT_LOCKEDPOOL_H
+#endif

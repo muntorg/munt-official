@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_VERSION_H
-#define GULDEN_VERSION_H
+#ifndef VERSION_H
+#define VERSION_H
 
 /**
  * network protocol versioning
@@ -52,4 +52,4 @@ static const int INVALID_CB_NO_BAN_VERSION = 70015;
 //! Reverse headers for fast header synchronisation from last checkpoint
 static const int REVERSEHEADERS_VERSION = 70016;
 
-#endif // GULDEN_VERSION_H
+#endif

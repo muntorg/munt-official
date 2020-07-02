@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_CHAINPARAMS_H
-#define GULDEN_CHAINPARAMS_H
+#ifndef CHAINPARAMS_H
+#define CHAINPARAMS_H
 
 #include "chainparamsbase.h"
 #include "consensus/params.h"
@@ -156,4 +156,4 @@ void FreeParams();
  */
 void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout);
 
-#endif // GULDEN_CHAINPARAMS_H
+#endif

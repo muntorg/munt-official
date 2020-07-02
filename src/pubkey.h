@@ -9,8 +9,8 @@
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
-#ifndef GULDEN_PUBKEY_H
-#define GULDEN_PUBKEY_H
+#ifndef CORE_PUBKEY_H
+#define CORE_PUBKEY_H
 
 #include "hash.h"
 #include "serialize.h"
@@ -256,4 +256,4 @@ public:
     ~ECCVerifyHandle();
 };
 
-#endif // GULDEN_PUBKEY_H
+#endif

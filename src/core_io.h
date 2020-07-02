@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_CORE_IO_H
-#define GULDEN_CORE_IO_H
+#ifndef CORE_IO_H
+#define CORE_IO_H
 
 #include <string>
 #include <vector>
@@ -33,4 +33,4 @@ void PoW2WitnessToUniv(const CTxOut& txout, UniValue& out, bool fIncludeHex);
 void ScriptPubKeyToUniv(const CScript& scriptPubKey, UniValue& out, bool fIncludeHex);
 void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry);
 
-#endif // GULDEN_CORE_IO_H
+#endif

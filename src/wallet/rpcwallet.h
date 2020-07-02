@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_WALLET_RPCWALLET_H
-#define GULDEN_WALLET_RPCWALLET_H
+#ifndef WALLET_RPCWALLET_H
+#define WALLET_RPCWALLET_H
 
 class CRPCTable;
 class CAccount;
@@ -32,4 +32,4 @@ std::string HelpRequiringPassphrase(CWallet *);
 void EnsureWalletIsUnlocked(CWallet *);
 bool EnsureWalletIsAvailable(CWallet *, bool avoidException);
 
-#endif //GULDEN_WALLET_RPCWALLET_H
+#endif

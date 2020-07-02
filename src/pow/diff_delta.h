@@ -10,8 +10,8 @@
 // In addition to the core algorithm several extra rules are then applied in certain situations (e.g. multiple quick blocks) to enhance the behaviour.
 
 
-#ifndef GULDEN_DIFF_DELTA_H
-#define GULDEN_DIFF_DELTA_H
+#ifndef POW_DIFF_DELTA_H
+#define POW_DIFF_DELTA_H
 
 #define PERCENT_FACTOR 100
 extern unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBlockHeader* block, int nPowTargetSpacing, unsigned int nPowLimit, unsigned int nFirstDeltaBlock);

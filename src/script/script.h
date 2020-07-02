@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_SCRIPT_SCRIPT_H
-#define GULDEN_SCRIPT_SCRIPT_H
+#ifndef SCRIPT_SCRIPT_H
+#define SCRIPT_SCRIPT_H
 
 #include "crypto/common.h"
 #include "prevector.h"
@@ -728,4 +728,4 @@ public:
     virtual ~CReserveScript() {}
 };
 
-#endif // GULDEN_SCRIPT_SCRIPT_H
+#endif

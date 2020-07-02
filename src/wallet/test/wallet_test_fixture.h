@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_WALLET_TEST_FIXTURE_H
-#define GULDEN_WALLET_TEST_FIXTURE_H
+#ifndef WALLET_TEST_FIXTURE_H
+#define WALLET_TEST_FIXTURE_H
 
 #include "test/test_gulden.h"
 

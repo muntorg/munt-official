@@ -1,6 +1,6 @@
 // Automatically generated file. Do not modify.
-#ifndef GULDEN_UNIVALUE_UNIVALUE_ESCAPES_H
-#define GULDEN_UNIVALUE_UNIVALUE_ESCAPES_H
+#ifndef UNIVALUE_UNIVALUE_ESCAPES_H
+#define UNIVALUE_UNIVALUE_ESCAPES_H
 static const char *escapes[256] = {
 	"\\u0000",
 	"\\u0001",

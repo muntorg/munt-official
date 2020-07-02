@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_WITNESS_H
-#define GULDEN_WITNESS_H
+#ifndef GENERATION_WITNESS_H
+#define GENERATION_WITNESS_H
 
 #include <boost/thread/thread.hpp>
 

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_CLIENTVERSION_H
-#define GULDEN_CLIENTVERSION_H
+#ifndef CLIENTVERSION_H
+#define CLIENTVERSION_H
 
 #if defined(HAVE_CONFIG_H)
 #include "config/build-config.h"
@@ -52,4 +52,4 @@ std::string Version();
 
 #endif // WINDRES_PREPROC
 
-#endif // GULDEN_CLIENTVERSION_H
+#endif

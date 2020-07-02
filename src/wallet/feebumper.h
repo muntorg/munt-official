@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_WALLET_FEEBUMPER_H
-#define GULDEN_WALLET_FEEBUMPER_H
+#ifndef WALLET_FEEBUMPER_H
+#define WALLET_FEEBUMPER_H
 
 #include <primitives/transaction.h>
 
@@ -56,4 +56,4 @@ private:
     BumpFeeResult currentResult;
 };
 
-#endif // GULDEN_WALLET_FEEBUMPER_H
+#endif

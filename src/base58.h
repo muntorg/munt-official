@@ -18,8 +18,8 @@
  * - E-mail usually won't line-break if there's no punctuation to break at.
  * - Double-clicking selects the whole string as one word if it's all alphanumeric.
  */
-#ifndef GULDEN_BASE58_H
-#define GULDEN_BASE58_H
+#ifndef BASE58_H
+#define BASE58_H
 
 #include "chainparams.h"
 #include "key.h"
@@ -350,4 +350,4 @@ public:
 typedef CGuldenExtKeyBase<CExtKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_SECRET_KEY> CGuldenExtKey;
 typedef CGuldenExtKeyBase<CExtPubKey, BIP32_EXTKEY_SIZE, CChainParams::EXT_PUBLIC_KEY> CGuldenExtPubKey;
 
-#endif // GULDEN_BASE58_H
+#endif

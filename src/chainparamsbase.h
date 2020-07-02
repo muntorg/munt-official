@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_CHAINPARAMSBASE_H
-#define GULDEN_CHAINPARAMSBASE_H
+#ifndef CHAINPARAMSBASE_H
+#define CHAINPARAMSBASE_H
 
 #include <memory>
 #include <string>
@@ -59,4 +59,4 @@ void SelectBaseParams(const std::string& chain);
  */
 std::string ChainNameFromCommandLine();
 
-#endif // GULDEN_CHAINPARAMSBASE_H
+#endif

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef _GULDEN_CUCKOOCACHE_H_
-#define _GULDEN_CUCKOOCACHE_H_
+#ifndef CUCKOOCACHE_H
+#define CUCKOOCACHE_H
 
 #include <array>
 #include <algorithm>

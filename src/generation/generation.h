@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_GENERATION_H
-#define GULDEN_GENERATION_H
+#ifndef GENERATION_GENERATION_H
+#define GENERATION_GENERATION_H
 
 #include "sync.h" //CCriticalSection
 #include "script/script.h"

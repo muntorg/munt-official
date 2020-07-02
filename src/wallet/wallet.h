@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_WALLET_WALLET_H
-#define GULDEN_WALLET_WALLET_H
+#ifndef WALLET_WALLET_H
+#define WALLET_WALLET_H
 
 #include "wallettx.h"
 
@@ -1033,4 +1033,4 @@ bool CWallet::DummySignTx(std::vector<CKeyStore*>& accountsToTry, CMutableTransa
     }
     return true;
 }
-#endif // GULDEN_WALLET_WALLET_H
+#endif

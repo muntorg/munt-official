@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_HTTPRPC_H
-#define GULDEN_HTTPRPC_H
+#ifndef CORE_HTTPRPC_H
+#define CORE_HTTPRPC_H
 
 #include <string>
 #include <map>

@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_DBWRAPPER_H
-#define GULDEN_DBWRAPPER_H
+#ifndef DBWRAPPER_H
+#define DBWRAPPER_H
 
 #include "clientversion.h"
 #include "fs.h"
@@ -343,4 +343,4 @@ public:
     }
 };
 
-#endif // GULDEN_DBWRAPPER_H
+#endif

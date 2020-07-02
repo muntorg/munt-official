@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_COMPAT_BYTESWAP_H
-#define GULDEN_COMPAT_BYTESWAP_H
+#ifndef COMPAT_BYTESWAP_H
+#define COMPAT_BYTESWAP_H
 
 #if defined(HAVE_CONFIG_H)
 #include "config/build-config.h"
@@ -63,4 +63,4 @@ inline uint64_t bswap_64(uint64_t x)
 
 #endif // defined(__APPLE__)
 
-#endif // GULDEN_COMPAT_BYTESWAP_H
+#endif

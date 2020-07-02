@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_VALIDATIONINTERFACE_H
-#define GULDEN_VALIDATIONINTERFACE_H
+#ifndef VALIDATIONINTERFACE_H
+#define VALIDATIONINTERFACE_H
 
 #if defined(HAVE_CONFIG_H)
 #include "config/build-config.h"
@@ -107,4 +107,4 @@ struct CMainSignals {
 
 CMainSignals& GetMainSignals();
 
-#endif // GULDEN_VALIDATIONINTERFACE_H
+#endif

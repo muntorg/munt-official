@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_KEY_H
-#define GULDEN_KEY_H
+#ifndef CORE_KEY_H
+#define CORE_KEY_H
 
 #include "pubkey.h"
 #include "serialize.h"
@@ -198,4 +198,4 @@ void ECC_Stop(void);
 /** Check that required EC support is available at runtime. */
 bool ECC_InitSanityCheck(void);
 
-#endif // GULDEN_KEY_H
+#endif

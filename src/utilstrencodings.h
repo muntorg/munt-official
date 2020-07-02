@@ -6,8 +6,8 @@
 /**
  * Utilities for converting data from/to strings.
  */
-#ifndef GULDEN_UTILSTRENCODINGS_H
-#define GULDEN_UTILSTRENCODINGS_H
+#ifndef UTILSTRENCODINGS_H
+#define UTILSTRENCODINGS_H
 
 #include <stdint.h>
 #include <string>
@@ -145,4 +145,4 @@ bool TimingResistantEqual(const T& a, const T& b)
  */
 bool ParseFixedPoint(const std::string &val, int decimals, int64_t *amount_out);
 
-#endif // GULDEN_UTILSTRENCODINGS_H
+#endif

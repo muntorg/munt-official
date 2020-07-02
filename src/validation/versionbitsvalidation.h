@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_VERSION_BITS_VALIDATION_H
-#define GULDEN_VERSION_BITS_VALIDATION_H
+#ifndef VERSION_BITS_VALIDATION_H
+#define VERSION_BITS_VALIDATION_H
 
 #include "versionbits.h"
 
@@ -25,4 +25,4 @@ BIP9Stats VersionBitsTipStatistics(const Consensus::Params& params, Consensus::D
 /** Get the block height at which the BIP9 deployment switched into the state for the block building on the current tip. */
 int VersionBitsTipStateSinceHeight(const Consensus::Params& params, Consensus::DeploymentPos pos);
 
-#endif // GULDEN_VERSION_BITS_VALIDATION_H
+#endif

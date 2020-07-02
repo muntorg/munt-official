@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_DIFF_H
-#define GULDEN_DIFF_H
+#ifndef POW_DIFF_H
+#define POW_DIFF_H
 
 #include <consensus/params.h>
 #include "diff_common.h"

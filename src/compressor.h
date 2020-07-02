@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_COMPRESSOR_H
-#define GULDEN_COMPRESSOR_H
+#ifndef COMPRESSOR_H
+#define COMPRESSOR_H
 
 #include "primitives/transaction.h"
 #include "script/script.h"
@@ -120,4 +120,4 @@ public:
         READWRITE(cscript);
     }
 };
-#endif // GULDEN_COMPRESSOR_H
+#endif

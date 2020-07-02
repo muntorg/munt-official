@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_SUPPORT_ALLOCATORS_SECURE_H
-#define GULDEN_SUPPORT_ALLOCATORS_SECURE_H
+#ifndef SUPPORT_ALLOCATORS_SECURE_H
+#define SUPPORT_ALLOCATORS_SECURE_H
 
 #include "support/lockedpool.h"
 #include "support/cleanse.h"
@@ -66,4 +66,4 @@ typedef std::basic_string<char, std::char_traits<char>, secure_allocator<char> >
 typedef std::vector<char, secure_allocator<char> > SecureCharVector;
 typedef std::vector<unsigned char, secure_allocator<unsigned char> > SecureUnsignedCharVector;
 
-#endif // GULDEN_SUPPORT_ALLOCATORS_SECURE_H
+#endif

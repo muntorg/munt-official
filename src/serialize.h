@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_SERIALIZE_H
-#define GULDEN_SERIALIZE_H
+#ifndef SERIALIZE_H
+#define SERIALIZE_H
 
 #include "compat/endian.h"
 
@@ -1482,4 +1482,4 @@ size_t GetSerializeSize(const S& s, const T& t)
     return (CSizeComputer(s.GetType(), s.GetVersion()) << t).size();
 }
 
-#endif // GULDEN_SERIALIZE_H
+#endif

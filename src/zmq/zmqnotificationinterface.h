@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_ZMQ_ZMQNOTIFICATIONINTERFACE_H
-#define GULDEN_ZMQ_ZMQNOTIFICATIONINTERFACE_H
+#ifndef ZMQ_ZMQNOTIFICATIONINTERFACE_H
+#define ZMQ_ZMQNOTIFICATIONINTERFACE_H
 
 #include "validation/validationinterface.h"
 #include <string>
@@ -38,4 +38,4 @@ private:
     std::list<CZMQAbstractNotifier*> notifiers;
 };
 
-#endif // GULDEN_ZMQ_ZMQNOTIFICATIONINTERFACE_H
+#endif // ZMQ_ZMQNOTIFICATIONINTERFACE_H

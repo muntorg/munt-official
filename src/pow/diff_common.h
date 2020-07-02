@@ -4,8 +4,8 @@
 // file COPYING
 
 
-#ifndef GULDEN_DIFF_COMMON_H
-#define GULDEN_DIFF_COMMON_H
+#ifndef POW_DIFF_COMMON_H
+#define POW_DIFF_COMMON_H
 
 #include <consensus/params.h>
 #include <arith_uint256.h>

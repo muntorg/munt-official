@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_CONSENSUS_VALIDATION_H
-#define GULDEN_CONSENSUS_VALIDATION_H
+#ifndef CONSENSUS_VALIDATION_H
+#define CONSENSUS_VALIDATION_H
 
 #include <string>
 
@@ -109,4 +109,4 @@ public:
     std::string GetDebugMessage() const { return strDebugMessage; }
 };
 
-#endif // GULDEN_CONSENSUS_VALIDATION_H
+#endif

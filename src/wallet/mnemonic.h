@@ -10,8 +10,8 @@
 
 // Note this has not been tested on big endian machines and likely requires further work for them.
 
-#ifndef GULDEN_MNEMONIC_H
-#define GULDEN_MNEMONIC_H
+#ifndef MNEMONIC_H
+#define MNEMONIC_H
 
 #include <string>
 #include <vector>

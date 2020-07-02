@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_PRIMITIVES_TRANSACTION_H
-#define GULDEN_PRIMITIVES_TRANSACTION_H
+#ifndef PRIMITIVES_TRANSACTION_H
+#define PRIMITIVES_TRANSACTION_H
 
 #include "amount.h"
 #include "script/script.h"
@@ -1322,4 +1322,4 @@ template <typename Tx> static inline CTransactionRef MakeTransactionRef(Tx&& txI
 /** Compute the weight of a transaction, as defined by BIP 141 */
 int64_t GetTransactionWeight(const CTransaction &tx);
 
-#endif // GULDEN_PRIMITIVES_TRANSACTION_H
+#endif

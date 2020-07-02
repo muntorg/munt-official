@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_BENCH_BENCH_H
-#define GULDEN_BENCH_BENCH_H
+#ifndef BENCH_BENCH_H
+#define BENCH_BENCH_H
 
 #include <functional>
 #include <limits>
@@ -78,4 +78,4 @@ namespace benchmark {
 #define BENCHMARK(n) \
     benchmark::BenchRunner BOOST_PP_CAT(bench_, BOOST_PP_CAT(__LINE__, n))(BOOST_PP_STRINGIZE(n), n);
 
-#endif // GULDEN_BENCH_BENCH_H
+#endif

@@ -9,8 +9,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_BLOCK_ENCODINGS_H
-#define GULDEN_BLOCK_ENCODINGS_H
+#ifndef BLOCK_ENCODINGS_H
+#define BLOCK_ENCODINGS_H
 
 #include "primitives/block.h"
 

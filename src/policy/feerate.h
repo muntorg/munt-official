@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_POLICY_FEERATE_H
-#define GULDEN_POLICY_FEERATE_H
+#ifndef POLICY_FEERATE_H
+#define POLICY_FEERATE_H
 
 #include "amount.h"
 #include "serialize.h"
@@ -51,4 +51,4 @@ public:
     }
 };
 
-#endif //  GULDEN_POLICY_FEERATE_H
+#endif
