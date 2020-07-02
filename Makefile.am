@@ -19,10 +19,10 @@ endif
 GZIP_ENV="-9n"
 export PYTHONPATH
 
-GULDEND_BIN=$(top_builddir)/src/$(GULDEN_DAEMON_NAME)$(EXEEXT)
-GULDEN_QT_BIN=$(top_builddir)/src/qt/$(GULDEN_GUI_NAME)$(EXEEXT)
-GULDEN_CLI_BIN=$(top_builddir)/src/$(GULDEN_CLI_NAME)$(EXEEXT)
-GULDEN_WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win$(WINDOWS_BITS)-setup$(EXEEXT)
+DAEMON_BIN=$(top_builddir)/src/$(_DAEMON_NAME)$(EXEEXT)
+QT_BIN=$(top_builddir)/src/qt/$(_GUI_NAME)$(EXEEXT)
+CLI_BIN=$(top_builddir)/src/$(_CLI_NAME)$(EXEEXT)
+WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win$(WINDOWS_BITS)-setup$(EXEEXT)
 
 empty :=
 space := $(empty) $(empty)
@@ -69,12 +69,12 @@ dist-hook:
 
 strip: all-recursive
 	$(MKDIR_P) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(GULDEND_BIN) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(GULDEN_QT_BIN) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(GULDEN_CLI_BIN) $(top_builddir)/release
+	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(DAEMON_BIN) $(top_builddir)/release
+	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(QT_BIN) $(top_builddir)/release
+	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(CLI_BIN) $(top_builddir)/release
 
 
-$(GULDEN_WIN_INSTALLER): all-recursive
+$(WIN_INSTALLER): all-recursive
 	@test -f $(MAKENSIS) && $(MAKENSIS) -V2 $(top_builddir)/share/setup.nsi || \
 	  echo error: could not build $@
 	@echo built $@
@@ -95,7 +95,7 @@ $(OSX_APP)/Contents/Resources/Gulden.icns: $(OSX_INSTALLER_ICONS)
 	$(MKDIR_P) $(@D)
 	$(INSTALL_DATA) $< $@
 
-$(OSX_APP)/Contents/MacOS/Gulden: $(GULDEN_QT_BIN)
+$(OSX_APP)/Contents/MacOS/Gulden: $(QT_BIN)
 	$(MKDIR_P) $(@D)
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM)  $< $@
 
@@ -159,16 +159,16 @@ appbundle: $(OSX_APP_BUILT)
 deploy: $(OSX_DMG)
 endif
 if TARGET_WINDOWS
-deploy: $(GULDEN_WIN_INSTALLER)
+deploy: $(WIN_INSTALLER)
 endif
 
-$(GULDEN_QT_BIN): FORCE
+$(QT_BIN): FORCE
 	$(MAKE) -C src qt/$(@F)
 
-$(GULDEND_BIN): FORCE
+$(DAEMON_BIN): FORCE
 	$(MAKE) -C src $(@F)
 
-$(GULDEN_CLI_BIN): FORCE
+$(CLI_BIN): FORCE
 	$(MAKE) -C src $(@F)
 
 if USE_LCOV
@@ -280,7 +280,7 @@ EXTRA_DIST += \
     test/util/data/txcreatesignv1.json \
     test/util/data/txcreatesignv2.hex
 
-CLEANFILES = $(OSX_DMG) $(GULDEN_WIN_INSTALLER)
+CLEANFILES = $(OSX_DMG) $(WIN_INSTALLER)
 
 .INTERMEDIATE: $(COVERAGE_INFO)
 

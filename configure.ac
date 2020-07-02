@@ -14,10 +14,19 @@ AC_CONFIG_HEADERS([src/config/build-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
-GULDEN_DAEMON_NAME=GuldenD
-GULDEN_GUI_NAME=Gulden
-GULDEN_CLI_NAME=Gulden-cli
-GULDEN_TX_NAME=Gulden-tx
+m4_define([_DAEMON_NAME], [GuldenD])
+m4_define([_CLI_NAME], [Gulden-cli])
+m4_define([_GUI_NAME], [Gulden])
+m4_define([_TX_NAME], [Gulden-tx])
+[_DAEMON_NAME]=_DAEMON_NAME
+[_CLI_NAME]=_CLI_NAME
+[_GUI_NAME]=_GUI_NAME
+[_TX_NAME]=_TX_NAME
+AC_DEFINE(DAEMON_NAME, "_DAEMON_NAME", [Command name of the deamon binary])
+AC_DEFINE(CLI_NAME, "_CLI_NAME", [Command name of the cli binary])
+AC_DEFINE(GUI_NAME, "_GUI_NAME", [Command name of the gui binary])
+AC_DEFINE(TX_NAME, "_TX_NAME", [Command name of the tx binary])
+
 
 dnl Unless the user specified ARFLAGS, force it to be cr
 AC_ARG_VAR(ARFLAGS, [Flags for the archiver, defaults to <cr> if not set])
@@ -265,31 +274,31 @@ CPPFLAGS="$CPPFLAGS -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS"
 
 AC_ARG_WITH([utils],
   [AS_HELP_STRING([--with-utils],
-  [build Gulden-cli Gulden-tx (default=yes)])],
+  [build ]_CLI_NAME[ ]_TX_NAME[ binaries (default=yes)])],
   [build_gulden_utils=$withval],
   [build_gulden_utils=yes])
 
 AC_ARG_WITH([node-js-libs],
   [AS_HELP_STRING([--with-node-js-libs],
-  [build node.js unity library (default=no)])],
+  [build node.js library (default=no)])],
   [build_gulden_libs_node_js=yes],
   [build_gulden_libs_node_js=no])
 
 AC_ARG_WITH([jni-libs],
   [AS_HELP_STRING([--with-jni-libs],
-  [build jni unity library (default=no)])],
+  [build jni library (default=no)])],
   [build_gulden_libs_jni=yes],
   [build_gulden_libs_jni=no])
 
 AC_ARG_WITH([objc-libs],
   [AS_HELP_STRING([--with-objc-libs],
-  [build objc unity library (default=no)])],
+  [build objc library (default=no)])],
   [build_gulden_libs_objc=yes],
   [build_gulden_libs_objc=no])
 
 AC_ARG_WITH([daemon],
   [AS_HELP_STRING([--with-daemon],
-  [build GuldenD daemon (default=yes)])],
+  [build ]_DAEMON_NAME[ daemon (default=yes)])],
   [build_GuldenD=$withval],
   [build_GuldenD=yes])
 
@@ -1066,11 +1075,11 @@ AC_SUBST(UNIVALUE_LIBS)
 
 GULDEN_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
 
-AC_MSG_CHECKING([whether to build GuldenD])
+AC_MSG_CHECKING([whether to build _DAEMON_NAME])
 AM_CONDITIONAL([BUILD_GULDEND], [test x$build_GuldenD = xyes])
 AC_MSG_RESULT($build_GuldenD)
 
-AC_MSG_CHECKING([whether to build utils (Gulden-cli Gulden-tx)])
+AC_MSG_CHECKING([whether to build utils (_CLI_NAME _TX_NAME)])
 AM_CONDITIONAL([BUILD_GULDEN_UTILS], [test x$build_gulden_utils = xyes])
 AC_MSG_RESULT($build_gulden_utils)
 
@@ -1252,10 +1261,10 @@ AC_SUBST(COPYRIGHT_YEAR, _COPYRIGHT_YEAR)
 AC_SUBST(COPYRIGHT_HOLDERS, "_COPYRIGHT_HOLDERS")
 AC_SUBST(COPYRIGHT_HOLDERS_SUBSTITUTION, "_COPYRIGHT_HOLDERS_SUBSTITUTION")
 AC_SUBST(COPYRIGHT_HOLDERS_FINAL, "_COPYRIGHT_HOLDERS_FINAL")
-AC_SUBST(GULDEN_DAEMON_NAME)
-AC_SUBST(GULDEN_GUI_NAME)
-AC_SUBST(GULDEN_CLI_NAME)
-AC_SUBST(GULDEN_TX_NAME)
+AC_SUBST([_DAEMON_NAME])
+AC_SUBST([_GUI_NAME])
+AC_SUBST([_CLI_NAME])
+AC_SUBST([_TX_NAME])
 
 AC_SUBST(RELDFLAGS)
 AC_SUBST(COMPAT_LDFLAGS)

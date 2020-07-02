@@ -254,7 +254,7 @@ obj/build.h: FORCE
 clientversion.cpp: obj/build.h
 
 
-# server: shared between GuldenD and Gulden
+# server: shared between Daemon and GUI client
 libgulden_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libgulden_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_server_a_SOURCES = \
@@ -278,7 +278,7 @@ libgulden_server_a_SOURCES += \
   wallet/rpcwallet.cpp
 endif
 
-# node: shared between GuldenD, Gulden and unity libraries.
+# node: shared between Daemon, GUI client and unity libraries.
 libgulden_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) -I$(srcdir)/univalue/include
 libgulden_node_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_node_a_SOURCES = \
@@ -323,7 +323,7 @@ libgulden_node_a_SOURCES = \
   pow/pow.cpp \
   $(GULDEN_CORE_H)
 
-# zmq: shared between GuldenD and Gulden, only if zmq enabled
+# zmq: shared between Daemon and GUI client, only if zmq enabled
 if ENABLE_ZMQ
 libgulden_zmq_a_CPPFLAGS = $(GULDEN_INCLUDES) $(ZMQ_CFLAGS)
 libgulden_zmq_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -334,7 +334,7 @@ libgulden_zmq_a_SOURCES = \
 endif
 
 
-# wallet: shared between GuldenD, Gulden and unity libraries but only linked when wallet enabled
+# wallet: shared between Daemon, GUI client and unity libraries but only linked when wallet enabled
 libgulden_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_wallet_a_SOURCES = \
@@ -639,7 +639,7 @@ libgulden_consensus_a_SOURCES = \
   uint256.h \
   version.h
 
-# common: shared between GuldenD, and Gulden and non-server tools
+# common: shared between Daemon, GUI client and non-server tools
 libgulden_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
 libgulden_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_common_a_SOURCES = \
@@ -713,7 +713,7 @@ else
 LIBGULDEN_UNITY_CRYPTO_OBJ=$(LIBGULDEN_CRYPTO_ARM)
 endif
 
-# Gulden-unity library (for node.js)#
+# unity library (for node.js)#
 if BUILD_GULDEN_LIBS_NODE_JS
 
 DJINNI_CPP_GEN = \
@@ -831,7 +831,7 @@ libgulden_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(GULDEN_INCLUDES)
 endif
 #
 
-# Gulden-unity library #
+# unity library for objc #
 if BUILD_GULDEN_LIBS_OBJC
 
 noinst_LIBRARIES += $(LIBGULDEN_UNITY_OBJC)

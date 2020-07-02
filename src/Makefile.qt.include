@@ -486,7 +486,7 @@ $(qt_libguldenqt_a_OBJECTS) $(qt_Gulden_OBJECTS) : | $(QT_MOC)
 $(QT_MOC): $(PROTOBUF_H)
 $(QT_MOC_CPP): $(PROTOBUF_H)
 
-# Gulden binary #
+# UI binary #
 qt_Gulden_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(GULDEN_QT_INCLUDES) \
   $(QT_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS) $(QWT_CFLAGS)
 qt_Gulden_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
