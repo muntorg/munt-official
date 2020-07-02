@@ -23,7 +23,7 @@
 #include "rpc/server.h"
 
 #if defined(HAVE_CONSENSUS_LIB)
-#include "script/guldenconsensus.h"
+#include "script/consensus.h"
 #endif
 
 #include <fstream>

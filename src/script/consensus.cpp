@@ -10,7 +10,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "guldenconsensus.h"
+#include "script/consensus.h"
 
 #include "primitives/transaction.h"
 #include "pubkey.h"

@@ -625,8 +625,8 @@ libgulden_consensus_a_SOURCES = \
   primitives/transaction.h \
   pubkey.cpp \
   pubkey.h \
-  script/guldenconsensus.cpp \
-  script/guldenconsensus.h \
+  script/consensus.cpp \
+  script/consensus.h \
   script/interpreter.cpp \
   script/interpreter.h \
   script/script.cpp \

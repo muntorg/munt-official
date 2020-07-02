@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_GULDENCONSENSUS_H
-#define GULDEN_GULDENCONSENSUS_H
+#ifndef SCRIPT_CONSENSUS_H
+#define SCRIPT_CONSENSUS_H
 
 #include <stdint.h>
 
@@ -80,4 +80,4 @@ EXPORT_SYMBOL unsigned int guldenconsensus_version();
 
 #undef EXPORT_SYMBOL
 
-#endif // GULDEN_GULDENCONSENSUS_H
+#endif
