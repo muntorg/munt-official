@@ -296,7 +296,7 @@ bool IsMine(const CKeyStore* forAccount, const CWalletTx& tx)
     return false;
 }
 
-isminetype CGuldenWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) const
+isminetype CExtWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) const
 {
     {
         LOCK(cs_wallet);
@@ -314,7 +314,7 @@ isminetype CGuldenWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) c
     return ISMINE_NO;
 }
 
-void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
+void CExtWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
 {
     {
         // Remove from key pool
@@ -446,7 +446,7 @@ void CGuldenWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
     static_cast<CWallet*>(this)->TopUpKeyPool(1);
 }
 
-void CGuldenWallet::changeAccountName(CAccount* account, const std::string& newName, bool notify)
+void CExtWallet::changeAccountName(CAccount* account, const std::string& newName, bool notify)
 {
     // Force names to be unique
     std::string finalNewName = newName;
@@ -480,15 +480,15 @@ void CGuldenWallet::changeAccountName(CAccount* account, const std::string& newN
         NotifyAccountNameChanged(static_cast<CWallet*>(this), account);
 }
 
-void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldPurge)
+void CExtWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldPurge)
 {
-    LogPrintf("CGuldenWallet::deleteAccount");
+    LogPrintf("CExtWallet::deleteAccount");
     //fixme: (FUT) (ACCOUNTS) - If we are trying to delete the last remaining account we should return false
     //As this may leave the wallet in an invalid state.
     //Alternatively we must make sure that the wallet can handle having 0 accounts in it.
     if (shouldPurge)
     {
-        LogPrintf("CGuldenWallet::deleteAccount - purge account");
+        LogPrintf("CExtWallet::deleteAccount - purge account");
 
         // We should never be purging an HD account unless we have also purged the seed that it belongs too (or it has no seed)
         // It makes no sense to purge an account while retaining the seed as it can always be regenerated from the seed (so purging is still not permanent) and it can only lead to difficult to understand issues.
@@ -497,7 +497,7 @@ void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldP
 
         LOCK2(cs_main, cs_wallet);
 
-        LogPrintf("CGuldenWallet::deleteAccount - wipe account from disk");
+        LogPrintf("CExtWallet::deleteAccount - wipe account from disk");
         if (!db.EraseAccount(getUUIDAsString(account->getUUID()), account))
         {
             throw std::runtime_error("erasing account failed");
@@ -516,7 +516,7 @@ void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldP
         }
 
         // Wipe all the keys
-        LogPrintf("CGuldenWallet::deleteAccount - wipe keys from disk");
+        LogPrintf("CExtWallet::deleteAccount - wipe keys from disk");
         {
             std::set<CKeyID> setAddress;
             account->GetKeys(setAddress);
@@ -539,7 +539,7 @@ void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldP
             }
         }
 
-        LogPrintf("CGuldenWallet::deleteAccount - wipe keypool from disk");
+        LogPrintf("CExtWallet::deleteAccount - wipe keypool from disk");
         // Wipe our keypool
         {
             bool forceErase = true;
@@ -553,7 +553,7 @@ void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldP
         }
 
         // Wipe all the transactions associated with account
-        LogPrintf("CGuldenWallet::deleteAccount - wipe transactions");
+        LogPrintf("CExtWallet::deleteAccount - wipe transactions");
         {
             std::vector<uint256> hashesToErase;
             std::vector<uint256> hashesErased;
@@ -575,7 +575,7 @@ void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldP
             pactiveWallet->ZapSelectTx(db, hashesToErase, hashesErased);
         }
 
-        LogPrintf("CGuldenWallet::deleteAccount - wipe account from memory");
+        LogPrintf("CExtWallet::deleteAccount - wipe account from memory");
         mapAccountLabels.erase(mapAccountLabels.find(account->getUUID()));
         mapAccounts.erase(mapAccounts.find(account->getUUID()));
 
@@ -620,7 +620,7 @@ void CGuldenWallet::deleteAccount(CWalletDB& db, CAccount* account, bool shouldP
     }
 }
 
-void CGuldenWallet::addAccount(CAccount* account, const std::string& newName, bool bMakeActive)
+void CExtWallet::addAccount(CAccount* account, const std::string& newName, bool bMakeActive)
 {
     {
         LOCK(cs_wallet);
@@ -645,7 +645,7 @@ void CGuldenWallet::addAccount(CAccount* account, const std::string& newName, bo
     }
 }
 
-void CGuldenWallet::setActiveAccount(CWalletDB& walletdb, CAccount* newActiveAccount)
+void CExtWallet::setActiveAccount(CWalletDB& walletdb, CAccount* newActiveAccount)
 {
     if (activeAccount != newActiveAccount)
     {
@@ -656,7 +656,7 @@ void CGuldenWallet::setActiveAccount(CWalletDB& walletdb, CAccount* newActiveAcc
     }
 }
 
-void CGuldenWallet::setAnyActiveAccount(CWalletDB& walletdb)
+void CExtWallet::setAnyActiveAccount(CWalletDB& walletdb)
 {
     for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
     {
@@ -669,12 +669,12 @@ void CGuldenWallet::setAnyActiveAccount(CWalletDB& walletdb)
     }
 }
 
-CAccount* CGuldenWallet::getActiveAccount()
+CAccount* CExtWallet::getActiveAccount()
 {
     return activeAccount;
 }
 
-void CGuldenWallet::setActiveSeed(CWalletDB& walletdb, CHDSeed* newActiveSeed)
+void CExtWallet::setActiveSeed(CWalletDB& walletdb, CHDSeed* newActiveSeed)
 {
     if (activeSeed != newActiveSeed)
     {
@@ -689,7 +689,7 @@ void CGuldenWallet::setActiveSeed(CWalletDB& walletdb, CHDSeed* newActiveSeed)
     }
 }
 
-CHDSeed* CGuldenWallet::GenerateHDSeed(CHDSeed::SeedType seedType)
+CHDSeed* CExtWallet::GenerateHDSeed(CHDSeed::SeedType seedType)
 {
     if (IsCrypted() && (!activeAccount || IsLocked()))
     {
@@ -715,9 +715,9 @@ CHDSeed* CGuldenWallet::GenerateHDSeed(CHDSeed::SeedType seedType)
     return newSeed;
 }
 
-void CGuldenWallet::DeleteSeed(CWalletDB& walletDB, CHDSeed* deleteSeed, bool shouldPurgeAccounts)
+void CExtWallet::DeleteSeed(CWalletDB& walletDB, CHDSeed* deleteSeed, bool shouldPurgeAccounts)
 {
-    LogPrintf("CGuldenWallet::DeleteSeed");
+    LogPrintf("CExtWallet::DeleteSeed");
     mapSeeds.erase(mapSeeds.find(deleteSeed->getUUID()));
     if (!walletDB.DeleteHDSeed(*deleteSeed))
     {
@@ -725,7 +725,7 @@ void CGuldenWallet::DeleteSeed(CWalletDB& walletDB, CHDSeed* deleteSeed, bool sh
     }
 
     //fixme: (FUT) (ACCOUNTS) purge accounts completely if empty?
-    LogPrintf("CGuldenWallet::DeleteSeed - testing which accounts to delete [%d]", pactiveWallet->mapAccounts.size());
+    LogPrintf("CExtWallet::DeleteSeed - testing which accounts to delete [%d]", pactiveWallet->mapAccounts.size());
     std::vector<CAccount*> deleteAccounts;
     for (const auto& accountPair : pactiveWallet->mapAccounts)
     {
@@ -734,34 +734,34 @@ void CGuldenWallet::DeleteSeed(CWalletDB& walletDB, CHDSeed* deleteSeed, bool sh
             deleteAccounts.push_back(accountPair.second);
         }
     }
-    LogPrintf("CGuldenWallet::DeleteSeed - Deleting  accounts [%d]", deleteAccounts.size());
+    LogPrintf("CExtWallet::DeleteSeed - Deleting  accounts [%d]", deleteAccounts.size());
     for (const auto& accountForDeletion : deleteAccounts)
     {
         //fixme: (FUT) (ACCOUNTS) check balance
         deleteAccount(walletDB, accountForDeletion, shouldPurgeAccounts);
     }
-    LogPrintf("CGuldenWallet::DeleteSeed - done deleting accounts");
+    LogPrintf("CExtWallet::DeleteSeed - done deleting accounts");
 
     if (activeSeed == deleteSeed)
     {
-        LogPrintf("CGuldenWallet::DeleteSeed - set active seed to new seed");
+        LogPrintf("CExtWallet::DeleteSeed - set active seed to new seed");
         if (mapSeeds.empty())
         {
-            LogPrintf("CGuldenWallet::DeleteSeed - set NULL active seed");
+            LogPrintf("CExtWallet::DeleteSeed - set NULL active seed");
             setActiveSeed(walletDB, NULL);
         }
         else
         {
-            LogPrintf("CGuldenWallet::DeleteSeed - setting first mapped seed as active");
+            LogPrintf("CExtWallet::DeleteSeed - setting first mapped seed as active");
             setActiveSeed(walletDB, mapSeeds.begin()->second);
         }
     }
 
-    LogPrintf("CGuldenWallet::DeleteSeed - Finished");
+    LogPrintf("CExtWallet::DeleteSeed - Finished");
     delete deleteSeed;
 }
 
-CHDSeed* CGuldenWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
+CHDSeed* CExtWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
 {
     if (IsCrypted() && (!activeAccount || IsLocked()))
     {
@@ -802,7 +802,7 @@ CHDSeed* CGuldenWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
     return newSeed;
 }
 
-CHDSeed* CGuldenWallet::ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType type)
+CHDSeed* CExtWallet::ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType type)
 {
     if (IsCrypted() && (!activeAccount || IsLocked()))
     {
@@ -834,18 +834,18 @@ CHDSeed* CGuldenWallet::ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType ty
 }
 
 
-CHDSeed* CGuldenWallet::getActiveSeed()
+CHDSeed* CExtWallet::getActiveSeed()
 {
     return activeSeed;
 }
 
-void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTxOut& txout, uint64_t time)
+void CExtWallet::RemoveAddressFromKeypoolIfIsMine(const CTxOut& txout, uint64_t time)
 {
     ::RemoveAddressFromKeypoolIfIsMine(*static_cast<CWallet*>(this), txout, time);
 }
 
 
-void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTransaction& tx, uint64_t time)
+void CExtWallet::RemoveAddressFromKeypoolIfIsMine(const CTransaction& tx, uint64_t time)
 {
     for(const CTxOut& txout : tx.vout)
     {
@@ -853,7 +853,7 @@ void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTransaction& tx, uin
     }
 }
 
-void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t time)
+void CExtWallet::RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t time)
 {
     LOCK(cs_wallet);
     const CWalletTx* prev = static_cast<CWallet*>(this)->GetWalletTx(txin.prevout);
@@ -867,7 +867,7 @@ void CGuldenWallet::RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t
 // Shadow accounts... For HD we keep a 'cache' of already created accounts, the reason being that another shared wallet might create new addresses, and we need to be able to detect those.
 // So we keep these 'shadow' accounts, and if they ever receive a transaction we automatically 'convert' them into normal accounts in the UI.
 // If/When the user wants new accounts, we hand out the previous shadow account and generate a new Shadow account to take it's place...
-CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive)
+CAccountHD* CExtWallet::GenerateNewAccount(std::string strAccount, AccountState state, AccountType subType, bool bMakeActive)
 {
     assert(state != AccountState::ShadowChild);
     assert(state != AccountState::Deleted);
@@ -939,7 +939,7 @@ CAccountHD* CGuldenWallet::GenerateNewAccount(std::string strAccount, AccountSta
     return newAccount;
 }
 
-CAccount* CGuldenWallet::GenerateNewLegacyAccount(std::string strAccount)
+CAccount* CExtWallet::GenerateNewLegacyAccount(std::string strAccount)
 {
     CAccount* newAccount = new CAccount();
     //fixme: (FUT) (ACCOUNTS) Improve the way encryption of legacy accounts is handled
@@ -960,7 +960,7 @@ CAccount* CGuldenWallet::GenerateNewLegacyAccount(std::string strAccount)
     return newAccount;
 }
 
-bool CGuldenWallet::ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates, bool allowRescan)
+bool CExtWallet::ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates, bool allowRescan)
 {
     if (!forAccount)
         return false;
@@ -990,7 +990,7 @@ bool CGuldenWallet::ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount
     return true;
 }
 
-std::vector<std::pair<CKey, uint64_t>> CGuldenWallet::ParseWitnessKeyURL(SecureString sEncodedPrivWitnessKeysURL)
+std::vector<std::pair<CKey, uint64_t>> CExtWallet::ParseWitnessKeyURL(SecureString sEncodedPrivWitnessKeysURL)
 {
     if (!boost::starts_with(sEncodedPrivWitnessKeysURL, "gulden://witnesskeys?keys="))
         throw std::runtime_error("Not a valid \"witness only\" witness account URI");
@@ -1038,7 +1038,7 @@ std::vector<std::pair<CKey, uint64_t>> CGuldenWallet::ParseWitnessKeyURL(SecureS
     return privateWitnessKeys;
 }
 
-CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates, bool allowRescan)
+CAccount* CExtWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount, std::vector<std::pair<CKey, uint64_t>> privateWitnessKeysWithBirthDates, bool allowRescan)
 {
     CAccount* newAccount = NULL;
 
@@ -1072,7 +1072,7 @@ CAccount* CGuldenWallet::CreateWitnessOnlyWitnessAccount(std::string strAccount,
     }
 }
 
-CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey)
+CAccountHD* CExtWallet::CreateReadOnlyAccount(std::string strAccount, SecureString encExtPubKey)
 {
     CAccountHD* newAccount = NULL;
 
@@ -1100,7 +1100,7 @@ CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureS
     return newAccount;
 }
 
-CAccountHD* CGuldenWallet::CreateSeedlessHDAccount(std::string strAccount, CEncodedSecretKeyExt<CExtKey> accountExtKey, AccountState state, AccountType type, bool generateKeys)
+CAccountHD* CExtWallet::CreateSeedlessHDAccount(std::string strAccount, CEncodedSecretKeyExt<CExtKey> accountExtKey, AccountState state, AccountType type, bool generateKeys)
 {
     //fixme: (FUT) (ACCOUNTS) (HIGH) add key validation checks here.
 
@@ -1120,7 +1120,7 @@ CAccountHD* CGuldenWallet::CreateSeedlessHDAccount(std::string strAccount, CEnco
 }
 
 
-void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
+void CExtWallet::ForceRewriteKeys(CAccount& forAccount)
 {
     {
         LOCK(cs_wallet);
@@ -1206,12 +1206,12 @@ void CGuldenWallet::ForceRewriteKeys(CAccount& forAccount)
 }
 
 
-bool CGuldenWallet::AddHDKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAccount& forAccount, int keyChain)
+bool CExtWallet::AddHDKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CAccount& forAccount, int keyChain)
 {
     AssertLockHeld(cs_wallet); // mapKeyMetadata
     if (!forAccount.AddKeyPubKey(HDKeyIndex, pubkey, keyChain))
     {
-        LogPrintf("CGuldenWallet::AddHDKeyPubKey: AddKeyPubKey failed for account");
+        LogPrintf("CExtWallet::AddHDKeyPubKey: AddKeyPubKey failed for account");
         return false;
     }
 
@@ -1226,7 +1226,7 @@ bool CGuldenWallet::AddHDKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CA
 
     if (!CWalletDB(*dbw).WriteKeyHD(pubkey, HDKeyIndex, keyChain, static_cast<CWallet*>(this)->mapKeyMetadata[pubkey.GetID()], getUUIDAsString(forAccount.getUUID())))
     {
-        LogPrintf("CGuldenWallet::AddHDKeyPubKey: WriteKeyHD failed for key");
+        LogPrintf("CExtWallet::AddHDKeyPubKey: WriteKeyHD failed for key");
         return false;
     }
     else if (forAccount.IsPoW2Witness() && keyChain == KEYCHAIN_WITNESS)
@@ -1238,14 +1238,14 @@ bool CGuldenWallet::AddHDKeyPubKey(int64_t HDKeyIndex, const CPubKey &pubkey, CA
 }
 
 
-bool CGuldenWallet::LoadHDKey(int64_t HDKeyIndex, int64_t keyChain, const CPubKey &pubkey, const std::string& forAccount)
+bool CExtWallet::LoadHDKey(int64_t HDKeyIndex, int64_t keyChain, const CPubKey &pubkey, const std::string& forAccount)
 {
     LOCK(cs_wallet);
     return mapAccounts[getUUIDFromString(forAccount)]->AddKeyPubKey(HDKeyIndex, pubkey, keyChain);
 }
 
 
-bool CGuldenWallet::Lock() const
+bool CExtWallet::Lock() const
 {
     LOCK(cs_wallet);
 
@@ -1258,7 +1258,7 @@ bool CGuldenWallet::Lock() const
     }
 }
 
-bool CGuldenWallet::LockHard() const
+bool CExtWallet::LockHard() const
 {
     AssertLockHeld(cs_wallet);
 

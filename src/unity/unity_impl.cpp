@@ -287,7 +287,7 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         bool isMine = false;
         for (const auto& account : accountsToTry)
         {
-            if (static_cast<const CGuldenWallet*>(pwallet)->IsMine(*account, txin))
+            if (static_cast<const CExtWallet*>(pwallet)->IsMine(*account, txin))
             {
                 isMine = true;
             }
@@ -1003,7 +1003,7 @@ bool GuldenUnifiedBackend::UnlockWallet(const std::string& password)
         return false;
     }
 
-    if (!dynamic_cast<CGuldenWallet*>(pactiveWallet)->IsCrypted())
+    if (!dynamic_cast<CExtWallet*>(pactiveWallet)->IsCrypted())
     {
         LogPrintf("UnlockWallet: Wallet not encrypted");
         return false;
@@ -1020,10 +1020,10 @@ bool GuldenUnifiedBackend::LockWallet()
         return false;
     }
 
-    if (dynamic_cast<CGuldenWallet*>(pactiveWallet)->IsLocked())
+    if (dynamic_cast<CExtWallet*>(pactiveWallet)->IsLocked())
         return true;
 
-    return dynamic_cast<CGuldenWallet*>(pactiveWallet)->Lock();
+    return dynamic_cast<CExtWallet*>(pactiveWallet)->Lock();
 }
 
 bool GuldenUnifiedBackend::ChangePassword(const std::string& oldPassword, const std::string& newPassword)

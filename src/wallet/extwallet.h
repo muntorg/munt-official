@@ -45,16 +45,16 @@ isminetype IsMine(const CWallet &wallet, const CTxDestination& dest);
 isminetype IsMine(const CWallet &wallet, const CTxOut& out);
 
 /** 
- * A CGuldenWallet maintains a set of transactions and balances
+ * A CExtWallet maintains a set of transactions and balances
  * and provides the ability to create new transactions.
  * it contains one or more accounts, which are responsible for creating/allocating/managing keys via their keystore interfaces.
  */
-class CGuldenWallet : public CValidationInterface
+class CExtWallet : public CValidationInterface
 {
 public:
-    CGuldenWallet() : dbw(new CWalletDBWrapper()){};
-    CGuldenWallet(std::unique_ptr<CWalletDBWrapper> dbw_in) : dbw(std::move(dbw_in)){};
-    virtual ~CGuldenWallet(){};
+    CExtWallet() : dbw(new CWalletDBWrapper()){};
+    CExtWallet(std::unique_ptr<CWalletDBWrapper> dbw_in) : dbw(std::move(dbw_in)){};
+    virtual ~CExtWallet(){};
 
     //Members that are shared with CWallet.
     mutable CCriticalSection cs_wallet;

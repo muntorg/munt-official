@@ -1098,7 +1098,7 @@ void WitnessDialog::updateAccountIndicators()
                 if (newState != prevState)
                 {
                     account->SetWarningState(newState);
-                    static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, account);
+                    static_cast<const CExtWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, account);
                 }
             }
         }

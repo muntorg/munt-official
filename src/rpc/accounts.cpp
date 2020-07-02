@@ -2765,7 +2765,7 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
 
     // Clear the failed flag in UI, and remove the 'renew' button for immediate user feedback.
     witnessAccount->SetWarningState(AccountStatus::WitnessPending);
-    static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, witnessAccount);
+    static_cast<const CExtWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, witnessAccount);
 
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee)));

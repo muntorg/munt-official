@@ -449,10 +449,10 @@ struct WalletBalances
 };
 
 /*
-All Gulden specific functionality goes in base class CGuldenWallet
+All Gulden specific functionality goes in base class CExtWallet
 A little bit clumsy 
 */
-class CWallet : public CGuldenWallet
+class CWallet : public CExtWallet
 {
 private:
     static std::atomic<bool> fFlushScheduled;

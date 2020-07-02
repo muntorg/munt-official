@@ -419,7 +419,7 @@ protected:
     bool m_readOnly = false;
 
     CKeyingMaterial vMasterKey; // Memory only.
-    friend class CGuldenWallet;
+    friend class CExtWallet;
     friend class CWallet;
 
     AccountStatus nWarningState = AccountStatus::Default; // Memory only

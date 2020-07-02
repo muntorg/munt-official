@@ -321,7 +321,7 @@ void GUI::doRequestRenewWitness(CAccount* funderAccount, CAccount* targetWitness
 
     // Clear the failed flag in UI, and remove the 'renew' button for immediate user feedback.
     targetWitnessAccount->SetWarningState(AccountStatus::WitnessPending);
-    static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, targetWitnessAccount);
+    static_cast<const CExtWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, targetWitnessAccount);
     walletFrame->currentWalletView()->witnessDialogPage->update();
 }
 
@@ -1983,7 +1983,7 @@ void GUI::acceptNewAccount()
             if (newAccountType == NewAccountType::FixedDeposit)
             {
                 newAccount->SetWarningState(AccountStatus::WitnessEmpty);
-                static_cast<const CGuldenWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, newAccount);
+                static_cast<const CExtWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, newAccount);
                 showWitnessDialog();
             }
             else

@@ -1143,7 +1143,7 @@ void CAccount::setCompounding(CAmount compoundAmount_, CWalletDB* Db)
 {
     if (pactiveWallet)
     {
-        dynamic_cast<CGuldenWallet*>(pactiveWallet)->NotifyAccountCompoundingChanged(pactiveWallet, this);
+        dynamic_cast<CExtWallet*>(pactiveWallet)->NotifyAccountCompoundingChanged(pactiveWallet, this);
     }
     compoundEarnings = compoundAmount_;
     if (Db)
