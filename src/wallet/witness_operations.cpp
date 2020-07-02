@@ -20,6 +20,7 @@
 #include "coincontrol.h"
 #include "net.h"
 #include "alert.h"
+#include "appname.h"
 #include "utilmoneystr.h"
 #include "wallet.h"
 

@@ -6,6 +6,7 @@
 #include "wallet/wallet.h"
 #include "policy/fees.h"
 #include "alert.h"
+#include "appname.h"
 #include "account.h"
 #include "script/ismine.h"
 

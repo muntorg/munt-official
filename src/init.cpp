@@ -18,6 +18,7 @@
 #include <unity/appmanager.h>
 
 #include "addrman.h"
+#include "appname.h"
 #include "amount.h"
 #include "blockstore.h"
 #include "chain.h"

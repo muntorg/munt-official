@@ -41,7 +41,7 @@ files:
 script: |
   WRAP_DIR=$HOME/wrapped
   HOSTS="x86_64-w64-mingw32 i686-w64-mingw32"
-  CONFIGFLAGS="--enable-reduce-exports --disable-gui-tests --disable-bench --disable-tests --disable-man --disable-zmq --without-utils  --without-daemon --with-node-js-libs --with-qrencode --with-gui=no"
+  CONFIGFLAGS="--enable-reduce-exports --disable-gui-tests --disable-bench --disable-tests --disable-man --disable-zmq --with-utils --with-daemon --with-node-js-libs --with-qrencode --with-gui=no"
   FAKETIME_HOST_PROGS="ar ranlib nm windres strip objcopy"
   FAKETIME_PROGS="date makensis zip"
   HOST_CFLAGS="-O2 -g"
@@ -227,16 +227,21 @@ script: |
     cp -f src/.libs/lib_unity_node_js-0.dll release/
 
     # Move executables into release folder
-    #find . -name "*.exe" | xargs --max-procs 32 -i cp {} release/
+    find . -name "*.exe" | xargs --max-procs 32 -i cp {} release/
 
     # TODO - change all the --max-procs to pull args from gitian input somehow; instead of hardcoded
     # Strip in place
     find release -name '*.exe' -o -name '*.dll' | xargs --max-procs 32 -i sh -c "${i}-objcopy --only-keep-debug {} {}.dbg ; ${i}-strip -s {} ; ${i}-objcopy --add-gnu-debuglink={}.dbg {}; (true)"
 
-    # Sign library
-    #if [ -f "${BUILD_DIR}/codesign/codesign.spc" ]; then
-    #    find release -name "*.exe" | xargs --max-procs 32 -i sh -c "(${BUILD_DIR}/osslsigncode-2.0/osslsigncode -spc \"${BUILD_DIR}/codesign/codesign.spc\" -key \"${BUILD_DIR}/codesign/codesign.key\" -n \"Gulden\" -i \"https://www.Gulden.com\" -in \"{}\" -out \"{}s\") && (mv {}s {})"
-    #fi
+    # Sign executables
+    if [ -f "${BUILD_DIR}/codesign/codesign.spc" ]; then
+        find release -name "*.exe" | xargs --max-procs 32 -i sh -c "(${BUILD_DIR}/osslsigncode-2.0/osslsigncode -spc \"${BUILD_DIR}/codesign/codesign.spc\" -key \"${BUILD_DIR}/codesign/codesign.key\" -n \"Gulden\" -i \"https://www.Gulden.com\" -in \"{}\" -out \"{}s\") && (mv {}s {})"
+    fi
+
+    #Move lib results to outdir
+    mkdir $OUTDIR/libs || true
+    mv -f release/lib_unity_node_js-0.dll $OUTDIR/libs/libnovo_win_${i}.node
+    mv -f release/lib_unity_node_js-0.dll.dbg $OUTDIR/libs/libnovo_win_${i}.dbg
 
     # Tarball of signed executables and debug info - direct to build host
     cd release
@@ -244,19 +249,5 @@ script: |
     find . -name '*.dbg' -type f | sort | zip -X@ ${OUTDIR}/${DISTNAME}-${i}-debug.zip
     find . -name '*.dbg' -type f | xargs rm -rf
     cd ..
-
-    # Generate NSIS installer
-    #make deploy
-    #rename 's/-setup\.exe$/-setup-unsigned.exe/' *-setup.exe
-
-    # Sign installer
-    #if [ -f "${BUILD_DIR}/codesign/codesign.spc" ]; then
-        #find . -name "*setup*.exe" | xargs --max-procs 32 -i sh -c "(${BUILD_DIR}/osslsigncode-2.0/osslsigncode -spc \"${BUILD_DIR}/codesign/codesign.spc\" -key \"${BUILD_DIR}/codesign/codesign.key\" -n \"Gulden\" -i \"https://www.Gulden.com\" -in \"{}\" -out \"{}s\") && (mv {}s {})"
-        #rename 's/-setup-unsigned\.exe$/-setup.exe/' *-setup-unsigned.exe
-    #fi
-
-    #Copy library to build host
-    mkdir $OUTDIR/libs || true
-    cp -f release/lib_unity_node_js-0.dll $OUTDIR/libs/libnovo_win_${i}.node
 
   done

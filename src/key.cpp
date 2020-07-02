@@ -16,7 +16,7 @@
 #include "crypto/hmac_sha512.h"
 #include "pubkey.h"
 #include "random.h"
-#include "util.h"
+#include "appname.h"
 
 #include <secp256k1.h>
 #include <secp256k1_recovery.h>

@@ -27,6 +27,7 @@
 #include "script/script.h"
 #include "script/standard.h"
 #include "support/allocators/zeroafterfree.h"
+#include "appname.h"
 
 #include <string>
 #include <vector>

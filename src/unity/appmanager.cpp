@@ -3,6 +3,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+#include "appname.h"
 #include "appmanager.h"
 #include "chainparams.h"
 #include "util.h"

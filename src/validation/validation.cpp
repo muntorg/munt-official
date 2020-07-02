@@ -14,6 +14,7 @@
 #include "validation/witnessvalidation.h"
 
 #include "alert.h"
+#include "appname.h"
 #include "arith_uint256.h"
 #include "blockstore.h"
 #include "chain.h"

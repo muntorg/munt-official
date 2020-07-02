@@ -10,6 +10,7 @@
 #include "net.h"
 
 #include "alert.h"
+#include "appname.h"
 #include "amount.h"
 #include "chain.h"
 #include "chainparams.h"

@@ -13,6 +13,7 @@
 #include "libinit.h"
 
 // Standard gulden headers
+#include "appname.h"
 #include "util.h"
 #include "witnessutil.h"
 #include "ui_interface.h"

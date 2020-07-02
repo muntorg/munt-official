@@ -3,6 +3,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+#include "appname.h"
 #include <rpc/accounts.h>
 #include "generation/generation.h"
 #include "generation/miner.h"

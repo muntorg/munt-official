@@ -17,6 +17,7 @@
 
 #include "alert.h"
 #include "amount.h"
+#include "appname.h"
 #include "chain.h"
 #include "chainparams.h"
 #include "coins.h"
