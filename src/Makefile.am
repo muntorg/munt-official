@@ -5,7 +5,7 @@
 # File contains modifications by: The Gulden developers
 # All modifications:
 # Copyright (c) 2016-2018 The Gulden developers
-# Authored by: Malcolm MacLeod (mmacleod@webmail.co.za)
+# Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 # Distributed under the GULDEN software license, see the accompanying
 # file COPYING
 
@@ -118,7 +118,7 @@ endif
 .PHONY: FORCE check-symbols check-security
 
 # core #
-GULDEN_CORE_H = rpc/rpcgulden.h \
+GULDEN_CORE_H = rpc/accounts.h \
   pow/diff.h \
   pow/diff_delta.h \
   pow/diff_old.h \
@@ -258,7 +258,7 @@ clientversion.cpp: obj/build.h
 libgulden_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libgulden_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libgulden_server_a_SOURCES = \
-  rpc/rpcgulden.cpp \
+  rpc/accounts.cpp \
   unity/generic/init_generic.cpp \
   httprpc.cpp \
   httpserver.cpp \

@@ -48,7 +48,7 @@
 #endif
 #include "generation/generation.h"
 #include "script/script.h"
-#include <rpc/rpcgulden.h>
+#include <rpc/accounts.h>
 #include <validation/witnessvalidation.h>
 
 #include <boost/algorithm/string/predicate.hpp> // for ends_with()
