@@ -3,8 +3,8 @@
     "back": "Terug",
     "change_password": "Verander wachtwoord",
     "finish": "Klaar",
-    "invalid_recovery_phrase": "Onjuiste herstelzin. Probeer opnieuw",
     "next": "Volgende",
+    "ok": "OK",
     "previous": "Vorige",
     "send": "Versturen"
   },
@@ -30,6 +30,10 @@
     "enter_existing_recovery_phrase": "Voer jouw herstelzin in om jouw portemonnee te herstellen.",
     "enter_recovery_phrase": "Voer herstelzin in",
     "enter_your_password": "Voer jouw wachtwoord in",
+    "invalid_recovery_phrase": {
+      "title": "Ongeldige herstelzin",
+      "message": "Deze combinatie vormt geen geldige herstelzin. Corrigeer de fout(en) en probeer het nogmaals."
+    },
     "recover_existing": "Ik wil mijn portemonnee herstellen met mijn herstelzin",
     "repeat_password": "Herhaal wachtwoord",
     "repeat_your_recovery_phrase": "Voer jouw herstelzin in om te controleren dat je deze goed hebt opgeschreven.",

@@ -2,7 +2,7 @@
   <div class="modal-mask" @click="closeModal" v-if="showModal">
     <div class="modal-container" @click.stop>
       <div class="header">
-        <span>{{ title }}</span>
+        <span :class="type">{{ title }}</span>
         <div class="close" @click="closeModal">
           <span class="icon">
             <fa-icon :icon="['fal', 'times']" />
@@ -10,8 +10,14 @@
         </div>
       </div>
       <div class="content">
-        <component :is="component"></component>
+        {{ message }}
+        <component v-if="component" :is="component"></component>
       </div>
+      <novo-button-section class="buttons">
+        <template v-slot:right>
+          <button @click="closeModal">{{ $t("buttons.ok") }}</button>
+        </template>
+      </novo-button-section>
     </div>
   </div>
 </template>
@@ -20,22 +26,31 @@
 export default {
   name: "ModalDialog",
   props: {
-    title: {
-      type: String,
-      default: ""
+    value: {
+      type: Object,
+      default: null
+    }
+  },
+  computed: {
+    showModal() {
+      return this.value !== null;
     },
-    component: {
-      type: String,
-      default: "div"
+    title() {
+      return this.value.title || "title";
     },
-    showModal: {
-      type: Boolean,
-      default: false
+    type() {
+      return this.value.type;
+    },
+    message() {
+      return this.value.message;
+    },
+    component() {
+      return this.value.component;
     }
   },
   methods: {
     closeModal() {
-      this.$emit("close-modal");
+      this.$emit("input", null);
     }
   }
 };
@@ -66,7 +81,6 @@ export default {
   height: auto;
   margin: 0px auto;
   background-color: #fff;
-  border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
 }
@@ -91,7 +105,6 @@ export default {
   & .icon:hover {
     color: #1d1c1d;
     background-color: #f6f6f6;
-    border-radius: 4px;
     cursor: pointer;
   }
 }
@@ -99,7 +112,16 @@ export default {
 .content {
   margin: 24px 0;
   padding: 0 24px;
-  height: calc(100% - 64px - 48px);
+  height: calc(100% - 64px - 64px - 36px);
   overflow-y: auto;
+}
+
+.buttons {
+  height: 64px;
+  padding: 0 12px;
+}
+
+.error {
+  color: var(--error-color, #dd3333);
 }
 </style>

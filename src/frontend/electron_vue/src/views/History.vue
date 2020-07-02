@@ -16,14 +16,24 @@
         <span class="transactions-depth">depth</span>
         <span class="transactions-status">status</span>
       </div>
-        <div class="transaction" v-for="row in transactions" v-bind:key="row.txHash">
-          <span class="resend-transaction"><button @click="resubmitTransaction(row.txHash)">resend</button></span>
-          <span class="transactions-address">{{ getRecipients(row.inputs, row.outputs) }}</span>
-          <span class="transactions-amount">{{ row.amount / 100000000 }}</span>
-          <span class="transactions-hash">{{ row.txHash }}</span>
-          <span class="transactions-depth">{{ row.depth }}</span>
-          <span class="transactions-status">{{ row.status }}</span>
-        </div>
+      <div
+        class="transaction"
+        v-for="row in transactions"
+        v-bind:key="row.txHash"
+      >
+        <span class="resend-transaction"
+          ><button @click="resubmitTransaction(row.txHash)">
+            resend
+          </button></span
+        >
+        <span class="transactions-address">{{
+          getRecipients(row.inputs, row.outputs)
+        }}</span>
+        <span class="transactions-amount">{{ row.amount / 100000000 }}</span>
+        <span class="transactions-hash">{{ row.txHash }}</span>
+        <span class="transactions-depth">{{ row.depth }}</span>
+        <span class="transactions-status">{{ row.status }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -57,7 +67,7 @@ a:hover > .arrow {
 .transactions-header {
   float: left;
   width: 100%;
-  font-size: .8em;
+  font-size: 0.8em;
   font-weight: 500;
 }
 
@@ -66,7 +76,7 @@ a:hover > .arrow {
   width: 100%;
   padding: 10px 0 10px 0;
   user-select: text;
-  font-size: .8em;
+  font-size: 0.8em;
   line-height: 1.2em;
 }
 

@@ -9,6 +9,8 @@
       :isSynchronizing="isSynchronizing"
     />
 
+    <modal-dialog v-model="modal" />
+
     <div class="app-topbar">
       <span class="app-topbar--logo"></span>
       <span class="app-topbar--balance" v-show="totalBalance !== null">{{
@@ -33,17 +35,22 @@
 import { mapState, mapGetters } from "vuex";
 import { AppStatus } from "./store";
 import AppLoader from "./components/AppLoader";
+import ModalDialog from "./components/ModalDialog";
+
+import EventBus from "./EventBus.js";
 
 export default {
   data() {
     return {
       splashReady: false,
       electronVersion: process.versions.electron,
-      progress: 1
+      progress: 1,
+      modal: null
     };
   },
   components: {
-    AppLoader
+    AppLoader,
+    ModalDialog
   },
   watch: {
     status() {
@@ -73,6 +80,8 @@ export default {
     this.handleStatusChanged();
   },
   mounted() {
+    EventBus.$on("show-dialog", this.showModal);
+
     setTimeout(() => {
       this.splashReady = true;
     }, 2500);
@@ -91,6 +100,9 @@ export default {
       }
       if (routeName === undefined || this.$route.name === routeName) return;
       this.$router.push({ name: routeName });
+    },
+    showModal(modal) {
+      this.modal = modal;
     }
   }
 };
@@ -98,10 +110,6 @@ export default {
 
 <style lang="less">
 @import "./css/app.less";
-
-body,
-#app {
-}
 
 *,
 #app {

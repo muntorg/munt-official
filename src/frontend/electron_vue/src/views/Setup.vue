@@ -5,11 +5,11 @@
       <novo-section v-if="current === 1">
         <h2>{{ $t("setup.setup_novo_wallet") }}</h2>
         <novo-section>
-          <div class="settings-row" @click="isRecovery = false">
+          <div class="settings-row" @click="setupWallet(false)">
             {{ $t("setup.create_new") }}
             <fa-icon :icon="['fal', 'long-arrow-right']" class="arrow" />
           </div>
-          <div class="settings-row" @click="isRecovery = true">
+          <div class="settings-row" @click="setupWallet(true)">
             {{ $t("setup.recover_existing") }}
             <fa-icon :icon="['fal', 'long-arrow-right']" class="arrow" />
           </div>
@@ -36,7 +36,8 @@
           :autofocus="true"
           :isPhraseInvalid="isRecoveryPhraseInvalid === true"
           :reset="reset"
-          @phrase-complete="validatePhrase"
+          @possible-phrase="onPossiblePhrase"
+          @enter="validatePhraseOnEnter"
         />
       </novo-section>
 
@@ -59,25 +60,25 @@
 
       <novo-button-section>
         <template v-slot:left>
-          <button v-if="current === 2 || current === 3" @click="previousStep">
+          <button v-if="showPreviousButton" @click="previousStep">
             {{ $t("buttons.previous") }}
-          </button>
-          <button
-            v-show="current === 3 && isRecoveryPhraseInvalid === true"
-            class="error"
-            @click="clearPhraseInput"
-          >
-            {{ $t("buttons.invalid_recovery_phrase") }}
           </button>
         </template>
         <template v-slot:right>
           <button @click="nextStep" :disabled="!isNextEnabled">
-            <span v-show="current === 2">
+            <span v-show="showNextButton">
               {{ $t("buttons.next") }}
             </span>
-            <span v-show="current === 4">
+            <span v-show="showFinishButton">
               {{ $t("buttons.finish") }}
             </span>
+          </button>
+          <button
+            @click="nextStep"
+            v-show="showValidateButton"
+            :disabled="!isValidateButtonEnabled"
+          >
+            {{ $t("buttons.next") }}
           </button>
         </template>
       </novo-button-section>
@@ -88,6 +89,7 @@
 <script>
 import UnityBackend from "../unity/UnityBackend";
 import PhraseInput from "../components/PhraseInput";
+import EventBus from "../EventBus.js";
 
 export default {
   data() {
@@ -95,6 +97,7 @@ export default {
       current: 1,
       isRecovery: null,
       recoveryPhrase: "",
+      possiblePhrase: null,
       isRecoveryPhraseInvalid: null,
       password1: "",
       password2: "",
@@ -130,6 +133,18 @@ export default {
 
       return this.password1 === this.password2;
     },
+    showPreviousButton() {
+      return this.current === 2 || this.current === 3;
+    },
+    showNextButton() {
+      return this.current === 2;
+    },
+    showValidateButton() {
+      return this.current === 3;
+    },
+    showFinishButton() {
+      return this.current === 4;
+    },
     isNextEnabled() {
       switch (this.current) {
         case 2:
@@ -138,18 +153,36 @@ export default {
           return this.passwordsValidated;
       }
       return false;
+    },
+    isValidateButtonEnabled() {
+      return (
+        this.possiblePhrase !== null && this.isRecoveryPhraseInvalid !== true
+      );
+    },
+    validateButtonClass() {
+      return this.isRecoveryPhraseInvalid ? "error" : "";
     }
   },
   watch: {
-    isRecovery() {
-      if (this.isRecovery === null) return;
-      this.nextStep();
+    current() {
+      let current = this.current;
+
+      this.$nextTick(() => {
+        switch (current) {
+          case 1:
+            this.isRecovery = null;
+            break;
+          case 4:
+            this.$refs.password.focus();
+            break;
+        }
+      });
     }
   },
   methods: {
-    clearPhraseInput() {
-      this.isRecoveryPhraseInvalid = null;
-      this.$refs.phraseinput.clear();
+    setupWallet(isRecovery) {
+      this.isRecovery = isRecovery;
+      this.nextStep();
     },
     nextStep() {
       let next = this.current + 1;
@@ -164,9 +197,18 @@ export default {
           }
           break;
         case 3:
-          this.$nextTick(() => {
-            this.$refs.password.focus();
-          });
+          if (UnityBackend.IsValidRecoveryPhrase(this.possiblePhrase)) {
+            this.recoveryPhrase = this.possiblePhrase;
+          } else {
+            EventBus.$emit("show-dialog", {
+              type: "error",
+              title: this.$t("setup.invalid_recovery_phrase.title"),
+              message: this.$t("setup.invalid_recovery_phrase.message")
+            });
+
+            this.isRecoveryPhraseInvalid = true;
+            return;
+          }
           break;
         case 4:
           if (
@@ -182,26 +224,19 @@ export default {
       this.current = next;
     },
     previousStep() {
-      let previous = this.current - 1;
-      switch (this.current) {
-        case 2:
-        case 3:
-          this.isRecovery = null;
-          previous = 1;
-          break;
-      }
-      this.current = previous;
+      if (this.current === 3 && this.isRecovery) this.current = 1;
+      else this.current--;
     },
     recoverFromPhrase() {
       this.isRecovery = true;
       this.nextStep();
     },
-    validatePhrase(phrase) {
-      this.isRecoveryPhraseInvalid = !UnityBackend.IsValidRecoveryPhrase(
-        phrase
-      );
-      if (!this.isRecoveryPhraseInvalid) {
-        this.recoveryPhrase = phrase;
+    onPossiblePhrase(phrase) {
+      this.isRecoveryPhraseInvalid = null;
+      this.possiblePhrase = phrase;
+    },
+    validatePhraseOnEnter() {
+      if (this.possiblePhrase !== null) {
         this.nextStep();
       }
     },

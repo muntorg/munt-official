@@ -3,8 +3,8 @@
     "back": "Back",
     "change_password": "Change password",
     "finish": "Finish",
-    "invalid_recovery_phrase": "Invalid recovery phrase. Try again",
     "next": "Next",
+    "ok": "OK",
     "previous": "Previous",
     "send": "Send"
   },
@@ -30,6 +30,10 @@
     "enter_existing_recovery_phrase": "Enter your recovery phrase in the boxes below to restore your wallet.",
     "enter_recovery_phrase": "Enter recovery phrase",
     "enter_your_password": "Enter your password",
+    "invalid_recovery_phrase": {
+      "title": "Invalid recovery phrase",
+      "message": "This combinatie is not a valid recovery phrase. Correct the error(s) and try again."
+    },
     "recover_existing": "I want to recover my wallet using my recovery phrase",
     "repeat_password": "Repeat password",
     "repeat_your_recovery_phrase": "To make sure you have correctly written down your recovery phrase, enter your phrase in the boxes below.",
