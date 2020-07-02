@@ -8,7 +8,7 @@
 
 #include <stdint.h>
 
-#if defined(BUILD_GULDEN_INTERNAL) && defined(HAVE_CONFIG_H)
+#if defined(BUILD_INTERNAL) && defined(HAVE_CONFIG_H)
 #include "config/build-config.h"
   #if defined(_WIN32)
     #if defined(DLL_EXPORT)
