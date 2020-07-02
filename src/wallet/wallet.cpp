@@ -1299,7 +1299,7 @@ static void forceRestart()
     
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
-    GuldenAppManager::gApp->shutdown();
+    AppLifecycleManager::gApp->shutdown();
 }
 
 void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)

@@ -2428,7 +2428,7 @@ static UniValue resetdatadirfull(const JSONRPCRequest& request)
     
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
-    GuldenAppManager::gApp->shutdown();
+    AppLifecycleManager::gApp->shutdown();
     return "Stopping application and fully resetting data directory (excluding wallet)";
 }
 
@@ -2452,7 +2452,7 @@ static UniValue resetdatadirpartial(const JSONRPCRequest& request)
     
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
-    GuldenAppManager::gApp->shutdown();
+    AppLifecycleManager::gApp->shutdown();
     return "Stopping application and partially resetting data directory (excluding wallet)";
 }
 

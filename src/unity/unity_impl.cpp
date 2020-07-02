@@ -487,7 +487,7 @@ void handleInitWithExistingWallet()
     {
         signalHandler->notifyInitWithExistingWallet();
     }
-    GuldenAppManager::gApp->initialize();
+    AppLifecycleManager::gApp->initialize();
 }
 
 void handleInitWithoutExistingWallet()
@@ -522,7 +522,7 @@ bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phras
     //fixme: (UNITY) (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
     SecureString phraseOnly;
     int phraseBirthNumber = 0;
-    GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), phraseOnly, phraseBirthNumber);
+    AppLifecycleManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), phraseOnly, phraseBirthNumber);
     if (!checkMnemonic(phraseOnly))
     {
         return false;
@@ -534,11 +534,11 @@ bool GuldenUnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phras
         phraseBirthNumber = timeToBirthNumber(1441212522L);
 
     //fixme: (UNITY) (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
-    GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
-    GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
-    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
-    GuldenAppManager::gApp->isRecovery = true;
-    GuldenAppManager::gApp->initialize();
+    AppLifecycleManager::gApp->setRecoveryPhrase(phraseOnly);
+    AppLifecycleManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
+    AppLifecycleManager::gApp->setRecoveryPassword(password.c_str());
+    AppLifecycleManager::gApp->isRecovery = true;
+    AppLifecycleManager::gApp->initialize();
 
     return true;
 }
@@ -548,7 +548,7 @@ bool ValidateAndSplitRecoveryPhrase(const std::string & phrase, SecureString& mn
     if (phrase.length() < 16)
         return false;
 
-    GuldenAppManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), mnemonic, birthNumber);
+    AppLifecycleManager::gApp->splitRecoveryPhraseAndBirth(phrase.c_str(), mnemonic, birthNumber);
     return checkMnemonic(mnemonic) && (birthNumber == 0 || Base10ChecksumDecode(birthNumber, nullptr));
 }
 
@@ -572,10 +572,10 @@ bool GuldenUnifiedBackend::ContinueWalletFromRecoveryPhrase(const std::string& p
     }
 
     LOCK2(cs_main, pactiveWallet->cs_wallet);
-    GuldenAppManager::gApp->setRecoveryPhrase(phraseOnly);
-    GuldenAppManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
-    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
-    GuldenAppManager::gApp->isRecovery = true;
+    AppLifecycleManager::gApp->setRecoveryPhrase(phraseOnly);
+    AppLifecycleManager::gApp->setRecoveryBirthNumber(phraseBirthNumber);
+    AppLifecycleManager::gApp->setRecoveryPassword(password.c_str());
+    AppLifecycleManager::gApp->isRecovery = true;
 
     CWallet::CreateSeedAndAccountFromPhrase(pactiveWallet);
 
@@ -600,12 +600,12 @@ std::string GuldenUnifiedBackend::GenerateRecoveryMnemonic()
 {
     std::vector<unsigned char> entropy(16);
     GetStrongRandBytes(&entropy[0], 16);
-    return GuldenAppManager::gApp->composeRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8), GetAdjustedTime()).c_str();
+    return AppLifecycleManager::gApp->composeRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8), GetAdjustedTime()).c_str();
 }
 
 std::string GuldenUnifiedBackend::ComposeRecoveryPhrase(const std::string & mnemonic, int64_t birthTime)
 {
-    return std::string(GuldenAppManager::composeRecoveryPhrase(SecureString(mnemonic), birthTime));
+    return std::string(AppLifecycleManager::composeRecoveryPhrase(SecureString(mnemonic), birthTime));
 }
 
 bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri, const std::string& password)
@@ -615,10 +615,10 @@ bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri
     {
         return false;
     }
-    GuldenAppManager::gApp->setLinkKey(linkedKey);
-    GuldenAppManager::gApp->isLink = true;
-    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
-    GuldenAppManager::gApp->initialize();
+    AppLifecycleManager::gApp->setLinkKey(linkedKey);
+    AppLifecycleManager::gApp->isLink = true;
+    AppLifecycleManager::gApp->setRecoveryPassword(password.c_str());
+    AppLifecycleManager::gApp->initialize();
 
     return true;
 }
@@ -640,9 +640,9 @@ bool GuldenUnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linke
         return false;
     }
 
-    GuldenAppManager::gApp->setLinkKey(linkedKey);
-    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
-    GuldenAppManager::gApp->isLink = true;
+    AppLifecycleManager::gApp->setLinkKey(linkedKey);
+    AppLifecycleManager::gApp->setRecoveryPassword(password.c_str());
+    AppLifecycleManager::gApp->isLink = true;
 
     CWallet::CreateSeedAndAccountFromLink(pactiveWallet);
 
@@ -729,9 +729,9 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
         return false;
     }
 
-    GuldenAppManager::gApp->setLinkKey(linkedKey);
-    GuldenAppManager::gApp->setRecoveryPassword(password.c_str());
-    GuldenAppManager::gApp->isLink = true;
+    AppLifecycleManager::gApp->setLinkKey(linkedKey);
+    AppLifecycleManager::gApp->setRecoveryPassword(password.c_str());
+    AppLifecycleManager::gApp->isLink = true;
 
     CWallet::CreateSeedAndAccountFromLink(pactiveWallet);
 
@@ -884,8 +884,8 @@ void GuldenUnifiedBackend::TerminateUnityLib()
 {
     work.reset();
     ioctx.stop();
-    GuldenAppManager::gApp->shutdown();
-    GuldenAppManager::gApp->waitForShutDown();
+    AppLifecycleManager::gApp->shutdown();
+    AppLifecycleManager::gApp->waitForShutDown();
     run_thread.join();
 }
 
@@ -957,7 +957,7 @@ std::string GuldenUnifiedBackend::GetRecoveryPhrase()
         std::set<SecureString> allPhrases;
         for (const auto& seedIter : pactiveWallet->mapSeeds)
         {
-            return GuldenAppManager::composeRecoveryPhrase(seedIter.second->getMnemonic(), birthTime).c_str();
+            return AppLifecycleManager::composeRecoveryPhrase(seedIter.second->getMnemonic(), birthTime).c_str();
         }
     }
     return "";
@@ -981,7 +981,7 @@ bool GuldenUnifiedBackend::IsMnemonicCorrect(const std::string & phrase)
     SecureString mnemonicPhrase;
     int birthNumber;
 
-    GuldenAppManager::splitRecoveryPhraseAndBirth(SecureString(phrase), mnemonicPhrase, birthNumber);
+    AppLifecycleManager::splitRecoveryPhraseAndBirth(SecureString(phrase), mnemonicPhrase, birthNumber);
 
     LOCK2(cs_main, pactiveWallet->cs_wallet);
 

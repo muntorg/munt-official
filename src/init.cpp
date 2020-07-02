@@ -125,7 +125,7 @@ static const char* FEE_ESTIMATES_FILENAME="fee_estimates.dat";
 // The network-processing threads are all part of a thread group
 // created by AppInit() or the Qt main() function.
 //
-// A clean exit happens when qt or the SIGTERM signal handler call GuldenAppManager::shutdown()
+// A clean exit happens when qt or the SIGTERM signal handler call AppLifecycleManager::shutdown()
 // This signals to the shutdown thread that shutdown can commence.
 // The shutdown thread systematically shuts down the application:
 // 1 - Alerts the UI to perform basic pre shutdown preparation (hide UI, show an exit message etc.)
@@ -345,8 +345,8 @@ static void HandleSIGTERM(int)
 {
     // We call a sigterm safe 'shutdown' function that does nothing but write to a socket.
     // The shutdown thread then safely handles the rest from within the already existing shutdown thread.
-    if (GuldenAppManager::gApp)
-        GuldenAppManager::gApp->shutdown();
+    if (AppLifecycleManager::gApp)
+        AppLifecycleManager::gApp->shutdown();
 }
 
 static void HandleSIGHUP(int)
@@ -555,12 +555,12 @@ static void ThreadImport(std::vector<fs::path> vImportFiles)
     CValidationState state;
     if (!ActivateBestChain(state, chainparams)) {
         LogPrintf("Failed to connect best block\n");
-        GuldenAppManager::gApp->shutdown();
+        AppLifecycleManager::gApp->shutdown();
     }
 
     if (GetBoolArg("-stopafterblockimport", DEFAULT_STOPAFTERBLOCKIMPORT)) {
         LogPrintf("Stopping after block import\n");
-        GuldenAppManager::gApp->shutdown();
+        AppLifecycleManager::gApp->shutdown();
     }
     } // End scope of CImportingNow
     if (GetArg("-persistmempool", DEFAULT_PERSIST_MEMPOOL)) {

@@ -37,8 +37,8 @@ bool dockClickHandler(id self,SEL _cmd,...) {
 
 int quitFromDockMenuHandler(id self,SEL _cmd,...)
 {
-    if (GuldenAppManager::gApp)
-        GuldenAppManager::gApp->shutdown();
+    if (AppLifecycleManager::gApp)
+        AppLifecycleManager::gApp->shutdown();
     /// Return NO (false) to suppress the default OS X actions
     return false;
 }

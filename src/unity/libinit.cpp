@@ -52,7 +52,7 @@ static void handleAppInitResult(bool bResult)
     if (!bResult)
     {
         // InitError will have been called with detailed error, which ends up on console
-        GuldenAppManager::gApp->shutdown();
+        AppLifecycleManager::gApp->shutdown();
         return;
     }
     handlePostInitMain();
@@ -79,7 +79,7 @@ int InitUnity()
     // Connect signal handlers
     noui_connect();
 
-    GuldenAppManager appManager; 
+    AppLifecycleManager appManager; 
     appManager.signalAppInitializeResult.connect(boost::bind(handleAppInitResult, _1));
     appManager.signalAboutToInitMain.connect(&handlePreInitMain);
     appManager.signalAppShutdownFinished.connect(&handleFinalShutdown);
@@ -134,14 +134,14 @@ int InitUnity()
                 if (!lock.try_lock())
                 {
                     fprintf(stderr, "ERROR: Cannot obtain a lock on data directory %s. %s is probably already running.", GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
-                    GuldenAppManager::gApp->shutdown();
+                    AppLifecycleManager::gApp->shutdown();
                     return EXIT_FAILURE;
                 }
             }
             catch(const boost::interprocess::interprocess_exception& e)
             {
                 fprintf(stderr, "ERROR: Cannot obtain a lock on data directory %s. %s is probably already running.", GetDataDir().string().c_str(), _(PACKAGE_NAME).c_str());
-                GuldenAppManager::gApp->shutdown();
+                AppLifecycleManager::gApp->shutdown();
                 return EXIT_FAILURE;
             }
         }
@@ -178,7 +178,7 @@ int InitUnity()
         PrintExceptionContinue(NULL, "AppInit()");
     }
 
-    GuldenAppManager::gApp->waitForShutDown();
+    AppLifecycleManager::gApp->waitForShutDown();
 
     return EXIT_SUCCESS;
 }

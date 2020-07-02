@@ -2324,7 +2324,7 @@ UniValue encryptwallet(const JSONRPCRequest& request)
     // BDB seems to have a bad habit of writing old data into
     // slack space in .dat files; that is bad if the old data is
     // unencrypted private keys. So:
-    GuldenAppManager::gApp->shutdown();
+    AppLifecycleManager::gApp->shutdown();
     return "wallet encrypted; Gulden server stopping, restart to run with encrypted wallet. The keypool has been flushed and a new HD seed was generated (if you are using HD). You need to make a new backup.";
 }
 

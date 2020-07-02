@@ -1511,7 +1511,7 @@ void GUI::userWantsToQuit()
     {
         hideForClose();
         haveAlreadySignalledShutdown = true;
-        GuldenAppManager::gApp->shutdown();
+        AppLifecycleManager::gApp->shutdown();
     }
 }
 
