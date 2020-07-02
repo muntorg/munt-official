@@ -141,7 +141,7 @@ static void AppInit(int argc, char* argv[])
         }
         try
         {
-            ReadConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME));
+            ReadConfigFile(GetArg("-conf", DEFAULT_CONF_FILENAME));
         }
         catch (const std::exception& e)
         {

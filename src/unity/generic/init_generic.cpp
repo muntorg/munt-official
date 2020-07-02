@@ -56,7 +56,7 @@ std::string HelpMessage(HelpMessageMode mode)
         strUsage += HelpMessageOpt("-blocksonly", strprintf(helptr("Whether to operate in a blocks only mode (default: %u)"), DEFAULT_BLOCKSONLY));
     strUsage +=HelpMessageOpt("-assumevalid=<hex>", strprintf(helptr("If this block is in the chain assume that it and its ancestors are valid and potentially skip their script verification (0 to verify all, default: %s, testnet: %s)"), defaultChainParams->GetConsensus().defaultAssumeValid.GetHex(), testnetChainParams->GetConsensus().defaultAssumeValid.GetHex()));
     strUsage += HelpMessageOpt("-fullsync", strprintf(_("Synchronize the whole chain for full validation mode. If used with SPV the sync will start when SPV if catched up. If disabled, blocks will not be requested automatically (default: %u)"), DEFAULT_FULL_SYNC_MODE));
-    strUsage += HelpMessageOpt("-conf=<file>", strprintf(helptr("Specify configuration file (default: %s)"), GULDEN_CONF_FILENAME));
+    strUsage += HelpMessageOpt("-conf=<file>", strprintf(helptr("Specify configuration file (default: %s)"), DEFAULT_CONF_FILENAME));
     if (mode == HMM_GULDEND)
     {
 #if HAVE_DECL_FORK
@@ -76,7 +76,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-par=<n>", strprintf(helptr("Set the number of script verification threads (%u to %d, 0 = auto, <0 = leave that many cores free, default: %d)"),
         -GetNumCores(), MAX_SCRIPTCHECK_THREADS, DEFAULT_SCRIPTCHECK_THREADS));
 #ifndef WIN32
-    strUsage += HelpMessageOpt("-pid=<file>", strprintf(helptr("Specify pid file (default: %s)"), GULDEN_PID_FILENAME));
+    strUsage += HelpMessageOpt("-pid=<file>", strprintf(helptr("Specify pid file (default: %s)"), DEFAULT_PID_FILENAME));
 #endif
     strUsage += HelpMessageOpt("-prune=<n>", strprintf(helptr("Reduce storage requirements by enabling pruning (deleting) of old blocks. This allows the pruneblockchain RPC to be called to delete specific blocks, and enables automatic pruning of old blocks if a target size in MiB is provided. This mode is incompatible with -txindex and -rescan. "
             "Warning: Reverting this setting requires re-downloading the entire blockchain. "

@@ -2469,7 +2469,7 @@ static UniValue resetconfig(const JSONRPCRequest& request)
 
     std::vector<std::string> asKeep;    
     {
-        fs::ifstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+        fs::ifstream streamConfig(GetConfigFile(GetArg("-conf", DEFAULT_CONF_FILENAME)));
         if (!streamConfig.good())
             throw std::runtime_error("No config file to reset\n");
 
@@ -2484,7 +2484,7 @@ static UniValue resetconfig(const JSONRPCRequest& request)
         }
     }
     
-    fs::ofstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+    fs::ofstream streamConfig(GetConfigFile(GetArg("-conf", DEFAULT_CONF_FILENAME)));
     if (!streamConfig.good())
         throw std::runtime_error("No config file to reset\n");
     
@@ -2509,7 +2509,7 @@ static UniValue resetconfig_pi_lowmem(const JSONRPCRequest& request)
 
     std::vector<std::string> asKeep;    
     {
-        fs::ifstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+        fs::ifstream streamConfig(GetConfigFile(GetArg("-conf", DEFAULT_CONF_FILENAME)));
         if (!streamConfig.good())
             throw std::runtime_error("No config file to reset\n");
 
@@ -2524,7 +2524,7 @@ static UniValue resetconfig_pi_lowmem(const JSONRPCRequest& request)
         }
     }
     
-    fs::ofstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+    fs::ofstream streamConfig(GetConfigFile(GetArg("-conf", DEFAULT_CONF_FILENAME)));
     if (!streamConfig.good())
         throw std::runtime_error("No config file to reset\n");
     
@@ -2555,7 +2555,7 @@ static UniValue resetconfig_pi_medmem(const JSONRPCRequest& request)
 
     std::vector<std::string> asKeep;    
     {
-        fs::ifstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+        fs::ifstream streamConfig(GetConfigFile(GetArg("-conf", DEFAULT_CONF_FILENAME)));
         if (!streamConfig.good())
             throw std::runtime_error("No config file to reset\n");
 
@@ -2570,7 +2570,7 @@ static UniValue resetconfig_pi_medmem(const JSONRPCRequest& request)
         }
     }
     
-    fs::ofstream streamConfig(GetConfigFile(GetArg("-conf", GULDEN_CONF_FILENAME)));
+    fs::ofstream streamConfig(GetConfigFile(GetArg("-conf", DEFAULT_CONF_FILENAME)));
     if (!streamConfig.good())
         throw std::runtime_error("No config file to reset\n");
     

@@ -485,7 +485,7 @@ void openDataDirectory()
 
 bool openGuldenConf()
 {
-    boost::filesystem::path pathConfig = GetConfigFile(GULDEN_CONF_FILENAME);
+    boost::filesystem::path pathConfig = GetConfigFile(DEFAULT_CONF_FILENAME);
 
     /* Create the file */
     boost::filesystem::ofstream configFile(pathConfig, std::ios_base::app);

@@ -61,8 +61,8 @@ extern bool gbMinimalLogging;
 extern std::atomic<bool> fReopenDebugLog;
 extern CTranslationInterface translationInterface;
 
-extern const char * const GULDEN_CONF_FILENAME;
-extern const char * const GULDEN_PID_FILENAME;
+extern const char * const DEFAULT_CONF_FILENAME;
+extern const char * const DEFAULT_PID_FILENAME;
 
 extern std::atomic<uint32_t> logCategories;
 
