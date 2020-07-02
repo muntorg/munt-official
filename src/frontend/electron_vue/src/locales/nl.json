@@ -42,6 +42,7 @@
   },
   "wallet": {
     "receive_acquired_novo": "Ontvang jouw verkregen Novo",
+    "buy_novo": "Koopen Novo",
     "your_address": "Jouw adres",
     "send_novo": "Verstuur Novo"
   }

@@ -17,6 +17,9 @@
         <button @click="viewHistory">
           {{ "transaction history" }}
         </button>
+        <button @click="buyNovo">
+          {{ $t("wallet.buy_novo") }}
+        </button>
       </template>
     </novo-button-section>
   </div>
@@ -47,6 +50,9 @@ export default {
     },
     viewHistory() {
       this.$router.push({ name: "history" });
+    },
+    buyNovo() {
+      window.open(this.buyUrl, "_blank");
     },
     copyAddress() {
       this.copyActive = true;
