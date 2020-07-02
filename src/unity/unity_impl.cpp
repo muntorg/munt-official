@@ -610,7 +610,7 @@ std::string GuldenUnifiedBackend::ComposeRecoveryPhrase(const std::string & mnem
 
 bool GuldenUnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri, const std::string& password)
 {
-    CGuldenSecretExt<CExtKey> linkedKey;
+    CEncodedSecretKeyExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
     {
         return false;
@@ -633,7 +633,7 @@ bool GuldenUnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linke
 
     LOCK2(cs_main, pactiveWallet->cs_wallet);
 
-    CGuldenSecretExt<CExtKey> linkedKey;
+    CEncodedSecretKeyExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
     {
         LogPrintf("%s: Failed to parse link URI", __func__);
@@ -667,7 +667,7 @@ bool GuldenUnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_
     }
 
     // Create ext key for new linked account from parsed data
-    CGuldenSecretExt<CExtKey> linkedKey;
+    CEncodedSecretKeyExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
     {
         LogPrintf("ReplaceWalletLinkedFromURI: Failed to parse link URI");
@@ -767,7 +767,7 @@ bool GuldenUnifiedBackend::EraseWalletSeedsAndAccounts()
 
 bool GuldenUnifiedBackend::IsValidLinkURI(const std::string& linked_uri)
 {
-    CGuldenSecretExt<CExtKey> linkedKey;
+    CEncodedSecretKeyExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
         return false;
     return true;

@@ -1049,7 +1049,7 @@ std::string witnessKeysLinkUrlForAccount(CWallet* pWallet, CAccount* account)
         //fixme: (FUT) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
         CKey witnessPrivKey;
         if (account->GetKey(key, witnessPrivKey))
-        witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString() + strprintf("#%s", account->getEarliestPossibleCreationTime());
+        witnessAccountKeys += CEncodedSecretKey(witnessPrivKey).ToString() + strprintf("#%s", account->getEarliestPossibleCreationTime());
         witnessAccountKeys += ":";
     }
 

@@ -376,7 +376,7 @@ SecureString AppLifecycleManager::composeRecoveryPhrase(const SecureString& phra
         return phrase;
 }
 
-void AppLifecycleManager::setLinkKey(CGuldenSecretExt<CExtKey> _linkKey)
+void AppLifecycleManager::setLinkKey(CEncodedSecretKeyExt<CExtKey> _linkKey)
 {
     linkKey = _linkKey;
 }
@@ -386,7 +386,7 @@ int64_t AppLifecycleManager::getLinkedBirthTime() const
     return linkKey.getCreationTime();
 }
 
-CGuldenSecretExt<CExtKey> AppLifecycleManager::getLinkedKey() const
+CEncodedSecretKeyExt<CExtKey> AppLifecycleManager::getLinkedKey() const
 {
     return linkKey;
 }

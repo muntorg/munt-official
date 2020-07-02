@@ -49,7 +49,7 @@ ImportPrivKeyDialog::~ImportPrivKeyDialog()
 
 void ImportPrivKeyDialog::accept()
 {
-    CGuldenSecret vchSecret;
+    CEncodedSecretKey vchSecret;
     bool fGood = vchSecret.SetString(getPrivKey().c_str());
 
     if (!fGood)

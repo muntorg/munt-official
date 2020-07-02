@@ -159,7 +159,7 @@ public:
 /**
  * A base58-encoded secret key
  */
-class CGuldenSecret : public CBase58Data
+class CEncodedSecretKey : public CBase58Data
 {
 public:
     void SetKey(const CKey& vchSecret);
@@ -168,14 +168,14 @@ public:
     bool SetString(const char* pszSecret);
     bool SetString(const std::string& strSecret);
 
-    CGuldenSecret(const CKey& vchSecret) { SetKey(vchSecret); }
-    CGuldenSecret() {}
+    CEncodedSecretKey(const CKey& vchSecret) { SetKey(vchSecret); }
+    CEncodedSecretKey() {}
 };
 
 /**
  * A combination base58 and hex encoded secret extended key
  */
-template <typename KeyType> class CGuldenSecretExt 
+template <typename KeyType> class CEncodedSecretKeyExt 
 {
 public:
     void SetKey(const KeyType& vchSecret) { key = vchSecret; }
@@ -219,7 +219,7 @@ public:
         return true;
     }
 
-    CGuldenSecretExt<KeyType>& SetCreationTime(std::string newCreationTime)
+    CEncodedSecretKeyExt<KeyType>& SetCreationTime(std::string newCreationTime)
     {
         creationTime = newCreationTime;
         return *this;
@@ -237,7 +237,7 @@ public:
         }
     }
 
-    CGuldenSecretExt<KeyType>& SetPayAccount(std::string newPayAccount)
+    CEncodedSecretKeyExt<KeyType>& SetPayAccount(std::string newPayAccount)
     {
         payAccount = newPayAccount;
         return *this;
@@ -306,9 +306,9 @@ public:
     }
 
     KeyType getKeyRaw() { return key; }
-    CGuldenSecretExt(const KeyType& vchSecret) { SetKey(vchSecret); }
-    CGuldenSecretExt(const std::string& strSecret) { SetString(strSecret); }
-    CGuldenSecretExt() {}
+    CEncodedSecretKeyExt(const KeyType& vchSecret) { SetKey(vchSecret); }
+    CEncodedSecretKeyExt(const std::string& strSecret) { SetString(strSecret); }
+    CEncodedSecretKeyExt() {}
 
 private:
     KeyType key;

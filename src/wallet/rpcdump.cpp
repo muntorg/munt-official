@@ -134,7 +134,7 @@ UniValue importprivkey(const JSONRPCRequest& request)
     if (fRescan && fPruneMode)
         throw JSONRPCError(RPC_WALLET_ERROR, "Rescan is disabled in pruned mode");
 
-    CGuldenSecret vchSecret;
+    CEncodedSecretKey vchSecret;
     bool fGood = vchSecret.SetString(strSecret);
 
     if (!fGood) throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid private key encoding");
@@ -530,7 +530,7 @@ UniValue importwallet(const JSONRPCRequest& request)
         boost::split(vstr, line, boost::is_any_of(" "));
         if (vstr.size() < 2)
             continue;
-        CGuldenSecret vchSecret;
+        CEncodedSecretKey vchSecret;
         if (!vchSecret.SetString(vstr[0]))
             continue;
         CKey key = vchSecret.GetKey();
@@ -638,7 +638,7 @@ UniValue dumpprivkey(const JSONRPCRequest& request)
         }
     }
 
-    return CGuldenSecret(vchSecret).ToString();
+    return CEncodedSecretKey(vchSecret).ToString();
 }
 
 UniValue dumpwallet(const JSONRPCRequest& request)
@@ -730,7 +730,7 @@ UniValue dumpwallet(const JSONRPCRequest& request)
         std::string strAddr = CNativeAddress(keyid).ToString();
         CKey key;
         if (pwallet->GetKey(keyid, key)) {
-            file << strprintf("%s %s ", CGuldenSecret(key).ToString(), strTime);
+            file << strprintf("%s %s ", CEncodedSecretKey(key).ToString(), strTime);
             if (pwallet->mapAddressBook.count(CNativeAddress(keyid).ToString())) {
                 file << strprintf("label=%s", EncodeDumpString(pwallet->mapAddressBook[CNativeAddress(keyid).ToString()].name));
             /*} else if (keyid == masterKeyID) {
@@ -877,7 +877,7 @@ UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniVa
                 for (size_t i = 0; i < keys.size(); i++) {
                     const std::string& privkey = keys[i].get_str();
 
-                    CGuldenSecret vchSecret;
+                    CEncodedSecretKey vchSecret;
                     bool fGood = vchSecret.SetString(privkey);
 
                     if (!fGood) {
@@ -994,7 +994,7 @@ UniValue ProcessImport(CWallet* const pwallet, CAccount* forAccount, const UniVa
                 const std::string& strPrivkey = keys[0].get_str();
 
                 // Checks.
-                CGuldenSecret vchSecret;
+                CEncodedSecretKey vchSecret;
                 bool fGood = vchSecret.SetString(strPrivkey);
 
                 if (!fGood) {

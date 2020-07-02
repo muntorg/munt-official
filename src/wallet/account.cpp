@@ -276,7 +276,7 @@ SecureString CHDSeed::getMnemonic()
 
 SecureString CHDSeed::getPubkey()
 {
-    return CGuldenSecretExt<CExtPubKey>(masterKeyPub).ToString().c_str();
+    return CEncodedSecretKeyExt<CExtPubKey>(masterKeyPub).ToString().c_str();
 }
 
 bool CHDSeed::IsLocked() const
@@ -730,7 +730,7 @@ SecureString CAccountHD::GetAccountMasterPubKeyEncoded()
     if (IsLocked())
         return NULL;
 
-    return CGuldenSecretExt<CExtPubKey>(accountKeyPriv.Neuter()).ToString().c_str();
+    return CEncodedSecretKeyExt<CExtPubKey>(accountKeyPriv.Neuter()).ToString().c_str();
 }
 
 boost::uuids::uuid CAccountHD::getSeedUUID() const

@@ -85,16 +85,16 @@ public:
     static SecureString composeRecoveryPhrase(const SecureString& phrase, int64_t birthTime);
     void setCombinedRecoveryPhrase(const SecureString& combinedPhrase);
     static void splitRecoveryPhraseAndBirth(const SecureString& input, SecureString& phrase, int& birthNumber);
-    void setLinkKey(CGuldenSecretExt<CExtKey> _linkKey);
+    void setLinkKey(CEncodedSecretKeyExt<CExtKey> _linkKey);
     int64_t getLinkedBirthTime() const;
     void setRecoveryPassword(const SecureString& password_);
     SecureString getRecoveryPassword();
-    CGuldenSecretExt<CExtKey> getLinkedKey() const;
+    CEncodedSecretKeyExt<CExtKey> getLinkedKey() const;
 
     void SecureWipeRecoveryDetails();
 private:
     void BurnRecoveryPhrase();
-    CGuldenSecretExt<CExtKey> linkKey;
+    CEncodedSecretKeyExt<CExtKey> linkKey;
     SecureString recoveryPhrase;
     SecureString recoveryPassword;
     int recoveryBirthNumber;

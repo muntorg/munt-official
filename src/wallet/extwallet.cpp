@@ -771,7 +771,7 @@ CHDSeed* CGuldenWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
     CExtPubKey pubkey;
     try
     {
-        CGuldenSecretExt<CExtPubKey> secretExt;
+        CEncodedSecretKeyExt<CExtPubKey> secretExt;
         secretExt.SetString(pubKeyString.c_str());
         pubkey = secretExt.GetKeyFromString();
     }
@@ -1015,7 +1015,7 @@ std::vector<std::pair<CKey, uint64_t>> CGuldenWallet::ParseWitnessKeyURL(SecureS
         bool keyError = false;
         try
         {
-            CGuldenSecret secretPrivWitnessKey;
+            CEncodedSecretKey secretPrivWitnessKey;
             secretPrivWitnessKey.SetString(encodedPrivateWitnessKeyAndBirthDate[0].c_str());
             if (secretPrivWitnessKey.IsValid())
             {
@@ -1079,7 +1079,7 @@ CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureS
     CExtPubKey pubkey;
     try
     {
-        CGuldenSecretExt<CExtPubKey> secretExt;
+        CEncodedSecretKeyExt<CExtPubKey> secretExt;
         secretExt.SetString(encExtPubKey.c_str());
         pubkey = secretExt.GetKeyFromString();
     }
@@ -1100,7 +1100,7 @@ CAccountHD* CGuldenWallet::CreateReadOnlyAccount(std::string strAccount, SecureS
     return newAccount;
 }
 
-CAccountHD* CGuldenWallet::CreateSeedlessHDAccount(std::string strAccount, CGuldenSecretExt<CExtKey> accountExtKey, AccountState state, AccountType type, bool generateKeys)
+CAccountHD* CGuldenWallet::CreateSeedlessHDAccount(std::string strAccount, CEncodedSecretKeyExt<CExtKey> accountExtKey, AccountState state, AccountType type, bool generateKeys)
 {
     //fixme: (FUT) (ACCOUNTS) (HIGH) add key validation checks here.
 

@@ -350,7 +350,7 @@ bool CNativeAddress::IsScript() const
     return IsValid() && (vchVersion == Params().Base58Prefix(CChainParams::SCRIPT_ADDRESS));
 }
 
-void CGuldenSecret::SetKey(const CKey& vchSecret)
+void CEncodedSecretKey::SetKey(const CKey& vchSecret)
 {
     assert(vchSecret.IsValid());
     SetData(Params().Base58Prefix(CChainParams::SECRET_KEY), vchSecret.begin(), vchSecret.size());
@@ -358,7 +358,7 @@ void CGuldenSecret::SetKey(const CKey& vchSecret)
         vchData.push_back(1);
 }
 
-CKey CGuldenSecret::GetKey()
+CKey CEncodedSecretKey::GetKey()
 {
     CKey ret;
     assert(vchData.size() >= 32);
@@ -366,19 +366,19 @@ CKey CGuldenSecret::GetKey()
     return ret;
 }
 
-bool CGuldenSecret::IsValid() const
+bool CEncodedSecretKey::IsValid() const
 {
     bool fExpectedFormat = vchData.size() == 32 || (vchData.size() == 33 && vchData[32] == 1);
     bool fCorrectVersion = vchVersion == Params().Base58Prefix(CChainParams::SECRET_KEY);
     return fExpectedFormat && fCorrectVersion;
 }
 
-bool CGuldenSecret::SetString(const char* pszSecret)
+bool CEncodedSecretKey::SetString(const char* pszSecret)
 {
     return CBase58Data::SetString(pszSecret) && IsValid();
 }
 
-bool CGuldenSecret::SetString(const std::string& strSecret)
+bool CEncodedSecretKey::SetString(const std::string& strSecret)
 {
     return SetString(strSecret.c_str());
 }

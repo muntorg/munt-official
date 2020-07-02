@@ -1642,7 +1642,7 @@ static UniValue importlinkedaccount(const JSONRPCRequest& request)
 
     EnsureWalletIsUnlocked(pwallet);
 
-    CGuldenSecretExt<CExtKey> linkedKey;
+    CEncodedSecretKeyExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(request.params[1].get_str().c_str()))
     {
         return false;
@@ -3450,7 +3450,7 @@ static UniValue getwitnessaddresskeys(const JSONRPCRequest& request)
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to retrieve key for witness address.");
             }
             //fixme: (PHASE5) - to be 100% correct we should export the creation time of the actual key (where available) and not getEarliestPossibleCreationTime - however getEarliestPossibleCreationTime will do for now.
-            witnessAccountKeys += CGuldenSecret(witnessPrivKey).ToString() + strprintf("#%s", forAccount->getEarliestPossibleCreationTime());
+            witnessAccountKeys += CEncodedSecretKey(witnessPrivKey).ToString() + strprintf("#%s", forAccount->getEarliestPossibleCreationTime());
             break;
         }
     }
