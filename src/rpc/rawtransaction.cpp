@@ -41,7 +41,7 @@
 #include <univalue.h>
 
 //fixme: (PHASE5) - We can remove this include
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include "validation/validation.h"
 
 

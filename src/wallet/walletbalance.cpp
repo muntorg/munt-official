@@ -15,7 +15,7 @@
 
 #include "validation/validation.h"
 #include "policy/policy.h"
-#include "guldenutil.h"
+#include "witnessutil.h"
 
 // Note that this function doesn't distinguish between a 0-valued input,
 // and a not-"is mine" (according to the filter) input.

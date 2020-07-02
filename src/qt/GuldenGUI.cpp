@@ -58,7 +58,7 @@
 #include "accountsettingsdialog.h"
 #include "witnessdialog.h"
 #include "miningaccountdialog.h"
-#include <guldenutil.h>
+#include <witnessutil.h>
 #include <consensus/consensus.h>
 #include "sendcoinsdialog.h"
 #include "wallet/wallet.h"

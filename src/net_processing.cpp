@@ -34,7 +34,7 @@
 #include "txmempool.h"
 #include "ui_interface.h"
 #include "util.h"
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include "utilmoneystr.h"
 #include "utilstrencodings.h"
 #include "validation/validationinterface.h"

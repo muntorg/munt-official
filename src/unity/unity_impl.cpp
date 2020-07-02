@@ -14,7 +14,7 @@
 
 // Standard gulden headers
 #include "util.h"
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include "ui_interface.h"
 #include "wallet/wallet.h"
 #include "unity/appmanager.h"

@@ -24,7 +24,7 @@
 #include "base58.h"
 
 //Gulden dependencies
-#include "guldenutil.h"
+#include "witnessutil.h"
 
 bool IsFinalTx(const CTransaction &tx, int nBlockHeight, int64_t nBlockTime)
 {

@@ -16,7 +16,7 @@
 #include "auto_checkpoints.h"
 #include "init.h"
 #include "unity/appmanager.h"
-#include "guldenutil.h"
+#include "witnessutil.h"
 
 #ifdef ENABLE_WALLET
 #include <wallet/rpcwallet.h>

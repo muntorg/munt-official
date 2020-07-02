@@ -10,7 +10,7 @@
 #include "validation/witnessvalidation.h"
 //#include "consensus/consensus.h"
 #include "consensus/validation.h"
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include "wallet/witness_operations.h"
 //#include "coincontrol.h"
 #include <qt/forms/ui_witnessdurationwidget.h>

@@ -80,7 +80,7 @@
 #include "walletview.h"
 #include "sendcoinsdialog.h"
 
-#include <guldenutil.h>
+#include <witnessutil.h>
 #include <accountsummarywidget.h>
 #include "receivecoinsdialog.h"
 

@@ -34,7 +34,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include <univalue.h>
-#include <guldenutil.h>
+#include <witnessutil.h>
 
 
 
@@ -306,7 +306,7 @@ UniValue importaddress(const JSONRPCRequest& request)
 }
 
 //fixme: (PHASE5) - We can remove this include after phase4 activation
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include "validation/validation.h"
 
 UniValue importprunedfunds(const JSONRPCRequest& request)

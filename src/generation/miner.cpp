@@ -47,7 +47,7 @@
 
 #include <pow/diff.h>
 #include <crypto/hash/hash.h>
-#include <guldenutil.h>
+#include <witnessutil.h>
 #include <openssl/sha.h>
 
 #include <boost/thread.hpp>

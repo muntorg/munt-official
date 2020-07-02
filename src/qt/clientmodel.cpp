@@ -33,7 +33,7 @@
 #include <QDebug>
 #include <QTimer>
 
-#include "guldenutil.h"
+#include "witnessutil.h"
 
 class CBlockIndex;
 

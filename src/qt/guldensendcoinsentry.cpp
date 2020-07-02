@@ -35,7 +35,7 @@
 #include "validation/validation.h"//chainActive
 #include "validation/witnessvalidation.h"
 #include <consensus/validation.h>
-#include "guldenutil.h"
+#include "witnessutil.h"
 
 GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget *parent) :
     QFrame(parent),

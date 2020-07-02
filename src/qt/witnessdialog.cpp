@@ -39,7 +39,7 @@
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
 
-#include "guldenutil.h"
+#include "witnessutil.h"
 #include "GuldenGUI.h"
 #include "fundwitnessdialog.h"
 #include "optimizewitnessdialog.h"

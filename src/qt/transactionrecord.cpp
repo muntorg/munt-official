@@ -19,7 +19,7 @@
 #include "wallet/wallet.h"
 #include "wallet/account.h"
 #include "script/ismine.h"
-#include <guldenutil.h>
+#include <witnessutil.h>
 
 #include <stdint.h>
 

@@ -16,7 +16,7 @@
 #include "gui.h"
 #include "walletmodel.h"
 #include "rotatewitnessdialog.h"
-#include <guldenutil.h>
+#include <witnessutil.h>
 #include "wallet/witness_operations.h"
 
 AccountSettingsDialog::AccountSettingsDialog(const QStyle *_platformStyle, QWidget *parent, CAccount* _activeAccount, WalletModel* model)

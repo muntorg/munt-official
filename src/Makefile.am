@@ -127,7 +127,7 @@ GULDEN_CORE_H = rpc/accounts.h \
   crypto/hash/city.h \
   crypto/hash/cityconfig.h \
   wallet/mnemonic.h \
-  guldenutil.h \
+  witnessutil.h \
   auto_checkpoints.h \
   wallet/guldenwallet.h \
   LRUCache/LRUCache11.hpp \
@@ -307,7 +307,7 @@ libgulden_node_a_SOURCES = \
   policy/rbf.cpp \
   txdb.cpp \
   txmempool.cpp \
-  guldenutil.cpp \
+  witnessutil.cpp \
   ui_interface.cpp \
   validation/validation.cpp \
   validation/validation_mempool.cpp \
