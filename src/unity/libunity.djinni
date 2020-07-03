@@ -292,6 +292,23 @@ unified_frontend = interface +j +o +n {
     logPrint(str : string): &;
 }
 
+# C++ interface to execute RPC commands
+i_rpc_controller = interface +c {
+    static execute(rpcCommandLine : string, resultListener : i_rpc_listener);
+    static getAutocompleteList() : list<string>;
+}
+
+# Interface to handle result of RPC commands
+# Calls either onSuccess or onError depending on whether command suceedes or fails
+i_rpc_listener = interface +j +o +n {
+    # Returns the result and a filtered version of the command with sensitive information like passwords removed
+    # Any kind of 'command history' functionality should store this filtered command and not the original command
+    onSuccess(filteredCommand : string, result : string);
+    # Returns an error message which might be a plain string or JSON depending on the type of error
+    onError(errorMessage : string);
+}
+    
+
 # monitoring stats
 monitor_record = record {
     partialHeight: i32;

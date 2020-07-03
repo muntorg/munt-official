@@ -143,6 +143,26 @@ declare class NJSUnifiedFrontend
     declare function notifyCoreReady();
     declare function logPrint(str: string);
 }
+/** C++ interface to execute RPC commands */
+declare class NJSIRpcController
+{
+    static declare function execute(rpcCommandLine: string, resultListener: NJSIRpcListener);
+    static declare function getAutocompleteList(): Array<string>;
+}
+/**
+ * Interface to handle result of RPC commands
+ * Calls either onSuccess or onError depending on whether command suceedes or fails
+ */
+declare class NJSIRpcListener
+{
+    /**
+     * Returns the result and a filtered version of the command with sensitive information like passwords removed
+     * Any kind of 'command history' functionality should store this filtered command and not the original command
+     */
+    declare function onSuccess(filteredCommand: string, result: string);
+    /** Returns an error message which might be a plain string or JSON depending on the type of error */
+    declare function onError(errorMessage: string);
+}
 /** Monitoring events */
 declare class NJSMonitorListener
 {

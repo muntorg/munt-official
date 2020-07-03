@@ -33,6 +33,7 @@ COMMON_INCLUDES += -I$(srcdir)/secp256k1/include
 COMMON_INCLUDES += $(UNIVALUE_CFLAGS)
 
 LIB_SERVER=lib_server.a
+LIB_RPC=lib_rpc.a
 LIB_NODE=lib_node.a
 LIB_COMMON=lib_common.a
 LIB_CONSENSUS=lib_consensus.a
@@ -93,6 +94,7 @@ EXTRA_LIBRARIES += \
   $(LIB_COMMON) \
   $(LIB_CONSENSUS) \
   $(LIB_SERVER) \
+  $(LIB_RPC) \
   $(LIB_NODE) \
   $(LIB_CLI) \
   $(LIB_WALLET) \
@@ -252,30 +254,37 @@ obj/build.h: FORCE
 
 clientversion.cpp: obj/build.h
 
-
-# server: shared between Daemon and GUI client
-lib_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
-lib_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-lib_server_a_SOURCES = \
+# RPC: Daemon and GUI/libs
+lib_rpc_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
+lib_rpc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_rpc_a_SOURCES = \
   rpc/accounts.cpp \
-  unity/generic/init_generic.cpp \
-  httprpc.cpp \
-  httpserver.cpp \
-  rest.cpp \
   rpc/blockchain.cpp \
   rpc/mining.cpp \
   rpc/misc.cpp \
   rpc/netrpc.cpp \
   rpc/rawtransaction.cpp \
+  rpc/protocol.cpp \
   rpc/server.cpp \
-  torcontrol.cpp \
+  rpc/client.cpp \
   $(CORE_H)
 
 if ENABLE_WALLET
-lib_server_a_SOURCES += \
+lib_rpc_a_SOURCES += \
   wallet/rpcdump.cpp \
   wallet/rpcwallet.cpp
 endif
+
+# server: shared between Daemon and GUI client
+lib_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
+lib_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_server_a_SOURCES = \
+  httprpc.cpp \
+  httpserver.cpp \
+  rest.cpp \
+  unity/generic/init_generic.cpp \
+  torcontrol.cpp \
+  $(CORE_H)
 
 # node: shared between Daemon, GUI client and unity libraries.
 lib_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) -I$(srcdir)/univalue/include
@@ -687,7 +696,6 @@ lib_generic_a_SOURCES = \
   unity/generic/logging.cpp \
   core_read.cpp \
   core_write.cpp \
-  rpc/protocol.cpp \
   $(CORE_H)
 
 if GLIBC_BACK_COMPAT
@@ -695,7 +703,7 @@ lib_util_a_SOURCES += compat/glibc_compat.cpp
 AM_LDFLAGS += $(COMPAT_LDFLAGS)
 endif
 
-# cli: shared between CLI and CUI client
+# cli: cli client only
 lib_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
 lib_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 lib_cli_a_SOURCES = \
@@ -732,6 +740,8 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/input_record.hpp \
   unity/djinni/cpp/output_record.hpp \
   unity/djinni/cpp/uri_recipient.hpp \
+  unity/djinni/cpp/i_rpc_controller.hpp \
+  unity/djinni/cpp/i_rpc_listener.hpp \
   unity/djinni/cpp/uri_record.hpp
 
 DJINNI_NODE_JS_GEN = \
@@ -741,28 +751,36 @@ DJINNI_NODE_JS_GEN = \
   unity/djinni/node_js/NJSUnifiedBackendCpp.cpp \
   unity/djinni/node_js/NJSUnifiedBackendCpp.hpp \
   unity/djinni/node_js/NJSUnifiedFrontend.cpp \
-  unity/djinni/node_js/NJSUnifiedFrontend.hpp
+  unity/djinni/node_js/NJSUnifiedFrontend.hpp \
+  unity/djinni/node_js/NJSIRpcControllerCpp.cpp \
+  unity/djinni/node_js/NJSIRpcControllerCpp.hpp \
+  unity/djinni/node_js/NJSIRpcListener.cpp \
+  unity/djinni/node_js/NJSIRpcListener.hpp
 
 lib_unity_node_js_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
 lib_unity_node_js_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
 lib_unity_node_js_la_SOURCES = \
+  controllers/rpccontroller.cpp \
+  controllers/rpccontroller.h \
   unity/libinit.cpp \
   unity/libinit.h \
   unity/node_js/logging_node_js.cpp \
   unity/node_js/init_node_js.cpp \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
+  unity/controllers/irpccontroller.h \
+  unity/controllers/irpccontroller.cpp \
   unity/djinni/support-lib/nodejs/win_delay_load_hook.cpp \
   $(DJINNI_CPP_GEN) \
   $(DJINNI_NODE_JS_GEN)
 
 
-NJS_DEPS = $(LIB_CONSENSUS) $(LIB_NODE) $(LIB_UTIL) $(LIB_COMMON) $(LIB_WALLET) $(LIB_CRYPTO_ALL)
+NJS_DEPS = $(LIB_CONSENSUS) $(LIB_NODE) $(LIB_UTIL) $(LIB_COMMON) $(LIB_SERVER) $(LIB_RPC) $(LIB_GENERIC) $(LIB_WALLET) $(LIB_CRYPTO_ALL)
 lib_unity_node_js_la_LDFLAGS = -shared -module -no-undefined -export-dynamic $(AM_LDFLAGS) $(RELDFLAGS) -pthread
-lib_unity_node_js_la_LIBADD = $(NJS_DEPS) $(NJS_DEPS) $(LIBSECP256K1) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(SSL_LIBS) -lqrencode -lpthread -lcryptopp $(SSL_LIBS) -lcrypto
-lib_unity_node_js_la_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
-lib_unity_node_js_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(COMMON_INCLUDES) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
+lib_unity_node_js_la_LIBADD = $(NJS_DEPS) $(NJS_DEPS) $(LIBSECP256K1) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(SSL_LIBS) -lqrencode -lpthread -lcryptopp $(SSL_LIBS) -lcrypto
+lib_unity_node_js_la_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
+lib_unity_node_js_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(COMMON_INCLUDES) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
 endif
 
 # unity library (for java)#
@@ -964,8 +982,10 @@ endif
 
 Novo_daemon_LDADD = \
   $(LIB_SERVER) \
+  $(LIB_RPC) \
   $(LIB_NODE) \
   $(LIB_SERVER) \
+  $(LIB_RPC) \
   $(LIB_NODE) \
   $(LIB_WALLET) \
   $(LIB_COMMON) \
