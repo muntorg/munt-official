@@ -769,7 +769,6 @@ lib_unity_node_js_la_SOURCES = \
   unity/node_js/init_node_js.cpp \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
-  unity/controllers/irpccontroller.h \
   unity/controllers/irpccontroller.cpp \
   unity/djinni/support-lib/nodejs/win_delay_load_hook.cpp \
   $(DJINNI_CPP_GEN) \
