@@ -13,7 +13,7 @@
 // All modifications:
 // Copyright (c) 2020 The Novo developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the GULDEN software license, see the accompanying
+// Distributed under the NOVO software license, see the accompanying
 // file COPYING
 
 #include <univalue/include/univalue.h>
