@@ -708,6 +708,7 @@ lib_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
 lib_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 lib_cli_a_SOURCES = \
   rpc/client.cpp \
+  rpc/protocol.cpp \
   $(CORE_H)
 
 nodist_lib_util_a_SOURCES = $(srcdir)/obj/build.h
