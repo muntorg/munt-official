@@ -15,7 +15,6 @@
 #include "mutation_record.hpp"
 #include "output_record.hpp"
 #include "payment_result_status.hpp"
-#include "peer_record.hpp"
 #include "qr_code_record.hpp"
 #include "transaction_record.hpp"
 #include "uri_recipient.hpp"
@@ -185,9 +184,6 @@ private:
      * by the OS) this might make more sense then to continue the progress from where it was a day or more ago.
      */
     void ResetUnifiedProgress(const Napi::CallbackInfo& info);
-
-    /** Get connected peer info */
-    Napi::Value getPeers(const Napi::CallbackInfo& info);
 
     /** Get info of last blocks (at most 32) in SPV chain */
     Napi::Value getLastSPVBlockInfos(const Napi::CallbackInfo& info);

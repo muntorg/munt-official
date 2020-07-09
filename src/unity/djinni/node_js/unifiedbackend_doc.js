@@ -110,8 +110,6 @@ declare class NJSUnifiedBackend
      * by the OS) this might make more sense then to continue the progress from where it was a day or more ago.
      */
     static declare function ResetUnifiedProgress();
-    /** Get connected peer info */
-    static declare function getPeers(): Array<PeerRecord>;
     /** Get info of last blocks (at most 32) in SPV chain */
     static declare function getLastSPVBlockInfos(): Array<BlockInfoRecord>;
     static declare function getUnifiedProgress(): number;
@@ -162,6 +160,30 @@ declare class NJSIRpcListener
     declare function onSuccess(filteredCommand: string, result: string);
     /** Returns an error message which might be a plain string or JSON depending on the type of error */
     declare function onError(errorMessage: string);
+}
+/** C++ interface to control networking related aspects of the software */
+declare class NJSIP2pNetworkController
+{
+    /** Register listener to be notified of networking events */
+    static declare function setListener(networklistener: NJSIP2pNetworkListener);
+    /** Turn p2p networking off */
+    static declare function disableNetwork();
+    /** Turn p2p networking on */
+    static declare function enableNetwork();
+    /** Get connected peer info */
+    static declare function getPeerInfo(): Array<PeerRecord>;
+}
+/** Interface to receive updates about network status */
+declare class NJSIP2pNetworkListener
+{
+    /** Notify that p2p networking has been enabled */
+    declare function onNetworkEnabled();
+    /** Notify that p2p networking has been disabled */
+    declare function onNetworkDisabled();
+    /** Notify that number of peers has changed */
+    declare function onConnectionCountChanged(numConnections: number);
+    /** Notify that amount of data sent/received has changed */
+    declare function onBytesChanged(totalRecv: number, totalSent: number);
 }
 /** Monitoring events */
 declare class NJSMonitorListener

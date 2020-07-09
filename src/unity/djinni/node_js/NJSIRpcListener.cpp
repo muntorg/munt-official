@@ -4,7 +4,7 @@
 #include "NJSIRpcListener.hpp"
 using namespace std;
 
-void NJSIRpcListener::onSuccess(const std::string & filteredCommand, const std::string & result)
+void NJSIRpcListener::onSuccess_aimpl__(const std::string & filteredCommand, const std::string & result)
 {
     const auto& env = Env();
     Napi::HandleScope scope(env);
@@ -23,7 +23,22 @@ void NJSIRpcListener::onSuccess(const std::string & filteredCommand, const std::
     }
 }
 
-void NJSIRpcListener::onError(const std::string & errorMessage)
+void NJSIRpcListener::onSuccess(const std::string & filteredCommand, const std::string & result)
+{
+    uv_work_t* request = new uv_work_t;
+    request->data = new std::tuple<NJSIRpcListener*, std::string, std::string>(this, filteredCommand, result);
+
+    uv_queue_work(uv_default_loop(), request, [](uv_work_t*) -> void{}, [](uv_work_t* req, int status) -> void
+    {
+        NJSIRpcListener* pthis = std::get<0>(*((std::tuple<NJSIRpcListener*, std::string, std::string>*)req->data));
+        pthis->onSuccess_aimpl__(std::get<1>(*((std::tuple<NJSIRpcListener*, std::string, std::string>*)req->data)), std::get<2>(*((std::tuple<NJSIRpcListener*, std::string, std::string>*)req->data)));
+        delete (std::tuple<NJSIRpcListener*, std::string, std::string>*)req->data;
+        req->data = nullptr;
+    }
+    );
+}
+
+void NJSIRpcListener::onError_aimpl__(const std::string & errorMessage)
 {
     const auto& env = Env();
     Napi::HandleScope scope(env);
@@ -38,6 +53,21 @@ void NJSIRpcListener::onError(const std::string & errorMessage)
         Napi::Error::New(env, "NJSIRpcListener::onError call failed").ThrowAsJavaScriptException();
         return;
     }
+}
+
+void NJSIRpcListener::onError(const std::string & errorMessage)
+{
+    uv_work_t* request = new uv_work_t;
+    request->data = new std::tuple<NJSIRpcListener*, std::string>(this, errorMessage);
+
+    uv_queue_work(uv_default_loop(), request, [](uv_work_t*) -> void{}, [](uv_work_t* req, int status) -> void
+    {
+        NJSIRpcListener* pthis = std::get<0>(*((std::tuple<NJSIRpcListener*, std::string>*)req->data));
+        pthis->onError_aimpl__(std::get<1>(*((std::tuple<NJSIRpcListener*, std::string>*)req->data)));
+        delete (std::tuple<NJSIRpcListener*, std::string>*)req->data;
+        req->data = nullptr;
+    }
+    );
 }
 
 Napi::FunctionReference NJSIRpcListener::constructor;

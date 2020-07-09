@@ -10,7 +10,6 @@
 #include "NativeMonitorRecord.hpp"
 #include "NativeMutationRecord.hpp"
 #include "NativePaymentResultStatus.hpp"
-#include "NativePeerRecord.hpp"
 #include "NativeQrCodeRecord.hpp"
 #include "NativeTransactionRecord.hpp"
 #include "NativeUnifiedFrontend.hpp"
@@ -418,15 +417,6 @@ CJNIEXPORT void JNICALL Java_com_novocurrency_jniunifiedbackend_UnifiedBackend_0
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         ::UnifiedBackend::ResetUnifiedProgress();
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
-}
-
-CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_UnifiedBackend_00024CppProxy_getPeers(JNIEnv* jniEnv, jobject /*this*/)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
-        auto r = ::UnifiedBackend::getPeers();
-        return ::djinni::release(::djinni::List<::djinni_generated::NativePeerRecord>::fromCpp(jniEnv, r));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
 CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_UnifiedBackend_00024CppProxy_getLastSPVBlockInfos(JNIEnv* jniEnv, jobject /*this*/)

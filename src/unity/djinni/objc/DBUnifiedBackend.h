@@ -7,7 +7,6 @@
 #import "DBMonitorRecord.h"
 #import "DBMutationRecord.h"
 #import "DBPaymentResultStatus.h"
-#import "DBPeerRecord.h"
 #import "DBQrCodeRecord.h"
 #import "DBTransactionRecord.h"
 #import "DBUriRecipient.h"
@@ -194,9 +193,6 @@ extern int32_t const DBUnifiedBackendVersion;
  * by the OS) this might make more sense then to continue the progress from where it was a day or more ago.
  */
 + (void)ResetUnifiedProgress;
-
-/** Get connected peer info */
-+ (nonnull NSArray<DBPeerRecord *> *)getPeers;
 
 /** Get info of last blocks (at most 32) in SPV chain */
 + (nonnull NSArray<DBBlockInfoRecord *> *)getLastSPVBlockInfos;

@@ -24,7 +24,6 @@ struct AddressRecord;
 struct BlockInfoRecord;
 struct MonitorRecord;
 struct MutationRecord;
-struct PeerRecord;
 struct QrCodeRecord;
 struct TransactionRecord;
 struct UriRecipient;
@@ -184,9 +183,6 @@ public:
      * by the OS) this might make more sense then to continue the progress from where it was a day or more ago.
      */
     static void ResetUnifiedProgress();
-
-    /** Get connected peer info */
-    static std::vector<PeerRecord> getPeers();
 
     /** Get info of last blocks (at most 32) in SPV chain */
     static std::vector<BlockInfoRecord> getLastSPVBlockInfos();

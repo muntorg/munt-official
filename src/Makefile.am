@@ -743,6 +743,8 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/uri_recipient.hpp \
   unity/djinni/cpp/i_rpc_controller.hpp \
   unity/djinni/cpp/i_rpc_listener.hpp \
+  unity/djinni/cpp/i_p2p_network_controller.hpp \
+  unity/djinni/cpp/i_p2p_network_listener.hpp \
   unity/djinni/cpp/uri_record.hpp
 
 DJINNI_NODE_JS_GEN = \
@@ -756,7 +758,11 @@ DJINNI_NODE_JS_GEN = \
   unity/djinni/node_js/NJSIRpcController.cpp \
   unity/djinni/node_js/NJSIRpcController.hpp \
   unity/djinni/node_js/NJSIRpcListener.cpp \
-  unity/djinni/node_js/NJSIRpcListener.hpp
+  unity/djinni/node_js/NJSIRpcListener.hpp \
+  unity/djinni/node_js/NJSIP2pNetworkController.cpp \
+  unity/djinni/node_js/NJSIP2pNetworkController.hpp \
+  unity/djinni/node_js/NJSIP2pNetworkListener.cpp \
+  unity/djinni/node_js/NJSIP2pNetworkListener.hpp
 
 lib_unity_node_js_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
 lib_unity_node_js_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -771,6 +777,7 @@ lib_unity_node_js_la_SOURCES = \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
   unity/controllers/irpccontroller.cpp \
+  unity/controllers/ip2pnetworkcontroller.cpp \
   unity/djinni/support-lib/nodejs/win_delay_load_hook.cpp \
   $(DJINNI_CPP_GEN) \
   $(DJINNI_NODE_JS_GEN)

@@ -10,7 +10,6 @@
 #import "DBMonitorRecord+Private.h"
 #import "DBMutationRecord+Private.h"
 #import "DBPaymentResultStatus+Private.h"
-#import "DBPeerRecord+Private.h"
 #import "DBQrCodeRecord+Private.h"
 #import "DBTransactionRecord+Private.h"
 #import "DBUnifiedFrontend+Private.h"
@@ -372,13 +371,6 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
 + (void)ResetUnifiedProgress {
     try {
         ::UnifiedBackend::ResetUnifiedProgress();
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-+ (nonnull NSArray<DBPeerRecord *> *)getPeers {
-    try {
-        auto objcpp_result_ = ::UnifiedBackend::getPeers();
-        return ::djinni::List<::djinni_generated::PeerRecord>::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

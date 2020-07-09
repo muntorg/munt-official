@@ -1145,50 +1145,6 @@ void NJSUnifiedBackend::ResetUnifiedProgress(const Napi::CallbackInfo& info) {
     //Check if parameters have correct types
     UnifiedBackend::ResetUnifiedProgress();
 }
-Napi::Value NJSUnifiedBackend::getPeers(const Napi::CallbackInfo& info) {
-    Napi::Env env = info.Env();
-
-
-    //Check if method called with right number of arguments
-    if(info.Length() != 0)
-    {
-        Napi::Error::New(env, "NJSUnifiedBackend::getPeers needs 0 arguments").ThrowAsJavaScriptException();
-    }
-
-    //Check if parameters have correct types
-
-    auto result = UnifiedBackend::getPeers();
-
-    //Wrap result in node object
-    auto arg_0 = Napi::Array::New(env);
-    for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
-    {
-        auto arg_0_elem = Napi::Object::New(env);
-        auto arg_0_elem_1 = Napi::Number::New(env, result[arg_0_id].id);
-        arg_0_elem.Set("id", arg_0_elem_1);
-        auto arg_0_elem_2 = Napi::String::New(env, result[arg_0_id].ip);
-        arg_0_elem.Set("ip", arg_0_elem_2);
-        auto arg_0_elem_3 = Napi::String::New(env, result[arg_0_id].hostname);
-        arg_0_elem.Set("hostname", arg_0_elem_3);
-        auto arg_0_elem_4 = Napi::Number::New(env, result[arg_0_id].start_height);
-        arg_0_elem.Set("start_height", arg_0_elem_4);
-        auto arg_0_elem_5 = Napi::Number::New(env, result[arg_0_id].synced_height);
-        arg_0_elem.Set("synced_height", arg_0_elem_5);
-        auto arg_0_elem_6 = Napi::Number::New(env, result[arg_0_id].common_height);
-        arg_0_elem.Set("common_height", arg_0_elem_6);
-        auto arg_0_elem_7 = Napi::Number::New(env, result[arg_0_id].latency);
-        arg_0_elem.Set("latency", arg_0_elem_7);
-        auto arg_0_elem_8 = Napi::String::New(env, result[arg_0_id].userAgent);
-        arg_0_elem.Set("userAgent", arg_0_elem_8);
-        auto arg_0_elem_9 = Napi::Number::New(env, result[arg_0_id].protocol);
-        arg_0_elem.Set("protocol", arg_0_elem_9);
-
-        arg_0.Set((int)arg_0_id,arg_0_elem);
-    }
-
-
-    return arg_0;
-}
 Napi::Value NJSUnifiedBackend::getLastSPVBlockInfos(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -1348,7 +1304,6 @@ Napi::Object NJSUnifiedBackend::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("deleteAddressBookRecord", &NJSUnifiedBackend::deleteAddressBookRecord),
     InstanceMethod("PersistAndPruneForSPV", &NJSUnifiedBackend::PersistAndPruneForSPV),
     InstanceMethod("ResetUnifiedProgress", &NJSUnifiedBackend::ResetUnifiedProgress),
-    InstanceMethod("getPeers", &NJSUnifiedBackend::getPeers),
     InstanceMethod("getLastSPVBlockInfos", &NJSUnifiedBackend::getLastSPVBlockInfos),
     InstanceMethod("getUnifiedProgress", &NJSUnifiedBackend::getUnifiedProgress),
     InstanceMethod("getMonitoringStats", &NJSUnifiedBackend::getMonitoringStats),

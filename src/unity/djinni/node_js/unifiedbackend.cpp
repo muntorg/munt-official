@@ -7,6 +7,8 @@
 #include "NJSUnifiedFrontend.hpp"
 #include "NJSIRpcController.hpp"
 #include "NJSIRpcListener.hpp"
+#include "NJSIP2pNetworkController.hpp"
+#include "NJSIP2pNetworkListener.hpp"
 #include "NJSMonitorListener.hpp"
 
 
@@ -16,6 +18,8 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports)
     NJSUnifiedFrontend::Init(env, exports);
     NJSIRpcController::Init(env, exports);
     NJSIRpcListener::Init(env, exports);
+    NJSIP2pNetworkController::Init(env, exports);
+    NJSIP2pNetworkListener::Init(env, exports);
     NJSMonitorListener::Init(env, exports);
     return exports;
 }

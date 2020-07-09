@@ -254,9 +254,6 @@ unified_backend = interface +c {
     # by the OS) this might make more sense then to continue the progress from where it was a day or more ago.
     static ResetUnifiedProgress();
 
-    # Get connected peer info
-    static getPeers() : list<peer_record>;
-
     # Get info of last blocks (at most 32) in SPV chain
     static getLastSPVBlockInfos() : list<block_info_record>;
 
@@ -303,9 +300,33 @@ i_rpc_controller = interface +c {
 i_rpc_listener = interface +j +o +n {
     # Returns the result and a filtered version of the command with sensitive information like passwords removed
     # Any kind of 'command history' functionality should store this filtered command and not the original command
-    onSuccess(filteredCommand : string, result : string);
+    onSuccess(filteredCommand : string, result : string) : &;
     # Returns an error message which might be a plain string or JSON depending on the type of error
-    onError(errorMessage : string);
+    onError(errorMessage : string) : &;
+}
+
+# C++ interface to control networking related aspects of the software
+i_p2p_network_controller = interface +c {
+    # Register listener to be notified of networking events
+    static setListener(networklistener : i_p2p_network_listener);
+    # Turn p2p networking off
+    static disableNetwork();
+    # Turn p2p networking on
+    static enableNetwork();
+    # Get connected peer info
+    static getPeerInfo() : list<peer_record>;
+}
+
+# Interface to receive updates about network status
+i_p2p_network_listener = interface +j +o +n {
+    # Notify that p2p networking has been enabled
+    onNetworkEnabled() : &;
+    # Notify that p2p networking has been disabled
+    onNetworkDisabled() : &;
+    # Notify that number of peers has changed
+    onConnectionCountChanged(numConnections : i32) : &;
+    # Notify that amount of data sent/received has changed
+    onBytesChanged(totalRecv : i32, totalSent : i32): &;
 }
     
 
