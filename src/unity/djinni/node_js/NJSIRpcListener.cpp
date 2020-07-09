@@ -14,12 +14,16 @@ void NJSIRpcListener::onSuccess_aimpl__(const std::string & filteredCommand, con
     args.push_back(arg_0);
     auto arg_1 = Napi::String::New(env, result);
     args.push_back(arg_1);
-    Napi::Function calling_function = Value().Get("onSuccess").As<Napi::Function>();
-    auto result_onSuccess = calling_function.Call(args);
-    if(result_onSuccess.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("onSuccess");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSIRpcListener::onSuccess call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_onSuccess = calling_function.Call(args);
+        if(result_onSuccess.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSIRpcListener::onSuccess call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 
@@ -46,12 +50,16 @@ void NJSIRpcListener::onError_aimpl__(const std::string & errorMessage)
     std::vector<napi_value> args;
     auto arg_0 = Napi::String::New(env, errorMessage);
     args.push_back(arg_0);
-    Napi::Function calling_function = Value().Get("onError").As<Napi::Function>();
-    auto result_onError = calling_function.Call(args);
-    if(result_onError.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("onError");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSIRpcListener::onError call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_onError = calling_function.Call(args);
+        if(result_onError.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSIRpcListener::onError call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 

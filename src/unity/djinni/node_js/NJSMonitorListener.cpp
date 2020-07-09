@@ -16,12 +16,16 @@ void NJSMonitorListener::onPartialChain(int32_t height, int32_t probable_height,
     args.push_back(arg_1);
     auto arg_2 = Napi::Number::New(env, offset);
     args.push_back(arg_2);
-    Napi::Function calling_function = Value().Get("onPartialChain").As<Napi::Function>();
-    auto result_onPartialChain = calling_function.Call(args);
-    if(result_onPartialChain.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("onPartialChain");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSMonitorListener::onPartialChain call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_onPartialChain = calling_function.Call(args);
+        if(result_onPartialChain.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSMonitorListener::onPartialChain call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 
@@ -33,12 +37,16 @@ void NJSMonitorListener::onPruned(int32_t height)
     std::vector<napi_value> args;
     auto arg_0 = Napi::Number::New(env, height);
     args.push_back(arg_0);
-    Napi::Function calling_function = Value().Get("onPruned").As<Napi::Function>();
-    auto result_onPruned = calling_function.Call(args);
-    if(result_onPruned.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("onPruned");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSMonitorListener::onPruned call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_onPruned = calling_function.Call(args);
+        if(result_onPruned.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSMonitorListener::onPruned call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 
@@ -50,12 +58,16 @@ void NJSMonitorListener::onProcessedSPVBlocks(int32_t height)
     std::vector<napi_value> args;
     auto arg_0 = Napi::Number::New(env, height);
     args.push_back(arg_0);
-    Napi::Function calling_function = Value().Get("onProcessedSPVBlocks").As<Napi::Function>();
-    auto result_onProcessedSPVBlocks = calling_function.Call(args);
-    if(result_onProcessedSPVBlocks.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("onProcessedSPVBlocks");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSMonitorListener::onProcessedSPVBlocks call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_onProcessedSPVBlocks = calling_function.Call(args);
+        if(result_onProcessedSPVBlocks.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSMonitorListener::onProcessedSPVBlocks call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 
