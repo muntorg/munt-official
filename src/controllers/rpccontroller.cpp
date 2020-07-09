@@ -72,6 +72,7 @@ void RPCController::executeCommandLine(const std::string& sCommandLine, const st
             return;
         }
         successHandler(strFilteredCmd, result);
+        return;
     }
     errorHandler("Empty commandline");
 }
