@@ -1292,7 +1292,7 @@ TransactionRecord UnifiedBackend::getTransaction(const std::string & txHash)
         throw std::runtime_error(strprintf("No transaction found for hash [%s]", txHash));
 
     const CWalletTx& wtx = pactiveWallet->mapWallet[hash];
-//     return calculateTransactionRecordForWalletTransaction(wtx);
+    return calculateTransactionRecordForWalletTransaction(wtx);
 }
 
 std::string UnifiedBackend::resendTransaction(const std::string& txHash)
