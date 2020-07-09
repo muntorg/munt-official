@@ -2,8 +2,8 @@
 set -e
 set -x
 
-ELECTRON_VERSION=8.2.3
-NAPI_VERSION=2.0.0
+ELECTRON_VERSION=9.1.0
+NODE_ADDON_API_VERSION=3.0.0
 
 NUM_PROCS=$(getconf _NPROCESSORS_ONLN)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
@@ -37,14 +37,14 @@ mkdir build_node | true
 cd build_node
 
 wget -c https://atom.io/download/electron/v${ELECTRON_VERSION}/iojs-v${ELECTRON_VERSION}.tar.gz
-wget -c https://registry.npmjs.org/node-addon-api/-/node-addon-api-${NAPI_VERSION}.tgz
+wget -c https://registry.npmjs.org/node-addon-api/-/node-addon-api-${NODE_ADDON_API_VERSION}.tgz
 
 mkdir electron-${ELECTRON_VERSION} | true
 tar -xvf iojs-v${ELECTRON_VERSION}.tar.gz -C electron-${ELECTRON_VERSION}
-mkdir node-addon-api-${NAPI_VERSION} | true
-tar -xvf node-addon-api-${NAPI_VERSION}.tgz -C node-addon-api-${NAPI_VERSION}
+mkdir node-addon-api-${NODE_ADDON_API_VERSION} | true
+tar -xvf node-addon-api-${NODE_ADDON_API_VERSION}.tgz -C node-addon-api-${NODE_ADDON_API_VERSION}
 
-export CXXFLAGS="${CXXFLAGS} -I${DIR}/../build_node/electron-${ELECTRON_VERSION}/node_headers/include/node/ -I${DIR}/../build_node/node-addon-api-${NAPI_VERSION}/package/ ${EXTRA_CXX_FLAGS} -O2"
+export CXXFLAGS="${CXXFLAGS} -I${DIR}/../build_node/electron-${ELECTRON_VERSION}/node_headers/include/node/ -I${DIR}/../build_node/node-addon-api-${NODE_ADDON_API_VERSION}/package/ ${EXTRA_CXX_FLAGS} -O2"
 export CFLAGS=${CXXFLAGS}
 
 if [ ${PLATFORM_OS} = "mingw32" ] || [ ${PLATFORM_OS} = "mingw64" ]; then
