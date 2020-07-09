@@ -7,7 +7,11 @@
 #include <string>
 #include <vector>
 
+#ifdef DJINNI_NODEJS
+#include "NJSIRpcListener.hpp"
+#else
 class IRpcListener;
+#endif
 
 /** C++ interface to execute RPC commands */
 class IRpcController {

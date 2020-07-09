@@ -3,9 +3,9 @@
 
 #include <napi.h>
 
-#include "NJSUnifiedBackendCpp.hpp"
+#include "NJSUnifiedBackend.hpp"
 #include "NJSUnifiedFrontend.hpp"
-#include "NJSIRpcControllerCpp.hpp"
+#include "NJSIRpcController.hpp"
 #include "NJSIRpcListener.hpp"
 #include "NJSMonitorListener.hpp"
 

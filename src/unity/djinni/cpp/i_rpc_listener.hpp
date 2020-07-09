@@ -9,6 +9,11 @@
  * Interface to handle result of RPC commands
  * Calls either onSuccess or onError depending on whether command suceedes or fails
  */
+#ifdef DJINNI_NODEJS
+#include "NJSIRpcListener.hpp" 
+#define IRpcListener NJSIRpcListener
+#else
+
 class IRpcListener {
 public:
     virtual ~IRpcListener() {}
@@ -22,3 +27,4 @@ public:
     /** Returns an error message which might be a plain string or JSON depending on the type of error */
     virtual void onError(const std::string & errorMessage) = 0;
 };
+#endif

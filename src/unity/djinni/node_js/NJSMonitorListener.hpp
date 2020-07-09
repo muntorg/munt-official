@@ -13,7 +13,7 @@
 
 using namespace std;
 
-class NJSMonitorListener: public ::MonitorListener, public Napi::ObjectWrap<NJSMonitorListener> {
+class NJSMonitorListener: public Napi::ObjectWrap<NJSMonitorListener> {
 public:
 
     static Napi::FunctionReference constructor;

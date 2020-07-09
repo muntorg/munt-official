@@ -18,7 +18,7 @@
 
 using namespace std;
 
-class NJSUnifiedFrontend: public ::UnifiedFrontend, public Napi::ObjectWrap<NJSUnifiedFrontend> {
+class NJSUnifiedFrontend: public Napi::ObjectWrap<NJSUnifiedFrontend> {
 public:
 
     static Napi::FunctionReference constructor;

@@ -6,6 +6,11 @@
 #include <cstdint>
 
 /** Monitoring events */
+#ifdef DJINNI_NODEJS
+#include "NJSMonitorListener.hpp" 
+#define MonitorListener NJSMonitorListener
+#else
+
 class MonitorListener {
 public:
     virtual ~MonitorListener() {}
@@ -16,3 +21,4 @@ public:
 
     virtual void onProcessedSPVBlocks(int32_t height) = 0;
 };
+#endif

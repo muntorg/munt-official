@@ -8,8 +8,16 @@
 #include <string>
 #include <vector>
 
+#ifdef DJINNI_NODEJS
+#include "NJSMonitorListener.hpp"
+#else
 class MonitorListener;
+#endif
+#ifdef DJINNI_NODEJS
+#include "NJSUnifiedFrontend.hpp"
+#else
 class UnifiedFrontend;
+#endif
 enum class LegacyWalletResult;
 enum class PaymentResultStatus;
 struct AddressRecord;

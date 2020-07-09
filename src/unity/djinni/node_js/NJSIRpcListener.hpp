@@ -13,7 +13,7 @@
 
 using namespace std;
 
-class NJSIRpcListener: public ::IRpcListener, public Napi::ObjectWrap<NJSIRpcListener> {
+class NJSIRpcListener: public Napi::ObjectWrap<NJSIRpcListener> {
 public:
 
     static Napi::FunctionReference constructor;

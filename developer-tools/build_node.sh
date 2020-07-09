@@ -15,7 +15,7 @@ if test -f developer-tools/private.conf; then
     source developer-tools/private.conf
 fi
 
-export CXXFLAGS="-fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer"
+export CXXFLAGS="-fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS"
 export CFLAGS=${CXXFLAGS}
 if [ ${PLATFORM_VENDOR} = "apple" ]; then
     export LDFLAGS="-fPIC -Bsymbolic -Wl,-undefined -Wl,dynamic_lookup"
