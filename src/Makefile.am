@@ -749,12 +749,12 @@ DJINNI_NODE_JS_GEN = \
   unity/djinni/node_js/unifiedbackend.cpp \
   unity/djinni/node_js/NJSMonitorListener.cpp \
   unity/djinni/node_js/NJSMonitorListener.hpp \
-  unity/djinni/node_js/NJSUnifiedBackendCpp.cpp \
-  unity/djinni/node_js/NJSUnifiedBackendCpp.hpp \
+  unity/djinni/node_js/NJSUnifiedBackend.cpp \
+  unity/djinni/node_js/NJSUnifiedBackend.hpp \
   unity/djinni/node_js/NJSUnifiedFrontend.cpp \
   unity/djinni/node_js/NJSUnifiedFrontend.hpp \
-  unity/djinni/node_js/NJSIRpcControllerCpp.cpp \
-  unity/djinni/node_js/NJSIRpcControllerCpp.hpp \
+  unity/djinni/node_js/NJSIRpcController.cpp \
+  unity/djinni/node_js/NJSIRpcController.hpp \
   unity/djinni/node_js/NJSIRpcListener.cpp \
   unity/djinni/node_js/NJSIRpcListener.hpp
 

@@ -10,6 +10,7 @@ contextMenu({
 let libnovo
 let novobackend
 let signalhandler
+let RPCController
 
 let coreIsRunning=false
 let allowExit=false
@@ -59,7 +60,7 @@ function createWindow () {
   {
         mainWindow.setIcon('img/icon_512.png')
   }
-  
+
   var menu = Menu.buildFromTemplate(
       [
         {
@@ -75,6 +76,25 @@ function createWindow () {
                 { role: 'cut' },
                 { role: 'copy' },
                 { role: 'paste' }
+            ]
+        },
+        {
+            label: 'Debug',
+            submenu: [
+                { label:"Generate genesis keys", click() {console.log(libUnity.backend.GenerateGenesisKeys()) }},
+                { label: "RPC test - getpeerinfo", click() {
+                    eval('');
+                    let RPCListener = new libnovo.NJSIRpcListener;
+
+                    RPCListener.onSuccess = function(filteredCommand, result) {
+                    console.log("RPC success: " + result);
+                    };
+                    RPCListener.onError = function(error) {
+                    console.log("RPC error: " + error);
+                    };
+                    setTimeout(function(){
+                    RPCController.execute("getpeerinfo", RPCListener);}, 1);
+                }}
             ]
         }
     ])
@@ -137,7 +157,14 @@ function guldenUnitySetup()
 
     libnovo = require('./libnovo_unity_node_js')
     novobackend = new libnovo.NJSUnifiedBackend
-    signalhandler = new libnovo.NJSUnifiedFrontend();
+    
+    //Set this to a larger number to allow time to attach gdb to the library
+    let debugTimeout = 1
+    
+    setTimeout(function(){
+    signalhandler = new libnovo.NJSUnifiedFrontend;
+    
+    RPCController = new libnovo.NJSIRpcController;
 
     // Receive signals from the core and marshall them as needed to the main window
     signalhandler.notifyCoreReady = function() {
@@ -206,6 +233,8 @@ function guldenUnitySetup()
 
     // Start the Gulden unified backend
     novobackend.InitUnityLibThreaded(walletpath, "", -1, -1, false, false, signalhandler, "")
+    }, debugTimeout);
+
 }
 
 ipcMain.on('acknowledgePhrase', (event) => {
