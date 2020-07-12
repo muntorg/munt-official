@@ -9,6 +9,7 @@ import "./components";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
+  faAngleDoubleLeft,
   faCog,
   faCopy,
   faLongArrowLeft,
@@ -16,7 +17,14 @@ import {
   faTimes
 } from "@fortawesome/pro-light-svg-icons";
 
-library.add([faCog, faCopy, faLongArrowLeft, faLongArrowRight, faTimes]);
+library.add([
+  faAngleDoubleLeft,
+  faCog,
+  faCopy,
+  faLongArrowLeft,
+  faLongArrowRight,
+  faTimes
+]);
 
 Vue.component("fa-icon", FontAwesomeIcon);
 

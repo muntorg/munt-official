@@ -1,6 +1,13 @@
 import { ipcRenderer as ipc } from "electron-better-ipc";
 
 class UnityBackend {
+  static ExecuteRpc(command) {
+    return ipc.sendSync("ExecuteRpc", command);
+  }
+  static ExecuteRpcAsync(command) {
+    return this.ExecuteRpc.callMain("ExecuteRpc", { command });
+  }
+
   /* inject:code */
   /** Add a record to the address book */
   static AddAddressBookRecord(address) {

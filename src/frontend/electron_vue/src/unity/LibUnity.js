@@ -22,6 +22,7 @@ class LibUnity {
     this.win = null;
     this.backend = new libUnity.NJSUnifiedBackend();
     this.signalHandler = new libUnity.NJSUnifiedFrontend();
+    this.rpcController = null;
   }
 
   SetWindow(win) {
@@ -175,6 +176,46 @@ class LibUnity {
   }
 
   _registerIpcHandlers() {
+    ipc.on("ExecuteRpc", (event, command) => {
+      let rpcListener = new libUnity.NJSIRpcListener();
+
+      rpcListener.onSuccess = (filteredCommand, result) => {
+        console.log(`RPC success: ${result}`);
+        event.returnValue = { success: true, data: result };
+      };
+
+      rpcListener.onError = error => {
+        console.error(`RPC error: ${error}`);
+        event.returnValue = { success: false, data: error };
+      };
+
+      if (this.rpcController === null) {
+        this.rpcController = new libUnity.NJSIRpcController();
+      }
+
+      this.rpcController.execute(command, rpcListener);
+    });
+
+    ipc.answerRenderer("ExecuteRpc", async data => {
+      let rpcListener = new libUnity.NJSIRpcListener();
+
+      rpcListener.onSuccess = (filteredCommand, result) => {
+        console.log(`RPC success: ${result}`);
+        return { success: true, data: result };
+      };
+
+      rpcListener.onError = error => {
+        console.error(`RPC error: ${error}`);
+        return { success: false, data: error };
+      };
+
+      if (this.rpcController === null) {
+        this.rpcController = new libUnity.NJSIRpcController();
+      }
+
+      this.rpcController.execute(data.command, rpcListener);
+    });
+
     /* inject:code */
     ipc.on("AddAddressBookRecord", (event, address) => {
       let result = this._tryGetResultBeforeBackendCall("AddAddressBookRecord");

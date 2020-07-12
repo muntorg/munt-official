@@ -18,7 +18,8 @@ import store, { AppStatus } from "./store";
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win;
+let winMain;
+let winDebug;
 let walletPath;
 if (os.platform() === "linux") {
   walletPath = path.join(
@@ -56,7 +57,7 @@ protocol.registerSchemesAsPrivileged([
 
 import lu from "native-ext-loader!./unity/lib_unity.node";
 
-function createWindow() {
+function createMainWindow() {
   let options = {
     width: 800,
     minWidth: 800,
@@ -76,7 +77,7 @@ function createWindow() {
       icon: path.join(__static, "icon.png")
     });
   }
-  win = new BrowserWindow(options);
+  winMain = new BrowserWindow(options);
 
   var menuTemplate = [
     {
@@ -98,6 +99,12 @@ function createWindow() {
           label: "Generate genesis keys",
           click() {
             console.log(libUnity.backend.GenerateGenesisKeys());
+          }
+        },
+        {
+          label: "Debug Window",
+          click() {
+            createDebugWindow();
           }
         },
         {
@@ -125,35 +132,93 @@ function createWindow() {
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
+    winMain.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
     //if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol("app");
     // Load the index.html when not in development
-    win.loadURL("app://./index.html");
+    winMain.loadURL("app://./index.html");
   }
 
-  win.on("ready-to-show", () => {
-    libUnity.SetWindow(win);
-    win.show();
+  winMain.on("ready-to-show", () => {
+    libUnity.SetWindow(winMain);
+    winMain.show();
   });
 
-  win.on("close", event => {
-    console.log("win.on:close");
+  winMain.on("close", event => {
+    console.log("winMain.on:close");
     if (process.platform !== "darwin") {
       EnsureUnityLibTerminated(event);
     }
   });
 
-  win.on("closed", () => {
-    console.log("win.on:closed");
-    win = null;
+  winMain.on("closed", () => {
+    console.log("winMain.on:closed");
+    winMain = null;
   });
 
   // Force external hrefs to open in external browser
-  win.webContents.on("new-window", function(e, url) {
+  winMain.webContents.on("new-window", function(e, url) {
     e.preventDefault();
     shell.openExternal(url);
+  });
+}
+
+function createDebugWindow() {
+  if (winDebug) {
+    return winDebug.show();
+  }
+
+  let options = {
+    width: 600,
+    minWidth: 400,
+    height: 600,
+    minHeight: 400,
+    show: false,
+    parent: winMain,
+    title: "Novo Debug Window",
+    skipTaskBar: true,
+    autoHideMenuBar: true,
+    webPreferences: {
+      // Use pluginOptions.nodeIntegration, leave this alone
+      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
+      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      enableRemoteModule: true
+    }
+  };
+  if (os.platform() === "linux") {
+    options = Object.assign({}, options, {
+      icon: path.join(__static, "icon.png")
+    });
+  }
+  winDebug = new BrowserWindow(options);
+
+  let hash = "#/debug";
+  if (process.env.WEBPACK_DEV_SERVER_URL) {
+    // Load the url of the dev server if in development mode
+    winDebug.loadURL(`${process.env.WEBPACK_DEV_SERVER_URL}${hash}`);
+    //if (!process.env.IS_TEST) win.webContents.openDevTools();
+  } else {
+    createProtocol("app");
+    // Load the index.html when not in development
+    winDebug.loadURL(`app://./index.html${hash}`);
+  }
+
+  winDebug.on("ready-to-show", () => {
+    //libUnity.SetWindow(winMain);
+    winDebug.show();
+  });
+
+  winDebug.on("close", event => {
+    console.log("winDebug.on:close");
+    if (libUnity === null || libUnity.isTerminated) return;
+    event.preventDefault();
+    winDebug.hide();
+  });
+
+  winDebug.on("closed", () => {
+    console.log("winDebug.on:closed");
+    winDebug = null;
   });
 }
 
@@ -178,8 +243,8 @@ app.on("window-all-closed", event => {
 app.on("activate", () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (win === null) {
-    createWindow();
+  if (winMain === null) {
+    createMainWindow();
   }
 });
 
@@ -204,7 +269,7 @@ app.on("ready", async () => {
   store.dispatch({ type: "SET_WALLET_VERSION", version: app.getVersion() });
   libUnity.Initialize();
 
-  createWindow();
+  createMainWindow();
 });
 
 function EnsureUnityLibTerminated(event) {
