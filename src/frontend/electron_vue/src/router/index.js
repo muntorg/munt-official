@@ -61,8 +61,7 @@ const routes = [
   {
     path: "/debug",
     name: "debug",
-    component: () =>
-      import(/* webpackChunkName: "debug" */ "../views/Debug.vue")
+    component: { template: "<div></div>" }
   }
 ];
 
