@@ -19,14 +19,9 @@ class LibUnity {
       ...options
     };
 
-    this.win = null;
     this.backend = new libUnity.NJSUnifiedBackend();
     this.signalHandler = new libUnity.NJSUnifiedFrontend();
     this.rpcController = null;
-  }
-
-  SetWindow(win) {
-    this.win = win;
   }
 
   Initialize() {

@@ -141,7 +141,6 @@ function createMainWindow() {
   }
 
   winMain.on("ready-to-show", () => {
-    libUnity.SetWindow(winMain);
     winMain.show();
   });
 
@@ -205,7 +204,6 @@ function createDebugWindow() {
   }
 
   winDebug.on("ready-to-show", () => {
-    //libUnity.SetWindow(winMain);
     winDebug.show();
   });
 
