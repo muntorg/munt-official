@@ -4,23 +4,27 @@
 #include <napi.h>
 
 #include "NJSUnifiedBackend.hpp"
+#include "NJSMonitorListener.hpp"
 #include "NJSUnifiedFrontend.hpp"
 #include "NJSIRpcController.hpp"
 #include "NJSIRpcListener.hpp"
 #include "NJSIP2pNetworkController.hpp"
 #include "NJSIP2pNetworkListener.hpp"
-#include "NJSMonitorListener.hpp"
+#include "NJSIAccountsController.hpp"
+#include "NJSIAccountsListener.hpp"
 
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports)
 {
     NJSUnifiedBackend::Init(env, exports);
+    NJSMonitorListener::Init(env, exports);
     NJSUnifiedFrontend::Init(env, exports);
     NJSIRpcController::Init(env, exports);
     NJSIRpcListener::Init(env, exports);
     NJSIP2pNetworkController::Init(env, exports);
     NJSIP2pNetworkListener::Init(env, exports);
-    NJSMonitorListener::Init(env, exports);
+    NJSIAccountsController::Init(env, exports);
+    NJSIAccountsListener::Init(env, exports);
     return exports;
 }
 NODE_API_MODULE(unifiedbackend,InitAll);

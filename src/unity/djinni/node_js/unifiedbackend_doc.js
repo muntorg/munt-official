@@ -117,6 +117,13 @@ declare class NJSUnifiedBackend
     static declare function RegisterMonitorListener(listener: NJSMonitorListener);
     static declare function UnregisterMonitorListener(listener: NJSMonitorListener);
 }
+/** Monitoring events */
+declare class NJSMonitorListener
+{
+    declare function onPartialChain(height: number, probable_height: number, offset: number);
+    declare function onPruned(height: number);
+    declare function onProcessedSPVBlocks(height: number);
+}
 /** Interface to receive events from the core */
 declare class NJSUnifiedFrontend
 {
@@ -185,10 +192,35 @@ declare class NJSIP2pNetworkListener
     /** Notify that amount of data sent/received has changed */
     declare function onBytesChanged(totalRecv: number, totalSent: number);
 }
-/** Monitoring events */
-declare class NJSMonitorListener
+/** C++ interface to control accounts */
+declare class NJSIAccountsController
 {
-    declare function onPartialChain(height: number, probable_height: number, offset: number);
-    declare function onPruned(height: number);
-    declare function onProcessedSPVBlocks(height: number);
+    /** Register listener to be notified of account related events */
+    static declare function setListener(accountslistener: NJSIAccountsListener);
+    /** Set the currently active account */
+    static declare function setActiveAccount(accountUUID: string): boolean;
+    /** Delete an account, account remains available in background but is hidden from user */
+    static declare function deleteAccount(accountUUID: string): boolean;
+    /** Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account */
+    static declare function createAccount(accountName: string, accountType: string): string;
+    /**
+     * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
+     * If it is a Legacy or imported witness key or similar account then it will be gone forever
+     * Generally prefer 'deleteAccount' and use this with caution
+     */
+    static declare function purgeAccount(accountUUID: string): boolean;
+}
+/** Interface to receive updates about accounts */
+declare class NJSIAccountsListener
+{
+    /** Notify that the active account has changed */
+    declare function onActiveAccountChanged(accountUUID: string);
+    /** Notify that the active account name has changed */
+    declare function onActiveAccountNameChanged(newAccountName: string);
+    /** Notify that an account name has changed */
+    declare function onAccountNameChanged(accountUUID: string, newAccountName: string);
+    /** Notify that a new account has been added */
+    declare function onAccountAdded(accountUUID: string, accountName: string);
+    /** Notify that an account has been deleted */
+    declare function onAccountDeleted(accountUUID: string);
 }

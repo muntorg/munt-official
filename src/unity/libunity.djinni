@@ -268,6 +268,22 @@ unified_backend = interface +c {
     const version: i32 = 1;
 }
 
+# monitoring stats
+monitor_record = record {
+    partialHeight: i32;
+    partialOffset: i32;
+    prunedHeight: i32;
+    processedSPVHeight: i32;
+    probableHeight: i32;
+}
+
+# Monitoring events
+monitor_listener = interface +j +o +n {
+    onPartialChain(height : i32, probable_height : i32, offset : i32);
+    onPruned(height : i32);
+    onProcessedSPVBlocks(height : i32);
+}
+
 # Interface to receive events from the core
 unified_frontend = interface +j +o +n {
     # Fraction of work done since session start or last progress reset [0..1]
@@ -328,20 +344,35 @@ i_p2p_network_listener = interface +j +o +n {
     # Notify that amount of data sent/received has changed
     onBytesChanged(totalRecv : i32, totalSent : i32): &;
 }
-    
 
-# monitoring stats
-monitor_record = record {
-    partialHeight: i32;
-    partialOffset: i32;
-    prunedHeight: i32;
-    processedSPVHeight: i32;
-    probableHeight: i32;
+# C++ interface to control accounts
+i_accounts_controller = interface +c {
+    # Register listener to be notified of account related events
+    static setListener(accountslistener : i_accounts_listener);
+    # Set the currently active account
+    static setActiveAccount(accountUUID : string) : bool;
+    # Delete an account, account remains available in background but is hidden from user
+    static deleteAccount(accountUUID : string) : bool;
+    # Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account
+    static createAccount(accountName : string, accountType : string) : string;
+    # Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
+    # If it is a Legacy or imported witness key or similar account then it will be gone forever
+    # Generally prefer 'deleteAccount' and use this with caution
+    static purgeAccount(accountUUID : string) : bool;
 }
 
-# Monitoring events
-monitor_listener = interface +j +o +n {
-    onPartialChain(height : i32, probable_height : i32, offset : i32);
-    onPruned(height : i32);
-    onProcessedSPVBlocks(height : i32);
+# Interface to receive updates about accounts
+i_accounts_listener = interface +j +o +n {
+    # Notify that the active account has changed
+    onActiveAccountChanged(accountUUID : string) : &;
+    # Notify that the active account name has changed
+    onActiveAccountNameChanged(newAccountName : string) : &;
+    # Notify that an account name has changed
+    onAccountNameChanged(accountUUID : string, newAccountName : string) : &;
+    # Notify that a new account has been added
+    onAccountAdded(accountUUID : string, accountName : string) : &;
+    # Notify that an account has been deleted
+    onAccountDeleted(accountUUID : string) : &;
 }
+
+
