@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import DebugConsole from "./components/debug/Console";
+import DebugConsole from "./components/DebugConsole";
 
 export default {
   name: "AppDebug",
