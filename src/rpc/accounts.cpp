@@ -1091,32 +1091,10 @@ static UniValue restoreaccount(const JSONRPCRequest& request)
 }
 
 
-static UniValue createaccounthelper(CWallet* pwallet, std::string accountName, std::string accountType, bool bMakeActive=true)
+
+static UniValue rpccreateaccounthelper(CWallet* pwallet, std::string accountName, std::string accountType, bool bMakeActive=true)
 {
-    CAccount* account = NULL;
-
-    EnsureWalletIsUnlocked(pwallet);
-
-    if (accountType == "HD")
-    {
-        account = pwallet->GenerateNewAccount(accountName, AccountState::Normal, AccountType::Desktop, bMakeActive);
-    }
-    else if (accountType == "Mobile")
-    {
-        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountState::Normal, AccountType::Mobi, bMakeActive);
-    }
-    else if (accountType == "Witness")
-    {
-        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountState::Normal, AccountType::PoW2Witness, bMakeActive);
-    }
-    else if (accountType == "Mining")
-    {
-        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountState::Normal, AccountType::MiningAccount, bMakeActive);
-    }
-    else if (accountType == "Legacy")
-    {
-        account = pwallet->GenerateNewLegacyAccount(accountName.c_str());
-    }
+    CAccount* account = CreateAccountHelper(pwallet, accountName, accountType, bMakeActive);
 
     if (!account)
         throw std::runtime_error("Unable to create account.");
@@ -1161,7 +1139,7 @@ static UniValue createaccount(const JSONRPCRequest& request)
             throw std::runtime_error("Invalid account type");
     }
 
-    return createaccounthelper(pwallet, request.params[0].get_str(), accountType);
+    return rpccreateaccounthelper(pwallet, request.params[0].get_str(), accountType);
 }
 
 
@@ -1193,7 +1171,7 @@ static UniValue createwitnessaccount(const JSONRPCRequest& request)
     if (GetPoW2Phase(chainActive.Tip()) < 2)
         throw std::runtime_error("Cannot create witness accounts before phase 2 activates.");
 
-    return createaccounthelper(pwallet, request.params[0].get_str(), "Witness", false);
+    return rpccreateaccounthelper(pwallet, request.params[0].get_str(), "Witness", false);
 }
 
 static UniValue createminingaccount(const JSONRPCRequest& request)
@@ -1230,7 +1208,7 @@ static UniValue createminingaccount(const JSONRPCRequest& request)
         }
     }
 
-    return createaccounthelper(pwallet, request.params[0].get_str(), "Mining", false);
+    return rpccreateaccounthelper(pwallet, request.params[0].get_str(), "Mining", false);
 }
 
 
