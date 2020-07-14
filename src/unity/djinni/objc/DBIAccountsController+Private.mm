@@ -3,6 +3,7 @@
 
 #import "DBIAccountsController+Private.h"
 #import "DBIAccountsController.h"
+#import "DBAccountRecord+Private.h"
 #import "DBIAccountsListener+Private.h"
 #import "DJICppWrapperCache+Private.h"
 #import "DJIError.h"
@@ -64,6 +65,13 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     try {
         auto objcpp_result_ = ::IAccountsController::purgeAccount(::djinni::String::toCpp(accountUUID));
         return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull NSArray<DBAccountRecord *> *)listAccounts {
+    try {
+        auto objcpp_result_ = ::IAccountsController::listAccounts();
+        return ::djinni::List<::djinni_generated::AccountRecord>::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

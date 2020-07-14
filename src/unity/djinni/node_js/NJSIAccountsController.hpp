@@ -6,8 +6,10 @@
 
 
 #include "NJSIAccountsListener.hpp"
+#include "account_record.hpp"
 #include <memory>
 #include <string>
+#include <vector>
 
 #include <napi.h>
 #include <uv.h>
@@ -41,6 +43,9 @@ private:
      * Generally prefer 'deleteAccount' and use this with caution
      */
     Napi::Value purgeAccount(const Napi::CallbackInfo& info);
+
+    /** List all currently visible accounts in the walley */
+    Napi::Value listAccounts(const Napi::CallbackInfo& info);
 
 };
 #endif //DJINNI_GENERATED_NJSIACCOUNTSCONTROLLER_HPP

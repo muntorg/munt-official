@@ -209,6 +209,8 @@ declare class NJSIAccountsController
      * Generally prefer 'deleteAccount' and use this with caution
      */
     static declare function purgeAccount(accountUUID: string): boolean;
+    /** List all currently visible accounts in the walley */
+    static declare function listAccounts(): Array<AccountRecord>;
 }
 /** Interface to receive updates about accounts */
 declare class NJSIAccountsListener

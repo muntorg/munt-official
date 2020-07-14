@@ -70,7 +70,7 @@ std::string GetAccountTypeString(AccountType type)
     return "Regular";
 }
 
-CAccount* CreateAccountHelper(CWallet* pwallet, std::string accountName, std::string accountType, bool bMakeActive=true);
+CAccount* CreateAccountHelper(CWallet* pwallet, std::string accountName, std::string accountType, bool bMakeActive)
 {
     CAccount* account = nullptr;
 

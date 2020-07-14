@@ -5,12 +5,14 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #ifdef DJINNI_NODEJS
 #include "NJSIAccountsListener.hpp"
 #else
 class IAccountsListener;
 #endif
+struct AccountRecord;
 
 /** C++ interface to control accounts */
 class IAccountsController {
@@ -35,4 +37,7 @@ public:
      * Generally prefer 'deleteAccount' and use this with caution
      */
     static bool purgeAccount(const std::string & accountUUID);
+
+    /** List all currently visible accounts in the walley */
+    static std::vector<AccountRecord> listAccounts();
 };

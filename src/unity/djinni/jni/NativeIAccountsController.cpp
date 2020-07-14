@@ -3,6 +3,7 @@
 
 #include "NativeIAccountsController.hpp"  // my header
 #include "Marshal.hpp"
+#include "NativeAccountRecord.hpp"
 #include "NativeIAccountsListener.hpp"
 
 namespace djinni_generated {
@@ -62,6 +63,15 @@ CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCon
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::IAccountsController::purgeAccount(::djinni::String::toCpp(jniEnv, j_accountUUID));
         return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_listAccounts(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::listAccounts();
+        return ::djinni::release(::djinni::List<::djinni_generated::NativeAccountRecord>::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 

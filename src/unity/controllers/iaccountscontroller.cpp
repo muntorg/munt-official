@@ -20,6 +20,7 @@
 #include "../unity_impl.h"
 #include "i_accounts_controller.hpp"
 #include "i_accounts_listener.hpp"
+#include "account_record.hpp"
 
 #include <boost/asio.hpp>
 #include <boost/date_time/posix_time/posix_time_duration.hpp>
@@ -127,7 +128,36 @@ std::string IAccountsController::createAccount(const std::string& accountName, c
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
     CAccount* pNewAccount = CreateAccountHelper(pactiveWallet, accountName, accountType, false);
     if (pNewAccount)
-        return getUUIDAsString(pNewAccount->getUUID();
+        return getUUIDAsString(pNewAccount->getUUID());
     
     return "";
+}
+
+//fixme: (DEDUP) - try share common code with RPC listallaccounts function
+std::vector<AccountRecord> IAccountsController::listAccounts()
+{
+    std::vector<AccountRecord> ret;
+
+    if (!pactiveWallet)
+        return ret;
+    
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    for (const auto& accountPair : pactiveWallet->mapAccounts)
+    {
+        AccountRecord rec("", "", "", "", false);
+        rec.UUID = getUUIDAsString(accountPair.first);
+        rec.label = accountPair.second->getLabel();
+        rec.state = GetAccountStateString(accountPair.second->m_State);
+        rec.type = GetAccountTypeString(accountPair.second->m_Type);
+        if (!accountPair.second->IsHD())
+        {
+            rec.isHD = false;
+        }
+        else
+        {
+            rec.isHD = true;
+        }
+        ret.emplace_back(rec);
+    }
+    return ret;
 }

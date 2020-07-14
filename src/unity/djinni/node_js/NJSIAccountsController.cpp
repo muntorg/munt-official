@@ -100,6 +100,42 @@ Napi::Value NJSIAccountsController::purgeAccount(const Napi::CallbackInfo& info)
 
     return arg_1;
 }
+Napi::Value NJSIAccountsController::listAccounts(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 0)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::listAccounts needs 0 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+
+    auto result = IAccountsController::listAccounts();
+
+    //Wrap result in node object
+    auto arg_0 = Napi::Array::New(env);
+    for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+    {
+        auto arg_0_elem = Napi::Object::New(env);
+        auto arg_0_elem_1 = Napi::String::New(env, result[arg_0_id].UUID);
+        arg_0_elem.Set("UUID", arg_0_elem_1);
+        auto arg_0_elem_2 = Napi::String::New(env, result[arg_0_id].label);
+        arg_0_elem.Set("label", arg_0_elem_2);
+        auto arg_0_elem_3 = Napi::String::New(env, result[arg_0_id].state);
+        arg_0_elem.Set("state", arg_0_elem_3);
+        auto arg_0_elem_4 = Napi::String::New(env, result[arg_0_id].type);
+        arg_0_elem.Set("type", arg_0_elem_4);
+        auto arg_0_elem_5 = Napi::Boolean::New(env, result[arg_0_id].isHD);
+        arg_0_elem.Set("isHD", arg_0_elem_5);
+
+        arg_0.Set((int)arg_0_id,arg_0_elem);
+    }
+
+
+    return arg_0;
+}
 
 Napi::FunctionReference NJSIAccountsController::constructor;
 
@@ -112,6 +148,7 @@ Napi::Object NJSIAccountsController::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("deleteAccount", &NJSIAccountsController::deleteAccount),
     InstanceMethod("createAccount", &NJSIAccountsController::createAccount),
     InstanceMethod("purgeAccount", &NJSIAccountsController::purgeAccount),
+    InstanceMethod("listAccounts", &NJSIAccountsController::listAccounts),
     });
     // Create a peristent reference to the class constructor. This will allow a function called on a class prototype and a function called on instance of a class to be distinguished from each other.
     constructor = Napi::Persistent(func);
