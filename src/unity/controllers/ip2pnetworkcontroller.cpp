@@ -20,14 +20,9 @@
 #include "i_p2p_network_listener.hpp"
 #include "peer_record.hpp"
 
-#include <boost/asio.hpp>
-#include <boost/date_time/posix_time/posix_time_duration.hpp>
-
 std::shared_ptr<IP2pNetworkListener> networkListener;
 boost::signals2::connection enabledConn;
 boost::signals2::connection disabledConn;
-boost::asio::io_service io;
-boost::asio::deadline_timer timer(io, boost::posix_time::seconds(30));
 
 void IP2pNetworkController::setListener(const std::shared_ptr<IP2pNetworkListener>& networkListener_)
 {

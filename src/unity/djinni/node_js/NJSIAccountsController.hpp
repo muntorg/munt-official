@@ -37,6 +37,9 @@ private:
     /** Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account */
     Napi::Value createAccount(const Napi::CallbackInfo& info);
 
+    /** Rename an account */
+    Napi::Value renameAccount(const Napi::CallbackInfo& info);
+
     /**
      * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
      * If it is a Legacy or imported witness key or similar account then it will be gone forever

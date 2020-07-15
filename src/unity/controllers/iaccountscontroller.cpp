@@ -22,9 +22,6 @@
 #include "i_accounts_listener.hpp"
 #include "account_record.hpp"
 
-#include <boost/asio.hpp>
-#include <boost/date_time/posix_time/posix_time_duration.hpp>
-
 std::shared_ptr<IAccountsListener> accountsListener;
 std::list<boost::signals2::connection> coreSignalConnections;
 
@@ -131,6 +128,24 @@ std::string IAccountsController::createAccount(const std::string& accountName, c
         return getUUIDAsString(pNewAccount->getUUID());
     
     return "";
+}
+
+bool IAccountsController::renameAccount(const std::string& accountUUID, const std::string& newAccountName)
+{
+    if (!pactiveWallet)
+        return false;
+    
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    CAccount* forAccount = NULL;
+    auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
+    CWalletDB walletdb(*pactiveWallet->dbw);
+    if (findIter != pactiveWallet->mapAccounts.end())
+    {
+        findIter->second->setLabel(newAccountName, &walletdb);
+        return true;
+    }
+        
+    return false;
 }
 
 //fixme: (DEDUP) - try share common code with RPC listallaccounts function

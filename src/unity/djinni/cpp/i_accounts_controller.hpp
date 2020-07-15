@@ -31,6 +31,9 @@ public:
     /** Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account */
     static std::string createAccount(const std::string & accountName, const std::string & accountType);
 
+    /** Rename an account */
+    static bool renameAccount(const std::string & accountUUID, const std::string & newAccountName);
+
     /**
      * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
      * If it is a Legacy or imported witness key or similar account then it will be gone forever

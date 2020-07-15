@@ -61,6 +61,15 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (BOOL)renameAccount:(nonnull NSString *)accountUUID
+       newAccountName:(nonnull NSString *)newAccountName {
+    try {
+        auto objcpp_result_ = ::IAccountsController::renameAccount(::djinni::String::toCpp(accountUUID),
+                                                                   ::djinni::String::toCpp(newAccountName));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (BOOL)purgeAccount:(nonnull NSString *)accountUUID {
     try {
         auto objcpp_result_ = ::IAccountsController::purgeAccount(::djinni::String::toCpp(accountUUID));

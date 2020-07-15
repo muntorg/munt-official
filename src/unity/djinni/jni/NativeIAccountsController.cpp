@@ -57,6 +57,16 @@ CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCont
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_renameAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID, jstring j_newAccountName)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::renameAccount(::djinni::String::toCpp(jniEnv, j_accountUUID),
+                                                      ::djinni::String::toCpp(jniEnv, j_newAccountName));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_purgeAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
 {
     try {

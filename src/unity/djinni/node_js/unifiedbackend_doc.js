@@ -203,6 +203,8 @@ declare class NJSIAccountsController
     static declare function deleteAccount(accountUUID: string): boolean;
     /** Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account */
     static declare function createAccount(accountName: string, accountType: string): string;
+    /** Rename an account */
+    static declare function renameAccount(accountUUID: string, newAccountName: string): boolean;
     /**
      * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
      * If it is a Legacy or imported witness key or similar account then it will be gone forever

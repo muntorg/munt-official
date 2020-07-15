@@ -80,6 +80,27 @@ Napi::Value NJSIAccountsController::createAccount(const Napi::CallbackInfo& info
 
     return arg_2;
 }
+Napi::Value NJSIAccountsController::renameAccount(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 2)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::renameAccount needs 2 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+    std::string arg_1 = info[1].As<Napi::String>();
+
+    auto result = IAccountsController::renameAccount(arg_0,arg_1);
+
+    //Wrap result in node object
+    auto arg_2 = Napi::Boolean::New(env, result);
+
+    return arg_2;
+}
 Napi::Value NJSIAccountsController::purgeAccount(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -147,6 +168,7 @@ Napi::Object NJSIAccountsController::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("setActiveAccount", &NJSIAccountsController::setActiveAccount),
     InstanceMethod("deleteAccount", &NJSIAccountsController::deleteAccount),
     InstanceMethod("createAccount", &NJSIAccountsController::createAccount),
+    InstanceMethod("renameAccount", &NJSIAccountsController::renameAccount),
     InstanceMethod("purgeAccount", &NJSIAccountsController::purgeAccount),
     InstanceMethod("listAccounts", &NJSIAccountsController::listAccounts),
     });
