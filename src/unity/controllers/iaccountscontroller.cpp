@@ -140,7 +140,8 @@ bool IAccountsController::renameAccount(const std::string& accountUUID, const st
     auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
     if (findIter != pactiveWallet->mapAccounts.end())
     {
-        pactiveWallet->changeAccountName(findIter->second, newAccountName);
+        forAccount = findIter->second;
+        pactiveWallet->changeAccountName(forAccount, newAccountName);
         return true;
     }
         
