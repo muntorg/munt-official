@@ -237,3 +237,26 @@ declare class NJSIAccountsListener
     /** Notify that an account has been deleted */
     declare function onAccountDeleted(accountUUID: string);
 }
+/** C++ interface to control generation of blocks (proof of work) */
+declare class NJSIGenerationController
+{
+    /** Register listener to be notified of generation related events */
+    static declare function setListener(generationListener: NJSIGenerationListener);
+    /**
+     * Activate block generation (proof of work)
+     * Number of threads should not exceed physical threads, memory limit is a string specifier in the form of #B/#K/#M/#G (e.g. 102400B, 10240K, 1024M, 1G)
+     */
+    static declare function startGeneration(numThreads: number, memoryLimit: string): boolean;
+    /** Stop any active block generation (proof of work) */
+    static declare function stopGeneration(): boolean;
+}
+/** Interface to receive updates about block generation */
+declare class NJSIGenerationListener
+{
+    /** Signal that block generation has started */
+    declare function onGenerationStarted();
+    /** Signal that block generation has stopped */
+    declare function onGenerationStopped();
+    /** Periodically signal latest block generation statistics */
+    declare function onStatsUpdated(hashesPerSecond: number, hashesPerSecondUnit: string, rollingHashesPerSecond: number, rollingHashesPerSecondUnit: string, bestHashesPerSecond: number, bestHashesPerSecondUnit: string, arenaSetupTime: number);
+}

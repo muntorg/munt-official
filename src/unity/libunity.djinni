@@ -395,4 +395,23 @@ i_accounts_listener = interface +j +o +n {
     onAccountDeleted(accountUUID : string) : &;
 }
 
+# C++ interface to control generation of blocks (proof of work)
+i_generation_controller = interface +c {
+    # Register listener to be notified of generation related events
+    static setListener(generationListener : i_generation_listener);
+    # Activate block generation (proof of work)
+    # Number of threads should not exceed physical threads, memory limit is a string specifier in the form of #B/#K/#M/#G (e.g. 102400B, 10240K, 1024M, 1G)
+    static startGeneration(numThreads : i32, memoryLimit : string) : bool;
+    # Stop any active block generation (proof of work)
+    static stopGeneration() : bool;
+}
 
+# Interface to receive updates about block generation
+i_generation_listener = interface +j +o +n {
+    # Signal that block generation has started
+    onGenerationStarted() : &;
+    # Signal that block generation has stopped
+    onGenerationStopped() : &;
+    # Periodically signal latest block generation statistics
+    onStatsUpdated(hashesPerSecond : f64, hashesPerSecondUnit : string, rollingHashesPerSecond : f64, rollingHashesPerSecondUnit : string, bestHashesPerSecond : f64, bestHashesPerSecondUnit : string, arenaSetupTime : f64) : &;
+}

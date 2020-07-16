@@ -767,7 +767,12 @@ DJINNI_NODE_JS_GEN = \
   unity/djinni/node_js/NJSIAccountsController.cpp \
   unity/djinni/node_js/NJSIAccountsController.hpp \
   unity/djinni/node_js/NJSIAccountsListener.cpp \
-  unity/djinni/node_js/NJSIAccountsListener.hpp
+  unity/djinni/node_js/NJSIAccountsListener.hpp \
+  unity/djinni/node_js/NJSIGenerationController.cpp \
+  unity/djinni/node_js/NJSIGenerationController.hpp \
+  unity/djinni/node_js/NJSIGenerationListener.cpp \
+  unity/djinni/node_js/NJSIGenerationListener.hpp
+
 
 
 lib_unity_node_js_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
@@ -785,6 +790,7 @@ lib_unity_node_js_la_SOURCES = \
   unity/controllers/irpccontroller.cpp \
   unity/controllers/ip2pnetworkcontroller.cpp \
   unity/controllers/iaccountscontroller.cpp \
+  unity/controllers/igenerationcontroller.cpp \
   unity/djinni/support-lib/nodejs/win_delay_load_hook.cpp \
   $(DJINNI_CPP_GEN) \
   $(DJINNI_NODE_JS_GEN)
