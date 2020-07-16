@@ -76,6 +76,16 @@ CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCont
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_createAccountFromWitnessKeyURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessKeyURI, jstring j_newAccountName)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::createAccountFromWitnessKeyURI(::djinni::String::toCpp(jniEnv, j_witnessKeyURI),
+                                                                       ::djinni::String::toCpp(jniEnv, j_newAccountName));
+        return ::djinni::release(::djinni::String::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_deleteAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
 {
     try {

@@ -138,6 +138,35 @@ std::string IAccountsController::getWitnessKeyURI(const std::string & accountUUI
     return "";
 }
 
+std::string IAccountsController::createAccountFromWitnessKeyURI(const std::string& witnessKeyURI, const std::string& newAccountName)
+{
+    if (!pactiveWallet || dynamic_cast<CExtWallet*>(pactiveWallet)->IsLocked())
+        return "";
+
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+    {
+        (unused)accountUUID;
+        if (account->getLabel() == newAccountName)
+        {
+            return "";
+        }
+    }
+        
+    bool shouldRescan = true;
+    const auto& keysAndBirthDates = pactiveWallet->ParseWitnessKeyURL(SecureString(witnessKeyURI.begin(), witnessKeyURI.end()));
+    if (keysAndBirthDates.empty())
+        throw std::runtime_error("Invalid encoded key URL");
+
+    CAccount* account = nullptr;
+    //NB! CreateWitnessOnlyWitnessAccount triggers a rescan for us
+    account = pactiveWallet->CreateWitnessOnlyWitnessAccount(newAccountName, keysAndBirthDates, shouldRescan);
+    if (!account)
+        return "";
+
+    return getUUIDAsString(account->getUUID());
+}
+
 bool IAccountsController::deleteAccount(const std::string & accountUUID)
 {
     if (!pactiveWallet)

@@ -29,6 +29,13 @@
 /** Get a URI that will enable creation of a "witness only" account in another wallet that can witness on behalf of this account */
 + (nonnull NSString *)getWitnessKeyURI:(nonnull NSString *)accountUUID;
 
+/**
+ * Create a new "witness-only" account from a previously exported URI
+ * Returns UUID on success, empty string on failiure
+ */
++ (nonnull NSString *)createAccountFromWitnessKeyURI:(nonnull NSString *)witnessKeyURI
+                                      newAccountName:(nonnull NSString *)newAccountName;
+
 /** Delete an account, account remains available in background but is hidden from user */
 + (BOOL)deleteAccount:(nonnull NSString *)accountUUID;
 

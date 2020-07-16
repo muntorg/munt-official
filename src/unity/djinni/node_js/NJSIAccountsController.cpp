@@ -121,6 +121,27 @@ Napi::Value NJSIAccountsController::getWitnessKeyURI(const Napi::CallbackInfo& i
 
     return arg_1;
 }
+Napi::Value NJSIAccountsController::createAccountFromWitnessKeyURI(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 2)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::createAccountFromWitnessKeyURI needs 2 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+    std::string arg_1 = info[1].As<Napi::String>();
+
+    auto result = IAccountsController::createAccountFromWitnessKeyURI(arg_0,arg_1);
+
+    //Wrap result in node object
+    auto arg_2 = Napi::String::New(env, result);
+
+    return arg_2;
+}
 Napi::Value NJSIAccountsController::deleteAccount(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -210,6 +231,7 @@ Napi::Object NJSIAccountsController::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("renameAccount", &NJSIAccountsController::renameAccount),
     InstanceMethod("getAccountLinkURI", &NJSIAccountsController::getAccountLinkURI),
     InstanceMethod("getWitnessKeyURI", &NJSIAccountsController::getWitnessKeyURI),
+    InstanceMethod("createAccountFromWitnessKeyURI", &NJSIAccountsController::createAccountFromWitnessKeyURI),
     InstanceMethod("deleteAccount", &NJSIAccountsController::deleteAccount),
     InstanceMethod("purgeAccount", &NJSIAccountsController::purgeAccount),
     InstanceMethod("listAccounts", &NJSIAccountsController::listAccounts),

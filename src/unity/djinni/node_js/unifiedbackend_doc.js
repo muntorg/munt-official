@@ -207,6 +207,11 @@ declare class NJSIAccountsController
     static declare function getAccountLinkURI(accountUUID: string): string;
     /** Get a URI that will enable creation of a "witness only" account in another wallet that can witness on behalf of this account */
     static declare function getWitnessKeyURI(accountUUID: string): string;
+    /**
+     * Create a new "witness-only" account from a previously exported URI
+     * Returns UUID on success, empty string on failiure
+     */
+    static declare function createAccountFromWitnessKeyURI(witnessKeyURI: string, newAccountName: string): string;
     /** Delete an account, account remains available in background but is hidden from user */
     static declare function deleteAccount(accountUUID: string): boolean;
     /**

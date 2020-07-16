@@ -367,6 +367,9 @@ i_accounts_controller = interface +c {
     static getAccountLinkURI(accountUUID : string) : string;
     # Get a URI that will enable creation of a "witness only" account in another wallet that can witness on behalf of this account
     static getWitnessKeyURI(accountUUID : string) : string;
+    # Create a new "witness-only" account from a previously exported URI
+    # Returns UUID on success, empty string on failiure
+    static createAccountFromWitnessKeyURI(witnessKeyURI : string, newAccountName : string) : string;
     # Delete an account, account remains available in background but is hidden from user
     static deleteAccount(accountUUID : string) : bool;
     # Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)

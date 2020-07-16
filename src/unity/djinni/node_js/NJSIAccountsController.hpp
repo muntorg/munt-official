@@ -43,6 +43,12 @@ private:
     /** Get a URI that will enable creation of a "witness only" account in another wallet that can witness on behalf of this account */
     Napi::Value getWitnessKeyURI(const Napi::CallbackInfo& info);
 
+    /**
+     * Create a new "witness-only" account from a previously exported URI
+     * Returns UUID on success, empty string on failiure
+     */
+    Napi::Value createAccountFromWitnessKeyURI(const Napi::CallbackInfo& info);
+
     /** Delete an account, account remains available in background but is hidden from user */
     Napi::Value deleteAccount(const Napi::CallbackInfo& info);
 
