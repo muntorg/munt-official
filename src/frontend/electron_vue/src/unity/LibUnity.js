@@ -78,6 +78,22 @@ class LibUnity {
     );
   }
 
+  _coreReady() {
+    this._initializeAccountsController();
+
+    store.dispatch({
+      type: "SET_RECEIVE_ADDRESS",
+      receiveAddress: this.backend.GetReceiveAddress()
+    });
+
+    store.dispatch({
+      type: "SET_MUTATIONS",
+      mutations: this.backend.getMutationHistory()
+    });
+
+    store.dispatch({ type: "SET_CORE_READY", coreReady: true });
+  }
+
   _registerSignalHandlers() {
     let self = this;
     let signalHandler = this.signalHandler;
@@ -85,19 +101,7 @@ class LibUnity {
 
     signalHandler.notifyCoreReady = function() {
       console.log("received: notifyCoreReady");
-
-      self._initializeAccountsController();
-
-      store.dispatch({
-        type: "SET_RECEIVE_ADDRESS",
-        receiveAddress: backend.GetReceiveAddress()
-      });
-
-      store.dispatch({
-        type: "SET_MUTATIONS",
-        mutations: backend.getMutationHistory()
-      });
-      store.dispatch({ type: "SET_CORE_READY", coreReady: true });
+      self._coreReady();
     };
 
     signalHandler.logPrint = function(message) {
