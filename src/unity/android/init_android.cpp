@@ -60,7 +60,7 @@ bool UnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(const std::string& w
         {
             if (wallet.walletSeedMnemonic.find("-") != std::string::npos && wallet.walletSeedMnemonic.find(":") != std::string::npos)
             {
-                return InitWalletLinkedFromURI("guldensync:"+wallet.walletSeedMnemonic+";unused_payout_address", newPassword.c_str());
+                return InitWalletLinkedFromURI(GLOBAL_APPNAME"sync:"+wallet.walletSeedMnemonic+";unused_payout_address", newPassword.c_str());
             }
             else
             {

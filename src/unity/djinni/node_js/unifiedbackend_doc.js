@@ -199,19 +199,23 @@ declare class NJSIAccountsController
     static declare function setListener(accountslistener: NJSIAccountsListener);
     /** Set the currently active account */
     static declare function setActiveAccount(accountUUID: string): boolean;
-    /** Delete an account, account remains available in background but is hidden from user */
-    static declare function deleteAccount(accountUUID: string): boolean;
     /** Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account */
     static declare function createAccount(accountName: string, accountType: string): string;
     /** Rename an account */
     static declare function renameAccount(accountUUID: string, newAccountName: string): boolean;
+    /** Get a URI that will enable 'linking' of this account in another wallet (for e.g. mobile wallet linking) for an account. Empty on failiure.  */
+    static declare function getAccountLinkURI(accountUUID: string): string;
+    /** Get a URI that will enable creation of a "witness only" account in another wallet that can witness on behalf of this account */
+    static declare function getWitnessKeyURI(accountUUID: string): string;
+    /** Delete an account, account remains available in background but is hidden from user */
+    static declare function deleteAccount(accountUUID: string): boolean;
     /**
      * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
      * If it is a Legacy or imported witness key or similar account then it will be gone forever
      * Generally prefer 'deleteAccount' and use this with caution
      */
     static declare function purgeAccount(accountUUID: string): boolean;
-    /** List all currently visible accounts in the walley */
+    /** List all currently visible accounts in the wallet */
     static declare function listAccounts(): Array<AccountRecord>;
 }
 /** Interface to receive updates about accounts */

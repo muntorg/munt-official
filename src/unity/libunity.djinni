@@ -359,18 +359,23 @@ i_accounts_controller = interface +c {
     static setListener(accountslistener : i_accounts_listener);
     # Set the currently active account
     static setActiveAccount(accountUUID : string) : bool;
-    # Delete an account, account remains available in background but is hidden from user
-    static deleteAccount(accountUUID : string) : bool;
     # Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account
     static createAccount(accountName : string, accountType : string) : string;
     # Rename an account
     static renameAccount(accountUUID : string, newAccountName : string) : bool;
+    # Get a URI that will enable 'linking' of this account in another wallet (for e.g. mobile wallet linking) for an account. Empty on failiure. 
+    static getAccountLinkURI(accountUUID : string) : string;
+    # Get a URI that will enable creation of a "witness only" account in another wallet that can witness on behalf of this account
+    static getWitnessKeyURI(accountUUID : string) : string;
+    # Delete an account, account remains available in background but is hidden from user
+    static deleteAccount(accountUUID : string) : bool;
     # Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
     # If it is a Legacy or imported witness key or similar account then it will be gone forever
     # Generally prefer 'deleteAccount' and use this with caution
     static purgeAccount(accountUUID : string) : bool;
-    # List all currently visible accounts in the walley
+    # List all currently visible accounts in the wallet
     static listAccounts() : list<account_record>;
+    
 }
 
 # Interface to receive updates about accounts

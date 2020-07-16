@@ -38,15 +38,6 @@ CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCon
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_deleteAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
-        auto r = ::IAccountsController::deleteAccount(::djinni::String::toCpp(jniEnv, j_accountUUID));
-        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
-}
-
 CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_createAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountName, jstring j_accountType)
 {
     try {
@@ -63,6 +54,33 @@ CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCon
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::IAccountsController::renameAccount(::djinni::String::toCpp(jniEnv, j_accountUUID),
                                                       ::djinni::String::toCpp(jniEnv, j_newAccountName));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_getAccountLinkURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::getAccountLinkURI(::djinni::String::toCpp(jniEnv, j_accountUUID));
+        return ::djinni::release(::djinni::String::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_getWitnessKeyURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::getWitnessKeyURI(::djinni::String::toCpp(jniEnv, j_accountUUID));
+        return ::djinni::release(::djinni::String::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_deleteAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::deleteAccount(::djinni::String::toCpp(jniEnv, j_accountUUID));
         return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
