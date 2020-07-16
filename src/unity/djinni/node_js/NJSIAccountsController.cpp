@@ -39,26 +39,6 @@ Napi::Value NJSIAccountsController::setActiveAccount(const Napi::CallbackInfo& i
 
     return arg_1;
 }
-Napi::Value NJSIAccountsController::deleteAccount(const Napi::CallbackInfo& info) {
-    Napi::Env env = info.Env();
-
-
-    //Check if method called with right number of arguments
-    if(info.Length() != 1)
-    {
-        Napi::Error::New(env, "NJSIAccountsController::deleteAccount needs 1 arguments").ThrowAsJavaScriptException();
-    }
-
-    //Check if parameters have correct types
-    std::string arg_0 = info[0].As<Napi::String>();
-
-    auto result = IAccountsController::deleteAccount(arg_0);
-
-    //Wrap result in node object
-    auto arg_1 = Napi::Boolean::New(env, result);
-
-    return arg_1;
-}
 Napi::Value NJSIAccountsController::createAccount(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -100,6 +80,66 @@ Napi::Value NJSIAccountsController::renameAccount(const Napi::CallbackInfo& info
     auto arg_2 = Napi::Boolean::New(env, result);
 
     return arg_2;
+}
+Napi::Value NJSIAccountsController::getAccountLinkURI(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 1)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::getAccountLinkURI needs 1 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+
+    auto result = IAccountsController::getAccountLinkURI(arg_0);
+
+    //Wrap result in node object
+    auto arg_1 = Napi::String::New(env, result);
+
+    return arg_1;
+}
+Napi::Value NJSIAccountsController::getWitnessKeyURI(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 1)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::getWitnessKeyURI needs 1 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+
+    auto result = IAccountsController::getWitnessKeyURI(arg_0);
+
+    //Wrap result in node object
+    auto arg_1 = Napi::String::New(env, result);
+
+    return arg_1;
+}
+Napi::Value NJSIAccountsController::deleteAccount(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 1)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::deleteAccount needs 1 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+
+    auto result = IAccountsController::deleteAccount(arg_0);
+
+    //Wrap result in node object
+    auto arg_1 = Napi::Boolean::New(env, result);
+
+    return arg_1;
 }
 Napi::Value NJSIAccountsController::purgeAccount(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -166,9 +206,11 @@ Napi::Object NJSIAccountsController::Init(Napi::Env env, Napi::Object exports) {
     Napi::Function func = DefineClass(env, "NJSIAccountsController", {
     InstanceMethod("setListener", &NJSIAccountsController::setListener),
     InstanceMethod("setActiveAccount", &NJSIAccountsController::setActiveAccount),
-    InstanceMethod("deleteAccount", &NJSIAccountsController::deleteAccount),
     InstanceMethod("createAccount", &NJSIAccountsController::createAccount),
     InstanceMethod("renameAccount", &NJSIAccountsController::renameAccount),
+    InstanceMethod("getAccountLinkURI", &NJSIAccountsController::getAccountLinkURI),
+    InstanceMethod("getWitnessKeyURI", &NJSIAccountsController::getWitnessKeyURI),
+    InstanceMethod("deleteAccount", &NJSIAccountsController::deleteAccount),
     InstanceMethod("purgeAccount", &NJSIAccountsController::purgeAccount),
     InstanceMethod("listAccounts", &NJSIAccountsController::listAccounts),
     });

@@ -8,13 +8,17 @@
 #undef DLL_EXPORT
 #endif
 
+#include "appname.h"
 #include "net.h"
 #include "net_processing.h"
 #include "validation/validation.h"
 #include "ui_interface.h"
+#include "utilstrencodings.h"
+
 
 #include <wallet/wallet.h>
 #include <wallet/account.h>
+#include <wallet/witness_operations.h>
 
 // Unity specific includes
 #include "../unity_impl.h"
@@ -81,6 +85,59 @@ bool IAccountsController::setActiveAccount(const std::string & accountUUID)
     return false;
 }
 
+//fixme: Move this out into a common helper and add an RPC equivalent
+std::string IAccountsController::getAccountLinkURI(const std::string & accountUUID)
+{
+    if (!pactiveWallet || dynamic_cast<CExtWallet*>(pactiveWallet)->IsLocked())
+        return "";
+    
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    CAccount* forAccount = NULL;
+    auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
+    if (findIter != pactiveWallet->mapAccounts.end())
+    {
+        forAccount = findIter->second;
+        
+        int64_t currentTime = forAccount->getEarliestPossibleCreationTime();
+        std::string payoutAddress;
+        std::string qrString = "";
+        if (forAccount->IsHD() && !forAccount->IsPoW2Witness())
+        {
+            CReserveKeyOrScript reservekey(pactiveWallet, forAccount, KEYCHAIN_CHANGE);
+            CPubKey vchPubKey;
+            if (!reservekey.GetReservedKey(vchPubKey))
+                return "";
+            payoutAddress = CNativeAddress(vchPubKey.GetID()).ToString();
+
+            qrString = GLOBAL_APPNAME"sync:" + CEncodedSecretKeyExt<CExtKey>(*(static_cast<CAccountHD*>(forAccount)->GetAccountMasterPrivKey())).SetCreationTime(i64tostr(currentTime)).SetPayAccount(payoutAddress).ToURIString();
+            
+            return qrString;
+        }
+        
+        return "";
+    }
+    return "";
+}
+
+std::string IAccountsController::getWitnessKeyURI(const std::string & accountUUID)
+{
+    if (!pactiveWallet || dynamic_cast<CExtWallet*>(pactiveWallet)->IsLocked())
+        return "";
+    
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    CAccount* forAccount = NULL;
+    auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
+    if (findIter != pactiveWallet->mapAccounts.end())
+    {
+        forAccount = findIter->second;
+        if (forAccount->IsPoW2Witness())
+        {
+            return witnessKeysLinkUrlForAccount(pactiveWallet, forAccount);
+        }
+    }
+    return "";
+}
+
 bool IAccountsController::deleteAccount(const std::string & accountUUID)
 {
     if (!pactiveWallet)
@@ -138,10 +195,10 @@ bool IAccountsController::renameAccount(const std::string& accountUUID, const st
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
     CAccount* forAccount = NULL;
     auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
-    CWalletDB walletdb(*pactiveWallet->dbw);
     if (findIter != pactiveWallet->mapAccounts.end())
     {
-        findIter->second->setLabel(newAccountName, &walletdb);
+        forAccount = findIter->second;
+        pactiveWallet->changeAccountName(forAccount, newAccountName);
         return true;
     }
         

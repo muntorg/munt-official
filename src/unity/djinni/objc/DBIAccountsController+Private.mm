@@ -45,13 +45,6 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (BOOL)deleteAccount:(nonnull NSString *)accountUUID {
-    try {
-        auto objcpp_result_ = ::IAccountsController::deleteAccount(::djinni::String::toCpp(accountUUID));
-        return ::djinni::Bool::fromCpp(objcpp_result_);
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
 + (nonnull NSString *)createAccount:(nonnull NSString *)accountName
                         accountType:(nonnull NSString *)accountType {
     try {
@@ -66,6 +59,27 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     try {
         auto objcpp_result_ = ::IAccountsController::renameAccount(::djinni::String::toCpp(accountUUID),
                                                                    ::djinni::String::toCpp(newAccountName));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull NSString *)getAccountLinkURI:(nonnull NSString *)accountUUID {
+    try {
+        auto objcpp_result_ = ::IAccountsController::getAccountLinkURI(::djinni::String::toCpp(accountUUID));
+        return ::djinni::String::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull NSString *)getWitnessKeyURI:(nonnull NSString *)accountUUID {
+    try {
+        auto objcpp_result_ = ::IAccountsController::getWitnessKeyURI(::djinni::String::toCpp(accountUUID));
+        return ::djinni::String::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)deleteAccount:(nonnull NSString *)accountUUID {
+    try {
+        auto objcpp_result_ = ::IAccountsController::deleteAccount(::djinni::String::toCpp(accountUUID));
         return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
