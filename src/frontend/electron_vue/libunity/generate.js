@@ -1,201 +1,213 @@
 var fs = require("fs");
 var path = require("path");
 
-const skipFunctions = [
-  "InitUnityLib",
-  "InitUnityLibThreaded",
-  "InitWalletFromAndroidLegacyProtoWallet",
-  "InitWalletLinkedFromURI",
-  "isValidAndroidLegacyProtoWallet"
-];
-
 let inputFile = path.join(
   __dirname,
   "../../../unity/djinni/node_js/unifiedbackend_doc.js"
 );
+
+const generateInfo = [
+  {
+    className: "NJSUnifiedBackend",
+    controller: "backend",
+    functions: [
+      "GenerateRecoveryMnemonic",
+      "GetMnemonicDictionary",
+      "GetRecoveryPhrase",
+      "GetTransactionHistory",
+      "InitWalletFromRecoveryPhrase",
+      "IsValidRecipient",
+      "IsValidRecoveryPhrase",
+      "LockWallet",
+      "PerformPaymentToRecipient",
+      "ResendTransaction",
+      "UnlockWallet"
+    ],
+    results: []
+  },
+  {
+    className: "NJSIAccountsController",
+    controller: "accountsController",
+    functions: [],
+    results: []
+  }
+];
+
 let backendFile = path.join(__dirname, "/../src/unity/UnityBackend.js");
 let libFile = path.join(__dirname, "/../src/unity/LibUnity.js");
 
-let dataToParse = fs.readFileSync(inputFile, "utf8").split("\n");
+let inputFileData = fs.readFileSync(inputFile, "utf8");
 
-let allFunctions = [];
-let comments = [];
-let startFound = false;
-let endFound = false;
+let txtUnityBackend = "";
+let txtLibUnity = "";
 
-while (endFound === false) {
-  let line = dataToParse.shift().trim();
-  if (startFound === false) {
-    if (line.indexOf("class NJSUnifiedBackend") !== -1) {
-      startFound = true;
-    }
-    continue;
+for (var i = 0; i < generateInfo.length; i++) {
+  let o = generateInfo[i];
+  generateCodeFor(o);
+
+  for (var j = 0; j < o.results.length; j++) {
+    let f = o.results[j];
+
+    let tabs = 1;
+
+    // ipc.sendSync <- Sync
+    txtUnityBackend = addLine(
+      txtUnityBackend,
+      `static ${f.functionName}(${f.args}) {`,
+      tabs
+    );
+    txtUnityBackend = addLine(
+      txtUnityBackend,
+      `return ipc.sendSync("${f.functionName}"${
+        f.args.length > 0 ? ", " + f.args : ""
+      });`,
+      tabs + 1
+    );
+    txtUnityBackend = addLine(txtUnityBackend, "}", tabs, 2);
+
+    // ipc.callMain <- Async
+    txtUnityBackend = addLine(
+      txtUnityBackend,
+      `static ${f.functionName}Async(${f.args}) {`,
+      tabs
+    );
+    txtUnityBackend = addLine(
+      txtUnityBackend,
+      `return ipc.callMain("${f.functionName}"${
+        f.args.length > 0 ? ", { " + f.args + " }" : ""
+      });`,
+      tabs + 1
+    );
+    txtUnityBackend = addLine(txtUnityBackend, "}", tabs, 2);
+
+    // ipc.on -> Sync
+    tabs = 2;
+    txtLibUnity = addLine(
+      txtLibUnity,
+      `ipc.on("${f.functionName}", ${
+        f.args.length > 0 ? "(event, " + f.args + ")" : "event"
+      } => {`,
+      tabs
+    );
+    txtLibUnity = addLine(
+      txtLibUnity,
+      `let result = this._preExecuteIpcCommand("${f.functionName}");`,
+      tabs + 1
+    );
+    txtLibUnity = addLine(txtLibUnity, `if (result === undefined) {`, tabs + 1);
+    txtLibUnity = addLine(
+      txtLibUnity,
+      `result = this.${o.controller}.${f.name}(${f.args});`,
+      tabs + 2
+    );
+    txtLibUnity = addLine(txtLibUnity, `}`, tabs + 1);
+    txtLibUnity = addLine(
+      txtLibUnity,
+      `this._postExecuteIpcCommand("${f.functionName}", result);`,
+      tabs + 1
+    );
+    txtLibUnity = addLine(txtLibUnity, `event.returnValue = result;`, tabs + 1);
+    txtLibUnity = addLine(txtLibUnity, `});`, tabs, 2);
+
+    // ipc.answerRenderer -> Async
+    txtLibUnity = addLine(
+      txtLibUnity,
+      `ipc.answerRenderer("${f.functionName}", async ${
+        f.args.length > 0 ? "data" : "()"
+      } => {`,
+      tabs
+    );
+    txtLibUnity = addLine(
+      txtLibUnity,
+      `let result = this._preExecuteIpcCommand("${f.functionName}");`,
+      tabs + 1
+    );
+    txtLibUnity = addLine(txtLibUnity, `if (result === undefined) {`, tabs + 1);
+    txtLibUnity = addLine(
+      txtLibUnity,
+      `result = this.${o.controller}.${f.name}(${
+        f.args.length > 0 ? "data." + f.args.split(", ").join(", data.") : ""
+      });`,
+      tabs + 2
+    );
+    txtLibUnity = addLine(txtLibUnity, `}`, tabs + 1);
+    txtLibUnity = addLine(
+      txtLibUnity,
+      `this._postExecuteIpcCommand("${f.functionName}", result);`,
+      tabs + 1
+    );
+    txtLibUnity = addLine(txtLibUnity, `return result;`, tabs + 1);
+    txtLibUnity = addLine(
+      txtLibUnity,
+      `});`,
+      tabs,
+      j == o.results.length - 1 ? 1 : 2
+    );
   }
-
-  if (line === "}") {
-    endFound = true;
-    continue;
-  }
-
-  line = line.replace("\r\n", "");
-
-  if (line.startsWith("static declare function") === false) {
-    if (line.startsWith("/")) {
-      comments.push(line);
-    }
-    if (line.startsWith("*")) {
-      comments.push(` ${line}`);
-    }
-    continue;
-  }
-
-  line = line.replace("static declare function", "").trim();
-
-  let functionOpeningBracketIdx = line.indexOf("(");
-  let functionClosingBracketIdx = line.indexOf(")");
-  let name = line.substr(0, functionOpeningBracketIdx);
-
-  if (skipFunctions.find(x => x === name)) {
-    comments = [];
-    continue;
-  }
-
-  let args = line.substr(
-    functionOpeningBracketIdx + 1,
-    functionClosingBracketIdx - functionOpeningBracketIdx - 1
-  );
-
-  if (args.length > 0) {
-    let argsSplit = args.split(", ");
-    let arr = [];
-    argsSplit.forEach(arg => {
-      arr.push(arg.substr(0, arg.indexOf(":")));
-    });
-
-    args = arr.join(", ");
-  }
-  allFunctions.push({
-    functionName: name.charAt(0).toUpperCase() + name.slice(1),
-    name,
-    args,
-    comments: comments
-  });
-  comments = [];
 }
 
-allFunctions.sort((a, b) => {
-  let A = a.functionName.toUpperCase();
-  let B = b.functionName.toUpperCase();
+function generateCodeFor(o) {
+  let startFound = false;
+  let endFound = false;
+  let dataToParse = inputFileData.split("\n");
 
-  if (A < B) {
-    return -1;
+  while (endFound === false) {
+    let line = dataToParse.shift().trim();
+    if (startFound === false) {
+      if (line.indexOf(`class ${o.className}`) !== -1) {
+        startFound = true;
+      }
+      continue;
+    }
+    if (line === "}") {
+      endFound = true;
+      continue;
+    }
+
+    line = line.replace("\r\n", "");
+    if (line.startsWith("static declare function") === false) continue;
+    line = line.replace("static declare function", "").trim();
+
+    let functionOpeningBracketIdx = line.indexOf("(");
+    let functionClosingBracketIdx = line.indexOf(")");
+    let name = line.substr(0, functionOpeningBracketIdx);
+
+    let exists = false;
+    for (var i = 0; i < o.functions.length; i++) {
+      if (name.toLowerCase() === o.functions[i].toLowerCase()) {
+        exists = true;
+        break;
+      }
+    }
+
+    if (exists === false) continue;
+
+    let args = line.substr(
+      functionOpeningBracketIdx + 1,
+      functionClosingBracketIdx - functionOpeningBracketIdx - 1
+    );
+
+    if (args.length > 0) {
+      let argsSplit = args.split(", ");
+      let arr = [];
+      argsSplit.forEach(arg => {
+        arr.push(arg.substr(0, arg.indexOf(":")));
+      });
+
+      args = arr.join(", ");
+    }
+
+    o.results.push({
+      functionName: name.charAt(0).toUpperCase() + name.slice(1),
+      name,
+      args
+    });
   }
-  if (A > B) {
-    return 1;
-  }
-  // names must be equal
-  return 0;
-});
-
-let txtBackend = ``;
-let txtLib = ``;
-let tabs = 1;
-for (let i = 0; i < allFunctions.length; i++) {
-  let f = allFunctions[i];
-
-  for (var j = 0; j < f.comments.length; j++) {
-    txtBackend = addLine(txtBackend, f.comments[j], tabs);
-  }
-
-  txtBackend = addLine(
-    txtBackend,
-    `static ${f.functionName}(${f.args}) {`,
-    tabs
-  );
-  txtBackend = addLine(
-    txtBackend,
-    `return ipc.sendSync("${f.functionName}"${
-      f.args.length > 0 ? ", " + f.args : ""
-    });`,
-    tabs + 1
-  );
-  txtBackend = addLine(txtBackend, "}", tabs, 2);
-
-  txtBackend = addLine(
-    txtBackend,
-    `static ${f.functionName}Async(${f.args}) {`,
-    tabs
-  );
-  txtBackend = addLine(
-    txtBackend,
-    `return ipc.callMain("${f.functionName}"${
-      f.args.length > 0 ? ", { " + f.args + " }" : ""
-    });`,
-    tabs + 1
-  );
-  txtBackend = addLine(txtBackend, "}", tabs, 2);
-
-  tabs = 2;
-  txtLib = addLine(
-    txtLib,
-    `ipc.on("${f.functionName}", ${
-      f.args.length > 0 ? "(event, " + f.args + ")" : "event"
-    } => {`,
-    tabs
-  );
-  txtLib = addLine(
-    txtLib,
-    `let result = this._tryGetResultBeforeBackendCall("${f.functionName}");`,
-    tabs + 1
-  );
-  txtLib = addLine(txtLib, `if (result === undefined) {`, tabs + 1);
-  txtLib = addLine(
-    txtLib,
-    `result = this.backend.${f.name}(${f.args});`,
-    tabs + 2
-  );
-  txtLib = addLine(txtLib, `}`, tabs + 1);
-  txtLib = addLine(
-    txtLib,
-    `this._handleIpcInternalAfterBackendCall("${f.functionName}", result);`,
-    tabs + 1
-  );
-  txtLib = addLine(txtLib, `event.returnValue = result;`, tabs + 1);
-  txtLib = addLine(txtLib, `});`, tabs, 2);
-
-  txtLib = addLine(
-    txtLib,
-    `ipc.answerRenderer("${f.functionName}", async ${
-      f.args.length > 0 ? "data" : "()"
-    } => {`,
-    tabs
-  );
-  txtLib = addLine(
-    txtLib,
-    `let result = this._tryGetResultBeforeBackendCall("${f.functionName}");`,
-    tabs + 1
-  );
-  txtLib = addLine(txtLib, `if (result === undefined) {`, tabs + 1);
-  txtLib = addLine(
-    txtLib,
-    `result = this.backend.${f.name}(${
-      f.args.length > 0 ? "data." + f.args.split(", ").join(", data.") : ""
-    });`,
-    tabs + 2
-  );
-  txtLib = addLine(txtLib, `}`, tabs + 1);
-  txtLib = addLine(
-    txtLib,
-    `this._handleIpcInternalAfterBackendCall("${f.functionName}", result);`,
-    tabs + 1
-  );
-  txtLib = addLine(txtLib, `return result;`, tabs + 1);
-  txtLib = addLine(txtLib, `});`, tabs, i == allFunctions.length - 1 ? 1 : 2);
 }
 
 let replace = "";
 replace = addLine(replace, "/* inject:code */");
-replace += txtBackend;
+replace += txtUnityBackend;
 replace = addLine(replace, "/* inject:code */", 1, 0);
 let backendData = fs.readFileSync(backendFile, "utf-8");
 var result = backendData.replace(
@@ -207,7 +219,7 @@ fs.writeFileSync(backendFile, result, "utf8");
 
 replace = "";
 replace = addLine(replace, "/* inject:code */");
-replace += txtLib;
+replace += txtLibUnity;
 replace = addLine(replace, "/* inject:code */", 1, 0);
 
 let libData = fs.readFileSync(libFile, "utf-8");
