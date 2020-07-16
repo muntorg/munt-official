@@ -1,6 +1,12 @@
 import { ipcRenderer as ipc } from "electron-better-ipc";
 
 class UnityBackend {
+  // hook to Accounts controller
+  static RenameAccount(accountUUID, newAccountName) {
+    return ipc.sendSync("RenameAccount", accountUUID, newAccountName);
+  }
+
+  // hook to RPC controller
   static ExecuteRpc(command) {
     return ipc.sendSync("ExecuteRpc", command);
   }

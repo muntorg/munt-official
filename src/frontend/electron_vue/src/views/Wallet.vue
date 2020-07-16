@@ -6,6 +6,8 @@
       <span class="copy"><fa-icon :icon="['fal', 'copy']"/></span>
     </div>
 
+    <button @click="renameAccount">TEST RENAME ACCOUNT</button>
+
     <novo-button-section>
       <template v-slot:left>
         <button @click="receiveNovo">
@@ -28,11 +30,13 @@
 <script>
 import { clipboard } from "electron";
 import { mapState } from "vuex";
+import UnityBackend from "../unity/UnityBackend";
 
 export default {
   data() {
     return {
-      copyActive: false
+      copyActive: false,
+      idx: 0
     };
   },
   computed: {
@@ -42,6 +46,14 @@ export default {
     }
   },
   methods: {
+    renameAccount() {
+      console.log(
+        UnityBackend.RenameAccount(
+          "1d5fa01b-6ae9-40b3-a5c4-ad97cbea1280",
+          "test-" + this.idx++
+        )
+      );
+    },
     receiveNovo() {
       window.open(this.receiveUrl, "_blank");
     },

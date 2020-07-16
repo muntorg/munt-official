@@ -21,7 +21,10 @@ class LibUnity {
 
     this.backend = new libUnity.NJSUnifiedBackend();
     this.signalHandler = new libUnity.NJSUnifiedFrontend();
+
     this.rpcController = null;
+    this.accountsController = null;
+    this.accountsListener = null;
   }
 
   Initialize() {
@@ -41,6 +44,21 @@ class LibUnity {
     // Maybe the call to terminate comes before the core is ready.
     // Then it's better to wait for the coreReady signal and then call TerminateUnityLib
     this.backend.TerminateUnityLib();
+  }
+
+  _initializeAccountsController() {
+    this.accountsController = new libUnity.NJSIAccountsController();
+    this.accountsListener = new libUnity.NJSIAccountsListener();
+
+    this.accountsListener.onAccountNameChanged = function(
+      accountUUID,
+      newAccountName
+    ) {
+      console.log(`AccountNameChanged ${accountUUID} to ${newAccountName}`);
+    };
+
+    console.log("set accountscontroller listener");
+    this.accountsController.setListener(this.accountsListener);
   }
 
   _startUnityLib() {
@@ -71,6 +89,8 @@ class LibUnity {
 
     signalHandler.notifyCoreReady = function() {
       console.log("received: notifyCoreReady");
+
+      self._initializeAccountsController();
 
       store.dispatch({
         type: "SET_RECEIVE_ADDRESS",
@@ -171,6 +191,13 @@ class LibUnity {
   }
 
   _registerIpcHandlers() {
+    ipc.on("RenameAccount", (event, accountUUID, newAccountName) => {
+      event.returnValue = this.accountsController.renameAccount(
+        accountUUID,
+        newAccountName
+      );
+    });
+
     ipc.on("ExecuteRpc", (event, command) => {
       let rpcListener = new libUnity.NJSIRpcListener();
 
