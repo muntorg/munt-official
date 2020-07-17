@@ -199,6 +199,8 @@ declare class NJSIAccountsController
     static declare function setListener(accountslistener: NJSIAccountsListener);
     /** Set the currently active account */
     static declare function setActiveAccount(accountUUID: string): boolean;
+    /** Get the currently active account */
+    static declare function getActiveAccount(): string;
     /** Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account */
     static declare function createAccount(accountName: string, accountType: string): string;
     /** Rename an account */

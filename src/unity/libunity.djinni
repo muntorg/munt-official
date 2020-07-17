@@ -359,6 +359,8 @@ i_accounts_controller = interface +c {
     static setListener(accountslistener : i_accounts_listener);
     # Set the currently active account
     static setActiveAccount(accountUUID : string) : bool;
+    # Get the currently active account
+    static getActiveAccount() : string;
     # Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account
     static createAccount(accountName : string, accountType : string) : string;
     # Rename an account

@@ -39,6 +39,25 @@ Napi::Value NJSIAccountsController::setActiveAccount(const Napi::CallbackInfo& i
 
     return arg_1;
 }
+Napi::Value NJSIAccountsController::getActiveAccount(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 0)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::getActiveAccount needs 0 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+
+    auto result = IAccountsController::getActiveAccount();
+
+    //Wrap result in node object
+    auto arg_0 = Napi::String::New(env, result);
+
+    return arg_0;
+}
 Napi::Value NJSIAccountsController::createAccount(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -227,6 +246,7 @@ Napi::Object NJSIAccountsController::Init(Napi::Env env, Napi::Object exports) {
     Napi::Function func = DefineClass(env, "NJSIAccountsController", {
     InstanceMethod("setListener", &NJSIAccountsController::setListener),
     InstanceMethod("setActiveAccount", &NJSIAccountsController::setActiveAccount),
+    InstanceMethod("getActiveAccount", &NJSIAccountsController::getActiveAccount),
     InstanceMethod("createAccount", &NJSIAccountsController::createAccount),
     InstanceMethod("renameAccount", &NJSIAccountsController::renameAccount),
     InstanceMethod("getAccountLinkURI", &NJSIAccountsController::getAccountLinkURI),

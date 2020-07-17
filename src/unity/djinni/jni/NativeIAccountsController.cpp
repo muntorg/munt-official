@@ -38,6 +38,15 @@ CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCon
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_getActiveAccount(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::getActiveAccount();
+        return ::djinni::release(::djinni::String::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_createAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountName, jstring j_accountType)
 {
     try {

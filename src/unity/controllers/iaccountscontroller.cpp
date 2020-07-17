@@ -85,6 +85,19 @@ bool IAccountsController::setActiveAccount(const std::string & accountUUID)
     return false;
 }
 
+std::string IAccountsController::getActiveAccount()
+{
+    if (pactiveWallet)
+    {        
+        CAccount* activeAccount = pactiveWallet->getActiveAccount();
+        if (activeAccount)
+        {
+            return getUUIDAsString(activeAccount->getUUID());
+        }
+    }
+    return "";
+}
+
 //fixme: Move this out into a common helper and add an RPC equivalent
 std::string IAccountsController::getAccountLinkURI(const std::string & accountUUID)
 {

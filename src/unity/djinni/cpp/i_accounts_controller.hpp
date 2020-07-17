@@ -25,6 +25,9 @@ public:
     /** Set the currently active account */
     static bool setActiveAccount(const std::string & accountUUID);
 
+    /** Get the currently active account */
+    static std::string getActiveAccount();
+
     /** Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account */
     static std::string createAccount(const std::string & accountName, const std::string & accountType);
 

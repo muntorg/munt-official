@@ -15,6 +15,9 @@
 /** Set the currently active account */
 + (BOOL)setActiveAccount:(nonnull NSString *)accountUUID;
 
+/** Get the currently active account */
++ (nonnull NSString *)getActiveAccount;
+
 /** Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account */
 + (nonnull NSString *)createAccount:(nonnull NSString *)accountName
                         accountType:(nonnull NSString *)accountType;
