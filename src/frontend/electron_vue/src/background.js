@@ -1,7 +1,14 @@
 "use strict";
 /* global __static */
 
-import { app, protocol, Menu, BrowserWindow, shell } from "electron";
+import {
+  app,
+  protocol,
+  Menu,
+  BrowserWindow,
+  shell,
+  ipcMain as ipc
+} from "electron";
 import {
   createProtocol
   /* installVueDevtools */
@@ -15,6 +22,11 @@ import fs from "fs";
 
 import LibUnity from "./unity/LibUnity";
 import store, { AppStatus } from "./store";
+
+// on vuex-connect send the current state to the renderer
+ipc.on("vuex-connect", event => {
+  event.sender.send("vuex-connected", store.state);
+});
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

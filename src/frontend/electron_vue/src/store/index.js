@@ -1,20 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
-
-import { app } from "electron";
-
-import { createPersistedState, createSharedMutations } from "vuex-electron";
-import Store from "electron-store";
-
-let store = new Store();
-if (process.type !== "renderer") {
-  console.log(`clear store on start`);
-  store.clear();
-  app.on("quit", () => {
-    console.log(`clear store on quit`);
-    store.clear();
-  });
-}
+import { createSharedMutations } from "vuex-electron";
+import syncState from "./syncState";
+import cloneDeep from "lodash.clonedeep";
 
 Vue.use(Vuex);
 
@@ -39,6 +27,9 @@ export default new Vuex.Store({
     walletVersion: null
   },
   mutations: {
+    REPLACE_STATE(state, payload) {
+      this.replaceState(cloneDeep(payload.state));
+    },
     SET_BALANCE(state, payload) {
       state.balance = payload.balance;
     },
@@ -73,6 +64,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    REPLACE_STATE({ commit }, payload) {
+      commit(payload);
+    },
     SET_BALANCE({ commit }, payload) {
       commit(payload);
     },
@@ -120,5 +114,5 @@ export default new Vuex.Store({
       ).toFixed(2);
     }
   },
-  plugins: [createPersistedState({ storage: store }), createSharedMutations()]
+  plugins: [syncState, createSharedMutations()]
 });
