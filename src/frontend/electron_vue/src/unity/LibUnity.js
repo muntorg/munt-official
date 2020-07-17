@@ -51,7 +51,11 @@ class LibUnity {
       accountUUID,
       newAccountName
     ) {
-      console.log(`AccountNameChanged ${accountUUID} to ${newAccountName}`);
+      store.dispatch({ type: "SET_ACCOUNT_NAME", accountUUID, newAccountName });
+    };
+
+    this.accountsListener.onActiveAccountChanged = function(accountUUID) {
+      store.dispatch({ type: "SET_ACTIVE_ACCOUNT", accountUUID });
     };
 
     this.accountsController.setListener(this.accountsListener);
@@ -78,8 +82,18 @@ class LibUnity {
     );
   }
 
-  _coreReady() {
+  async _coreReady() {
     this._initializeAccountsController();
+
+    store.dispatch({
+      type: "SET_ACCOUNTS",
+      accounts: this.accountsController.listAccounts()
+    });
+
+    store.dispatch({
+      type: "SET_ACTIVE_ACCOUNT",
+      accountUUID: await this._executeRpc("getactiveaccount") // TODO: replace by call to accountscontroller method when it's available
+    });
 
     store.dispatch({
       type: "SET_RECEIVE_ADDRESS",
@@ -188,6 +202,28 @@ class LibUnity {
         }
         break;
     }
+  }
+
+  async _executeRpc(command) {
+    let rpcListener = new libUnity.NJSIRpcListener();
+
+    if (this.rpcController === null) {
+      this.rpcController = new libUnity.NJSIRpcController();
+    }
+
+    this.rpcController.execute(command, rpcListener);
+
+    return new Promise((resolve, reject) => {
+      rpcListener.onSuccess = (filteredCommand, result) => {
+        console.log(`RPC success: ${result}`);
+        resolve(result);
+      };
+
+      rpcListener.onError = error => {
+        console.error(`RPC error: ${error}`);
+        reject(error);
+      };
+    });
   }
 
   _registerIpcHandlers() {

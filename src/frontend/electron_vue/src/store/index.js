@@ -16,6 +16,8 @@ export const AppStatus = {
 
 export default new Vuex.Store({
   state: {
+    accounts: [],
+    activeAccount: null,
     balance: null,
     coreReady: false,
     mutations: null,
@@ -29,6 +31,12 @@ export default new Vuex.Store({
   mutations: {
     REPLACE_STATE(state, payload) {
       this.replaceState(cloneDeep(payload.state));
+    },
+    SET_ACCOUNTS(state, payload) {
+      state.accounts = payload.accounts;
+    },
+    SET_ACTIVE_ACCOUNT(state, payload) {
+      state.activeAccount = payload.accountUUID;
     },
     SET_BALANCE(state, payload) {
       state.balance = payload.balance;
@@ -65,6 +73,18 @@ export default new Vuex.Store({
   },
   actions: {
     REPLACE_STATE({ commit }, payload) {
+      commit(payload);
+    },
+    SET_ACCOUNT_NAME({ state, commit }, payload) {
+      let accounts = [...state.accounts];
+      let account = accounts.find(x => x.UUID === payload.accountUUID);
+      account.label = payload.newAccountName;
+      commit({ type: "SET_ACCOUNTS", accounts: accounts });
+    },
+    SET_ACCOUNTS({ commit }, payload) {
+      commit(payload);
+    },
+    SET_ACTIVE_ACCOUNT({ commit }, payload) {
       commit(payload);
     },
     SET_BALANCE({ commit }, payload) {
@@ -112,6 +132,9 @@ export default new Vuex.Store({
           balance.immatureIncludingLocked) /
         100000000
       ).toFixed(2);
+    },
+    accounts: state => {
+      return state.accounts.filter(x => x.state === "Normal");
     }
   },
   plugins: [syncState, createSharedMutations()]
