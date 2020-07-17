@@ -59,6 +59,64 @@ Napi::Value NJSIGenerationController::stopGeneration(const Napi::CallbackInfo& i
 
     return arg_0;
 }
+Napi::Value NJSIGenerationController::getGenerationAddress(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 0)
+    {
+        Napi::Error::New(env, "NJSIGenerationController::getGenerationAddress needs 0 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+
+    auto result = IGenerationController::getGenerationAddress();
+
+    //Wrap result in node object
+    auto arg_0 = Napi::String::New(env, result);
+
+    return arg_0;
+}
+Napi::Value NJSIGenerationController::getGenerationOverrideAddress(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 0)
+    {
+        Napi::Error::New(env, "NJSIGenerationController::getGenerationOverrideAddress needs 0 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+
+    auto result = IGenerationController::getGenerationOverrideAddress();
+
+    //Wrap result in node object
+    auto arg_0 = Napi::String::New(env, result);
+
+    return arg_0;
+}
+Napi::Value NJSIGenerationController::setGenerationOverrideAddress(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 1)
+    {
+        Napi::Error::New(env, "NJSIGenerationController::setGenerationOverrideAddress needs 1 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+
+    auto result = IGenerationController::setGenerationOverrideAddress(arg_0);
+
+    //Wrap result in node object
+    auto arg_1 = Napi::Boolean::New(env, result);
+
+    return arg_1;
+}
 
 Napi::FunctionReference NJSIGenerationController::constructor;
 
@@ -69,6 +127,9 @@ Napi::Object NJSIGenerationController::Init(Napi::Env env, Napi::Object exports)
     InstanceMethod("setListener", &NJSIGenerationController::setListener),
     InstanceMethod("startGeneration", &NJSIGenerationController::startGeneration),
     InstanceMethod("stopGeneration", &NJSIGenerationController::stopGeneration),
+    InstanceMethod("getGenerationAddress", &NJSIGenerationController::getGenerationAddress),
+    InstanceMethod("getGenerationOverrideAddress", &NJSIGenerationController::getGenerationOverrideAddress),
+    InstanceMethod("setGenerationOverrideAddress", &NJSIGenerationController::setGenerationOverrideAddress),
     });
     // Create a peristent reference to the class constructor. This will allow a function called on a class prototype and a function called on instance of a class to be distinguished from each other.
     constructor = Napi::Persistent(func);

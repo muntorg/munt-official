@@ -36,5 +36,21 @@ private:
     /** Stop any active block generation (proof of work) */
     Napi::Value stopGeneration(const Napi::CallbackInfo& info);
 
+    /**
+     * Get the address of the account that is used for generation by default. Empty on failiure
+     * Note that this isn't necessarily the actual generation address as there might be an override
+     * See: getGenerationOverrideAddress
+     */
+    Napi::Value getGenerationAddress(const Napi::CallbackInfo& info);
+
+    /**
+     * Get the 'override' address for generation, if one has been set
+     * The override address, when present it used for all block generation in place of the default account address
+     */
+    Napi::Value getGenerationOverrideAddress(const Napi::CallbackInfo& info);
+
+    /** Set an override address to use for block generation in place of the default */
+    Napi::Value setGenerationOverrideAddress(const Napi::CallbackInfo& info);
+
 };
 #endif //DJINNI_GENERATED_NJSIGENERATIONCONTROLLER_HPP

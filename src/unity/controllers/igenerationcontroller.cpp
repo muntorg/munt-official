@@ -69,6 +69,19 @@ void IGenerationController::setListener(const std::shared_ptr<IGenerationListene
     }
 }
 
+CAccount* findMiningAccount(CWallet* pWallet)
+{
+    for (const auto& [accountUUID, account] : pWallet->mapAccounts)
+    {
+        (unused) accountUUID;
+        if (account->IsMiningAccount() && account->m_State == AccountState::Normal)
+        {
+            return account;
+        }
+    }
+    return nullptr;
+}
+
 bool IGenerationController::startGeneration(int32_t numThreads, const std::string& memoryLimit)
 {
     if (!pactiveWallet)
@@ -76,23 +89,15 @@ bool IGenerationController::startGeneration(int32_t numThreads, const std::strin
         return false;
     }
     
-    CAccount* forAccount=nullptr;
-    std::string overrideAccountAddress;
-    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
-    {
-        (unused) accountUUID;
-        if (account->IsMiningAccount() && account->m_State == AccountState::Normal)
-        {
-            forAccount = account;
-            break;
-        }
-    }
-    CWalletDB(*pactiveWallet->dbw).ReadMiningAddressString(overrideAccountAddress);
-    
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    CAccount* forAccount = findMiningAccount(pactiveWallet);        
     if (!forAccount)
     {
         return false;
     }
+    
+    std::string overrideAccountAddress;
+    CWalletDB(*pactiveWallet->dbw).ReadMiningAddressString(overrideAccountAddress);
 
     // Allow user to override default memory selection.
     uint64_t nGenMemoryLimitBytes = GetMemLimitInBytesFromFormattedStringSpecifier(memoryLimit);
@@ -130,4 +135,55 @@ bool IGenerationController::stopGeneration()
     }).detach();
     return true;
 }
+
+std::string IGenerationController::getGenerationAddress()
+{
+    CAccount* forAccount = findMiningAccount(pactiveWallet);
+    if (forAccount)
+    {
+        CReserveKeyOrScript* receiveAddress = new CReserveKeyOrScript(pactiveWallet, forAccount, KEYCHAIN_EXTERNAL);
+        CPubKey pubKey;
+        if (receiveAddress->GetReservedKey(pubKey))
+        {
+            CKeyID keyID = pubKey.GetID();
+            return CNativeAddress(keyID).ToString();
+        }
+    }
+    return "";
+}
+
+std::string IGenerationController::getGenerationOverrideAddress()
+{
+    std::string overrideAccountAddress;
+    if (CWalletDB(*pactiveWallet->dbw).ReadMiningAddressString(overrideAccountAddress))
+    {
+        return overrideAccountAddress;
+    }
+    else
+    {
+        return "";
+    }
+}
+
+bool IGenerationController::setGenerationOverrideAddress(const std::string& overrideAddress)
+{
+    if (!pactiveWallet)
+        return false;
+
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+
+    if (!findMiningAccount(pactiveWallet))
+        return false;
+    
+    if (!overrideAddress.empty())
+    {
+        CNativeAddress address(overrideAddress);
+        if (!address.IsValid())
+        {
+            return false;
+        }
+    }
+    return CWalletDB(*pactiveWallet->dbw).WriteMiningAddressString(overrideAddress);
+}
+
 

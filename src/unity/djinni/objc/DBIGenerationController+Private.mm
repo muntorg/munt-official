@@ -53,6 +53,27 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (nonnull NSString *)getGenerationAddress {
+    try {
+        auto objcpp_result_ = ::IGenerationController::getGenerationAddress();
+        return ::djinni::String::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull NSString *)getGenerationOverrideAddress {
+    try {
+        auto objcpp_result_ = ::IGenerationController::getGenerationOverrideAddress();
+        return ::djinni::String::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)setGenerationOverrideAddress:(nonnull NSString *)overrideAddress {
+    try {
+        auto objcpp_result_ = ::IGenerationController::setGenerationOverrideAddress(::djinni::String::toCpp(overrideAddress));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 namespace djinni_generated {
 
 auto IGenerationController::toCpp(ObjcType objc) -> CppType

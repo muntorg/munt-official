@@ -249,6 +249,19 @@ declare class NJSIGenerationController
     static declare function startGeneration(numThreads: number, memoryLimit: string): boolean;
     /** Stop any active block generation (proof of work) */
     static declare function stopGeneration(): boolean;
+    /**
+     * Get the address of the account that is used for generation by default. Empty on failiure
+     * Note that this isn't necessarily the actual generation address as there might be an override
+     * See: getGenerationOverrideAddress
+     */
+    static declare function getGenerationAddress(): string;
+    /**
+     * Get the 'override' address for generation, if one has been set
+     * The override address, when present it used for all block generation in place of the default account address
+     */
+    static declare function getGenerationOverrideAddress(): string;
+    /** Set an override address to use for block generation in place of the default */
+    static declare function setGenerationOverrideAddress(overrideAddress: string): boolean;
 }
 /** Interface to receive updates about block generation */
 declare class NJSIGenerationListener

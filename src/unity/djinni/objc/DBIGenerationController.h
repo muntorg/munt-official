@@ -21,4 +21,20 @@
 /** Stop any active block generation (proof of work) */
 + (BOOL)stopGeneration;
 
+/**
+ * Get the address of the account that is used for generation by default. Empty on failiure
+ * Note that this isn't necessarily the actual generation address as there might be an override
+ * See: getGenerationOverrideAddress
+ */
++ (nonnull NSString *)getGenerationAddress;
+
+/**
+ * Get the 'override' address for generation, if one has been set
+ * The override address, when present it used for all block generation in place of the default account address
+ */
++ (nonnull NSString *)getGenerationOverrideAddress;
+
+/** Set an override address to use for block generation in place of the default */
++ (BOOL)setGenerationOverrideAddress:(nonnull NSString *)overrideAddress;
+
 @end
