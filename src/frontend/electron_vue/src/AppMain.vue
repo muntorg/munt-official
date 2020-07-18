@@ -11,6 +11,8 @@
 
     <modal-dialog v-model="modal" />
 
+    <novo-wallet />
+    <!--
     <div class="app-topbar">
       <span class="app-topbar--logo"></span>
       <span class="app-topbar--balance" v-show="totalBalance !== null">{{
@@ -28,6 +30,7 @@
         <router-view />
       </div>
     </div>
+    -->
   </div>
 </template>
 
@@ -35,6 +38,7 @@
 import { mapState, mapGetters } from "vuex";
 import { AppStatus } from "./store";
 import AppLoader from "./components/AppLoader";
+import NovoWallet from "./components/layout/NovoWallet";
 import ModalDialog from "./components/ModalDialog";
 
 import EventBus from "./EventBus.js";
@@ -51,6 +55,7 @@ export default {
   },
   components: {
     AppLoader,
+    NovoWallet,
     ModalDialog
   },
   watch: {
@@ -111,14 +116,14 @@ export default {
 
 <style lang="less" scoped>
 .app-main {
-  --top-height: 62px;
-
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  overflow: hidden;
   color: #000;
   background-color: #fff;
 }
 
+/*
 .app-topbar {
   position: fixed;
   top: 0;
@@ -177,4 +182,5 @@ export default {
     max-width: 800px;
   }
 }
+*/
 </style>
