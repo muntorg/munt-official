@@ -36,8 +36,7 @@ export default {
   font-family: euclid, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 1.7em;
+  font-size: 14px;
   -webkit-text-size-adjust: none;
   text-rendering: optimizeLegibility;
   font-variant-ligatures: none;
