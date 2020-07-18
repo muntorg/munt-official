@@ -85,14 +85,23 @@ class LibUnity {
   async _coreReady() {
     this._initializeAccountsController();
 
+    let accounts = this.accountsController.listAccounts();
+    let accountBalances = await this._executeRpc("getaccountbalances");
+
+    for (var i = 0; i < accountBalances.length; i++) {
+      let accountBalance = accountBalances[i];
+      accounts.find(x => x.UUID === accountBalance.UUID).balance =
+        accountBalance.balance;
+    }
+
     store.dispatch({
       type: "SET_ACCOUNTS",
-      accounts: this.accountsController.listAccounts()
+      accounts: accounts
     });
 
     store.dispatch({
       type: "SET_ACTIVE_ACCOUNT",
-      accountUUID: await this._executeRpc("getactiveaccount") // TODO: replace by call to accountscontroller method when it's available
+      accountUUID: this.accountsController.getActiveAccount()
     });
 
     store.dispatch({
@@ -216,7 +225,12 @@ class LibUnity {
     return new Promise((resolve, reject) => {
       rpcListener.onSuccess = (filteredCommand, result) => {
         console.log(`RPC success: ${result}`);
-        resolve(result);
+
+        try {
+          resolve(JSON.parse(result));
+        } catch {
+          resolve(result);
+        }
       };
 
       rpcListener.onError = error => {
