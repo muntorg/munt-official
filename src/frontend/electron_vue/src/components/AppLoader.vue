@@ -1,5 +1,5 @@
 <template>
-  <div class="app-loader">
+  <div class="app-loader" v-if="showLoader">
     <div class="logo-outer">
       <div class="logo-inner"></div>
     </div>
@@ -23,28 +23,59 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import { AppStatus } from "../store";
+
 export default {
   name: "AppLoader",
-  props: {
-    unityVersion: {
-      type: String,
-      default: "0.0.0"
+  data() {
+    return {
+      splashReady: false,
+      electronVersion: process.versions.electron
+    };
+  },
+  computed: {
+    ...mapState(["status", "unityVersion", "walletVersion"]),
+    showLoader() {
+      return (
+        this.splashReady === false ||
+        (this.status !== AppStatus.ready && this.status !== AppStatus.setup)
+      );
     },
-    walletVersion: {
-      type: String,
-      default: "0.0.0"
+    isShuttingDown() {
+      return this.status === AppStatus.shutdown;
     },
-    electronVersion: {
-      type: String,
-      default: "0.0.0"
-    },
-    isShuttingDown: {
-      type: Boolean,
-      default: false
-    },
-    isSynchronizing: {
-      type: Boolean,
-      default: false
+    isSynchronizing() {
+      return this.status === AppStatus.synchronize;
+    }
+  },
+  watch: {
+    status() {
+      this.onStatusChanged();
+    }
+  },
+  created() {
+    this.onStatusChanged();
+  },
+  mounted() {
+    setTimeout(() => {
+      this.splashReady = true;
+    }, 2500);
+  },
+  methods: {
+    onStatusChanged() {
+      let routeName;
+      switch (this.status) {
+        case AppStatus.setup:
+          routeName = "setup";
+          break;
+        case AppStatus.synchronize:
+        case AppStatus.ready:
+          routeName = "wallet";
+          break;
+      }
+      if (routeName === undefined || this.$route.name === routeName) return;
+      this.$router.push({ name: routeName });
     }
   }
 };

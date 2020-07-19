@@ -204,15 +204,20 @@ function createDebugWindow() {
   }
   winDebug = new BrowserWindow(options);
 
-  let hash = "#/debug";
+  let url = process.env.WEBPACK_DEV_SERVER_URL
+    ? `${process.env.WEBPACK_DEV_SERVER_URL}#/debug`
+    : `app://./index.html#/debug`;
+
+  console.log(url);
+
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    winDebug.loadURL(`${process.env.WEBPACK_DEV_SERVER_URL}${hash}`);
+    winDebug.loadURL(url);
     //if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol("app");
     // Load the index.html when not in development
-    winDebug.loadURL(`app://./index.html${hash}`);
+    winDebug.loadURL(url);
   }
 
   winDebug.on("ready-to-show", () => {

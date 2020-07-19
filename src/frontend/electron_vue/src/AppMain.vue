@@ -1,13 +1,6 @@
 <template>
   <div class="app-main">
-    <app-loader
-      v-show="showLoader"
-      :unityVersion="unityVersion"
-      :walletVersion="walletVersion"
-      :electronVersion="electronVersion"
-      :isShuttingDown="isShuttingDown"
-      :isSynchronizing="isSynchronizing"
-    />
+    <app-loader />
 
     <modal-dialog v-model="modal" />
 
@@ -47,9 +40,6 @@ export default {
   name: "AppMain",
   data() {
     return {
-      splashReady: false,
-      electronVersion: process.versions.electron,
-      progress: 1,
       modal: null
     };
   },
@@ -64,22 +54,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(["status", "unityVersion", "walletVersion", "balance"]),
+    ...mapState(["status", "balance"]),
     ...mapGetters(["totalBalance"]),
     showSettings() {
       return this.status === AppStatus.ready;
-    },
-    showLoader() {
-      return (
-        this.splashReady === false ||
-        (this.status !== AppStatus.ready && this.status !== AppStatus.setup)
-      );
-    },
-    isShuttingDown() {
-      return this.status === AppStatus.shutdown;
-    },
-    isSynchronizing() {
-      return this.status === AppStatus.synchronize;
     }
   },
   created() {
@@ -87,10 +65,6 @@ export default {
   },
   mounted() {
     EventBus.$on("show-dialog", this.showModal);
-
-    setTimeout(() => {
-      this.splashReady = true;
-    }, 2500);
   },
   methods: {
     handleStatusChanged() {

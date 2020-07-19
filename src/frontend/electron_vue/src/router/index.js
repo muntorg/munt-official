@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Wallet from "../views/Wallet.vue";
+import Wallet from "../views/Wallet";
 
 Vue.use(VueRouter);
 
@@ -8,24 +8,36 @@ const routes = [
   {
     path: "/",
     name: "wallet",
-    component: Wallet
+    component: Wallet,
+    meta: {
+      layout: "wallet-layout"
+    }
   },
   {
     path: "/setup",
     name: "setup",
     component: () =>
-      import(/* webpackChunkName: "setup" */ "../views/Setup.vue")
+      import(/* webpackChunkName: "setup" */ "../views/Setup.vue"),
+    meta: {
+      layout: "setup-layout"
+    }
   },
   {
     path: "/send",
     name: "send",
-    component: () => import(/* webpackChunkName: "send" */ "../views/Send.vue")
+    component: () => import(/* webpackChunkName: "send" */ "../views/Send.vue"),
+    meta: {
+      layout: "wallet-layout"
+    }
   },
   {
     path: "/history",
     name: "history",
     component: () =>
-      import(/* webpackChunkName: "send" */ "../views/History.vue")
+      import(/* webpackChunkName: "send" */ "../views/History.vue"),
+    meta: {
+      layout: "wallet-layout"
+    }
   },
   {
     path: "/settings",
@@ -56,12 +68,19 @@ const routes = [
             /* webpackChunkName: "change-password" */ "../views/Settings/ChangePassword.vue"
           )
       }
-    ]
+    ],
+    meta: {
+      layout: "wallet-layout"
+    }
   },
   {
     path: "/debug",
     name: "debug",
-    component: { template: "<div></div>" }
+    component: () =>
+      import(/* webpackChunkName: "debug" */ "../views/Debug.vue"),
+    meta: {
+      isDialog: true
+    }
   }
 ];
 

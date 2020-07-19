@@ -1,28 +1,21 @@
 <template>
   <div id="app">
-    <component :is="app"></component>
+    <app-wallet v-if="isWallet" />
+    <router-view v-else />
   </div>
 </template>
 
 <script>
-import AppMain from "./AppMain";
-import AppDebug from "./AppDebug";
+import AppWallet from "./AppWallet";
 
 export default {
-  data() {
-    return {
-      app: AppMain
-    };
-  },
+  name: "App",
   components: {
-    AppMain,
-    AppDebug
+    AppWallet
   },
-  created() {
-    switch (window.location.hash.toLowerCase()) {
-      case "#/debug":
-        this.app = AppDebug;
-        break;
+  computed: {
+    isWallet() {
+      return this.$route.meta.isDialog ? false : true;
     }
   }
 };

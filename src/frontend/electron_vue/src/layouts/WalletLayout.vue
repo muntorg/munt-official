@@ -1,5 +1,5 @@
 <template>
-  <div class="novo-wallet">
+  <div class="wallet-layout">
     <div class="sidebar">
       <header>
         <div class="logo" />
@@ -56,7 +56,7 @@
 import { mapState, mapGetters } from "vuex";
 
 export default {
-  name: "NovoWallet",
+  name: "WalletLayout",
   computed: {
     ...mapState(["activeAccount"]),
     ...mapGetters(["totalBalance", "accounts"]),
@@ -75,7 +75,6 @@ export default {
           accounts = this.spendingAccounts;
           break;
       }
-
       return accounts.reduce(function(acc, obj) {
         return acc + obj.balance;
       }, 0);
@@ -85,7 +84,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.novo-wallet {
+.wallet-layout {
   --sidebar-width: 240px;
   --transfer-width: 400px;
   --header-height: 62px;
@@ -98,6 +97,7 @@ export default {
 
   width: 100%;
   height: 100vh;
+  overflow: hidden;
 
   display: grid;
   grid-template-columns: var(--sidebar-width) calc(100% - var(--sidebar-width));
@@ -178,7 +178,7 @@ footer {
   & .logo {
     width: 22px;
     height: 22px;
-    background: url("../../img/logo.svg"),
+    background: url("../img/logo.svg"),
       linear-gradient(transparent, transparent);
     background-size: cover;
   }

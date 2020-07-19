@@ -5,6 +5,7 @@ import router from "./router";
 import i18n from "./i18n";
 
 import "./components";
+import "./layouts";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
