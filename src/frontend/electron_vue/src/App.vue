@@ -15,7 +15,12 @@ export default {
   },
   computed: {
     isWallet() {
-      return this.$route.meta.isDialog ? false : true;
+      switch (window.location.hash.toLowerCase()) {
+        case "#/debug":
+          return false;
+        default:
+          return true;
+      }
     }
   }
 };

@@ -77,10 +77,7 @@ const routes = [
     path: "/debug",
     name: "debug",
     component: () =>
-      import(/* webpackChunkName: "debug" */ "../views/Debug.vue"),
-    meta: {
-      isDialog: true
-    }
+      import(/* webpackChunkName: "debug" */ "../views/Debug.vue")
   }
 ];
 
