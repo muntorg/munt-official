@@ -275,3 +275,46 @@ std::vector<AccountRecord> IAccountsController::listAccounts()
     }
     return ret;
 }
+  
+BalanceRecord IAccountsController::getActiveAccountBalance()
+{
+    if (!pactiveWallet)
+        return BalanceRecord(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+    WalletBalances balances;
+    pactiveWallet->GetBalances(balances, pactiveWallet->activeAccount, true);
+    return BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked);
+}
+
+BalanceRecord IAccountsController::getAccountBalance(const std::string& accountUUID)
+{
+    if (pactiveWallet)
+    {
+        DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            WalletBalances balances;
+            pactiveWallet->GetBalances(balances, findIter->second, true);
+            return BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked);
+        }
+    }
+    return BalanceRecord(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+}
+
+std::unordered_map<std::string, BalanceRecord> IAccountsController::getAllAccountBalances()
+{
+    std::unordered_map<std::string, BalanceRecord> ret;
+    
+    if (!pactiveWallet)
+        return ret;
+    
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+    {
+        WalletBalances balances;
+        pactiveWallet->GetBalances(balances, account, true);
+        ret.emplace(getUUIDAsString(accountUUID), BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
+    }    
+    return ret;
+}

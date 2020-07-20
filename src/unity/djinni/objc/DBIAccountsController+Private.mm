@@ -4,6 +4,7 @@
 #import "DBIAccountsController+Private.h"
 #import "DBIAccountsController.h"
 #import "DBAccountRecord+Private.h"
+#import "DBBalanceRecord+Private.h"
 #import "DBIAccountsListener+Private.h"
 #import "DJICppWrapperCache+Private.h"
 #import "DJIError.h"
@@ -111,6 +112,27 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     try {
         auto objcpp_result_ = ::IAccountsController::listAccounts();
         return ::djinni::List<::djinni_generated::AccountRecord>::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull DBBalanceRecord *)getActiveAccountBalance {
+    try {
+        auto objcpp_result_ = ::IAccountsController::getActiveAccountBalance();
+        return ::djinni_generated::BalanceRecord::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull DBBalanceRecord *)getAccountBalance:(nonnull NSString *)accountUUID {
+    try {
+        auto objcpp_result_ = ::IAccountsController::getAccountBalance(::djinni::String::toCpp(accountUUID));
+        return ::djinni_generated::BalanceRecord::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull NSDictionary<NSString *, DBBalanceRecord *> *)getAllAccountBalances {
+    try {
+        auto objcpp_result_ = ::IAccountsController::getAllAccountBalances();
+        return ::djinni::Map<::djinni::String, ::djinni_generated::BalanceRecord>::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

@@ -237,6 +237,134 @@ Napi::Value NJSIAccountsController::listAccounts(const Napi::CallbackInfo& info)
 
     return arg_0;
 }
+Napi::Value NJSIAccountsController::getActiveAccountBalance(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 0)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::getActiveAccountBalance needs 0 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+
+    auto result = IAccountsController::getActiveAccountBalance();
+
+    //Wrap result in node object
+    auto arg_0 = Napi::Object::New(env);
+    auto arg_0_1 = Napi::Number::New(env, result.availableIncludingLocked);
+    arg_0.Set("availableIncludingLocked", arg_0_1);
+    auto arg_0_2 = Napi::Number::New(env, result.availableExcludingLocked);
+    arg_0.Set("availableExcludingLocked", arg_0_2);
+    auto arg_0_3 = Napi::Number::New(env, result.availableLocked);
+    arg_0.Set("availableLocked", arg_0_3);
+    auto arg_0_4 = Napi::Number::New(env, result.unconfirmedIncludingLocked);
+    arg_0.Set("unconfirmedIncludingLocked", arg_0_4);
+    auto arg_0_5 = Napi::Number::New(env, result.unconfirmedExcludingLocked);
+    arg_0.Set("unconfirmedExcludingLocked", arg_0_5);
+    auto arg_0_6 = Napi::Number::New(env, result.unconfirmedLocked);
+    arg_0.Set("unconfirmedLocked", arg_0_6);
+    auto arg_0_7 = Napi::Number::New(env, result.immatureIncludingLocked);
+    arg_0.Set("immatureIncludingLocked", arg_0_7);
+    auto arg_0_8 = Napi::Number::New(env, result.immatureExcludingLocked);
+    arg_0.Set("immatureExcludingLocked", arg_0_8);
+    auto arg_0_9 = Napi::Number::New(env, result.immatureLocked);
+    arg_0.Set("immatureLocked", arg_0_9);
+    auto arg_0_10 = Napi::Number::New(env, result.totalLocked);
+    arg_0.Set("totalLocked", arg_0_10);
+
+
+    return arg_0;
+}
+Napi::Value NJSIAccountsController::getAccountBalance(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 1)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::getAccountBalance needs 1 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+
+    auto result = IAccountsController::getAccountBalance(arg_0);
+
+    //Wrap result in node object
+    auto arg_1 = Napi::Object::New(env);
+    auto arg_1_1 = Napi::Number::New(env, result.availableIncludingLocked);
+    arg_1.Set("availableIncludingLocked", arg_1_1);
+    auto arg_1_2 = Napi::Number::New(env, result.availableExcludingLocked);
+    arg_1.Set("availableExcludingLocked", arg_1_2);
+    auto arg_1_3 = Napi::Number::New(env, result.availableLocked);
+    arg_1.Set("availableLocked", arg_1_3);
+    auto arg_1_4 = Napi::Number::New(env, result.unconfirmedIncludingLocked);
+    arg_1.Set("unconfirmedIncludingLocked", arg_1_4);
+    auto arg_1_5 = Napi::Number::New(env, result.unconfirmedExcludingLocked);
+    arg_1.Set("unconfirmedExcludingLocked", arg_1_5);
+    auto arg_1_6 = Napi::Number::New(env, result.unconfirmedLocked);
+    arg_1.Set("unconfirmedLocked", arg_1_6);
+    auto arg_1_7 = Napi::Number::New(env, result.immatureIncludingLocked);
+    arg_1.Set("immatureIncludingLocked", arg_1_7);
+    auto arg_1_8 = Napi::Number::New(env, result.immatureExcludingLocked);
+    arg_1.Set("immatureExcludingLocked", arg_1_8);
+    auto arg_1_9 = Napi::Number::New(env, result.immatureLocked);
+    arg_1.Set("immatureLocked", arg_1_9);
+    auto arg_1_10 = Napi::Number::New(env, result.totalLocked);
+    arg_1.Set("totalLocked", arg_1_10);
+
+
+    return arg_1;
+}
+Napi::Value NJSIAccountsController::getAllAccountBalances(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 0)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::getAllAccountBalances needs 0 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+
+    auto result = IAccountsController::getAllAccountBalances();
+
+    //Wrap result in node object
+    auto arg_0 = Napi::Object::New(env);
+    for(auto const& arg_0_elem : result)
+    {
+        auto arg_0_first = Napi::String::New(env, arg_0_elem.first);
+        auto arg_0_second = Napi::Object::New(env);
+        auto arg_0_second_1 = Napi::Number::New(env, arg_0_elem.second.availableIncludingLocked);
+        arg_0_second.Set("availableIncludingLocked", arg_0_second_1);
+        auto arg_0_second_2 = Napi::Number::New(env, arg_0_elem.second.availableExcludingLocked);
+        arg_0_second.Set("availableExcludingLocked", arg_0_second_2);
+        auto arg_0_second_3 = Napi::Number::New(env, arg_0_elem.second.availableLocked);
+        arg_0_second.Set("availableLocked", arg_0_second_3);
+        auto arg_0_second_4 = Napi::Number::New(env, arg_0_elem.second.unconfirmedIncludingLocked);
+        arg_0_second.Set("unconfirmedIncludingLocked", arg_0_second_4);
+        auto arg_0_second_5 = Napi::Number::New(env, arg_0_elem.second.unconfirmedExcludingLocked);
+        arg_0_second.Set("unconfirmedExcludingLocked", arg_0_second_5);
+        auto arg_0_second_6 = Napi::Number::New(env, arg_0_elem.second.unconfirmedLocked);
+        arg_0_second.Set("unconfirmedLocked", arg_0_second_6);
+        auto arg_0_second_7 = Napi::Number::New(env, arg_0_elem.second.immatureIncludingLocked);
+        arg_0_second.Set("immatureIncludingLocked", arg_0_second_7);
+        auto arg_0_second_8 = Napi::Number::New(env, arg_0_elem.second.immatureExcludingLocked);
+        arg_0_second.Set("immatureExcludingLocked", arg_0_second_8);
+        auto arg_0_second_9 = Napi::Number::New(env, arg_0_elem.second.immatureLocked);
+        arg_0_second.Set("immatureLocked", arg_0_second_9);
+        auto arg_0_second_10 = Napi::Number::New(env, arg_0_elem.second.totalLocked);
+        arg_0_second.Set("totalLocked", arg_0_second_10);
+
+        arg_0.Set(arg_0_first, arg_0_second);
+    }
+
+
+    return arg_0;
+}
 
 Napi::FunctionReference NJSIAccountsController::constructor;
 
@@ -255,6 +383,9 @@ Napi::Object NJSIAccountsController::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("deleteAccount", &NJSIAccountsController::deleteAccount),
     InstanceMethod("purgeAccount", &NJSIAccountsController::purgeAccount),
     InstanceMethod("listAccounts", &NJSIAccountsController::listAccounts),
+    InstanceMethod("getActiveAccountBalance", &NJSIAccountsController::getActiveAccountBalance),
+    InstanceMethod("getAccountBalance", &NJSIAccountsController::getAccountBalance),
+    InstanceMethod("getAllAccountBalances", &NJSIAccountsController::getAllAccountBalances),
     });
     // Create a peristent reference to the class constructor. This will allow a function called on a class prototype and a function called on instance of a class to be distinguished from each other.
     constructor = Napi::Persistent(func);

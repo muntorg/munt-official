@@ -224,6 +224,12 @@ declare class NJSIAccountsController
     static declare function purgeAccount(accountUUID: string): boolean;
     /** List all currently visible accounts in the wallet */
     static declare function listAccounts(): Array<AccountRecord>;
+    /** Check balance for active account */
+    static declare function getActiveAccountBalance(): BalanceRecord;
+    /** Check balance for account */
+    static declare function getAccountBalance(accountUUID: string): BalanceRecord;
+    /** Check balance for all accounts, returns a map of accout_uuid->balance_record */
+    static declare function getAllAccountBalances(): Map<string, BalanceRecord>;
 }
 /** Interface to receive updates about accounts */
 declare class NJSIAccountsListener

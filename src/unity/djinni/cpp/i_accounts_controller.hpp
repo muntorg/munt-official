@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #ifdef DJINNI_NODEJS
@@ -13,6 +14,7 @@
 class IAccountsListener;
 #endif
 struct AccountRecord;
+struct BalanceRecord;
 
 /** C++ interface to control accounts */
 class IAccountsController {
@@ -58,4 +60,13 @@ public:
 
     /** List all currently visible accounts in the wallet */
     static std::vector<AccountRecord> listAccounts();
+
+    /** Check balance for active account */
+    static BalanceRecord getActiveAccountBalance();
+
+    /** Check balance for account */
+    static BalanceRecord getAccountBalance(const std::string & accountUUID);
+
+    /** Check balance for all accounts, returns a map of accout_uuid->balance_record */
+    static std::unordered_map<std::string, BalanceRecord> getAllAccountBalances();
 };

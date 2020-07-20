@@ -7,8 +7,10 @@
 
 #include "NJSIAccountsListener.hpp"
 #include "account_record.hpp"
+#include "balance_record.hpp"
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <napi.h>
@@ -64,6 +66,15 @@ private:
 
     /** List all currently visible accounts in the wallet */
     Napi::Value listAccounts(const Napi::CallbackInfo& info);
+
+    /** Check balance for active account */
+    Napi::Value getActiveAccountBalance(const Napi::CallbackInfo& info);
+
+    /** Check balance for account */
+    Napi::Value getAccountBalance(const Napi::CallbackInfo& info);
+
+    /** Check balance for all accounts, returns a map of accout_uuid->balance_record */
+    Napi::Value getAllAccountBalances(const Napi::CallbackInfo& info);
 
 };
 #endif //DJINNI_GENERATED_NJSIACCOUNTSCONTROLLER_HPP

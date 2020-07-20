@@ -381,6 +381,12 @@ i_accounts_controller = interface +c {
     # List all currently visible accounts in the wallet
     static listAccounts() : list<account_record>;
     
+    # Check balance for active account
+    static getActiveAccountBalance(): balance_record;
+    # Check balance for account
+    static getAccountBalance(accountUUID : string): balance_record;
+    # Check balance for all accounts, returns a map of accout_uuid->balance_record
+    static getAllAccountBalances(): map<string, balance_record>;
 }
 
 # Interface to receive updates about accounts

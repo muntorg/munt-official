@@ -4,6 +4,7 @@
 #include "NativeIAccountsController.hpp"  // my header
 #include "Marshal.hpp"
 #include "NativeAccountRecord.hpp"
+#include "NativeBalanceRecord.hpp"
 #include "NativeIAccountsListener.hpp"
 
 namespace djinni_generated {
@@ -119,6 +120,33 @@ CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCont
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::IAccountsController::listAccounts();
         return ::djinni::release(::djinni::List<::djinni_generated::NativeAccountRecord>::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_getActiveAccountBalance(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::getActiveAccountBalance();
+        return ::djinni::release(::djinni_generated::NativeBalanceRecord::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_getAccountBalance(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::getAccountBalance(::djinni::String::toCpp(jniEnv, j_accountUUID));
+        return ::djinni::release(::djinni_generated::NativeBalanceRecord::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_getAllAccountBalances(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::getAllAccountBalances();
+        return ::djinni::release(::djinni::Map<::djinni::String, ::djinni_generated::NativeBalanceRecord>::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
