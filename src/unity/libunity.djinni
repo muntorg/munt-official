@@ -385,8 +385,13 @@ i_accounts_controller = interface +c {
     static getActiveAccountBalance(): balance_record;
     # Check balance for account
     static getAccountBalance(accountUUID : string): balance_record;
-    # Check balance for all accounts, returns a map of accout_uuid->balance_record
+    # Check balance for all accounts, returns a map of account_uuid->balance_record
     static getAllAccountBalances(): map<string, balance_record>;
+    
+    # Get list of all transactions account has been involved in
+    static getTransactionHistory(accountUUID : string) : list<transaction_record>;
+    # Get list of mutations for account
+    static getMutationHistory(accountUUID : string) : list<mutation_record>;
 }
 
 # Interface to receive updates about accounts

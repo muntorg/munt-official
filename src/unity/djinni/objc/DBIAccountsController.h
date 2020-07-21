@@ -3,6 +3,8 @@
 
 #import "DBAccountRecord.h"
 #import "DBBalanceRecord.h"
+#import "DBMutationRecord.h"
+#import "DBTransactionRecord.h"
 #import <Foundation/Foundation.h>
 @protocol DBIAccountsListener;
 
@@ -59,7 +61,13 @@
 /** Check balance for account */
 + (nonnull DBBalanceRecord *)getAccountBalance:(nonnull NSString *)accountUUID;
 
-/** Check balance for all accounts, returns a map of accout_uuid->balance_record */
+/** Check balance for all accounts, returns a map of account_uuid->balance_record */
 + (nonnull NSDictionary<NSString *, DBBalanceRecord *> *)getAllAccountBalances;
+
+/** Get list of all transactions account has been involved in */
++ (nonnull NSArray<DBTransactionRecord *> *)getTransactionHistory:(nonnull NSString *)accountUUID;
+
+/** Get list of mutations for account */
++ (nonnull NSArray<DBMutationRecord *> *)getMutationHistory:(nonnull NSString *)accountUUID;
 
 @end

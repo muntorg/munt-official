@@ -318,3 +318,31 @@ std::unordered_map<std::string, BalanceRecord> IAccountsController::getAllAccoun
     }    
     return ret;
 }
+
+std::vector<TransactionRecord> IAccountsController::getTransactionHistory(const std::string& accountUUID)
+{
+    if (pactiveWallet)
+    {
+        DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            return getTransactionHistoryForAccount(findIter->second);
+        }
+    }
+    return std::vector<TransactionRecord>();
+}
+
+std::vector<MutationRecord> IAccountsController::getMutationHistory(const std::string& accountUUID)
+{
+    if (pactiveWallet)
+    {
+        DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            return getMutationHistoryForAccount(findIter->second);
+        }
+    }
+    return std::vector<MutationRecord>();
+}

@@ -17,7 +17,6 @@
 #include "util.h"
 #include "witnessutil.h"
 #include "ui_interface.h"
-#include "wallet/wallet.h"
 #include "unity/appmanager.h"
 #include "utilmoneystr.h"
 #include <chain.h>
@@ -36,7 +35,6 @@
 #include "uri_record.hpp"
 #include "uri_recipient.hpp"
 #include "mutation_record.hpp"
-#include "transaction_record.hpp"
 #include "input_record.hpp"
 #include "output_record.hpp"
 #include "address_record.hpp"
@@ -159,15 +157,15 @@ TransactionStatus getStatusForTransaction(const CWalletTx* wtx)
     return status;
 }
 
-void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord>& mutations)
+void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord>& mutations, CAccount* forAccount)
 {
     // exclude generated that are orphaned
     if (wtx->IsCoinBase() && wtx->GetDepthInMainChain() < 1)
         return;
 
-    int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
-    int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true) +
-                    wtx->GetImmatureCredit(false, pactiveWallet->activeAccount, true);
+    int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, forAccount, true);
+    int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, forAccount, true) +
+                    wtx->GetImmatureCredit(false, forAccount, true);
 
     uint64_t time = wtx->nTimeSmart;
     std::string hash = wtx->GetHash().ToString();
@@ -201,29 +199,16 @@ void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord
     }
 }
 
-TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx& wtx)
+TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx& wtx, std::vector<CAccount*>& forAccounts, bool& anyInputsOrOutputsAreMine)
 {
     CWallet* pwallet = pactiveWallet;
 
     std::vector<InputRecord> inputs;
     std::vector<OutputRecord> outputs;
 
-
-    //fixme: (UNITY) - rather calculate this once and pass it in instead of for every call..
-    std::vector<CAccount*> accountsToTry;
-    accountsToTry.push_back(pactiveWallet->activeAccount);
-    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
-    {
-        (unused) accountUUID;
-        if (account->getParentUUID() == pactiveWallet->activeAccount->getUUID())
-        {
-            accountsToTry.push_back(account);
-        }
-    }
-
     int64_t subtracted=0;
     int64_t added=0;
-    for (const auto& account : accountsToTry)
+    for (const auto& account : forAccounts)
     {
         subtracted += wtx.GetDebit(ISMINE_SPENDABLE, account, true);
         added += wtx.GetCredit(ISMINE_SPENDABLE, account, true);
@@ -286,11 +271,12 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
             description = data.description;
         }
         bool isMine = false;
-        for (const auto& account : accountsToTry)
+        for (const auto& account : forAccounts)
         {
             if (static_cast<const CExtWallet*>(pwallet)->IsMine(*account, txin))
             {
                 isMine = true;
+                anyInputsOrOutputsAreMine = true;
             }
         }
         inputs.push_back(InputRecord(address, label, description, isMine));
@@ -320,11 +306,12 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
             description = data.description;
         }
         bool isMine = false;
-        for (const auto& account : accountsToTry)
+        for (const auto& account : forAccounts)
         {
             if (IsMine(*account, txout))
             {
                 isMine = true;
+                anyInputsOrOutputsAreMine = true;
             }
         }
         outputs.push_back(OutputRecord(txout.nValue, address, label, description, isMine));
@@ -362,6 +349,22 @@ void terminateUnityFrontend()
 }
 
 #include <boost/chrono/thread_clock.hpp>
+
+std::vector<CAccount*> GetAccountsForAccount(CAccount* forAccount)
+{
+    std::vector<CAccount*> forAccounts;
+    forAccounts.push_back(forAccount);
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+    {
+        (unused) accountUUID;
+        if (account->getParentUUID() == forAccount->getUUID())
+        {
+            forAccounts.push_back(account);
+        }
+    }
+    return forAccounts;
+}
+
 
 void handlePostInitMain()
 {
@@ -459,8 +462,13 @@ void handlePostInitMain()
                 LogPrintf("unity: notify transaction depth changed %s",hash.ToString().c_str());
                 if (signalHandler)
                 {
-                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx);
-                    signalHandler->notifyUpdatedTransaction(walletTransaction);
+                    std::vector<CAccount*> forAccounts = GetAccountsForAccount(pactiveWallet->activeAccount);
+                    bool anyInputsOrOutputsAreMine = false;
+                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
+                    if (anyInputsOrOutputsAreMine)
+                    {
+                        signalHandler->notifyUpdatedTransaction(walletTransaction);
+                    }
                 }
             }
         } );
@@ -476,8 +484,13 @@ void handlePostInitMain()
                 {
                     LogPrintf("unity: notify tx updated %s",hash.ToString().c_str());
                     const CWalletTx& wtx = pwallet->mapWallet[hash];
-                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx);
-                    signalHandler->notifyUpdatedTransaction(walletTransaction);
+                    std::vector<CAccount*> forAccounts = GetAccountsForAccount(pactiveWallet->activeAccount);
+                    bool anyInputsOrOutputsAreMine = false;
+                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
+                    if (anyInputsOrOutputsAreMine)
+                    {
+                        signalHandler->notifyUpdatedTransaction(walletTransaction);
+                    }
                 }
                 //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
                 // else if (status == CT_DELETED)
@@ -834,7 +847,7 @@ int32_t UnifiedBackend::InitUnityLib(const std::string& dataDir, const std::stri
             {
                 const CWalletTx& wtx = pactiveWallet->mapWallet[txHash];
                 std::vector<MutationRecord> mutations;
-                addMutationsForTransaction(&wtx, mutations);
+                addMutationsForTransaction(&wtx, mutations, pactiveWallet->activeAccount);
                 for (auto& m: mutations)
                 {
                     LogPrintf("unity: notify new mutation for tx %s", txHash.ToString().c_str());
@@ -1264,25 +1277,34 @@ PaymentResultStatus UnifiedBackend::performPaymentToRecipient(const UriRecipient
     return PaymentResultStatus::SUCCESS;
 }
 
-std::vector<TransactionRecord> UnifiedBackend::getTransactionHistory()
+std::vector<TransactionRecord> getTransactionHistoryForAccount(CAccount* forAccount)
 {
-    std::vector<TransactionRecord> ret;
-
-    if (!pactiveWallet)
-        return ret;
-
+    std::vector<TransactionRecord> ret;    
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
 
+    std::vector<CAccount*> forAccounts = GetAccountsForAccount(forAccount);    
     for (const auto& [hash, wtx] : pactiveWallet->mapWallet)
     {
-        TransactionRecord tx = calculateTransactionRecordForWalletTransaction(wtx);
-        ret.push_back(tx);
+        bool anyInputsOrOutputsAreMine = false;
+        TransactionRecord tx = calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
+        if (anyInputsOrOutputsAreMine)
+        {
+            ret.push_back(tx);
+        }
     }
     std::sort(ret.begin(), ret.end(), [&](TransactionRecord& x, TransactionRecord& y){ return (x.timeStamp > y.timeStamp); });
     return ret;
 }
 
-TransactionRecord UnifiedBackend::getTransaction(const std::string & txHash)
+std::vector<TransactionRecord> UnifiedBackend::getTransactionHistory()
+{
+    if (!pactiveWallet)
+        return std::vector<TransactionRecord>();
+    
+    return getTransactionHistoryForAccount(pactiveWallet->activeAccount);
+}
+
+TransactionRecord UnifiedBackend::getTransaction(const std::string& txHash)
 {
     if (!pactiveWallet)
         throw std::runtime_error(strprintf("No active wallet to query tx hash [%s]", txHash));
@@ -1294,8 +1316,11 @@ TransactionRecord UnifiedBackend::getTransaction(const std::string & txHash)
     if (pactiveWallet->mapWallet.find(hash) == pactiveWallet->mapWallet.end())
         throw std::runtime_error(strprintf("No transaction found for hash [%s]", txHash));
 
+    
+    std::vector<CAccount*> forAccounts = GetAccountsForAccount(pactiveWallet->activeAccount);
     const CWalletTx& wtx = pactiveWallet->mapWallet[hash];
-    return calculateTransactionRecordForWalletTransaction(wtx);
+    bool anyInputsOrOutputsAreMine = false;
+    return calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
 }
 
 std::string UnifiedBackend::resendTransaction(const std::string& txHash)
@@ -1328,12 +1353,9 @@ std::string UnifiedBackend::resendTransaction(const std::string& txHash)
     return strHex;
 }
 
-std::vector<MutationRecord> UnifiedBackend::getMutationHistory()
+std::vector<MutationRecord> getMutationHistoryForAccount(CAccount* forAccount)
 {
     std::vector<MutationRecord> ret;
-
-    if (!pactiveWallet)
-        return ret;
 
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
 
@@ -1348,10 +1370,17 @@ std::vector<MutationRecord> UnifiedBackend::getMutationHistory()
     // build mutation list based on transactions
     for (const CWalletTx* wtx : vWtx)
     {
-        addMutationsForTransaction(wtx, ret);
+        addMutationsForTransaction(wtx, ret, forAccount);
     }
 
     return ret;
+}
+
+std::vector<MutationRecord> UnifiedBackend::getMutationHistory()
+{
+    if (!pactiveWallet)
+        return std::vector<MutationRecord>();
+    return getMutationHistoryForAccount(pactiveWallet->activeAccount);
 }
 
 std::vector<AddressRecord> UnifiedBackend::getAddressBookRecords()

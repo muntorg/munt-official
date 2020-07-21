@@ -8,6 +8,10 @@
 #include "NJSIAccountsListener.hpp"
 #include "account_record.hpp"
 #include "balance_record.hpp"
+#include "input_record.hpp"
+#include "mutation_record.hpp"
+#include "output_record.hpp"
+#include "transaction_record.hpp"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -73,8 +77,14 @@ private:
     /** Check balance for account */
     Napi::Value getAccountBalance(const Napi::CallbackInfo& info);
 
-    /** Check balance for all accounts, returns a map of accout_uuid->balance_record */
+    /** Check balance for all accounts, returns a map of account_uuid->balance_record */
     Napi::Value getAllAccountBalances(const Napi::CallbackInfo& info);
+
+    /** Get list of all transactions account has been involved in */
+    Napi::Value getTransactionHistory(const Napi::CallbackInfo& info);
+
+    /** Get list of mutations for account */
+    Napi::Value getMutationHistory(const Napi::CallbackInfo& info);
 
 };
 #endif //DJINNI_GENERATED_NJSIACCOUNTSCONTROLLER_HPP

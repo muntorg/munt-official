@@ -365,6 +365,122 @@ Napi::Value NJSIAccountsController::getAllAccountBalances(const Napi::CallbackIn
 
     return arg_0;
 }
+Napi::Value NJSIAccountsController::getTransactionHistory(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 1)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::getTransactionHistory needs 1 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+
+    auto result = IAccountsController::getTransactionHistory(arg_0);
+
+    //Wrap result in node object
+    auto arg_1 = Napi::Array::New(env);
+    for(size_t arg_1_id = 0; arg_1_id < result.size(); arg_1_id++)
+    {
+        auto arg_1_elem = Napi::Object::New(env);
+        auto arg_1_elem_1 = Napi::String::New(env, result[arg_1_id].txHash);
+        arg_1_elem.Set("txHash", arg_1_elem_1);
+        auto arg_1_elem_2 = Napi::Number::New(env, result[arg_1_id].timeStamp);
+        arg_1_elem.Set("timeStamp", arg_1_elem_2);
+        auto arg_1_elem_3 = Napi::Number::New(env, result[arg_1_id].amount);
+        arg_1_elem.Set("amount", arg_1_elem_3);
+        auto arg_1_elem_4 = Napi::Number::New(env, result[arg_1_id].fee);
+        arg_1_elem.Set("fee", arg_1_elem_4);
+        auto arg_1_elem_5 = Napi::Value::From(env, (int)result[arg_1_id].status);
+        arg_1_elem.Set("status", arg_1_elem_5);
+        auto arg_1_elem_6 = Napi::Number::New(env, result[arg_1_id].height);
+        arg_1_elem.Set("height", arg_1_elem_6);
+        auto arg_1_elem_7 = Napi::Number::New(env, result[arg_1_id].blockTime);
+        arg_1_elem.Set("blockTime", arg_1_elem_7);
+        auto arg_1_elem_8 = Napi::Number::New(env, result[arg_1_id].depth);
+        arg_1_elem.Set("depth", arg_1_elem_8);
+        auto arg_1_elem_9 = Napi::Array::New(env);
+        for(size_t arg_1_elem_9_id = 0; arg_1_elem_9_id < result[arg_1_id].inputs.size(); arg_1_elem_9_id++)
+        {
+            auto arg_1_elem_9_elem = Napi::Object::New(env);
+            auto arg_1_elem_9_elem_1 = Napi::String::New(env, result[arg_1_id].inputs[arg_1_elem_9_id].address);
+            arg_1_elem_9_elem.Set("address", arg_1_elem_9_elem_1);
+            auto arg_1_elem_9_elem_2 = Napi::String::New(env, result[arg_1_id].inputs[arg_1_elem_9_id].label);
+            arg_1_elem_9_elem.Set("label", arg_1_elem_9_elem_2);
+            auto arg_1_elem_9_elem_3 = Napi::String::New(env, result[arg_1_id].inputs[arg_1_elem_9_id].desc);
+            arg_1_elem_9_elem.Set("desc", arg_1_elem_9_elem_3);
+            auto arg_1_elem_9_elem_4 = Napi::Boolean::New(env, result[arg_1_id].inputs[arg_1_elem_9_id].isMine);
+            arg_1_elem_9_elem.Set("isMine", arg_1_elem_9_elem_4);
+
+            arg_1_elem_9.Set((int)arg_1_elem_9_id,arg_1_elem_9_elem);
+        }
+
+        arg_1_elem.Set("inputs", arg_1_elem_9);
+        auto arg_1_elem_10 = Napi::Array::New(env);
+        for(size_t arg_1_elem_10_id = 0; arg_1_elem_10_id < result[arg_1_id].outputs.size(); arg_1_elem_10_id++)
+        {
+            auto arg_1_elem_10_elem = Napi::Object::New(env);
+            auto arg_1_elem_10_elem_1 = Napi::Number::New(env, result[arg_1_id].outputs[arg_1_elem_10_id].amount);
+            arg_1_elem_10_elem.Set("amount", arg_1_elem_10_elem_1);
+            auto arg_1_elem_10_elem_2 = Napi::String::New(env, result[arg_1_id].outputs[arg_1_elem_10_id].address);
+            arg_1_elem_10_elem.Set("address", arg_1_elem_10_elem_2);
+            auto arg_1_elem_10_elem_3 = Napi::String::New(env, result[arg_1_id].outputs[arg_1_elem_10_id].label);
+            arg_1_elem_10_elem.Set("label", arg_1_elem_10_elem_3);
+            auto arg_1_elem_10_elem_4 = Napi::String::New(env, result[arg_1_id].outputs[arg_1_elem_10_id].desc);
+            arg_1_elem_10_elem.Set("desc", arg_1_elem_10_elem_4);
+            auto arg_1_elem_10_elem_5 = Napi::Boolean::New(env, result[arg_1_id].outputs[arg_1_elem_10_id].isMine);
+            arg_1_elem_10_elem.Set("isMine", arg_1_elem_10_elem_5);
+
+            arg_1_elem_10.Set((int)arg_1_elem_10_id,arg_1_elem_10_elem);
+        }
+
+        arg_1_elem.Set("outputs", arg_1_elem_10);
+
+        arg_1.Set((int)arg_1_id,arg_1_elem);
+    }
+
+
+    return arg_1;
+}
+Napi::Value NJSIAccountsController::getMutationHistory(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 1)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::getMutationHistory needs 1 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+
+    auto result = IAccountsController::getMutationHistory(arg_0);
+
+    //Wrap result in node object
+    auto arg_1 = Napi::Array::New(env);
+    for(size_t arg_1_id = 0; arg_1_id < result.size(); arg_1_id++)
+    {
+        auto arg_1_elem = Napi::Object::New(env);
+        auto arg_1_elem_1 = Napi::Number::New(env, result[arg_1_id].change);
+        arg_1_elem.Set("change", arg_1_elem_1);
+        auto arg_1_elem_2 = Napi::Number::New(env, result[arg_1_id].timestamp);
+        arg_1_elem.Set("timestamp", arg_1_elem_2);
+        auto arg_1_elem_3 = Napi::String::New(env, result[arg_1_id].txHash);
+        arg_1_elem.Set("txHash", arg_1_elem_3);
+        auto arg_1_elem_4 = Napi::Value::From(env, (int)result[arg_1_id].status);
+        arg_1_elem.Set("status", arg_1_elem_4);
+        auto arg_1_elem_5 = Napi::Number::New(env, result[arg_1_id].depth);
+        arg_1_elem.Set("depth", arg_1_elem_5);
+
+        arg_1.Set((int)arg_1_id,arg_1_elem);
+    }
+
+
+    return arg_1;
+}
 
 Napi::FunctionReference NJSIAccountsController::constructor;
 
@@ -386,6 +502,8 @@ Napi::Object NJSIAccountsController::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("getActiveAccountBalance", &NJSIAccountsController::getActiveAccountBalance),
     InstanceMethod("getAccountBalance", &NJSIAccountsController::getAccountBalance),
     InstanceMethod("getAllAccountBalances", &NJSIAccountsController::getAllAccountBalances),
+    InstanceMethod("getTransactionHistory", &NJSIAccountsController::getTransactionHistory),
+    InstanceMethod("getMutationHistory", &NJSIAccountsController::getMutationHistory),
     });
     // Create a peristent reference to the class constructor. This will allow a function called on a class prototype and a function called on instance of a class to be distinguished from each other.
     constructor = Napi::Persistent(func);
