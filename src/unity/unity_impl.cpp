@@ -888,14 +888,17 @@ int32_t UnifiedBackend::InitUnityLib(const std::string& dataDir, const std::stri
     SoftSetArg("-clientname", GLOBAL_APPNAME" desktop");
 #endif
 
-    SoftSetArg("-addnode", "178.62.195.19");
-    SoftSetArg("-addnode", "149.210.165.218");
-
     // Testnet
     if (testnet)
     {
-        SoftSetArg("-testnet", "C1534687770:60");
+        SoftSetArg("-testnet", "C1595323263:60");
         SoftSetArg("-addnode", "devbak.net");
+        SoftSetArg("-addnode", "178.62.195.19");
+    }
+    else
+    {
+        SoftSetArg("-addnode", "178.62.195.19");
+        SoftSetArg("-addnode", "149.210.165.218");
     }
 
     signalHandler = signalHandler_;
