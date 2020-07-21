@@ -312,9 +312,12 @@ std::unordered_map<std::string, BalanceRecord> IAccountsController::getAllAccoun
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
     for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
     {
-        WalletBalances balances;
-        pactiveWallet->GetBalances(balances, account, true);
-        ret.emplace(getUUIDAsString(accountUUID), BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
+        if (findIter->second->m_State == AccountState::Normal)
+        {
+            WalletBalances balances;
+            pactiveWallet->GetBalances(balances, account, true);
+            ret.emplace(getUUIDAsString(accountUUID), BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
+        }
     }    
     return ret;
 }
