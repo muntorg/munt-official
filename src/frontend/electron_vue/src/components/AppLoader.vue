@@ -71,7 +71,7 @@ export default {
           break;
         case AppStatus.synchronize:
         case AppStatus.ready:
-          routeName = "wallet";
+          routeName = "account";
           break;
       }
       if (routeName === undefined || this.$route.name === routeName) return;

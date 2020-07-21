@@ -57,32 +57,31 @@
           />
         </novo-form-field>
       </div>
-
-      <novo-button-section>
-        <template v-slot:left>
-          <button v-if="showPreviousButton" @click="previousStep">
-            {{ $t("buttons.previous") }}
-          </button>
-        </template>
-        <template v-slot:right>
-          <button @click="nextStep" :disabled="!isNextEnabled">
-            <span v-show="showNextButton">
-              {{ $t("buttons.next") }}
-            </span>
-            <span v-show="showFinishButton">
-              {{ $t("buttons.finish") }}
-            </span>
-          </button>
-          <button
-            @click="nextStep"
-            v-show="showValidateButton"
-            :disabled="!isValidateButtonEnabled"
-          >
-            {{ $t("buttons.next") }}
-          </button>
-        </template>
-      </novo-button-section>
     </div>
+    <novo-button-section class="steps-buttons">
+      <template v-slot:left>
+        <button v-if="showPreviousButton" @click="previousStep">
+          {{ $t("buttons.previous") }}
+        </button>
+      </template>
+      <template v-slot:right>
+        <button @click="nextStep" :disabled="!isNextEnabled">
+          <span v-show="showNextButton">
+            {{ $t("buttons.next") }}
+          </span>
+          <span v-show="showFinishButton">
+            {{ $t("buttons.finish") }}
+          </span>
+        </button>
+        <button
+          @click="nextStep"
+          v-show="showValidateButton"
+          :disabled="!isValidateButtonEnabled"
+        >
+          {{ $t("buttons.next") }}
+        </button>
+      </template>
+    </novo-button-section>
   </div>
 </template>
 
@@ -248,6 +247,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.setup-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.steps-container {
+  flex: 1;
+}
+
 .settings-row {
   padding: 4px 0;
   border-bottom: 1px solid #ccc;
@@ -256,7 +265,6 @@ export default {
 
 .arrow {
   float: right;
-  margin: 6px 0 0 0;
   color: #fff;
 }
 

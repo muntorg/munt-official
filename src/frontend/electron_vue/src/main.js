@@ -11,30 +11,40 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faAngleDoubleLeft,
+  faArrowFromBottom,
+  faArrowLeft,
+  faArrowToBottom,
   faChevronDown,
   faChevronRight,
   faCog,
   faCopy,
   faCreditCard,
+  faDiamond,
   faLongArrowLeft,
   faLongArrowRight,
   faPlus,
   faTimes,
-  faUniversity
+  faUniversity,
+  faUserCircle
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add([
   faAngleDoubleLeft,
+  faArrowFromBottom,
+  faArrowLeft,
+  faArrowToBottom,
   faChevronDown,
   faChevronRight,
   faCog,
   faCopy,
   faCreditCard,
+  faDiamond,
   faLongArrowLeft,
   faLongArrowRight,
   faPlus,
   faTimes,
-  faUniversity
+  faUniversity,
+  faUserCircle
 ]);
 
 Vue.component("fa-icon", FontAwesomeIcon);

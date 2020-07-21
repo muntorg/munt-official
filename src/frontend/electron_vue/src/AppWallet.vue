@@ -13,7 +13,7 @@ import AppLoader from "./components/AppLoader";
 import ModalDialog from "./components/ModalDialog";
 import EventBus from "./EventBus.js";
 
-const default_layout = "div";
+const default_layout = "wallet-layout";
 
 export default {
   name: "AppWallet",

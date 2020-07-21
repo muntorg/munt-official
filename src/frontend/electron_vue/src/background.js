@@ -71,9 +71,9 @@ import lu from "native-ext-loader!./unity/lib_unity.node";
 
 function createMainWindow() {
   let options = {
-    width: 800,
+    width: 1024,
     minWidth: 800,
-    height: 600,
+    height: 768,
     minHeight: 600,
     show: false,
     title: "Novo",

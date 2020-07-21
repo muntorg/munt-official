@@ -1,26 +1,11 @@
 <template>
   <div class="setup-layout">
-    <router-view />
-
-    <!--
-    <div class="app-topbar">
-      <span class="app-topbar--logo"></span>
-      <span class="app-topbar--balance" v-show="totalBalance !== null">{{
-        totalBalance
-      }}</span>
-      <span class="app-topbar--settings" v-if="showSettings">
-        <router-link :to="{ name: 'settings' }">
-          <fa-icon :icon="['fal', 'cog']" />
-          <span> {{ $t("settings.header") }}</span>
-        </router-link>
-      </span>
+    <div class="header">
+      <div class="logo" />
     </div>
-    <div class="app-content">
-      <div class="app-content--wrapper">
-        <router-view />
-      </div>
+    <div class="main">
+      <router-view />
     </div>
-    -->
   </div>
 </template>
 
@@ -34,66 +19,25 @@ export default {
 .setup-layout {
   width: 100%;
   height: 100vh;
-}
+  overflow: hidden;
 
-/*
-.app-topbar {
-  position: fixed;
-  top: 0;
-  height: var(--top-height);
-  line-height: var(--top-height);
-  width: 100%;
-  padding: 0 40px 0 40px;
-  background-color: #000;
-  color: #fff;
-  z-index: 999;
+  & .header {
+    height: var(--header-height);
+    border-bottom: 1px solid #ddd;
+    padding: 20px;
 
-  & .app-topbar--logo {
-    float: left;
-    margin-top: 20px;
-    width: 22px;
-    height: 22px;
-    background: url("./img/logo.svg"), linear-gradient(transparent, transparent);
+    & .logo {
+      width: 22px;
+      height: 22px;
+      background: url("../img/logo-start.svg"),
+        linear-gradient(transparent, transparent);
+      background-size: cover;
+    }
   }
 
-  & .app-topbar--balance {
-    float: left;
-    margin-left: 10px;
-  }
-
-  & .app-topbar--settings {
-    float: right;
-    margin-right: -10px;
-  }
-
-  & .app-topbar--settings a,
-  .app-topbar--settings a:active,
-  .app-topbar--settings a:visited {
-    display: inline-block;
-    padding: 0 10px 0 10px;
-    font-size: 0.9em;
-    font-weight: 400;
-    line-height: 32px;
-    color: #fff;
-  }
-
-  .app-topbar--settings a:hover {
-    background-color: #222;
+  & .main {
+    height: calc(100vh - var(--header-height));
+    padding: 40px;
   }
 }
-
-.app-content {
-  position: absolute;
-  top: var(--top-height);
-  height: calc(100% - var(--top-height));
-  width: 100%;
-  padding: 0 40px 100px 40px;
-
-  & .app-content--wrapper {
-    margin: 40px auto;
-    width: 100%;
-    max-width: 800px;
-  }
-}
-*/
 </style>

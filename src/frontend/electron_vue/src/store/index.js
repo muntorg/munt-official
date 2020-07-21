@@ -21,7 +21,6 @@ export default new Vuex.Store({
     balance: null,
     coreReady: false,
     mutations: null,
-    priceInfo: null,
     receiveAddress: null,
     status: AppStatus.start,
     unityVersion: null,
@@ -46,9 +45,6 @@ export default new Vuex.Store({
     },
     SET_MUTATIONS(state, payload) {
       state.mutations = payload.mutations;
-    },
-    SET_PRICE_INFO(state, payload) {
-      state.priceInfo = payload.priceInfo;
     },
     SET_RECEIVE_ADDRESS(state, payload) {
       state.receiveAddress = payload.receiveAddress;
@@ -99,9 +95,6 @@ export default new Vuex.Store({
     SET_MUTATIONS({ commit }, payload) {
       commit(payload);
     },
-    SET_PRICE_INFO({ commit }, payload) {
-      commit(payload);
-    },
     SET_RECEIVE_ADDRESS({ commit }, payload) {
       commit(payload);
     },
@@ -134,7 +127,23 @@ export default new Vuex.Store({
       ).toFixed(2);
     },
     accounts: state => {
-      return state.accounts.filter(x => x.state === "Normal");
+      return state.accounts
+        .filter(x => x.state === "Normal")
+        .sort((a, b) => {
+          const labelA = a.label.toUpperCase();
+          const labelB = b.label.toUpperCase();
+
+          let comparison = 0;
+          if (labelA > labelB) {
+            comparison = 1;
+          } else if (labelA < labelB) {
+            comparison = -1;
+          }
+          return comparison;
+        });
+    },
+    account: state => {
+      return state.accounts.find(x => x.UUID === state.activeAccount);
     }
   },
   plugins: [syncState, createSharedMutations()]

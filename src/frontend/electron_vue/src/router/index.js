@@ -1,17 +1,17 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Wallet from "../views/Wallet";
+import Account from "../views/Account";
+
+import UnityBackend from "../unity/UnityBackend";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "wallet",
-    component: Wallet,
-    meta: {
-      layout: "wallet-layout"
-    }
+    path: "/account/:id?",
+    name: "account",
+    props: true,
+    component: Account
   },
   {
     path: "/setup",
@@ -23,26 +23,9 @@ const routes = [
     }
   },
   {
-    path: "/send",
-    name: "send",
-    component: () => import(/* webpackChunkName: "send" */ "../views/Send.vue"),
-    meta: {
-      layout: "wallet-layout"
-    }
-  },
-  {
-    path: "/history",
-    name: "history",
-    component: () =>
-      import(/* webpackChunkName: "send" */ "../views/History.vue"),
-    meta: {
-      layout: "wallet-layout"
-    }
-  },
-  {
     path: "/settings",
     component: () =>
-      import(/* webpackChunkName: "settings" */ "../views/Settings.vue"),
+      import(/* webpackChunkName: "settings" */ "../views/Settings"),
     children: [
       {
         path: "",
@@ -68,21 +51,30 @@ const routes = [
             /* webpackChunkName: "change-password" */ "../views/Settings/ChangePassword.vue"
           )
       }
-    ],
-    meta: {
-      layout: "wallet-layout"
-    }
+    ]
   },
   {
     path: "/debug",
     name: "debug",
     component: () =>
-      import(/* webpackChunkName: "debug" */ "../views/Debug.vue")
+      import(/* webpackChunkName: "debug-dialog" */ "../views/DebugDialog")
   }
 ];
 
 const router = new VueRouter({
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  switch (to.name) {
+    case "account":
+      if (to.params.id !== undefined) {
+        // set active account to specified id
+        UnityBackend.SetActiveAccount(to.params.id);
+      }
+      break;
+  }
+  next();
 });
 
 export default router;

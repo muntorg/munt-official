@@ -6,6 +6,7 @@
     "next": "Volgende",
     "ok": "OK",
     "previous": "Vorige",
+    "receive": "Ontvangen",
     "send": "Versturen"
   },
   "common": {
@@ -40,10 +41,12 @@
     "setup_novo_wallet": "Installeer jouw Novo portemonnee",
     "this_is_your_recovery_phrase": "Dit is jouw herstelzin. Bewaar de herstelzin op een veilige plek. Zin kwijt of iemand toegang tot je zin = Novo weg."
   },
-  "wallet": {
+  "receive_novo": {
     "receive_acquired_novo": "Ontvang jouw verkregen Novo",
-    "buy_novo": "Koopen Novo",
-    "your_address": "Jouw adres",
-    "send_novo": "Verstuur Novo"
+    "your_address": "Jouw adres"
+  },
+  "send_novo": {
+    "enter_label": "Voer label in",
+    "enter_novo_address": "Voer Novo adres in"
   }
 }

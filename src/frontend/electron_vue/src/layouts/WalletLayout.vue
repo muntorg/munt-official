@@ -1,17 +1,17 @@
 <template>
   <div class="wallet-layout">
     <div class="sidebar">
-      <header>
+      <div class="header">
         <div class="logo" />
-        <div class="balance-total">
+        <div class="total-balance">
           {{ totalBalance }}
         </div>
-      </header>
-      <section>
+      </div>
+      <div class="accounts-section">
         <h4 class="accounts-header">
           accounts
         </h4>
-        <div class="accounts">
+        <div class="accounts-scroller">
           <div class="account-cat">
             <div class="status">
               <fa-icon :icon="['fal', 'chevron-down']" />
@@ -32,23 +32,25 @@
             class="account"
             :class="{ active: account.UUID === activeAccount }"
           >
-            <router-link to="/account">
+            <router-link
+              :to="{ name: 'account', params: { id: account.UUID } }"
+            >
               {{ account.label }}
               <span class="balance">{{ account.balance }}</span>
             </router-link>
           </div>
         </div>
-      </section>
-      <footer></footer>
+      </div>
+      <div class="footer">
+        <div class="status"></div>
+        <div class="settings" @click="showSettings">
+          <fa-icon :icon="['fal', 'user-circle']" />
+        </div>
+      </div>
     </div>
     <div class="main">
-      <header></header>
-      <section>
-        <router-view />
-      </section>
-      <footer></footer>
+      <router-view />
     </div>
-    <div class="transfer"></div>
   </div>
 </template>
 
@@ -78,6 +80,10 @@ export default {
       return accounts.reduce(function(acc, obj) {
         return acc + obj.balance;
       }, 0);
+    },
+    showSettings() {
+      if (this.$route.path.indexOf("/settings/") === 0) return;
+      this.$router.push({ name: "settings" });
     }
   }
 };
@@ -86,189 +92,178 @@ export default {
 <style lang="less" scoped>
 .wallet-layout {
   --sidebar-width: 240px;
-  --transfer-width: 400px;
-  --header-height: 62px;
-  --footer-height: 53px;
 
   --sidebar-background-color: #000;
   --sidebar-color: #ccc;
   --sidebar-border-color: #333;
+
   --main-border-color: #ddd;
 
   width: 100%;
   height: 100vh;
   overflow: hidden;
 
-  display: grid;
-  grid-template-columns: var(--sidebar-width) calc(100% - var(--sidebar-width));
-  grid-template-areas:
-    "sidebar-header main-header transfer"
-    "sidebar-content main-content transfer"
-    "sidebar-footer main-footer transfer";
-
-  &.transfer-open {
-    grid-template-columns:
-      var(--sidebar-width) calc(
-        100% - var(--sidebar-width) - var(--transfer-width)
-      )
-      var(--transfer-width);
-  }
-}
-
-header {
-  height: var(--header-height);
-}
-
-section {
-  height: calc(100vh - var(--header-height) - var(--footer-height));
-}
-
-footer {
-  height: var(--footer-height);
-}
-
-.sidebar {
-  color: var(--sidebar-color);
-  background-color: var(--sidebar-background-color);
-  border-right: 1px solid var(--sidebar-border-color);
-
-  & header {
-    grid-area: "sidebar-header";
-    border-bottom: 1px solid var(--sidebar-border-color);
-  }
-
-  & section {
-    grid-area: "sidebar-content";
-  }
-
-  & footer {
-    grid-area: "sidebar-footer";
-    border-top: 1px solid var(--sidebar-border-color);
-  }
-}
-
-.main {
-  & header {
-    grid-area: "main-header";
-    border-bottom: 1px solid var(--main-border-color);
-  }
-
-  & section {
-    grid-area: "main-content";
-  }
-
-  & footer {
-    grid-area: "main-footer";
-    border-top: 1px solid var(--main-border-color);
-  }
-}
-
-.transfer {
-  padding: 0 30px 10px 30px;
-  background-color: #f5f5f5;
-}
-
-// ==================================================
-
-.sidebar header {
-  padding: 20px;
-  color: #fff;
   display: flex;
+  flex-direction: row;
 
-  & .logo {
-    width: 22px;
-    height: 22px;
-    background: url("../img/logo.svg"),
-      linear-gradient(transparent, transparent);
-    background-size: cover;
-  }
+  & .sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-background-color);
+    color: var(--sidebar-color);
 
-  & .balance-total {
-    padding: 0 0 0 10px;
-    line-height: 22px;
-  }
-}
+    & .header {
+      height: var(--header-height);
+      border-bottom: 1px solid var(--sidebar-border-color);
 
-.sidebar section {
-  padding: 30px 0 0 0;
+      padding: 20px;
+      color: #fff;
+      display: flex;
 
-  & .accounts-header {
-    padding: 0 20px 0 20px;
-    height: 20px;
-    margin-bottom: 4px;
-  }
+      & .logo {
+        width: 22px;
+        height: 22px;
+        background: url("../img/logo.svg"),
+          linear-gradient(transparent, transparent);
+        background-size: cover;
+      }
 
-  & .accounts {
-    height: calc(100% - 20px - 4px);
-  }
-
-  & .account-cat {
-    display: flex;
-    padding: 17px 0 17px 0;
-
-    &:hover {
-      background: #222;
+      & .total-balance {
+        padding: 0 0 0 10px;
+        line-height: 22px;
+      }
     }
 
-    & .status {
-      padding: 5px 10px 0 20px;
-      font-size: 12px;
+    & .accounts-section {
+      height: calc(100% - var(--header-height) - var(--footer-height));
+      padding: 30px 0 0 0;
+
+      & .accounts-header {
+        padding: 0 20px 0 20px;
+        height: 20px;
+        margin-bottom: 4px;
+      }
+      & .accounts-scroller {
+        height: calc(100% - 20px - 4px);
+        overflow: hidden;
+
+        --scrollbarBG: #030303;
+        --thumbBG: #ccc;
+
+        &:hover {
+          overflow-y: overlay;
+        }
+        &::-webkit-scrollbar {
+          width: 11px;
+        }
+        &::-webkit-scrollbar-track {
+          background: var(--scrollbarBG);
+        }
+        &::-webkit-scrollbar-thumb {
+          border-radius: 0;
+          border: 4px solid var(--scrollbarBG);
+          background-color: var(--thumbBG);
+        }
+      }
+
+      & .account-cat {
+        display: flex;
+        padding: 17px 0 17px 0;
+
+        // why highlight the category on hover?
+        // &:hover {
+        //   background: #222;
+        // }
+
+        & .status {
+          padding: 5px 10px 0 20px;
+          font-size: 12px;
+        }
+
+        & .symbol {
+          font-size: 16px;
+          padding: 0 7px 0 0;
+        }
+
+        & .title {
+          line-height: 0.9em;
+          font-size: 0.9em;
+          font-weight: 600;
+          letter-spacing: 0.02em;
+          text-transform: uppercase;
+          padding: 0 0 6px 0;
+        }
+
+        & .info {
+          flex-grow: 1;
+        }
+
+        & .balance {
+          line-height: 0.8em;
+          font-size: 0.8em;
+          font-weight: 500;
+          letter-spacing: 0.02em;
+          text-transform: uppercase;
+        }
+
+        & .add {
+          margin: 0 25px 0 0;
+          line-height: 26px;
+          font-size: 16px;
+        }
+      }
+
+      & .account a {
+        display: flex;
+        flex-direction: column;
+        padding: 10px 20px 10px 40px;
+        font-size: 0.9em;
+        color: #ccc;
+        line-height: 1.2em;
+        cursor: pointer;
+      }
+
+      & .account a:hover {
+        background-color: #222;
+      }
+
+      & .account.active a {
+        font-weight: 500;
+        color: #fff;
+        background-color: #009572;
+      }
+
+      & .account .balance {
+        font-size: 0.9em;
+      }
     }
 
-    & .symbol {
+    & .footer {
+      height: var(--footer-height);
+      border-top: 1px solid var(--sidebar-border-color);
       font-size: 16px;
-      padding: 0 7px 0 0;
-    }
+      font-weight: 400;
 
-    & .title {
-      line-height: 0.9em;
-      font-size: 0.9em;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      padding: 0 0 6px 0;
-    }
+      display: flex;
+      flex-direction: row;
 
-    & .info {
-      flex-grow: 1;
-    }
+      & .status {
+        flex: 1;
+      }
 
-    & .balance {
-      line-height: 0.8em;
-      font-size: 0.8em;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-    }
+      & .settings {
+        line-height: 52px;
+        padding: 0 20px;
+        cursor: pointer;
 
-    & .add {
-      margin: 0 25px 0 0;
-      line-height: 26px;
-      font-size: 16px;
+        &:hover {
+          background-color: #222;
+        }
+      }
     }
   }
 
-  & .account a {
-    display: flex;
-    flex-direction: column;
-    padding: 10px 20px 10px 40px;
-    font-size: 0.9em;
-    color: #ccc;
-    line-height: 1.2em;
-  }
-
-  & .account a:hover {
-    background-color: #222;
-  }
-
-  & .account.active a {
-    font-weight: 500;
-    color: #fff;
-    background-color: #009572;
-  }
-
-  & .account .balance {
-    font-size: 0.9em;
+  & .main {
+    flex: 1;
   }
 }
 </style>

@@ -46,7 +46,10 @@ class LibUnity {
     this.backend.TerminateUnityLib();
   }
 
-  _initializeAccountsController() {
+  async _initializeAccountsController() {
+    let self = this;
+    let backend = this.backend;
+
     this.accountsListener.onAccountNameChanged = function(
       accountUUID,
       newAccountName
@@ -56,6 +59,24 @@ class LibUnity {
 
     this.accountsListener.onActiveAccountChanged = function(accountUUID) {
       store.dispatch({ type: "SET_ACTIVE_ACCOUNT", accountUUID });
+      store.dispatch({
+        type: "SET_RECEIVE_ADDRESS",
+        receiveAddress: backend.GetReceiveAddress()
+      });
+    };
+
+    this.accountsListener.onAccountAdded = async function() {
+      store.dispatch({
+        type: "SET_ACCOUNTS",
+        accounts: await self._getAccountsWithBalancesAsync()
+      });
+    };
+
+    this.accountsListener.onAccountDeleted = async function() {
+      store.dispatch({
+        type: "SET_ACCOUNTS",
+        accounts: await self._getAccountsWithBalancesAsync()
+      });
     };
 
     this.accountsController.setListener(this.accountsListener);
@@ -82,11 +103,9 @@ class LibUnity {
     );
   }
 
-  async _coreReady() {
-    this._initializeAccountsController();
-
+  async _getAccountsWithBalancesAsync() {
     let accounts = this.accountsController.listAccounts();
-    let accountBalances = await this._executeRpc("getaccountbalances");
+    let accountBalances = await this._executeRpcAsync("getaccountbalances");
 
     for (var i = 0; i < accountBalances.length; i++) {
       let accountBalance = accountBalances[i];
@@ -94,9 +113,15 @@ class LibUnity {
         accountBalance.balance;
     }
 
+    return accounts;
+  }
+
+  async _coreReady() {
+    this._initializeAccountsController();
+
     store.dispatch({
       type: "SET_ACCOUNTS",
-      accounts: accounts
+      accounts: await this._getAccountsWithBalancesAsync()
     });
 
     store.dispatch({
@@ -213,7 +238,7 @@ class LibUnity {
     }
   }
 
-  async _executeRpc(command) {
+  async _executeRpcAsync(command) {
     let rpcListener = new libUnity.NJSIRpcListener();
 
     if (this.rpcController === null) {
@@ -412,6 +437,27 @@ class LibUnity {
       return result;
     });
 
+    ipc.on("ChangePassword", (event, oldPassword, newPassword) => {
+      let result = this._preExecuteIpcCommand("ChangePassword");
+      if (result === undefined) {
+        result = this.backend.ChangePassword(oldPassword, newPassword);
+      }
+      this._postExecuteIpcCommand("ChangePassword", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("ChangePassword", async data => {
+      let result = this._preExecuteIpcCommand("ChangePassword");
+      if (result === undefined) {
+        result = this.backend.ChangePassword(
+          data.oldPassword,
+          data.newPassword
+        );
+      }
+      this._postExecuteIpcCommand("ChangePassword", result);
+      return result;
+    });
+
     ipc.on("IsValidRecipient", (event, request) => {
       let result = this._preExecuteIpcCommand("IsValidRecipient");
       if (result === undefined) {
@@ -484,6 +530,23 @@ class LibUnity {
         result = this.backend.resendTransaction(data.txHash);
       }
       this._postExecuteIpcCommand("ResendTransaction", result);
+      return result;
+    });
+    ipc.on("SetActiveAccount", (event, accountUUID) => {
+      let result = this._preExecuteIpcCommand("SetActiveAccount");
+      if (result === undefined) {
+        result = this.accountsController.setActiveAccount(accountUUID);
+      }
+      this._postExecuteIpcCommand("SetActiveAccount", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("SetActiveAccount", async data => {
+      let result = this._preExecuteIpcCommand("SetActiveAccount");
+      if (result === undefined) {
+        result = this.accountsController.setActiveAccount(data.accountUUID);
+      }
+      this._postExecuteIpcCommand("SetActiveAccount", result);
       return result;
     });
     /* inject:code */

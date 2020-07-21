@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import DebugConsole from "../components/DebugConsole";
+import DebugConsole from "./DebugConsole";
 
 export default {
   data() {
