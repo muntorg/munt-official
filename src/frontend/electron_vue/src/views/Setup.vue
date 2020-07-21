@@ -216,7 +216,7 @@ export default {
               this.password1
             )
           ) {
-            this.$router.push({ name: "wallet" });
+            this.$router.push({ name: "account" });
           }
           break;
       }
