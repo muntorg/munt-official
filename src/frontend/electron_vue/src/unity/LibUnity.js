@@ -27,6 +27,13 @@ class LibUnity {
     this.rpcController = null;
     this.accountsController = new libUnity.NJSIAccountsController();
     this.accountsListener = new libUnity.NJSIAccountsListener();
+
+    let buildInfo = this.backend.BuildInfo();
+
+    store.dispatch({
+      type: "SET_UNITY_VERSION",
+      version: buildInfo.substr(1, buildInfo.indexOf("-") - 1)
+    });
   }
 
   Initialize() {
@@ -156,15 +163,6 @@ class LibUnity {
 
     signalHandler.logPrint = function(message) {
       console.log("unity_core: " + message);
-
-      if (message.indexOf("Novo version v") === 0) {
-        store.dispatch({
-          type: "SET_UNITY_VERSION",
-          version: message
-            .substr(0, message.indexOf("-"))
-            .replace("Novo version v", "")
-        });
-      }
     };
 
     signalHandler.notifyUnifiedProgress = function(/*progress*/) {
