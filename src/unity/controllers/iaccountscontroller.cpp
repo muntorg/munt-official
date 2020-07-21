@@ -312,7 +312,7 @@ std::unordered_map<std::string, BalanceRecord> IAccountsController::getAllAccoun
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
     for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
     {
-        if (findIter->second->m_State == AccountState::Normal)
+        if (account->m_State == AccountState::Normal)
         {
             WalletBalances balances;
             pactiveWallet->GetBalances(balances, account, true);
