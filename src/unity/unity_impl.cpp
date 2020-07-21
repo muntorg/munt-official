@@ -891,7 +891,7 @@ int32_t UnifiedBackend::InitUnityLib(const std::string& dataDir, const std::stri
     // Testnet
     if (testnet)
     {
-        SoftSetArg("-testnet", "C1595323263:60");
+        SoftSetArg("-testnet", "S1595347850:60");
         SoftSetArg("-addnode", "devbak.net");
         SoftSetArg("-addnode", "178.62.195.19");
     }
