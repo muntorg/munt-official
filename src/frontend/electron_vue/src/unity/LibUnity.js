@@ -12,7 +12,9 @@ class LibUnity {
     this.isTerminated = false;
 
     this.options = {
-      useTestNet: false,
+      useTestnet: process.env.UNITY_USE_TESTNET
+        ? process.env.UNITY_USE_TESTNET
+        : false,
       extraArgs: process.env.UNITY_EXTRA_ARGS
         ? process.env.UNITY_EXTRA_ARGS
         : "",
@@ -96,7 +98,7 @@ class LibUnity {
       "",
       -1,
       -1,
-      this.options.useTestNet,
+      this.options.useTestnet,
       false, // non spv mode
       this.signalHandler,
       this.options.extraArgs
