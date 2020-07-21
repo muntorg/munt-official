@@ -110,7 +110,7 @@ void NJSUnifiedFrontend::notifyNewMutation_aimpl__(const MutationRecord & mutati
     arg_0.Set("timestamp", arg_0_2);
     auto arg_0_3 = Napi::String::New(env, mutation.txHash);
     arg_0.Set("txHash", arg_0_3);
-    auto arg_0_4 = Napi::Number::New(env, (int)mutation.status);
+    auto arg_0_4 = Napi::Value::From(env, (int)mutation.status);
     arg_0.Set("status", arg_0_4);
     auto arg_0_5 = Napi::Number::New(env, mutation.depth);
     arg_0.Set("depth", arg_0_5);
@@ -161,7 +161,7 @@ void NJSUnifiedFrontend::notifyUpdatedTransaction_aimpl__(const TransactionRecor
     arg_0.Set("amount", arg_0_3);
     auto arg_0_4 = Napi::Number::New(env, transaction.fee);
     arg_0.Set("fee", arg_0_4);
-    auto arg_0_5 = Napi::Number::New(env, (int)transaction.status);
+    auto arg_0_5 = Napi::Value::From(env, (int)transaction.status);
     arg_0.Set("status", arg_0_5);
     auto arg_0_6 = Napi::Number::New(env, transaction.height);
     arg_0.Set("height", arg_0_6);

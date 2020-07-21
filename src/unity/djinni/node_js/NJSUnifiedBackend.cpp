@@ -196,7 +196,7 @@ Napi::Value NJSUnifiedBackend::isValidAndroidLegacyProtoWallet(const Napi::Callb
     auto result = UnifiedBackend::isValidAndroidLegacyProtoWallet(arg_0,arg_1);
 
     //Wrap result in node object
-    auto arg_2 = Napi::Number::New(env, (int)result);
+    auto arg_2 = Napi::Value::From(env, (int)result);
 
     return arg_2;
 }
@@ -375,7 +375,7 @@ Napi::Value NJSUnifiedBackend::QRImageFromString(const Napi::CallbackInfo& info)
     auto arg_2_2 = Napi::Array::New(env);
     for(size_t arg_2_2_id = 0; arg_2_2_id < result.pixel_data.size(); arg_2_2_id++)
     {
-        auto arg_2_2_elem = Napi::Number::New(env, result.pixel_data[arg_2_2_id]);
+        auto arg_2_2_elem = Napi::Value::From(env, result.pixel_data[arg_2_2_id]);
         arg_2_2.Set((int)arg_2_2_id,arg_2_2_elem);
     }
 
@@ -780,7 +780,7 @@ Napi::Value NJSUnifiedBackend::performPaymentToRecipient(const Napi::CallbackInf
     auto result = UnifiedBackend::performPaymentToRecipient(arg_0,arg_1);
 
     //Wrap result in node object
-    auto arg_2 = Napi::Number::New(env, (int)result);
+    auto arg_2 = Napi::Value::From(env, (int)result);
 
     return arg_2;
 }
@@ -811,7 +811,7 @@ Napi::Value NJSUnifiedBackend::getTransactionHistory(const Napi::CallbackInfo& i
         arg_0_elem.Set("amount", arg_0_elem_3);
         auto arg_0_elem_4 = Napi::Number::New(env, result[arg_0_id].fee);
         arg_0_elem.Set("fee", arg_0_elem_4);
-        auto arg_0_elem_5 = Napi::Number::New(env, (int)result[arg_0_id].status);
+        auto arg_0_elem_5 = Napi::Value::From(env, (int)result[arg_0_id].status);
         arg_0_elem.Set("status", arg_0_elem_5);
         auto arg_0_elem_6 = Napi::Number::New(env, result[arg_0_id].height);
         arg_0_elem.Set("height", arg_0_elem_6);
@@ -887,7 +887,7 @@ Napi::Value NJSUnifiedBackend::getTransaction(const Napi::CallbackInfo& info) {
     arg_1.Set("amount", arg_1_3);
     auto arg_1_4 = Napi::Number::New(env, result.fee);
     arg_1.Set("fee", arg_1_4);
-    auto arg_1_5 = Napi::Number::New(env, (int)result.status);
+    auto arg_1_5 = Napi::Value::From(env, (int)result.status);
     arg_1.Set("status", arg_1_5);
     auto arg_1_6 = Napi::Number::New(env, result.height);
     arg_1.Set("height", arg_1_6);
@@ -980,7 +980,7 @@ Napi::Value NJSUnifiedBackend::getMutationHistory(const Napi::CallbackInfo& info
         arg_0_elem.Set("timestamp", arg_0_elem_2);
         auto arg_0_elem_3 = Napi::String::New(env, result[arg_0_id].txHash);
         arg_0_elem.Set("txHash", arg_0_elem_3);
-        auto arg_0_elem_4 = Napi::Number::New(env, (int)result[arg_0_id].status);
+        auto arg_0_elem_4 = Napi::Value::From(env, (int)result[arg_0_id].status);
         arg_0_elem.Set("status", arg_0_elem_4);
         auto arg_0_elem_5 = Napi::Number::New(env, result[arg_0_id].depth);
         arg_0_elem.Set("depth", arg_0_elem_5);
