@@ -746,6 +746,10 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/i_rpc_listener.hpp \
   unity/djinni/cpp/i_p2p_network_controller.hpp \
   unity/djinni/cpp/i_p2p_network_listener.hpp \
+  unity/djinni/cpp/i_accounts_controller.hpp \
+  unity/djinni/cpp/i_accounts_listener.hpp \
+  unity/djinni/cpp/i_generation_controller.hpp \
+  unity/djinni/cpp/i_generation_listener.hpp \
   unity/djinni/cpp/uri_record.hpp
 
 DJINNI_NODE_JS_GEN = \
