@@ -120,7 +120,7 @@ do
   cd ..
 
   mkdir src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib} | true
-  cp build_android_${target_host}/src/.libs/libgulden_unity_jni.so src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/
+  cp build_android_${target_host}/src/.libs/lib_unity_jni.so src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/
   cp ${LIB_DIR}/${target_host}/libc++_shared.so src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/
   ${STRIP} --strip-unneeded src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/*.so
 done

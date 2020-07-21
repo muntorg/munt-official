@@ -3,6 +3,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include "appname.h"
 #include <boost/thread.hpp>
 #include "chain.h"
 #include "init.h"

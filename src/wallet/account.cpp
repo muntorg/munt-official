@@ -74,7 +74,8 @@ CAccount* CreateAccountHelper(CWallet* pwallet, std::string accountName, std::st
 {
     CAccount* account = nullptr;
 
-    EnsureWalletIsUnlocked(pwallet);
+    if (pwallet->IsLocked())
+        return nullptr;
 
     if (accountType == "HD")
     {

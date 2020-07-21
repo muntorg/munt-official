@@ -10,10 +10,11 @@ else
 	cd ..
 fi
 rm -rf src/unity/djinni/*
+rm -rf src/frontend/android/unity_wallet/app/src/main/java/com/novo/jniunifiedbackend/*
 
 djinni/src/run \
- --java-out ./src/frontend/android/unity_wallet/app/src/main/java/com/novocurrency/jniunifiedbackend/ \
-   --java-package com.novocurrency.jniunifiedbackend \
+ --java-out ./src/frontend/android/unity_wallet/app/src/main/java/com/novo/jniunifiedbackend/ \
+   --java-package com.novo.jniunifiedbackend \
    --java-implement-android-os-parcelable true \
    --ident-java-field mFooBar \
    --jni-out src/unity/djinni/jni/ \

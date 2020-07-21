@@ -9,12 +9,12 @@
 
 namespace djinni_generated {
 
-NativeIAccountsController::NativeIAccountsController() : ::djinni::JniInterface<::IAccountsController, NativeIAccountsController>("com/novocurrency/jniunifiedbackend/IAccountsController$CppProxy") {}
+NativeIAccountsController::NativeIAccountsController() : ::djinni::JniInterface<::IAccountsController, NativeIAccountsController>("com/novo/jniunifiedbackend/IAccountsController$CppProxy") {}
 
 NativeIAccountsController::~NativeIAccountsController() = default;
 
 
-CJNIEXPORT void JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
@@ -22,7 +22,7 @@ CJNIEXPORT void JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsControl
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_setListener(JNIEnv* jniEnv, jobject /*this*/, jobject j_accountslistener)
+CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_setListener(JNIEnv* jniEnv, jobject /*this*/, jobject j_accountslistener)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -30,7 +30,7 @@ CJNIEXPORT void JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsControl
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_setActiveAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_setActiveAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -39,7 +39,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCon
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_getActiveAccount(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_getActiveAccount(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -48,7 +48,7 @@ CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCont
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_createAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountName, jstring j_accountType)
+CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_createAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountName, jstring j_accountType)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -58,7 +58,7 @@ CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCont
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_renameAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID, jstring j_newAccountName)
+CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_renameAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID, jstring j_newAccountName)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -68,7 +68,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCon
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_getAccountLinkURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_getAccountLinkURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -77,7 +77,7 @@ CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCont
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_getWitnessKeyURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_getWitnessKeyURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -86,7 +86,7 @@ CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCont
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_createAccountFromWitnessKeyURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessKeyURI, jstring j_newAccountName)
+CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_createAccountFromWitnessKeyURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessKeyURI, jstring j_newAccountName)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -96,7 +96,7 @@ CJNIEXPORT jstring JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCont
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_deleteAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_deleteAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -105,7 +105,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCon
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_purgeAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_purgeAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -114,7 +114,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCon
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_listAccounts(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_listAccounts(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -123,7 +123,7 @@ CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCont
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_getActiveAccountBalance(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_getActiveAccountBalance(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -132,7 +132,7 @@ CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCont
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_getAccountBalance(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_getAccountBalance(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -141,7 +141,7 @@ CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsCont
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novocurrency_jniunifiedbackend_IAccountsController_00024CppProxy_getAllAccountBalances(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_getAllAccountBalances(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);

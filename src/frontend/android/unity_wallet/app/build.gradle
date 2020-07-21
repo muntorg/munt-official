@@ -50,36 +50,36 @@ android {
     // Flavour specific config.
     flavorDimensions "default"
     productFlavors {
-        gulden_testnet {
-            applicationId 'com.gulden.testnet'
-            archivesBaseName = 'gulden'
-            resValue "string", "app_name", "Gulden-testnet"
+        novo_testnet {
+            applicationId 'com.novo.testnet'
+            archivesBaseName = 'novo'
+            resValue "string", "app_name", "Novo-testnet"
             buildConfigField "boolean", "TESTNET", "true"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf-testnet"'
             versionCode 300410
             versionName = "2.2.0"
-            resValue "string", "about_text_app_name", "Gulden testnet $versionName ($versionCode)"
+            resValue "string", "about_text_app_name", "Novo testnet $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2020 Gulden.com BV"
         }
 
-        gulden_mainnet {
-            applicationId 'com.gulden.wallet'
-            archivesBaseName = 'gulden'
-            resValue "string", "app_name", "Gulden"
+        novo_mainnet {
+            applicationId 'com.novo.wallet'
+            archivesBaseName = 'novo'
+            resValue "string", "app_name", "Novo"
             buildConfigField "boolean", "TESTNET", "false"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf"'
             versionCode 400
             versionName = "2.2.0"
-            resValue "string", "about_text_app_name", "Gulden $versionName ($versionCode)"
+            resValue "string", "about_text_app_name", "Novo $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2020 Gulden.com BV"
         }
     }
 
     sourceSets {
-        gulden_testnet {
+        novo_testnet {
             assets.srcDirs = ['src/main/assets', 'src/main/assetsTestnet']
         }
-        gulden_mainnet {
+        novo_mainnet {
             assets.srcDirs = ['src/main/assets', 'src/main/assetsMainnet']
         }
     }
