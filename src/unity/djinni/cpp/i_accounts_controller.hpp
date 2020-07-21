@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #ifdef DJINNI_NODEJS
@@ -13,6 +14,7 @@
 class IAccountsListener;
 #endif
 struct AccountRecord;
+struct BalanceRecord;
 
 /** C++ interface to control accounts */
 class IAccountsController {
@@ -24,6 +26,9 @@ public:
 
     /** Set the currently active account */
     static bool setActiveAccount(const std::string & accountUUID);
+
+    /** Get the currently active account */
+    static std::string getActiveAccount();
 
     /** Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account */
     static std::string createAccount(const std::string & accountName, const std::string & accountType);
@@ -37,6 +42,12 @@ public:
     /** Get a URI that will enable creation of a "witness only" account in another wallet that can witness on behalf of this account */
     static std::string getWitnessKeyURI(const std::string & accountUUID);
 
+    /**
+     * Create a new "witness-only" account from a previously exported URI
+     * Returns UUID on success, empty string on failiure
+     */
+    static std::string createAccountFromWitnessKeyURI(const std::string & witnessKeyURI, const std::string & newAccountName);
+
     /** Delete an account, account remains available in background but is hidden from user */
     static bool deleteAccount(const std::string & accountUUID);
 
@@ -49,4 +60,13 @@ public:
 
     /** List all currently visible accounts in the wallet */
     static std::vector<AccountRecord> listAccounts();
+
+    /** Check balance for active account */
+    static BalanceRecord getActiveAccountBalance();
+
+    /** Check balance for account */
+    static BalanceRecord getAccountBalance(const std::string & accountUUID);
+
+    /** Check balance for all accounts, returns a map of accout_uuid->balance_record */
+    static std::unordered_map<std::string, BalanceRecord> getAllAccountBalances();
 };

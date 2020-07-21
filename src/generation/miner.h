@@ -162,7 +162,7 @@ inline std::string fixedGenerateAddress="";
 void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nMemoryKb, const CChainParams& chainparams, CAccount* forAccount = nullptr, std::string generateAddress="");
 
 //! Stop the block generation threads if they are currently active
-void PoWStopGeneration();
+void PoWStopGeneration(bool notify=true);
 
 //! Determine whether block generation is currently active or not.
 bool PoWGenerationIsActive();

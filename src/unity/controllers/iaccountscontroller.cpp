@@ -85,6 +85,19 @@ bool IAccountsController::setActiveAccount(const std::string & accountUUID)
     return false;
 }
 
+std::string IAccountsController::getActiveAccount()
+{
+    if (pactiveWallet)
+    {        
+        CAccount* activeAccount = pactiveWallet->getActiveAccount();
+        if (activeAccount)
+        {
+            return getUUIDAsString(activeAccount->getUUID());
+        }
+    }
+    return "";
+}
+
 //fixme: Move this out into a common helper and add an RPC equivalent
 std::string IAccountsController::getAccountLinkURI(const std::string & accountUUID)
 {
@@ -136,6 +149,35 @@ std::string IAccountsController::getWitnessKeyURI(const std::string & accountUUI
         }
     }
     return "";
+}
+
+std::string IAccountsController::createAccountFromWitnessKeyURI(const std::string& witnessKeyURI, const std::string& newAccountName)
+{
+    if (!pactiveWallet || dynamic_cast<CExtWallet*>(pactiveWallet)->IsLocked())
+        return "";
+
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+    {
+        (unused)accountUUID;
+        if (account->getLabel() == newAccountName)
+        {
+            return "";
+        }
+    }
+        
+    bool shouldRescan = true;
+    const auto& keysAndBirthDates = pactiveWallet->ParseWitnessKeyURL(SecureString(witnessKeyURI.begin(), witnessKeyURI.end()));
+    if (keysAndBirthDates.empty())
+        throw std::runtime_error("Invalid encoded key URL");
+
+    CAccount* account = nullptr;
+    //NB! CreateWitnessOnlyWitnessAccount triggers a rescan for us
+    account = pactiveWallet->CreateWitnessOnlyWitnessAccount(newAccountName, keysAndBirthDates, shouldRescan);
+    if (!account)
+        return "";
+
+    return getUUIDAsString(account->getUUID());
 }
 
 bool IAccountsController::deleteAccount(const std::string & accountUUID)
@@ -231,5 +273,48 @@ std::vector<AccountRecord> IAccountsController::listAccounts()
         }
         ret.emplace_back(rec);
     }
+    return ret;
+}
+  
+BalanceRecord IAccountsController::getActiveAccountBalance()
+{
+    if (!pactiveWallet)
+        return BalanceRecord(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+    WalletBalances balances;
+    pactiveWallet->GetBalances(balances, pactiveWallet->activeAccount, true);
+    return BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked);
+}
+
+BalanceRecord IAccountsController::getAccountBalance(const std::string& accountUUID)
+{
+    if (pactiveWallet)
+    {
+        DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            WalletBalances balances;
+            pactiveWallet->GetBalances(balances, findIter->second, true);
+            return BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked);
+        }
+    }
+    return BalanceRecord(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+}
+
+std::unordered_map<std::string, BalanceRecord> IAccountsController::getAllAccountBalances()
+{
+    std::unordered_map<std::string, BalanceRecord> ret;
+    
+    if (!pactiveWallet)
+        return ret;
+    
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+    {
+        WalletBalances balances;
+        pactiveWallet->GetBalances(balances, account, true);
+        ret.emplace(getUUIDAsString(accountUUID), BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
+    }    
     return ret;
 }

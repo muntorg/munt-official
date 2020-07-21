@@ -199,6 +199,8 @@ declare class NJSIAccountsController
     static declare function setListener(accountslistener: NJSIAccountsListener);
     /** Set the currently active account */
     static declare function setActiveAccount(accountUUID: string): boolean;
+    /** Get the currently active account */
+    static declare function getActiveAccount(): string;
     /** Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account */
     static declare function createAccount(accountName: string, accountType: string): string;
     /** Rename an account */
@@ -207,6 +209,11 @@ declare class NJSIAccountsController
     static declare function getAccountLinkURI(accountUUID: string): string;
     /** Get a URI that will enable creation of a "witness only" account in another wallet that can witness on behalf of this account */
     static declare function getWitnessKeyURI(accountUUID: string): string;
+    /**
+     * Create a new "witness-only" account from a previously exported URI
+     * Returns UUID on success, empty string on failiure
+     */
+    static declare function createAccountFromWitnessKeyURI(witnessKeyURI: string, newAccountName: string): string;
     /** Delete an account, account remains available in background but is hidden from user */
     static declare function deleteAccount(accountUUID: string): boolean;
     /**
@@ -217,6 +224,12 @@ declare class NJSIAccountsController
     static declare function purgeAccount(accountUUID: string): boolean;
     /** List all currently visible accounts in the wallet */
     static declare function listAccounts(): Array<AccountRecord>;
+    /** Check balance for active account */
+    static declare function getActiveAccountBalance(): BalanceRecord;
+    /** Check balance for account */
+    static declare function getAccountBalance(accountUUID: string): BalanceRecord;
+    /** Check balance for all accounts, returns a map of accout_uuid->balance_record */
+    static declare function getAllAccountBalances(): Map<string, BalanceRecord>;
 }
 /** Interface to receive updates about accounts */
 declare class NJSIAccountsListener
@@ -231,4 +244,40 @@ declare class NJSIAccountsListener
     declare function onAccountAdded(accountUUID: string, accountName: string);
     /** Notify that an account has been deleted */
     declare function onAccountDeleted(accountUUID: string);
+}
+/** C++ interface to control generation of blocks (proof of work) */
+declare class NJSIGenerationController
+{
+    /** Register listener to be notified of generation related events */
+    static declare function setListener(generationListener: NJSIGenerationListener);
+    /**
+     * Activate block generation (proof of work)
+     * Number of threads should not exceed physical threads, memory limit is a string specifier in the form of #B/#K/#M/#G (e.g. 102400B, 10240K, 1024M, 1G)
+     */
+    static declare function startGeneration(numThreads: number, memoryLimit: string): boolean;
+    /** Stop any active block generation (proof of work) */
+    static declare function stopGeneration(): boolean;
+    /**
+     * Get the address of the account that is used for generation by default. Empty on failiure
+     * Note that this isn't necessarily the actual generation address as there might be an override
+     * See: getGenerationOverrideAddress
+     */
+    static declare function getGenerationAddress(): string;
+    /**
+     * Get the 'override' address for generation, if one has been set
+     * The override address, when present it used for all block generation in place of the default account address
+     */
+    static declare function getGenerationOverrideAddress(): string;
+    /** Set an override address to use for block generation in place of the default */
+    static declare function setGenerationOverrideAddress(overrideAddress: string): boolean;
+}
+/** Interface to receive updates about block generation */
+declare class NJSIGenerationListener
+{
+    /** Signal that block generation has started */
+    declare function onGenerationStarted();
+    /** Signal that block generation has stopped */
+    declare function onGenerationStopped();
+    /** Periodically signal latest block generation statistics */
+    declare function onStatsUpdated(hashesPerSecond: number, hashesPerSecondUnit: string, rollingHashesPerSecond: number, rollingHashesPerSecondUnit: string, bestHashesPerSecond: number, bestHashesPerSecondUnit: string, arenaSetupTime: number);
 }

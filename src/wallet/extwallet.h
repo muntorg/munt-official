@@ -329,6 +329,15 @@ public:
 
     // Account compound setting changed
     boost::signals2::signal<void (CWallet* wallet, CAccount* account)> NotifyAccountCompoundingChanged;
+    
+    // Block generation turned on
+    boost::signals2::signal<void (void)> NotifyGenerationStarted;
+    
+    // Block generation turned off
+    boost::signals2::signal<void (void)> NotifyGenerationStopped;
+    
+    // New generation statistics
+    boost::signals2::signal<void (void)> NotifyGenerationStatisticsUpdate;
 
     /** Locking state changed */
     boost::signals2::signal<void (bool isLocked)> NotifyLockingChanged;

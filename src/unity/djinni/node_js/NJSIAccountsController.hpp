@@ -7,8 +7,10 @@
 
 #include "NJSIAccountsListener.hpp"
 #include "account_record.hpp"
+#include "balance_record.hpp"
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <napi.h>
@@ -31,6 +33,9 @@ private:
     /** Set the currently active account */
     Napi::Value setActiveAccount(const Napi::CallbackInfo& info);
 
+    /** Get the currently active account */
+    Napi::Value getActiveAccount(const Napi::CallbackInfo& info);
+
     /** Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account */
     Napi::Value createAccount(const Napi::CallbackInfo& info);
 
@@ -42,6 +47,12 @@ private:
 
     /** Get a URI that will enable creation of a "witness only" account in another wallet that can witness on behalf of this account */
     Napi::Value getWitnessKeyURI(const Napi::CallbackInfo& info);
+
+    /**
+     * Create a new "witness-only" account from a previously exported URI
+     * Returns UUID on success, empty string on failiure
+     */
+    Napi::Value createAccountFromWitnessKeyURI(const Napi::CallbackInfo& info);
 
     /** Delete an account, account remains available in background but is hidden from user */
     Napi::Value deleteAccount(const Napi::CallbackInfo& info);
@@ -55,6 +66,15 @@ private:
 
     /** List all currently visible accounts in the wallet */
     Napi::Value listAccounts(const Napi::CallbackInfo& info);
+
+    /** Check balance for active account */
+    Napi::Value getActiveAccountBalance(const Napi::CallbackInfo& info);
+
+    /** Check balance for account */
+    Napi::Value getAccountBalance(const Napi::CallbackInfo& info);
+
+    /** Check balance for all accounts, returns a map of accout_uuid->balance_record */
+    Napi::Value getAllAccountBalances(const Napi::CallbackInfo& info);
 
 };
 #endif //DJINNI_GENERATED_NJSIACCOUNTSCONTROLLER_HPP

@@ -2,6 +2,13 @@
 // Copyright (c) 2009-2016 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+//
+// File contains modifications by: The Novo developers
+// All modifications:
+// Copyright (c) 2020 The Novo developers
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com)
+// Distributed under the GULDEN software license, see the accompanying
+// file COPYING
 
 /**
  * Utilities for converting data from/to strings.
@@ -144,5 +151,9 @@ bool TimingResistantEqual(const T& a, const T& b)
  * @note The result must be in the range (-10^18,10^18), otherwise an overflow error will trigger.
  */
 bool ParseFixedPoint(const std::string &val, int decimals, int64_t *amount_out);
+
+//! Given a string specifier, calculate a memory size in bytes to match it e.g. 1K -> 1024; 2M -> 2097152;
+//! Returns 0 if specifier is invalid.
+uint64_t GetMemLimitInBytesFromFormattedStringSpecifier(std::string formattedLockPeriodSpecifier);
 
 #endif
