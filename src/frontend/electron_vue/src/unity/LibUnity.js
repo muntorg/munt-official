@@ -12,7 +12,9 @@ class LibUnity {
     this.isTerminated = false;
 
     this.options = {
-      useTestNet: false,
+      useTestnet: process.env.UNITY_USE_TESTNET
+        ? process.env.UNITY_USE_TESTNET
+        : false,
       extraArgs: process.env.UNITY_EXTRA_ARGS
         ? process.env.UNITY_EXTRA_ARGS
         : "",
@@ -25,6 +27,13 @@ class LibUnity {
     this.rpcController = null;
     this.accountsController = new libUnity.NJSIAccountsController();
     this.accountsListener = new libUnity.NJSIAccountsListener();
+
+    let buildInfo = this.backend.BuildInfo();
+
+    store.dispatch({
+      type: "SET_UNITY_VERSION",
+      version: buildInfo.substr(1, buildInfo.indexOf("-") - 1)
+    });
   }
 
   Initialize() {
@@ -46,12 +55,37 @@ class LibUnity {
     this.backend.TerminateUnityLib();
   }
 
-  _initializeAccountsController() {
+  async _initializeAccountsController() {
+    let self = this;
+    let backend = this.backend;
+
     this.accountsListener.onAccountNameChanged = function(
       accountUUID,
       newAccountName
     ) {
-      console.log(`AccountNameChanged ${accountUUID} to ${newAccountName}`);
+      store.dispatch({ type: "SET_ACCOUNT_NAME", accountUUID, newAccountName });
+    };
+
+    this.accountsListener.onActiveAccountChanged = function(accountUUID) {
+      store.dispatch({ type: "SET_ACTIVE_ACCOUNT", accountUUID });
+      store.dispatch({
+        type: "SET_RECEIVE_ADDRESS",
+        receiveAddress: backend.GetReceiveAddress()
+      });
+    };
+
+    this.accountsListener.onAccountAdded = async function() {
+      store.dispatch({
+        type: "SET_ACCOUNTS",
+        accounts: await self._getAccountsWithBalancesAsync()
+      });
+    };
+
+    this.accountsListener.onAccountDeleted = async function() {
+      store.dispatch({
+        type: "SET_ACCOUNTS",
+        accounts: await self._getAccountsWithBalancesAsync()
+      });
     };
 
     this.accountsController.setListener(this.accountsListener);
@@ -71,11 +105,50 @@ class LibUnity {
       "",
       -1,
       -1,
-      this.options.useTestNet,
+      this.options.useTestnet,
       false, // non spv mode
       this.signalHandler,
       this.options.extraArgs
     );
+  }
+
+  async _getAccountsWithBalancesAsync() {
+    let accounts = this.accountsController.listAccounts();
+    let accountBalances = await this._executeRpcAsync("getaccountbalances");
+
+    for (var i = 0; i < accountBalances.length; i++) {
+      let accountBalance = accountBalances[i];
+      accounts.find(x => x.UUID === accountBalance.UUID).balance =
+        accountBalance.balance;
+    }
+
+    return accounts;
+  }
+
+  async _coreReady() {
+    this._initializeAccountsController();
+
+    store.dispatch({
+      type: "SET_ACCOUNTS",
+      accounts: await this._getAccountsWithBalancesAsync()
+    });
+
+    store.dispatch({
+      type: "SET_ACTIVE_ACCOUNT",
+      accountUUID: this.accountsController.getActiveAccount()
+    });
+
+    store.dispatch({
+      type: "SET_RECEIVE_ADDRESS",
+      receiveAddress: this.backend.GetReceiveAddress()
+    });
+
+    store.dispatch({
+      type: "SET_MUTATIONS",
+      mutations: this.backend.getMutationHistory()
+    });
+
+    store.dispatch({ type: "SET_CORE_READY", coreReady: true });
   }
 
   _registerSignalHandlers() {
@@ -85,32 +158,11 @@ class LibUnity {
 
     signalHandler.notifyCoreReady = function() {
       console.log("received: notifyCoreReady");
-
-      self._initializeAccountsController();
-
-      store.dispatch({
-        type: "SET_RECEIVE_ADDRESS",
-        receiveAddress: backend.GetReceiveAddress()
-      });
-
-      store.dispatch({
-        type: "SET_MUTATIONS",
-        mutations: backend.getMutationHistory()
-      });
-      store.dispatch({ type: "SET_CORE_READY", coreReady: true });
+      self._coreReady();
     };
 
     signalHandler.logPrint = function(message) {
       console.log("unity_core: " + message);
-
-      if (message.indexOf("Novo version v") === 0) {
-        store.dispatch({
-          type: "SET_UNITY_VERSION",
-          version: message
-            .substr(0, message.indexOf("-"))
-            .replace("Novo version v", "")
-        });
-      }
     };
 
     signalHandler.notifyUnifiedProgress = function(/*progress*/) {
@@ -184,6 +236,33 @@ class LibUnity {
         }
         break;
     }
+  }
+
+  async _executeRpcAsync(command) {
+    let rpcListener = new libUnity.NJSIRpcListener();
+
+    if (this.rpcController === null) {
+      this.rpcController = new libUnity.NJSIRpcController();
+    }
+
+    this.rpcController.execute(command, rpcListener);
+
+    return new Promise((resolve, reject) => {
+      rpcListener.onSuccess = (filteredCommand, result) => {
+        console.log(`RPC success: ${result}`);
+
+        try {
+          resolve(JSON.parse(result));
+        } catch {
+          resolve(result);
+        }
+      };
+
+      rpcListener.onError = error => {
+        console.error(`RPC error: ${error}`);
+        reject(error);
+      };
+    });
   }
 
   _registerIpcHandlers() {
@@ -358,6 +437,27 @@ class LibUnity {
       return result;
     });
 
+    ipc.on("ChangePassword", (event, oldPassword, newPassword) => {
+      let result = this._preExecuteIpcCommand("ChangePassword");
+      if (result === undefined) {
+        result = this.backend.ChangePassword(oldPassword, newPassword);
+      }
+      this._postExecuteIpcCommand("ChangePassword", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("ChangePassword", async data => {
+      let result = this._preExecuteIpcCommand("ChangePassword");
+      if (result === undefined) {
+        result = this.backend.ChangePassword(
+          data.oldPassword,
+          data.newPassword
+        );
+      }
+      this._postExecuteIpcCommand("ChangePassword", result);
+      return result;
+    });
+
     ipc.on("IsValidRecipient", (event, request) => {
       let result = this._preExecuteIpcCommand("IsValidRecipient");
       if (result === undefined) {
@@ -430,6 +530,23 @@ class LibUnity {
         result = this.backend.resendTransaction(data.txHash);
       }
       this._postExecuteIpcCommand("ResendTransaction", result);
+      return result;
+    });
+    ipc.on("SetActiveAccount", (event, accountUUID) => {
+      let result = this._preExecuteIpcCommand("SetActiveAccount");
+      if (result === undefined) {
+        result = this.accountsController.setActiveAccount(accountUUID);
+      }
+      this._postExecuteIpcCommand("SetActiveAccount", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("SetActiveAccount", async data => {
+      let result = this._preExecuteIpcCommand("SetActiveAccount");
+      if (result === undefined) {
+        result = this.accountsController.setActiveAccount(data.accountUUID);
+      }
+      this._postExecuteIpcCommand("SetActiveAccount", result);
       return result;
     });
     /* inject:code */

@@ -1,14 +1,14 @@
 <template>
   <div class="app-debug">
     <div class="topbar">
-      <span
+      <div
         v-for="(tab, index) in tabs"
         :key="index"
         :class="getTabClass(index)"
         @click="setTab(index)"
       >
         {{ tab.title }}
-      </span>
+      </div>
     </div>
     <div class="main">
       <debug-console v-show="current === 0" />
@@ -17,10 +17,9 @@
 </template>
 
 <script>
-import DebugConsole from "./components/DebugConsole";
+import DebugConsole from "./DebugConsole";
 
 export default {
-  name: "AppDebug",
   data() {
     return {
       current: 0,
@@ -60,10 +59,11 @@ export default {
   display: flex;
   flex-direction: row;
 
-  & span {
+  & div {
     cursor: pointer;
-    padding: 10px 20px;
+    padding: 0px 20px;
     height: 100%;
+    line-height: 48px;
 
     &:hover {
       background: #333;

@@ -66,6 +66,14 @@ class UnityBackend {
     return ipc.callMain("LockWallet");
   }
 
+  static ChangePassword(oldPassword, newPassword) {
+    return ipc.sendSync("ChangePassword", oldPassword, newPassword);
+  }
+
+  static ChangePasswordAsync(oldPassword, newPassword) {
+    return ipc.callMain("ChangePassword", { oldPassword, newPassword });
+  }
+
   static IsValidRecipient(request) {
     return ipc.sendSync("IsValidRecipient", request);
   }
@@ -99,6 +107,14 @@ class UnityBackend {
 
   static ResendTransactionAsync(txHash) {
     return ipc.callMain("ResendTransaction", { txHash });
+  }
+
+  static SetActiveAccount(accountUUID) {
+    return ipc.sendSync("SetActiveAccount", accountUUID);
+  }
+
+  static SetActiveAccountAsync(accountUUID) {
+    return ipc.callMain("SetActiveAccount", { accountUUID });
   }
 
   /* inject:code */

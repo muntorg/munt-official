@@ -1,7 +1,14 @@
 "use strict";
 /* global __static */
 
-import { app, protocol, Menu, BrowserWindow, shell } from "electron";
+import {
+  app,
+  protocol,
+  Menu,
+  BrowserWindow,
+  shell,
+  ipcMain as ipc
+} from "electron";
 import {
   createProtocol
   /* installVueDevtools */
@@ -15,6 +22,11 @@ import fs from "fs";
 
 import LibUnity from "./unity/LibUnity";
 import store, { AppStatus } from "./store";
+
+// on vuex-connect send the current state to the renderer
+ipc.on("vuex-connect", event => {
+  event.sender.send("vuex-connected", store.state);
+});
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -59,9 +71,9 @@ import lu from "native-ext-loader!./unity/lib_unity.node";
 
 function createMainWindow() {
   let options = {
-    width: 800,
+    width: 1024,
     minWidth: 800,
-    height: 600,
+    height: 768,
     minHeight: 600,
     show: false,
     title: "Novo",
@@ -192,15 +204,18 @@ function createDebugWindow() {
   }
   winDebug = new BrowserWindow(options);
 
-  let hash = "#/debug";
+  let url = process.env.WEBPACK_DEV_SERVER_URL
+    ? `${process.env.WEBPACK_DEV_SERVER_URL}#/debug`
+    : `app://./index.html#/debug`;
+
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    winDebug.loadURL(`${process.env.WEBPACK_DEV_SERVER_URL}${hash}`);
+    winDebug.loadURL(url);
     //if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol("app");
     // Load the index.html when not in development
-    winDebug.loadURL(`app://./index.html${hash}`);
+    winDebug.loadURL(url);
   }
 
   winDebug.on("ready-to-show", () => {

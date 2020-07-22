@@ -6,6 +6,7 @@
     "next": "Next",
     "ok": "OK",
     "previous": "Previous",
+    "receive": "Receive",
     "send": "Send"
   },
   "common": {
@@ -40,10 +41,12 @@
     "setup_novo_wallet": "Setup your Novo wallet",
     "this_is_your_recovery_phrase": "This is your recovery phrase. Keep your backup phrase in a safe place. Lose phrase or someone else with access to the phrase = lose Novo."
   },
-  "wallet": {
+  "receive_novo": {
     "receive_acquired_novo": "Receive your acquired Novo",
-    "buy_novo": "Buy Novo",
-    "your_address": "Your address",
-    "send_novo": "Send Novo"
+    "your_address": "Your address"
+  },
+  "send_novo": {
+    "enter_label": "Enter label",
+    "enter_novo_address": "Enter Novo address"
   }
 }

@@ -95,7 +95,7 @@ export default {
           break;
         case 2:
           if (UnityBackend.ChangePassword(this.passwordold, this.password2)) {
-            this.$router.push({ name: "wallet" });
+            this.$router.push({ name: "account" });
           }
           break;
       }

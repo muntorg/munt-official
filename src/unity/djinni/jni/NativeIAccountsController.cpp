@@ -6,6 +6,8 @@
 #include "NativeAccountRecord.hpp"
 #include "NativeBalanceRecord.hpp"
 #include "NativeIAccountsListener.hpp"
+#include "NativeMutationRecord.hpp"
+#include "NativeTransactionRecord.hpp"
 
 namespace djinni_generated {
 
@@ -147,6 +149,24 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_0
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::IAccountsController::getAllAccountBalances();
         return ::djinni::release(::djinni::Map<::djinni::String, ::djinni_generated::NativeBalanceRecord>::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_getTransactionHistory(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::getTransactionHistory(::djinni::String::toCpp(jniEnv, j_accountUUID));
+        return ::djinni::release(::djinni::List<::djinni_generated::NativeTransactionRecord>::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_getMutationHistory(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::getMutationHistory(::djinni::String::toCpp(jniEnv, j_accountUUID));
+        return ::djinni::release(::djinni::List<::djinni_generated::NativeMutationRecord>::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 

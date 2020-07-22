@@ -11,6 +11,7 @@ const generateInfo = [
     className: "NJSUnifiedBackend",
     controller: "backend",
     functions: [
+      "ChangePassword",
       "GenerateRecoveryMnemonic",
       "GetMnemonicDictionary",
       "GetRecoveryPhrase",
@@ -28,7 +29,7 @@ const generateInfo = [
   {
     className: "NJSIAccountsController",
     controller: "accountsController",
-    functions: [],
+    functions: ["SetActiveAccount"],
     results: []
   }
 ];

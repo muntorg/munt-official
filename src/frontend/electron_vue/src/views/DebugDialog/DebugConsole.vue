@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import UnityBackend from "../unity/UnityBackend";
+import UnityBackend from "../../unity/UnityBackend";
 
 export default {
   name: "DebugConsole",

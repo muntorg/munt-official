@@ -1,0 +1,269 @@
+<template>
+  <div class="wallet-layout">
+    <div class="sidebar">
+      <div class="header">
+        <div class="logo" />
+        <div class="total-balance">
+          {{ totalBalance }}
+        </div>
+      </div>
+      <div class="accounts-section">
+        <h4 class="accounts-header">
+          accounts
+        </h4>
+        <div class="accounts-scroller">
+          <div class="account-cat">
+            <div class="status">
+              <fa-icon :icon="['fal', 'chevron-down']" />
+            </div>
+            <div class="symbol">
+              <fa-icon :icon="['fal', 'credit-card']" />
+            </div>
+            <div class="info">
+              <div class="title">spending</div>
+              <div class="balance">{{ balanceFor("spending") }}</div>
+            </div>
+            <div class="add"><fa-icon :icon="['fal', 'plus']" /></div>
+          </div>
+
+          <div
+            v-for="account in spendingAccounts"
+            :key="account.UUID"
+            class="account"
+            :class="{ active: account.UUID === activeAccount }"
+          >
+            <router-link
+              :to="{ name: 'account', params: { id: account.UUID } }"
+            >
+              {{ account.label }}
+              <span class="balance">{{ account.balance }}</span>
+            </router-link>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="status"></div>
+        <div class="settings" @click="showSettings">
+          <fa-icon :icon="['fal', 'user-circle']" />
+        </div>
+      </div>
+    </div>
+    <div class="main">
+      <router-view />
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState, mapGetters } from "vuex";
+
+export default {
+  name: "WalletLayout",
+  computed: {
+    ...mapState(["activeAccount"]),
+    ...mapGetters(["totalBalance", "accounts"]),
+    spendingAccounts() {
+      return this.accounts.filter(
+        x =>
+          x.type === "Desktop" /* || x.type === "Mobile" etc. -> sort by name */
+      );
+    }
+  },
+  methods: {
+    balanceFor(type) {
+      let accounts = [];
+      switch (type) {
+        case "spending":
+          accounts = this.spendingAccounts;
+          break;
+      }
+      return accounts.reduce(function(acc, obj) {
+        return acc + obj.balance;
+      }, 0);
+    },
+    showSettings() {
+      if (this.$route.path.indexOf("/settings/") === 0) return;
+      this.$router.push({ name: "settings" });
+    }
+  }
+};
+</script>
+
+<style lang="less" scoped>
+.wallet-layout {
+  --sidebar-width: 240px;
+
+  --sidebar-background-color: #000;
+  --sidebar-color: #ccc;
+  --sidebar-border-color: #333;
+
+  --main-border-color: #ddd;
+
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: row;
+
+  & .sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-background-color);
+    color: var(--sidebar-color);
+
+    & .header {
+      height: var(--header-height);
+      border-bottom: 1px solid var(--sidebar-border-color);
+
+      padding: 20px;
+      color: #fff;
+      display: flex;
+
+      & .logo {
+        width: 22px;
+        height: 22px;
+        background: url("../img/logo.svg"),
+          linear-gradient(transparent, transparent);
+        background-size: cover;
+      }
+
+      & .total-balance {
+        padding: 0 0 0 10px;
+        line-height: 22px;
+      }
+    }
+
+    & .accounts-section {
+      height: calc(100% - var(--header-height) - var(--footer-height));
+      padding: 30px 0 0 0;
+
+      & .accounts-header {
+        padding: 0 20px 0 20px;
+        height: 20px;
+        margin-bottom: 4px;
+      }
+      & .accounts-scroller {
+        height: calc(100% - 20px - 4px);
+        overflow: hidden;
+
+        --scrollbarBG: #030303;
+        --thumbBG: #ccc;
+
+        &:hover {
+          overflow-y: overlay;
+        }
+        &::-webkit-scrollbar {
+          width: 11px;
+        }
+        &::-webkit-scrollbar-track {
+          background: var(--scrollbarBG);
+        }
+        &::-webkit-scrollbar-thumb {
+          border-radius: 0;
+          border: 4px solid var(--scrollbarBG);
+          background-color: var(--thumbBG);
+        }
+      }
+
+      & .account-cat {
+        display: flex;
+        padding: 17px 0 17px 0;
+
+        // why highlight the category on hover?
+        // &:hover {
+        //   background: #222;
+        // }
+
+        & .status {
+          padding: 5px 10px 0 20px;
+          font-size: 12px;
+        }
+
+        & .symbol {
+          font-size: 16px;
+          padding: 0 7px 0 0;
+        }
+
+        & .title {
+          line-height: 0.9em;
+          font-size: 0.9em;
+          font-weight: 600;
+          letter-spacing: 0.02em;
+          text-transform: uppercase;
+          padding: 0 0 6px 0;
+        }
+
+        & .info {
+          flex-grow: 1;
+        }
+
+        & .balance {
+          line-height: 0.8em;
+          font-size: 0.8em;
+          font-weight: 500;
+          letter-spacing: 0.02em;
+          text-transform: uppercase;
+        }
+
+        & .add {
+          margin: 0 25px 0 0;
+          line-height: 26px;
+          font-size: 16px;
+        }
+      }
+
+      & .account a {
+        display: flex;
+        flex-direction: column;
+        padding: 10px 20px 10px 40px;
+        font-size: 0.9em;
+        color: #ccc;
+        line-height: 1.2em;
+        cursor: pointer;
+      }
+
+      & .account a:hover {
+        background-color: #222;
+      }
+
+      & .account.active a {
+        font-weight: 500;
+        color: #fff;
+        background-color: #009572;
+      }
+
+      & .account .balance {
+        font-size: 0.9em;
+      }
+    }
+
+    & .footer {
+      height: var(--footer-height);
+      border-top: 1px solid var(--sidebar-border-color);
+      font-size: 16px;
+      font-weight: 400;
+
+      display: flex;
+      flex-direction: row;
+
+      & .status {
+        flex: 1;
+      }
+
+      & .settings {
+        line-height: 52px;
+        padding: 0 20px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #222;
+        }
+      }
+    }
+  }
+
+  & .main {
+    flex: 1;
+  }
+}
+</style>

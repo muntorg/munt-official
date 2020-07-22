@@ -312,9 +312,40 @@ std::unordered_map<std::string, BalanceRecord> IAccountsController::getAllAccoun
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
     for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
     {
-        WalletBalances balances;
-        pactiveWallet->GetBalances(balances, account, true);
-        ret.emplace(getUUIDAsString(accountUUID), BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
+        if (account->m_State == AccountState::Normal)
+        {
+            WalletBalances balances;
+            pactiveWallet->GetBalances(balances, account, true);
+            ret.emplace(getUUIDAsString(accountUUID), BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
+        }
     }    
     return ret;
+}
+
+std::vector<TransactionRecord> IAccountsController::getTransactionHistory(const std::string& accountUUID)
+{
+    if (pactiveWallet)
+    {
+        DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            return getTransactionHistoryForAccount(findIter->second);
+        }
+    }
+    return std::vector<TransactionRecord>();
+}
+
+std::vector<MutationRecord> IAccountsController::getMutationHistory(const std::string& accountUUID)
+{
+    if (pactiveWallet)
+    {
+        DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            return getMutationHistoryForAccount(findIter->second);
+        }
+    }
+    return std::vector<MutationRecord>();
 }

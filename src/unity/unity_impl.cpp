@@ -17,7 +17,6 @@
 #include "util.h"
 #include "witnessutil.h"
 #include "ui_interface.h"
-#include "wallet/wallet.h"
 #include "unity/appmanager.h"
 #include "utilmoneystr.h"
 #include <chain.h>
@@ -29,14 +28,13 @@
 #include "sync.h"
 
 // Djinni generated files
-#include "unified_backend.hpp"
-#include "unified_frontend.hpp"
+#include "i_library_controller.hpp"
+#include "i_library_listener.hpp"
 #include "qr_code_record.hpp"
 #include "balance_record.hpp"
 #include "uri_record.hpp"
 #include "uri_recipient.hpp"
 #include "mutation_record.hpp"
-#include "transaction_record.hpp"
 #include "input_record.hpp"
 #include "output_record.hpp"
 #include "address_record.hpp"
@@ -59,7 +57,7 @@
 #include <crypto/hash/sigma/sigma.h>
 #include <algorithm>
 
-std::shared_ptr<UnifiedFrontend> signalHandler;
+std::shared_ptr<ILibraryListener> signalHandler;
 
 CCriticalSection cs_monitoringListeners;
 std::set<std::shared_ptr<MonitorListener> > monitoringListeners;
@@ -159,15 +157,15 @@ TransactionStatus getStatusForTransaction(const CWalletTx* wtx)
     return status;
 }
 
-void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord>& mutations)
+void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord>& mutations, CAccount* forAccount)
 {
     // exclude generated that are orphaned
     if (wtx->IsCoinBase() && wtx->GetDepthInMainChain() < 1)
         return;
 
-    int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true);
-    int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, pactiveWallet->activeAccount, true) +
-                    wtx->GetImmatureCredit(false, pactiveWallet->activeAccount, true);
+    int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, forAccount, true);
+    int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, forAccount, true) +
+                    wtx->GetImmatureCredit(false, forAccount, true);
 
     uint64_t time = wtx->nTimeSmart;
     std::string hash = wtx->GetHash().ToString();
@@ -201,29 +199,16 @@ void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord
     }
 }
 
-TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx& wtx)
+TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx& wtx, std::vector<CAccount*>& forAccounts, bool& anyInputsOrOutputsAreMine)
 {
     CWallet* pwallet = pactiveWallet;
 
     std::vector<InputRecord> inputs;
     std::vector<OutputRecord> outputs;
 
-
-    //fixme: (UNITY) - rather calculate this once and pass it in instead of for every call..
-    std::vector<CAccount*> accountsToTry;
-    accountsToTry.push_back(pactiveWallet->activeAccount);
-    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
-    {
-        (unused) accountUUID;
-        if (account->getParentUUID() == pactiveWallet->activeAccount->getUUID())
-        {
-            accountsToTry.push_back(account);
-        }
-    }
-
     int64_t subtracted=0;
     int64_t added=0;
-    for (const auto& account : accountsToTry)
+    for (const auto& account : forAccounts)
     {
         subtracted += wtx.GetDebit(ISMINE_SPENDABLE, account, true);
         added += wtx.GetCredit(ISMINE_SPENDABLE, account, true);
@@ -286,11 +271,12 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
             description = data.description;
         }
         bool isMine = false;
-        for (const auto& account : accountsToTry)
+        for (const auto& account : forAccounts)
         {
             if (static_cast<const CExtWallet*>(pwallet)->IsMine(*account, txin))
             {
                 isMine = true;
+                anyInputsOrOutputsAreMine = true;
             }
         }
         inputs.push_back(InputRecord(address, label, description, isMine));
@@ -320,11 +306,12 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
             description = data.description;
         }
         bool isMine = false;
-        for (const auto& account : accountsToTry)
+        for (const auto& account : forAccounts)
         {
             if (IsMine(*account, txout))
             {
                 isMine = true;
+                anyInputsOrOutputsAreMine = true;
             }
         }
         outputs.push_back(OutputRecord(txout.nValue, address, label, description, isMine));
@@ -362,6 +349,22 @@ void terminateUnityFrontend()
 }
 
 #include <boost/chrono/thread_clock.hpp>
+
+std::vector<CAccount*> GetAccountsForAccount(CAccount* forAccount)
+{
+    std::vector<CAccount*> forAccounts;
+    forAccounts.push_back(forAccount);
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+    {
+        (unused) accountUUID;
+        if (account->getParentUUID() == forAccount->getUUID())
+        {
+            forAccounts.push_back(account);
+        }
+    }
+    return forAccounts;
+}
+
 
 void handlePostInitMain()
 {
@@ -459,8 +462,13 @@ void handlePostInitMain()
                 LogPrintf("unity: notify transaction depth changed %s",hash.ToString().c_str());
                 if (signalHandler)
                 {
-                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx);
-                    signalHandler->notifyUpdatedTransaction(walletTransaction);
+                    std::vector<CAccount*> forAccounts = GetAccountsForAccount(pactiveWallet->activeAccount);
+                    bool anyInputsOrOutputsAreMine = false;
+                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
+                    if (anyInputsOrOutputsAreMine)
+                    {
+                        signalHandler->notifyUpdatedTransaction(walletTransaction);
+                    }
                 }
             }
         } );
@@ -476,8 +484,13 @@ void handlePostInitMain()
                 {
                     LogPrintf("unity: notify tx updated %s",hash.ToString().c_str());
                     const CWalletTx& wtx = pwallet->mapWallet[hash];
-                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx);
-                    signalHandler->notifyUpdatedTransaction(walletTransaction);
+                    std::vector<CAccount*> forAccounts = GetAccountsForAccount(pactiveWallet->activeAccount);
+                    bool anyInputsOrOutputsAreMine = false;
+                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
+                    if (anyInputsOrOutputsAreMine)
+                    {
+                        signalHandler->notifyUpdatedTransaction(walletTransaction);
+                    }
                 }
                 //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
                 // else if (status == CT_DELETED)
@@ -504,7 +517,7 @@ void handleInitWithoutExistingWallet()
     signalHandler->notifyInitWithoutExistingWallet();
 }
 
-std::string UnifiedBackend::BuildInfo()
+std::string ILibraryController::BuildInfo()
 {
     std::string info = FormatFullVersion();
 
@@ -520,7 +533,7 @@ std::string UnifiedBackend::BuildInfo()
     return info;
 }
 
-bool UnifiedBackend::InitWalletFromRecoveryPhrase(const std::string& phrase, const std::string& password)
+bool ILibraryController::InitWalletFromRecoveryPhrase(const std::string& phrase, const std::string& password)
 {
     // Refuse to acknowledge an empty recovery phrase, or one that doesn't pass even the most obvious requirement
     if (phrase.length() < 16)
@@ -561,7 +574,7 @@ bool ValidateAndSplitRecoveryPhrase(const std::string & phrase, SecureString& mn
     return checkMnemonic(mnemonic) && (birthNumber == 0 || Base10ChecksumDecode(birthNumber, nullptr));
 }
 
-bool UnifiedBackend::ContinueWalletFromRecoveryPhrase(const std::string& phrase, const std::string& password)
+bool ILibraryController::ContinueWalletFromRecoveryPhrase(const std::string& phrase, const std::string& password)
 {
     SecureString phraseOnly;
     int phraseBirthNumber;
@@ -598,7 +611,7 @@ bool UnifiedBackend::ContinueWalletFromRecoveryPhrase(const std::string& phrase,
     return true;
 }
 
-bool UnifiedBackend::IsValidRecoveryPhrase(const std::string & phrase)
+bool ILibraryController::IsValidRecoveryPhrase(const std::string & phrase)
 {
     SecureString dummyMnemonic;
     int dummyNumber;
@@ -606,7 +619,7 @@ bool UnifiedBackend::IsValidRecoveryPhrase(const std::string & phrase)
 }
 
 #include "base58.h"
-std::string UnifiedBackend::GenerateGenesisKeys()
+std::string ILibraryController::GenerateGenesisKeys()
 {
     std::string address = GetReceiveAddress();
     CNativeAddress addr(address);
@@ -627,7 +640,7 @@ std::string UnifiedBackend::GenerateGenesisKeys()
     return "privkey: "+privkey+"\n"+"pubkeyID: "+pubKeyID+"\n"+"witness: "+witnessKeys+"\n"+"dev subsidy addr: "+address+"\n"+"dev subsidy pubkey: "+devSubsidyPubKey+"\n"+"dev subsidy pubkey ID: "+devSubsidyPubKeyID+"\n";
 }
 
-std::string UnifiedBackend::GenerateRecoveryMnemonic()
+std::string ILibraryController::GenerateRecoveryMnemonic()
 {
     std::vector<unsigned char> entropy(16);
     GetStrongRandBytes(&entropy[0], 16);
@@ -639,12 +652,12 @@ std::string UnifiedBackend::GenerateRecoveryMnemonic()
     return AppLifecycleManager::gApp->composeRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8), birthTime).c_str();
 }
 
-std::string UnifiedBackend::ComposeRecoveryPhrase(const std::string & mnemonic, int64_t birthTime)
+std::string ILibraryController::ComposeRecoveryPhrase(const std::string & mnemonic, int64_t birthTime)
 {
     return std::string(AppLifecycleManager::composeRecoveryPhrase(SecureString(mnemonic), birthTime));
 }
 
-bool UnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri, const std::string& password)
+bool ILibraryController::InitWalletLinkedFromURI(const std::string& linked_uri, const std::string& password)
 {
     CEncodedSecretKeyExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
@@ -659,7 +672,7 @@ bool UnifiedBackend::InitWalletLinkedFromURI(const std::string& linked_uri, cons
     return true;
 }
 
-bool UnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linked_uri, const std::string& password)
+bool ILibraryController::ContinueWalletLinkedFromURI(const std::string & linked_uri, const std::string& password)
 {
     if (!pactiveWallet)
     {
@@ -692,7 +705,7 @@ bool UnifiedBackend::ContinueWalletLinkedFromURI(const std::string & linked_uri,
     return true;
 }
 
-bool UnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_uri, const std::string& password)
+bool ILibraryController::ReplaceWalletLinkedFromURI(const std::string& linked_uri, const std::string& password)
 {
     LOCK2(cs_main, pactiveWallet->cs_wallet);
 
@@ -795,13 +808,13 @@ bool UnifiedBackend::ReplaceWalletLinkedFromURI(const std::string& linked_uri, c
     return true;
 }
 
-bool UnifiedBackend::EraseWalletSeedsAndAccounts()
+bool ILibraryController::EraseWalletSeedsAndAccounts()
 {
     pactiveWallet->EraseWalletSeedsAndAccounts();
     return true;
 }
 
-bool UnifiedBackend::IsValidLinkURI(const std::string& linked_uri)
+bool ILibraryController::IsValidLinkURI(const std::string& linked_uri)
 {
     CEncodedSecretKeyExt<CExtKey> linkedKey;
     if (!linkedKey.fromURIString(linked_uri))
@@ -810,7 +823,7 @@ bool UnifiedBackend::IsValidLinkURI(const std::string& linked_uri)
 }
 
 
-int32_t UnifiedBackend::InitUnityLib(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, bool spvMode, const std::shared_ptr<UnifiedFrontend>& signalHandler_, const std::string& extraArgs)
+int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, bool spvMode, const std::shared_ptr<ILibraryListener>& signalHandler_, const std::string& extraArgs)
 {
     balanceChangeNotifier = new CRateLimit<int>([](int)
     {
@@ -834,7 +847,7 @@ int32_t UnifiedBackend::InitUnityLib(const std::string& dataDir, const std::stri
             {
                 const CWalletTx& wtx = pactiveWallet->mapWallet[txHash];
                 std::vector<MutationRecord> mutations;
-                addMutationsForTransaction(&wtx, mutations);
+                addMutationsForTransaction(&wtx, mutations, pactiveWallet->activeAccount);
                 for (auto& m: mutations)
                 {
                     LogPrintf("unity: notify new mutation for tx %s", txHash.ToString().c_str());
@@ -888,14 +901,17 @@ int32_t UnifiedBackend::InitUnityLib(const std::string& dataDir, const std::stri
     SoftSetArg("-clientname", GLOBAL_APPNAME" desktop");
 #endif
 
-    SoftSetArg("-addnode", "178.62.195.19");
-    SoftSetArg("-addnode", "149.210.165.218");
-
     // Testnet
     if (testnet)
     {
-        SoftSetArg("-testnet", "C1534687770:60");
+        SoftSetArg("-testnet", "S1595347850:60");
         SoftSetArg("-addnode", "devbak.net");
+        SoftSetArg("-addnode", "178.62.195.19");
+    }
+    else
+    {
+        SoftSetArg("-addnode", "178.62.195.19");
+        SoftSetArg("-addnode", "149.210.165.218");
     }
 
     signalHandler = signalHandler_;
@@ -911,7 +927,7 @@ int32_t UnifiedBackend::InitUnityLib(const std::string& dataDir, const std::stri
     return InitUnity();
 }
 
-void UnifiedBackend::InitUnityLibThreaded(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, bool spvMode, const std::shared_ptr<UnifiedFrontend>& signalHandler_, const std::string& extraArgs)
+void ILibraryController::InitUnityLibThreaded(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, bool spvMode, const std::shared_ptr<ILibraryListener>& signalHandler_, const std::string& extraArgs)
 {
     std::thread([=]
     {
@@ -919,7 +935,7 @@ void UnifiedBackend::InitUnityLibThreaded(const std::string& dataDir, const std:
     }).detach();
 }
 
-void UnifiedBackend::TerminateUnityLib()
+void ILibraryController::TerminateUnityLib()
 {
     // Terminate in thread so we don't block interprocess communication
     std::thread([=]
@@ -932,7 +948,7 @@ void UnifiedBackend::TerminateUnityLib()
     }).detach();
 }
 
-QrCodeRecord UnifiedBackend::QRImageFromString(const std::string& qr_string, int32_t width_hint)
+QrCodeRecord ILibraryController::QRImageFromString(const std::string& qr_string, int32_t width_hint)
 {
     QRcode* code = QRcode_encodeString(qr_string.c_str(), 0, QR_ECLEVEL_L, QR_MODE_8, 1);
     if (!code)
@@ -963,7 +979,7 @@ QrCodeRecord UnifiedBackend::QRImageFromString(const std::string& qr_string, int
     }
 }
 
-std::string UnifiedBackend::GetReceiveAddress()
+std::string ILibraryController::GetReceiveAddress()
 {
     LOCK2(cs_main, pactiveWallet->cs_wallet);
 
@@ -986,7 +1002,7 @@ std::string UnifiedBackend::GetReceiveAddress()
 }
 
 //fixme: (UNITY) - find a way to use char[] here as well as on the java side.
-std::string UnifiedBackend::GetRecoveryPhrase()
+std::string ILibraryController::GetRecoveryPhrase()
 {
     if (!pactiveWallet || !pactiveWallet->activeAccount)
         return "";
@@ -1010,7 +1026,7 @@ std::string UnifiedBackend::GetRecoveryPhrase()
     return "";
 }
 
-bool UnifiedBackend::IsMnemonicWallet()
+bool ILibraryController::IsMnemonicWallet()
 {
     if (!pactiveWallet || !pactiveWallet->activeAccount)
         throw std::runtime_error(_("No active internal wallet."));
@@ -1020,7 +1036,7 @@ bool UnifiedBackend::IsMnemonicWallet()
     return pactiveWallet->activeSeed != nullptr;
 }
 
-bool UnifiedBackend::IsMnemonicCorrect(const std::string & phrase)
+bool ILibraryController::IsMnemonicCorrect(const std::string & phrase)
 {
     if (!pactiveWallet || !pactiveWallet->activeAccount)
         throw std::runtime_error(_("No active internal wallet."));
@@ -1040,14 +1056,14 @@ bool UnifiedBackend::IsMnemonicCorrect(const std::string & phrase)
     return false;
 }
 
-std::vector<std::string> UnifiedBackend::GetMnemonicDictionary()
+std::vector<std::string> ILibraryController::GetMnemonicDictionary()
 {
     return getMnemonicDictionary();
 }
 
 
 //fixme: (UNITY) HIGH - take a timeout value and always lock again after timeout
-bool UnifiedBackend::UnlockWallet(const std::string& password)
+bool ILibraryController::UnlockWallet(const std::string& password)
 {
     if (!pactiveWallet)
     {
@@ -1064,7 +1080,7 @@ bool UnifiedBackend::UnlockWallet(const std::string& password)
     return pactiveWallet->Unlock(password.c_str());
 }
 
-bool UnifiedBackend::LockWallet()
+bool ILibraryController::LockWallet()
 {
     if (!pactiveWallet)
     {
@@ -1078,7 +1094,7 @@ bool UnifiedBackend::LockWallet()
     return dynamic_cast<CExtWallet*>(pactiveWallet)->Lock();
 }
 
-bool UnifiedBackend::ChangePassword(const std::string& oldPassword, const std::string& newPassword)
+bool ILibraryController::ChangePassword(const std::string& oldPassword, const std::string& newPassword)
 {
     if (!pactiveWallet)
     {
@@ -1095,7 +1111,7 @@ bool UnifiedBackend::ChangePassword(const std::string& oldPassword, const std::s
     return pactiveWallet->ChangeWalletPassphrase(oldPassword.c_str(), newPassword.c_str());
 }
 
-bool UnifiedBackend::HaveUnconfirmedFunds()
+bool ILibraryController::HaveUnconfirmedFunds()
 {
     if (!pactiveWallet)
         return true;
@@ -1110,7 +1126,7 @@ bool UnifiedBackend::HaveUnconfirmedFunds()
     return false;
 }
 
-int64_t UnifiedBackend::GetBalance()
+int64_t ILibraryController::GetBalance()
 {
     if (!pactiveWallet)
         return 0;
@@ -1120,7 +1136,7 @@ int64_t UnifiedBackend::GetBalance()
     return balances.availableIncludingLocked + balances.unconfirmedIncludingLocked + balances.immatureIncludingLocked;
 }
 
-void UnifiedBackend::DoRescan()
+void ILibraryController::DoRescan()
 {
     if (pactiveWallet)
     {
@@ -1128,7 +1144,7 @@ void UnifiedBackend::DoRescan()
     }
 }
 
-UriRecipient UnifiedBackend::IsValidRecipient(const UriRecord & request)
+UriRecipient ILibraryController::IsValidRecipient(const UriRecord & request)
 {
      // return if URI is not valid or is no Gulden: URI
     std::string lowerCaseScheme = boost::algorithm::to_lower_copy(request.scheme);
@@ -1162,7 +1178,7 @@ UriRecipient UnifiedBackend::IsValidRecipient(const UriRecord & request)
 }
 
 
-int64_t UnifiedBackend::feeForRecipient(const UriRecipient & request)
+int64_t ILibraryController::feeForRecipient(const UriRecipient & request)
 {
     if (!pactiveWallet)
         throw std::runtime_error(_("No active internal wallet."));
@@ -1203,7 +1219,7 @@ int64_t UnifiedBackend::feeForRecipient(const UriRecipient & request)
     return nFeeRequired;
 }
 
-PaymentResultStatus UnifiedBackend::performPaymentToRecipient(const UriRecipient & request, bool substract_fee)
+PaymentResultStatus ILibraryController::performPaymentToRecipient(const UriRecipient & request, bool substract_fee)
 {
     if (!pactiveWallet)
         throw std::runtime_error(_("No active internal wallet."));
@@ -1261,25 +1277,34 @@ PaymentResultStatus UnifiedBackend::performPaymentToRecipient(const UriRecipient
     return PaymentResultStatus::SUCCESS;
 }
 
-std::vector<TransactionRecord> UnifiedBackend::getTransactionHistory()
+std::vector<TransactionRecord> getTransactionHistoryForAccount(CAccount* forAccount)
 {
-    std::vector<TransactionRecord> ret;
-
-    if (!pactiveWallet)
-        return ret;
-
+    std::vector<TransactionRecord> ret;    
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
 
+    std::vector<CAccount*> forAccounts = GetAccountsForAccount(forAccount);    
     for (const auto& [hash, wtx] : pactiveWallet->mapWallet)
     {
-        TransactionRecord tx = calculateTransactionRecordForWalletTransaction(wtx);
-        ret.push_back(tx);
+        bool anyInputsOrOutputsAreMine = false;
+        TransactionRecord tx = calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
+        if (anyInputsOrOutputsAreMine)
+        {
+            ret.push_back(tx);
+        }
     }
     std::sort(ret.begin(), ret.end(), [&](TransactionRecord& x, TransactionRecord& y){ return (x.timeStamp > y.timeStamp); });
     return ret;
 }
 
-TransactionRecord UnifiedBackend::getTransaction(const std::string & txHash)
+std::vector<TransactionRecord> ILibraryController::getTransactionHistory()
+{
+    if (!pactiveWallet)
+        return std::vector<TransactionRecord>();
+    
+    return getTransactionHistoryForAccount(pactiveWallet->activeAccount);
+}
+
+TransactionRecord ILibraryController::getTransaction(const std::string& txHash)
 {
     if (!pactiveWallet)
         throw std::runtime_error(strprintf("No active wallet to query tx hash [%s]", txHash));
@@ -1291,11 +1316,14 @@ TransactionRecord UnifiedBackend::getTransaction(const std::string & txHash)
     if (pactiveWallet->mapWallet.find(hash) == pactiveWallet->mapWallet.end())
         throw std::runtime_error(strprintf("No transaction found for hash [%s]", txHash));
 
+    
+    std::vector<CAccount*> forAccounts = GetAccountsForAccount(pactiveWallet->activeAccount);
     const CWalletTx& wtx = pactiveWallet->mapWallet[hash];
-    return calculateTransactionRecordForWalletTransaction(wtx);
+    bool anyInputsOrOutputsAreMine = false;
+    return calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
 }
 
-std::string UnifiedBackend::resendTransaction(const std::string& txHash)
+std::string ILibraryController::resendTransaction(const std::string& txHash)
 {
     if (!pactiveWallet)
         throw std::runtime_error(strprintf("No active wallet to query tx hash [%s]", txHash));
@@ -1325,12 +1353,9 @@ std::string UnifiedBackend::resendTransaction(const std::string& txHash)
     return strHex;
 }
 
-std::vector<MutationRecord> UnifiedBackend::getMutationHistory()
+std::vector<MutationRecord> getMutationHistoryForAccount(CAccount* forAccount)
 {
     std::vector<MutationRecord> ret;
-
-    if (!pactiveWallet)
-        return ret;
 
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
 
@@ -1345,13 +1370,20 @@ std::vector<MutationRecord> UnifiedBackend::getMutationHistory()
     // build mutation list based on transactions
     for (const CWalletTx* wtx : vWtx)
     {
-        addMutationsForTransaction(wtx, ret);
+        addMutationsForTransaction(wtx, ret, forAccount);
     }
 
     return ret;
 }
 
-std::vector<AddressRecord> UnifiedBackend::getAddressBookRecords()
+std::vector<MutationRecord> ILibraryController::getMutationHistory()
+{
+    if (!pactiveWallet)
+        return std::vector<MutationRecord>();
+    return getMutationHistoryForAccount(pactiveWallet->activeAccount);
+}
+
+std::vector<AddressRecord> ILibraryController::getAddressBookRecords()
 {
     std::vector<AddressRecord> ret;
     if (pactiveWallet)
@@ -1366,7 +1398,7 @@ std::vector<AddressRecord> UnifiedBackend::getAddressBookRecords()
     return ret;
 }
 
-void UnifiedBackend::addAddressBookRecord(const AddressRecord& address)
+void ILibraryController::addAddressBookRecord(const AddressRecord& address)
 {
     if (pactiveWallet)
     {
@@ -1374,7 +1406,7 @@ void UnifiedBackend::addAddressBookRecord(const AddressRecord& address)
     }
 }
 
-void UnifiedBackend::deleteAddressBookRecord(const AddressRecord& address)
+void ILibraryController::deleteAddressBookRecord(const AddressRecord& address)
 {
     if (pactiveWallet)
     {
@@ -1382,22 +1414,22 @@ void UnifiedBackend::deleteAddressBookRecord(const AddressRecord& address)
     }
 }
 
-void UnifiedBackend::PersistAndPruneForSPV()
+void ILibraryController::PersistAndPruneForSPV()
 {
     PersistAndPruneForPartialSync();
 }
 
-void UnifiedBackend::ResetUnifiedProgress()
+void ILibraryController::ResetUnifiedProgress()
 {
     CWallet::ResetUnifiedSPVProgressNotification();
 }
 
-float UnifiedBackend::getUnifiedProgress()
+float ILibraryController::getUnifiedProgress()
 {
     return CSPVScanner::lastProgressReported;
 }
 
-std::vector<BlockInfoRecord> UnifiedBackend::getLastSPVBlockInfos()
+std::vector<BlockInfoRecord> ILibraryController::getLastSPVBlockInfos()
 {
     std::vector<BlockInfoRecord> ret;
 
@@ -1413,7 +1445,7 @@ std::vector<BlockInfoRecord> UnifiedBackend::getLastSPVBlockInfos()
     return ret;
 }
 
-MonitorRecord UnifiedBackend::getMonitoringStats()
+MonitorRecord ILibraryController::getMonitoringStats()
 {
     LOCK(cs_main);
     int32_t partialHeight_ = partialChain.Height();
@@ -1429,13 +1461,13 @@ MonitorRecord UnifiedBackend::getMonitoringStats()
                          probableHeight_);
 }
 
-void UnifiedBackend::RegisterMonitorListener(const std::shared_ptr<MonitorListener> & listener)
+void ILibraryController::RegisterMonitorListener(const std::shared_ptr<MonitorListener> & listener)
 {
     LOCK(cs_monitoringListeners);
     monitoringListeners.insert(listener);
 }
 
-void UnifiedBackend::UnregisterMonitorListener(const std::shared_ptr<MonitorListener> & listener)
+void ILibraryController::UnregisterMonitorListener(const std::shared_ptr<MonitorListener> & listener)
 {
     LOCK(cs_monitoringListeners);
     monitoringListeners.erase(listener);

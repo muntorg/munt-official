@@ -10,7 +10,7 @@
 
 #include "unity/compat/android_wallet.h"
 #include "unity/djinni/cpp/legacy_wallet_result.hpp"
-#include "unity/djinni/cpp/unified_backend.hpp"
+#include "unity/djinni/cpp/i_library_controller.hpp"
 
 extern std::string HelpMessage(HelpMessageMode mode)
 {
@@ -52,7 +52,7 @@ bool InitTor(boost::thread_group& threadGroup, CScheduler& scheduler)
 }
 
 
-bool UnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(const std::string& walletFile, const std::string& oldPassword, const std::string& newPassword)
+bool ILibraryController::InitWalletFromAndroidLegacyProtoWallet(const std::string& walletFile, const std::string& oldPassword, const std::string& newPassword)
 {
     android_wallet wallet = ParseAndroidProtoWallet(walletFile, oldPassword);
     if (wallet.validWalletProto && wallet.validWallet)
@@ -79,7 +79,7 @@ bool UnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(const std::string& w
     return false;
 }
 
-LegacyWalletResult UnifiedBackend::isValidAndroidLegacyProtoWallet(const std::string& walletFile, const std::string& oldPassword)
+LegacyWalletResult ILibraryController::isValidAndroidLegacyProtoWallet(const std::string& walletFile, const std::string& oldPassword)
 {
     LogPrintf("Checking for valid legacy wallet proto [%s]\n", walletFile.c_str());
 

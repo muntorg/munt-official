@@ -1,20 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
-
-import { app } from "electron";
-
-import { createPersistedState, createSharedMutations } from "vuex-electron";
-import Store from "electron-store";
-
-let store = new Store();
-if (process.type !== "renderer") {
-  console.log(`clear store on start`);
-  store.clear();
-  app.on("quit", () => {
-    console.log(`clear store on quit`);
-    store.clear();
-  });
-}
+import { createSharedMutations } from "vuex-electron";
+import syncState from "./syncState";
+import cloneDeep from "lodash.clonedeep";
 
 Vue.use(Vuex);
 
@@ -28,10 +16,11 @@ export const AppStatus = {
 
 export default new Vuex.Store({
   state: {
+    accounts: [],
+    activeAccount: null,
     balance: null,
     coreReady: false,
     mutations: null,
-    priceInfo: null,
     receiveAddress: null,
     status: AppStatus.start,
     unityVersion: null,
@@ -39,6 +28,15 @@ export default new Vuex.Store({
     walletVersion: null
   },
   mutations: {
+    REPLACE_STATE(state, payload) {
+      this.replaceState(cloneDeep(payload.state));
+    },
+    SET_ACCOUNTS(state, payload) {
+      state.accounts = payload.accounts;
+    },
+    SET_ACTIVE_ACCOUNT(state, payload) {
+      state.activeAccount = payload.accountUUID;
+    },
     SET_BALANCE(state, payload) {
       state.balance = payload.balance;
     },
@@ -47,9 +45,6 @@ export default new Vuex.Store({
     },
     SET_MUTATIONS(state, payload) {
       state.mutations = payload.mutations;
-    },
-    SET_PRICE_INFO(state, payload) {
-      state.priceInfo = payload.priceInfo;
     },
     SET_RECEIVE_ADDRESS(state, payload) {
       state.receiveAddress = payload.receiveAddress;
@@ -73,6 +68,21 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    REPLACE_STATE({ commit }, payload) {
+      commit(payload);
+    },
+    SET_ACCOUNT_NAME({ state, commit }, payload) {
+      let accounts = [...state.accounts];
+      let account = accounts.find(x => x.UUID === payload.accountUUID);
+      account.label = payload.newAccountName;
+      commit({ type: "SET_ACCOUNTS", accounts: accounts });
+    },
+    SET_ACCOUNTS({ commit }, payload) {
+      commit(payload);
+    },
+    SET_ACTIVE_ACCOUNT({ commit }, payload) {
+      commit(payload);
+    },
     SET_BALANCE({ commit }, payload) {
       commit(payload);
     },
@@ -83,9 +93,6 @@ export default new Vuex.Store({
       commit(payload);
     },
     SET_MUTATIONS({ commit }, payload) {
-      commit(payload);
-    },
-    SET_PRICE_INFO({ commit }, payload) {
       commit(payload);
     },
     SET_RECEIVE_ADDRESS({ commit }, payload) {
@@ -118,7 +125,26 @@ export default new Vuex.Store({
           balance.immatureIncludingLocked) /
         100000000
       ).toFixed(2);
+    },
+    accounts: state => {
+      return state.accounts
+        .filter(x => x.state === "Normal")
+        .sort((a, b) => {
+          const labelA = a.label.toUpperCase();
+          const labelB = b.label.toUpperCase();
+
+          let comparison = 0;
+          if (labelA > labelB) {
+            comparison = 1;
+          } else if (labelA < labelB) {
+            comparison = -1;
+          }
+          return comparison;
+        });
+    },
+    account: state => {
+      return state.accounts.find(x => x.UUID === state.activeAccount);
     }
   },
-  plugins: [createPersistedState({ storage: store }), createSharedMutations()]
+  plugins: [syncState, createSharedMutations()]
 });

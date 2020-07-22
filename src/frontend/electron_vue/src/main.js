@@ -5,25 +5,46 @@ import router from "./router";
 import i18n from "./i18n";
 
 import "./components";
+import "./layouts";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faAngleDoubleLeft,
+  faArrowFromBottom,
+  faArrowLeft,
+  faArrowToBottom,
+  faChevronDown,
+  faChevronRight,
   faCog,
   faCopy,
+  faCreditCard,
+  faDiamond,
   faLongArrowLeft,
   faLongArrowRight,
-  faTimes
+  faPlus,
+  faTimes,
+  faUniversity,
+  faUserCircle
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add([
   faAngleDoubleLeft,
+  faArrowFromBottom,
+  faArrowLeft,
+  faArrowToBottom,
+  faChevronDown,
+  faChevronRight,
   faCog,
   faCopy,
+  faCreditCard,
+  faDiamond,
   faLongArrowLeft,
   faLongArrowRight,
-  faTimes
+  faPlus,
+  faTimes,
+  faUniversity,
+  faUserCircle
 ]);
 
 Vue.component("fa-icon", FontAwesomeIcon);

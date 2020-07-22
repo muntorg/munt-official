@@ -1,28 +1,26 @@
 <template>
   <div id="app">
-    <component :is="app"></component>
+    <app-wallet v-if="isWallet" />
+    <router-view v-else />
   </div>
 </template>
 
 <script>
-import AppMain from "./AppMain";
-import AppDebug from "./AppDebug";
+import AppWallet from "./AppWallet";
 
 export default {
-  data() {
-    return {
-      app: AppMain
-    };
-  },
+  name: "App",
   components: {
-    AppMain,
-    AppDebug
+    AppWallet
   },
-  created() {
-    switch (window.location.hash.toLowerCase()) {
-      case "#/debug":
-        this.app = AppDebug;
-        break;
+  computed: {
+    isWallet() {
+      switch (window.location.hash.toLowerCase()) {
+        case "#/debug":
+          return false;
+        default:
+          return true;
+      }
     }
   }
 };
@@ -36,8 +34,7 @@ export default {
   font-family: euclid, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 1.7em;
+  font-size: 14px;
   -webkit-text-size-adjust: none;
   text-rendering: optimizeLegibility;
   font-variant-ligatures: none;

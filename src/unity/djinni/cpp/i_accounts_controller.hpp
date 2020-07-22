@@ -15,6 +15,8 @@ class IAccountsListener;
 #endif
 struct AccountRecord;
 struct BalanceRecord;
+struct MutationRecord;
+struct TransactionRecord;
 
 /** C++ interface to control accounts */
 class IAccountsController {
@@ -67,6 +69,12 @@ public:
     /** Check balance for account */
     static BalanceRecord getAccountBalance(const std::string & accountUUID);
 
-    /** Check balance for all accounts, returns a map of accout_uuid->balance_record */
+    /** Check balance for all accounts, returns a map of account_uuid->balance_record */
     static std::unordered_map<std::string, BalanceRecord> getAllAccountBalances();
+
+    /** Get list of all transactions account has been involved in */
+    static std::vector<TransactionRecord> getTransactionHistory(const std::string & accountUUID);
+
+    /** Get list of mutations for account */
+    static std::vector<MutationRecord> getMutationHistory(const std::string & accountUUID);
 };

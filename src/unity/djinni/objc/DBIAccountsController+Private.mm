@@ -6,6 +6,8 @@
 #import "DBAccountRecord+Private.h"
 #import "DBBalanceRecord+Private.h"
 #import "DBIAccountsListener+Private.h"
+#import "DBMutationRecord+Private.h"
+#import "DBTransactionRecord+Private.h"
 #import "DJICppWrapperCache+Private.h"
 #import "DJIError.h"
 #import "DJIMarshal+Private.h"
@@ -133,6 +135,20 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     try {
         auto objcpp_result_ = ::IAccountsController::getAllAccountBalances();
         return ::djinni::Map<::djinni::String, ::djinni_generated::BalanceRecord>::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull NSArray<DBTransactionRecord *> *)getTransactionHistory:(nonnull NSString *)accountUUID {
+    try {
+        auto objcpp_result_ = ::IAccountsController::getTransactionHistory(::djinni::String::toCpp(accountUUID));
+        return ::djinni::List<::djinni_generated::TransactionRecord>::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull NSArray<DBMutationRecord *> *)getMutationHistory:(nonnull NSString *)accountUUID {
+    try {
+        auto objcpp_result_ = ::IAccountsController::getMutationHistory(::djinni::String::toCpp(accountUUID));
+        return ::djinni::List<::djinni_generated::MutationRecord>::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
