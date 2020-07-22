@@ -85,5 +85,6 @@ export default {
   text-align: center;
   word-spacing: 4px;
   background-color: #f5f5f5;
+  user-select: all;
 }
 </style>
