@@ -107,6 +107,11 @@ export default {
   margin-bottom: 8px;
   border: 1px solid #ccc;
   overflow-y: auto;
+  user-select: text;
+
+  & * {
+    user-select: text;
+  }
 
   font-size: 0.8rem;
 
