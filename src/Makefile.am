@@ -728,9 +728,9 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/account_record.hpp \
   unity/djinni/cpp/balance_record.hpp \
   unity/djinni/cpp/block_info_record.hpp \
-  unity/djinni/cpp/unified_backend.cpp \
-  unity/djinni/cpp/unified_backend.hpp \
-  unity/djinni/cpp/unified_frontend.hpp \
+  unity/djinni/cpp/i_library_controller.cpp \
+  unity/djinni/cpp/i_library_controller.hpp \
+  unity/djinni/cpp/i_library_listener.hpp \
   unity/djinni/cpp/legacy_wallet_result.hpp \
   unity/djinni/cpp/monitor_listener.hpp \
   unity/djinni/cpp/monitor_record.hpp \
@@ -756,10 +756,10 @@ DJINNI_NODE_JS_GEN = \
   unity/djinni/node_js/unifiedbackend.cpp \
   unity/djinni/node_js/NJSMonitorListener.cpp \
   unity/djinni/node_js/NJSMonitorListener.hpp \
-  unity/djinni/node_js/NJSUnifiedBackend.cpp \
-  unity/djinni/node_js/NJSUnifiedBackend.hpp \
-  unity/djinni/node_js/NJSUnifiedFrontend.cpp \
-  unity/djinni/node_js/NJSUnifiedFrontend.hpp \
+  unity/djinni/node_js/NJSILibraryController.cpp \
+  unity/djinni/node_js/NJSILibraryController.hpp \
+  unity/djinni/node_js/NJSILibraryListener.cpp \
+  unity/djinni/node_js/NJSILibraryListener.hpp \
   unity/djinni/node_js/NJSIRpcController.cpp \
   unity/djinni/node_js/NJSIRpcController.hpp \
   unity/djinni/node_js/NJSIRpcListener.cpp \
@@ -823,10 +823,10 @@ lib_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeBlockInfoRecord.cpp \
   unity/djinni/jni/NativeMonitorListener.cpp \
   unity/djinni/jni/NativeMonitorListener.hpp \
-  unity/djinni/jni/NativeUnifiedBackend.hpp \
-  unity/djinni/jni/NativeUnifiedBackend.cpp \
-  unity/djinni/jni/NativeUnifiedFrontend.hpp \
-  unity/djinni/jni/NativeUnifiedFrontend.cpp \
+  unity/djinni/jni/NativeILibraryController.hpp \
+  unity/djinni/jni/NativeILibraryController.cpp \
+  unity/djinni/jni/NativeILibraryListener.hpp \
+  unity/djinni/jni/NativeILibraryListener.cpp \
   unity/djinni/jni/NativeLegacyWalletResult.hpp \
   unity/djinni/jni/NativeMonitorRecord.cpp \
   unity/djinni/jni/NativeMonitorRecord.hpp \
@@ -852,9 +852,9 @@ lib_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeOutputRecord.cpp \
   unity/djinni/jni/NativeInputRecord.hpp \
   unity/djinni/jni/NativeInputRecord.cpp \
-  unity/djinni/cpp/unified_backend.hpp \
-  unity/djinni/cpp/unified_backend.cpp \
-  unity/djinni/cpp/unified_frontend.hpp \
+  unity/djinni/cpp/i_library_controller.hpp \
+  unity/djinni/cpp/i_library_controller.cpp \
+  unity/djinni/cpp/i_library_listener.hpp \
   $(CORE_H)
 
 nodist_lib_unity_jni_la_SOURCES = \
@@ -884,9 +884,9 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/address_record.hpp \
   unity/djinni/cpp/balance_record.hpp \
   unity/djinni/cpp/block_info_record.hpp \
-  unity/djinni/cpp/unified_backend.cpp \
-  unity/djinni/cpp/unified_backend.hpp \
-  unity/djinni/cpp/unified_frontend.hpp \
+  unity/djinni/cpp/i_library_controller.cpp \
+  unity/djinni/cpp/i_library_controller.hpp \
+  unity/djinni/cpp/i_library_listener.hpp \
   unity/djinni/cpp/legacy_wallet_result.hpp \
   unity/djinni/cpp/monitor_listener.hpp \
   unity/djinni/cpp/monitor_record.hpp \
@@ -914,12 +914,12 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBBlockInfoRecord+Private.mm \
   unity/djinni/objc/DBBlockInfoRecord.h \
   unity/djinni/objc/DBBlockInfoRecord.mm \
-  unity/djinni/objc/DBUnifiedBackend+Private.h \
-  unity/djinni/objc/DBUnifiedBackend+Private.mm \
-  unity/djinni/objc/DBUnifiedBackend.h \
-  unity/djinni/objc/DBUnifiedBackend.mm \
-  unity/djinni/objc/DBUnifiedFrontend+Private.h \
-  unity/djinni/objc/DBUnifiedFrontend+Private.mm \
+  unity/djinni/objc/DBILibraryController+Private.h \
+  unity/djinni/objc/DBILibraryController+Private.mm \
+  unity/djinni/objc/DBILibraryController.h \
+  unity/djinni/objc/DBILibraryController.mm \
+  unity/djinni/objc/DBILibraryListener+Private.h \
+  unity/djinni/objc/DBILibraryListener+Private.mm \
   unity/djinni/objc/DBUnifiedFrontend.h \
   unity/djinni/objc/DBLegacyWalletResult.h \
   unity/djinni/objc/DBLegacyWalletResult+Private.h \

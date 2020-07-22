@@ -117,8 +117,10 @@ payment_result_status = enum {
     insufficient_funds;
 }
 
-# This interface will be implemented in C++ and can be called from any language.
-unified_backend = interface +c {
+# The library controller is used to Init/Terminate the library, and other similar tasks.
+# It is also home to various generic utility functions that don't (yet) have a place in more specific controllers
+# Specific functionality should go in specific controllers; account related functionality -> accounts_controller, network related functionality -> network_controller and so on
+i_library_controller = interface +c {
 
     # Get the build information (ie. commit id and status)
     static BuildInfo(): string;
@@ -127,9 +129,9 @@ unified_backend = interface +c {
     # extraArgs - any additional commandline arguments as could normally be passed to the daemon binary
     # NB!!! This call blocks until the library is terminated, it is the callers responsibility to place it inside a thread or similar.
     # If you are in an environment where this is not possible (node.js for example use InitUnityLibThreaded instead which places it in a thread on your behalf)
-    static InitUnityLib(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool,spvMode : bool, signalHandler : unified_frontend, extraArgs : string): i32;
+    static InitUnityLib(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool,spvMode : bool, signalHandler : i_library_listener, extraArgs : string): i32;
     # Threaded implementation of InitUnityLib
-    static InitUnityLibThreaded(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool,spvMode : bool, signalHandler : unified_frontend, extraArgs : string);
+    static InitUnityLibThreaded(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool,spvMode : bool, signalHandler : i_library_listener, extraArgs : string);
 
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletFromRecoveryPhrase(phrase : string, password : string): bool;
@@ -285,7 +287,7 @@ monitor_listener = interface +j +o +n {
 }
 
 # Interface to receive events from the core
-unified_frontend = interface +j +o +n {
+i_library_listener = interface +j +o +n {
     # Fraction of work done since session start or last progress reset [0..1]
     # Unified progress combines connection state, header and block sync
     notifyUnifiedProgress(progress : f32): &;

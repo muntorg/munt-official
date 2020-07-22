@@ -12,7 +12,7 @@
 #endif
 
 #include "unity/djinni/cpp/legacy_wallet_result.hpp"
-#include "unity/djinni/cpp/unified_backend.hpp"
+#include "unity/djinni/cpp/i_library_controller.hpp"
 
 #include <boost/thread.hpp>
 
@@ -61,17 +61,17 @@ bool InitTor(boost::thread_group& threadGroup, CScheduler& scheduler)
     return true;
 }
 
-bool UnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(const std::string& walletFile, const std::string& oldPassword, const std::string& newPassword)
+bool ILibraryController::InitWalletFromAndroidLegacyProtoWallet(const std::string& walletFile, const std::string& oldPassword, const std::string& newPassword)
 {
     // only exists here to keep the compiler happy, never call this on iOS
-    LogPrintf("DO NOT call UnifiedBackend::InitWalletFromAndroidLegacyProtoWallet on iOS\n");
+    LogPrintf("DO NOT call ILibraryController::InitWalletFromAndroidLegacyProtoWallet on iOS\n");
     assert(false);
 }
 
-LegacyWalletResult UnifiedBackend::isValidAndroidLegacyProtoWallet(const std::string& walletFile, const std::string& oldPassword)
+LegacyWalletResult ILibraryController::isValidAndroidLegacyProtoWallet(const std::string& walletFile, const std::string& oldPassword)
 {
     // only exists here to keep the compiler happy, never call this on iOS
-    LogPrintf("DO NOT call UnifiedBackend::isValidAndroidLegacyProtoWallet on iOS\n");
+    LogPrintf("DO NOT call ILibraryController::isValidAndroidLegacyProtoWallet on iOS\n");
     assert(false);
     return LegacyWalletResult::INVALID_OR_CORRUPT;
 }

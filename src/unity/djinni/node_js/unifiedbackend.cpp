@@ -3,9 +3,9 @@
 
 #include <napi.h>
 
-#include "NJSUnifiedBackend.hpp"
+#include "NJSILibraryController.hpp"
 #include "NJSMonitorListener.hpp"
-#include "NJSUnifiedFrontend.hpp"
+#include "NJSILibraryListener.hpp"
 #include "NJSIRpcController.hpp"
 #include "NJSIRpcListener.hpp"
 #include "NJSIP2pNetworkController.hpp"
@@ -18,9 +18,9 @@
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports)
 {
-    NJSUnifiedBackend::Init(env, exports);
+    NJSILibraryController::Init(env, exports);
     NJSMonitorListener::Init(env, exports);
-    NJSUnifiedFrontend::Init(env, exports);
+    NJSILibraryListener::Init(env, exports);
     NJSIRpcController::Init(env, exports);
     NJSIRpcListener::Init(env, exports);
     NJSIP2pNetworkController::Init(env, exports);
