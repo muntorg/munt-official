@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="content">
-        <transaction-list />
+        <mutation-list :mutations="mutations" />
       </div>
       <div class="footer">
         <span
@@ -49,7 +49,8 @@
 </template>
 
 <script>
-import TransactionList from "./TransactionList";
+import { mapState } from "vuex";
+import MutationList from "./MutationList";
 import SendNovo from "./SendNovo";
 import ReceiveNovo from "./ReceiveNovo";
 
@@ -65,11 +66,12 @@ export default {
     };
   },
   components: {
-    TransactionList,
+    MutationList,
     SendNovo,
     ReceiveNovo
   },
   computed: {
+    ...mapState(["mutations"]),
     rightSectionTitle() {
       switch (this.rightSection) {
         case "Send":
@@ -151,6 +153,7 @@ export default {
   & .content {
     flex: 1;
     padding: 30px;
+    overflow-y: auto;
   }
 
   & .footer {

@@ -68,6 +68,12 @@ class LibUnity {
 
     this.accountsListener.onActiveAccountChanged = function(accountUUID) {
       store.dispatch({ type: "SET_ACTIVE_ACCOUNT", accountUUID });
+
+      store.dispatch({
+        type: "SET_MUTATIONS",
+        mutations: backend.getMutationHistory()
+      });
+
       store.dispatch({
         type: "SET_RECEIVE_ADDRESS",
         receiveAddress: backend.GetReceiveAddress()
