@@ -50,11 +50,7 @@ export default new Vuex.Store({
       state.receiveAddress = payload.receiveAddress;
     },
     SET_STATUS(state, status) {
-      if (state.status === AppStatus.shutdown) return;
-      if (status === AppStatus.synchronize) {
-        console.log(`skip synchronization for now`);
-        status = AppStatus.ready;
-      }
+      if (state.status === AppStatus.shutdown) return; // shutdown in progress, do not switch to other status
       state.status = status;
     },
     SET_UNITY_VERSION(state, payload) {
@@ -87,6 +83,7 @@ export default new Vuex.Store({
       commit(payload);
     },
     SET_CORE_READY({ commit }, payload) {
+      commit("SET_STATUS", AppStatus.ready); // set status to ready. maybe core_ready is redundant and can be removed.
       commit(payload);
     },
     SET_GULDEN_VERSION({ commit }, payload) {
