@@ -1,6 +1,10 @@
 <template>
   <div class="mutation-list">
-    <div v-for="group in groupedMutations" :key="group.idx">
+    <div
+      class="mutation-group"
+      v-for="group in groupedMutations"
+      :key="group.idx"
+    >
       <h4>{{ formatDate(group.date) }}</h4>
       <div
         class="mutation-row"
@@ -11,7 +15,6 @@
           <fa-icon :icon="['fal', mutationIcon(mutation)]" />
         </div>
         <div class="time">{{ formatTime(mutation.timestamp) }}</div>
-        <div class="hash">{{ mutation.txHash }}</div>
         <div class="amount">{{ formatAmount(mutation.change) }}</div>
       </div>
     </div>
@@ -78,7 +81,21 @@ export default {
         day: "numeric"
       };
       if (date.getFullYear() === new Date().getFullYear()) delete options.year;
-      return date.toLocaleString("en-US", options);
+
+      // for now determine localization here. replace by global method
+      let language =
+        process.env.VUE_APP_I18N_LOCALE ||
+        window.navigator.language.slice(0, 2);
+      switch (language) {
+        case "nl":
+        case "en":
+          break;
+        default:
+          language = "en";
+          break;
+      }
+
+      return date.toLocaleString(language, options);
     },
     formatTime(timestamp) {
       let date = new Date(timestamp * 1000);
@@ -94,8 +111,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.mutation-group {
+  margin-bottom: 20px;
+}
+
 h4 {
   color: #999;
+  margin-bottom: 10px;
 }
 
 .mutation-row {
