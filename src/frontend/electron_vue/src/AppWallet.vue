@@ -19,7 +19,6 @@ export default {
   name: "AppWallet",
   data() {
     return {
-      isMounted: false,
       modal: null
     };
   },
@@ -28,9 +27,12 @@ export default {
     ModalDialog
   },
   mounted() {
-    if (this.isMounted) return;
-    this.isMounted = true;
+    EventBus.$on("close-dialog", this.closeModal);
     EventBus.$on("show-dialog", this.showModal);
+  },
+  beforeDestroy() {
+    EventBus.$off("close-dialog", this.closeModal);
+    EventBus.$off("show-dialog", this.showModal);
   },
   computed: {
     layout() {
@@ -38,6 +40,9 @@ export default {
     }
   },
   methods: {
+    closeModal() {
+      this.modal = null;
+    },
     showModal(modal) {
       this.modal = modal;
     }
