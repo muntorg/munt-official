@@ -153,7 +153,25 @@ export default {
   & .content {
     flex: 1;
     padding: 30px;
-    overflow-y: auto;
+    overflow-y: hidden;
+
+    --scrollbarBG: #fff;
+    --thumbBG: #999;
+
+    &:hover {
+      overflow-y: overlay;
+    }
+    &::-webkit-scrollbar {
+      width: 14px;
+    }
+    &::-webkit-scrollbar-track {
+      background: var(--scrollbarBG);
+    }
+    &::-webkit-scrollbar-thumb {
+      border: 3px solid var(--scrollbarBG);
+      background-color: var(--thumbBG);
+      border-radius: 14px;
+    }
   }
 
   & .footer {
