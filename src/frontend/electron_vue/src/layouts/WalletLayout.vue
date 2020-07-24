@@ -39,11 +39,71 @@
               <span class="balance">{{ account.balance }}</span>
             </router-link>
           </div>
+
+          <div class="account-cat">
+            <div class="status">
+              <fa-icon :icon="['fal', 'chevron-down']" />
+            </div>
+            <div class="symbol">
+              <fa-icon :icon="['fal', 'university']" />
+            </div>
+            <div class="info">
+              <div class="title">holding</div>
+              <div class="balance">{{ balanceFor("holding") }}</div>
+            </div>
+            <div class="add"><fa-icon :icon="['fal', 'plus']" /></div>
+          </div>
+
+          <div
+            v-for="account in holdingAccounts"
+            :key="account.UUID"
+            class="account"
+            :class="{ active: account.UUID === activeAccount }"
+          >
+            <router-link
+              :to="{ name: 'account', params: { id: account.UUID } }"
+            >
+              {{ account.label }}
+              <span class="balance">{{ account.balance }}</span>
+            </router-link>
+          </div>
+
+          <div class="account-cat">
+            <div class="status">
+              <fa-icon :icon="['fal', 'chevron-down']" />
+            </div>
+            <div class="symbol">
+              <fa-icon :icon="['fal', 'gem']" />
+            </div>
+            <div class="info">
+              <div class="title">mining</div>
+              <div class="balance">{{ balanceFor("mining") }}</div>
+            </div>
+            <div class="add"><fa-icon :icon="['fal', 'plus']" /></div>
+          </div>
+
+          <div
+            v-for="account in miningAccounts"
+            :key="account.UUID"
+            class="account"
+            :class="{ active: account.UUID === activeAccount }"
+          >
+            <router-link
+              :to="{ name: 'account', params: { id: account.UUID } }"
+            >
+              {{ account.label }}
+              <span class="balance">{{ account.balance }}</span>
+            </router-link>
+          </div>
         </div>
       </div>
       <div class="footer">
         <div class="status"></div>
-        <div class="settings" @click="showSettings">
+        <div class="button" @click="changeLockSettings">
+          <fa-icon :icon="lockIcon" />
+        </div>
+
+        <div class="button" @click="showSettings">
           <fa-icon :icon="['fal', 'user-circle']" />
         </div>
       </div>
@@ -56,17 +116,28 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import EventBus from "../EventBus";
+
+import PasswordDialog from "../components/PasswordDialog";
 
 export default {
   name: "WalletLayout",
   computed: {
-    ...mapState(["activeAccount"]),
+    ...mapState(["activeAccount", "password"]),
     ...mapGetters(["totalBalance", "accounts"]),
     spendingAccounts() {
       return this.accounts.filter(
-        x =>
-          x.type === "Desktop" /* || x.type === "Mobile" etc. -> sort by name */
+        x => x.type === "Desktop" /* || x.type === "Mobile" etc. */
       );
+    },
+    holdingAccounts() {
+      return this.accounts.filter(x => x.type === "Witness");
+    },
+    miningAccounts() {
+      return this.accounts.filter(x => x.type === "Mining");
+    },
+    lockIcon() {
+      return this.password ? ["fal", "unlock"] : ["fal", "lock"];
     }
   },
   methods: {
@@ -76,6 +147,12 @@ export default {
         case "spending":
           accounts = this.spendingAccounts;
           break;
+        case "holding":
+          accounts = this.holdingAccounts;
+          break;
+        case "mining":
+          accounts = this.miningAccounts;
+          break;
       }
       return accounts.reduce(function(acc, obj) {
         return acc + obj.balance;
@@ -84,6 +161,17 @@ export default {
     showSettings() {
       if (this.$route.path.indexOf("/settings/") === 0) return;
       this.$router.push({ name: "settings" });
+    },
+    changeLockSettings() {
+      if (this.password) {
+        this.$store.dispatch({ type: "SET_PASSWORD", password: null });
+      } else {
+        EventBus.$emit("show-dialog", {
+          title: this.$t("password_dialog.unlock_wallet"),
+          component: PasswordDialog,
+          showButtons: false
+        });
+      }
     }
   }
 };
@@ -142,6 +230,7 @@ export default {
         height: 20px;
         margin-bottom: 4px;
       }
+
       & .accounts-scroller {
         height: calc(100% - 20px - 4px);
         overflow: hidden;
@@ -159,9 +248,9 @@ export default {
           background: var(--scrollbarBG);
         }
         &::-webkit-scrollbar-thumb {
-          border-radius: 0;
           border: 4px solid var(--scrollbarBG);
           background-color: var(--thumbBG);
+          border-radius: 11px;
         }
       }
 
@@ -250,7 +339,7 @@ export default {
         flex: 1;
       }
 
-      & .settings {
+      & .button {
         line-height: 52px;
         padding: 0 20px;
         cursor: pointer;

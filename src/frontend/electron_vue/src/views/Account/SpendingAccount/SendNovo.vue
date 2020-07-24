@@ -18,20 +18,35 @@
         type="text"
         :placeholder="$t('send_novo.enter_label')"
       />
+
+      <input
+        v-model="passwordInput"
+        type="password"
+        v-show="password === null"
+        :placeholder="$t('send_novo.enter_password')"
+      />
     </div>
     <button @click="send">{{ $t("buttons.send") }}</button>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+import UnityBackend from "../../../unity/UnityBackend";
+import EventBus from "../../../EventBus";
+
 export default {
   name: "SendNovo",
   data() {
     return {
       amount: null,
       address: null,
-      label: null
+      label: null,
+      passwordInput: null
     };
+  },
+  computed: {
+    ...mapState(["password"])
   },
   mounted() {
     this.$refs.amount.focus();
@@ -45,6 +60,15 @@ export default {
         - send novo
         - show success / error notification
        */
+
+      if (this.password) {
+        UnityBackend.UnlockWallet(this.password);
+      } else {
+        EventBus.$once("close-dialog", () => {
+          console.log("CLOSEEDD");
+        });
+        EventBus.$emit("show-password-dialog");
+      }
     }
   }
 };

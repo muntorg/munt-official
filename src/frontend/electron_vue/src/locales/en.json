@@ -7,7 +7,8 @@
     "ok": "OK",
     "previous": "Previous",
     "receive": "Receive",
-    "send": "Send"
+    "send": "Send",
+    "unlock": "Unlock"
   },
   "common": {
     "amount": "Amount",
@@ -18,6 +19,9 @@
   "loader": {
     "shutdown": "Shutting down...",
     "synchronizing": "Your wallet is now synchronizing with the Novo network. This may take some time to complete."
+  },
+  "password_dialog": {
+    "unlock_wallet": "Unlock wallet"
   },
   "settings": {
     "header": "Settings",
@@ -47,6 +51,7 @@
   },
   "send_novo": {
     "enter_label": "Enter label",
-    "enter_novo_address": "Enter Novo address"
+    "enter_novo_address": "Enter Novo address",
+    "enter_password": "Enter your password"
   }
 }

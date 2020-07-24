@@ -7,7 +7,8 @@
     "ok": "OK",
     "previous": "Vorige",
     "receive": "Ontvangen",
-    "send": "Versturen"
+    "send": "Versturen",
+    "unlock": "Ontgrendelen"
   },
   "common": {
     "amount": "Bedrag",
@@ -18,6 +19,9 @@
   "loader": {
     "shutdown": "Bezig met afsluiten...",
     "synchronizing": "Jouw portemonnee is aan het synchroniseren met het Novo netwerk. Dit kan enige tijd duren."
+  },
+  "password_dialog": {
+    "unlock_wallet": "Ontgrendel portemonnee"
   },
   "settings": {
     "header": "Instellingen",
@@ -47,6 +51,7 @@
   },
   "send_novo": {
     "enter_label": "Voer label in",
-    "enter_novo_address": "Voer Novo adres in"
+    "enter_novo_address": "Voer Novo adres in",
+    "enter_password": "Voer jouw wachtwoord in"
   }
 }

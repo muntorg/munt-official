@@ -6,6 +6,7 @@
 import { mapGetters } from "vuex";
 
 import SpendingAccount from "./SpendingAccount";
+import HoldingAccount from "./HoldingAccount";
 
 export default {
   name: "Account",
@@ -18,7 +19,8 @@ export default {
     id: null
   },
   components: {
-    SpendingAccount
+    SpendingAccount,
+    HoldingAccount
   },
   computed: {
     ...mapGetters(["account"])
@@ -36,6 +38,12 @@ export default {
       if (this.account) {
         switch (this.account.type) {
           case "Desktop":
+            this.accountType = SpendingAccount;
+            break;
+          case "Witness":
+            this.accountType = HoldingAccount;
+            break;
+          case "Mining":
             this.accountType = SpendingAccount;
             break;
           default:

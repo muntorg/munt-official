@@ -11,9 +11,13 @@
       </div>
       <div class="content">
         {{ message }}
-        <component v-if="component" :is="component"></component>
+        <component
+          v-if="component"
+          :is="component"
+          v-bind="componentProps"
+        ></component>
       </div>
-      <novo-button-section class="buttons">
+      <novo-button-section class="buttons" v-if="showButtons">
         <template v-slot:right>
           <button @click="closeModal">{{ $t("buttons.ok") }}</button>
         </template>
@@ -23,6 +27,8 @@
 </template>
 
 <script>
+import EventBus from "../EventBus";
+
 export default {
   name: "ModalDialog",
   props: {
@@ -38,6 +44,11 @@ export default {
     title() {
       return this.value.title || "title";
     },
+    showButtons() {
+      return typeof this.value.showButtons === "boolean"
+        ? this.value.showButtons
+        : true;
+    },
     type() {
       return this.value.type;
     },
@@ -46,11 +57,14 @@ export default {
     },
     component() {
       return this.value.component;
+    },
+    componentProps() {
+      return this.value.componentProps;
     }
   },
   methods: {
     closeModal() {
-      this.$emit("input", null);
+      EventBus.$emit("close-dialog");
     }
   }
 };
@@ -112,7 +126,6 @@ export default {
 .content {
   margin: 24px 0;
   padding: 0 24px;
-  height: calc(100% - 64px - 64px - 36px);
   overflow-y: auto;
 }
 

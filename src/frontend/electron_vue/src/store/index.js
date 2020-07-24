@@ -21,6 +21,7 @@ export default new Vuex.Store({
     balance: null,
     coreReady: false,
     mutations: null,
+    password: null,
     receiveAddress: null,
     status: AppStatus.start,
     unityVersion: null,
@@ -45,6 +46,9 @@ export default new Vuex.Store({
     },
     SET_MUTATIONS(state, payload) {
       state.mutations = payload.mutations;
+    },
+    SET_PASSWORD(state, payload) {
+      state.password = payload.password;
     },
     SET_RECEIVE_ADDRESS(state, payload) {
       state.receiveAddress = payload.receiveAddress;
@@ -90,6 +94,9 @@ export default new Vuex.Store({
       commit(payload);
     },
     SET_MUTATIONS({ commit }, payload) {
+      commit(payload);
+    },
+    SET_PASSWORD({ commit }, payload) {
       commit(payload);
     },
     SET_RECEIVE_ADDRESS({ commit }, payload) {
