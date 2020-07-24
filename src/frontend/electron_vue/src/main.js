@@ -22,6 +22,7 @@ import {
   faCreditCard,
   faGem,
   faHourglassStart,
+  faLock,
   faLongArrowLeft,
   faLongArrowRight,
   faPlus,
@@ -29,6 +30,7 @@ import {
   faShieldCheck,
   faTimes,
   faUniversity,
+  faUnlock,
   faUserCircle
 } from "@fortawesome/pro-light-svg-icons";
 
@@ -45,6 +47,7 @@ library.add([
   faCreditCard,
   faGem,
   faHourglassStart,
+  faLock,
   faLongArrowLeft,
   faLongArrowRight,
   faPlus,
@@ -52,6 +55,7 @@ library.add([
   faShieldCheck,
   faTimes,
   faUniversity,
+  faUnlock,
   faUserCircle
 ]);
 
