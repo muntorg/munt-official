@@ -60,15 +60,6 @@ export default {
         - send novo
         - show success / error notification
        */
-
-      if (this.password) {
-        UnityBackend.UnlockWallet(this.password);
-      } else {
-        EventBus.$once("close-dialog", () => {
-          console.log("CLOSEEDD");
-        });
-        EventBus.$emit("show-password-dialog");
-      }
     }
   }
 };
