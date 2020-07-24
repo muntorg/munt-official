@@ -113,8 +113,7 @@ public:
         consensus.devBlockSubsidyActivationHeight=1030001;
         consensus.pow2Phase4FirstBlockHeight=1131652;
         consensus.pow2Phase5FirstBlockHeight=1140958;
-        consensus.deltaV3ActivationTime=v3
-1598443200;
+        consensus.deltaV3ActivationTime=1598443200;
 
         // Message start string to avoid accidental cross communication with other chains or software.
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
