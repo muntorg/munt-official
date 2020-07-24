@@ -156,7 +156,7 @@ export default {
     overflow-y: hidden;
 
     --scrollbarBG: #fff;
-    --thumbBG: #999;
+    --thumbBG: #ddd;
 
     &:hover {
       overflow-y: overlay;
