@@ -164,11 +164,14 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
             if (nDeltaTimespan <= nBadTimeLimit)
                 nDeltaTimespan = nBadTimeReplace;
             
-            // If last block was 'long block' with difficulty adjustment, treat it as a faster block at the lower difficulty
-            if (nDeltaTimespanPoW > (nLongTimeLimit + nLongTimeStep))
+            if (nDeltaVersion>=3)
             {
-                nDeltaTimespanPoW = (nDeltaTimespanPoW-nLongTimeLimit)%nLongTimeStep;
-                nDeltaTimespan = std::min(nDeltaTimespan, nDeltaTimespanPoW);
+                // If last block was 'long block' with difficulty adjustment, treat it as a faster block at the lower difficulty
+                if (nDeltaTimespanPoW > (nLongTimeLimit + nLongTimeStep))
+                {
+                    nDeltaTimespanPoW = (nDeltaTimespanPoW-nLongTimeLimit)%nLongTimeStep;
+                    nDeltaTimespan = std::min(nDeltaTimespan, nDeltaTimespanPoW);
+                }
             }
 
             if (i<= nShortFrame)
@@ -204,18 +207,14 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
                 if (nDeltaTimespan <= nBadTimeLimit)
                     nDeltaTimespan = nBadTimeReplace;
                 
-                // If last block was 'long block' with difficulty adjustment, treat it as a faster block at the lower difficulty
-                if (nDeltaTimespanPoW > (nLongTimeLimit + nLongTimeStep))
-                {
-                    nDeltaTimespanPoW = (nDeltaTimespanPoW-nLongTimeLimit)%nLongTimeStep;
-                    nDeltaTimespan = std::min(nDeltaTimespan, nDeltaTimespanPoW);
-                }
-
-                // If last block was 'long block' with difficulty adjustment, treat it as a faster block at the lower difficulty
                 if (nDeltaVersion>=3)
                 {
-                    //if (nDeltaTimespan > (nLongTimeLimit + nLongTimeStep))
-                    //nDeltaTimespan = nRetargetTimespan;
+                    // If last block was 'long block' with difficulty adjustment, treat it as a faster block at the lower difficulty
+                    if (nDeltaTimespanPoW > (nLongTimeLimit + nLongTimeStep))
+                    {
+                        nDeltaTimespanPoW = (nDeltaTimespanPoW-nLongTimeLimit)%nLongTimeStep;
+                        nDeltaTimespan = std::min(nDeltaTimespan, nDeltaTimespanPoW);
+                    }
                 }
 
                 nMiddleTimespan += nDeltaTimespan;
