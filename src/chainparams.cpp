@@ -113,7 +113,8 @@ public:
         consensus.devBlockSubsidyActivationHeight=1030001;
         consensus.pow2Phase4FirstBlockHeight=1131652;
         consensus.pow2Phase5FirstBlockHeight=1140958;
-        consensus.deltaV3ActivationTime=1598443200;
+        consensus.deltaV3ActivationTime=v3
+1598443200;
 
         // Message start string to avoid accidental cross communication with other chains or software.
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
@@ -463,7 +464,7 @@ public:
                 consensus.devBlockSubsidyActivationHeight=528750;
                 consensus.pow2Phase4FirstBlockHeight=528762;
                 consensus.pow2Phase5FirstBlockHeight=528762;
-                consensus.deltaV3ActivationTime=1596542400;
+                consensus.deltaV3ActivationTime=1595937600;
 
                 genesis = CreateGenesisBlock(seedTimestamp, 0, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
                 genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
