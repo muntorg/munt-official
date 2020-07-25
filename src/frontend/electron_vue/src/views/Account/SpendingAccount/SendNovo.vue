@@ -32,8 +32,6 @@
 
 <script>
 import { mapState } from "vuex";
-import UnityBackend from "../../../unity/UnityBackend";
-import EventBus from "../../../EventBus";
 
 export default {
   name: "SendNovo",
