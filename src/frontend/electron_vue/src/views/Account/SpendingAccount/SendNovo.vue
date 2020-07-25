@@ -20,9 +20,9 @@
       />
 
       <input
-        v-model="passwordInput"
+        v-model="password"
         type="password"
-        v-show="password === null"
+        v-show="walletPassword === null"
         :placeholder="$t('send_novo.enter_password')"
       />
     </div>
@@ -40,11 +40,11 @@ export default {
       amount: null,
       address: null,
       label: null,
-      passwordInput: null
+      password: null
     };
   },
   computed: {
-    ...mapState(["password"])
+    ...mapState(["walletPassword"])
   },
   mounted() {
     this.$refs.amount.focus();

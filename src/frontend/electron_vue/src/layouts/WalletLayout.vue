@@ -118,12 +118,12 @@
 import { mapState, mapGetters } from "vuex";
 import EventBus from "../EventBus";
 
-import PasswordDialog from "../components/PasswordDialog";
+import WalletPasswordDialog from "../components/WalletPasswordDialog";
 
 export default {
   name: "WalletLayout",
   computed: {
-    ...mapState(["activeAccount", "password"]),
+    ...mapState(["activeAccount", "walletPassword"]),
     ...mapGetters(["totalBalance", "accounts"]),
     spendingAccounts() {
       return this.accounts.filter(
@@ -137,7 +137,7 @@ export default {
       return this.accounts.filter(x => x.type === "Mining");
     },
     lockIcon() {
-      return this.password ? ["fal", "unlock"] : ["fal", "lock"];
+      return this.walletPassword ? ["fal", "unlock"] : ["fal", "lock"];
     }
   },
   methods: {
@@ -163,12 +163,15 @@ export default {
       this.$router.push({ name: "settings" });
     },
     changeLockSettings() {
-      if (this.password) {
-        this.$store.dispatch({ type: "SET_PASSWORD", password: null });
+      if (this.walletPassword) {
+        this.$store.dispatch({
+          type: "SET_WALLET_PASSWORD",
+          walletPassword: null
+        });
       } else {
         EventBus.$emit("show-dialog", {
           title: this.$t("password_dialog.unlock_wallet"),
-          component: PasswordDialog,
+          component: WalletPasswordDialog,
           showButtons: false
         });
       }

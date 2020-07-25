@@ -11,7 +11,7 @@
         ref="password"
         type="password"
         v-model="password"
-        @keydown="validatePasswordOnEnter"
+        @keydown="getRecoveryPhraseOnEnter"
         :class="computedStatus"
       />
     </novo-form-field>
@@ -27,7 +27,7 @@
     <novo-button-section>
       <button
         v-if="current === 1"
-        @click="validatePassword"
+        @click="getRecoveryPhrase"
         :disabled="isNextDisabled"
       >
         {{ $t("buttons.next") }}
@@ -37,21 +37,30 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import UnityBackend from "../../unity/UnityBackend";
 
 export default {
   data() {
     return {
-      current: 1,
       recoveryPhrase: null,
       password: "",
       isPasswordInvalid: false
     };
   },
   mounted() {
-    this.$refs.password.focus();
+    if (this.walletPassword) {
+      this.password = this.walletPassword;
+      this.getRecoveryPhrase();
+    } else {
+      this.$refs.password.focus();
+    }
   },
   computed: {
+    ...mapState(["walletPassword"]),
+    current() {
+      return this.recoveryPhrase ? 2 : 1;
+    },
     computedStatus() {
       return this.isPasswordInvalid ? "error" : "";
     },
@@ -60,15 +69,14 @@ export default {
     }
   },
   methods: {
-    validatePasswordOnEnter() {
+    getRecoveryPhraseOnEnter() {
       this.isPasswordInvalid = false;
-      if (event.keyCode === 13) this.validatePassword();
+      if (event.keyCode === 13) this.getRecoveryPhrase();
     },
-    validatePassword() {
+    getRecoveryPhrase() {
       if (UnityBackend.UnlockWallet(this.password)) {
         this.recoveryPhrase = UnityBackend.GetRecoveryPhrase();
         UnityBackend.LockWallet();
-        this.current++;
       } else {
         this.isPasswordInvalid = true;
       }
