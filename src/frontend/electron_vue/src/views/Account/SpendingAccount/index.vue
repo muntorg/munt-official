@@ -1,5 +1,5 @@
 <template>
-  <div class="account-view" v-if="account">
+  <div class="account-view" v-if="account" :class="accountViewClass">
     <div class="main-section">
       <div class="header">
         <div class="info">
@@ -72,6 +72,9 @@ export default {
   },
   computed: {
     ...mapState(["mutations"]),
+    accountViewClass() {
+      return this.rightSection ? "right-section-active" : "";
+    },
     rightSectionTitle() {
       switch (this.rightSection) {
         case "Send":
@@ -104,6 +107,12 @@ export default {
   height: 100vh;
   display: flex;
   flex-direction: row;
+
+  &.right-section-active {
+    & .header .settings {
+      display: none;
+    }
+  }
 }
 
 .main-section {
@@ -117,6 +126,8 @@ export default {
     height: var(--header-height);
     border-bottom: 1px solid var(--main-border-color);
     padding: 11px 30px 0 30px;
+    white-space: nowrap;
+    overflow: hidden;
 
     display: flex;
     flex-direction: row;
