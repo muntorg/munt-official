@@ -13,111 +13,87 @@
         </h4>
         <div class="accounts-scroller">
           <div class="account-cat">
-            <div
-              class="status"
-              @click="toggleCategory('spending')"
-              :class="isToggleVisible(spendingAccounts)"
-            >
-              <fa-icon :icon="getCategoryIcon(spendingOpened)" />
-            </div>
-            <div class="symbol">
-              <fa-icon :icon="['fal', 'credit-card']" />
+            <div class="status">
+              <fa-icon :icon="['fal', 'chevron-down']" />
             </div>
             <div class="info">
-              <div class="title">spending</div>
+              <div class="title">Spending</div>
               <div class="balance">{{ balanceFor("spending") }}</div>
             </div>
             <div class="add"><fa-icon :icon="['fal', 'plus']" /></div>
           </div>
-          <div v-if="spendingOpened">
-            <div
-              v-for="account in spendingAccounts"
-              :key="account.UUID"
-              class="account"
-              :class="{ active: account.UUID === activeAccount }"
+
+          <div
+            v-for="account in spendingAccounts"
+            :key="account.UUID"
+            class="account"
+            :class="{ active: account.UUID === activeAccount }"
+          >
+            <router-link
+              :to="{ name: 'account', params: { id: account.UUID } }"
             >
-              <router-link
-                :to="{ name: 'account', params: { id: account.UUID } }"
-              >
-                {{ account.label }}
-                <span class="balance">{{ account.balance }}</span>
-              </router-link>
-            </div>
+              {{ account.label }}
+              <span class="balance">{{ account.balance }}</span>
+            </router-link>
           </div>
 
           <div class="account-cat">
-            <div
-              class="status"
-              @click="toggleCategory('holding')"
-              :class="isToggleVisible(holdingAccounts)"
-            >
-              <fa-icon :icon="getCategoryIcon(holdingOpened)" />
-            </div>
-            <div class="symbol">
-              <fa-icon :icon="['fal', 'university']" />
+            <div class="status">
+              <fa-icon :icon="['fal', 'chevron-right']" />
             </div>
             <div class="info">
-              <div class="title">holding</div>
+              <div class="title">Holding</div>
               <div class="balance">{{ balanceFor("holding") }}</div>
             </div>
             <div class="add"><fa-icon :icon="['fal', 'plus']" /></div>
           </div>
-          <div v-if="holdingOpened">
-            <div
-              v-for="account in holdingAccounts"
-              :key="account.UUID"
-              class="account"
-              :class="{ active: account.UUID === activeAccount }"
+
+          <div
+            v-for="account in holdingAccounts"
+            :key="account.UUID"
+            class="account"
+            :class="{ active: account.UUID === activeAccount }"
+          >
+            <router-link
+              :to="{ name: 'account', params: { id: account.UUID } }"
             >
-              <router-link
-                :to="{ name: 'account', params: { id: account.UUID } }"
-              >
-                {{ account.label }}
-                <span class="balance">{{ account.balance }}</span>
-              </router-link>
-            </div>
+              {{ account.label }}
+              <span class="balance">{{ account.balance }}</span>
+            </router-link>
           </div>
 
           <div class="account-cat">
-            <div
-              class="status"
-              @click="toggleCategory('mining')"
-              :class="isToggleVisible(miningAccounts)"
-            >
-              <fa-icon :icon="getCategoryIcon(miningOpened)" />
-            </div>
-            <div class="symbol">
-              <fa-icon :icon="['fal', 'gem']" />
+            <div class="status">
+              <fa-icon :icon="['fal', 'chevron-right']" />
             </div>
             <div class="info">
-              <div class="title">mining</div>
+              <div class="title">Mining</div>
               <div class="balance">{{ balanceFor("mining") }}</div>
             </div>
             <div class="add"><fa-icon :icon="['fal', 'plus']" /></div>
           </div>
-          <div v-if="miningOpened">
-            <div
-              v-for="account in miningAccounts"
-              :key="account.UUID"
-              class="account"
-              :class="{ active: account.UUID === activeAccount }"
+
+          <div
+            v-for="account in miningAccounts"
+            :key="account.UUID"
+            class="account"
+            :class="{ active: account.UUID === activeAccount }"
+          >
+            <router-link
+              :to="{ name: 'account', params: { id: account.UUID } }"
             >
-              <router-link
-                :to="{ name: 'account', params: { id: account.UUID } }"
-              >
-                {{ account.label }}
-                <span class="balance">{{ account.balance }}</span>
-              </router-link>
-            </div>
+              {{ account.label }}
+              <span class="balance">{{ account.balance }}</span>
+            </router-link>
           </div>
         </div>
       </div>
       <div class="footer">
         <div class="status"></div>
-
         <div class="button" @click="changeLockSettings">
           <fa-icon :icon="lockIcon" />
         </div>
+
         <div class="button" @click="showSettings">
           <fa-icon :icon="['fal', 'user-circle']" />
         </div>
@@ -133,33 +109,13 @@
 import { mapState, mapGetters } from "vuex";
 import EventBus from "../EventBus";
 
-import WalletPasswordDialog from "../components/WalletPasswordDialog";
+import PasswordDialog from "../components/PasswordDialog";
 
 export default {
   name: "WalletLayout",
-  data() {
-    return {
-      spendingOpened: false,
-      holdingOpened: false,
-      miningOpened: false
-    };
-  },
   computed: {
-    ...mapState(["activeAccount", "walletPassword"]),
+    ...mapState(["activeAccount", "password"]),
     ...mapGetters(["totalBalance", "accounts"]),
-    activeCategory() {
-      if (this.activeAccount === null) return null;
-      let type = this.accounts.find(x => x.UUID === this.activeAccount).type;
-      switch (type) {
-        case "Desktop":
-          return "spending";
-        case "Witness":
-          return "holding";
-        case "Mining":
-          return "mining";
-      }
-      return null;
-    },
     spendingAccounts() {
       return this.accounts.filter(
         x => x.type === "Desktop" /* || x.type === "Mobile" etc. */
@@ -172,12 +128,7 @@ export default {
       return this.accounts.filter(x => x.type === "Mining");
     },
     lockIcon() {
-      return this.walletPassword ? ["fal", "unlock"] : ["fal", "lock"];
-    }
-  },
-  watch: {
-    activeCategory() {
-      this.toggleCategory(this.activeCategory, true);
+      return this.password ? ["fal", "unlock"] : ["fal", "lock"];
     }
   },
   methods: {
@@ -202,38 +153,15 @@ export default {
       if (this.$route.path.indexOf("/settings/") === 0) return;
       this.$router.push({ name: "settings" });
     },
-    showMining() {},
     changeLockSettings() {
-      if (this.walletPassword) {
-        this.$store.dispatch({
-          type: "SET_WALLET_PASSWORD",
-          walletPassword: null
-        });
+      if (this.password) {
+        this.$store.dispatch({ type: "SET_PASSWORD", password: null });
       } else {
         EventBus.$emit("show-dialog", {
           title: this.$t("password_dialog.unlock_wallet"),
-          component: WalletPasswordDialog,
+          component: PasswordDialog,
           showButtons: false
         });
-      }
-    },
-    getCategoryIcon(categoryOpened) {
-      return ["fal", categoryOpened ? "chevron-down" : "chevron-right"];
-    },
-    isToggleVisible(accounts) {
-      return accounts.length > 0 ? "" : "hide";
-    },
-    toggleCategory(category, open) {
-      switch (category) {
-        case "spending":
-          this.spendingOpened = open || !this.spendingOpened;
-          break;
-        case "holding":
-          this.holdingOpened = open || !this.holdingOpened;
-          break;
-        case "mining":
-          this.miningOpened = open || !this.miningOpened;
-          break;
       }
     }
   }
@@ -286,7 +214,7 @@ export default {
 
     & .accounts-section {
       height: calc(100% - var(--header-height) - var(--footer-height));
-      padding: 30px 0 0 0;
+      padding: 24px 0 0 0;
 
       & .accounts-header {
         padding: 0 20px 0 20px;
@@ -319,7 +247,7 @@ export default {
 
       & .account-cat {
         display: flex;
-        padding: 17px 0 17px 0;
+        padding: 12px 0 12px 0;
 
         // why highlight the category on hover?
         // &:hover {
@@ -327,27 +255,17 @@ export default {
         // }
 
         & .status {
-          padding: 5px 10px 0 20px;
+          width: 44px;
+          padding: 0 0 0 20px;
           font-size: 12px;
-          cursor: pointer;
-
-          &.hide {
-            visibility: hidden;
-          }
-        }
-
-        & .symbol {
-          font-size: 16px;
-          padding: 0 7px 0 0;
+          line-height: 16px;
         }
 
         & .title {
-          line-height: 0.9em;
-          font-size: 0.9em;
-          font-weight: 600;
-          letter-spacing: 0.02em;
-          text-transform: uppercase;
-          padding: 0 0 6px 0;
+          line-height: 16px;
+          font-size: 1em;
+          font-weight: 500;
+          margin: 0 0 6px 0;
         }
 
         & .info {
@@ -355,7 +273,7 @@ export default {
         }
 
         & .balance {
-          line-height: 0.8em;
+          line-height: 10px;
           font-size: 0.8em;
           font-weight: 500;
           letter-spacing: 0.02em;
@@ -363,8 +281,8 @@ export default {
         }
 
         & .add {
-          margin: 0 25px 0 0;
-          line-height: 26px;
+          margin: 0 24px 0 0;
+          line-height: 16px;
           font-size: 16px;
         }
       }
@@ -372,10 +290,10 @@ export default {
       & .account a {
         display: flex;
         flex-direction: column;
-        padding: 10px 20px 10px 40px;
-        font-size: 0.9em;
+        padding: 8px 24px 8px 25px;
+        font-size: 1em;
         color: #ccc;
-        line-height: 1.2em;
+        line-height: 16px;
         cursor: pointer;
       }
 
@@ -390,7 +308,9 @@ export default {
       }
 
       & .account .balance {
-        font-size: 0.9em;
+        margin: 6px 0 0 0;
+        font-size: 0.8em;
+        line-height: 10px;
       }
     }
 

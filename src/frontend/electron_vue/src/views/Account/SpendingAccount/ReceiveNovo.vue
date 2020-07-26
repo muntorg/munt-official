@@ -62,6 +62,7 @@ export default {
     }
 
     & .qrcode {
+      width: 100%;
       padding: 26px;
     }
 

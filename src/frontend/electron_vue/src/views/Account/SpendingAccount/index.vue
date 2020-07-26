@@ -1,5 +1,5 @@
 <template>
-  <div class="account-view" v-if="account" :class="accountViewClass">
+  <div class="account-view" v-if="account">
     <div class="main-section">
       <div class="header">
         <div class="info">
@@ -72,9 +72,6 @@ export default {
   },
   computed: {
     ...mapState(["mutations"]),
-    accountViewClass() {
-      return this.rightSection ? "right-section-active" : "";
-    },
     rightSectionTitle() {
       switch (this.rightSection) {
         case "Send":
@@ -107,12 +104,6 @@ export default {
   height: 100vh;
   display: flex;
   flex-direction: row;
-
-  &.right-section-active {
-    & .header .settings {
-      display: none;
-    }
-  }
 }
 
 .main-section {
@@ -125,12 +116,11 @@ export default {
   & .header {
     height: var(--header-height);
     border-bottom: 1px solid var(--main-border-color);
-    padding: 11px 30px 0 30px;
-    white-space: nowrap;
-    overflow: hidden;
+    padding: 11px 24px 0 24px;
 
     display: flex;
     flex-direction: row;
+    overflow: hidden;
 
     & .info {
       & .label {
@@ -146,12 +136,13 @@ export default {
     }
 
     & .settings {
+      margin: 2px -10px 0 0;
       font-size: 16px;
       display: flex;
       flex-direction: column;
 
       & span {
-        padding: 8px;
+        padding: 10px;
         cursor: pointer;
 
         &:hover {
@@ -163,7 +154,7 @@ export default {
 
   & .content {
     flex: 1;
-    padding: 30px;
+    padding: 24px;
     overflow-y: hidden;
 
     --scrollbarBG: #fff;
@@ -214,9 +205,10 @@ export default {
 }
 
 .right-section {
-  width: 400px;
+  width: 50%;
+  min-width: 380px;
   background-color: #f5f5f5;
-  padding: 0 30px;
+  padding: 0 24px;
 
   & .header {
     line-height: 62px;
