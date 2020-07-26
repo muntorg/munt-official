@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import UnityBackend from "../../unity/UnityBackend";
 
 export default {
@@ -56,6 +57,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(["walletPassword"]),
     passwordOldStatus() {
       return this.isPasswordInvalid ? "error" : "";
     },
@@ -95,6 +97,12 @@ export default {
           break;
         case 2:
           if (UnityBackend.ChangePassword(this.passwordold, this.password2)) {
+            if (this.walletPassword) {
+              this.$store.dispatch({
+                type: "SET_WALLET_PASSWORD",
+                walletPassword: this.password2
+              });
+            }
             this.$router.push({ name: "account" });
           }
           break;
