@@ -2,6 +2,7 @@
   "buttons": {
     "back": "Terug",
     "change_password": "Verander wachtwoord",
+    "create_mining_account": "Mining rekening aanmaken",
     "finish": "Klaar",
     "next": "Volgende",
     "ok": "OK",
@@ -44,6 +45,10 @@
     "repeat_your_recovery_phrase": "Voer jouw herstelzin in om te controleren dat je deze goed hebt opgeschreven.",
     "setup_novo_wallet": "Installeer jouw Novo portemonnee",
     "this_is_your_recovery_phrase": "Dit is jouw herstelzin. Bewaar de herstelzin op een veilige plek. Zin kwijt of iemand toegang tot je zin = Novo weg."
+  },
+  "setup_mining": {
+    "title": "Mining instellen",
+    "information": "Voordat je kunt beginnen met minen van Novo moet een mining rekening worden aangemaakt. Voer je wachtwoord in om je portemonnee te ontgrendelen en een mining rekening aan te maken."
   },
   "receive_novo": {
     "receive_acquired_novo": "Ontvang jouw verkregen Novo",

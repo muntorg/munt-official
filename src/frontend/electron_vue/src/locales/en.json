@@ -2,6 +2,7 @@
   "buttons": {
     "back": "Back",
     "change_password": "Change password",
+    "create_mining_account": "Create mining account",
     "finish": "Finish",
     "next": "Next",
     "ok": "OK",
@@ -44,6 +45,10 @@
     "repeat_your_recovery_phrase": "To make sure you have correctly written down your recovery phrase, enter your phrase in the boxes below.",
     "setup_novo_wallet": "Setup your Novo wallet",
     "this_is_your_recovery_phrase": "This is your recovery phrase. Keep your backup phrase in a safe place. Lose phrase or someone else with access to the phrase = lose Novo."
+  },
+  "setup_mining": {
+    "title": "Setup mining",
+    "information": "Before you can start mining Novo a mining account needs to be created. Enter your password to unlock your wallet and create a mining account."
   },
   "receive_novo": {
     "receive_acquired_novo": "Receive your acquired Novo",

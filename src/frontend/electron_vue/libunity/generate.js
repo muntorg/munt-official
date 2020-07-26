@@ -29,7 +29,7 @@ const generateInfo = [
   {
     className: "NJSIAccountsController",
     controller: "accountsController",
-    functions: ["SetActiveAccount"],
+    functions: ["CreateAccount", "SetActiveAccount"],
     results: []
   }
 ];

@@ -73,37 +73,6 @@
               </router-link>
             </div>
           </div>
-
-          <div class="account-cat">
-            <div
-              class="status"
-              @click="toggleCategory('mining')"
-              :class="isToggleVisible(miningAccounts)"
-            >
-              <fa-icon :icon="getCategoryIcon(miningOpened)" />
-            </div>
-            <div class="info">
-              <div class="title">Mining</div>
-              <div class="balance">{{ balanceFor("mining") }}</div>
-            </div>
-            <div class="add"><fa-icon :icon="['fal', 'plus']" /></div>
-          </div>
-
-          <div v-if="miningOpened">
-            <div
-              v-for="account in miningAccounts"
-              :key="account.UUID"
-              class="account"
-              :class="{ active: account.UUID === activeAccount }"
-            >
-              <router-link
-                :to="{ name: 'account', params: { id: account.UUID } }"
-              >
-                {{ account.label }}
-                <span class="balance">{{ account.balance }}</span>
-              </router-link>
-            </div>
-          </div>
         </div>
       </div>
       <div class="footer">
@@ -111,7 +80,9 @@
         <div class="button" @click="changeLockSettings">
           <fa-icon :icon="lockIcon" />
         </div>
-
+        <div class="button" @click="showMining">
+          <fa-icon :icon="['fal', 'gem']" />
+        </div>
         <div class="button" @click="showSettings">
           <fa-icon :icon="['fal', 'user-circle']" />
         </div>
@@ -134,36 +105,33 @@ export default {
   data() {
     return {
       spendingOpened: false,
-      holdingOpened: false,
-      miningOpened: false
+      holdingOpened: false
     };
   },
   computed: {
     ...mapState(["activeAccount", "walletPassword"]),
-    ...mapGetters(["totalBalance", "accounts"]),
+    ...mapGetters(["totalBalance", "accounts", "miningAccount"]),
     activeCategory() {
       if (this.activeAccount === null) return null;
-      let type = this.accounts.find(x => x.UUID === this.activeAccount).type;
-      switch (type) {
+      let account = this.accounts.find(x => x.UUID === this.activeAccount);
+      if (account === undefined) return null;
+      switch (account.type) {
         case "Desktop":
           return "spending";
         case "Witness":
           return "holding";
-        case "Mining":
-          return "mining";
       }
       return null;
     },
     spendingAccounts() {
       return this.accounts.filter(
-        x => x.type === "Desktop" /* || x.type === "Mobile" etc. */
+        x => x.type === "Desktop" && x.state === "Normal"
       );
     },
     holdingAccounts() {
-      return this.accounts.filter(x => x.type === "Witness");
-    },
-    miningAccounts() {
-      return this.accounts.filter(x => x.type === "Mining");
+      return this.accounts.filter(
+        x => x.type === "Witness" && x.state === "Normal"
+      );
     },
     lockIcon() {
       return this.walletPassword ? ["fal", "unlock"] : ["fal", "lock"];
@@ -184,13 +152,22 @@ export default {
         case "holding":
           accounts = this.holdingAccounts;
           break;
-        case "mining":
-          accounts = this.miningAccounts;
-          break;
       }
       return accounts.reduce(function(acc, obj) {
         return acc + obj.balance;
       }, 0);
+    },
+    showMining() {
+      if (this.miningAccount) {
+        if (this.$route.path === `/account/${this.miningAccount.UUID}`) return;
+        this.$router.push({
+          name: "account",
+          params: { id: this.miningAccount.UUID }
+        });
+      } else {
+        if (this.$route.name === "setup-mining") return;
+        this.$router.push({ name: "setup-mining" });
+      }
     },
     showSettings() {
       if (this.$route.path.indexOf("/settings/") === 0) return;
@@ -223,9 +200,6 @@ export default {
           break;
         case "holding":
           this.holdingOpened = open || !this.holdingOpened;
-          break;
-        case "mining":
-          this.miningOpened = open || !this.miningOpened;
           break;
       }
     }

@@ -117,6 +117,14 @@ class UnityBackend {
     return ipc.callMain("SetActiveAccount", { accountUUID });
   }
 
+  static CreateAccount(accountName, accountType) {
+    return ipc.sendSync("CreateAccount", accountName, accountType);
+  }
+
+  static CreateAccountAsync(accountName, accountType) {
+    return ipc.callMain("CreateAccount", { accountName, accountType });
+  }
+
   /* inject:code */
 }
 

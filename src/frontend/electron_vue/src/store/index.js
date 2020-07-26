@@ -148,6 +148,11 @@ export default new Vuex.Store({
     },
     account: state => {
       return state.accounts.find(x => x.UUID === state.activeAccount);
+    },
+    miningAccount: state => {
+      return state.accounts.find(
+        x => x.type === "Mining" && x.state === "Normal"
+      ); // this will retrieve the first account if type Mining
     }
   },
   plugins: [syncState, createSharedMutations()]

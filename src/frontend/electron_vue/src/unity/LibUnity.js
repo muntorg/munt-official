@@ -555,6 +555,30 @@ class LibUnity {
       this._postExecuteIpcCommand("SetActiveAccount", result);
       return result;
     });
+
+    ipc.on("CreateAccount", (event, accountName, accountType) => {
+      let result = this._preExecuteIpcCommand("CreateAccount");
+      if (result === undefined) {
+        result = this.accountsController.createAccount(
+          accountName,
+          accountType
+        );
+      }
+      this._postExecuteIpcCommand("CreateAccount", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("CreateAccount", async data => {
+      let result = this._preExecuteIpcCommand("CreateAccount");
+      if (result === undefined) {
+        result = this.accountsController.createAccount(
+          data.accountName,
+          data.accountType
+        );
+      }
+      this._postExecuteIpcCommand("CreateAccount", result);
+      return result;
+    });
     /* inject:code */
   }
 }
