@@ -13,18 +13,43 @@
         </div>
       </div>
       <div class="content">
-        todo: enable/disable mining
+        <h4>active: {{ generationActive }}</h4>
+        <h4>stats:</h4>
+        <pre>{{ generationStats }}</pre>
       </div>
-      <div class="footer"></div>
+      <div class="footer">
+        <button @click="toggleGeneration">
+          <span v-if="generationActive">{{ $t("buttons.stop") }}</span>
+          <span v-else>{{ $t("buttons.start") }}</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+import UnityBackend from "../../../unity/UnityBackend";
+
 export default {
   name: "MiningAccount",
   props: {
     account: null
+  },
+  computed: {
+    ...mapState(["generationActive", "generationStats"])
+  },
+  methods: {
+    toggleGeneration() {
+      if (this.generationActive) {
+        UnityBackend.StopGeneration();
+      } else {
+        let result = UnityBackend.StartGeneration(1, "4096M"); // use hardcoded settings for now
+        if (result === false) {
+          // todo: starting failed, notify user
+        }
+      }
+    }
   }
 };
 </script>
@@ -108,8 +133,10 @@ export default {
 
   & .footer {
     height: var(--footer-height);
+    line-height: var(--footer-height);
     border-top: 1px solid var(--main-border-color);
-    padding-right: 10px;
+    text-align: right;
+    padding-right: 5px;
   }
 }
 </style>

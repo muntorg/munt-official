@@ -25,8 +25,12 @@ class LibUnity {
     this.signalHandler = new libUnity.NJSUnifiedFrontend();
 
     this.rpcController = null;
+
     this.accountsController = new libUnity.NJSIAccountsController();
     this.accountsListener = new libUnity.NJSIAccountsListener();
+
+    this.generationController = new libUnity.NJSIGenerationController();
+    this.generationListener = new libUnity.NJSIGenerationListener();
 
     let buildInfo = this.backend.BuildInfo();
 
@@ -97,6 +101,50 @@ class LibUnity {
     this.accountsController.setListener(this.accountsListener);
   }
 
+  _initializeGenerationController() {
+    this.generationListener.onGenerationStarted = function() {
+      console.log("GENERATION STARTED");
+      store.dispatch({
+        type: "SET_GENERATION_ACTIVE",
+        generationActive: true
+      });
+    };
+
+    this.generationListener.onGenerationStopped = function() {
+      console.log("GENERATION STOPPED");
+      store.dispatch({
+        type: "SET_GENERATION_ACTIVE",
+        generationActive: false
+      });
+      store.dispatch({
+        type: "SET_GENERATION_STATS",
+        generationStats: null
+      });
+    };
+
+    this.generationListener.onStatsUpdated = function(
+      hashesPerSecond,
+      hashesPerSecondUnit,
+      rollingHashesPerSecond,
+      rollingHashesPerSecondUnit,
+      bestHashesPerSecond,
+      bestHashesPerSecondUnit,
+      arenaSetupTime
+    ) {
+      store.dispatch({
+        type: "SET_GENERATION_STATS",
+        generationStats: {
+          hashesPerSecond: `${hashesPerSecond}${hashesPerSecondUnit}`,
+          rollingHashesPerSecond: `${rollingHashesPerSecond}${rollingHashesPerSecondUnit}`,
+          bestHashesPerSecond: `${bestHashesPerSecond}${bestHashesPerSecondUnit}`,
+          arenaSetupTime: arenaSetupTime
+        }
+      });
+    };
+
+    this.generationController.setListener(this.generationListener);
+  }
+
   _startUnityLib() {
     if (!fs.existsSync(this.options.walletPath)) {
       console.log(`create wallet folder ${this.options.walletPath}`);
@@ -133,6 +181,7 @@ class LibUnity {
 
   async _coreReady() {
     this._initializeAccountsController();
+    this._initializeGenerationController();
 
     store.dispatch({
       type: "SET_ACCOUNTS",
@@ -577,6 +626,47 @@ class LibUnity {
         );
       }
       this._postExecuteIpcCommand("CreateAccount", result);
+      return result;
+    });
+    ipc.on("StartGeneration", (event, numThreads, memoryLimit) => {
+      let result = this._preExecuteIpcCommand("StartGeneration");
+      if (result === undefined) {
+        result = this.generationController.startGeneration(
+          numThreads,
+          memoryLimit
+        );
+      }
+      this._postExecuteIpcCommand("StartGeneration", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("StartGeneration", async data => {
+      let result = this._preExecuteIpcCommand("StartGeneration");
+      if (result === undefined) {
+        result = this.generationController.startGeneration(
+          data.numThreads,
+          data.memoryLimit
+        );
+      }
+      this._postExecuteIpcCommand("StartGeneration", result);
+      return result;
+    });
+
+    ipc.on("StopGeneration", event => {
+      let result = this._preExecuteIpcCommand("StopGeneration");
+      if (result === undefined) {
+        result = this.generationController.stopGeneration();
+      }
+      this._postExecuteIpcCommand("StopGeneration", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("StopGeneration", async () => {
+      let result = this._preExecuteIpcCommand("StopGeneration");
+      if (result === undefined) {
+        result = this.generationController.stopGeneration();
+      }
+      this._postExecuteIpcCommand("StopGeneration", result);
       return result;
     });
     /* inject:code */

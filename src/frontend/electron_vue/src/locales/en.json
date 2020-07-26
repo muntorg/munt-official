@@ -9,6 +9,8 @@
     "previous": "Previous",
     "receive": "Receive",
     "send": "Send",
+    "start": "Start",
+    "stop": "Stop",
     "unlock": "Unlock"
   },
   "common": {

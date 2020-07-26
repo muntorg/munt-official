@@ -31,6 +31,12 @@ const generateInfo = [
     controller: "accountsController",
     functions: ["CreateAccount", "SetActiveAccount"],
     results: []
+  },
+  {
+    className: "NJSIGenerationController",
+    controller: "generationController",
+    functions: ["StartGeneration", "StopGeneration"],
+    results: []
   }
 ];
 

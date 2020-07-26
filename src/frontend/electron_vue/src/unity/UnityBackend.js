@@ -125,6 +125,22 @@ class UnityBackend {
     return ipc.callMain("CreateAccount", { accountName, accountType });
   }
 
+  static StartGeneration(numThreads, memoryLimit) {
+    return ipc.sendSync("StartGeneration", numThreads, memoryLimit);
+  }
+
+  static StartGenerationAsync(numThreads, memoryLimit) {
+    return ipc.callMain("StartGeneration", { numThreads, memoryLimit });
+  }
+
+  static StopGeneration() {
+    return ipc.sendSync("StopGeneration");
+  }
+
+  static StopGenerationAsync() {
+    return ipc.callMain("StopGeneration");
+  }
+
   /* inject:code */
 }
 

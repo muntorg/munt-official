@@ -20,6 +20,8 @@ export default new Vuex.Store({
     activeAccount: null,
     balance: null,
     coreReady: false,
+    generationActive: false,
+    generationStats: null,
     mutations: null,
     receiveAddress: null,
     status: AppStatus.start,
@@ -43,6 +45,12 @@ export default new Vuex.Store({
     },
     SET_CORE_READY(state, payload) {
       state.coreReady = payload.coreReady;
+    },
+    SET_GENERATION_ACTIVE(state, payload) {
+      state.generationActive = payload.generationActive;
+    },
+    SET_GENERATION_STATS(state, payload) {
+      state.generationStats = payload.generationStats;
     },
     SET_MUTATIONS(state, payload) {
       state.mutations = payload.mutations;
@@ -91,6 +99,12 @@ export default new Vuex.Store({
       commit(payload);
     },
     SET_GULDEN_VERSION({ commit }, payload) {
+      commit(payload);
+    },
+    SET_GENERATION_ACTIVE({ commit }, payload) {
+      commit(payload);
+    },
+    SET_GENERATION_STATS({ commit }, payload) {
       commit(payload);
     },
     SET_MUTATIONS({ commit }, payload) {
