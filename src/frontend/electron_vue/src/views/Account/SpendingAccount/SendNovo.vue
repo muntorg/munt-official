@@ -24,14 +24,16 @@
         type="password"
         v-show="walletPassword === null"
         :placeholder="$t('send_novo.enter_password')"
+        :class="computedStatus"
       />
     </div>
-    <button @click="send">{{ $t("buttons.send") }}</button>
+    <button @click="trySend">{{ $t("buttons.send") }}</button>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import UnityBackend from "../../../unity/UnityBackend";
 
 export default {
   name: "SendNovo",
@@ -40,11 +42,18 @@ export default {
       amount: null,
       address: null,
       label: null,
-      password: null
+      password: null,
+      isPasswordInvalid: false
     };
   },
   computed: {
-    ...mapState(["walletPassword"])
+    ...mapState(["walletPassword"]),
+    computedPassword() {
+      return this.walletPassword ? this.walletPassword : this.password;
+    },
+    computedStatus() {
+      return this.isPasswordInvalid ? "error" : "";
+    }
   },
   mounted() {
     this.$refs.amount.focus();
@@ -53,11 +62,38 @@ export default {
     send() {
       /*
        todo:
-        - validate input
-        - unlock wallet
-        - send novo
-        - show success / error notification
+        - validate amount
+        - validate address
+        - show success / error notification (after payment)
        */
+
+      // wallet needs to be unlocked to make a payment
+      if (UnityBackend.UnlockWallet(this.computedPassword) === false) {
+        this.isPasswordInvalid = true;
+        return; // invalid password
+      }
+      // create payment request
+      var request = {
+        valid: true,
+        address: this.address,
+        label: this.label,
+        desc: "",
+        amount: this.amount * 100000000
+      };
+      // try to make the payment
+      let result = UnityBackend.PerformPaymentToRecipient(request, false);
+      if (result === 0) {
+        // payment succeeded
+        this.amount = null;
+        this.address = null;
+        this.label = null;
+        this.password = null;
+      } else {
+        // payment failed
+        console.log("someting went wrong, but don't exactly know what.");
+      }
+      // lock the wallet again
+      UnityBackend.LockWallet();
     }
   }
 };
