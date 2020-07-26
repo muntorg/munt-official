@@ -4,9 +4,9 @@
 package com.novo.jniunifiedbackend;
 
 /**
- * Copyright (c) 2018-2020 The Gulden developers
+ * Copyright (c) 2018-2020 The Novo developers
  * Authored by: Malcolm MacLeod (mmacleod@gmx.com)
- * Distributed under the GULDEN software license, see the accompanying
+ * Distributed under the Novo software license, see the accompanying
  * file COPYING
  */
 public final class QrCodeRecord {

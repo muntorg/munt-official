@@ -819,6 +819,7 @@ lib_unity_jni_la_SOURCES = \
   unity/android/init_android.cpp \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
+  unity/controllers/ip2pnetworkcontroller.cpp \
   unity/djinni/jni/NativeBlockInfoRecord.hpp \
   unity/djinni/jni/NativeBlockInfoRecord.cpp \
   unity/djinni/jni/NativeMonitorListener.cpp \
@@ -980,6 +981,7 @@ lib_unity_objc_a_SOURCES = \
   $(crypto_lib_crypto_a_SOURCES) \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
+  unity/controllers/ip2pnetworkcontroller.cpp \
   $(DJINNI_CPP_GEN) \
   $(DJINNI_OBJC_GEN) \
   $(CORE_H)

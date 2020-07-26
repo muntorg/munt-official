@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
     <!--
-Copyright (c) 2018 The Gulden developers
-Distributed under the GULDEN software license, see the accompanying
+Copyright (c) 2018 The Novo developers
+Distributed under the Novo software license, see the accompanying
 file COPYING
 !-->
     <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
@@ -53,13 +53,13 @@ file COPYING
     <string name="tx_status_confirmed">Potwierdzono w bloku #%d w %s</string>
     <string name="tx_status_unknown">Nieznany (znalazłeś błąd)</string>
     <string name="no_tx_details">Brak szczegółów transakcji dla  [%s]</string>
-    <string name="no_guldensync_warning_title">Nieprawidłowy kod QR</string>
-    <string name="no_guldensync_warning">Ten kod QR nie zawiera prawidłowego kodu synchronizacji Gulden. Spróbuj ponownie, podając poprawny kod.</string>
-    <string name="failed_guldensync_warning_title">Nie można wykonać linku</string>
-    <string name="failed_guldensync_unconfirmed_funds_message">Niektóre środki oczekują na potwierdzenie, proszę pozwolić im w pełni potwierdzić przed ponowną próbą połączenia.</string>
-    <string name="guldensync_info_title">Łącze z portfelem komputera</string>
-    <string name="guldensync_info_message_non_empty_wallet">Zamierzasz nawiązać połączenie z portfelem stacjonarnym. Bieżące adresy w tym portfelu zostaną usunięte i przestaną być dostępne po nawiązaniu połączenia. Obecne środki w tym portfelu zostaną przeniesione do portfela na komputery przed ustanowieniem połączenia i będą tymczasowo niedostępne z tego portfela, dopóki połączenie nie zostanie zakończone. Upewnij się, że zachowałeś kopię hasła phrase  na wypadek gdybyś kiedykolwiek musiał ponownie uzyskać dostęp do tych adresów.</string>
-    <string name="guldensync_info_message_empty_wallet">Zamierzasz nawiązać połączenie z portfelem stacjonarnym. Bieżące adresy w tym portfelu zostaną usunięte i przestaną być dostępne po nawiązaniu połączenia. Upewnij się, że zachowałeś kopię hasła phrase na wypadek, gdybyś kiedykolwiek musiał ponownie uzyskać dostęp do tych adresów.</string>
+    <string name="no_novosync_warning_title">Nieprawidłowy kod QR</string>
+    <string name="no_novosync_warning">Ten kod QR nie zawiera prawidłowego kodu synchronizacji Gulden. Spróbuj ponownie, podając poprawny kod.</string>
+    <string name="failed_novosync_warning_title">Nie można wykonać linku</string>
+    <string name="failed_novosync_unconfirmed_funds_message">Niektóre środki oczekują na potwierdzenie, proszę pozwolić im w pełni potwierdzić przed ponowną próbą połączenia.</string>
+    <string name="novosync_info_title">Łącze z portfelem komputera</string>
+    <string name="novosync_info_message_non_empty_wallet">Zamierzasz nawiązać połączenie z portfelem stacjonarnym. Bieżące adresy w tym portfelu zostaną usunięte i przestaną być dostępne po nawiązaniu połączenia. Obecne środki w tym portfelu zostaną przeniesione do portfela na komputery przed ustanowieniem połączenia i będą tymczasowo niedostępne z tego portfela, dopóki połączenie nie zostanie zakończone. Upewnij się, że zachowałeś kopię hasła phrase  na wypadek gdybyś kiedykolwiek musiał ponownie uzyskać dostęp do tych adresów.</string>
+    <string name="novosync_info_message_empty_wallet">Zamierzasz nawiązać połączenie z portfelem stacjonarnym. Bieżące adresy w tym portfelu zostaną usunięte i przestaną być dostępne po nawiązaniu połączenia. Upewnij się, że zachowałeś kopię hasła phrase na wypadek, gdybyś kiedykolwiek musiał ponownie uzyskać dostęp do tych adresów.</string>
     <string name="preference_fragment_title">Preferencje</string>
     <string name="preference_fragment_recovery_label">Kopia zapasowa hasła phrase</string>
     <string name="preference_fragment_link_label">Łącze z portfelem</string>
@@ -153,7 +153,7 @@ file COPYING
     <string name="notification_service_channel_name">Usługa</string>
     <string name="notification_service_channel_description">Usługa umożliwiająca synchronizację danych i monitorowanie transakcji po zamknięciu aplikacji, można ją włączyć / wyłączyć z poziomu ustawień aplikacji</string>
     <string name="dialog_title_add_address">Dodaj adres</string>
-    <string name="hint_iban_or_gulden_address">Gulden lub IBAN adres</string>
+    <string name="hint_iban_or_novo_address">Gulden lub IBAN adres</string>
     <string name="toast_warn_uri_attempt_before_wallet_creation">Przed użyciem tego identyfikatora URI musisz skonfigurować portfel Gulden</string>
     <string name="preference_fragment_link_summary">Połącz swój mobilny portfel z portfelem na komputerze</string>
     <string name="preference_fragment_remove_summary">Usuń ten portfel, aby uruchomić lub odzyskać inny portfel</string>

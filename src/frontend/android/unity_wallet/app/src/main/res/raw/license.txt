@@ -1,4 +1,4 @@
-Gulden© is written and maintained by "The Gulden Developers" under the employ of "Gulden.com BV" and all code and products produced are licensed under "The Gulden license".
+Gulden© is written and maintained by "The Novo developers" under the employ of "Gulden.com BV" and all code and products produced are licensed under "The Gulden license".
 
 In addition to our own source code Gulden makes use of source code, fonts and assets from a multitude of third party projects, and is compliant with the licensing for all of these projects, most of which are free and open source.
 
@@ -7,7 +7,7 @@ The license information for these projects can be found alongside the source cod
 
 The Gulden License
 
-Copyright (c) 2014-2019 Gulden Developers
+Copyright (c) 2014-2019 Novo developers
 
 TERMS AND CONDITIONS
 
