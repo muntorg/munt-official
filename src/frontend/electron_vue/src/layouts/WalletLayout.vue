@@ -9,7 +9,7 @@
       </div>
       <div class="accounts-section">
         <h4 class="accounts-header">
-          accounts
+          Accounts
         </h4>
         <div class="accounts-scroller">
           <div class="account-cat">
@@ -220,6 +220,7 @@ export default {
         padding: 0 20px 0 20px;
         height: 20px;
         margin-bottom: 4px;
+        font-weight: 500;
       }
 
       & .accounts-scroller {
@@ -263,8 +264,10 @@ export default {
 
         & .title {
           line-height: 16px;
-          font-size: 1em;
-          font-weight: 500;
+          font-size: .85em;
+          font-weight: 600;
+          letter-spacing: 0.02em;
+          text-transform: uppercase;
           margin: 0 0 6px 0;
         }
 
