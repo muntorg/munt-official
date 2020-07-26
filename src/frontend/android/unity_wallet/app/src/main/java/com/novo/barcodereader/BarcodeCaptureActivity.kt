@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * This file contains modifications by The Gulden developers
- * All modifications copyright (C) The Gulden developers
+ * This file contains modifications by The Novo developers
+ * All modifications copyright (C) The Novo developers
  */
 package com.novo.barcodereader
 
@@ -48,7 +48,7 @@ import com.google.android.gms.vision.FocusingProcessor
 import com.google.android.gms.vision.Tracker
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
-import com.novo.wallet.R
+import com.novo.unity_wallet.R
 import kotlinx.android.synthetic.main.barcode_capture.*
 import org.jetbrains.anko.contentView
 
@@ -324,7 +324,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
         val listener = DialogInterface.OnClickListener { _, id -> finish() }
 
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Gulden").setMessage("Unable to get camera permission").setPositiveButton("ok", listener).show()
+        builder.setTitle("Novo").setMessage("Unable to get camera permission").setPositiveButton("ok", listener).show()
     }
 
     /**

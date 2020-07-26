@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * This file contains modifications by The Gulden developers
- * All modifications copyright (C) The Gulden developers
+ * This file contains modifications by The Novo developers
+ * All modifications copyright (C) The Novo developers
  */
 package com.novo.barcodereader
 

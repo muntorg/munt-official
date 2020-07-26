@@ -13,7 +13,7 @@
 
 # unity backend
 -keep class com.novo.jniunifiedbackend.** { *; }
--keep interface com.novo.jniunifiedbackend.** { *; }
+-keep interface com.novogu.jniunifiedbackend.** { *; }
 
 #### OkHttp, Retrofit and Moshi
 -dontwarn retrofit2.Platform$Java8

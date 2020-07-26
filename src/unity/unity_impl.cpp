@@ -905,7 +905,6 @@ int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::
     if (testnet)
     {
         SoftSetArg("-testnet", "S1595347850:60");
-        SoftSetArg("-addnode", "devbak.net");
         SoftSetArg("-addnode", "178.62.195.19");
     }
     else
