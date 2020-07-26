@@ -218,9 +218,9 @@ export default {
 
       & .accounts-header {
         padding: 0 20px 0 20px;
-        height: 20px;
-        margin-bottom: 4px;
+        margin-bottom: 8px;
         font-weight: 500;
+        font-size: .8em;
       }
 
       & .accounts-scroller {
