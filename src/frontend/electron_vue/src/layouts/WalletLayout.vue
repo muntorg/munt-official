@@ -13,8 +13,12 @@
         </h4>
         <div class="accounts-scroller">
           <div class="account-cat">
-            <div class="status">
-              <fa-icon :icon="['fal', 'chevron-down']" />
+            <div
+              class="status"
+              @click="toggleCategory('spending')"
+              :class="isToggleVisible(spendingAccounts)"
+            >
+              <fa-icon :icon="getCategoryIcon(spendingOpened)" />
             </div>
             <div class="info">
               <div class="title">Spending</div>
@@ -23,23 +27,29 @@
             <div class="add"><fa-icon :icon="['fal', 'plus']" /></div>
           </div>
 
-          <div
-            v-for="account in spendingAccounts"
-            :key="account.UUID"
-            class="account"
-            :class="{ active: account.UUID === activeAccount }"
-          >
-            <router-link
-              :to="{ name: 'account', params: { id: account.UUID } }"
+          <div v-if="spendingOpened">
+            <div
+              v-for="account in spendingAccounts"
+              :key="account.UUID"
+              class="account"
+              :class="{ active: account.UUID === activeAccount }"
             >
-              {{ account.label }}
-              <span class="balance">{{ account.balance }}</span>
-            </router-link>
+              <router-link
+                :to="{ name: 'account', params: { id: account.UUID } }"
+              >
+                {{ account.label }}
+                <span class="balance">{{ account.balance }}</span>
+              </router-link>
+            </div>
           </div>
 
           <div class="account-cat">
-            <div class="status">
-              <fa-icon :icon="['fal', 'chevron-right']" />
+            <div
+              class="status"
+              @click="toggleCategory('holding')"
+              :class="isToggleVisible(holdingAccounts)"
+            >
+              <fa-icon :icon="getCategoryIcon(holdingOpened)" />
             </div>
             <div class="info">
               <div class="title">Holding</div>
@@ -48,23 +58,29 @@
             <div class="add"><fa-icon :icon="['fal', 'plus']" /></div>
           </div>
 
-          <div
-            v-for="account in holdingAccounts"
-            :key="account.UUID"
-            class="account"
-            :class="{ active: account.UUID === activeAccount }"
-          >
-            <router-link
-              :to="{ name: 'account', params: { id: account.UUID } }"
+          <div v-if="holdingOpened">
+            <div
+              v-for="account in holdingAccounts"
+              :key="account.UUID"
+              class="account"
+              :class="{ active: account.UUID === activeAccount }"
             >
-              {{ account.label }}
-              <span class="balance">{{ account.balance }}</span>
-            </router-link>
+              <router-link
+                :to="{ name: 'account', params: { id: account.UUID } }"
+              >
+                {{ account.label }}
+                <span class="balance">{{ account.balance }}</span>
+              </router-link>
+            </div>
           </div>
 
           <div class="account-cat">
-            <div class="status">
-              <fa-icon :icon="['fal', 'chevron-right']" />
+            <div
+              class="status"
+              @click="toggleCategory('mining')"
+              :class="isToggleVisible(miningAccounts)"
+            >
+              <fa-icon :icon="getCategoryIcon(miningOpened)" />
             </div>
             <div class="info">
               <div class="title">Mining</div>
@@ -73,18 +89,20 @@
             <div class="add"><fa-icon :icon="['fal', 'plus']" /></div>
           </div>
 
-          <div
-            v-for="account in miningAccounts"
-            :key="account.UUID"
-            class="account"
-            :class="{ active: account.UUID === activeAccount }"
-          >
-            <router-link
-              :to="{ name: 'account', params: { id: account.UUID } }"
+          <div v-if="miningOpened">
+            <div
+              v-for="account in miningAccounts"
+              :key="account.UUID"
+              class="account"
+              :class="{ active: account.UUID === activeAccount }"
             >
-              {{ account.label }}
-              <span class="balance">{{ account.balance }}</span>
-            </router-link>
+              <router-link
+                :to="{ name: 'account', params: { id: account.UUID } }"
+              >
+                {{ account.label }}
+                <span class="balance">{{ account.balance }}</span>
+              </router-link>
+            </div>
           </div>
         </div>
       </div>
@@ -113,9 +131,29 @@ import WalletPasswordDialog from "../components/WalletPasswordDialog";
 
 export default {
   name: "WalletLayout",
+  data() {
+    return {
+      spendingOpened: false,
+      holdingOpened: false,
+      miningOpened: false
+    };
+  },
   computed: {
     ...mapState(["activeAccount", "walletPassword"]),
     ...mapGetters(["totalBalance", "accounts"]),
+    activeCategory() {
+      if (this.activeAccount === null) return null;
+      let type = this.accounts.find(x => x.UUID === this.activeAccount).type;
+      switch (type) {
+        case "Desktop":
+          return "spending";
+        case "Witness":
+          return "holding";
+        case "Mining":
+          return "mining";
+      }
+      return null;
+    },
     spendingAccounts() {
       return this.accounts.filter(
         x => x.type === "Desktop" /* || x.type === "Mobile" etc. */
@@ -129,6 +167,11 @@ export default {
     },
     lockIcon() {
       return this.walletPassword ? ["fal", "unlock"] : ["fal", "lock"];
+    }
+  },
+  watch: {
+    activeCategory() {
+      this.toggleCategory(this.activeCategory, true);
     }
   },
   methods: {
@@ -165,6 +208,25 @@ export default {
           component: WalletPasswordDialog,
           showButtons: false
         });
+      }
+    },
+    getCategoryIcon(categoryOpened) {
+      return ["fal", categoryOpened ? "chevron-down" : "chevron-right"];
+    },
+    isToggleVisible(accounts) {
+      return accounts.length > 0 ? "" : "hide";
+    },
+    toggleCategory(category, open) {
+      switch (category) {
+        case "spending":
+          this.spendingOpened = open || !this.spendingOpened;
+          break;
+        case "holding":
+          this.holdingOpened = open || !this.holdingOpened;
+          break;
+        case "mining":
+          this.miningOpened = open || !this.miningOpened;
+          break;
       }
     }
   }
@@ -263,6 +325,11 @@ export default {
           padding: 0 0 0 20px;
           font-size: 12px;
           line-height: 16px;
+          cursor: pointer;
+
+          &.hide {
+            visibility: hidden;
+          }
         }
 
         & .title {
