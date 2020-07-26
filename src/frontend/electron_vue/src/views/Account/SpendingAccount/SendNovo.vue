@@ -59,7 +59,7 @@ export default {
     this.$refs.amount.focus();
   },
   methods: {
-    send() {
+    trySend() {
       /*
        todo:
         - validate amount
