@@ -206,7 +206,7 @@ class LibUnity {
     store.dispatch({ type: "SET_CORE_READY", coreReady: true });
   }
 
-  _registerSignalHandlers() {
+  async _registerSignalHandlers() {
     let self = this;
     let signalHandler = this.signalHandler;
     let backend = this.backend;
@@ -230,7 +230,7 @@ class LibUnity {
       store.dispatch({ type: "SET_BALANCE", balance: new_balance });
     };
 
-    signalHandler.notifyNewMutation = function(/*mutation, self_committed*/) {
+    signalHandler.notifyNewMutation = async function(/*mutation, self_committed*/) {
       console.log("received: notifyNewMutation");
 
       store.dispatch({
@@ -240,6 +240,11 @@ class LibUnity {
       store.dispatch({
         type: "SET_RECEIVE_ADDRESS",
         receiveAddress: backend.GetReceiveAddress()
+      });
+      // todo: find a better way to update the balances for the accounts
+      store.dispatch({
+        type: "SET_ACCOUNTS",
+        accounts: await self._getAccountsWithBalancesAsync()
       });
     };
 
