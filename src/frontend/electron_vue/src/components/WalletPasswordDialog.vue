@@ -1,5 +1,5 @@
 <template>
-  <div class="password-dialog">
+  <div class="wallet-password-dialog">
     <novo-form-field :title="$t('common.password')">
       <input
         ref="password"
@@ -24,7 +24,7 @@ import UnityBackend from "../unity/UnityBackend";
 import EventBus from "../EventBus";
 
 export default {
-  name: "PasswordDialog",
+  name: "WalletPasswordDialog",
   props: {
     value: {
       type: String,
@@ -57,8 +57,8 @@ export default {
       if (UnityBackend.UnlockWallet(this.password)) {
         UnityBackend.LockWallet();
         this.$store.dispatch({
-          type: "SET_PASSWORD",
-          password: this.password
+          type: "SET_WALLET_PASSWORD",
+          walletPassword: this.password
         });
         EventBus.$emit("close-dialog");
       } else {

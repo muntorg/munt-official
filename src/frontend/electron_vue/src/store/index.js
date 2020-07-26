@@ -21,11 +21,11 @@ export default new Vuex.Store({
     balance: null,
     coreReady: false,
     mutations: null,
-    password: null,
     receiveAddress: null,
     status: AppStatus.start,
     unityVersion: null,
     walletExists: null,
+    walletPassword: null,
     walletVersion: null
   },
   mutations: {
@@ -47,9 +47,6 @@ export default new Vuex.Store({
     SET_MUTATIONS(state, payload) {
       state.mutations = payload.mutations;
     },
-    SET_PASSWORD(state, payload) {
-      state.password = payload.password;
-    },
     SET_RECEIVE_ADDRESS(state, payload) {
       state.receiveAddress = payload.receiveAddress;
     },
@@ -62,6 +59,9 @@ export default new Vuex.Store({
     },
     SET_WALLET_EXISTS(state, walletExists) {
       state.walletExists = walletExists;
+    },
+    SET_WALLET_PASSWORD(state, payload) {
+      state.walletPassword = payload.walletPassword;
     },
     SET_WALLET_VERSION(state, payload) {
       state.walletVersion = payload.version;
@@ -96,9 +96,6 @@ export default new Vuex.Store({
     SET_MUTATIONS({ commit }, payload) {
       commit(payload);
     },
-    SET_PASSWORD({ commit }, payload) {
-      commit(payload);
-    },
     SET_RECEIVE_ADDRESS({ commit }, payload) {
       commit(payload);
     },
@@ -114,6 +111,9 @@ export default new Vuex.Store({
         : AppStatus.setup;
       commit("SET_STATUS", status);
       commit("SET_WALLET_EXISTS", payload.walletExists);
+    },
+    SET_WALLET_PASSWORD({ commit }, payload) {
+      commit(payload);
     },
     SET_WALLET_VERSION({ commit }, payload) {
       commit(payload);
