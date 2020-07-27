@@ -114,7 +114,7 @@ dependencies {
     implementation "commons-validator:commons-validator:1.6" exclude module: "commons-logging"
     implementation "commons-io:commons-io:2.6"
     implementation 'com.squareup.okhttp3:okhttp:3.14.0'
-    implementation 'com.itkacher.okhttpprofiler:okhttpprofiler:1.0.5'
+    implementation 'com.itkacher.okhttpprofiler:okhttpprofiler:1.0.7'
     implementation 'com.squareup.moshi:moshi:1.8.0'
     implementation 'se.ansman.kotshi:api:2.0-rc1'
     implementation 'com.jayway.jsonpath:json-path:2.4.0'
