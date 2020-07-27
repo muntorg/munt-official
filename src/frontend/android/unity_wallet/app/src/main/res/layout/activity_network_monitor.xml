@@ -48,17 +48,17 @@ file COPYING
                 android:id="@+id/walletLogo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/bg_bright"
+                android:contentDescription="@string/image_content_description_logo"
                 android:paddingLeft="0dp"
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
                 android:paddingBottom="12dp"
-                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/networkMonitorBackButton"
-                android:background="@color/bg_bright"
-                android:contentDescription="@string/image_content_description_gulden_logo"
-                android:visibility="visible"
-                app:srcCompat="@drawable/ic_gulden_logo_text" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_logo_minimal" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

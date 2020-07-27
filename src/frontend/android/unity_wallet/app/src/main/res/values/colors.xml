@@ -22,6 +22,7 @@ file COPYING
     <color name="bg_less_bright">#ffe8e8f0</color>
     <color name="bg_list">#40ffffff</color>
     <color name="bg_main">#f3f3f3</color>
+    <color name="bg_welcome">#ff000000</color>
 
     <!-- mutation depending on balance effect -->
     <color name="change_positive">#4CAF50</color>

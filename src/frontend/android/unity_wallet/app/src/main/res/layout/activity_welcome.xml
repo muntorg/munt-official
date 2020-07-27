@@ -71,11 +71,11 @@ file COPYING
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:layout_marginTop="16dp"
-        android:contentDescription="@string/image_content_description_gulden_logo"
-        android:src="@drawable/ic_gulden_logo_text"
+        android:contentDescription="@string/image_content_description_logo"
+        android:src="@drawable/ic_logo_minimal"
         android:tint="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_gulden_logo_text" />
+        app:srcCompat="@drawable/ic_logo_minimal" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

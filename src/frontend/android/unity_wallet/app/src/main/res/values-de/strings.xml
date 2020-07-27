@@ -32,8 +32,8 @@ file COPYING
     <string name="address_book_title">Adressbuch</string>
     <string name="transaction_list_empty_title">Keine Überweisungen erhalten</string>
     <string name="transaction_list_empty_message">Hier tippen um deine ersten Novo zu kaufen.</string>
-    <string name="send_coins_confirm_template">%1$s NLG\n\nnach %2$s</string>
-    <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nnach %3$s</string>
+    <string name="send_coins_confirm_template">%1$s NOV\n\nnach %2$s</string>
+    <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NOV)\n\nnach %3$s</string>
     <string name="send_coins_nocks_estimate_template">Ungefähr G %1$s inklusive IBAN-Gebühr</string>
     <string name="peer_list_fragment_empty">Keine Peers verbunden</string>
     <string name="block_row_now">gerade eben</string>
@@ -89,7 +89,7 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeich
     <string name="cancel_btn">Abbrechen</string>
     <string name="rescan_started">Erneuter Scan gestartet</string>
     <string name="upgrade_wrong_password">Falsches Passwort?</string>
-    <string name="upgrade_explanation">Gulden benötigt eine Aktualisierung. Dies kann einige Minuten dauern. Danach ist Gulden schneller, einfacher zu verwenden und eine leichtgewichtigere Anwendung.</string>
+    <string name="upgrade_explanation">Novo benötigt eine Aktualisierung. Dies kann einige Minuten dauern. Danach ist Novo schneller, einfacher zu verwenden und eine leichtgewichtigere Anwendung.</string>
     <string name="upgrade_btn">Aktualisierung</string>
     <string name="upgrade_enter_password">Passwort eingeben</string>
     <string name="upgrade_enter_password_hint">PIN</string>
@@ -99,16 +99,16 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeich
     <string name="notify_received">Geldmittel erhalten</string>
     <string name="notify_sent">Geldmittel gesendet</string>
     <string name="unlock">Entsperren</string>
-    <string name="access_code_entry_title">Zugangscode für \"Gulden\"</string>
+    <string name="access_code_entry_title">Zugangscode für \"Novo\"</string>
     <plurals name="access_code_entry_remaining">
         <item quantity="one">Noch %d Versuch</item>
         <item quantity="other">%d verbleibende Versuche</item>
     </plurals>
-    <string name="access_code_choose_upgrade_title">Wähle deinen neuen \"Gulden\" Zugangscode</string>
-    <string name="access_code_choose_title">Wähle deinen \"Gulden\" Zugangscode</string>
+    <string name="access_code_choose_upgrade_title">Wähle deinen neuen \"Novo\" Zugangscode</string>
+    <string name="access_code_choose_title">Wähle deinen \"Novo\" Zugangscode</string>
     <string name="access_code_choose_verify">Bestätige deinen Zugangscode</string>
     <string name="access_code_choose_hint">6-stelliger PIN</string>
-    <string name="show_recovery_msg">Zeige deine Wiederherstellungsphrase niemandem, sonst können sie deine Gulden ausgeben.</string>
+    <string name="show_recovery_msg">Zeige deine Wiederherstellungsphrase niemandem, sonst können sie deine Novo ausgeben.</string>
     <string name="send_coins_error_acknowledge">OK</string>
     <string name="authentication_blocked_title">Wallet deaktiviert</string>
     <string name="authentication_blocked_msg_recovery">Versuche %s erneut, oder wähle einen neuen Zugangscode unter Verwendung deiner Wiederherstellungsphrase.</string>
@@ -130,11 +130,11 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeich
     <string name="numeric_keypad_send_button">Senden</string>
     <string name="preferences_support_button">Hilfe</string>
     <string name="preferences_advanced_button">Fortgeschritten</string>
-    <string name="clipboard_no_valid_address">Keine gültige Gulden-Adresse in der Zwischenablage</string>
+    <string name="clipboard_no_valid_address">Keine gültige Novo-Adresse in der Zwischenablage</string>
     <string name="transaction_confirmation_text_conflicted">In Konflikt geraten</string>
     <string name="transaction_confirmation_text_abandoned">Verlassen</string>
     <string name="transaction_confirmation_text_pending">Steht aus</string>
-    <string name="receive_fragment_share_title">Gulden Adresse teilen</string>
+    <string name="receive_fragment_share_title">Novo Adresse teilen</string>
     <plurals name="transaction_confirmation_text">
         <item quantity="one">%d Bestätigung</item>
         <item quantity="other">%d Bestätigungen</item>
@@ -144,7 +144,7 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeich
     <string name="tx_detail_wallet_address">Wallet Adresse</string>
     <string name="tx_detail_sending_address">Sendeadresse</string>
     <string name="tx_detail_payment_address">Zahlungsadresse</string>
-    <string name="tx_detail_network_fee">Gulden Netzwerk-Gebühr</string>
+    <string name="tx_detail_network_fee">Novo Netzwerk-Gebühr</string>
     <string name="iban_account_holder_info_text">Gib den korrekten Namen des Kontoinhabers ein, um eine Verzögerung zu vermeiden.</string>
     <string name="iban_account_holder_name">Name</string>
     <string name="iban_account_holder_description">Beschreibung (optional)</string>

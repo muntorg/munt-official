@@ -32,8 +32,8 @@ file COPYING
     <string name="address_book_title">Adresboek</string>
     <string name="transaction_list_empty_title">Geen transacties ontvangen</string>
     <string name="transaction_list_empty_message">Tik hier om je eerste Novos te kopen</string>
-    <string name="send_coins_confirm_template">%1$s NLG\n\nnaar %2$s</string>
-    <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nnaar %3$s</string>
+    <string name="send_coins_confirm_template">%1$s NOV\n\nnaar %2$s</string>
+    <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NOV)\n\nnaar %3$s</string>
     <string name="send_coins_nocks_estimate_template">Ongeveer G %1$s inclusief IBAN-kosten.</string>
     <string name="peer_list_fragment_empty">Geen connecties</string>
     <string name="block_row_now">alleen nu</string>

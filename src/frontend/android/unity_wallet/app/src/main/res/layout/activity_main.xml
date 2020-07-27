@@ -64,18 +64,18 @@ file COPYING
 
                     <ImageView
                         android:id="@+id/walletLogo"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/bg_bright"
-                        android:contentDescription="@string/image_content_description_gulden_logo"
+                        android:contentDescription="@string/image_content_description_logo"
                         android:paddingLeft="16dp"
                         android:paddingTop="18dp"
                         android:paddingBottom="12dp"
                         android:visibility="visible"
-                        app:srcCompat="@drawable/ic_gulden_logo_text" />
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_logo_minimal" />
 
                     <TextView
                         android:id="@+id/syncProgressTextual"
