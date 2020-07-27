@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5537D3F524CF098900A27959 /* DBMonitorListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 5537D3F224CF098900A27959 /* DBMonitorListener.h */; };
+		5537D3F624CF098900A27959 /* DBUnifiedBackend.h in Headers */ = {isa = PBXBuildFile; fileRef = 5537D3F324CF098900A27959 /* DBUnifiedBackend.h */; };
+		5537D3F724CF098900A27959 /* DBUnifiedFrontend.h in Headers */ = {isa = PBXBuildFile; fileRef = 5537D3F424CF098900A27959 /* DBUnifiedFrontend.h */; };
+		5537D3FA24CF0C7500A27959 /* lib_unity_crypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5537D3F824CF0BBD00A27959 /* lib_unity_crypto.a */; };
+		5537D3FB24CF0CAE00A27959 /* lib_unity_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5537D3F924CF0BDE00A27959 /* lib_unity_objc.a */; };
 		E61A12842171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */; };
 		E61A12862171360F000069F0 /* dummy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E61A12852171360F000069F0 /* dummy.cpp */; };
 		E61A1288217136DE000069F0 /* dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E61A1287217136DE000069F0 /* dummy.m */; };
@@ -30,7 +35,6 @@
 		E68FAE0D216C964E0038C745 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE01216C964E0038C745 /* libssl.a */; };
 		E68FAE0F216C964E0038C745 /* libdb_cxx-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */; };
 		E698B375233E670A00458186 /* libcryptopp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E698B374233E66D700458186 /* libcryptopp.a */; };
-		E698B376233E674900458186 /* libgulden_unity_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65180AD218A1080009283A8 /* libgulden_unity_objc.a */; };
 		E6CEA4252264AA2D00C87DC5 /* DBOutputRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6CEA4232264AA2D00C87DC5 /* DBOutputRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6CEA4262264AA2D00C87DC5 /* DBPaymentResultStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = E6CEA4242264AA2D00C87DC5 /* DBPaymentResultStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EBCA222254B2BA00B02F24 /* staticfiltercp in Resources */ = {isa = PBXBuildFile; fileRef = E6EBCA212254B2BA00B02F24 /* staticfiltercp */; };
@@ -38,10 +42,7 @@
 		E6EBCA262254B7AF00B02F24 /* GuldenCoreUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EBCA252254B7AF00B02F24 /* GuldenCoreUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0221EF24A900320806 /* DBMonitorRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF521EF24A800320806 /* DBMonitorRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0421EF24A900320806 /* DBQrCodeRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF721EF24A800320806 /* DBQrCodeRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E6EC7D0521EF24A900320806 /* DBGuldenMonitorListener.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF821EF24A800320806 /* DBGuldenMonitorListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E6EC7D0621EF24A900320806 /* DBGuldenUnifiedBackend.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CF921EF24A800320806 /* DBGuldenUnifiedBackend.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0721EF24A900320806 /* DBUriRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFA21EF24A800320806 /* DBUriRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E6EC7D0821EF24A900320806 /* DBGuldenUnifiedFrontend.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFB21EF24A800320806 /* DBGuldenUnifiedFrontend.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0921EF24A900320806 /* DBBlockInfoRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFC21EF24A800320806 /* DBBlockInfoRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0A21EF24A900320806 /* DBUriRecipient.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFD21EF24A800320806 /* DBUriRecipient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EC7D0B21EF24A900320806 /* DBBalanceRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7CFE21EF24A800320806 /* DBBalanceRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -50,10 +51,14 @@
 		E6EC7D0E21EF24A900320806 /* DBTransactionRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7D0121EF24A800320806 /* DBTransactionRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6ED8385228ED8F700DD0BC9 /* core-packages.licenses in Resources */ = {isa = PBXBuildFile; fileRef = E6ED8384228ED8F700DD0BC9 /* core-packages.licenses */; };
 		E6EFA49E22735748002484C6 /* staticfiltercptestnet in Resources */ = {isa = PBXBuildFile; fileRef = E6EFA49D227352BB002484C6 /* staticfiltercptestnet */; };
-		E6F2DCA42343609F002B3CEA /* libgulden_unity_crypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F2DCA32343609F002B3CEA /* libgulden_unity_crypto.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5537D3F224CF098900A27959 /* DBMonitorListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBMonitorListener.h; path = ../../../djinni/objc/DBMonitorListener.h; sourceTree = "<group>"; };
+		5537D3F324CF098900A27959 /* DBUnifiedBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBUnifiedBackend.h; path = ../../../djinni/objc/DBUnifiedBackend.h; sourceTree = "<group>"; };
+		5537D3F424CF098900A27959 /* DBUnifiedFrontend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBUnifiedFrontend.h; path = ../../../djinni/objc/DBUnifiedFrontend.h; sourceTree = "<group>"; };
+		5537D3F824CF0BBD00A27959 /* lib_unity_crypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = lib_unity_crypto.a; sourceTree = "<group>"; };
+		5537D3F924CF0BDE00A27959 /* lib_unity_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = lib_unity_objc.a; sourceTree = "<group>"; };
 		E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdjinni_support_lib_UNIVERSAL.a; path = "../../../../depends/aarch64-ios/lib/libdjinni_support_lib_UNIVERSAL.a"; sourceTree = "<group>"; };
 		E61A12852171360F000069F0 /* dummy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dummy.cpp; sourceTree = "<group>"; };
 		E61A1287217136DE000069F0 /* dummy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = dummy.m; sourceTree = "<group>"; };
@@ -87,20 +92,15 @@
 		E6EBCA252254B7AF00B02F24 /* GuldenCoreUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GuldenCoreUtil.h; sourceTree = "<group>"; };
 		E6EC7CF521EF24A800320806 /* DBMonitorRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBMonitorRecord.h; path = ../../../djinni/objc/DBMonitorRecord.h; sourceTree = "<group>"; };
 		E6EC7CF721EF24A800320806 /* DBQrCodeRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBQrCodeRecord.h; path = ../../../djinni/objc/DBQrCodeRecord.h; sourceTree = "<group>"; };
-		E6EC7CF821EF24A800320806 /* DBGuldenMonitorListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBGuldenMonitorListener.h; path = ../../../djinni/objc/DBGuldenMonitorListener.h; sourceTree = "<group>"; };
-		E6EC7CF921EF24A800320806 /* DBGuldenUnifiedBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBGuldenUnifiedBackend.h; path = ../../../djinni/objc/DBGuldenUnifiedBackend.h; sourceTree = "<group>"; };
 		E6EC7CFA21EF24A800320806 /* DBUriRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBUriRecord.h; path = ../../../djinni/objc/DBUriRecord.h; sourceTree = "<group>"; };
-		E6EC7CFB21EF24A800320806 /* DBGuldenUnifiedFrontend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBGuldenUnifiedFrontend.h; path = ../../../djinni/objc/DBGuldenUnifiedFrontend.h; sourceTree = "<group>"; };
 		E6EC7CFC21EF24A800320806 /* DBBlockInfoRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBBlockInfoRecord.h; path = ../../../djinni/objc/DBBlockInfoRecord.h; sourceTree = "<group>"; };
 		E6EC7CFD21EF24A800320806 /* DBUriRecipient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBUriRecipient.h; path = ../../../djinni/objc/DBUriRecipient.h; sourceTree = "<group>"; };
 		E6EC7CFE21EF24A800320806 /* DBBalanceRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBBalanceRecord.h; path = ../../../djinni/objc/DBBalanceRecord.h; sourceTree = "<group>"; };
 		E6EC7CFF21EF24A800320806 /* DBPeerRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBPeerRecord.h; path = ../../../djinni/objc/DBPeerRecord.h; sourceTree = "<group>"; };
 		E6EC7D0021EF24A800320806 /* DBAddressRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBAddressRecord.h; path = ../../../djinni/objc/DBAddressRecord.h; sourceTree = "<group>"; };
 		E6EC7D0121EF24A800320806 /* DBTransactionRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBTransactionRecord.h; path = ../../../djinni/objc/DBTransactionRecord.h; sourceTree = "<group>"; };
-		E6ED7E97234216F3009C4DAB /* libgulden_crypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgulden_crypto.a; path = "../../../../build/aarch64-ios/src/crypto/libgulden_crypto.a"; sourceTree = "<group>"; };
 		E6ED8384228ED8F700DD0BC9 /* core-packages.licenses */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "core-packages.licenses"; path = "../../../../data/core-packages.licenses"; sourceTree = "<group>"; };
 		E6EFA49D227352BB002484C6 /* staticfiltercptestnet */ = {isa = PBXFileReference; lastKnownFileType = file; name = staticfiltercptestnet; path = ../../../../data/staticfiltercptestnet; sourceTree = "<group>"; };
-		E6F2DCA32343609F002B3CEA /* libgulden_unity_crypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgulden_unity_crypto.a; path = "../../../../build/x86_64-ios/src/libgulden_unity_crypto.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,16 +108,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6F2DCA42343609F002B3CEA /* libgulden_unity_crypto.a in Frameworks */,
 				E65D167C218A22B70080637D /* libmemenv.a in Frameworks */,
 				E65D167A218A229F0080637D /* libleveldb.a in Frameworks */,
 				E65D1678218A22540080637D /* libsecp256k1.a in Frameworks */,
+				5537D3FB24CF0CAE00A27959 /* lib_unity_objc.a in Frameworks */,
 				E61A12842171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a in Frameworks */,
 				E698B375233E670A00458186 /* libcryptopp.a in Frameworks */,
 				E68FAE04216C964E0038C745 /* libdb-4.8.a in Frameworks */,
 				E68FAE05216C964E0038C745 /* libboost_system-mt-s.a in Frameworks */,
 				E68FAE06216C964E0038C745 /* libboost_filesystem-mt-s.a in Frameworks */,
 				E68FAE07216C964E0038C745 /* libboost_program_options-mt-s.a in Frameworks */,
+				5537D3FA24CF0C7500A27959 /* lib_unity_crypto.a in Frameworks */,
 				E68FAE08216C964E0038C745 /* libboost_thread-mt-s.a in Frameworks */,
 				E68FAE09216C964E0038C745 /* libboost_timer-mt-s.a in Frameworks */,
 				E68FAE0A216C964E0038C745 /* libqrencode.a in Frameworks */,
@@ -125,7 +126,6 @@
 				E68FAE0C216C964E0038C745 /* libcrypto.a in Frameworks */,
 				E68FAE0D216C964E0038C745 /* libssl.a in Frameworks */,
 				E68FAE0F216C964E0038C745 /* libdb_cxx-4.8.a in Frameworks */,
-				E698B376233E674900458186 /* libgulden_unity_objc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,17 +161,17 @@
 				E6EC7D0021EF24A800320806 /* DBAddressRecord.h */,
 				E6EC7CFE21EF24A800320806 /* DBBalanceRecord.h */,
 				E6EC7CFC21EF24A800320806 /* DBBlockInfoRecord.h */,
-				E6EC7CF821EF24A800320806 /* DBGuldenMonitorListener.h */,
 				E6CEA4232264AA2D00C87DC5 /* DBOutputRecord.h */,
 				E6CEA4242264AA2D00C87DC5 /* DBPaymentResultStatus.h */,
-				E6EC7CF921EF24A800320806 /* DBGuldenUnifiedBackend.h */,
-				E6EC7CFB21EF24A800320806 /* DBGuldenUnifiedFrontend.h */,
 				E6EC7CFF21EF24A800320806 /* DBPeerRecord.h */,
 				E6EC7CF721EF24A800320806 /* DBQrCodeRecord.h */,
 				E6EC7D0121EF24A800320806 /* DBTransactionRecord.h */,
 				E6EC7CFD21EF24A800320806 /* DBUriRecipient.h */,
 				E6EC7CF521EF24A800320806 /* DBMonitorRecord.h */,
 				E6EC7CFA21EF24A800320806 /* DBUriRecord.h */,
+				5537D3F224CF098900A27959 /* DBMonitorListener.h */,
+				5537D3F324CF098900A27959 /* DBUnifiedBackend.h */,
+				5537D3F424CF098900A27959 /* DBUnifiedFrontend.h */,
 				E64203EF21638CD6004A77FF /* GuldenCore.h */,
 				E64203F021638CD6004A77FF /* Info.plist */,
 			);
@@ -181,8 +181,8 @@
 		E64203F721638D34004A77FF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E6F2DCA32343609F002B3CEA /* libgulden_unity_crypto.a */,
-				E6ED7E97234216F3009C4DAB /* libgulden_crypto.a */,
+				5537D3F924CF0BDE00A27959 /* lib_unity_objc.a */,
+				5537D3F824CF0BBD00A27959 /* lib_unity_crypto.a */,
 				E698B374233E66D700458186 /* libcryptopp.a */,
 				E65D167B218A22B70080637D /* libmemenv.a */,
 				E65D1679218A229F0080637D /* libleveldb.a */,
@@ -235,22 +235,22 @@
 				E6EC7D0D21EF24A900320806 /* DBAddressRecord.h in Headers */,
 				E6EC7D0E21EF24A900320806 /* DBTransactionRecord.h in Headers */,
 				E6EC7D0B21EF24A900320806 /* DBBalanceRecord.h in Headers */,
-				E6EC7D0521EF24A900320806 /* DBGuldenMonitorListener.h in Headers */,
 				E6EC7D0221EF24A900320806 /* DBMonitorRecord.h in Headers */,
 				E6EC7D0721EF24A900320806 /* DBUriRecord.h in Headers */,
-				E6EC7D0621EF24A900320806 /* DBGuldenUnifiedBackend.h in Headers */,
 				E6EC7D0C21EF24A900320806 /* DBPeerRecord.h in Headers */,
 				E6EC7D0921EF24A900320806 /* DBBlockInfoRecord.h in Headers */,
 				E6CEA4262264AA2D00C87DC5 /* DBPaymentResultStatus.h in Headers */,
 				E6CEA4252264AA2D00C87DC5 /* DBOutputRecord.h in Headers */,
 				E6EC7D0421EF24A900320806 /* DBQrCodeRecord.h in Headers */,
-				E6EC7D0821EF24A900320806 /* DBGuldenUnifiedFrontend.h in Headers */,
 				E67BA0882209C84600223B01 /* DBTransactionStatus.h in Headers */,
 				E67BA0892209C84600223B01 /* DBMutationRecord.h in Headers */,
 				E6EC7D0A21EF24A900320806 /* DBUriRecipient.h in Headers */,
 				E67CDA64224A22F100CC9F6E /* DBInputRecord.h in Headers */,
 				E67CDA66224A263400CC9F6E /* DBLegacyWalletResult.h in Headers */,
+				5537D3F724CF098900A27959 /* DBUnifiedFrontend.h in Headers */,
+				5537D3F524CF098900A27959 /* DBMonitorListener.h in Headers */,
 				E6EBCA262254B7AF00B02F24 /* GuldenCoreUtil.h in Headers */,
+				5537D3F624CF098900A27959 /* DBUnifiedBackend.h in Headers */,
 				E64203F121638CD6004A77FF /* GuldenCore.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

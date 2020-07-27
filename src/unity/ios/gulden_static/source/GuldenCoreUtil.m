@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GuldenCore/DBUnifiedBackend.h"
+#import "DBUnifiedBackend.h"
+#import "DBUnifiedBackend.h"
 
 NSString* GuldenCoreStaticFilterPath(BOOL testnet)
 {
