@@ -81,7 +81,7 @@ export default {
   methods: {
     sendCoins() {
       var check = UnityBackend.IsValidRecipient({
-        scheme: "gulden",
+        scheme: "novo",
         path: this.address,
         items: []
       });
