@@ -60,26 +60,26 @@
 		E64203EC21638CD6004A77FF /* GuldenCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GuldenCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E64203EF21638CD6004A77FF /* GuldenCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GuldenCore.h; sourceTree = "<group>"; };
 		E64203F021638CD6004A77FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E65180AD218A1080009283A8 /* libgulden_unity_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgulden_unity_objc.a; path = "../../../../build/aarch64-ios/src/libgulden_unity_objc.a"; sourceTree = "<group>"; };
-		E65D1677218A22540080637D /* libsecp256k1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsecp256k1.a; path = "../../../../build/aarch64-ios/src/secp256k1/.libs/libsecp256k1.a"; sourceTree = "<group>"; };
-		E65D1679218A229F0080637D /* libleveldb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libleveldb.a; path = "../../../../build/aarch64-ios/src/leveldb/libleveldb.a"; sourceTree = "<group>"; };
-		E65D167B218A22B70080637D /* libmemenv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmemenv.a; path = "../../../../build/aarch64-ios/src/leveldb/libmemenv.a"; sourceTree = "<group>"; };
+		E65180AD218A1080009283A8 /* libgulden_unity_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgulden_unity_objc.a; sourceTree = "<group>"; };
+		E65D1677218A22540080637D /* libsecp256k1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsecp256k1.a; sourceTree = "<group>"; };
+		E65D1679218A229F0080637D /* libleveldb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libleveldb.a; sourceTree = "<group>"; };
+		E65D167B218A22B70080637D /* libmemenv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmemenv.a; sourceTree = "<group>"; };
 		E67BA0862209C84600223B01 /* DBTransactionStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBTransactionStatus.h; path = ../../../djinni/objc/DBTransactionStatus.h; sourceTree = "<group>"; };
 		E67BA0872209C84600223B01 /* DBMutationRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBMutationRecord.h; path = ../../../djinni/objc/DBMutationRecord.h; sourceTree = "<group>"; };
 		E67CDA63224A22F100CC9F6E /* DBInputRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBInputRecord.h; path = ../../../djinni/objc/DBInputRecord.h; sourceTree = "<group>"; };
 		E67CDA65224A263400CC9F6E /* DBLegacyWalletResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBLegacyWalletResult.h; path = ../../../djinni/objc/DBLegacyWalletResult.h; sourceTree = "<group>"; };
-		E68FADF8216C964D0038C745 /* libdb-4.8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdb-4.8.a"; path = "../../../../depends/aarch64-ios/lib/libdb-4.8.a"; sourceTree = "<group>"; };
-		E68FADF9216C964D0038C745 /* libboost_system-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_system-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_system-mt-s.a"; sourceTree = "<group>"; };
-		E68FADFA216C964D0038C745 /* libboost_filesystem-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_filesystem-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_filesystem-mt-s.a"; sourceTree = "<group>"; };
-		E68FADFB216C964D0038C745 /* libboost_program_options-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_program_options-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_program_options-mt-s.a"; sourceTree = "<group>"; };
-		E68FADFC216C964E0038C745 /* libboost_thread-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_thread-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_thread-mt-s.a"; sourceTree = "<group>"; };
-		E68FADFD216C964E0038C745 /* libboost_timer-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_timer-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_timer-mt-s.a"; sourceTree = "<group>"; };
-		E68FADFE216C964E0038C745 /* libqrencode.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqrencode.a; path = "../../../../depends/aarch64-ios/lib/libqrencode.a"; sourceTree = "<group>"; };
-		E68FADFF216C964E0038C745 /* libboost_chrono-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_chrono-mt-s.a"; path = "../../../../depends/aarch64-ios/lib/libboost_chrono-mt-s.a"; sourceTree = "<group>"; };
-		E68FAE00216C964E0038C745 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../../../../depends/aarch64-ios/lib/libcrypto.a"; sourceTree = "<group>"; };
-		E68FAE01216C964E0038C745 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "../../../../depends/aarch64-ios/lib/libssl.a"; sourceTree = "<group>"; };
-		E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdb_cxx-4.8.a"; path = "../../../../depends/aarch64-ios/lib/libdb_cxx-4.8.a"; sourceTree = "<group>"; };
-		E698B374233E66D700458186 /* libcryptopp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcryptopp.a; path = "../../../../depends/aarch64-ios/lib/libcryptopp.a"; sourceTree = "<group>"; };
+		E68FADF8216C964D0038C745 /* libdb-4.8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdb-4.8.a"; sourceTree = "<group>"; };
+		E68FADF9216C964D0038C745 /* libboost_system-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_system-mt-s.a"; sourceTree = "<group>"; };
+		E68FADFA216C964D0038C745 /* libboost_filesystem-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_filesystem-mt-s.a"; sourceTree = "<group>"; };
+		E68FADFB216C964D0038C745 /* libboost_program_options-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_program_options-mt-s.a"; sourceTree = "<group>"; };
+		E68FADFC216C964E0038C745 /* libboost_thread-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_thread-mt-s.a"; sourceTree = "<group>"; };
+		E68FADFD216C964E0038C745 /* libboost_timer-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_timer-mt-s.a"; sourceTree = "<group>"; };
+		E68FADFE216C964E0038C745 /* libqrencode.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqrencode.a; sourceTree = "<group>"; };
+		E68FADFF216C964E0038C745 /* libboost_chrono-mt-s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_chrono-mt-s.a"; sourceTree = "<group>"; };
+		E68FAE00216C964E0038C745 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; sourceTree = "<group>"; };
+		E68FAE01216C964E0038C745 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; sourceTree = "<group>"; };
+		E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdb_cxx-4.8.a"; sourceTree = "<group>"; };
+		E698B374233E66D700458186 /* libcryptopp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcryptopp.a; sourceTree = "<group>"; };
 		E6CEA4232264AA2D00C87DC5 /* DBOutputRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBOutputRecord.h; path = ../../../djinni/objc/DBOutputRecord.h; sourceTree = "<group>"; };
 		E6CEA4242264AA2D00C87DC5 /* DBPaymentResultStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBPaymentResultStatus.h; path = ../../../djinni/objc/DBPaymentResultStatus.h; sourceTree = "<group>"; };
 		E6EBCA212254B2BA00B02F24 /* staticfiltercp */ = {isa = PBXFileReference; lastKnownFileType = file; name = staticfiltercp; path = ../../../../data/staticfiltercp; sourceTree = "<group>"; };
@@ -100,7 +100,7 @@
 		E6ED7E97234216F3009C4DAB /* libgulden_crypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgulden_crypto.a; path = "../../../../build/aarch64-ios/src/crypto/libgulden_crypto.a"; sourceTree = "<group>"; };
 		E6ED8384228ED8F700DD0BC9 /* core-packages.licenses */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "core-packages.licenses"; path = "../../../../data/core-packages.licenses"; sourceTree = "<group>"; };
 		E6EFA49D227352BB002484C6 /* staticfiltercptestnet */ = {isa = PBXFileReference; lastKnownFileType = file; name = staticfiltercptestnet; path = ../../../../data/staticfiltercptestnet; sourceTree = "<group>"; };
-		E6F2DCA32343609F002B3CEA /* libgulden_unity_crypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgulden_unity_crypto.a; path = "../../../../build/x86_64-ios/src/libgulden_unity_crypto.a"; sourceTree = "<group>"; };
+		E6F2DCA32343609F002B3CEA /* libgulden_unity_crypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgulden_unity_crypto.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
