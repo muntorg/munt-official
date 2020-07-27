@@ -23,16 +23,16 @@ file COPYING
     <string name="welcome_activity_recover_existing_wallet">Recover wallet</string>
     <string name="welcome_activity_sync_with_desktop">Link wallet</string>
     <string name="recover_from_phrase_intro">Enter your recovery phrase from which to perform a recovery</string>
-    <string name="show_recovery_phrase_EULA">By using the Gulden app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Gulden.</string>
+    <string name="show_recovery_phrase_EULA">By using the Novo app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Novo.</string>
     <string name="recovery_phrase_continue">Continue</string>
     <string name="title_activity_enter_recovery_phrase">Enter recovery phrase</string>
-    <string name="show_recovery_phrase_introtext">Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</string>
+    <string name="show_recovery_phrase_introtext">Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Novos. Someone else with access to the phrase = lose Novos.</string>
     <string name="recovery_phrase_acknowledge_writing_down">I wrote it down</string>
     <string name="recovery_phrase_copy">Recovery phrase copied to clipboard</string>
     <string name="address_book_empty_message">To add an address, start a payment and tap \"Add to address book\".</string>
     <string name="address_book_title">Address book</string>
     <string name="transaction_list_empty_title">No Transactions received</string>
-    <string name="transaction_list_empty_message">Touch here to buy your first Gulden</string>
+    <string name="transaction_list_empty_message">Touch here to buy your first Novo</string>
     <string name="send_coins_confirm_template">%1$s NLG\n\nto %2$s</string>
     <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nto %3$s</string>
     <string name="send_coins_nocks_estimate_template">Approx. G %1$s including IBAN service fee</string>
