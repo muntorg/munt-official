@@ -53,7 +53,7 @@ file COPYING
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:layout_marginEnd="28dp"
-        android:background="@drawable/shape_rounded_button_with_border"
+        android:background="@drawable/shape_square_button_with_border"
         android:onClick="onUpgrade"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"

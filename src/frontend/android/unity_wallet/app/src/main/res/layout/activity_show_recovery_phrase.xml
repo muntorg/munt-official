@@ -93,7 +93,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:background="@drawable/shape_rounded_button"
+            android:background="@drawable/shape_square_button"
             android:textColor="@android:color/white"
             />
     </RelativeLayout>

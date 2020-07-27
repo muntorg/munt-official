@@ -75,7 +75,7 @@ file COPYING
             android:layout_marginRight="4dp"
             android:layout_marginBottom="4dp"
             android:layout_weight="1"
-            android:background="@drawable/shape_rounded_button"
+            android:background="@drawable/shape_square_button"
             android:text="@string/action_bar_buy"
             android:textAllCaps="false"
             android:textColor="@android:color/white" />
@@ -92,7 +92,7 @@ file COPYING
             android:layout_marginRight="8dp"
             android:layout_marginBottom="4dp"
             android:layout_weight="1"
-            android:background="@drawable/shape_rounded_button"
+            android:background="@drawable/shape_square_button"
             android:maxLines="2"
             android:text="@string/action_bar_share"
             android:textAllCaps="false"

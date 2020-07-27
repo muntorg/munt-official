@@ -91,7 +91,7 @@ file COPYING
             android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"
             android:textColor="@android:color/white"
-            android:background="@drawable/shape_rounded_button"
+            android:background="@drawable/shape_square_button"
             tools:ignore="RelativeOverlap" />
 
     </RelativeLayout>
