@@ -462,8 +462,8 @@ public:
                 consensus.pow2Phase3FirstBlockHeight=51;
                 consensus.devBlockSubsidyActivationHeight=528750;
                 consensus.pow2Phase4FirstBlockHeight=528762;
-                consensus.pow2Phase5FirstBlockHeight=528762;
-                consensus.deltaV3ActivationTime=1595937600;
+                consensus.pow2Phase5FirstBlockHeight=604000;
+                consensus.deltaV3ActivationTime=1596052800;
 
                 genesis = CreateGenesisBlock(seedTimestamp, 0, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
                 genesis.nBits = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
@@ -691,8 +691,9 @@ public:
             { 525000, { uint256S("0x1215c8c8e196c922a021dbc6ca413fec0fa08b5280c179bab4ff18034a643a27"), 1583863369 } },
             { 526274, { uint256S("0x36bb6227d4535ad251ef019f4780d85a0ea732cc437f2c751ae50cfab132a8f3"), 1583973659 } },
             { 527426, { uint256S("0x8e2b07256b389b923030e5820aac3c762cddfdac272836be7a9a8150e6f73ee5"), 1584661592 } },
+            { 604400, { uint256S("0x8a1592c3322783c470864d36bbc09c5ca11622cd6bc91140355611ed39c7dd72"), 1595886598 } },
             };
-            consensus.defaultAssumeValid = uint256S("0x8e2b07256b389b923030e5820aac3c762cddfdac272836be7a9a8150e6f73ee5");
+            consensus.defaultAssumeValid = uint256S("0x8a1592c3322783c470864d36bbc09c5ca11622cd6bc91140355611ed39c7dd72");
         }
         
 

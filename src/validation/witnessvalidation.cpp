@@ -491,6 +491,13 @@ bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCa
             witnessInfo.witnessSelectionPoolUnfiltered.push_back(RouletteItem(outPoint, coin, nWeight, nAge));                     
         }
     }
+
+    // On testnet v1 we have some abandoned phase 3 accounts that will never be upgraded, we need to add their weight here
+    if (chainParams.IsOfficialTestnetV1())
+    {
+        witnessInfo.nTotalWeightRaw += 405911+5827397+33566+524931+242054+44000+33825+156000+33825+2400000+21000+109093+496438+8000000+21000+10481+1499998+405911+156000+4799994+649457+20999+800000+1499998+2399997+16454794+15219+21000+397808+2828758+299999;
+    }
+    
     return true;
 }
 
