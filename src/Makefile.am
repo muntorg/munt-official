@@ -926,7 +926,7 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBILibraryController.mm \
   unity/djinni/objc/DBILibraryListener+Private.h \
   unity/djinni/objc/DBILibraryListener+Private.mm \
-  unity/djinni/objc/DBUnifiedFrontend.h \
+  unity/djinni/objc/DBILibraryController.h \
   unity/djinni/objc/DBLegacyWalletResult.h \
   unity/djinni/objc/DBLegacyWalletResult+Private.h \
   unity/djinni/objc/DBMonitorListener+Private.h \
