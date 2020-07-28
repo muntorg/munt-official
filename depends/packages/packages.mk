@@ -8,7 +8,7 @@ endif
 
 ios_packages = qrencode djinni libcryptoppunity libevent
 ifeq ($(host_flavor),android)
-packages += libcryptoppunity
+packages += libevent libcryptoppunity
 endif
 
 rapidcheck_packages = rapidcheck
