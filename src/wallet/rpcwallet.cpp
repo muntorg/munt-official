@@ -33,6 +33,7 @@
 #include "wallet/feebumper.h"
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h"
+#include "wallet/witness_operations.h"
 #include "script/ismine.h"
 #include "auto_checkpoints.h"
 
@@ -451,10 +452,35 @@ static void SendMoney(CWallet * const pwallet, CAccount* fromAccount, const CTxD
             accountsToTry.push_back(accountPair.second);
         }
     }
-    if (!pwallet->CreateTransaction(accountsToTry, vecSend, wtxNew, reservekey, nFeeRequired, nChangePosRet, strError)) {
+    if (!pwallet->CreateTransaction(accountsToTry, vecSend, wtxNew, reservekey, nFeeRequired, nChangePosRet, strError))
+    {
         if (!fSubtractFeeFromAmount && nValue + nFeeRequired > curBalance)
+        {
             strError = strprintf("Error: This transaction requires a transaction fee of at least %s", FormatMoney(nFeeRequired));
-        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+        }
+        else if (fromAccount->IsPoW2Witness() && fSubtractFeeFromAmount)
+        {
+            const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAccount(fromAccount);
+            if (unspentWitnessOutputs.size() > 0)
+            {
+                const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessTxIndex, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+                const std::vector<CAccount*> accounts = pwallet->FindAccountsForTransaction(currentWitnessTxOut);
+                accountsToTry.clear();
+                for ( const auto& accountToTry : accounts )
+                {
+                    accountsToTry.push_back(accountToTry);
+                }
+                strError = "";
+                if (!pwallet->CreateTransaction(accountsToTry, vecSend, wtxNew, reservekey, nFeeRequired, nChangePosRet, strError))
+                {
+                    throw JSONRPCError(RPC_WALLET_ERROR, strError);
+                }
+            }
+            else
+            {
+                throw JSONRPCError(RPC_WALLET_ERROR, strError);
+            }
+        }
     }
     CValidationState state;
     if (!pwallet->CommitTransaction(wtxNew, reservekey, g_connman.get(), state)) {

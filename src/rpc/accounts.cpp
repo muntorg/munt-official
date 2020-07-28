@@ -1183,23 +1183,6 @@ static witnessOutputsInfoVector getCurrentOutputsForWitnessAddress(CNativeAddres
     return matchedOutputs;
 }
 
-static witnessOutputsInfoVector getCurrentOutputsForWitnessAccount(CAccount* forAccount)
-{
-    std::map<COutPoint, Coin> allWitnessCoins;
-    if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
-        throw std::runtime_error("Failed to enumerate all witness coins.");
-
-    witnessOutputsInfoVector matchedOutputs;
-    for (const auto& [outpoint, coin] : allWitnessCoins)
-    {
-        if (IsMine(*forAccount, coin.out))
-        {
-            matchedOutputs.push_back(std::tuple(coin.out, coin.nHeight, coin.nTxIndex, outpoint));
-        }
-    }
-    return matchedOutputs;
-}
-
 //! Given a string specifier, calculate a lock length in blocks to match it. e.g. 1d -> 576; 5b -> 5; 1m -> 17280
 //! Returns 0 if specifier is invalid.
 static uint64_t GetLockPeriodInBlocksFromFormattedStringSpecifier(std::string formattedLockPeriodSpecifier)

@@ -23,7 +23,7 @@
 #include "utilmoneystr.h"
 #include "wallet.h"
 
-static witnessOutputsInfoVector getCurrentOutputsForWitnessAccount(CAccount* forAccount)
+witnessOutputsInfoVector getCurrentOutputsForWitnessAccount(CAccount* forAccount)
 {
     std::map<COutPoint, Coin> allWitnessCoins;
     if (!getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
@@ -39,6 +39,7 @@ static witnessOutputsInfoVector getCurrentOutputsForWitnessAccount(CAccount* for
     }
     return matchedOutputs;
 }
+
 
 void extendwitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVector unspentWitnessOutputs, CWallet* pwallet, CAmount requestedAmount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee)
 {

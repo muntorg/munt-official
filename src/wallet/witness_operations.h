@@ -105,6 +105,8 @@ struct CWitnessAccountStatus
 */
 CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* account, CGetWitnessInfo* pWitnessInfo = nullptr);
 
+witnessOutputsInfoVector getCurrentOutputsForWitnessAccount(CAccount* forAccount);
+
 bool isWitnessDistributionNearOptimal(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);
 std::tuple<std::vector<CAmount>, uint64_t, CAmount> witnessDistribution(CWallet* pWallet, CAccount* account);
 std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t duration, uint64_t totalWeight);
