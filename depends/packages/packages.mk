@@ -2,13 +2,13 @@ packages:=boost openssl
 
 ifneq ($(host_os),ios)
 ifneq ($(host_flavor),android)
-packages += zeromq libcryptopp
+packages += libevent zeromq libcryptopp
 endif
 endif
 
 ios_packages = qrencode djinni libcryptoppunity libevent
 ifeq ($(host_flavor),android)
-packages += libevent libcryptoppunity
+packages += libcryptoppunity
 endif
 
 rapidcheck_packages = rapidcheck
