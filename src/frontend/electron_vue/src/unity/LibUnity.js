@@ -21,8 +21,8 @@ class LibUnity {
       ...options
     };
 
-    this.backend = new libUnity.NJSUnifiedBackend();
-    this.signalHandler = new libUnity.NJSUnifiedFrontend();
+    this.libraryController = new libUnity.NJSUnifiedBackend(); // todo: update NJSUnifiedBackend to NJSILibraryController
+    this.libraryListener = new libUnity.NJSUnifiedFrontend(); // todo: update NJSUnifiedFrontend to NJSILibraryListener
 
     this.rpcController = null;
 
@@ -32,7 +32,7 @@ class LibUnity {
     this.generationController = new libUnity.NJSIGenerationController();
     this.generationListener = new libUnity.NJSIGenerationListener();
 
-    let buildInfo = this.backend.BuildInfo();
+    let buildInfo = this.libraryController.BuildInfo();
 
     store.dispatch({
       type: "SET_UNITY_VERSION",
@@ -51,17 +51,17 @@ class LibUnity {
   }
 
   TerminateUnityLib() {
-    if (this.backend === null || this.isTerminated) return;
+    if (this.libraryController === null || this.isTerminated) return;
     console.log(`terminating unity lib`);
     // TODO:
     // Maybe the call to terminate comes before the core is ready.
     // Then it's better to wait for the coreReady signal and then call TerminateUnityLib
-    this.backend.TerminateUnityLib();
+    this.libraryController.TerminateUnityLib();
   }
 
   async _initializeAccountsController() {
     let self = this;
-    let backend = this.backend;
+    let libraryController = this.libraryController;
 
     this.accountsListener.onAccountNameChanged = function(
       accountUUID,
@@ -75,12 +75,12 @@ class LibUnity {
 
       store.dispatch({
         type: "SET_MUTATIONS",
-        mutations: backend.getMutationHistory()
+        mutations: libraryController.getMutationHistory()
       });
 
       store.dispatch({
         type: "SET_RECEIVE_ADDRESS",
-        receiveAddress: backend.GetReceiveAddress()
+        receiveAddress: libraryController.GetReceiveAddress()
       });
     };
 
@@ -154,14 +154,14 @@ class LibUnity {
     }
 
     console.log(`init unity lib threaded`);
-    this.backend.InitUnityLibThreaded(
+    this.libraryController.InitUnityLibThreaded(
       this.options.walletPath,
       "",
       -1,
       -1,
       this.options.useTestnet,
       false, // non spv mode
-      this.signalHandler,
+      this.libraryListener,
       this.options.extraArgs
     );
   }
@@ -195,12 +195,12 @@ class LibUnity {
 
     store.dispatch({
       type: "SET_RECEIVE_ADDRESS",
-      receiveAddress: this.backend.GetReceiveAddress()
+      receiveAddress: this.libraryController.GetReceiveAddress()
     });
 
     store.dispatch({
       type: "SET_MUTATIONS",
-      mutations: this.backend.getMutationHistory()
+      mutations: this.libraryController.getMutationHistory()
     });
 
     store.dispatch({ type: "SET_CORE_READY", coreReady: true });
@@ -208,38 +208,38 @@ class LibUnity {
 
   async _registerSignalHandlers() {
     let self = this;
-    let signalHandler = this.signalHandler;
-    let backend = this.backend;
+    let libraryListener = this.libraryListener;
+    let libraryController = this.libraryController;
 
-    signalHandler.notifyCoreReady = function() {
+    libraryListener.notifyCoreReady = function() {
       console.log("received: notifyCoreReady");
       self._coreReady();
     };
 
-    signalHandler.logPrint = function(message) {
+    libraryListener.logPrint = function(message) {
       console.log("unity_core: " + message);
     };
 
-    signalHandler.notifyUnifiedProgress = function(/*progress*/) {
+    libraryListener.notifyUnifiedProgress = function(/*progress*/) {
       console.log("received: notifyUnifiedProgress");
       // todo: set progress property in store?
     };
 
-    signalHandler.notifyBalanceChange = async function(new_balance) {
+    libraryListener.notifyBalanceChange = async function(new_balance) {
       console.log("received: notifyBalanceChange");
       store.dispatch({ type: "SET_BALANCE", balance: new_balance });
     };
 
-    signalHandler.notifyNewMutation = async function(/*mutation, self_committed*/) {
+    libraryListener.notifyNewMutation = async function(/*mutation, self_committed*/) {
       console.log("received: notifyNewMutation");
 
       store.dispatch({
         type: "SET_MUTATIONS",
-        mutations: backend.getMutationHistory()
+        mutations: libraryController.getMutationHistory()
       });
       store.dispatch({
         type: "SET_RECEIVE_ADDRESS",
-        receiveAddress: backend.GetReceiveAddress()
+        receiveAddress: libraryController.GetReceiveAddress()
       });
       // todo: find a better way to update the balances for the accounts
       store.dispatch({
@@ -248,28 +248,28 @@ class LibUnity {
       });
     };
 
-    signalHandler.notifyUpdatedTransaction = function(/*transaction*/) {
+    libraryListener.notifyUpdatedTransaction = function(/*transaction*/) {
       console.log("received: notifyUpdatedTransaction");
       store.dispatch({
         type: "SET_MUTATIONS",
-        mutations: backend.getMutationHistory()
+        mutations: libraryController.getMutationHistory()
       });
     };
 
-    signalHandler.notifyInitWithExistingWallet = function() {
+    libraryListener.notifyInitWithExistingWallet = function() {
       console.log("received: notifyInitWithExistingWallet");
       store.dispatch({ type: "SET_WALLET_EXISTS", walletExists: true });
     };
 
-    signalHandler.notifyInitWithoutExistingWallet = function() {
+    libraryListener.notifyInitWithoutExistingWallet = function() {
       console.log("received: notifyInitWithoutExistingWallet");
-      self.newRecoveryPhrase = backend.GenerateRecoveryMnemonic();
+      self.newRecoveryPhrase = libraryController.GenerateRecoveryMnemonic();
       store.dispatch({ type: "SET_WALLET_EXISTS", walletExists: false });
     };
 
-    signalHandler.notifyShutdown = function() {
-      //NB! It is important to set the signalHandler to null here as this is the last thing the core lib is waiting on for clean exit; once we set this to null we are free to quit the app
-      signalHandler = null;
+    libraryListener.notifyShutdown = function() {
+      //NB! It is important to set the libraryListener to null here as this is the last thing the core lib is waiting on for clean exit; once we set this to null we are free to quit the app
+      libraryListener = null;
       console.log("received: notifyShutdown");
       self.isTerminated = true;
       app.quit();
@@ -371,7 +371,10 @@ class LibUnity {
     ipc.on("InitWalletFromRecoveryPhrase", (event, phrase, password) => {
       let result = this._preExecuteIpcCommand("InitWalletFromRecoveryPhrase");
       if (result === undefined) {
-        result = this.backend.InitWalletFromRecoveryPhrase(phrase, password);
+        result = this.libraryController.InitWalletFromRecoveryPhrase(
+          phrase,
+          password
+        );
       }
       this._postExecuteIpcCommand("InitWalletFromRecoveryPhrase", result);
       event.returnValue = result;
@@ -380,7 +383,7 @@ class LibUnity {
     ipc.answerRenderer("InitWalletFromRecoveryPhrase", async data => {
       let result = this._preExecuteIpcCommand("InitWalletFromRecoveryPhrase");
       if (result === undefined) {
-        result = this.backend.InitWalletFromRecoveryPhrase(
+        result = this.libraryController.InitWalletFromRecoveryPhrase(
           data.phrase,
           data.password
         );
@@ -392,7 +395,7 @@ class LibUnity {
     ipc.on("IsValidRecoveryPhrase", (event, phrase) => {
       let result = this._preExecuteIpcCommand("IsValidRecoveryPhrase");
       if (result === undefined) {
-        result = this.backend.IsValidRecoveryPhrase(phrase);
+        result = this.libraryController.IsValidRecoveryPhrase(phrase);
       }
       this._postExecuteIpcCommand("IsValidRecoveryPhrase", result);
       event.returnValue = result;
@@ -401,7 +404,7 @@ class LibUnity {
     ipc.answerRenderer("IsValidRecoveryPhrase", async data => {
       let result = this._preExecuteIpcCommand("IsValidRecoveryPhrase");
       if (result === undefined) {
-        result = this.backend.IsValidRecoveryPhrase(data.phrase);
+        result = this.libraryController.IsValidRecoveryPhrase(data.phrase);
       }
       this._postExecuteIpcCommand("IsValidRecoveryPhrase", result);
       return result;
@@ -410,7 +413,7 @@ class LibUnity {
     ipc.on("GenerateRecoveryMnemonic", event => {
       let result = this._preExecuteIpcCommand("GenerateRecoveryMnemonic");
       if (result === undefined) {
-        result = this.backend.GenerateRecoveryMnemonic();
+        result = this.libraryController.GenerateRecoveryMnemonic();
       }
       this._postExecuteIpcCommand("GenerateRecoveryMnemonic", result);
       event.returnValue = result;
@@ -419,7 +422,7 @@ class LibUnity {
     ipc.answerRenderer("GenerateRecoveryMnemonic", async () => {
       let result = this._preExecuteIpcCommand("GenerateRecoveryMnemonic");
       if (result === undefined) {
-        result = this.backend.GenerateRecoveryMnemonic();
+        result = this.libraryController.GenerateRecoveryMnemonic();
       }
       this._postExecuteIpcCommand("GenerateRecoveryMnemonic", result);
       return result;
@@ -428,7 +431,7 @@ class LibUnity {
     ipc.on("GetRecoveryPhrase", event => {
       let result = this._preExecuteIpcCommand("GetRecoveryPhrase");
       if (result === undefined) {
-        result = this.backend.GetRecoveryPhrase();
+        result = this.libraryController.GetRecoveryPhrase();
       }
       this._postExecuteIpcCommand("GetRecoveryPhrase", result);
       event.returnValue = result;
@@ -437,7 +440,7 @@ class LibUnity {
     ipc.answerRenderer("GetRecoveryPhrase", async () => {
       let result = this._preExecuteIpcCommand("GetRecoveryPhrase");
       if (result === undefined) {
-        result = this.backend.GetRecoveryPhrase();
+        result = this.libraryController.GetRecoveryPhrase();
       }
       this._postExecuteIpcCommand("GetRecoveryPhrase", result);
       return result;
@@ -446,7 +449,7 @@ class LibUnity {
     ipc.on("GetMnemonicDictionary", event => {
       let result = this._preExecuteIpcCommand("GetMnemonicDictionary");
       if (result === undefined) {
-        result = this.backend.GetMnemonicDictionary();
+        result = this.libraryController.GetMnemonicDictionary();
       }
       this._postExecuteIpcCommand("GetMnemonicDictionary", result);
       event.returnValue = result;
@@ -455,7 +458,7 @@ class LibUnity {
     ipc.answerRenderer("GetMnemonicDictionary", async () => {
       let result = this._preExecuteIpcCommand("GetMnemonicDictionary");
       if (result === undefined) {
-        result = this.backend.GetMnemonicDictionary();
+        result = this.libraryController.GetMnemonicDictionary();
       }
       this._postExecuteIpcCommand("GetMnemonicDictionary", result);
       return result;
@@ -464,7 +467,7 @@ class LibUnity {
     ipc.on("UnlockWallet", (event, password) => {
       let result = this._preExecuteIpcCommand("UnlockWallet");
       if (result === undefined) {
-        result = this.backend.UnlockWallet(password);
+        result = this.libraryController.UnlockWallet(password);
       }
       this._postExecuteIpcCommand("UnlockWallet", result);
       event.returnValue = result;
@@ -473,7 +476,7 @@ class LibUnity {
     ipc.answerRenderer("UnlockWallet", async data => {
       let result = this._preExecuteIpcCommand("UnlockWallet");
       if (result === undefined) {
-        result = this.backend.UnlockWallet(data.password);
+        result = this.libraryController.UnlockWallet(data.password);
       }
       this._postExecuteIpcCommand("UnlockWallet", result);
       return result;
@@ -482,7 +485,7 @@ class LibUnity {
     ipc.on("LockWallet", event => {
       let result = this._preExecuteIpcCommand("LockWallet");
       if (result === undefined) {
-        result = this.backend.LockWallet();
+        result = this.libraryController.LockWallet();
       }
       this._postExecuteIpcCommand("LockWallet", result);
       event.returnValue = result;
@@ -491,7 +494,7 @@ class LibUnity {
     ipc.answerRenderer("LockWallet", async () => {
       let result = this._preExecuteIpcCommand("LockWallet");
       if (result === undefined) {
-        result = this.backend.LockWallet();
+        result = this.libraryController.LockWallet();
       }
       this._postExecuteIpcCommand("LockWallet", result);
       return result;
@@ -500,7 +503,10 @@ class LibUnity {
     ipc.on("ChangePassword", (event, oldPassword, newPassword) => {
       let result = this._preExecuteIpcCommand("ChangePassword");
       if (result === undefined) {
-        result = this.backend.ChangePassword(oldPassword, newPassword);
+        result = this.libraryController.ChangePassword(
+          oldPassword,
+          newPassword
+        );
       }
       this._postExecuteIpcCommand("ChangePassword", result);
       event.returnValue = result;
@@ -509,7 +515,7 @@ class LibUnity {
     ipc.answerRenderer("ChangePassword", async data => {
       let result = this._preExecuteIpcCommand("ChangePassword");
       if (result === undefined) {
-        result = this.backend.ChangePassword(
+        result = this.libraryController.ChangePassword(
           data.oldPassword,
           data.newPassword
         );
@@ -521,7 +527,7 @@ class LibUnity {
     ipc.on("IsValidRecipient", (event, request) => {
       let result = this._preExecuteIpcCommand("IsValidRecipient");
       if (result === undefined) {
-        result = this.backend.IsValidRecipient(request);
+        result = this.libraryController.IsValidRecipient(request);
       }
       this._postExecuteIpcCommand("IsValidRecipient", result);
       event.returnValue = result;
@@ -530,7 +536,7 @@ class LibUnity {
     ipc.answerRenderer("IsValidRecipient", async data => {
       let result = this._preExecuteIpcCommand("IsValidRecipient");
       if (result === undefined) {
-        result = this.backend.IsValidRecipient(data.request);
+        result = this.libraryController.IsValidRecipient(data.request);
       }
       this._postExecuteIpcCommand("IsValidRecipient", result);
       return result;
@@ -539,7 +545,10 @@ class LibUnity {
     ipc.on("PerformPaymentToRecipient", (event, request, substract_fee) => {
       let result = this._preExecuteIpcCommand("PerformPaymentToRecipient");
       if (result === undefined) {
-        result = this.backend.performPaymentToRecipient(request, substract_fee);
+        result = this.libraryController.performPaymentToRecipient(
+          request,
+          substract_fee
+        );
       }
       this._postExecuteIpcCommand("PerformPaymentToRecipient", result);
       event.returnValue = result;
@@ -548,7 +557,7 @@ class LibUnity {
     ipc.answerRenderer("PerformPaymentToRecipient", async data => {
       let result = this._preExecuteIpcCommand("PerformPaymentToRecipient");
       if (result === undefined) {
-        result = this.backend.performPaymentToRecipient(
+        result = this.libraryController.performPaymentToRecipient(
           data.request,
           data.substract_fee
         );
@@ -560,7 +569,7 @@ class LibUnity {
     ipc.on("GetTransactionHistory", event => {
       let result = this._preExecuteIpcCommand("GetTransactionHistory");
       if (result === undefined) {
-        result = this.backend.getTransactionHistory();
+        result = this.libraryController.getTransactionHistory();
       }
       this._postExecuteIpcCommand("GetTransactionHistory", result);
       event.returnValue = result;
@@ -569,7 +578,7 @@ class LibUnity {
     ipc.answerRenderer("GetTransactionHistory", async () => {
       let result = this._preExecuteIpcCommand("GetTransactionHistory");
       if (result === undefined) {
-        result = this.backend.getTransactionHistory();
+        result = this.libraryController.getTransactionHistory();
       }
       this._postExecuteIpcCommand("GetTransactionHistory", result);
       return result;
@@ -578,7 +587,7 @@ class LibUnity {
     ipc.on("ResendTransaction", (event, txHash) => {
       let result = this._preExecuteIpcCommand("ResendTransaction");
       if (result === undefined) {
-        result = this.backend.resendTransaction(txHash);
+        result = this.libraryController.resendTransaction(txHash);
       }
       this._postExecuteIpcCommand("ResendTransaction", result);
       event.returnValue = result;
@@ -587,7 +596,7 @@ class LibUnity {
     ipc.answerRenderer("ResendTransaction", async data => {
       let result = this._preExecuteIpcCommand("ResendTransaction");
       if (result === undefined) {
-        result = this.backend.resendTransaction(data.txHash);
+        result = this.libraryController.resendTransaction(data.txHash);
       }
       this._postExecuteIpcCommand("ResendTransaction", result);
       return result;

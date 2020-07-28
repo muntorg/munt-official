@@ -9,7 +9,7 @@ let inputFile = path.join(
 const generateInfo = [
   {
     className: "NJSILibraryController",
-    controller: "backend",
+    controller: "libraryController",
     functions: [
       "ChangePassword",
       "GenerateRecoveryMnemonic",
