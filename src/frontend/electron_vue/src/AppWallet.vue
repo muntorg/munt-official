@@ -13,7 +13,8 @@ import AppLoader from "./components/AppLoader";
 import ModalDialog from "./components/ModalDialog";
 import EventBus from "./EventBus.js";
 
-const default_layout = "wallet-layout";
+import SetupLayout from "./layouts/SetupLayout";
+import WalletLayout from "./layouts/WalletLayout";
 
 export default {
   name: "AppWallet",
@@ -24,7 +25,9 @@ export default {
   },
   components: {
     AppLoader,
-    ModalDialog
+    ModalDialog,
+    SetupLayout,
+    WalletLayout
   },
   mounted() {
     EventBus.$on("close-dialog", this.closeModal);
@@ -36,7 +39,7 @@ export default {
   },
   computed: {
     layout() {
-      return this.$route.meta.layout || default_layout;
+      return this.$route.meta.layout || WalletLayout;
     }
   },
   methods: {

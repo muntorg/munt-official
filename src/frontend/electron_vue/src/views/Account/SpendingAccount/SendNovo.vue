@@ -1,5 +1,5 @@
 <template>
-  <div class="send-novo">
+  <div class="send-novo flex-col">
     <div class="main">
       <input
         v-model="amount"
@@ -67,6 +67,8 @@ export default {
         - show success / error notification (after payment)
        */
 
+      console.log(this.computedPassword);
+
       // wallet needs to be unlocked to make a payment
       if (UnityBackend.UnlockWallet(this.computedPassword) === false) {
         this.isPasswordInvalid = true;
@@ -76,10 +78,13 @@ export default {
       var request = {
         valid: true,
         address: this.address,
-        label: this.label,
+        label: this.label || "",
         desc: "",
         amount: this.amount * 100000000
       };
+
+      console.log(request);
+
       // try to make the payment
       let result = UnityBackend.PerformPaymentToRecipient(request, false);
       if (result === 0) {
@@ -102,9 +107,6 @@ export default {
 <style lang="less" scoped>
 .send-novo {
   height: 100%;
-
-  display: flex;
-  flex-direction: column;
 
   & .main {
     flex: 1;

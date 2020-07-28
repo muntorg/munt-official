@@ -1,5 +1,5 @@
 <template>
-  <div class="setup-view">
+  <div class="setup-view flex-col">
     <div class="steps-container">
       <!-- step 1: choose setup type -->
       <novo-section v-if="current === 1">
@@ -249,8 +249,6 @@ export default {
 <style lang="less" scoped>
 .setup-view {
   height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 .steps-container {

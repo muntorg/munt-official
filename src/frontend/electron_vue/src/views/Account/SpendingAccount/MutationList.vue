@@ -7,7 +7,7 @@
     >
       <h4>{{ formatDate(group.date) }}</h4>
       <div
-        class="mutation-row"
+        class="mutation-row flex-row"
         v-for="mutation in group.mutations"
         :key="mutation.txHash"
       >
@@ -121,8 +121,6 @@ h4 {
 }
 
 .mutation-row {
-  display: flex;
-  flex-direction: row;
   margin-bottom: 4px;
 
   & > div {

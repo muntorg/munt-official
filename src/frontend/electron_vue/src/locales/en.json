@@ -1,4 +1,11 @@
 {
+  "accounts_section": {
+    "accounts": "Accounts",
+    "categories": {
+      "spending": "Spending",
+      "holding": "Holding"
+    }
+  },
   "buttons": {
     "back": "Back",
     "change_password": "Change password",

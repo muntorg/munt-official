@@ -1,6 +1,6 @@
 <template>
-  <div class="app-loader" v-if="showLoader">
-    <div class="logo-outer">
+  <div class="app-loader flex-col" v-if="showLoader">
+    <div class="logo-outer flex-col">
       <div class="logo-inner"></div>
     </div>
     <div class="version-container">
@@ -88,9 +88,7 @@ export default {
   height: 100%;
   margin-top: 0;
   margin-left: 0;
-  display: flex;
   align-items: center;
-  flex-direction: column;
   justify-content: center;
   background-color: #fff;
   z-index: 9999;
@@ -102,9 +100,7 @@ export default {
   width: 128px;
   height: 128px;
   border-radius: 50%;
-  display: flex;
   align-items: center;
-  flex-direction: column;
   justify-content: center;
   text-align: center;
 }

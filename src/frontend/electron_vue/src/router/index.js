@@ -17,7 +17,9 @@ const routes = [
     path: "/setup-mining",
     name: "setup-mining",
     component: () =>
-      import(/* webpackChunkName: "setup-mining" */ "../views/SetupMining.vue")
+      import(
+        /* webpackChunkName: "setup-mining" */ "../views/Account/MiningAccount/SetupMining.vue"
+      )
   },
   {
     path: "/setup",

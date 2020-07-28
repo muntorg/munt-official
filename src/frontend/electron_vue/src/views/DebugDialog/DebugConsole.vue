@@ -1,5 +1,5 @@
 <template>
-  <div class="debug-console">
+  <div class="debug-console flex-col">
     <div ref="output" class="output">
       <div v-for="(item, index) in output" :key="index">
         <div v-if="item.type === 'command'">
@@ -98,8 +98,6 @@ export default {
 .debug-console {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 .output {
