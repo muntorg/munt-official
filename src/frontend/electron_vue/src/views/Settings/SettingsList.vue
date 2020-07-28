@@ -24,6 +24,7 @@
 .settings-row a {
   display: inline-block;
   width: 100%;
+  line-height: 20px;
 }
 
 .arrow {

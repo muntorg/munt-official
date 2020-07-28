@@ -60,7 +60,7 @@ export default {
       }
     },
     showSettings() {
-      if (this.$route.path.indexOf("/settings/") === 0) return;
+      if (this.$route.path === "/settings/") return;
       this.$router.push({ name: "settings" });
     },
     changeLockSettings() {

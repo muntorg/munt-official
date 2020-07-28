@@ -19,12 +19,12 @@
     <pre>{{ generationStats }}</pre>
 
     <template v-slot:footer>
-      <section class="footer">
+      <novo-button-section class="footer">
         <button @click="toggleGeneration">
           <span v-if="generationActive">{{ $t("buttons.stop") }}</span>
           <span v-else>{{ $t("buttons.start") }}</span>
         </button>
-      </section>
+      </novo-button-section>
     </template>
   </novo-page-layout>
 </template>
@@ -89,8 +89,7 @@ export default {
   }
 
   & .footer {
-    text-align: right;
-    padding-right: 5px;
+    padding-right: 20px;
   }
 }
 </style>

@@ -31,14 +31,24 @@
       </novo-form-field>
     </div>
 
-    <novo-button-section>
-      <button v-if="current === 1" @click="nextStep" :disabled="isNextDisabled">
-        {{ $t("buttons.next") }}
-      </button>
-      <button v-if="current === 2" @click="nextStep" :disabled="isNextDisabled">
-        {{ $t("buttons.change_password") }}
-      </button>
-    </novo-button-section>
+    <portal to="footer-slot">
+      <novo-button-section class="footer">
+        <button
+          v-if="current === 1"
+          @click="nextStep"
+          :disabled="isNextDisabled"
+        >
+          {{ $t("buttons.next") }}
+        </button>
+        <button
+          v-if="current === 2"
+          @click="nextStep"
+          :disabled="isNextDisabled"
+        >
+          {{ $t("buttons.change_password") }}
+        </button>
+      </novo-button-section>
+    </portal>
   </div>
 </template>
 
@@ -129,3 +139,9 @@ export default {
   }
 };
 </script>
+
+<style lang="less" scoped>
+.footer {
+  padding: 0 20px;
+}
+</style>

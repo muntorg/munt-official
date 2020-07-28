@@ -24,15 +24,17 @@
       </novo-section>
     </div>
 
-    <novo-button-section>
-      <button
-        v-if="current === 1"
-        @click="getRecoveryPhrase"
-        :disabled="isNextDisabled"
-      >
-        {{ $t("buttons.next") }}
-      </button>
-    </novo-button-section>
+    <portal to="footer-slot">
+      <novo-button-section class="footer">
+        <button
+          v-if="current === 1"
+          @click="getRecoveryPhrase"
+          :disabled="isNextDisabled"
+        >
+          {{ $t("buttons.next") }}
+        </button>
+      </novo-button-section>
+    </portal>
   </div>
 </template>
 
@@ -94,5 +96,9 @@ export default {
   word-spacing: 4px;
   background-color: #f5f5f5;
   user-select: all;
+}
+
+.footer {
+  padding: 20px;
 }
 </style>

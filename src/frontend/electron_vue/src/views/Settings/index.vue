@@ -1,21 +1,41 @@
 <template>
-  <div class="settings-view flex-col">
-    <div class="header flex-row">
-      <div class="back" v-if="false">
-        <span>
-          <fa-icon :icon="['fal', 'arrow-left']" />
-          {{ $t("buttons.back") }}
-        </span>
-      </div>
-      <div class="title">
-        {{ $t("settings.header") }}
-      </div>
-    </div>
+  <novo-page-layout>
+    <template v-slot:header>
+      <section class="header flex-row">
+        <div class="title">
+          {{ $t("settings.header") }}
+        </div>
+      </section>
+    </template>
+
     <router-view class="content" />
-  </div>
+
+    <template v-slot:footer>
+      <section class="footer">
+        <portal-target ref="footerSlot" name="footer-slot" slim></portal-target>
+      </section>
+    </template>
+  </novo-page-layout>
 </template>
 
 <style scoped lang="less">
+::v-deep {
+  & .header {
+    & .title {
+      flex: 1;
+      font-size: 1.1em;
+      font-weight: 500;
+      line-height: 32px;
+      text-align: center;
+    }
+  }
+
+  & .footer {
+    width: 100%;
+  }
+}
+
+/*
 .header {
   height: var(--header-height);
   border-bottom: 1px solid var(--main-border-color);
@@ -48,4 +68,5 @@
   flex: 1;
   padding: 40px;
 }
+*/
 </style>

@@ -98,7 +98,7 @@ export default {
     position: relative;
     padding: 0 24px;
 
-    & ::v-deep section.header {
+    & ::v-deep .header {
       width: calc(100vw - var(--sidebar-width));
     }
   }
@@ -125,7 +125,7 @@ export default {
     border-top: 1px solid var(--main-border-color);
     position: relative;
 
-    & ::v-deep section.footer {
+    & ::v-deep .footer {
       width: calc(100vw - var(--sidebar-width));
     }
   }
