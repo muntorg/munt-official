@@ -21,8 +21,8 @@ class LibUnity {
       ...options
     };
 
-    this.libraryController = new libUnity.NJSUnifiedBackend(); // todo: update NJSUnifiedBackend to NJSILibraryController
-    this.libraryListener = new libUnity.NJSUnifiedFrontend(); // todo: update NJSUnifiedFrontend to NJSILibraryListener
+    this.libraryController = new libUnity.NJSILibraryController();
+    this.libraryListener = new libUnity.NJSILibraryListener();
 
     this.rpcController = null;
 
