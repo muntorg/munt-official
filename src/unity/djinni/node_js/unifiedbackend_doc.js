@@ -55,7 +55,7 @@ declare class NJSILibraryController
     static declare function TerminateUnityLib();
     /** Generate a QR code for a string, QR code will be as close to width_hint as possible when applying simple scaling. */
     static declare function QRImageFromString(qr_string: string, width_hint: number): QrCodeRecord;
-    /** Get a receive address from the wallet */
+    /** Get a receive address for the active account */
     static declare function GetReceiveAddress(): string;
     /** Get the recovery phrase for the wallet */
     static declare function GetRecoveryPhrase(): string;
@@ -76,10 +76,6 @@ declare class NJSILibraryController
     static declare function LockWallet(): boolean;
     /** Change the wallet password */
     static declare function ChangePassword(oldPassword: string, newPassword: string): boolean;
-    /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
-    static declare function HaveUnconfirmedFunds(): boolean;
-    /** Check current wallet balance (including unconfirmed funds) */
-    static declare function GetBalance(): number;
     /** Rescan blockchain for wallet transactions */
     static declare function DoRescan();
     /** Check if text/address is something we are capable of sending money too */
@@ -88,8 +84,6 @@ declare class NJSILibraryController
     static declare function feeForRecipient(request: UriRecipient): number;
     /** Attempt to pay a recipient, will throw on failure with description */
     static declare function performPaymentToRecipient(request: UriRecipient, substract_fee: boolean): PaymentResultStatus;
-    /** Get list of all transactions wallet has been involved in */
-    static declare function getTransactionHistory(): Array<TransactionRecord>;
     /**
      * Get the wallet transaction for the hash
      * Will throw if not found
@@ -97,8 +91,6 @@ declare class NJSILibraryController
     static declare function getTransaction(txHash: string): TransactionRecord;
     /** resubmit a transaction to the network, returns the raw hex of the transaction as a string or empty on fail */
     static declare function resendTransaction(txHash: string): string;
-    /** Get list of wallet mutations */
-    static declare function getMutationHistory(): Array<MutationRecord>;
     /** Get list of all address book entries */
     static declare function getAddressBookRecords(): Array<AddressRecord>;
     /** Add a record to the address book */
@@ -120,6 +112,55 @@ declare class NJSILibraryController
     static declare function getMonitoringStats(): MonitorRecord;
     static declare function RegisterMonitorListener(listener: NJSMonitorListener);
     static declare function UnregisterMonitorListener(listener: NJSMonitorListener);
+    /**
+     * Get list of wallet mutations
+     *NB! This is SPV specific, non SPV wallets should use account specific getMutationHistory on an accounts controller instead
+     */
+    static declare function getMutationHistory(): Array<MutationRecord>;
+    /**
+     * Get list of all transactions wallet has been involved in
+     *NB! This is SPV specific, non SPV wallets should use account specific getTransactionHistory on an accounts controller instead
+     */
+    static declare function getTransactionHistory(): Array<TransactionRecord>;
+    /**
+     * Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait.
+     *NB! This is SPV specific, non SPV wallets should use HaveUnconfirmedFunds on wallet controller instead
+     */
+    static declare function HaveUnconfirmedFunds(): boolean;
+    /**
+     * Check current wallet balance (including unconfirmed funds)
+     *NB! This is SPV specific, non SPV wallets should use GetBalance on wallet controller instead
+     */
+    static declare function GetBalance(): number;
+}
+/**
+ * Controller to perform functions at a wallet level (e.g. get balance of the entire wallet)
+ * For per account functionality see accounts_controller
+ */
+declare class NJSIWalletController
+{
+    /** Set listener to be notified of wallet events */
+    static declare function setListener(networklistener: NJSIWalletListener);
+    /** Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait. */
+    static declare function HaveUnconfirmedFunds(): boolean;
+    /** Check current wallet balance, as a single simple number that includes confirmed/unconfirmed/immature funds */
+    static declare function GetBalanceSimple(): number;
+    /** Check current wallet balance */
+    static declare function GetBalance(): BalanceRecord;
+}
+/** Interface to receive wallet level events */
+declare class NJSIWalletListener
+{
+    declare function notifyBalanceChange(new_balance: BalanceRecord);
+    /**
+     * Notification of new mutations.
+     * If self_committed it is due to a call to performPaymentToRecipient, else it is because of a transaction
+     * reached us in another way. In general this will be because we received funds from someone, hower there are
+     * also cases where funds is send from our wallet while !self_committed (for example by a linked desktop wallet
+     * or another wallet instance using the same keys as ours).
+     */
+    declare function notifyNewMutation(mutation: MutationRecord, self_committed: boolean);
+    declare function notifyUpdatedTransaction(transaction: TransactionRecord);
 }
 /** Monitoring events */
 declare class NJSMonitorListener

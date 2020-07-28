@@ -4,6 +4,8 @@
 #include <napi.h>
 
 #include "NJSILibraryController.hpp"
+#include "NJSIWalletController.hpp"
+#include "NJSIWalletListener.hpp"
 #include "NJSMonitorListener.hpp"
 #include "NJSILibraryListener.hpp"
 #include "NJSIRpcController.hpp"
@@ -19,6 +21,8 @@
 Napi::Object InitAll(Napi::Env env, Napi::Object exports)
 {
     NJSILibraryController::Init(env, exports);
+    NJSIWalletController::Init(env, exports);
+    NJSIWalletListener::Init(env, exports);
     NJSMonitorListener::Init(env, exports);
     NJSILibraryListener::Init(env, exports);
     NJSIRpcController::Init(env, exports);
