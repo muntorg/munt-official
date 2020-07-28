@@ -1,15 +1,15 @@
 <template>
-  <section class="account-page-layout flex-row" :class="accountPageLayoutClass">
+  <section class="novo-page-layout flex-row" :class="novoPageLayoutClass">
     <section class="main flex-col">
-      <section class="header">
+      <section class="header" v-if="hasHeaderSlot">
         <div class="vertical-center">
           <slot name="header"></slot>
         </div>
       </section>
-      <section class="content scrollable">
+      <section class="content scrollable" :class="contentClass">
         <slot></slot>
       </section>
-      <section class="footer">
+      <section class="footer" v-if="hasFooterSlot">
         <div class="vertical-center">
           <slot name="footer"></slot>
         </div>
@@ -29,13 +29,25 @@
 
 <script>
 export default {
-  name: "AccountPageLayout",
+  name: "NovoPageLayout",
   props: {
     rightSection: null
   },
   computed: {
-    accountPageLayoutClass() {
+    novoPageLayoutClass() {
       return this.rightSection ? "right-section-opened" : "";
+    },
+    contentClass() {
+      let classes = [];
+      if (!this.hasHeaderSlot) classes.push("no-header");
+      if (!this.hasFooterSlot) classes.push("no-footer");
+      return classes;
+    },
+    hasHeaderSlot() {
+      return !!this.$slots.header;
+    },
+    hasFooterSlot() {
+      return !!this.$slots.footer;
     }
   },
   methods: {
@@ -47,7 +59,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.account-page-layout {
+.novo-page-layout {
   height: 100vh;
 
   & > .main {
@@ -94,6 +106,18 @@ export default {
   & > .content {
     flex: 0 0 calc(100% - var(--header-height) - var(--footer-height));
     padding: 24px;
+
+    &.no-header {
+      flex: 0 0 calc(100% - var(--footer-height));
+    }
+
+    &.no-footer {
+      flex: 0 0 calc(100% - var(--header-height));
+    }
+
+    &.no-header.no-footer {
+      flex: 0 0 100%;
+    }
   }
 
   & > .footer {

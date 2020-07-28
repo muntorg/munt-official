@@ -1,5 +1,5 @@
 <template>
-  <account-page-layout class="setup-mining">
+  <novo-page-layout class="setup-mining">
     <template v-slot:header>
       <section class="header flex-row">
         <div class="info">
@@ -32,13 +32,12 @@
         </button>
       </section>
     </template>
-  </account-page-layout>
+  </novo-page-layout>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
 import UnityBackend from "../../../unity/UnityBackend";
-import AccountPageLayout from "../AccountPageLayout";
 
 export default {
   name: "SetupMining",
@@ -47,9 +46,6 @@ export default {
       password: null,
       isPasswordInvalid: false
     };
-  },
-  components: {
-    AccountPageLayout
   },
   computed: {
     ...mapState(["walletPassword"]),

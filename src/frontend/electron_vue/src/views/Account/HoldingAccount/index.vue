@@ -1,5 +1,5 @@
 <template>
-  <account-page-layout
+  <novo-page-layout
     class="holding-account"
     :right-section="rightSectionComponent"
     @close-right-section="closeRightSection"
@@ -17,12 +17,10 @@
         </div>
       </section>
     </template>
-  </account-page-layout>
+  </novo-page-layout>
 </template>
 
 <script>
-import AccountPageLayout from "../AccountPageLayout";
-
 export default {
   name: "HoldingAccount",
   props: {
@@ -33,9 +31,6 @@ export default {
       rightSection: null,
       rightSectionComponent: null
     };
-  },
-  components: {
-    AccountPageLayout
   },
   methods: {
     closeRightSection() {

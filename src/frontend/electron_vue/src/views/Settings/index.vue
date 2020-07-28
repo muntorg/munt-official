@@ -1,7 +1,7 @@
 <template>
   <div class="settings-view flex-col">
     <div class="header flex-row">
-      <div class="back">
+      <div class="back" v-if="false">
         <span>
           <fa-icon :icon="['fal', 'arrow-left']" />
           {{ $t("buttons.back") }}

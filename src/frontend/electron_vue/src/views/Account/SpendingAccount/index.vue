@@ -1,5 +1,5 @@
 <template>
-  <account-page-layout
+  <novo-page-layout
     class="spending-account"
     :right-section="rightSectionComponent"
     @close-right-section="closeRightSection"
@@ -40,12 +40,11 @@
         </span>
       </section>
     </template>
-  </account-page-layout>
+  </novo-page-layout>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import AccountPageLayout from "../AccountPageLayout";
 
 import MutationList from "./MutationList";
 import SendNovo from "./SendNovo";
@@ -63,7 +62,6 @@ export default {
     };
   },
   components: {
-    AccountPageLayout,
     MutationList
   },
   computed: {

@@ -1,5 +1,5 @@
 <template>
-  <account-page-layout class="account-view">
+  <novo-page-layout class="account-view">
     <template v-slot:header>
       <section class="header flex-row">
         <div class="info">
@@ -26,22 +26,17 @@
         </button>
       </section>
     </template>
-  </account-page-layout>
+  </novo-page-layout>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import UnityBackend from "../../../unity/UnityBackend";
 
-import AccountPageLayout from "../AccountPageLayout";
-
 export default {
   name: "MiningAccount",
   props: {
     account: null
-  },
-  components: {
-    AccountPageLayout
   },
   computed: {
     ...mapState(["generationActive", "generationStats"])
