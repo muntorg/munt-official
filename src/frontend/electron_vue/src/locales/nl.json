@@ -1,4 +1,11 @@
 {
+  "accounts_section": {
+    "accounts": "Rekeningen",
+    "categories": {
+      "spending": "Spending",
+      "holding": "Holding"
+    }
+  },
   "buttons": {
     "back": "Terug",
     "change_password": "Verander wachtwoord",

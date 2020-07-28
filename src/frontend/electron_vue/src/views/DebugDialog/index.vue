@@ -1,6 +1,6 @@
 <template>
   <div class="app-debug">
-    <div class="topbar">
+    <div class="topbar flex-row">
       <div
         v-for="(tab, index) in tabs"
         :key="index"
@@ -55,9 +55,6 @@ export default {
   height: 48px;
   background-color: #000;
   color: #fff;
-
-  display: flex;
-  flex-direction: row;
 
   & div {
     cursor: pointer;

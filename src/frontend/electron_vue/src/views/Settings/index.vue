@@ -1,6 +1,6 @@
 <template>
-  <div class="settings-view">
-    <div class="header">
+  <div class="settings-view flex-col">
+    <div class="header flex-row">
       <div class="back">
         <span>
           <fa-icon :icon="['fal', 'arrow-left']" />
@@ -16,18 +16,10 @@
 </template>
 
 <style scoped lang="less">
-.settings-view {
-  display: flex;
-  flex-direction: column;
-}
-
 .header {
   height: var(--header-height);
   border-bottom: 1px solid var(--main-border-color);
   padding: 15px 30px 0 30px;
-
-  display: flex;
-  flex-direction: row;
 
   & .back {
     font-weight: 300;

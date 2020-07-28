@@ -1,40 +1,47 @@
 <template>
-  <div class="account-view">
-    <div class="main-section">
-      <div class="header">
+  <account-page-layout class="account-view">
+    <template v-slot:header>
+      <section class="header flex-row">
         <div class="info">
-          <div class="label">{{ account.label }}</div>
-          <div class="balance">{{ account.balance }}</div>
+          <div class="label ellipsis">{{ account.label }}</div>
+          <div class="balance ellipsis">{{ account.balance }}</div>
         </div>
-        <div class="settings" v-if="false">
+        <div class="settings flex-col" v-if="false">
           <span>
             <fa-icon :icon="['fal', 'cog']" />
           </span>
         </div>
-      </div>
-      <div class="content">
-        <h4>active: {{ generationActive }}</h4>
-        <h4>stats:</h4>
-        <pre>{{ generationStats }}</pre>
-      </div>
-      <div class="footer">
+      </section>
+    </template>
+
+    <h4>active: {{ generationActive }}</h4>
+    <h4>stats:</h4>
+    <pre>{{ generationStats }}</pre>
+
+    <template v-slot:footer>
+      <section class="footer">
         <button @click="toggleGeneration">
           <span v-if="generationActive">{{ $t("buttons.stop") }}</span>
           <span v-else>{{ $t("buttons.start") }}</span>
         </button>
-      </div>
-    </div>
-  </div>
+      </section>
+    </template>
+  </account-page-layout>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import UnityBackend from "../../../unity/UnityBackend";
 
+import AccountPageLayout from "../AccountPageLayout";
+
 export default {
   name: "MiningAccount",
   props: {
     account: null
+  },
+  components: {
+    AccountPageLayout
   },
   computed: {
     ...mapState(["generationActive", "generationStats"])
@@ -55,46 +62,25 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.account-view {
-  height: 100vh;
-}
-
-.main-section {
-  height: 100%;
-  flex: 1;
-
-  display: flex;
-  flex-direction: column;
-
+::v-deep {
   & .header {
-    height: var(--header-height);
-    border-bottom: 1px solid var(--main-border-color);
-    padding: 11px 24px 0 24px;
-    white-space: nowrap;
-    overflow: hidden;
+    & > .info {
+      width: calc(100% - 48px - 26px);
+      padding-right: 10px;
 
-    display: flex;
-    flex-direction: row;
-    overflow: hidden;
-
-    & .info {
-      & .label {
+      & > .label {
         font-size: 1.1em;
         font-weight: 500;
         line-height: 20px;
       }
-      & .balance {
+
+      & > .balance {
         line-height: 20px;
       }
-
-      flex: 1;
     }
 
-    & .settings {
-      margin: 2px -10px 0 0;
+    & > .settings {
       font-size: 16px;
-      display: flex;
-      flex-direction: column;
 
       & span {
         padding: 10px;
@@ -107,34 +93,7 @@ export default {
     }
   }
 
-  & .content {
-    flex: 1;
-    padding: 24px;
-    overflow-y: hidden;
-
-    --scrollbarBG: #fff;
-    --thumbBG: #ddd;
-
-    &:hover {
-      overflow-y: overlay;
-    }
-    &::-webkit-scrollbar {
-      width: 14px;
-    }
-    &::-webkit-scrollbar-track {
-      background: var(--scrollbarBG);
-    }
-    &::-webkit-scrollbar-thumb {
-      border: 3px solid var(--scrollbarBG);
-      background-color: var(--thumbBG);
-      border-radius: 14px;
-    }
-  }
-
   & .footer {
-    height: var(--footer-height);
-    line-height: var(--footer-height);
-    border-top: 1px solid var(--main-border-color);
     text-align: right;
     padding-right: 5px;
   }

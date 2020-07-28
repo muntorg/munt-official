@@ -1,21 +1,27 @@
 <template>
-  <div class="account-view" v-if="account" :class="accountViewClass">
-    <div class="main-section">
-      <div class="header">
+  <account-page-layout
+    class="spending-account"
+    :right-section="rightSectionComponent"
+    @close-right-section="closeRightSection"
+  >
+    <template v-slot:header>
+      <section class="header flex-row">
         <div class="info">
-          <div class="label">{{ account.label }}</div>
-          <div class="balance">{{ account.balance }}</div>
+          <div class="label ellipsis">{{ account.label }}</div>
+          <div class="balance ellipsis">{{ account.balance }}</div>
         </div>
-        <div class="settings">
+        <div class="settings flex-col" v-if="false">
           <span>
             <fa-icon :icon="['fal', 'cog']" />
           </span>
         </div>
-      </div>
-      <div class="content">
-        <mutation-list :mutations="mutations" />
-      </div>
-      <div class="footer">
+      </section>
+    </template>
+
+    <mutation-list :mutations="mutations" />
+
+    <template v-slot:footer>
+      <section class="footer">
         <span
           class="button"
           @click="setRightSection('Send')"
@@ -32,24 +38,15 @@
           <fa-icon :icon="['fal', 'arrow-to-bottom']" />
           {{ $t("buttons.receive") }}
         </span>
-      </div>
-    </div>
-    <div class="right-section" v-if="rightSection">
-      <div class="header">
-        <div class="title">
-          {{ rightSectionTitle }}
-        </div>
-        <div class="close" @click="rightSection = null">
-          <fa-icon :icon="['fal', 'times']" />
-        </div>
-      </div>
-      <component class="component" :is="rightSectionComponent" />
-    </div>
-  </div>
+      </section>
+    </template>
+  </account-page-layout>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import AccountPageLayout from "../AccountPageLayout";
+
 import MutationList from "./MutationList";
 import SendNovo from "./SendNovo";
 import ReceiveNovo from "./ReceiveNovo";
@@ -66,91 +63,58 @@ export default {
     };
   },
   components: {
-    MutationList,
-    SendNovo,
-    ReceiveNovo
+    AccountPageLayout,
+    MutationList
   },
   computed: {
-    ...mapState(["mutations"]),
-    accountViewClass() {
-      return this.rightSection ? "right-section-active" : "";
-    },
-    rightSectionTitle() {
-      switch (this.rightSection) {
-        case "Send":
-          return this.$t("buttons.send");
-        case "Receive":
-          return this.$t("buttons.receive");
-        default:
-          return null;
-      }
-    }
+    ...mapState(["mutations"])
   },
   methods: {
+    closeRightSection() {
+      this.rightSection = null;
+      this.rightSectionComponent = null;
+    },
     setRightSection(name) {
+      this.rightSection = name;
       switch (name) {
         case "Send":
-          this.rightSectionComponent = SendNovo;
+          this.rightSectionComponent = {
+            title: this.$t("buttons.send"),
+            component: SendNovo
+          };
           break;
         case "Receive":
-          this.rightSectionComponent = ReceiveNovo;
+          this.rightSectionComponent = {
+            title: this.$t("buttons.receive"),
+            component: ReceiveNovo
+          };
           break;
       }
-      this.rightSection = name;
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-.account-view {
-  height: 100vh;
-  display: flex;
-  flex-direction: row;
-
-  &.right-section-active {
-    & .header .settings {
-      display: none;
-    }
-  }
-}
-
-.main-section {
-  height: 100%;
-  flex: 1;
-
-  display: flex;
-  flex-direction: column;
-
+::v-deep {
   & .header {
-    height: var(--header-height);
-    border-bottom: 1px solid var(--main-border-color);
-    padding: 11px 24px 0 24px;
-    white-space: nowrap;
-    overflow: hidden;
+    & > .info {
+      width: calc(100% - 48px - 26px);
+      padding-right: 10px;
 
-    display: flex;
-    flex-direction: row;
-    overflow: hidden;
-
-    & .info {
-      & .label {
+      & > .label {
         font-size: 1.1em;
         font-weight: 500;
         line-height: 20px;
       }
-      & .balance {
+
+      & > .balance {
         line-height: 20px;
       }
-
-      flex: 1;
     }
 
-    & .settings {
-      margin: 2px -10px 0 0;
+    & > .settings {
       font-size: 16px;
-      display: flex;
-      flex-direction: column;
 
       & span {
         padding: 10px;
@@ -163,34 +127,7 @@ export default {
     }
   }
 
-  & .content {
-    flex: 1;
-    padding: 24px;
-    overflow-y: hidden;
-
-    --scrollbarBG: #fff;
-    --thumbBG: #ddd;
-
-    &:hover {
-      overflow-y: overlay;
-    }
-    &::-webkit-scrollbar {
-      width: 14px;
-    }
-    &::-webkit-scrollbar-track {
-      background: var(--scrollbarBG);
-    }
-    &::-webkit-scrollbar-thumb {
-      border: 3px solid var(--scrollbarBG);
-      background-color: var(--thumbBG);
-      border-radius: 14px;
-    }
-  }
-
   & .footer {
-    height: var(--footer-height);
-    border-top: 1px solid var(--main-border-color);
-    padding: 10px 0;
     text-align: center;
 
     & svg {
@@ -204,7 +141,7 @@ export default {
       line-height: 32px;
       font-weight: 500;
       font-size: 1em;
-      color: #009572;
+      color: var(--primary-color);
       text-align: center;
       cursor: pointer;
 
@@ -212,34 +149,6 @@ export default {
         background-color: #f5f5f5;
       }
     }
-  }
-}
-
-.right-section {
-  width: 50%;
-  min-width: 380px;
-  background-color: #f5f5f5;
-  padding: 0 24px;
-
-  & .header {
-    line-height: 62px;
-    font-size: 1.1em;
-    font-weight: 500;
-
-    display: flex;
-    flex-direction: row;
-
-    & .title {
-      flex: 1;
-    }
-
-    & .close {
-      cursor: pointer;
-    }
-  }
-
-  & .component {
-    height: calc(100% - 72px);
   }
 }
 </style>

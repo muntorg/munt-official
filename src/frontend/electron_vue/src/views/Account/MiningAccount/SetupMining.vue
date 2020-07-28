@@ -1,43 +1,44 @@
 <template>
-  <div class="setup-mining">
-    <div class="main-section">
-      <div class="header">
+  <account-page-layout class="setup-mining">
+    <template v-slot:header>
+      <section class="header flex-row">
         <div class="info">
           <div class="label">
             {{ $t("setup_mining.title") }}
           </div>
         </div>
-      </div>
-      <div class="content">
-        <novo-section>
-          {{ $t("setup_mining.information") }}
-        </novo-section>
-        <novo-form-field :title="$t('common.password')">
-          <input
-            type="password"
-            v-model="password"
-            :class="computedStatus"
-            @keydown="createMiningAccountOnEnter"
-          />
-        </novo-form-field>
-      </div>
-      <div class="footer">
-        <novo-button-section>
-          <button
-            @click="createMiningAccount(password)"
-            :disabled="!isEnableMiningButtonEnabled"
-          >
-            {{ $t("buttons.create_mining_account") }}
-          </button>
-        </novo-button-section>
-      </div>
-    </div>
-  </div>
+      </section>
+    </template>
+
+    <novo-section>
+      {{ $t("setup_mining.information") }}
+    </novo-section>
+    <novo-form-field :title="$t('common.password')">
+      <input
+        type="password"
+        v-model="password"
+        :class="computedStatus"
+        @keydown="createMiningAccountOnEnter"
+      />
+    </novo-form-field>
+
+    <template v-slot:footer>
+      <section class="footer">
+        <button
+          @click="createMiningAccount(password)"
+          :disabled="!isEnableMiningButtonEnabled"
+        >
+          {{ $t("buttons.create_mining_account") }}
+        </button>
+      </section>
+    </template>
+  </account-page-layout>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import UnityBackend from "../unity/UnityBackend";
+import UnityBackend from "../../../unity/UnityBackend";
+import AccountPageLayout from "../AccountPageLayout";
 
 export default {
   name: "SetupMining",
@@ -46,6 +47,9 @@ export default {
       password: null,
       isPasswordInvalid: false
     };
+  },
+  components: {
+    AccountPageLayout
   },
   computed: {
     ...mapState(["walletPassword"]),
@@ -86,24 +90,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.setup-mining {
-  height: 100vh;
-}
-
-.main-section {
-  height: 100%;
-  flex: 1;
-
-  display: flex;
-  flex-direction: column;
-
+::v-deep {
   & .header {
-    height: var(--header-height);
-    border-bottom: 1px solid var(--main-border-color);
-    padding: 11px 24px 0 24px;
+    & > .info {
+      width: calc(100% - 48px - 26px);
+      padding-right: 10px;
 
-    & .info {
-      & .label {
+      & > .label {
         font-size: 1.1em;
         font-weight: 500;
         line-height: 20px;
@@ -111,18 +104,9 @@ export default {
     }
   }
 
-  & .content {
-    flex: 1;
-    padding: 24px;
-    overflow-y: hidden;
-  }
-
   & .footer {
-    height: var(--footer-height);
-    line-height: var(--footer-height);
-    border-top: 1px solid var(--main-border-color);
-    text-align: center;
-    padding-right: 10px;
+    text-align: right;
+    padding-right: 5px;
   }
 }
 </style>

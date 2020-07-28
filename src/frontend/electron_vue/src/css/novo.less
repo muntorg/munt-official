@@ -142,3 +142,56 @@ button {
 .important {
   color: var(--error-color);
 }
+
+.ellipsis {
+  text-overflow: ellipsis;
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.scrollable {
+  overflow-y: hidden;
+  
+  &:hover {
+    overflow-y: overlay;
+  }
+  &::-webkit-scrollbar {
+    width: 14px;
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbarBG);
+  }
+  &::-webkit-scrollbar-thumb {
+    border: 3px solid var(--scrollbarBG);
+    background-color: var(--thumbBG);
+    border-radius: 14px;
+  }
+
+  &.dark {
+    &::-webkit-scrollbar-track {
+      background: var(--scrollbarBG-dark);
+    } 
+    &::-webkit-scrollbar-thumb {
+      border: 3px solid var(--scrollbarBG-dark);
+      background-color: var(--thumbBG-dark);
+    }
+  }
+}

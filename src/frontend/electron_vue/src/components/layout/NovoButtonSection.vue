@@ -1,5 +1,5 @@
 <template>
-  <div class="novo-button-section">
+  <div class="novo-button-section flex-row">
     <div class="left">
       <slot name="left" />
     </div>
@@ -19,9 +19,7 @@ export default {
 
 <style lang="less" scoped>
 .novo-button-section {
-  display: flex;
   width: 100%;
-  flex-direction: row;
 
   & .left {
     float: left;

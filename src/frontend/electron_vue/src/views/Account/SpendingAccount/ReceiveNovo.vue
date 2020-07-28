@@ -1,5 +1,5 @@
 <template>
-  <div class="receive-novo">
+  <div class="receive-novo flex-col">
     <div class="main">
       <h4>{{ $t("receive_novo.your_address") }}</h4>
       <div class="qr" @click="copyAddress">
@@ -48,9 +48,6 @@ export default {
 <style lang="less" scoped>
 .receive-novo {
   height: 100%;
-
-  display: flex;
-  flex-direction: column;
 
   & .main {
     flex: 1;

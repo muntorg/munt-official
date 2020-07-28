@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-mask" @click="closeModal" v-if="showModal">
+  <div class="modal-mask flex-col" @click="closeModal" v-if="showModal">
     <div class="modal-container" @click.stop>
       <div class="header">
         <span :class="type">{{ title }}</span>
@@ -80,9 +80,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.5);
   margin-top: 0;
   margin-left: 0;
-  display: flex;
   align-items: center;
-  flex-direction: column;
   justify-content: center;
   transition: opacity 0.3s ease;
   z-index: 9998;
