@@ -1106,6 +1106,17 @@ UriRecipient ILibraryController::IsValidRecipient(const UriRecord & request)
     return UriRecipient(true, address, label, description, amount);
 }
 
+bool ILibraryController::IsValidNativeAddress(const std::string& address)
+{
+    CNativeAddress addr(address);
+    return addr.IsValid();
+}
+
+bool ILibraryController::IsValidBitcoinAddress(const std::string& address)
+{
+    CNativeAddress addr(address);
+    return addr.IsValidBitcoin();
+}
 
 int64_t ILibraryController::feeForRecipient(const UriRecipient & request)
 {

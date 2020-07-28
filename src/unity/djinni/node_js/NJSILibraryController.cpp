@@ -623,6 +623,46 @@ Napi::Value NJSILibraryController::IsValidRecipient(const Napi::CallbackInfo& in
 
     return arg_1;
 }
+Napi::Value NJSILibraryController::IsValidNativeAddress(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 1)
+    {
+        Napi::Error::New(env, "NJSILibraryController::IsValidNativeAddress needs 1 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+
+    auto result = ILibraryController::IsValidNativeAddress(arg_0);
+
+    //Wrap result in node object
+    auto arg_1 = Napi::Boolean::New(env, result);
+
+    return arg_1;
+}
+Napi::Value NJSILibraryController::IsValidBitcoinAddress(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 1)
+    {
+        Napi::Error::New(env, "NJSILibraryController::IsValidBitcoinAddress needs 1 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+
+    auto result = ILibraryController::IsValidBitcoinAddress(arg_0);
+
+    //Wrap result in node object
+    auto arg_1 = Napi::Boolean::New(env, result);
+
+    return arg_1;
+}
 Napi::Value NJSILibraryController::feeForRecipient(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -1291,6 +1331,8 @@ Napi::Object NJSILibraryController::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("ChangePassword", &NJSILibraryController::ChangePassword),
     InstanceMethod("DoRescan", &NJSILibraryController::DoRescan),
     InstanceMethod("IsValidRecipient", &NJSILibraryController::IsValidRecipient),
+    InstanceMethod("IsValidNativeAddress", &NJSILibraryController::IsValidNativeAddress),
+    InstanceMethod("IsValidBitcoinAddress", &NJSILibraryController::IsValidBitcoinAddress),
     InstanceMethod("feeForRecipient", &NJSILibraryController::feeForRecipient),
     InstanceMethod("performPaymentToRecipient", &NJSILibraryController::performPaymentToRecipient),
     InstanceMethod("getTransaction", &NJSILibraryController::getTransaction),

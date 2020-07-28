@@ -150,6 +150,12 @@ extern int32_t const DBILibraryControllerVersion;
 /** Check if text/address is something we are capable of sending money too */
 + (nonnull DBUriRecipient *)IsValidRecipient:(nonnull DBUriRecord *)request;
 
+/** Check if text/address is a native (to our blockchain) address */
++ (BOOL)IsValidNativeAddress:(nonnull NSString *)address;
+
+/** Check if text/address is a valid bitcoin address */
++ (BOOL)IsValidBitcoinAddress:(nonnull NSString *)address;
+
 /** Compute the fee required to send amount to given recipient */
 + (int64_t)feeForRecipient:(nonnull DBUriRecipient *)request;
 

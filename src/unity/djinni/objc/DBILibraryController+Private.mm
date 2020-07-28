@@ -285,6 +285,20 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (BOOL)IsValidNativeAddress:(nonnull NSString *)address {
+    try {
+        auto objcpp_result_ = ::ILibraryController::IsValidNativeAddress(::djinni::String::toCpp(address));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)IsValidBitcoinAddress:(nonnull NSString *)address {
+    try {
+        auto objcpp_result_ = ::ILibraryController::IsValidBitcoinAddress(::djinni::String::toCpp(address));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (int64_t)feeForRecipient:(nonnull DBUriRecipient *)request {
     try {
         auto objcpp_result_ = ::ILibraryController::feeForRecipient(::djinni_generated::UriRecipient::toCpp(request));

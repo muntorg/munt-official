@@ -138,6 +138,12 @@ private:
     /** Check if text/address is something we are capable of sending money too */
     Napi::Value IsValidRecipient(const Napi::CallbackInfo& info);
 
+    /** Check if text/address is a native (to our blockchain) address */
+    Napi::Value IsValidNativeAddress(const Napi::CallbackInfo& info);
+
+    /** Check if text/address is a valid bitcoin address */
+    Napi::Value IsValidBitcoinAddress(const Napi::CallbackInfo& info);
+
     /** Compute the fee required to send amount to given recipient */
     Napi::Value feeForRecipient(const Napi::CallbackInfo& info);
 

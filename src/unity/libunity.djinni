@@ -212,6 +212,12 @@ i_library_controller = interface +c {
 
     # Check if text/address is something we are capable of sending money too
     static IsValidRecipient(request : uri_record): uri_recipient;
+    
+    # Check if text/address is a native (to our blockchain) address
+    static IsValidNativeAddress(address : string): bool;
+    
+    # Check if text/address is a valid bitcoin address
+    static IsValidBitcoinAddress(address : string): bool;
 
     # Compute the fee required to send amount to given recipient
     static feeForRecipient(request : uri_recipient) : i64;

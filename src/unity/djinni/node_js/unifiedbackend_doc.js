@@ -80,6 +80,10 @@ declare class NJSILibraryController
     static declare function DoRescan();
     /** Check if text/address is something we are capable of sending money too */
     static declare function IsValidRecipient(request: UriRecord): UriRecipient;
+    /** Check if text/address is a native (to our blockchain) address */
+    static declare function IsValidNativeAddress(address: string): boolean;
+    /** Check if text/address is a valid bitcoin address */
+    static declare function IsValidBitcoinAddress(address: string): boolean;
     /** Compute the fee required to send amount to given recipient */
     static declare function feeForRecipient(request: UriRecipient): number;
     /** Attempt to pay a recipient, will throw on failure with description */

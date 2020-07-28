@@ -141,6 +141,12 @@ public:
     /** Check if text/address is something we are capable of sending money too */
     static UriRecipient IsValidRecipient(const UriRecord & request);
 
+    /** Check if text/address is a native (to our blockchain) address */
+    static bool IsValidNativeAddress(const std::string & address);
+
+    /** Check if text/address is a valid bitcoin address */
+    static bool IsValidBitcoinAddress(const std::string & address);
+
     /** Compute the fee required to send amount to given recipient */
     static int64_t feeForRecipient(const UriRecipient & request);
 

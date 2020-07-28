@@ -305,6 +305,24 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_IsValidNativeAddress(JNIEnv* jniEnv, jobject /*this*/, jstring j_address)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::ILibraryController::IsValidNativeAddress(::djinni::String::toCpp(jniEnv, j_address));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_IsValidBitcoinAddress(JNIEnv* jniEnv, jobject /*this*/, jstring j_address)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::ILibraryController::IsValidBitcoinAddress(::djinni::String::toCpp(jniEnv, j_address));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jlong JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_feeForRecipient(JNIEnv* jniEnv, jobject /*this*/, jobject j_request)
 {
     try {
