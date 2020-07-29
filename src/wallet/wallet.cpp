@@ -966,6 +966,9 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose, bool fSelf
     CWalletDB walletdb(*dbw, "r+", fFlushOnClose);
 
     uint256 hash = wtxIn.GetHash();
+    // Refuse to add a null hash to the wallet, as this flags the wallet as corrupted on restart
+    if (hash.IsNull())
+        return false;
     maintainHashMap(wtxIn, hash);
 
     // Inserts only if not already there, returns tx inserted or tx found

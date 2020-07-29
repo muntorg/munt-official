@@ -1135,6 +1135,10 @@ bool CWallet::SignAndSubmitTransaction(CReserveKeyOrScript& changeReserveKey, CM
  */
 bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKeyOrScript& reservekey, CConnman* connman, CValidationState& state)
 {
+    // Refuse to add a null hash to the wallet, as this flags the wallet as corrupted on restart
+    if(wtxNew.GetHash().IsNull())
+        return false;
+    
     {
         LOCK2(cs_main, cs_wallet);
         LogPrintf("CommitTransaction:\n%s", wtxNew.tx->ToString());
