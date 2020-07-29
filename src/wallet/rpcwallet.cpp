@@ -481,6 +481,10 @@ static void SendMoney(CWallet * const pwallet, CAccount* fromAccount, const CTxD
                 throw JSONRPCError(RPC_WALLET_ERROR, strError);
             }
         }
+        else
+        {
+            throw JSONRPCError(RPC_WALLET_ERROR, strError);
+        }
     }
     CValidationState state;
     if (!pwallet->CommitTransaction(wtxNew, reservekey, g_connman.get(), state)) {
