@@ -36,7 +36,7 @@ Napi::Value NJSIGenerationController::startGeneration(const Napi::CallbackInfo& 
     auto result = IGenerationController::startGeneration(arg_0,arg_1);
 
     //Wrap result in node object
-    auto arg_2 = Napi::Boolean::New(env, result);
+    auto arg_2 = Napi::Value::From(env, result);
 
     return arg_2;
 }
@@ -55,7 +55,7 @@ Napi::Value NJSIGenerationController::stopGeneration(const Napi::CallbackInfo& i
     auto result = IGenerationController::stopGeneration();
 
     //Wrap result in node object
-    auto arg_0 = Napi::Boolean::New(env, result);
+    auto arg_0 = Napi::Value::From(env, result);
 
     return arg_0;
 }
@@ -113,7 +113,7 @@ Napi::Value NJSIGenerationController::setGenerationOverrideAddress(const Napi::C
     auto result = IGenerationController::setGenerationOverrideAddress(arg_0);
 
     //Wrap result in node object
-    auto arg_1 = Napi::Boolean::New(env, result);
+    auto arg_1 = Napi::Value::From(env, result);
 
     return arg_1;
 }

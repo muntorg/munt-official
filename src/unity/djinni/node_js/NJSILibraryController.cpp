@@ -47,7 +47,7 @@ Napi::Value NJSILibraryController::InitUnityLib(const Napi::CallbackInfo& info) 
     auto result = ILibraryController::InitUnityLib(arg_0,arg_1,arg_2,arg_3,arg_4,arg_5,arg_6,arg_7);
 
     //Wrap result in node object
-    auto arg_8 = Napi::Number::New(env, result);
+    auto arg_8 = Napi::Value::From(env, result);
 
     return arg_8;
 }
@@ -90,7 +90,7 @@ Napi::Value NJSILibraryController::InitWalletFromRecoveryPhrase(const Napi::Call
     auto result = ILibraryController::InitWalletFromRecoveryPhrase(arg_0,arg_1);
 
     //Wrap result in node object
-    auto arg_2 = Napi::Boolean::New(env, result);
+    auto arg_2 = Napi::Value::From(env, result);
 
     return arg_2;
 }
@@ -111,7 +111,7 @@ Napi::Value NJSILibraryController::ContinueWalletFromRecoveryPhrase(const Napi::
     auto result = ILibraryController::ContinueWalletFromRecoveryPhrase(arg_0,arg_1);
 
     //Wrap result in node object
-    auto arg_2 = Napi::Boolean::New(env, result);
+    auto arg_2 = Napi::Value::From(env, result);
 
     return arg_2;
 }
@@ -132,7 +132,7 @@ Napi::Value NJSILibraryController::InitWalletLinkedFromURI(const Napi::CallbackI
     auto result = ILibraryController::InitWalletLinkedFromURI(arg_0,arg_1);
 
     //Wrap result in node object
-    auto arg_2 = Napi::Boolean::New(env, result);
+    auto arg_2 = Napi::Value::From(env, result);
 
     return arg_2;
 }
@@ -153,7 +153,7 @@ Napi::Value NJSILibraryController::ContinueWalletLinkedFromURI(const Napi::Callb
     auto result = ILibraryController::ContinueWalletLinkedFromURI(arg_0,arg_1);
 
     //Wrap result in node object
-    auto arg_2 = Napi::Boolean::New(env, result);
+    auto arg_2 = Napi::Value::From(env, result);
 
     return arg_2;
 }
@@ -175,7 +175,7 @@ Napi::Value NJSILibraryController::InitWalletFromAndroidLegacyProtoWallet(const 
     auto result = ILibraryController::InitWalletFromAndroidLegacyProtoWallet(arg_0,arg_1,arg_2);
 
     //Wrap result in node object
-    auto arg_3 = Napi::Boolean::New(env, result);
+    auto arg_3 = Napi::Value::From(env, result);
 
     return arg_3;
 }
@@ -216,7 +216,7 @@ Napi::Value NJSILibraryController::IsValidLinkURI(const Napi::CallbackInfo& info
     auto result = ILibraryController::IsValidLinkURI(arg_0);
 
     //Wrap result in node object
-    auto arg_1 = Napi::Boolean::New(env, result);
+    auto arg_1 = Napi::Value::From(env, result);
 
     return arg_1;
 }
@@ -237,7 +237,7 @@ Napi::Value NJSILibraryController::ReplaceWalletLinkedFromURI(const Napi::Callba
     auto result = ILibraryController::ReplaceWalletLinkedFromURI(arg_0,arg_1);
 
     //Wrap result in node object
-    auto arg_2 = Napi::Boolean::New(env, result);
+    auto arg_2 = Napi::Value::From(env, result);
 
     return arg_2;
 }
@@ -256,7 +256,7 @@ Napi::Value NJSILibraryController::EraseWalletSeedsAndAccounts(const Napi::Callb
     auto result = ILibraryController::EraseWalletSeedsAndAccounts();
 
     //Wrap result in node object
-    auto arg_0 = Napi::Boolean::New(env, result);
+    auto arg_0 = Napi::Value::From(env, result);
 
     return arg_0;
 }
@@ -276,7 +276,7 @@ Napi::Value NJSILibraryController::IsValidRecoveryPhrase(const Napi::CallbackInf
     auto result = ILibraryController::IsValidRecoveryPhrase(arg_0);
 
     //Wrap result in node object
-    auto arg_1 = Napi::Boolean::New(env, result);
+    auto arg_1 = Napi::Value::From(env, result);
 
     return arg_1;
 }
@@ -370,7 +370,7 @@ Napi::Value NJSILibraryController::QRImageFromString(const Napi::CallbackInfo& i
 
     //Wrap result in node object
     auto arg_2 = Napi::Object::New(env);
-    auto arg_2_1 = Napi::Number::New(env, result.width);
+    auto arg_2_1 = Napi::Value::From(env, result.width);
     arg_2.Set("width", arg_2_1);
     auto arg_2_2 = Napi::Array::New(env);
     for(size_t arg_2_2_id = 0; arg_2_2_id < result.pixel_data.size(); arg_2_2_id++)
@@ -437,7 +437,7 @@ Napi::Value NJSILibraryController::IsMnemonicWallet(const Napi::CallbackInfo& in
     auto result = ILibraryController::IsMnemonicWallet();
 
     //Wrap result in node object
-    auto arg_0 = Napi::Boolean::New(env, result);
+    auto arg_0 = Napi::Value::From(env, result);
 
     return arg_0;
 }
@@ -457,7 +457,7 @@ Napi::Value NJSILibraryController::IsMnemonicCorrect(const Napi::CallbackInfo& i
     auto result = ILibraryController::IsMnemonicCorrect(arg_0);
 
     //Wrap result in node object
-    auto arg_1 = Napi::Boolean::New(env, result);
+    auto arg_1 = Napi::Value::From(env, result);
 
     return arg_1;
 }
@@ -502,7 +502,7 @@ Napi::Value NJSILibraryController::UnlockWallet(const Napi::CallbackInfo& info) 
     auto result = ILibraryController::UnlockWallet(arg_0);
 
     //Wrap result in node object
-    auto arg_1 = Napi::Boolean::New(env, result);
+    auto arg_1 = Napi::Value::From(env, result);
 
     return arg_1;
 }
@@ -521,7 +521,7 @@ Napi::Value NJSILibraryController::LockWallet(const Napi::CallbackInfo& info) {
     auto result = ILibraryController::LockWallet();
 
     //Wrap result in node object
-    auto arg_0 = Napi::Boolean::New(env, result);
+    auto arg_0 = Napi::Value::From(env, result);
 
     return arg_0;
 }
@@ -542,7 +542,7 @@ Napi::Value NJSILibraryController::ChangePassword(const Napi::CallbackInfo& info
     auto result = ILibraryController::ChangePassword(arg_0,arg_1);
 
     //Wrap result in node object
-    auto arg_2 = Napi::Boolean::New(env, result);
+    auto arg_2 = Napi::Value::From(env, result);
 
     return arg_2;
 }
@@ -609,7 +609,7 @@ Napi::Value NJSILibraryController::IsValidRecipient(const Napi::CallbackInfo& in
 
     //Wrap result in node object
     auto arg_1 = Napi::Object::New(env);
-    auto arg_1_1 = Napi::Boolean::New(env, result.valid);
+    auto arg_1_1 = Napi::Value::From(env, result.valid);
     arg_1.Set("valid", arg_1_1);
     auto arg_1_2 = Napi::String::New(env, result.address);
     arg_1.Set("address", arg_1_2);
@@ -617,7 +617,7 @@ Napi::Value NJSILibraryController::IsValidRecipient(const Napi::CallbackInfo& in
     arg_1.Set("label", arg_1_3);
     auto arg_1_4 = Napi::String::New(env, result.desc);
     arg_1.Set("desc", arg_1_4);
-    auto arg_1_5 = Napi::Number::New(env, result.amount);
+    auto arg_1_5 = Napi::Value::From(env, result.amount);
     arg_1.Set("amount", arg_1_5);
 
 
@@ -639,7 +639,7 @@ Napi::Value NJSILibraryController::IsValidNativeAddress(const Napi::CallbackInfo
     auto result = ILibraryController::IsValidNativeAddress(arg_0);
 
     //Wrap result in node object
-    auto arg_1 = Napi::Boolean::New(env, result);
+    auto arg_1 = Napi::Value::From(env, result);
 
     return arg_1;
 }
@@ -659,7 +659,7 @@ Napi::Value NJSILibraryController::IsValidBitcoinAddress(const Napi::CallbackInf
     auto result = ILibraryController::IsValidBitcoinAddress(arg_0);
 
     //Wrap result in node object
-    auto arg_1 = Napi::Boolean::New(env, result);
+    auto arg_1 = Napi::Value::From(env, result);
 
     return arg_1;
 }
@@ -720,7 +720,7 @@ Napi::Value NJSILibraryController::feeForRecipient(const Napi::CallbackInfo& inf
     auto result = ILibraryController::feeForRecipient(arg_0);
 
     //Wrap result in node object
-    auto arg_1 = Napi::Number::New(env, result);
+    auto arg_1 = Napi::Value::From(env, result);
 
     return arg_1;
 }
@@ -805,19 +805,19 @@ Napi::Value NJSILibraryController::getTransaction(const Napi::CallbackInfo& info
     auto arg_1 = Napi::Object::New(env);
     auto arg_1_1 = Napi::String::New(env, result.txHash);
     arg_1.Set("txHash", arg_1_1);
-    auto arg_1_2 = Napi::Number::New(env, result.timeStamp);
+    auto arg_1_2 = Napi::Value::From(env, result.timeStamp);
     arg_1.Set("timeStamp", arg_1_2);
-    auto arg_1_3 = Napi::Number::New(env, result.amount);
+    auto arg_1_3 = Napi::Value::From(env, result.amount);
     arg_1.Set("amount", arg_1_3);
-    auto arg_1_4 = Napi::Number::New(env, result.fee);
+    auto arg_1_4 = Napi::Value::From(env, result.fee);
     arg_1.Set("fee", arg_1_4);
     auto arg_1_5 = Napi::Value::From(env, (int)result.status);
     arg_1.Set("status", arg_1_5);
-    auto arg_1_6 = Napi::Number::New(env, result.height);
+    auto arg_1_6 = Napi::Value::From(env, result.height);
     arg_1.Set("height", arg_1_6);
-    auto arg_1_7 = Napi::Number::New(env, result.blockTime);
+    auto arg_1_7 = Napi::Value::From(env, result.blockTime);
     arg_1.Set("blockTime", arg_1_7);
-    auto arg_1_8 = Napi::Number::New(env, result.depth);
+    auto arg_1_8 = Napi::Value::From(env, result.depth);
     arg_1.Set("depth", arg_1_8);
     auto arg_1_9 = Napi::Array::New(env);
     for(size_t arg_1_9_id = 0; arg_1_9_id < result.inputs.size(); arg_1_9_id++)
@@ -829,7 +829,7 @@ Napi::Value NJSILibraryController::getTransaction(const Napi::CallbackInfo& info
         arg_1_9_elem.Set("label", arg_1_9_elem_2);
         auto arg_1_9_elem_3 = Napi::String::New(env, result.inputs[arg_1_9_id].desc);
         arg_1_9_elem.Set("desc", arg_1_9_elem_3);
-        auto arg_1_9_elem_4 = Napi::Boolean::New(env, result.inputs[arg_1_9_id].isMine);
+        auto arg_1_9_elem_4 = Napi::Value::From(env, result.inputs[arg_1_9_id].isMine);
         arg_1_9_elem.Set("isMine", arg_1_9_elem_4);
 
         arg_1_9.Set((int)arg_1_9_id,arg_1_9_elem);
@@ -840,7 +840,7 @@ Napi::Value NJSILibraryController::getTransaction(const Napi::CallbackInfo& info
     for(size_t arg_1_10_id = 0; arg_1_10_id < result.outputs.size(); arg_1_10_id++)
     {
         auto arg_1_10_elem = Napi::Object::New(env);
-        auto arg_1_10_elem_1 = Napi::Number::New(env, result.outputs[arg_1_10_id].amount);
+        auto arg_1_10_elem_1 = Napi::Value::From(env, result.outputs[arg_1_10_id].amount);
         arg_1_10_elem.Set("amount", arg_1_10_elem_1);
         auto arg_1_10_elem_2 = Napi::String::New(env, result.outputs[arg_1_10_id].address);
         arg_1_10_elem.Set("address", arg_1_10_elem_2);
@@ -848,7 +848,7 @@ Napi::Value NJSILibraryController::getTransaction(const Napi::CallbackInfo& info
         arg_1_10_elem.Set("label", arg_1_10_elem_3);
         auto arg_1_10_elem_4 = Napi::String::New(env, result.outputs[arg_1_10_id].desc);
         arg_1_10_elem.Set("desc", arg_1_10_elem_4);
-        auto arg_1_10_elem_5 = Napi::Boolean::New(env, result.outputs[arg_1_10_id].isMine);
+        auto arg_1_10_elem_5 = Napi::Value::From(env, result.outputs[arg_1_10_id].isMine);
         arg_1_10_elem.Set("isMine", arg_1_10_elem_5);
 
         arg_1_10.Set((int)arg_1_10_id,arg_1_10_elem);
@@ -1052,9 +1052,9 @@ Napi::Value NJSILibraryController::getLastSPVBlockInfos(const Napi::CallbackInfo
     for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
     {
         auto arg_0_elem = Napi::Object::New(env);
-        auto arg_0_elem_1 = Napi::Number::New(env, result[arg_0_id].height);
+        auto arg_0_elem_1 = Napi::Value::From(env, result[arg_0_id].height);
         arg_0_elem.Set("height", arg_0_elem_1);
-        auto arg_0_elem_2 = Napi::Number::New(env, result[arg_0_id].timeStamp);
+        auto arg_0_elem_2 = Napi::Value::From(env, result[arg_0_id].timeStamp);
         arg_0_elem.Set("timeStamp", arg_0_elem_2);
         auto arg_0_elem_3 = Napi::String::New(env, result[arg_0_id].blockHash);
         arg_0_elem.Set("blockHash", arg_0_elem_3);
@@ -1080,7 +1080,7 @@ Napi::Value NJSILibraryController::getUnifiedProgress(const Napi::CallbackInfo& 
     auto result = ILibraryController::getUnifiedProgress();
 
     //Wrap result in node object
-    auto arg_0 = Napi::Number::New(env, result);
+    auto arg_0 = Napi::Value::From(env, result);
 
     return arg_0;
 }
@@ -1100,15 +1100,15 @@ Napi::Value NJSILibraryController::getMonitoringStats(const Napi::CallbackInfo& 
 
     //Wrap result in node object
     auto arg_0 = Napi::Object::New(env);
-    auto arg_0_1 = Napi::Number::New(env, result.partialHeight);
+    auto arg_0_1 = Napi::Value::From(env, result.partialHeight);
     arg_0.Set("partialHeight", arg_0_1);
-    auto arg_0_2 = Napi::Number::New(env, result.partialOffset);
+    auto arg_0_2 = Napi::Value::From(env, result.partialOffset);
     arg_0.Set("partialOffset", arg_0_2);
-    auto arg_0_3 = Napi::Number::New(env, result.prunedHeight);
+    auto arg_0_3 = Napi::Value::From(env, result.prunedHeight);
     arg_0.Set("prunedHeight", arg_0_3);
-    auto arg_0_4 = Napi::Number::New(env, result.processedSPVHeight);
+    auto arg_0_4 = Napi::Value::From(env, result.processedSPVHeight);
     arg_0.Set("processedSPVHeight", arg_0_4);
-    auto arg_0_5 = Napi::Number::New(env, result.probableHeight);
+    auto arg_0_5 = Napi::Value::From(env, result.probableHeight);
     arg_0.Set("probableHeight", arg_0_5);
 
 
@@ -1163,15 +1163,15 @@ Napi::Value NJSILibraryController::getMutationHistory(const Napi::CallbackInfo& 
     for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
     {
         auto arg_0_elem = Napi::Object::New(env);
-        auto arg_0_elem_1 = Napi::Number::New(env, result[arg_0_id].change);
+        auto arg_0_elem_1 = Napi::Value::From(env, result[arg_0_id].change);
         arg_0_elem.Set("change", arg_0_elem_1);
-        auto arg_0_elem_2 = Napi::Number::New(env, result[arg_0_id].timestamp);
+        auto arg_0_elem_2 = Napi::Value::From(env, result[arg_0_id].timestamp);
         arg_0_elem.Set("timestamp", arg_0_elem_2);
         auto arg_0_elem_3 = Napi::String::New(env, result[arg_0_id].txHash);
         arg_0_elem.Set("txHash", arg_0_elem_3);
         auto arg_0_elem_4 = Napi::Value::From(env, (int)result[arg_0_id].status);
         arg_0_elem.Set("status", arg_0_elem_4);
-        auto arg_0_elem_5 = Napi::Number::New(env, result[arg_0_id].depth);
+        auto arg_0_elem_5 = Napi::Value::From(env, result[arg_0_id].depth);
         arg_0_elem.Set("depth", arg_0_elem_5);
 
         arg_0.Set((int)arg_0_id,arg_0_elem);
@@ -1201,19 +1201,19 @@ Napi::Value NJSILibraryController::getTransactionHistory(const Napi::CallbackInf
         auto arg_0_elem = Napi::Object::New(env);
         auto arg_0_elem_1 = Napi::String::New(env, result[arg_0_id].txHash);
         arg_0_elem.Set("txHash", arg_0_elem_1);
-        auto arg_0_elem_2 = Napi::Number::New(env, result[arg_0_id].timeStamp);
+        auto arg_0_elem_2 = Napi::Value::From(env, result[arg_0_id].timeStamp);
         arg_0_elem.Set("timeStamp", arg_0_elem_2);
-        auto arg_0_elem_3 = Napi::Number::New(env, result[arg_0_id].amount);
+        auto arg_0_elem_3 = Napi::Value::From(env, result[arg_0_id].amount);
         arg_0_elem.Set("amount", arg_0_elem_3);
-        auto arg_0_elem_4 = Napi::Number::New(env, result[arg_0_id].fee);
+        auto arg_0_elem_4 = Napi::Value::From(env, result[arg_0_id].fee);
         arg_0_elem.Set("fee", arg_0_elem_4);
         auto arg_0_elem_5 = Napi::Value::From(env, (int)result[arg_0_id].status);
         arg_0_elem.Set("status", arg_0_elem_5);
-        auto arg_0_elem_6 = Napi::Number::New(env, result[arg_0_id].height);
+        auto arg_0_elem_6 = Napi::Value::From(env, result[arg_0_id].height);
         arg_0_elem.Set("height", arg_0_elem_6);
-        auto arg_0_elem_7 = Napi::Number::New(env, result[arg_0_id].blockTime);
+        auto arg_0_elem_7 = Napi::Value::From(env, result[arg_0_id].blockTime);
         arg_0_elem.Set("blockTime", arg_0_elem_7);
-        auto arg_0_elem_8 = Napi::Number::New(env, result[arg_0_id].depth);
+        auto arg_0_elem_8 = Napi::Value::From(env, result[arg_0_id].depth);
         arg_0_elem.Set("depth", arg_0_elem_8);
         auto arg_0_elem_9 = Napi::Array::New(env);
         for(size_t arg_0_elem_9_id = 0; arg_0_elem_9_id < result[arg_0_id].inputs.size(); arg_0_elem_9_id++)
@@ -1225,7 +1225,7 @@ Napi::Value NJSILibraryController::getTransactionHistory(const Napi::CallbackInf
             arg_0_elem_9_elem.Set("label", arg_0_elem_9_elem_2);
             auto arg_0_elem_9_elem_3 = Napi::String::New(env, result[arg_0_id].inputs[arg_0_elem_9_id].desc);
             arg_0_elem_9_elem.Set("desc", arg_0_elem_9_elem_3);
-            auto arg_0_elem_9_elem_4 = Napi::Boolean::New(env, result[arg_0_id].inputs[arg_0_elem_9_id].isMine);
+            auto arg_0_elem_9_elem_4 = Napi::Value::From(env, result[arg_0_id].inputs[arg_0_elem_9_id].isMine);
             arg_0_elem_9_elem.Set("isMine", arg_0_elem_9_elem_4);
 
             arg_0_elem_9.Set((int)arg_0_elem_9_id,arg_0_elem_9_elem);
@@ -1236,7 +1236,7 @@ Napi::Value NJSILibraryController::getTransactionHistory(const Napi::CallbackInf
         for(size_t arg_0_elem_10_id = 0; arg_0_elem_10_id < result[arg_0_id].outputs.size(); arg_0_elem_10_id++)
         {
             auto arg_0_elem_10_elem = Napi::Object::New(env);
-            auto arg_0_elem_10_elem_1 = Napi::Number::New(env, result[arg_0_id].outputs[arg_0_elem_10_id].amount);
+            auto arg_0_elem_10_elem_1 = Napi::Value::From(env, result[arg_0_id].outputs[arg_0_elem_10_id].amount);
             arg_0_elem_10_elem.Set("amount", arg_0_elem_10_elem_1);
             auto arg_0_elem_10_elem_2 = Napi::String::New(env, result[arg_0_id].outputs[arg_0_elem_10_id].address);
             arg_0_elem_10_elem.Set("address", arg_0_elem_10_elem_2);
@@ -1244,7 +1244,7 @@ Napi::Value NJSILibraryController::getTransactionHistory(const Napi::CallbackInf
             arg_0_elem_10_elem.Set("label", arg_0_elem_10_elem_3);
             auto arg_0_elem_10_elem_4 = Napi::String::New(env, result[arg_0_id].outputs[arg_0_elem_10_id].desc);
             arg_0_elem_10_elem.Set("desc", arg_0_elem_10_elem_4);
-            auto arg_0_elem_10_elem_5 = Napi::Boolean::New(env, result[arg_0_id].outputs[arg_0_elem_10_id].isMine);
+            auto arg_0_elem_10_elem_5 = Napi::Value::From(env, result[arg_0_id].outputs[arg_0_elem_10_id].isMine);
             arg_0_elem_10_elem.Set("isMine", arg_0_elem_10_elem_5);
 
             arg_0_elem_10.Set((int)arg_0_elem_10_id,arg_0_elem_10_elem);
@@ -1273,7 +1273,7 @@ Napi::Value NJSILibraryController::HaveUnconfirmedFunds(const Napi::CallbackInfo
     auto result = ILibraryController::HaveUnconfirmedFunds();
 
     //Wrap result in node object
-    auto arg_0 = Napi::Boolean::New(env, result);
+    auto arg_0 = Napi::Value::From(env, result);
 
     return arg_0;
 }
@@ -1292,7 +1292,7 @@ Napi::Value NJSILibraryController::GetBalance(const Napi::CallbackInfo& info) {
     auto result = ILibraryController::GetBalance();
 
     //Wrap result in node object
-    auto arg_0 = Napi::Number::New(env, result);
+    auto arg_0 = Napi::Value::From(env, result);
 
     return arg_0;
 }

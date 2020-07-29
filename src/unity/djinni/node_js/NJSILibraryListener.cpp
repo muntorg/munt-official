@@ -10,7 +10,7 @@ void NJSILibraryListener::notifyUnifiedProgress_aimpl__(float progress)
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    auto arg_0 = Napi::Number::New(env, progress);
+    auto arg_0 = Napi::Value::From(env, progress);
     args.push_back(arg_0);
     Napi::Value calling_function_as_value = Value().Get("notifyUnifiedProgress");
     if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
@@ -47,25 +47,25 @@ void NJSILibraryListener::notifyBalanceChange_aimpl__(const BalanceRecord & new_
     //Wrap parameters
     std::vector<napi_value> args;
     auto arg_0 = Napi::Object::New(env);
-    auto arg_0_1 = Napi::Number::New(env, new_balance.availableIncludingLocked);
+    auto arg_0_1 = Napi::Value::From(env, new_balance.availableIncludingLocked);
     arg_0.Set("availableIncludingLocked", arg_0_1);
-    auto arg_0_2 = Napi::Number::New(env, new_balance.availableExcludingLocked);
+    auto arg_0_2 = Napi::Value::From(env, new_balance.availableExcludingLocked);
     arg_0.Set("availableExcludingLocked", arg_0_2);
-    auto arg_0_3 = Napi::Number::New(env, new_balance.availableLocked);
+    auto arg_0_3 = Napi::Value::From(env, new_balance.availableLocked);
     arg_0.Set("availableLocked", arg_0_3);
-    auto arg_0_4 = Napi::Number::New(env, new_balance.unconfirmedIncludingLocked);
+    auto arg_0_4 = Napi::Value::From(env, new_balance.unconfirmedIncludingLocked);
     arg_0.Set("unconfirmedIncludingLocked", arg_0_4);
-    auto arg_0_5 = Napi::Number::New(env, new_balance.unconfirmedExcludingLocked);
+    auto arg_0_5 = Napi::Value::From(env, new_balance.unconfirmedExcludingLocked);
     arg_0.Set("unconfirmedExcludingLocked", arg_0_5);
-    auto arg_0_6 = Napi::Number::New(env, new_balance.unconfirmedLocked);
+    auto arg_0_6 = Napi::Value::From(env, new_balance.unconfirmedLocked);
     arg_0.Set("unconfirmedLocked", arg_0_6);
-    auto arg_0_7 = Napi::Number::New(env, new_balance.immatureIncludingLocked);
+    auto arg_0_7 = Napi::Value::From(env, new_balance.immatureIncludingLocked);
     arg_0.Set("immatureIncludingLocked", arg_0_7);
-    auto arg_0_8 = Napi::Number::New(env, new_balance.immatureExcludingLocked);
+    auto arg_0_8 = Napi::Value::From(env, new_balance.immatureExcludingLocked);
     arg_0.Set("immatureExcludingLocked", arg_0_8);
-    auto arg_0_9 = Napi::Number::New(env, new_balance.immatureLocked);
+    auto arg_0_9 = Napi::Value::From(env, new_balance.immatureLocked);
     arg_0.Set("immatureLocked", arg_0_9);
-    auto arg_0_10 = Napi::Number::New(env, new_balance.totalLocked);
+    auto arg_0_10 = Napi::Value::From(env, new_balance.totalLocked);
     arg_0.Set("totalLocked", arg_0_10);
 
     args.push_back(arg_0);
@@ -104,19 +104,19 @@ void NJSILibraryListener::notifyNewMutation_aimpl__(const MutationRecord & mutat
     //Wrap parameters
     std::vector<napi_value> args;
     auto arg_0 = Napi::Object::New(env);
-    auto arg_0_1 = Napi::Number::New(env, mutation.change);
+    auto arg_0_1 = Napi::Value::From(env, mutation.change);
     arg_0.Set("change", arg_0_1);
-    auto arg_0_2 = Napi::Number::New(env, mutation.timestamp);
+    auto arg_0_2 = Napi::Value::From(env, mutation.timestamp);
     arg_0.Set("timestamp", arg_0_2);
     auto arg_0_3 = Napi::String::New(env, mutation.txHash);
     arg_0.Set("txHash", arg_0_3);
     auto arg_0_4 = Napi::Value::From(env, (int)mutation.status);
     arg_0.Set("status", arg_0_4);
-    auto arg_0_5 = Napi::Number::New(env, mutation.depth);
+    auto arg_0_5 = Napi::Value::From(env, mutation.depth);
     arg_0.Set("depth", arg_0_5);
 
     args.push_back(arg_0);
-    auto arg_1 = Napi::Boolean::New(env, self_committed);
+    auto arg_1 = Napi::Value::From(env, self_committed);
     args.push_back(arg_1);
     Napi::Value calling_function_as_value = Value().Get("notifyNewMutation");
     if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
@@ -155,19 +155,19 @@ void NJSILibraryListener::notifyUpdatedTransaction_aimpl__(const TransactionReco
     auto arg_0 = Napi::Object::New(env);
     auto arg_0_1 = Napi::String::New(env, transaction.txHash);
     arg_0.Set("txHash", arg_0_1);
-    auto arg_0_2 = Napi::Number::New(env, transaction.timeStamp);
+    auto arg_0_2 = Napi::Value::From(env, transaction.timeStamp);
     arg_0.Set("timeStamp", arg_0_2);
-    auto arg_0_3 = Napi::Number::New(env, transaction.amount);
+    auto arg_0_3 = Napi::Value::From(env, transaction.amount);
     arg_0.Set("amount", arg_0_3);
-    auto arg_0_4 = Napi::Number::New(env, transaction.fee);
+    auto arg_0_4 = Napi::Value::From(env, transaction.fee);
     arg_0.Set("fee", arg_0_4);
     auto arg_0_5 = Napi::Value::From(env, (int)transaction.status);
     arg_0.Set("status", arg_0_5);
-    auto arg_0_6 = Napi::Number::New(env, transaction.height);
+    auto arg_0_6 = Napi::Value::From(env, transaction.height);
     arg_0.Set("height", arg_0_6);
-    auto arg_0_7 = Napi::Number::New(env, transaction.blockTime);
+    auto arg_0_7 = Napi::Value::From(env, transaction.blockTime);
     arg_0.Set("blockTime", arg_0_7);
-    auto arg_0_8 = Napi::Number::New(env, transaction.depth);
+    auto arg_0_8 = Napi::Value::From(env, transaction.depth);
     arg_0.Set("depth", arg_0_8);
     auto arg_0_9 = Napi::Array::New(env);
     for(size_t arg_0_9_id = 0; arg_0_9_id < transaction.inputs.size(); arg_0_9_id++)
@@ -179,7 +179,7 @@ void NJSILibraryListener::notifyUpdatedTransaction_aimpl__(const TransactionReco
         arg_0_9_elem.Set("label", arg_0_9_elem_2);
         auto arg_0_9_elem_3 = Napi::String::New(env, transaction.inputs[arg_0_9_id].desc);
         arg_0_9_elem.Set("desc", arg_0_9_elem_3);
-        auto arg_0_9_elem_4 = Napi::Boolean::New(env, transaction.inputs[arg_0_9_id].isMine);
+        auto arg_0_9_elem_4 = Napi::Value::From(env, transaction.inputs[arg_0_9_id].isMine);
         arg_0_9_elem.Set("isMine", arg_0_9_elem_4);
 
         arg_0_9.Set((int)arg_0_9_id,arg_0_9_elem);
@@ -190,7 +190,7 @@ void NJSILibraryListener::notifyUpdatedTransaction_aimpl__(const TransactionReco
     for(size_t arg_0_10_id = 0; arg_0_10_id < transaction.outputs.size(); arg_0_10_id++)
     {
         auto arg_0_10_elem = Napi::Object::New(env);
-        auto arg_0_10_elem_1 = Napi::Number::New(env, transaction.outputs[arg_0_10_id].amount);
+        auto arg_0_10_elem_1 = Napi::Value::From(env, transaction.outputs[arg_0_10_id].amount);
         arg_0_10_elem.Set("amount", arg_0_10_elem_1);
         auto arg_0_10_elem_2 = Napi::String::New(env, transaction.outputs[arg_0_10_id].address);
         arg_0_10_elem.Set("address", arg_0_10_elem_2);
@@ -198,7 +198,7 @@ void NJSILibraryListener::notifyUpdatedTransaction_aimpl__(const TransactionReco
         arg_0_10_elem.Set("label", arg_0_10_elem_3);
         auto arg_0_10_elem_4 = Napi::String::New(env, transaction.outputs[arg_0_10_id].desc);
         arg_0_10_elem.Set("desc", arg_0_10_elem_4);
-        auto arg_0_10_elem_5 = Napi::Boolean::New(env, transaction.outputs[arg_0_10_id].isMine);
+        auto arg_0_10_elem_5 = Napi::Value::From(env, transaction.outputs[arg_0_10_id].isMine);
         arg_0_10_elem.Set("isMine", arg_0_10_elem_5);
 
         arg_0_10.Set((int)arg_0_10_id,arg_0_10_elem);

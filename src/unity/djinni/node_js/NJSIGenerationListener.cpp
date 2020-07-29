@@ -78,19 +78,19 @@ void NJSIGenerationListener::onStatsUpdated_aimpl__(double hashesPerSecond, cons
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    auto arg_0 = Napi::Number::New(env, hashesPerSecond);
+    auto arg_0 = Napi::Value::From(env, hashesPerSecond);
     args.push_back(arg_0);
     auto arg_1 = Napi::String::New(env, hashesPerSecondUnit);
     args.push_back(arg_1);
-    auto arg_2 = Napi::Number::New(env, rollingHashesPerSecond);
+    auto arg_2 = Napi::Value::From(env, rollingHashesPerSecond);
     args.push_back(arg_2);
     auto arg_3 = Napi::String::New(env, rollingHashesPerSecondUnit);
     args.push_back(arg_3);
-    auto arg_4 = Napi::Number::New(env, bestHashesPerSecond);
+    auto arg_4 = Napi::Value::From(env, bestHashesPerSecond);
     args.push_back(arg_4);
     auto arg_5 = Napi::String::New(env, bestHashesPerSecondUnit);
     args.push_back(arg_5);
-    auto arg_6 = Napi::Number::New(env, arenaSetupTime);
+    auto arg_6 = Napi::Value::From(env, arenaSetupTime);
     args.push_back(arg_6);
     Napi::Value calling_function_as_value = Value().Get("onStatsUpdated");
     if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())

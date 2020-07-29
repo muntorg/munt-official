@@ -35,7 +35,7 @@ Napi::Value NJSIAccountsController::setActiveAccount(const Napi::CallbackInfo& i
     auto result = IAccountsController::setActiveAccount(arg_0);
 
     //Wrap result in node object
-    auto arg_1 = Napi::Boolean::New(env, result);
+    auto arg_1 = Napi::Value::From(env, result);
 
     return arg_1;
 }
@@ -96,7 +96,7 @@ Napi::Value NJSIAccountsController::renameAccount(const Napi::CallbackInfo& info
     auto result = IAccountsController::renameAccount(arg_0,arg_1);
 
     //Wrap result in node object
-    auto arg_2 = Napi::Boolean::New(env, result);
+    auto arg_2 = Napi::Value::From(env, result);
 
     return arg_2;
 }
@@ -177,7 +177,7 @@ Napi::Value NJSIAccountsController::deleteAccount(const Napi::CallbackInfo& info
     auto result = IAccountsController::deleteAccount(arg_0);
 
     //Wrap result in node object
-    auto arg_1 = Napi::Boolean::New(env, result);
+    auto arg_1 = Napi::Value::From(env, result);
 
     return arg_1;
 }
@@ -197,7 +197,7 @@ Napi::Value NJSIAccountsController::purgeAccount(const Napi::CallbackInfo& info)
     auto result = IAccountsController::purgeAccount(arg_0);
 
     //Wrap result in node object
-    auto arg_1 = Napi::Boolean::New(env, result);
+    auto arg_1 = Napi::Value::From(env, result);
 
     return arg_1;
 }
@@ -228,7 +228,7 @@ Napi::Value NJSIAccountsController::listAccounts(const Napi::CallbackInfo& info)
         arg_0_elem.Set("state", arg_0_elem_3);
         auto arg_0_elem_4 = Napi::String::New(env, result[arg_0_id].type);
         arg_0_elem.Set("type", arg_0_elem_4);
-        auto arg_0_elem_5 = Napi::Boolean::New(env, result[arg_0_id].isHD);
+        auto arg_0_elem_5 = Napi::Value::From(env, result[arg_0_id].isHD);
         arg_0_elem.Set("isHD", arg_0_elem_5);
 
         arg_0.Set((int)arg_0_id,arg_0_elem);
@@ -253,25 +253,25 @@ Napi::Value NJSIAccountsController::getActiveAccountBalance(const Napi::Callback
 
     //Wrap result in node object
     auto arg_0 = Napi::Object::New(env);
-    auto arg_0_1 = Napi::Number::New(env, result.availableIncludingLocked);
+    auto arg_0_1 = Napi::Value::From(env, result.availableIncludingLocked);
     arg_0.Set("availableIncludingLocked", arg_0_1);
-    auto arg_0_2 = Napi::Number::New(env, result.availableExcludingLocked);
+    auto arg_0_2 = Napi::Value::From(env, result.availableExcludingLocked);
     arg_0.Set("availableExcludingLocked", arg_0_2);
-    auto arg_0_3 = Napi::Number::New(env, result.availableLocked);
+    auto arg_0_3 = Napi::Value::From(env, result.availableLocked);
     arg_0.Set("availableLocked", arg_0_3);
-    auto arg_0_4 = Napi::Number::New(env, result.unconfirmedIncludingLocked);
+    auto arg_0_4 = Napi::Value::From(env, result.unconfirmedIncludingLocked);
     arg_0.Set("unconfirmedIncludingLocked", arg_0_4);
-    auto arg_0_5 = Napi::Number::New(env, result.unconfirmedExcludingLocked);
+    auto arg_0_5 = Napi::Value::From(env, result.unconfirmedExcludingLocked);
     arg_0.Set("unconfirmedExcludingLocked", arg_0_5);
-    auto arg_0_6 = Napi::Number::New(env, result.unconfirmedLocked);
+    auto arg_0_6 = Napi::Value::From(env, result.unconfirmedLocked);
     arg_0.Set("unconfirmedLocked", arg_0_6);
-    auto arg_0_7 = Napi::Number::New(env, result.immatureIncludingLocked);
+    auto arg_0_7 = Napi::Value::From(env, result.immatureIncludingLocked);
     arg_0.Set("immatureIncludingLocked", arg_0_7);
-    auto arg_0_8 = Napi::Number::New(env, result.immatureExcludingLocked);
+    auto arg_0_8 = Napi::Value::From(env, result.immatureExcludingLocked);
     arg_0.Set("immatureExcludingLocked", arg_0_8);
-    auto arg_0_9 = Napi::Number::New(env, result.immatureLocked);
+    auto arg_0_9 = Napi::Value::From(env, result.immatureLocked);
     arg_0.Set("immatureLocked", arg_0_9);
-    auto arg_0_10 = Napi::Number::New(env, result.totalLocked);
+    auto arg_0_10 = Napi::Value::From(env, result.totalLocked);
     arg_0.Set("totalLocked", arg_0_10);
 
 
@@ -294,25 +294,25 @@ Napi::Value NJSIAccountsController::getAccountBalance(const Napi::CallbackInfo& 
 
     //Wrap result in node object
     auto arg_1 = Napi::Object::New(env);
-    auto arg_1_1 = Napi::Number::New(env, result.availableIncludingLocked);
+    auto arg_1_1 = Napi::Value::From(env, result.availableIncludingLocked);
     arg_1.Set("availableIncludingLocked", arg_1_1);
-    auto arg_1_2 = Napi::Number::New(env, result.availableExcludingLocked);
+    auto arg_1_2 = Napi::Value::From(env, result.availableExcludingLocked);
     arg_1.Set("availableExcludingLocked", arg_1_2);
-    auto arg_1_3 = Napi::Number::New(env, result.availableLocked);
+    auto arg_1_3 = Napi::Value::From(env, result.availableLocked);
     arg_1.Set("availableLocked", arg_1_3);
-    auto arg_1_4 = Napi::Number::New(env, result.unconfirmedIncludingLocked);
+    auto arg_1_4 = Napi::Value::From(env, result.unconfirmedIncludingLocked);
     arg_1.Set("unconfirmedIncludingLocked", arg_1_4);
-    auto arg_1_5 = Napi::Number::New(env, result.unconfirmedExcludingLocked);
+    auto arg_1_5 = Napi::Value::From(env, result.unconfirmedExcludingLocked);
     arg_1.Set("unconfirmedExcludingLocked", arg_1_5);
-    auto arg_1_6 = Napi::Number::New(env, result.unconfirmedLocked);
+    auto arg_1_6 = Napi::Value::From(env, result.unconfirmedLocked);
     arg_1.Set("unconfirmedLocked", arg_1_6);
-    auto arg_1_7 = Napi::Number::New(env, result.immatureIncludingLocked);
+    auto arg_1_7 = Napi::Value::From(env, result.immatureIncludingLocked);
     arg_1.Set("immatureIncludingLocked", arg_1_7);
-    auto arg_1_8 = Napi::Number::New(env, result.immatureExcludingLocked);
+    auto arg_1_8 = Napi::Value::From(env, result.immatureExcludingLocked);
     arg_1.Set("immatureExcludingLocked", arg_1_8);
-    auto arg_1_9 = Napi::Number::New(env, result.immatureLocked);
+    auto arg_1_9 = Napi::Value::From(env, result.immatureLocked);
     arg_1.Set("immatureLocked", arg_1_9);
-    auto arg_1_10 = Napi::Number::New(env, result.totalLocked);
+    auto arg_1_10 = Napi::Value::From(env, result.totalLocked);
     arg_1.Set("totalLocked", arg_1_10);
 
 
@@ -338,25 +338,25 @@ Napi::Value NJSIAccountsController::getAllAccountBalances(const Napi::CallbackIn
     {
         auto arg_0_first = Napi::String::New(env, arg_0_elem.first);
         auto arg_0_second = Napi::Object::New(env);
-        auto arg_0_second_1 = Napi::Number::New(env, arg_0_elem.second.availableIncludingLocked);
+        auto arg_0_second_1 = Napi::Value::From(env, arg_0_elem.second.availableIncludingLocked);
         arg_0_second.Set("availableIncludingLocked", arg_0_second_1);
-        auto arg_0_second_2 = Napi::Number::New(env, arg_0_elem.second.availableExcludingLocked);
+        auto arg_0_second_2 = Napi::Value::From(env, arg_0_elem.second.availableExcludingLocked);
         arg_0_second.Set("availableExcludingLocked", arg_0_second_2);
-        auto arg_0_second_3 = Napi::Number::New(env, arg_0_elem.second.availableLocked);
+        auto arg_0_second_3 = Napi::Value::From(env, arg_0_elem.second.availableLocked);
         arg_0_second.Set("availableLocked", arg_0_second_3);
-        auto arg_0_second_4 = Napi::Number::New(env, arg_0_elem.second.unconfirmedIncludingLocked);
+        auto arg_0_second_4 = Napi::Value::From(env, arg_0_elem.second.unconfirmedIncludingLocked);
         arg_0_second.Set("unconfirmedIncludingLocked", arg_0_second_4);
-        auto arg_0_second_5 = Napi::Number::New(env, arg_0_elem.second.unconfirmedExcludingLocked);
+        auto arg_0_second_5 = Napi::Value::From(env, arg_0_elem.second.unconfirmedExcludingLocked);
         arg_0_second.Set("unconfirmedExcludingLocked", arg_0_second_5);
-        auto arg_0_second_6 = Napi::Number::New(env, arg_0_elem.second.unconfirmedLocked);
+        auto arg_0_second_6 = Napi::Value::From(env, arg_0_elem.second.unconfirmedLocked);
         arg_0_second.Set("unconfirmedLocked", arg_0_second_6);
-        auto arg_0_second_7 = Napi::Number::New(env, arg_0_elem.second.immatureIncludingLocked);
+        auto arg_0_second_7 = Napi::Value::From(env, arg_0_elem.second.immatureIncludingLocked);
         arg_0_second.Set("immatureIncludingLocked", arg_0_second_7);
-        auto arg_0_second_8 = Napi::Number::New(env, arg_0_elem.second.immatureExcludingLocked);
+        auto arg_0_second_8 = Napi::Value::From(env, arg_0_elem.second.immatureExcludingLocked);
         arg_0_second.Set("immatureExcludingLocked", arg_0_second_8);
-        auto arg_0_second_9 = Napi::Number::New(env, arg_0_elem.second.immatureLocked);
+        auto arg_0_second_9 = Napi::Value::From(env, arg_0_elem.second.immatureLocked);
         arg_0_second.Set("immatureLocked", arg_0_second_9);
-        auto arg_0_second_10 = Napi::Number::New(env, arg_0_elem.second.totalLocked);
+        auto arg_0_second_10 = Napi::Value::From(env, arg_0_elem.second.totalLocked);
         arg_0_second.Set("totalLocked", arg_0_second_10);
 
         arg_0.Set(arg_0_first, arg_0_second);
@@ -387,19 +387,19 @@ Napi::Value NJSIAccountsController::getTransactionHistory(const Napi::CallbackIn
         auto arg_1_elem = Napi::Object::New(env);
         auto arg_1_elem_1 = Napi::String::New(env, result[arg_1_id].txHash);
         arg_1_elem.Set("txHash", arg_1_elem_1);
-        auto arg_1_elem_2 = Napi::Number::New(env, result[arg_1_id].timeStamp);
+        auto arg_1_elem_2 = Napi::Value::From(env, result[arg_1_id].timeStamp);
         arg_1_elem.Set("timeStamp", arg_1_elem_2);
-        auto arg_1_elem_3 = Napi::Number::New(env, result[arg_1_id].amount);
+        auto arg_1_elem_3 = Napi::Value::From(env, result[arg_1_id].amount);
         arg_1_elem.Set("amount", arg_1_elem_3);
-        auto arg_1_elem_4 = Napi::Number::New(env, result[arg_1_id].fee);
+        auto arg_1_elem_4 = Napi::Value::From(env, result[arg_1_id].fee);
         arg_1_elem.Set("fee", arg_1_elem_4);
         auto arg_1_elem_5 = Napi::Value::From(env, (int)result[arg_1_id].status);
         arg_1_elem.Set("status", arg_1_elem_5);
-        auto arg_1_elem_6 = Napi::Number::New(env, result[arg_1_id].height);
+        auto arg_1_elem_6 = Napi::Value::From(env, result[arg_1_id].height);
         arg_1_elem.Set("height", arg_1_elem_6);
-        auto arg_1_elem_7 = Napi::Number::New(env, result[arg_1_id].blockTime);
+        auto arg_1_elem_7 = Napi::Value::From(env, result[arg_1_id].blockTime);
         arg_1_elem.Set("blockTime", arg_1_elem_7);
-        auto arg_1_elem_8 = Napi::Number::New(env, result[arg_1_id].depth);
+        auto arg_1_elem_8 = Napi::Value::From(env, result[arg_1_id].depth);
         arg_1_elem.Set("depth", arg_1_elem_8);
         auto arg_1_elem_9 = Napi::Array::New(env);
         for(size_t arg_1_elem_9_id = 0; arg_1_elem_9_id < result[arg_1_id].inputs.size(); arg_1_elem_9_id++)
@@ -411,7 +411,7 @@ Napi::Value NJSIAccountsController::getTransactionHistory(const Napi::CallbackIn
             arg_1_elem_9_elem.Set("label", arg_1_elem_9_elem_2);
             auto arg_1_elem_9_elem_3 = Napi::String::New(env, result[arg_1_id].inputs[arg_1_elem_9_id].desc);
             arg_1_elem_9_elem.Set("desc", arg_1_elem_9_elem_3);
-            auto arg_1_elem_9_elem_4 = Napi::Boolean::New(env, result[arg_1_id].inputs[arg_1_elem_9_id].isMine);
+            auto arg_1_elem_9_elem_4 = Napi::Value::From(env, result[arg_1_id].inputs[arg_1_elem_9_id].isMine);
             arg_1_elem_9_elem.Set("isMine", arg_1_elem_9_elem_4);
 
             arg_1_elem_9.Set((int)arg_1_elem_9_id,arg_1_elem_9_elem);
@@ -422,7 +422,7 @@ Napi::Value NJSIAccountsController::getTransactionHistory(const Napi::CallbackIn
         for(size_t arg_1_elem_10_id = 0; arg_1_elem_10_id < result[arg_1_id].outputs.size(); arg_1_elem_10_id++)
         {
             auto arg_1_elem_10_elem = Napi::Object::New(env);
-            auto arg_1_elem_10_elem_1 = Napi::Number::New(env, result[arg_1_id].outputs[arg_1_elem_10_id].amount);
+            auto arg_1_elem_10_elem_1 = Napi::Value::From(env, result[arg_1_id].outputs[arg_1_elem_10_id].amount);
             arg_1_elem_10_elem.Set("amount", arg_1_elem_10_elem_1);
             auto arg_1_elem_10_elem_2 = Napi::String::New(env, result[arg_1_id].outputs[arg_1_elem_10_id].address);
             arg_1_elem_10_elem.Set("address", arg_1_elem_10_elem_2);
@@ -430,7 +430,7 @@ Napi::Value NJSIAccountsController::getTransactionHistory(const Napi::CallbackIn
             arg_1_elem_10_elem.Set("label", arg_1_elem_10_elem_3);
             auto arg_1_elem_10_elem_4 = Napi::String::New(env, result[arg_1_id].outputs[arg_1_elem_10_id].desc);
             arg_1_elem_10_elem.Set("desc", arg_1_elem_10_elem_4);
-            auto arg_1_elem_10_elem_5 = Napi::Boolean::New(env, result[arg_1_id].outputs[arg_1_elem_10_id].isMine);
+            auto arg_1_elem_10_elem_5 = Napi::Value::From(env, result[arg_1_id].outputs[arg_1_elem_10_id].isMine);
             arg_1_elem_10_elem.Set("isMine", arg_1_elem_10_elem_5);
 
             arg_1_elem_10.Set((int)arg_1_elem_10_id,arg_1_elem_10_elem);
@@ -464,15 +464,15 @@ Napi::Value NJSIAccountsController::getMutationHistory(const Napi::CallbackInfo&
     for(size_t arg_1_id = 0; arg_1_id < result.size(); arg_1_id++)
     {
         auto arg_1_elem = Napi::Object::New(env);
-        auto arg_1_elem_1 = Napi::Number::New(env, result[arg_1_id].change);
+        auto arg_1_elem_1 = Napi::Value::From(env, result[arg_1_id].change);
         arg_1_elem.Set("change", arg_1_elem_1);
-        auto arg_1_elem_2 = Napi::Number::New(env, result[arg_1_id].timestamp);
+        auto arg_1_elem_2 = Napi::Value::From(env, result[arg_1_id].timestamp);
         arg_1_elem.Set("timestamp", arg_1_elem_2);
         auto arg_1_elem_3 = Napi::String::New(env, result[arg_1_id].txHash);
         arg_1_elem.Set("txHash", arg_1_elem_3);
         auto arg_1_elem_4 = Napi::Value::From(env, (int)result[arg_1_id].status);
         arg_1_elem.Set("status", arg_1_elem_4);
-        auto arg_1_elem_5 = Napi::Number::New(env, result[arg_1_id].depth);
+        auto arg_1_elem_5 = Napi::Value::From(env, result[arg_1_id].depth);
         arg_1_elem.Set("depth", arg_1_elem_5);
 
         arg_1.Set((int)arg_1_id,arg_1_elem);
