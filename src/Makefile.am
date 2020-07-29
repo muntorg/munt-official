@@ -747,6 +747,7 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/i_p2p_network_controller.hpp \
   unity/djinni/cpp/i_p2p_network_listener.hpp \
   unity/djinni/cpp/i_accounts_controller.hpp \
+  unity/djinni/cpp/i_witness_controller.hpp \
   unity/djinni/cpp/i_accounts_listener.hpp \
   unity/djinni/cpp/i_wallet_controller.hpp \
   unity/djinni/cpp/i_wallet_listener.hpp \
@@ -775,6 +776,7 @@ DJINNI_NODE_JS_GEN = \
   unity/djinni/node_js/NJSIWalletListener.cpp \
   unity/djinni/node_js/NJSIWalletListener.hpp \
   unity/djinni/node_js/NJSIAccountsController.cpp \
+  unity/djinni/node_js/NJSIWitnessController.cpp \
   unity/djinni/node_js/NJSIAccountsController.hpp \
   unity/djinni/node_js/NJSIAccountsListener.cpp \
   unity/djinni/node_js/NJSIAccountsListener.hpp \
@@ -800,6 +802,7 @@ lib_unity_node_js_la_SOURCES = \
   unity/controllers/irpccontroller.cpp \
   unity/controllers/ip2pnetworkcontroller.cpp \
   unity/controllers/iaccountscontroller.cpp \
+  unity/controllers/iwitnesscontroller.cpp \
   unity/controllers/iwalletcontroller.cpp \
   unity/controllers/igenerationcontroller.cpp \
   unity/djinni/support-lib/nodejs/win_delay_load_hook.cpp \

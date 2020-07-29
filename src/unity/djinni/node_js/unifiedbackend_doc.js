@@ -298,6 +298,11 @@ declare class NJSIAccountsListener
     /** Notify that an account has been deleted */
     declare function onAccountDeleted(accountUUID: string);
 }
+/** C++ interface to control witness accounts */
+declare class NJSIWitnessController
+{
+    static declare function getNetworkLimits(): Map<string, string>;
+}
 /** C++ interface to control generation of blocks (proof of work) */
 declare class NJSIGenerationController
 {

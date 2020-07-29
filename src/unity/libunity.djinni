@@ -448,6 +448,11 @@ i_accounts_listener = interface +j +o +n {
     onAccountDeleted(accountUUID : string) : &;
 }
 
+# C++ interface to control witness accounts
+i_witness_controller = interface +c {
+    static getNetworkLimits() : map<string, string>;
+}
+
 # C++ interface to control generation of blocks (proof of work)
 i_generation_controller = interface +c {
     # Register listener to be notified of generation related events

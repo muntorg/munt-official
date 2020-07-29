@@ -14,6 +14,7 @@
 #include "NJSIP2pNetworkListener.hpp"
 #include "NJSIAccountsController.hpp"
 #include "NJSIAccountsListener.hpp"
+#include "NJSIWitnessController.hpp"
 #include "NJSIGenerationController.hpp"
 #include "NJSIGenerationListener.hpp"
 
@@ -31,6 +32,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports)
     NJSIP2pNetworkListener::Init(env, exports);
     NJSIAccountsController::Init(env, exports);
     NJSIAccountsListener::Init(env, exports);
+    NJSIWitnessController::Init(env, exports);
     NJSIGenerationController::Init(env, exports);
     NJSIGenerationListener::Init(env, exports);
     return exports;
