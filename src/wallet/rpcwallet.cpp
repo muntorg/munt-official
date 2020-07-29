@@ -464,6 +464,9 @@ static void SendMoney(CWallet * const pwallet, CAccount* fromAccount, const CTxD
             if (unspentWitnessOutputs.size() > 0)
             {
                 const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessTxIndex, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+                (unused) currentWitnessHeight;
+                (unused) currentWitnessTxIndex;
+                (unused) currentWitnessOutpoint;
                 const std::vector<CAccount*> accounts = pwallet->FindAccountsForTransaction(currentWitnessTxOut);
                 accountsToTry.clear();
                 for ( const auto& accountToTry : accounts )
