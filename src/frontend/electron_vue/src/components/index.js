@@ -1,13 +1,13 @@
 import Vue from "vue";
 
 import CurrencyInput from "./CurrencyInput";
+import MainHeader from "./layout/MainHeader";
 import NovoButtonSection from "./layout/NovoButtonSection";
 import NovoFormField from "./layout/NovoFormField";
-import NovoPageLayout from "./layout/NovoPageLayout";
 import NovoSection from "./layout/NovoSection";
 
 Vue.component(CurrencyInput.name, CurrencyInput);
+Vue.component(MainHeader.name, MainHeader);
 Vue.component(NovoButtonSection.name, NovoButtonSection);
 Vue.component(NovoFormField.name, NovoFormField);
-Vue.component(NovoPageLayout.name, NovoPageLayout);
 Vue.component(NovoSection.name, NovoSection);

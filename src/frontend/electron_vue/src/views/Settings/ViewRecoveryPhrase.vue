@@ -25,7 +25,7 @@
     </div>
 
     <portal to="footer-slot">
-      <novo-button-section class="footer">
+      <novo-button-section>
         <button
           v-if="current === 1"
           @click="getRecoveryPhrase"
@@ -96,9 +96,5 @@ export default {
   word-spacing: 4px;
   background-color: #f5f5f5;
   user-select: all;
-}
-
-.footer {
-  padding: 20px;
 }
 </style>

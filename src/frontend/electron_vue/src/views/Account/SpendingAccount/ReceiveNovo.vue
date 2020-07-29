@@ -1,5 +1,9 @@
 <template>
   <div class="receive-novo flex-col">
+    <portal to="sidebar-right-title">
+      {{ $t("buttons.receive") }}
+    </portal>
+
     <div class="main">
       <h4>{{ $t("receive_novo.your_address") }}</h4>
       <div class="qr" @click="copyAddress">

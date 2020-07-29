@@ -32,7 +32,7 @@
     </div>
 
     <portal to="footer-slot">
-      <novo-button-section class="footer">
+      <novo-button-section>
         <button
           v-if="current === 1"
           @click="nextStep"
@@ -139,9 +139,3 @@ export default {
   }
 };
 </script>
-
-<style lang="less" scoped>
-.footer {
-  padding: 0 20px;
-}
-</style>

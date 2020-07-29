@@ -1,14 +1,14 @@
 <template>
-  <section class="wallet-layout flex-row">
-    <section class="sidebar flex-col">
-      <header class="flex-row">
+  <section class="wallet-layout flex-row" :class="walletLayoutClasses">
+    <section class="sidebar-left">
+      <section class="header flex-row">
         <div class="logo" />
         <div class="total-balance">
           {{ totalBalance }}
         </div>
-      </header>
+      </section>
       <accounts-section class="accounts" />
-      <footer class="flex-row">
+      <section class="footer flex-row">
         <div class="status" />
         <div class="button" @click="changeLockSettings">
           <fa-icon :icon="['fal', lockIcon]" />
@@ -19,9 +19,41 @@
         <div class="button" @click="showSettings">
           <fa-icon :icon="['fal', 'user-circle']" />
         </div>
-      </footer>
+      </section>
     </section>
-    <router-view class="main" />
+    <section class="main">
+      <portal-target
+        ref="headerSlot"
+        name="header-slot"
+        class="header"
+        @change="headerSlotChanged"
+      ></portal-target>
+      <section class="content scrollable">
+        <router-view />
+      </section>
+      <portal-target
+        ref="footerSlot"
+        name="footer-slot"
+        class="footer"
+        @change="footerSlotChanged"
+      ></portal-target>
+    </section>
+    <section class="sidebar-right">
+      <section class="header flex-row">
+        <div class="title">
+          <portal-target name="sidebar-right-title" />
+        </div>
+        <div class="close" @click="closeRightSidebar">
+          <fa-icon :icon="['fal', 'times']" />
+        </div>
+      </section>
+      <portal-target
+        class="component"
+        ref="sidebarRight"
+        name="sidebar-right"
+        @change="sidebarRightSlotChanged"
+      />
+    </section>
   </section>
 </template>
 
@@ -34,19 +66,39 @@ import EventBus from "../EventBus";
 export default {
   name: "WalletLayout",
   data() {
-    return {};
+    return {
+      isHeaderSlotEmpty: true,
+      isFooterSlotEmpty: true,
+      isSidebarRightSlotEmpty: true
+    };
   },
   components: {
     AccountsSection
   },
   computed: {
     ...mapState(["activeAccount", "walletPassword"]),
-    ...mapGetters(["totalBalance", "accounts", "miningAccount"]),
+    ...mapGetters(["totalBalance", "miningAccount"]),
+    walletLayoutClasses() {
+      let classes = [];
+      if (this.isHeaderSlotEmpty) classes.push("no-header");
+      if (this.isFooterSlotEmpty) classes.push("no-footer");
+      if (this.isSidebarRightSlotEmpty) classes.push("no-sidebar-right");
+      return classes;
+    },
     lockIcon() {
       return this.walletPassword ? "unlock" : "lock";
     }
   },
   methods: {
+    headerSlotChanged(newContent) {
+      this.isHeaderSlotEmpty = !newContent;
+    },
+    footerSlotChanged(newContent) {
+      this.isFooterSlotEmpty = !newContent;
+    },
+    sidebarRightSlotChanged(newContent) {
+      this.isSidebarRightSlotEmpty = !newContent;
+    },
     showMining() {
       if (this.miningAccount) {
         if (this.$route.path === `/account/${this.miningAccount.UUID}`) return;
@@ -76,6 +128,9 @@ export default {
           showButtons: false
         });
       }
+    },
+    closeRightSidebar() {
+      EventBus.$emit("close-right-sidebar");
     }
   }
 };
@@ -83,37 +138,86 @@ export default {
 
 <style lang="less" scoped>
 .wallet-layout {
-  width: 100%;
   height: 100vh;
   overflow: hidden;
 
-  & > .sidebar {
-    flex: 0 0 var(--sidebar-width);
-    max-width: var(--sidebar-width);
-    background: var(--sidebar-background-color);
-    color: var(--sidebar-color);
+  --header-height-main: var(--header-height);
+  --footer-height-main: var(--footer-height);
 
-    & > header {
+  &.no-header {
+    --header-height-main: 0px;
+
+    & > .main > .header {
+      display: none;
+    }
+  }
+
+  &.no-footer {
+    --footer-height-main: 0px;
+    & > .main > .footer {
+      display: none;
+    }
+  }
+
+  &.no-sidebar-right {
+    --sidebar-right-width: 0px;
+
+    & > .sidebar-right {
+      display: none;
+    }
+  }
+
+  & > .sidebar-left {
+    width: var(--sidebar-left-width);
+    background: var(--sidebar-left-background-color);
+    color: var(--sidebar-left-color);
+
+    & > .header {
       height: var(--header-height);
-      border-bottom: 1px solid var(--sidebar-border-color);
+      border-bottom: 1px solid var(--sidebar-left-border-color);
     }
 
     & > .accounts {
       height: calc(100% - var(--header-height) - var(--footer-height));
     }
 
-    & > footer {
+    & > .footer {
       height: var(--footer-height);
-      border-top: 1px solid var(--sidebar-border-color);
+      border-top: 1px solid var(--sidebar-left-border-color);
     }
   }
 
   & > .main {
-    flex: 0 0 calc(100% - var(--sidebar-width));
+    width: calc(100% - var(--sidebar-left-width) - var(--sidebar-right-width));
+
+    & > .header {
+      height: var(--header-height);
+      border-bottom: 1px solid var(--main-border-color);
+      padding: 0 20px;
+    }
+
+    & > .content {
+      height: calc(
+        100% - var(--header-height-main) - var(--footer-height-main)
+      );
+      padding: 20px;
+    }
+
+    & > .footer {
+      height: var(--footer-height);
+      border-top: 1px solid var(--main-border-color);
+      line-height: var(--footer-height);
+      padding: 0 20px;
+    }
+  }
+
+  & > .sidebar-right {
+    width: var(--sidebar-right-width);
+    background: var(--sidebar-right-background-color);
   }
 }
 
-.sidebar > header {
+.sidebar-left > .header {
   padding: 20px;
   color: #fff;
 
@@ -130,12 +234,10 @@ export default {
   & .total-balance {
     padding: 0 0 0 10px;
     line-height: 22px;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 }
 
-.sidebar > footer {
+.sidebar-left > .footer {
   font-size: 16px;
   font-weight: 400;
 
@@ -151,6 +253,28 @@ export default {
     &:hover {
       background-color: #222;
     }
+  }
+}
+
+.sidebar-right {
+  padding: 0 24px;
+
+  & > .header {
+    line-height: 62px;
+    font-size: 1.1em;
+    font-weight: 500;
+
+    & .title {
+      flex: 1;
+    }
+
+    & .close {
+      cursor: pointer;
+    }
+  }
+
+  & .component {
+    height: calc(100% - 72px);
   }
 }
 </style>

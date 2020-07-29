@@ -1,23 +1,24 @@
 <template>
-  <novo-page-layout
-    class="holding-account"
-    :right-section="rightSectionComponent"
-    @close-right-section="closeRightSection"
-  >
-    <template v-slot:header>
+  <div class="holding-account">
+    <portal to="header-slot">
       <section class="header flex-row">
-        <div class="info">
-          <div class="label ellipsis">{{ account.label }}</div>
-          <div class="balance ellipsis">{{ account.balance }}</div>
-        </div>
-        <div class="settings flex-col" v-if="false">
+        <main-header
+          class="info"
+          :title="account.label"
+          :subtitle="account.balance"
+        />
+        <div class="settings flex-col">
           <span>
             <fa-icon :icon="['fal', 'cog']" />
           </span>
         </div>
       </section>
-    </template>
-  </novo-page-layout>
+    </portal>
+
+    <portal to="footer-slot">
+      <div />
+    </portal>
+  </div>
 </template>
 
 <script>
@@ -42,39 +43,24 @@ export default {
 </script>
 
 <style lang="less" scoped>
-::v-deep {
-  & .header {
-    & > .info {
-      width: calc(100% - 48px - 26px);
-      padding-right: 10px;
-
-      & > .label {
-        font-size: 1.1em;
-        font-weight: 500;
-        line-height: 20px;
-      }
-
-      & > .balance {
-        line-height: 20px;
-      }
-    }
-
-    & > .settings {
-      font-size: 16px;
-
-      & span {
-        padding: 10px;
-        cursor: pointer;
-
-        &:hover {
-          background: #f5f5f5;
-        }
-      }
-    }
+.header {
+  & > .info {
+    width: calc(100% - 26px);
+    padding-right: 10px;
   }
 
-  & .footer {
-    text-align: center;
+  & > .settings {
+    font-size: 16px;
+    padding: calc((var(--header-height) - 40px) / 2) 0;
+
+    & span {
+      padding: 10px;
+      cursor: pointer;
+
+      &:hover {
+        background: #f5f5f5;
+      }
+    }
   }
 }
 </style>

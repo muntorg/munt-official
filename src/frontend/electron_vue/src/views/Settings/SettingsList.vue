@@ -1,5 +1,8 @@
 <template>
   <div class="settings-list-view">
+    <portal to="header-slot">
+      <main-header :title="$t('settings.header')" />
+    </portal>
     <div class="settings-row">
       <router-link :to="{ name: 'view-recovery-phrase' }">
         {{ $t("settings.view_recovery_phrase") }}
@@ -12,6 +15,10 @@
         <fa-icon :icon="['fal', 'long-arrow-right']" class="arrow" />
       </router-link>
     </div>
+
+    <portal to="footer-slot">
+      <div />
+    </portal>
   </div>
 </template>
 

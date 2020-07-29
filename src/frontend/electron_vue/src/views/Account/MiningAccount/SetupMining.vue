@@ -1,14 +1,8 @@
 <template>
-  <novo-page-layout class="setup-mining">
-    <template v-slot:header>
-      <section class="header flex-row">
-        <div class="info">
-          <div class="label">
-            {{ $t("setup_mining.title") }}
-          </div>
-        </div>
-      </section>
-    </template>
+  <div class="setup-mining">
+    <portal to="header-slot">
+      <main-header :title="$t('setup_mining.title')"></main-header>
+    </portal>
 
     <novo-section>
       {{ $t("setup_mining.information") }}
@@ -22,17 +16,17 @@
       />
     </novo-form-field>
 
-    <template v-slot:footer>
-      <section class="footer">
+    <portal to="footer-slot">
+      <novo-button-section>
         <button
           @click="createMiningAccount(password)"
           :disabled="!isEnableMiningButtonEnabled"
         >
           {{ $t("buttons.create_mining_account") }}
         </button>
-      </section>
-    </template>
-  </novo-page-layout>
+      </novo-button-section>
+    </portal>
+  </div>
 </template>
 
 <script>
@@ -86,23 +80,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-::v-deep {
-  & .header {
-    & > .info {
-      width: calc(100% - 48px - 26px);
-      padding-right: 10px;
-
-      & > .label {
-        font-size: 1.1em;
-        font-weight: 500;
-        line-height: 20px;
-      }
-    }
-  }
-
-  & .footer {
-    text-align: right;
-    padding-right: 5px;
-  }
+.title {
+  font-size: 1.1em;
+  font-weight: 500;
+  line-height: var(--header-height);
 }
 </style>

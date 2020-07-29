@@ -1,5 +1,9 @@
 <template>
   <div class="send-novo flex-col">
+    <portal to="sidebar-right-title">
+      {{ $t("buttons.send") }}
+    </portal>
+
     <div class="main">
       <input
         v-model="amount"
@@ -108,7 +112,7 @@ export default {
 .send-novo {
   height: 100%;
 
-  & .main {
+  .main {
     flex: 1;
   }
 }

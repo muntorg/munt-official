@@ -118,7 +118,7 @@ export default {
 
 <style lang="less" scoped>
 .accounts {
-  height: calc(100% - var(--header-height) - var(--footer-height));
+  height: 100%;
 
   & h4 {
     padding: 24px 20px 0 20px;
@@ -128,7 +128,7 @@ export default {
   }
 
   & > .scrollable {
-    height: calc(100% - 24px - 20px - 4px);
+    height: calc(100% - 48px);
   }
 }
 
