@@ -10,11 +10,11 @@ void NJSMonitorListener::onPartialChain(int32_t height, int32_t probable_height,
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    auto arg_0 = Napi::Number::New(env, height);
+    auto arg_0 = Napi::Value::From(env, height);
     args.push_back(arg_0);
-    auto arg_1 = Napi::Number::New(env, probable_height);
+    auto arg_1 = Napi::Value::From(env, probable_height);
     args.push_back(arg_1);
-    auto arg_2 = Napi::Number::New(env, offset);
+    auto arg_2 = Napi::Value::From(env, offset);
     args.push_back(arg_2);
     Napi::Value calling_function_as_value = Value().Get("onPartialChain");
     if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
@@ -35,7 +35,7 @@ void NJSMonitorListener::onPruned(int32_t height)
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    auto arg_0 = Napi::Number::New(env, height);
+    auto arg_0 = Napi::Value::From(env, height);
     args.push_back(arg_0);
     Napi::Value calling_function_as_value = Value().Get("onPruned");
     if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
@@ -56,7 +56,7 @@ void NJSMonitorListener::onProcessedSPVBlocks(int32_t height)
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    auto arg_0 = Napi::Number::New(env, height);
+    auto arg_0 = Napi::Value::From(env, height);
     args.push_back(arg_0);
     Napi::Value calling_function_as_value = Value().Get("onProcessedSPVBlocks");
     if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())

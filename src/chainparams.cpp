@@ -316,10 +316,9 @@ public:
                     txNew.vin[0].segregatedSignatureData.stack.push_back(ParseHex("4f6e206a616e756172692031737420746865204475746368206c6f73742074686572652062656c6f7665642047756c64656e"));
                     
                     {
-                        std::string sKey = std::string(sTestnetParams, 1, 8);
-                        sKey += sKey;
-                        sKey += sKey;
-                        genesisWitnessPrivKey.Set((unsigned char*)&sTestnetParams[0],(unsigned char*)&sTestnetParams[0]+32, true);
+                        std::string sKey = sTestnetParams;
+                        sKey.resize(32, 0);
+                        genesisWitnessPrivKey.Set((unsigned char*)&sKey[0],(unsigned char*)&sKey[0]+32, true);
                         
                         CTxOut renewedWitnessTxOutput;
                         renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);

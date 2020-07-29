@@ -34,7 +34,7 @@ Napi::Value NJSIWalletController::HaveUnconfirmedFunds(const Napi::CallbackInfo&
     auto result = IWalletController::HaveUnconfirmedFunds();
 
     //Wrap result in node object
-    auto arg_0 = Napi::Boolean::New(env, result);
+    auto arg_0 = Napi::Value::From(env, result);
 
     return arg_0;
 }
@@ -53,7 +53,7 @@ Napi::Value NJSIWalletController::GetBalanceSimple(const Napi::CallbackInfo& inf
     auto result = IWalletController::GetBalanceSimple();
 
     //Wrap result in node object
-    auto arg_0 = Napi::Number::New(env, result);
+    auto arg_0 = Napi::Value::From(env, result);
 
     return arg_0;
 }
@@ -73,25 +73,25 @@ Napi::Value NJSIWalletController::GetBalance(const Napi::CallbackInfo& info) {
 
     //Wrap result in node object
     auto arg_0 = Napi::Object::New(env);
-    auto arg_0_1 = Napi::Number::New(env, result.availableIncludingLocked);
+    auto arg_0_1 = Napi::Value::From(env, result.availableIncludingLocked);
     arg_0.Set("availableIncludingLocked", arg_0_1);
-    auto arg_0_2 = Napi::Number::New(env, result.availableExcludingLocked);
+    auto arg_0_2 = Napi::Value::From(env, result.availableExcludingLocked);
     arg_0.Set("availableExcludingLocked", arg_0_2);
-    auto arg_0_3 = Napi::Number::New(env, result.availableLocked);
+    auto arg_0_3 = Napi::Value::From(env, result.availableLocked);
     arg_0.Set("availableLocked", arg_0_3);
-    auto arg_0_4 = Napi::Number::New(env, result.unconfirmedIncludingLocked);
+    auto arg_0_4 = Napi::Value::From(env, result.unconfirmedIncludingLocked);
     arg_0.Set("unconfirmedIncludingLocked", arg_0_4);
-    auto arg_0_5 = Napi::Number::New(env, result.unconfirmedExcludingLocked);
+    auto arg_0_5 = Napi::Value::From(env, result.unconfirmedExcludingLocked);
     arg_0.Set("unconfirmedExcludingLocked", arg_0_5);
-    auto arg_0_6 = Napi::Number::New(env, result.unconfirmedLocked);
+    auto arg_0_6 = Napi::Value::From(env, result.unconfirmedLocked);
     arg_0.Set("unconfirmedLocked", arg_0_6);
-    auto arg_0_7 = Napi::Number::New(env, result.immatureIncludingLocked);
+    auto arg_0_7 = Napi::Value::From(env, result.immatureIncludingLocked);
     arg_0.Set("immatureIncludingLocked", arg_0_7);
-    auto arg_0_8 = Napi::Number::New(env, result.immatureExcludingLocked);
+    auto arg_0_8 = Napi::Value::From(env, result.immatureExcludingLocked);
     arg_0.Set("immatureExcludingLocked", arg_0_8);
-    auto arg_0_9 = Napi::Number::New(env, result.immatureLocked);
+    auto arg_0_9 = Napi::Value::From(env, result.immatureLocked);
     arg_0.Set("immatureLocked", arg_0_9);
-    auto arg_0_10 = Napi::Number::New(env, result.totalLocked);
+    auto arg_0_10 = Napi::Value::From(env, result.totalLocked);
     arg_0.Set("totalLocked", arg_0_10);
 
 

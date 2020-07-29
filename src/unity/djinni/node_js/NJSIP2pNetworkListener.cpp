@@ -78,7 +78,7 @@ void NJSIP2pNetworkListener::onConnectionCountChanged_aimpl__(int32_t numConnect
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    auto arg_0 = Napi::Number::New(env, numConnections);
+    auto arg_0 = Napi::Value::From(env, numConnections);
     args.push_back(arg_0);
     Napi::Value calling_function_as_value = Value().Get("onConnectionCountChanged");
     if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
@@ -114,9 +114,9 @@ void NJSIP2pNetworkListener::onBytesChanged_aimpl__(int32_t totalRecv, int32_t t
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    auto arg_0 = Napi::Number::New(env, totalRecv);
+    auto arg_0 = Napi::Value::From(env, totalRecv);
     args.push_back(arg_0);
-    auto arg_1 = Napi::Number::New(env, totalSent);
+    auto arg_1 = Napi::Value::From(env, totalSent);
     args.push_back(arg_1);
     Napi::Value calling_function_as_value = Value().Get("onBytesChanged");
     if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
