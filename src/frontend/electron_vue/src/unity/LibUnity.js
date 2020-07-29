@@ -24,13 +24,16 @@ class LibUnity {
     this.libraryController = new libUnity.NJSILibraryController();
     this.libraryListener = new libUnity.NJSILibraryListener();
 
-    this.rpcController = null;
+    this.walletController = new libUnity.NJSIWalletController();
+    this.walletListener = new libUnity.NJSIWalletListener();
 
     this.accountsController = new libUnity.NJSIAccountsController();
     this.accountsListener = new libUnity.NJSIAccountsListener();
 
     this.generationController = new libUnity.NJSIGenerationController();
     this.generationListener = new libUnity.NJSIGenerationListener();
+
+    this.rpcController = null;
 
     let buildInfo = this.libraryController.BuildInfo();
 
@@ -57,6 +60,26 @@ class LibUnity {
     // Maybe the call to terminate comes before the core is ready.
     // Then it's better to wait for the coreReady signal and then call TerminateUnityLib
     this.libraryController.TerminateUnityLib();
+  }
+
+  _initializeWalletController() {
+    this.walletListener.notifyBalanceChange = function(new_balance) {
+      console.log(`walletListener.notifyBalanceChange: ${new_balance}`);
+    };
+
+    this.walletListener.notifyNewMutation = function(
+      mutation /*, self_committed*/
+    ) {
+      console.log("walletListener.notifyNewMutation");
+      console.log(mutation);
+    };
+
+    this.walletListener.notifyUpdatedTransaction = function(transaction) {
+      console.log("walletListener.notifyUpdatedTransaction");
+      console.log(transaction);
+    };
+
+    this.walletController.setListener(this.walletListener);
   }
 
   async _initializeAccountsController() {
@@ -180,8 +203,13 @@ class LibUnity {
   }
 
   async _coreReady() {
+    this._initializeWalletController();
     this._initializeAccountsController();
     this._initializeGenerationController();
+
+    console.log(`balanceSimple: ${this.walletController.GetBalanceSimple()}`);
+    console.log(`balance:`);
+    console.log(this.walletController.GetBalance());
 
     store.dispatch({
       type: "SET_ACCOUNTS",
