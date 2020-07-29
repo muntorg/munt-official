@@ -44,11 +44,11 @@
  *
  * \section intro_sec Introduction
  *
- * This is the developer documentation of the reference client for an experimental new digital currency called Gulden (https://www.gulden.com),
- * which enables instant payments to anyone, anywhere in the world. Gulden uses peer-to-peer technology to operate
+ * This is the developer documentation of the reference client for an experimental new digital currency called Novo (https://www.novocurrency.com),
+ * which enables instant payments to anyone, anywhere in the world. Novo uses peer-to-peer technology to operate
  * with no central authority: managing transactions and issuing money are carried out collectively by the network.
  *
- * The software is a community-driven open source project, released under the MIT license.
+ * The software is a community-driven open source project, released under the Novo license.
  *
  * \section Navigation
  * Use the buttons <code>Namespaces</code>, <code>Classes</code> or <code>Files</code> at the top of the page to start navigating the code.
@@ -107,7 +107,7 @@ static void AppInit(int argc, char* argv[])
     //
     // Parameters
     //
-    // If Qt is used, parameters/Gulden.conf are parsed in qt/Gulden.cpp's main()
+    // If Qt is used, parameters/.conf are parsed in the qt clients main() implementation
     ParseParameters(argc, argv);
 
     // Process help and version before taking care about datadir
@@ -166,13 +166,13 @@ static void AppInit(int argc, char* argv[])
         {
             if (!IsSwitchChar(argv[i][0]))
             {
-                fprintf(stderr, "Error: Command line contains unexpected token '%s', see GuldenD -h for a list of options.\n", argv[i]);
+                fprintf(stderr, "Error: Command line contains unexpected token '%s', see " DAEMON_NAME " -h for a list of options.\n", argv[i]);
                 exitStatus = EXIT_FAILURE;
                 return;
             }
         }
 
-        // -server defaults to true for GuldenD but not for the GUI so do this here
+        // -server defaults to true for daemon but not for the GUI so do this here
         SoftSetBoolArg("-server", true);
         // Set this early so that parameter interactions go to console
         InitLogging();
@@ -180,7 +180,7 @@ static void AppInit(int argc, char* argv[])
 
         //fixme: (UNITY) - This is now duplicated, factor this out into a common helper.
         // NB! This has to happen before we deamonise
-        // Make sure only a single Gulden process is using the data directory.
+        // Make sure only a single process is using the data directory.
         {
             fs::path pathLockFile = GetDataDir() / ".lock";
             FILE* file = fopen(pathLockFile.string().c_str(), "a"); // empty lock file; created if it doesn't exist.
@@ -209,7 +209,7 @@ static void AppInit(int argc, char* argv[])
 
         if (GetBoolArg("-daemon", false))
         {
-            fprintf(stdout, "Gulden server starting\n");
+            fprintf(stdout, "%s server starting\n", _(PACKAGE_NAME));
             if (!AppLifecycleManager::gApp->daemonise())
             {
                 LogPrintf("Failed to daemonise\n");
@@ -238,7 +238,7 @@ int main(int argc, char* argv[])
 {
     SetupEnvironment();
 
-    // Connect GuldenD signal handlers
+    // Connect daemon signal handlers
     noui_connect();
 
     AppInit(argc, argv);
