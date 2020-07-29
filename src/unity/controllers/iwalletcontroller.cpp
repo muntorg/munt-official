@@ -44,7 +44,7 @@ void IWalletController::setListener(const std::shared_ptr<IWalletListener>& wall
             if (pactiveWallet && walletListener)
             {
                 WalletBalances balances;
-                pactiveWallet->GetBalances(balances, pactiveWallet->activeAccount, true);
+                pactiveWallet->GetBalances(balances, nullptr, true);
                 walletListener->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
             }
         }, std::chrono::milliseconds(BALANCE_NOTIFY_THRESHOLD_MS));
