@@ -64,7 +64,11 @@ class LibUnity {
 
   _initializeWalletController() {
     this.walletListener.notifyBalanceChange = function(new_balance) {
-      console.log(`walletListener.notifyBalanceChange: ${new_balance}`);
+      console.log(`walletListener.notifyBalanceChange`);
+      store.dispatch({
+        type: "SET_WALLET_BALANCE",
+        walletBalance: new_balance
+      });
     };
 
     this.walletListener.notifyNewMutation = function(
@@ -208,8 +212,11 @@ class LibUnity {
     this._initializeGenerationController();
 
     console.log(`balanceSimple: ${this.walletController.GetBalanceSimple()}`);
-    console.log(`balance:`);
-    console.log(this.walletController.GetBalance());
+
+    store.dispatch({
+      type: "SET_WALLET_BALANCE",
+      walletBalance: this.walletController.GetBalance()
+    });
 
     store.dispatch({
       type: "SET_ACCOUNTS",

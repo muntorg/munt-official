@@ -26,6 +26,7 @@ export default new Vuex.Store({
     receiveAddress: null,
     status: AppStatus.start,
     unityVersion: null,
+    walletBalance: null,
     walletExists: null,
     walletPassword: null,
     walletVersion: null
@@ -64,6 +65,9 @@ export default new Vuex.Store({
     },
     SET_UNITY_VERSION(state, payload) {
       state.unityVersion = payload.version;
+    },
+    SET_WALLET_BALANCE(state, payload) {
+      state.walletBalance = payload.walletBalance;
     },
     SET_WALLET_EXISTS(state, walletExists) {
       state.walletExists = walletExists;
@@ -119,6 +123,9 @@ export default new Vuex.Store({
     SET_UNITY_VERSION({ commit }, payload) {
       commit(payload);
     },
+    SET_WALLET_BALANCE({ commit }, payload) {
+      commit(payload);
+    },
     SET_WALLET_EXISTS({ commit }, payload) {
       let status = payload.walletExists
         ? AppStatus.synchronize
@@ -135,7 +142,7 @@ export default new Vuex.Store({
   },
   getters: {
     totalBalance: state => {
-      let balance = state.balance;
+      let balance = state.walletBalance;
       if (balance === undefined || balance === null) return null;
       return (
         (balance.availableIncludingLocked +
