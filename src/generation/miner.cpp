@@ -1095,7 +1095,7 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
         {
             while (true)
             {
-                if (IsChainNearPresent() && !IsInitialBlockDownload())
+                if (IsChainNearPresent() /*&& !IsInitialBlockDownload()*/)
                 {
                     break;
                 }
