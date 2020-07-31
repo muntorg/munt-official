@@ -448,9 +448,30 @@ i_accounts_listener = interface +j +o +n {
     onAccountDeleted(accountUUID : string) : &;
 }
 
+witness_estimate_info_record = record {
+    # Current network weight
+    network_weight : i64;
+    # Weight of resulting witness account
+    weight : i64;
+    # How many parts this weight will be split into
+    parts : i64;
+    # The per block probability of resulting account witnesing
+    estimated_witness_probability : f64;
+    # The estimated number of blocks the resulting account should find per day
+    estimated_blocks_per_day : f64;
+    # The estimated earnings the account should make per day
+    estimated_daily_earnings: i64;
+    # The estimated earnings the account should make over its entire lifetime
+    estimated_lifetime_earnings: i64;
+} deriving(parcelable)
+
 # C++ interface to control witness accounts
 i_witness_controller = interface +c {
+    # Get information on min/max witness periods, weights etc.
     static getNetworkLimits() : map<string, string>;
+    
+    # Get an estimate of weights/parts that a witness account will be funded with
+    static getEstimatedWeight(amount_to_lock : i64, lock_period_in_days : i64) : witness_estimate_info_record;
 }
 
 # C++ interface to control generation of blocks (proof of work)

@@ -30,6 +30,42 @@ Napi::Value NJSIWitnessController::getNetworkLimits(const Napi::CallbackInfo& in
 
     return arg_0;
 }
+Napi::Value NJSIWitnessController::getEstimatedWeight(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 2)
+    {
+        Napi::Error::New(env, "NJSIWitnessController::getEstimatedWeight needs 2 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    auto arg_0 = info[0].ToNumber().Int64Value();
+    auto arg_1 = info[1].ToNumber().Int64Value();
+
+    auto result = IWitnessController::getEstimatedWeight(arg_0,arg_1);
+
+    //Wrap result in node object
+    auto arg_2 = Napi::Object::New(env);
+    auto arg_2_1 = Napi::Value::From(env, result.network_weight);
+    arg_2.Set("network_weight", arg_2_1);
+    auto arg_2_2 = Napi::Value::From(env, result.weight);
+    arg_2.Set("weight", arg_2_2);
+    auto arg_2_3 = Napi::Value::From(env, result.parts);
+    arg_2.Set("parts", arg_2_3);
+    auto arg_2_4 = Napi::Value::From(env, result.estimated_witness_probability);
+    arg_2.Set("estimated_witness_probability", arg_2_4);
+    auto arg_2_5 = Napi::Value::From(env, result.estimated_blocks_per_day);
+    arg_2.Set("estimated_blocks_per_day", arg_2_5);
+    auto arg_2_6 = Napi::Value::From(env, result.estimated_daily_earnings);
+    arg_2.Set("estimated_daily_earnings", arg_2_6);
+    auto arg_2_7 = Napi::Value::From(env, result.estimated_lifetime_earnings);
+    arg_2.Set("estimated_lifetime_earnings", arg_2_7);
+
+
+    return arg_2;
+}
 
 Napi::FunctionReference NJSIWitnessController::constructor;
 
@@ -38,6 +74,7 @@ Napi::Object NJSIWitnessController::Init(Napi::Env env, Napi::Object exports) {
     // Hook all method callbacks
     Napi::Function func = DefineClass(env, "NJSIWitnessController", {
     InstanceMethod("getNetworkLimits", &NJSIWitnessController::getNetworkLimits),
+    InstanceMethod("getEstimatedWeight", &NJSIWitnessController::getEstimatedWeight),
     });
     // Create a peristent reference to the class constructor. This will allow a function called on a class prototype and a function called on instance of a class to be distinguished from each other.
     constructor = Napi::Persistent(func);

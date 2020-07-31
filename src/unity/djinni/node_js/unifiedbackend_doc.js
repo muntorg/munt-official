@@ -301,7 +301,10 @@ declare class NJSIAccountsListener
 /** C++ interface to control witness accounts */
 declare class NJSIWitnessController
 {
+    /** Get information on min/max witness periods, weights etc. */
     static declare function getNetworkLimits(): Map<string, string>;
+    /** Get an estimate of weights/parts that a witness account will be funded with */
+    static declare function getEstimatedWeight(amount_to_lock: number, lock_period_in_days: number): WitnessEstimateInfoRecord;
 }
 /** C++ interface to control generation of blocks (proof of work) */
 declare class NJSIGenerationController

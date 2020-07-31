@@ -3,6 +3,7 @@
 
 #import "DBIWitnessController+Private.h"
 #import "DBIWitnessController.h"
+#import "DBWitnessEstimateInfoRecord+Private.h"
 #import "DJICppWrapperCache+Private.h"
 #import "DJIError.h"
 #import "DJIMarshal+Private.h"
@@ -34,6 +35,15 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     try {
         auto objcpp_result_ = ::IWitnessController::getNetworkLimits();
         return ::djinni::Map<::djinni::String, ::djinni::String>::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull DBWitnessEstimateInfoRecord *)getEstimatedWeight:(int64_t)amountToLock
+                                           lockPeriodInDays:(int64_t)lockPeriodInDays {
+    try {
+        auto objcpp_result_ = ::IWitnessController::getEstimatedWeight(::djinni::I64::toCpp(amountToLock),
+                                                                       ::djinni::I64::toCpp(lockPeriodInDays));
+        return ::djinni_generated::WitnessEstimateInfoRecord::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
