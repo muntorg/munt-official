@@ -74,6 +74,27 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (int64_t)getAvailableCores {
+    try {
+        auto objcpp_result_ = ::IGenerationController::getAvailableCores();
+        return ::djinni::I64::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (int64_t)getMinimumMemory {
+    try {
+        auto objcpp_result_ = ::IGenerationController::getMinimumMemory();
+        return ::djinni::I64::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (int64_t)getMaximumMemory {
+    try {
+        auto objcpp_result_ = ::IGenerationController::getMaximumMemory();
+        return ::djinni::I64::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 namespace djinni_generated {
 
 auto IGenerationController::toCpp(ObjcType objc) -> CppType

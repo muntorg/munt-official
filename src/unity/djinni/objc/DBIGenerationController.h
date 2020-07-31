@@ -37,4 +37,10 @@
 /** Set an override address to use for block generation in place of the default */
 + (BOOL)setGenerationOverrideAddress:(nonnull NSString *)overrideAddress;
 
++ (int64_t)getAvailableCores;
+
++ (int64_t)getMinimumMemory;
+
++ (int64_t)getMaximumMemory;
+
 @end

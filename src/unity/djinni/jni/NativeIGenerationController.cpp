@@ -74,4 +74,31 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IGenerationControlle
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT jlong JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00024CppProxy_getAvailableCores(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IGenerationController::getAvailableCores();
+        return ::djinni::release(::djinni::I64::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jlong JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00024CppProxy_getMinimumMemory(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IGenerationController::getMinimumMemory();
+        return ::djinni::release(::djinni::I64::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jlong JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00024CppProxy_getMaximumMemory(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IGenerationController::getMaximumMemory();
+        return ::djinni::release(::djinni::I64::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 }  // namespace djinni_generated

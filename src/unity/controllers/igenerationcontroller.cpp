@@ -186,4 +186,31 @@ bool IGenerationController::setGenerationOverrideAddress(const std::string& over
     return CWalletDB(*pactiveWallet->dbw).WriteMiningAddressString(overrideAddress);
 }
 
+int64_t IGenerationController::getAvailableCores()
+{
+    return std::max((uint32_t)2, (uint32_t)std::thread::hardware_concurrency());
+}
+
+int64_t IGenerationController::getMinimumMemory()
+{
+    return 128*1024*1024L;
+}
+
+int64_t IGenerationController::getMaximumMemory()
+{
+    uint64_t systemMemoryInMb = systemPhysicalMemoryInBytes()/1024/1024;
+    uint64_t nMaxMemoryInMb = std::min(systemMemoryInMb, defaultSigmaSettings.arenaSizeKb/1024);
+    // 32 bit windows can only address 2gb of memory per process (3gb if /largeaddressaware)
+    // 32 bit linux is 4gb per process.
+    // Limit both accordingly
+    #ifdef ARCH_X86
+        #ifdef WIN32
+            nMaxMemoryInMb = std::min((uint64_t)nMaxMemoryInMb, (uint64_t)1*1024);
+        #else
+            nMaxMemoryInMb = std::min((uint64_t)nMaxMemoryInMb, (uint64_t)2*1024);
+        #endif
+    #endif
+    return nMaxMemoryInMb;
+}
+
 

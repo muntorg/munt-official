@@ -328,6 +328,9 @@ declare class NJSIGenerationController
     static declare function getGenerationOverrideAddress(): string;
     /** Set an override address to use for block generation in place of the default */
     static declare function setGenerationOverrideAddress(overrideAddress: string): boolean;
+    static declare function getAvailableCores(): number;
+    static declare function getMinimumMemory(): number;
+    static declare function getMaximumMemory(): number;
 }
 /** Interface to receive updates about block generation */
 declare class NJSIGenerationListener

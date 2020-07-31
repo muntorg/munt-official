@@ -471,6 +471,10 @@ i_generation_controller = interface +c {
     static getGenerationOverrideAddress() : string;
     # Set an override address to use for block generation in place of the default
     static setGenerationOverrideAddress(overrideAddress : string) : bool;
+    
+    static getAvailableCores() : i64;
+    static getMinimumMemory() : i64;
+    static getMaximumMemory() : i64;
 }
 
 # Interface to receive updates about block generation

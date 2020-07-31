@@ -52,5 +52,11 @@ private:
     /** Set an override address to use for block generation in place of the default */
     Napi::Value setGenerationOverrideAddress(const Napi::CallbackInfo& info);
 
+    Napi::Value getAvailableCores(const Napi::CallbackInfo& info);
+
+    Napi::Value getMinimumMemory(const Napi::CallbackInfo& info);
+
+    Napi::Value getMaximumMemory(const Napi::CallbackInfo& info);
+
 };
 #endif //DJINNI_GENERATED_NJSIGENERATIONCONTROLLER_HPP

@@ -4,6 +4,19 @@
       <main-header :title="account.label" :subtitle="account.balance" />
     </portal>
 
+    <h4>number of threads</h4>
+    <vue-slider 
+    v-model="miningThreadCount" 
+    :min="1"
+    :max="64"
+    />
+    <h4>memory to use</h4>
+    <vue-slider 
+    v-model="miningMemorySize" 
+    :min="1"
+    :max="12"
+    />
+    
     <h4>active: {{ generationActive }}</h4>
     <h4>stats:</h4>
     <pre>{{ generationStats }}</pre>
@@ -22,11 +35,22 @@
 <script>
 import { mapState } from "vuex";
 import UnityBackend from "../../../unity/UnityBackend";
+import VueSlider from 'vue-slider-component'
+import 'vue-slider-component/theme/antd.css'
 
 export default {
   name: "MiningAccount",
+   components: {
+    VueSlider
+  },
   props: {
     account: null
+  },
+  data () {
+    return {
+      miningMemorySize: 12,
+      miningThreadCount: 2
+    }
   },
   computed: {
     ...mapState(["generationActive", "generationStats"])
@@ -36,7 +60,7 @@ export default {
       if (this.generationActive) {
         UnityBackend.StopGeneration();
       } else {
-        let result = UnityBackend.StartGeneration(1, "4096M"); // use hardcoded settings for now
+        let result = UnityBackend.StartGeneration(this.miningThreadCount, this.miningMemorySize+"G");
         if (result === false) {
           // todo: starting failed, notify user
         }

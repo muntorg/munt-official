@@ -45,4 +45,10 @@ public:
 
     /** Set an override address to use for block generation in place of the default */
     static bool setGenerationOverrideAddress(const std::string & overrideAddress);
+
+    static int64_t getAvailableCores();
+
+    static int64_t getMinimumMemory();
+
+    static int64_t getMaximumMemory();
 };
