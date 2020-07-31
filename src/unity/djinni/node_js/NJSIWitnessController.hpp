@@ -6,6 +6,7 @@
 
 
 #include "witness_estimate_info_record.hpp"
+#include "witness_funding_result_record.hpp"
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -30,6 +31,9 @@ private:
 
     /** Get an estimate of weights/parts that a witness account will be funded with */
     Napi::Value getEstimatedWeight(const Napi::CallbackInfo& info);
+
+    /** Fund a witness account */
+    Napi::Value fundWitnessAccount(const Napi::CallbackInfo& info);
 
 };
 #endif //DJINNI_GENERATED_NJSIWITNESSCONTROLLER_HPP

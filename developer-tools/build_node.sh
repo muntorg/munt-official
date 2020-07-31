@@ -15,14 +15,14 @@ if test -f developer-tools/private.conf; then
     source developer-tools/private.conf
 fi
 
-export CXXFLAGS="-fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS"
+export CXXFLAGS="-fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS -D_HAS_EXCEPTIONS=1"
 export CFLAGS=${CXXFLAGS}
 if [ ${PLATFORM_VENDOR} = "apple" ]; then
     export LDFLAGS="-fPIC -Bsymbolic -Wl,-undefined -Wl,dynamic_lookup"
 else
     if [ ${PLATFORM_OS} = "mingw32" ] ||  [ ${PLATFORM_OS} = "mingw64" ]; then
         export LDFLAGS="-fPIC -Bsymbolic -L${DIR}/../build_node -lnode -Wl,--gc-sections"
-        export EXTRA_CXX_FLAGS="-DNODE_HOST_BINARY=node.exe -DUSING_UV_SHARED=1 -DUSING_V8_SHARED=1 -DV8_DEPRECATION_WARNINGS=1 -DV8_DEPRECATION_WARNINGS -DV8_IMMINENT_DEPRECATION_WARNINGS -DWIN32 -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -D_HAS_EXCEPTIONS=0 -DBUILDING_NODE_EXTENSION -D_WINDLL"
+        export EXTRA_CXX_FLAGS="-DNODE_HOST_BINARY=node.exe -DUSING_UV_SHARED=1 -DUSING_V8_SHARED=1 -DV8_DEPRECATION_WARNINGS=1 -DV8_DEPRECATION_WARNINGS -DV8_IMMINENT_DEPRECATION_WARNINGS -DWIN32 -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DBUILDING_NODE_EXTENSION -D_WINDLL"
     else
         export LDFLAGS="-fPIC -Bsymbolic -Wl,--gc-sections"
     fi

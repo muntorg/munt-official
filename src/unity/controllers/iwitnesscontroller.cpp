@@ -27,6 +27,7 @@
 #include "../unity_impl.h"
 #include "i_witness_controller.hpp"
 #include "witness_estimate_info_record.hpp"
+#include "witness_funding_result_record.hpp"
 
 #include <consensus/validation.h>
 
@@ -97,3 +98,41 @@ WitnessEstimateInfoRecord IWitnessController::getEstimatedWeight(int64_t amountT
     
     return WitnessEstimateInfoRecord(networkWeight, ourTotalWeight, optimalAmounts.size(), witnessProbability, estimatedBlocksPerDay, estimatedDaileyEarnings, estimatedLifetimeEarnings);
 }
+
+WitnessFundingResultRecord IWitnessController::fundWitnessAccount(const std::string& fundingAccountUUID, const std::string& witnessAccountUUID, int64_t fundingAmount, int64_t requestedLockPeriodInBlocks)
+{
+    if (!pactiveWallet)
+        return WitnessFundingResultRecord("no active wallet present", "", 0);;
+    
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    
+    auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(fundingAccountUUID));
+    if (findIter != pactiveWallet->mapAccounts.end())
+        return WitnessFundingResultRecord("invalid funding account", "", 0);;
+    CAccount* fundingAccount = findIter->second;
+    
+    findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(witnessAccountUUID));
+    if (findIter != pactiveWallet->mapAccounts.end())
+        return WitnessFundingResultRecord("invalid witness account", "", 0);;
+    CAccount* witnessAccount = findIter->second;
+    
+    if (!witnessAccount->IsPoW2Witness())
+        return WitnessFundingResultRecord("not a witness account", "", 0);;
+        
+    try
+    {
+        std::string txid;
+        CAmount fee;
+        fundwitnessaccount(pactiveWallet, fundingAccount, witnessAccount, fundingAmount, requestedLockPeriodInBlocks, true, &txid, &fee);
+        return WitnessFundingResultRecord("success", txid, fee);
+    }
+    catch (witness_error& e)
+    {
+        return WitnessFundingResultRecord(e.what(), "", 0);
+    }
+    catch (std::runtime_error& e)
+    {
+        return WitnessFundingResultRecord(e.what(), "", 0);
+    }
+}
+

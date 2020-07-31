@@ -4,6 +4,7 @@
 #include "NativeIWitnessController.hpp"  // my header
 #include "Marshal.hpp"
 #include "NativeWitnessEstimateInfoRecord.hpp"
+#include "NativeWitnessFundingResultRecord.hpp"
 
 namespace djinni_generated {
 
@@ -36,6 +37,18 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IWitnessController_00
         auto r = ::IWitnessController::getEstimatedWeight(::djinni::I64::toCpp(jniEnv, j_amountToLock),
                                                           ::djinni::I64::toCpp(jniEnv, j_lockPeriodInDays));
         return ::djinni::release(::djinni_generated::NativeWitnessEstimateInfoRecord::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IWitnessController_00024CppProxy_fundWitnessAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_fundingAccountUUID, jstring j_witnessAccountUUID, jlong j_fundingAmount, jlong j_requestedLockPeriodInBlocks)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IWitnessController::fundWitnessAccount(::djinni::String::toCpp(jniEnv, j_fundingAccountUUID),
+                                                          ::djinni::String::toCpp(jniEnv, j_witnessAccountUUID),
+                                                          ::djinni::I64::toCpp(jniEnv, j_fundingAmount),
+                                                          ::djinni::I64::toCpp(jniEnv, j_requestedLockPeriodInBlocks));
+        return ::djinni::release(::djinni_generated::NativeWitnessFundingResultRecord::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 

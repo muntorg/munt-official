@@ -749,6 +749,7 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/i_accounts_controller.hpp \
   unity/djinni/cpp/i_witness_controller.hpp \
   unity/djinni/cpp/witness_estimate_info_record.hpp \
+  unity/djinni/cpp/witness_funding_result_record.hpp \
   unity/djinni/cpp/i_accounts_listener.hpp \
   unity/djinni/cpp/i_wallet_controller.hpp \
   unity/djinni/cpp/i_wallet_listener.hpp \

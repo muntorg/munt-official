@@ -4,6 +4,7 @@
 #import "DBIWitnessController+Private.h"
 #import "DBIWitnessController.h"
 #import "DBWitnessEstimateInfoRecord+Private.h"
+#import "DBWitnessFundingResultRecord+Private.h"
 #import "DJICppWrapperCache+Private.h"
 #import "DJIError.h"
 #import "DJIMarshal+Private.h"
@@ -44,6 +45,19 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
         auto objcpp_result_ = ::IWitnessController::getEstimatedWeight(::djinni::I64::toCpp(amountToLock),
                                                                        ::djinni::I64::toCpp(lockPeriodInDays));
         return ::djinni_generated::WitnessEstimateInfoRecord::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull DBWitnessFundingResultRecord *)fundWitnessAccount:(nonnull NSString *)fundingAccountUUID
+                                          witnessAccountUUID:(nonnull NSString *)witnessAccountUUID
+                                               fundingAmount:(int64_t)fundingAmount
+                                 requestedLockPeriodInBlocks:(int64_t)requestedLockPeriodInBlocks {
+    try {
+        auto objcpp_result_ = ::IWitnessController::fundWitnessAccount(::djinni::String::toCpp(fundingAccountUUID),
+                                                                       ::djinni::String::toCpp(witnessAccountUUID),
+                                                                       ::djinni::I64::toCpp(fundingAmount),
+                                                                       ::djinni::I64::toCpp(requestedLockPeriodInBlocks));
+        return ::djinni_generated::WitnessFundingResultRecord::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

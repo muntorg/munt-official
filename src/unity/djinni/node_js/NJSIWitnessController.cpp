@@ -66,6 +66,36 @@ Napi::Value NJSIWitnessController::getEstimatedWeight(const Napi::CallbackInfo& 
 
     return arg_2;
 }
+Napi::Value NJSIWitnessController::fundWitnessAccount(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 4)
+    {
+        Napi::Error::New(env, "NJSIWitnessController::fundWitnessAccount needs 4 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+    std::string arg_1 = info[1].As<Napi::String>();
+    auto arg_2 = info[2].ToNumber().Int64Value();
+    auto arg_3 = info[3].ToNumber().Int64Value();
+
+    auto result = IWitnessController::fundWitnessAccount(arg_0,arg_1,arg_2,arg_3);
+
+    //Wrap result in node object
+    auto arg_4 = Napi::Object::New(env);
+    auto arg_4_1 = Napi::String::New(env, result.status);
+    arg_4.Set("status", arg_4_1);
+    auto arg_4_2 = Napi::String::New(env, result.txid);
+    arg_4.Set("txid", arg_4_2);
+    auto arg_4_3 = Napi::Value::From(env, result.fee);
+    arg_4.Set("fee", arg_4_3);
+
+
+    return arg_4;
+}
 
 Napi::FunctionReference NJSIWitnessController::constructor;
 
@@ -75,6 +105,7 @@ Napi::Object NJSIWitnessController::Init(Napi::Env env, Napi::Object exports) {
     Napi::Function func = DefineClass(env, "NJSIWitnessController", {
     InstanceMethod("getNetworkLimits", &NJSIWitnessController::getNetworkLimits),
     InstanceMethod("getEstimatedWeight", &NJSIWitnessController::getEstimatedWeight),
+    InstanceMethod("fundWitnessAccount", &NJSIWitnessController::fundWitnessAccount),
     });
     // Create a peristent reference to the class constructor. This will allow a function called on a class prototype and a function called on instance of a class to be distinguished from each other.
     constructor = Napi::Persistent(func);
