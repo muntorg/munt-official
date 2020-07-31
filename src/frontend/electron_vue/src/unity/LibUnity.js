@@ -33,6 +33,8 @@ class LibUnity {
     this.generationController = new libUnity.NJSIGenerationController();
     this.generationListener = new libUnity.NJSIGenerationListener();
 
+    this.witnessController = new libUnity.NJSIWitnessController();
+
     this.rpcController = null;
 
     let buildInfo = this.libraryController.BuildInfo();
@@ -752,6 +754,23 @@ class LibUnity {
         result = this.generationController.stopGeneration();
       }
       this._postExecuteIpcCommand("StopGeneration", result);
+      return result;
+    });
+    ipc.on("GetNetworkLimits", event => {
+      let result = this._preExecuteIpcCommand("GetNetworkLimits");
+      if (result === undefined) {
+        result = this.witnessController.getNetworkLimits();
+      }
+      this._postExecuteIpcCommand("GetNetworkLimits", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("GetNetworkLimits", async () => {
+      let result = this._preExecuteIpcCommand("GetNetworkLimits");
+      if (result === undefined) {
+        result = this.witnessController.getNetworkLimits();
+      }
+      this._postExecuteIpcCommand("GetNetworkLimits", result);
       return result;
     });
     /* inject:code */

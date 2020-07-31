@@ -95,10 +95,7 @@ class UnityBackend {
   }
 
   static PerformPaymentToRecipientAsync(request, substract_fee) {
-    return ipc.callMain("PerformPaymentToRecipient", {
-      request,
-      substract_fee
-    });
+    return ipc.callMain("PerformPaymentToRecipient", { request, substract_fee });
   }
 
   static ResendTransaction(txHash) {
@@ -155,6 +152,14 @@ class UnityBackend {
 
   static StopGenerationAsync() {
     return ipc.callMain("StopGeneration");
+  }
+
+  static GetNetworkLimits() {
+    return ipc.sendSync("GetNetworkLimits");
+  }
+
+  static GetNetworkLimitsAsync() {
+    return ipc.callMain("GetNetworkLimits");
   }
 
   /* inject:code */

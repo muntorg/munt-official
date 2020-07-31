@@ -38,6 +38,12 @@ const generateInfo = [
     controller: "generationController",
     functions: ["StartGeneration", "StopGeneration"],
     results: []
+  },
+  {
+    className: "NJSIWitnessController",
+    controller: "witnessController",
+    functions: ["GetNetworkLimits", "GetEstimatedWeight", "FundWitnessAccount"],
+    results: []
   }
 ];
 
