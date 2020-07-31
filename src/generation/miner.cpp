@@ -1091,17 +1091,19 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
 
         // Ensure we are reasonably caught up with peers, so we don't waste time mining on an obsolete chain.
         // In testnet/regtest mode we expect to be able to mine without peers.
+        #if 0
         if (!regTest && !testnet)
         {
             while (true)
             {
-                if (IsChainNearPresent() /*&& !IsInitialBlockDownload()*/)
+                if (IsChainNearPresent() && !IsInitialBlockDownload())
                 {
                     break;
                 }
                 MilliSleep(1000);
             }
         }
+        #endif
 
         while (true)
         {
@@ -1253,7 +1255,7 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
                         BOOST_SCOPE_EXIT(&workerThreads, &interrupt) { interrupt=true; workerThreads->stop(); workerThreads->join(); delete workerThreads;} BOOST_SCOPE_EXIT_END
                         int nCount = 0;
                         while (true)
-                        {    
+                        {
                             //fixme: (SIGMA) - Instead of busy polling it would be better if we could wait here on various signals, we would need to wait on several signals
                             // 1) A signal for block found by one of our mining threads
                             // 2) A signal for chain tip change
@@ -1267,13 +1269,6 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
                             //fixme: (SIGMA) - This can be improved in cases where we have 'uneven' contexts, one may still have lots of work when another is finished, we might want to only restart one of them and not both...
                             // If at least one of the threads is done working then abandon the rest of them, and then see if we have found a block or need to start again with a different block etc.
                             if (nThreadCounter < sigmaContexts.size())
-                            {
-                                break;
-                            }
-
-                            // Abort for timestamp update if its been longer than ~3 minutes; but only if difficulty reduction has not yet kicked in and we are on a machine that generated arenas 'quickly'
-                            // Randomly stagger the checks so that all miners perform slightly differently.
-                            if (nMissedSteps == 0 && nArenaSetupTime < 5000.0 && (GetTimeMillis() - nStart > nTimeout))
                             {
                                 break;
                             }
