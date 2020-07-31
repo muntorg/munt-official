@@ -19,12 +19,16 @@
             </div>
           </div>
         </div>
+        <div class="account active" v-if="showNewAccountFor(category)">
+          <div>New account</div>
+          <div class="balance">0</div>
+        </div>
         <div v-if="opened[category]">
           <div
             v-for="account in getAccountsFor(category)"
             :key="account.UUID"
             class="account"
-            :class="{ active: account.UUID === activeAccount }"
+            :class="accountClass(account.UUID)"
           >
             <router-link
               class="flex-col"
@@ -76,6 +80,12 @@ export default {
     }
   },
   methods: {
+    accountClass(accountUUID) {
+      return this.$route.name === "account" &&
+        accountUUID === this.activeAccount
+        ? "active"
+        : "";
+    },
     getAccountsFor(category) {
       let types;
       switch (category) {
@@ -109,8 +119,23 @@ export default {
         }, 0)
         .toFixed(2);
     },
+    showNewAccountFor(category) {
+      switch (category) {
+        case "holding":
+          return this.$route.name === "add-holding-account";
+        default:
+          return false;
+      }
+    },
     addAccountFor(category) {
-      console.log(`todo: add account for ${category}`);
+      switch (category) {
+        case "holding":
+          this.$router.push({ name: "add-holding-account" });
+          break;
+        default:
+          console.log(`add account for ${category} not implemented yet`);
+          break;
+      }
     }
   }
 };
@@ -197,22 +222,29 @@ export default {
 }
 
 .account {
-  & a {
-    padding: 8px 20px;
-    font-size: 1em;
-    color: #ccc;
-    line-height: 16px;
-    cursor: pointer;
+  padding: 8px 20px;
+  font-size: 1em;
+  color: #ccc;
+  line-height: 16px;
 
-    &:hover {
-      background-color: #222;
-    }
+  &:hover {
+    background-color: #222;
   }
 
-  &.active a {
+  & a {
+    color: #ccc;
+    cursor: pointer;
+  }
+
+  &.active {
     font-weight: 500;
     color: #fff;
     background-color: #009572;
+
+    & a {
+      font-weight: 500;
+      color: #fff;
+    }
   }
 
   & .balance {
