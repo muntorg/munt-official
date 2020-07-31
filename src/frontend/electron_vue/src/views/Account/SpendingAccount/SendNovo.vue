@@ -9,13 +9,19 @@
         v-model="amount"
         ref="amount"
         type="number"
+        step="0.01"
         placeholder="0.00"
+        :class="amountClass"
         min="0"
+        :max="maxAmount"
+        @change="isAmountInvalid = false"
       />
       <input
         v-model="address"
         type="text"
         :placeholder="$t('send_novo.enter_novo_address')"
+        :class="addressClass"
+        @keydown="isAddressInvalid = false"
       />
       <input
         v-model="label"
@@ -28,10 +34,13 @@
         type="password"
         v-show="walletPassword === null"
         :placeholder="$t('send_novo.enter_password')"
-        :class="computedStatus"
+        :class="passwordClass"
+        @keydown="onPasswordKeydown"
       />
     </div>
-    <button @click="trySend">{{ $t("buttons.send") }}</button>
+    <button @click="trySend" :disabled="disableSendButton">
+      {{ $t("buttons.send") }}
+    </button>
   </div>
 </template>
 
@@ -44,40 +53,79 @@ export default {
   data() {
     return {
       amount: null,
+      maxAmount: null,
       address: null,
       label: null,
       password: null,
+      isAmountInvalid: false,
+      isAddressInvalid: false,
       isPasswordInvalid: false
     };
   },
   computed: {
     ...mapState(["walletPassword"]),
     computedPassword() {
-      return this.walletPassword ? this.walletPassword : this.password;
+      return this.walletPassword ? this.walletPassword : this.password || "";
     },
-    computedStatus() {
+    amountClass() {
+      return this.isAmountInvalid ? "error" : "";
+    },
+    addressClass() {
+      return this.isAddressInvalid ? "error" : "";
+    },
+    passwordClass() {
       return this.isPasswordInvalid ? "error" : "";
+    },
+    hasErrors() {
+      return (
+        this.isAmountInvalid || this.isAddressInvalid || this.isPasswordInvalid
+      );
+    },
+    disableSendButton() {
+      if (isNaN(parseFloat(this.amount))) return true;
+      if (this.address === null || this.address.trim().length === 0)
+        return true;
+      if (this.computedPassword.trim().length === 0) return true;
+      return false;
     }
+  },
+  created() {
+    this.maxAmount =
+      Math.floor(
+        UnityBackend.GetActiveAccountBalance().availableExcludingLocked /
+          1000000
+      ) / 100;
   },
   mounted() {
     this.$refs.amount.focus();
   },
   methods: {
+    onPasswordKeydown() {
+      this.isPasswordInvalid = false;
+    },
     trySend() {
       /*
        todo:
-        - validate amount
-        - validate address
-        - show success / error notification (after payment)
+        - replace amount input by custom amount input (this one is too basic)
+        - improve notifications / messages on success and error
        */
 
-      console.log(this.computedPassword);
+      // validate amount
+      let accountBalance = UnityBackend.GetActiveAccountBalance();
+      if (accountBalance.availableExcludingLocked / 100000000 < this.amount) {
+        this.isAmountInvalid = true;
+      }
+
+      // validate address
+      this.isAddressInvalid = !UnityBackend.IsValidNativeAddress(this.address);
 
       // wallet needs to be unlocked to make a payment
       if (UnityBackend.UnlockWallet(this.computedPassword) === false) {
         this.isPasswordInvalid = true;
-        return; // invalid password
       }
+
+      if (this.hasErrors) return;
+
       // create payment request
       var request = {
         valid: true,
@@ -86,8 +134,6 @@ export default {
         desc: "",
         amount: this.amount * 100000000
       };
-
-      console.log(request);
 
       // try to make the payment
       let result = UnityBackend.PerformPaymentToRecipient(request, false);

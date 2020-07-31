@@ -17,6 +17,7 @@ const generateInfo = [
       "GetRecoveryPhrase",
       "GetTransactionHistory",
       "InitWalletFromRecoveryPhrase",
+      "IsValidNativeAddress",
       "IsValidRecipient",
       "IsValidRecoveryPhrase",
       "LockWallet",
@@ -29,7 +30,7 @@ const generateInfo = [
   {
     className: "NJSIAccountsController",
     controller: "accountsController",
-    functions: ["CreateAccount", "SetActiveAccount"],
+    functions: ["CreateAccount", "GetActiveAccountBalance", "SetActiveAccount"],
     results: []
   },
   {
