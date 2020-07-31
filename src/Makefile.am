@@ -778,8 +778,9 @@ DJINNI_NODE_JS_GEN = \
   unity/djinni/node_js/NJSIWalletListener.cpp \
   unity/djinni/node_js/NJSIWalletListener.hpp \
   unity/djinni/node_js/NJSIAccountsController.cpp \
-  unity/djinni/node_js/NJSIWitnessController.cpp \
   unity/djinni/node_js/NJSIAccountsController.hpp \
+  unity/djinni/node_js/NJSIWitnessController.cpp \
+  unity/djinni/node_js/NJSIWitnessController.hpp \
   unity/djinni/node_js/NJSIAccountsListener.cpp \
   unity/djinni/node_js/NJSIAccountsListener.hpp \
   unity/djinni/node_js/NJSIGenerationController.cpp \
