@@ -9,8 +9,10 @@
         v-model="amount"
         ref="amount"
         type="number"
+        step="1"
         placeholder="0.00"
         min="0"
+        :max="maxAmount"
       />
       <input
         v-model="address"
@@ -29,9 +31,12 @@
         v-show="walletPassword === null"
         :placeholder="$t('send_novo.enter_password')"
         :class="computedStatus"
+        @keydown="onPasswordKeydown"
       />
     </div>
-    <button @click="trySend">{{ $t("buttons.send") }}</button>
+    <button @click="trySend" :disabled="disableSendButton">
+      {{ $t("buttons.send") }}
+    </button>
   </div>
 </template>
 
@@ -44,9 +49,12 @@ export default {
   data() {
     return {
       amount: null,
+      maxAmount: null,
       address: null,
       label: null,
       password: null,
+      isAmountInvalid: false,
+      isAddressInvalid: false,
       isPasswordInvalid: false
     };
   },
@@ -57,12 +65,31 @@ export default {
     },
     computedStatus() {
       return this.isPasswordInvalid ? "error" : "";
+    },
+    isValidAddress() {
+      if (this.address === null || this.address.trim().length === 0)
+        return false;
+      return UnityBackend.IsValidNativeAddress(this.address);
+    },
+    disableSendButton() {
+      if (isNaN(parseFloat(this.amount))) return true;
+      if (!this.isValidAddress) return true;
+      if (this.computedPassword.trim().length === 0) return true;
+      return false;
     }
+  },
+  created() {
+    this.maxAmount =
+      UnityBackend.GetActiveAccountBalance().availableExcludingLocked /
+      100000000;
   },
   mounted() {
     this.$refs.amount.focus();
   },
   methods: {
+    onPasswordKeydown() {
+      this.isPasswordInvalid = false;
+    },
     trySend() {
       /*
        todo:
@@ -70,8 +97,8 @@ export default {
         - validate address
         - show success / error notification (after payment)
        */
-
-      console.log(this.computedPassword);
+      let accountBalance = UnityBackend.GetActiveAccountBalance();
+      console.log(accountBalance.availableExcludingLocked);
 
       // wallet needs to be unlocked to make a payment
       if (UnityBackend.UnlockWallet(this.computedPassword) === false) {
@@ -86,8 +113,6 @@ export default {
         desc: "",
         amount: this.amount * 100000000
       };
-
-      console.log(request);
 
       // try to make the payment
       let result = UnityBackend.PerformPaymentToRecipient(request, false);
