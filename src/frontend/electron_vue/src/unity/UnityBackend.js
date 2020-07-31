@@ -82,6 +82,14 @@ class UnityBackend {
     return ipc.callMain("IsValidRecipient", { request });
   }
 
+  static IsValidNativeAddress(address) {
+    return ipc.sendSync("IsValidNativeAddress", address);
+  }
+
+  static IsValidNativeAddressAsync(address) {
+    return ipc.callMain("IsValidNativeAddress", { address });
+  }
+
   static PerformPaymentToRecipient(request, substract_fee) {
     return ipc.sendSync("PerformPaymentToRecipient", request, substract_fee);
   }
@@ -93,20 +101,20 @@ class UnityBackend {
     });
   }
 
-  static GetTransactionHistory() {
-    return ipc.sendSync("GetTransactionHistory");
-  }
-
-  static GetTransactionHistoryAsync() {
-    return ipc.callMain("GetTransactionHistory");
-  }
-
   static ResendTransaction(txHash) {
     return ipc.sendSync("ResendTransaction", txHash);
   }
 
   static ResendTransactionAsync(txHash) {
     return ipc.callMain("ResendTransaction", { txHash });
+  }
+
+  static GetTransactionHistory() {
+    return ipc.sendSync("GetTransactionHistory");
+  }
+
+  static GetTransactionHistoryAsync() {
+    return ipc.callMain("GetTransactionHistory");
   }
 
   static SetActiveAccount(accountUUID) {
@@ -123,6 +131,14 @@ class UnityBackend {
 
   static CreateAccountAsync(accountName, accountType) {
     return ipc.callMain("CreateAccount", { accountName, accountType });
+  }
+
+  static GetActiveAccountBalance() {
+    return ipc.sendSync("GetActiveAccountBalance");
+  }
+
+  static GetActiveAccountBalanceAsync() {
+    return ipc.callMain("GetActiveAccountBalance");
   }
 
   static StartGeneration(numThreads, memoryLimit) {

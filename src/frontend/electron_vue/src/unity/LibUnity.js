@@ -577,6 +577,24 @@ class LibUnity {
       return result;
     });
 
+    ipc.on("IsValidNativeAddress", (event, address) => {
+      let result = this._preExecuteIpcCommand("IsValidNativeAddress");
+      if (result === undefined) {
+        result = this.libraryController.IsValidNativeAddress(address);
+      }
+      this._postExecuteIpcCommand("IsValidNativeAddress", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("IsValidNativeAddress", async data => {
+      let result = this._preExecuteIpcCommand("IsValidNativeAddress");
+      if (result === undefined) {
+        result = this.libraryController.IsValidNativeAddress(data.address);
+      }
+      this._postExecuteIpcCommand("IsValidNativeAddress", result);
+      return result;
+    });
+
     ipc.on("PerformPaymentToRecipient", (event, request, substract_fee) => {
       let result = this._preExecuteIpcCommand("PerformPaymentToRecipient");
       if (result === undefined) {
@@ -601,24 +619,6 @@ class LibUnity {
       return result;
     });
 
-    ipc.on("GetTransactionHistory", event => {
-      let result = this._preExecuteIpcCommand("GetTransactionHistory");
-      if (result === undefined) {
-        result = this.libraryController.getTransactionHistory();
-      }
-      this._postExecuteIpcCommand("GetTransactionHistory", result);
-      event.returnValue = result;
-    });
-
-    ipc.answerRenderer("GetTransactionHistory", async () => {
-      let result = this._preExecuteIpcCommand("GetTransactionHistory");
-      if (result === undefined) {
-        result = this.libraryController.getTransactionHistory();
-      }
-      this._postExecuteIpcCommand("GetTransactionHistory", result);
-      return result;
-    });
-
     ipc.on("ResendTransaction", (event, txHash) => {
       let result = this._preExecuteIpcCommand("ResendTransaction");
       if (result === undefined) {
@@ -634,6 +634,24 @@ class LibUnity {
         result = this.libraryController.resendTransaction(data.txHash);
       }
       this._postExecuteIpcCommand("ResendTransaction", result);
+      return result;
+    });
+
+    ipc.on("GetTransactionHistory", event => {
+      let result = this._preExecuteIpcCommand("GetTransactionHistory");
+      if (result === undefined) {
+        result = this.libraryController.getTransactionHistory();
+      }
+      this._postExecuteIpcCommand("GetTransactionHistory", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("GetTransactionHistory", async () => {
+      let result = this._preExecuteIpcCommand("GetTransactionHistory");
+      if (result === undefined) {
+        result = this.libraryController.getTransactionHistory();
+      }
+      this._postExecuteIpcCommand("GetTransactionHistory", result);
       return result;
     });
     ipc.on("SetActiveAccount", (event, accountUUID) => {
@@ -675,6 +693,24 @@ class LibUnity {
         );
       }
       this._postExecuteIpcCommand("CreateAccount", result);
+      return result;
+    });
+
+    ipc.on("GetActiveAccountBalance", event => {
+      let result = this._preExecuteIpcCommand("GetActiveAccountBalance");
+      if (result === undefined) {
+        result = this.accountsController.getActiveAccountBalance();
+      }
+      this._postExecuteIpcCommand("GetActiveAccountBalance", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("GetActiveAccountBalance", async () => {
+      let result = this._preExecuteIpcCommand("GetActiveAccountBalance");
+      if (result === undefined) {
+        result = this.accountsController.getActiveAccountBalance();
+      }
+      this._postExecuteIpcCommand("GetActiveAccountBalance", result);
       return result;
     });
     ipc.on("StartGeneration", (event, numThreads, memoryLimit) => {
