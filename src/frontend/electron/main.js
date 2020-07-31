@@ -67,7 +67,6 @@ function createWindow () {
             label: 'File',
             submenu: [
                 { label:'Exit', click() { app.quit() }},
-                { label:'Generate genesis keys', click() { console.log(novobackend.GenerateGenesisKeys()) }}
             ]
         },
         {
@@ -81,7 +80,7 @@ function createWindow () {
         {
             label: 'Debug',
             submenu: [
-                { label:"Generate genesis keys", click() {console.log(libUnity.backend.GenerateGenesisKeys()) }},
+                { label:"Generate genesis keys", click() {console.log(novobackend.GenerateGenesisKeys()) }},
                 { label: "RPC test - getpeerinfo", click() {
                     eval('');
                     let RPCListener = new libnovo.NJSIRpcListener;
@@ -156,13 +155,13 @@ function guldenUnitySetup()
     var basepath = app.getPath("userData");
 
     libnovo = require('./libnovo_unity_node_js')
-    novobackend = new libnovo.NJSUnifiedBackend
+    novobackend = new libnovo.NJSILibraryController
     
     //Set this to a larger number to allow time to attach gdb to the library
     let debugTimeout = 1
     
     setTimeout(function(){
-    signalhandler = new libnovo.NJSUnifiedFrontend;
+    signalhandler = new libnovo.NJSILibraryListener;
     
     RPCController = new libnovo.NJSIRpcController;
 
