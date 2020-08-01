@@ -165,6 +165,50 @@ class UnityBackend {
     return ipc.callMain("GetNetworkLimits");
   }
 
+  static GetEstimatedWeight(amount_to_lock, lock_period_in_days) {
+    return ipc.sendSync(
+      "GetEstimatedWeight",
+      amount_to_lock,
+      lock_period_in_days
+    );
+  }
+
+  static GetEstimatedWeightAsync(amount_to_lock, lock_period_in_days) {
+    return ipc.callMain("GetEstimatedWeight", {
+      amount_to_lock,
+      lock_period_in_days
+    });
+  }
+
+  static FundWitnessAccount(
+    funding_account_UUID,
+    witness_account_UUID,
+    funding_amount,
+    requestedLockPeriodInBlocks
+  ) {
+    return ipc.sendSync(
+      "FundWitnessAccount",
+      funding_account_UUID,
+      witness_account_UUID,
+      funding_amount,
+      requestedLockPeriodInBlocks
+    );
+  }
+
+  static FundWitnessAccountAsync(
+    funding_account_UUID,
+    witness_account_UUID,
+    funding_amount,
+    requestedLockPeriodInBlocks
+  ) {
+    return ipc.callMain("FundWitnessAccount", {
+      funding_account_UUID,
+      witness_account_UUID,
+      funding_amount,
+      requestedLockPeriodInBlocks
+    });
+  }
+
   /* inject:code */
 }
 

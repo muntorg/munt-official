@@ -773,6 +773,70 @@ class LibUnity {
       this._postExecuteIpcCommand("GetNetworkLimits", result);
       return result;
     });
+
+    ipc.on(
+      "GetEstimatedWeight",
+      (event, amount_to_lock, lock_period_in_days) => {
+        let result = this._preExecuteIpcCommand("GetEstimatedWeight");
+        if (result === undefined) {
+          result = this.witnessController.getEstimatedWeight(
+            amount_to_lock,
+            lock_period_in_days
+          );
+        }
+        this._postExecuteIpcCommand("GetEstimatedWeight", result);
+        event.returnValue = result;
+      }
+    );
+
+    ipc.answerRenderer("GetEstimatedWeight", async data => {
+      let result = this._preExecuteIpcCommand("GetEstimatedWeight");
+      if (result === undefined) {
+        result = this.witnessController.getEstimatedWeight(
+          data.amount_to_lock,
+          data.lock_period_in_days
+        );
+      }
+      this._postExecuteIpcCommand("GetEstimatedWeight", result);
+      return result;
+    });
+
+    ipc.on(
+      "FundWitnessAccount",
+      (
+        event,
+        funding_account_UUID,
+        witness_account_UUID,
+        funding_amount,
+        requestedLockPeriodInBlocks
+      ) => {
+        let result = this._preExecuteIpcCommand("FundWitnessAccount");
+        if (result === undefined) {
+          result = this.witnessController.fundWitnessAccount(
+            funding_account_UUID,
+            witness_account_UUID,
+            funding_amount,
+            requestedLockPeriodInBlocks
+          );
+        }
+        this._postExecuteIpcCommand("FundWitnessAccount", result);
+        event.returnValue = result;
+      }
+    );
+
+    ipc.answerRenderer("FundWitnessAccount", async data => {
+      let result = this._preExecuteIpcCommand("FundWitnessAccount");
+      if (result === undefined) {
+        result = this.witnessController.fundWitnessAccount(
+          data.funding_account_UUID,
+          data.witness_account_UUID,
+          data.funding_amount,
+          data.requestedLockPeriodInBlocks
+        );
+      }
+      this._postExecuteIpcCommand("FundWitnessAccount", result);
+      return result;
+    });
     /* inject:code */
   }
 }

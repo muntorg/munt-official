@@ -19,7 +19,7 @@
             </div>
           </div>
         </div>
-        <div class="account active" v-if="showNewAccountFor(category)">
+        <div class="account active" v-if="showNewAccountFor(category) && false">
           <div>New account</div>
           <div class="balance">0</div>
         </div>
@@ -222,7 +222,7 @@ export default {
 }
 
 .account {
-  padding: 8px 20px;
+  padding: 8px 24px;
   font-size: 1em;
   color: #ccc;
   line-height: 16px;
