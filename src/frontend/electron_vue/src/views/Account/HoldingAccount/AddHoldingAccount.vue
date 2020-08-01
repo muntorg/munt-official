@@ -145,7 +145,7 @@ export default {
         this.fundingAccount.UUID,
         accountId,
         this.amount * 100000000,
-        this.lockTimeInMonths * 1576800
+        this.lockTimeInMonths * 43800
       );
 
       console.log(result);
