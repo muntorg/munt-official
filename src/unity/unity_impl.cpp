@@ -14,6 +14,8 @@
 
 // Standard gulden headers
 #include "appname.h"
+#include "clientversion.h"
+
 #include "util.h"
 #include "witnessutil.h"
 #include "ui_interface.h"
@@ -65,6 +67,8 @@ std::set<std::shared_ptr<MonitorListener> > monitoringListeners;
 boost::asio::io_context ioctx;
 boost::asio::executor_work_guard<boost::asio::io_context::executor_type> work = boost::asio::make_work_guard(ioctx);
 boost::thread run_thread(boost::bind(&boost::asio::io_context::run, boost::ref(ioctx)));
+
+static const int64_t nClientStartupTime = GetTime();
 
 TransactionStatus getStatusForTransaction(const CWalletTx* wtx)
 {
@@ -1411,4 +1415,33 @@ void ILibraryController::UnregisterMonitorListener(const std::shared_ptr<Monitor
 {
     LOCK(cs_monitoringListeners);
     monitoringListeners.erase(listener);
+}
+
+std::unordered_map<std::string, std::string> ILibraryController::getClientInfo()
+{
+    std::unordered_map<std::string, std::string> ret;
+    
+    ret.insert(std::pair("client_version", FormatFullVersion()));
+    ret.insert(std::pair("user_agent", strSubVersion));
+    ret.insert(std::pair("datadir_path", GetDataDir().string()));
+    std::string logfilePath = (GetDataDir() / "debug.log").string();
+    ret.insert(std::pair("logfile_path", logfilePath));
+    ret.insert(std::pair("startup_timestamp", i64tostr(nClientStartupTime)));
+    
+    if (!g_connman->GetNetworkActive())
+    {
+        ret.insert(std::pair("network_status", "disabled"));    
+        ret.insert(std::pair("num_connections_in", "0"));
+        ret.insert(std::pair("num_connections_out", "0"));
+    }
+    else
+    {
+        ret.insert(std::pair("network_status", "enabled"));
+        std::string connectionsIn = i64tostr(g_connman->GetNodeCount(CConnman::NumConnections::CONNECTIONS_IN));
+        std::string connectionsOut = i64tostr(g_connman->GetNodeCount(CConnman::NumConnections::CONNECTIONS_OUT));
+        ret.insert(std::pair("num_connections_in", connectionsIn));
+        ret.insert(std::pair("num_connections_out", connectionsOut));
+    }    
+    
+    return ret;
 }

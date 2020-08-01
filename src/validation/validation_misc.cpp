@@ -95,6 +95,10 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const CChainPar
 CAmount GetBlockSubsidy(uint64_t nHeight)
 {
     static bool fRegTest = GetBoolArg("-regtest", false);
+    static bool fTestNet = IsArgSet("-testnet");
+    if (fTestNet)
+        return 20*COIN;
+
     if (fRegTest)
         return 50*COIN;
     
@@ -112,6 +116,11 @@ CAmount GetBlockSubsidy(uint64_t nHeight)
 
 CAmount GetBlockSubsidyWitness(uint64_t nHeight)
 {
+    static bool fRegTest = GetBoolArg("-regtest", false);
+    static bool fTestNet = IsArgSet("-testnet");
+    if (fTestNet)
+        return 10*COIN;
+
     if (nHeight > 26280000)
         return 0;
 

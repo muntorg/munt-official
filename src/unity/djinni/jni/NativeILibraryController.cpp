@@ -444,6 +444,15 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
+CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_getClientInfo(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::ILibraryController::getClientInfo();
+        return ::djinni::release(::djinni::Map<::djinni::String, ::djinni::String>::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_getMutationHistory(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {

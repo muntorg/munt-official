@@ -116,6 +116,7 @@ declare class NJSILibraryController
     static declare function getMonitoringStats(): MonitorRecord;
     static declare function RegisterMonitorListener(listener: NJSMonitorListener);
     static declare function UnregisterMonitorListener(listener: NJSMonitorListener);
+    static declare function getClientInfo(): Map<string, string>;
     /**
      * Get list of wallet mutations
      *NB! This is SPV specific, non SPV wallets should use account specific getMutationHistory on an accounts controller instead

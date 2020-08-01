@@ -11,7 +11,10 @@
       </div>
     </div>
     <div class="main">
-      <debug-console v-show="current === 0" />
+      <div v-show="current === 0">
+        // Placeholder, values from getClientInfo() go here...
+      </div>
+      <debug-console v-show="current === 1" />
     </div>
   </div>
 </template>
@@ -24,6 +27,9 @@ export default {
     return {
       current: 0,
       tabs: [
+        {
+          title: "About"
+        },
         {
           title: "Console"
         }

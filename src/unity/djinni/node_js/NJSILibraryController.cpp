@@ -1144,6 +1144,32 @@ void NJSILibraryController::UnregisterMonitorListener(const Napi::CallbackInfo& 
 
     ILibraryController::UnregisterMonitorListener(arg_0);
 }
+Napi::Value NJSILibraryController::getClientInfo(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 0)
+    {
+        Napi::Error::New(env, "NJSILibraryController::getClientInfo needs 0 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+
+    auto result = ILibraryController::getClientInfo();
+
+    //Wrap result in node object
+    auto arg_0 = Napi::Object::New(env);
+    for(auto const& arg_0_elem : result)
+    {
+        auto arg_0_first = Napi::String::New(env, arg_0_elem.first);
+        auto arg_0_second = Napi::String::New(env, arg_0_elem.second);
+        arg_0.Set(arg_0_first, arg_0_second);
+    }
+
+
+    return arg_0;
+}
 Napi::Value NJSILibraryController::getMutationHistory(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -1347,6 +1373,7 @@ Napi::Object NJSILibraryController::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("getMonitoringStats", &NJSILibraryController::getMonitoringStats),
     InstanceMethod("RegisterMonitorListener", &NJSILibraryController::RegisterMonitorListener),
     InstanceMethod("UnregisterMonitorListener", &NJSILibraryController::UnregisterMonitorListener),
+    InstanceMethod("getClientInfo", &NJSILibraryController::getClientInfo),
     InstanceMethod("getMutationHistory", &NJSILibraryController::getMutationHistory),
     InstanceMethod("getTransactionHistory", &NJSILibraryController::getTransactionHistory),
     InstanceMethod("HaveUnconfirmedFunds", &NJSILibraryController::HaveUnconfirmedFunds),

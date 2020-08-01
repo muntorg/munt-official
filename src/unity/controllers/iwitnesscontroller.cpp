@@ -107,12 +107,12 @@ WitnessFundingResultRecord IWitnessController::fundWitnessAccount(const std::str
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
     
     auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(fundingAccountUUID));
-    if (findIter != pactiveWallet->mapAccounts.end())
+    if (findIter == pactiveWallet->mapAccounts.end())
         return WitnessFundingResultRecord("invalid funding account", "", 0);;
     CAccount* fundingAccount = findIter->second;
     
     findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(witnessAccountUUID));
-    if (findIter != pactiveWallet->mapAccounts.end())
+    if (findIter == pactiveWallet->mapAccounts.end())
         return WitnessFundingResultRecord("invalid witness account", "", 0);;
     CAccount* witnessAccount = findIter->second;
     
