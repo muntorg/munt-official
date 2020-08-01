@@ -96,6 +96,49 @@ Napi::Value NJSIWitnessController::fundWitnessAccount(const Napi::CallbackInfo& 
 
     return arg_4;
 }
+Napi::Value NJSIWitnessController::getAccountWitnessStatistics(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 1)
+    {
+        Napi::Error::New(env, "NJSIWitnessController::getAccountWitnessStatistics needs 1 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+
+    auto result = IWitnessController::getAccountWitnessStatistics(arg_0);
+
+    //Wrap result in node object
+    auto arg_1 = Napi::Object::New(env);
+    auto arg_1_1 = Napi::String::New(env, result.request_status);
+    arg_1.Set("request_status", arg_1_1);
+    auto arg_1_2 = Napi::String::New(env, result.account_status);
+    arg_1.Set("account_status", arg_1_2);
+    auto arg_1_3 = Napi::Value::From(env, result.account_weight);
+    arg_1.Set("account_weight", arg_1_3);
+    auto arg_1_4 = Napi::Value::From(env, result.account_weight_at_creation);
+    arg_1.Set("account_weight_at_creation", arg_1_4);
+    auto arg_1_5 = Napi::Value::From(env, result.network_tip_total_weight);
+    arg_1.Set("network_tip_total_weight", arg_1_5);
+    auto arg_1_6 = Napi::Value::From(env, result.network_total_weight_at_account_creation_time);
+    arg_1.Set("network_total_weight_at_account_creation_time", arg_1_6);
+    auto arg_1_7 = Napi::Value::From(env, result.account_initial_lock_period_in_blocks);
+    arg_1.Set("account_initial_lock_period_in_blocks", arg_1_7);
+    auto arg_1_8 = Napi::Value::From(env, result.account_remaining_lock_period_in_blocks);
+    arg_1.Set("account_remaining_lock_period_in_blocks", arg_1_8);
+    auto arg_1_9 = Napi::Value::From(env, result.account_expected_witness_period_in_blocks);
+    arg_1.Set("account_expected_witness_period_in_blocks", arg_1_9);
+    auto arg_1_10 = Napi::Value::From(env, result.account_estimated_witness_period_in_blocks);
+    arg_1.Set("account_estimated_witness_period_in_blocks", arg_1_10);
+    auto arg_1_11 = Napi::Value::From(env, result.account_initial_lock_creation_block_height);
+    arg_1.Set("account_initial_lock_creation_block_height", arg_1_11);
+
+
+    return arg_1;
+}
 
 Napi::FunctionReference NJSIWitnessController::constructor;
 
@@ -106,6 +149,7 @@ Napi::Object NJSIWitnessController::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("getNetworkLimits", &NJSIWitnessController::getNetworkLimits),
     InstanceMethod("getEstimatedWeight", &NJSIWitnessController::getEstimatedWeight),
     InstanceMethod("fundWitnessAccount", &NJSIWitnessController::fundWitnessAccount),
+    InstanceMethod("getAccountWitnessStatistics", &NJSIWitnessController::getAccountWitnessStatistics),
     });
     // Create a peristent reference to the class constructor. This will allow a function called on a class prototype and a function called on instance of a class to be distinguished from each other.
     constructor = Napi::Persistent(func);

@@ -28,8 +28,12 @@
 #include "i_witness_controller.hpp"
 #include "witness_estimate_info_record.hpp"
 #include "witness_funding_result_record.hpp"
+#include "witness_account_statistics_record.hpp"
 
 #include <consensus/validation.h>
+
+// stdlib includes
+#include <numeric>
 
 
 std::unordered_map<std::string, std::string> IWitnessController::getNetworkLimits()
@@ -38,7 +42,7 @@ std::unordered_map<std::string, std::string> IWitnessController::getNetworkLimit
     if (pactiveWallet)
     {
         // Testnet does these calculations on "mainnet time" even though its block targer may be faster/slower (giving a sort of "time warp" illusion for testers)
-        if (IsArgSet)
+        if (IsArgSet("-testnet"))
         {
             ret.insert(std::pair("expected_blocks_per_day", i64tostr(gRefactorDailyBlocksUsage)));
             ret.insert(std::pair("minimum_lock_period_blocks", i64tostr(gMinimumWitnessLockDays*gRefactorDailyBlocksUsage)));
@@ -90,9 +94,17 @@ static int64_t GetNetworkWeight()
     return nNetworkWeight;
 }
 
-WitnessEstimateInfoRecord IWitnessController::getEstimatedWeight(int64_t amountToLock, int64_t lockPeriodInDays)
+WitnessEstimateInfoRecord IWitnessController::getEstimatedWeight(int64_t amountToLock, int64_t lockPeriodInBlocks)
 {
-    int64_t lockPeriodInBlocks = lockPeriodInDays * DailyBlocksTarget();
+    int64_t lockPeriodInDays;
+    if (IsArgSet("-testnet"))
+    {
+        lockPeriodInDays = lockPeriodInBlocks / gRefactorDailyBlocksUsage;
+    }
+    else
+    {
+        lockPeriodInDays = lockPeriodInBlocks / DailyBlocksTarget();
+    }
     
     uint64_t networkWeight = GetNetworkWeight();
     const auto optimalAmounts = optimalWitnessDistribution(amountToLock, lockPeriodInBlocks, networkWeight);
@@ -146,3 +158,176 @@ WitnessFundingResultRecord IWitnessController::fundWitnessAccount(const std::str
     }
 }
 
+
+struct WitnessInfoForAccount
+{
+    CWitnessAccountStatus accountStatus;
+
+    uint64_t nOurWeight = 0;
+    uint64_t nTotalNetworkWeightTip = 0;
+    uint64_t nWitnessLength = 0;
+    uint64_t nExpectedWitnessBlockPeriod = 0;
+    uint64_t nEstimatedWitnessBlockPeriod = 0;
+    uint64_t nLockBlocksRemaining = 0;
+    int64_t nOriginNetworkWeight = 0;
+    uint64_t nOriginBlock = 0;
+    uint64_t nOriginWeight = 0;
+    uint64_t nOriginLength = 0;
+    uint64_t nEarningsToDate = 0;
+    //GraphScale scale = GraphScale::Blocks;
+    //std::map<double, CAmount> pointMapForecast;
+    //std::map<double, CAmount> pointMapGenerated;
+    //QDateTime originDate;
+    //QDateTime lastEarningsDate;
+};
+
+bool GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoForAccount)
+{
+    if (!forAccount->IsPoW2Witness())
+        return false;
+        
+    CWitnessAccountStatus accountStatus;
+    CGetWitnessInfo witnessInfo;
+    accountStatus = GetWitnessAccountStatus(pactiveWallet, forAccount, &witnessInfo);
+
+    infoForAccount.accountStatus = accountStatus;
+
+    infoForAccount.nTotalNetworkWeightTip = accountStatus.networkWeight;
+    infoForAccount.nOurWeight = accountStatus.accountWeight;
+
+    // the lock period could have been different initially if it was extended, this is not accounted for
+    infoForAccount.nOriginLength = accountStatus.nLockPeriodInBlocks;
+
+    // if the witness was extended or rearranged the initial weight will have been different, this is not accounted for
+    infoForAccount.nOriginWeight = accountStatus.accountWeight;
+
+    infoForAccount.nOriginBlock = accountStatus.nLockFromBlock;
+
+    LOCK(cs_main);
+    CBlockIndex* originIndex = chainActive[infoForAccount.nOriginBlock];
+    #if 0
+    infoForAccount.originDate = QDateTime::fromTime_t(originIndex->GetBlockTime());
+    #endif
+
+    // We take the network weight 100 blocks ahead to give a chance for our own weight to filter into things (and also if e.g. the first time witnessing activated - testnet - then weight will only climb once other people also join)
+    CBlockIndex* sampleWeightIndex = chainActive[infoForAccount.nOriginBlock+100 > (uint64_t)chainActive.Tip()->nHeight ? infoForAccount.nOriginBlock : infoForAccount.nOriginBlock+100];
+    int64_t nUnused1;
+    if (!GetPow2NetworkWeight(sampleWeightIndex, Params(), nUnused1, infoForAccount.nOriginNetworkWeight, chainActive))
+    {
+        std::string strErrorMessage = "Error in witness dialog, failed to get weight for account";
+        return false;
+    }
+
+    #if 0
+    infoForAccount.scale = (GraphScale)model->getOptionsModel()->guldenSettings->getWitnessGraphScale();
+
+    infoForAccount.pointMapForecast[0] = 0;
+
+    // fixme: (PHASE5) Use only rewards of current locked witness amounts, not of previous ones after a re-fund...
+    // Extract details for every witness reward we have received.
+    filter->setAccountFilter(forAccount);
+    int rows = filter->rowCount();
+    for (int row = 0; row < rows; ++row)
+    {
+        QModelIndex index = filter->index(row, 0);
+
+        int nDepth = filter->data(index, TransactionTableModel::DepthRole).toInt();
+        if ( nDepth > 0 )
+        {
+            int nType = filter->data(index, TransactionTableModel::TypeRole).toInt();
+            if (nType == TransactionRecord::GeneratedWitness)
+            {
+                int nX = filter->data(index, TransactionTableModel::TxBlockHeightRole).toInt();
+                if (nX > 0)
+                {
+                    infoForAccount.lastEarningsDate = filter->data(index, TransactionTableModel::DateRole).toDateTime();
+                    uint64_t nY = filter->data(index, TransactionTableModel::AmountRole).toLongLong()/COIN;
+                    infoForAccount.nEarningsToDate += nY;
+                    uint64_t nDays = infoForAccount.originDate.daysTo(infoForAccount.lastEarningsDate);
+                    AddPointToMapWithAdjustedTimePeriod(infoForAccount.pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale, true);
+                }
+            }
+        }
+    }
+
+    QDateTime tipTime = QDateTime::fromTime_t(chainActive.Tip()->GetBlockTime());
+    // One last datapoint for 'current' block.
+    if (!infoForAccount.pointMapGenerated.empty())
+    {
+        uint64_t nY = infoForAccount.pointMapGenerated.rbegin()->second;
+        uint64_t nX = chainActive.Tip()->nHeight;
+        uint64_t nDays = infoForAccount.originDate.daysTo(tipTime);
+        infoForAccount.pointMapGenerated.erase(--infoForAccount.pointMapGenerated.end());
+        AddPointToMapWithAdjustedTimePeriod(infoForAccount.pointMapGenerated, infoForAccount.nOriginBlock, nX, nY, nDays, infoForAccount.scale, false);
+    }
+
+    // Using the origin block details gathered from previous loop, generate the points for a 'forecast' of how much the account should earn over its entire existence.
+    infoForAccount.nWitnessLength = infoForAccount.nOriginLength;
+    if (infoForAccount.nOriginNetworkWeight == 0)
+        infoForAccount.nOriginNetworkWeight = gStartingWitnessNetworkWeightEstimate;
+    uint64_t nEstimatedWitnessBlockPeriodOrigin = estimatedWitnessBlockPeriod((infoForAccount.nOriginWeight>0)?infoForAccount.nOriginWeight:gMinimumWitnessWeight, infoForAccount.nOriginNetworkWeight);
+    infoForAccount.pointMapForecast[0] = 0;
+    for (unsigned int i = nEstimatedWitnessBlockPeriodOrigin; i < infoForAccount.nWitnessLength; i += nEstimatedWitnessBlockPeriodOrigin)
+    {
+        unsigned int nX = i;
+        uint64_t nDays = infoForAccount.originDate.daysTo(tipTime.addSecs(i*Params().GetConsensus().nPowTargetSpacing));
+        AddPointToMapWithAdjustedTimePeriod(infoForAccount.pointMapForecast, 0, nX, 20, nDays, infoForAccount.scale, true);
+    }
+    #else
+    infoForAccount.nWitnessLength = infoForAccount.nOriginLength;
+    if (infoForAccount.nOriginNetworkWeight == 0)
+        infoForAccount.nOriginNetworkWeight = gStartingWitnessNetworkWeightEstimate;
+    #endif
+
+    const auto& parts = infoForAccount.accountStatus.parts;
+    if (!parts.empty())
+    {
+        uint64_t networkWeight = infoForAccount.nTotalNetworkWeightTip;
+        // Worst case all parts witness at latest opportunity so part with maximum weight will be the first to be required to witness
+        infoForAccount.nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(*std::max_element(parts.begin(), parts.end()), networkWeight);
+
+        // Combine estimated witness frequency f for part frequencies f1..fN: 1/f = 1/f1 + .. 1/fN
+        double fInv = std::accumulate(parts.begin(), parts.end(), 0.0, [=](const double acc, const uint64_t w){
+            uint64_t fn = estimatedWitnessBlockPeriod(w, networkWeight);
+            return acc + 1.0/fn;
+        });
+        infoForAccount.nEstimatedWitnessBlockPeriod = uint64_t(1.0/fInv);
+    }
+
+    infoForAccount.nLockBlocksRemaining = GetPoW2RemainingLockLengthInBlocks(accountStatus.nLockUntilBlock, chainActive.Tip()->nHeight);
+
+    return true;
+}
+
+WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(const std::string& witnessAccountUUID)
+{
+    if (!pactiveWallet)
+        return WitnessAccountStatisticsRecord("no active wallet present", "", 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    
+    auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(witnessAccountUUID));
+    if (findIter == pactiveWallet->mapAccounts.end())
+        return WitnessAccountStatisticsRecord("invalid witness account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    CAccount* witnessAccount = findIter->second;
+    
+    WitnessInfoForAccount infoForAccount;
+    if (!GetWitnessInfoForAccount(witnessAccount, infoForAccount))
+    {
+        std::string accountStatus;
+        switch (infoForAccount.accountStatus.status)
+        {
+            case WitnessStatus::Empty: accountStatus = "empty"; break;
+            case WitnessStatus::EmptyWithRemainder: accountStatus = "empty_with_remainder"; break;
+            case WitnessStatus::Pending: accountStatus = "pending"; break;
+            case WitnessStatus::Witnessing: accountStatus = "witnessing"; break;
+            case WitnessStatus::Ended: accountStatus = "ended"; break;
+            case WitnessStatus::Expired: accountStatus = "expired"; break;
+            case WitnessStatus::Emptying: accountStatus = "emptying"; break;
+        }
+        return WitnessAccountStatisticsRecord("success", accountStatus, infoForAccount.nOurWeight, infoForAccount.nOriginWeight, 
+                                              infoForAccount.nTotalNetworkWeightTip, infoForAccount.nOriginNetworkWeight, 
+                                              infoForAccount.nOriginLength, infoForAccount.nLockBlocksRemaining, infoForAccount.nExpectedWitnessBlockPeriod,
+                                              infoForAccount.nEstimatedWitnessBlockPeriod, infoForAccount.nOriginBlock);
+    }
+}

@@ -476,16 +476,44 @@ witness_funding_result_record = record {
     fee : i64;
 } deriving(parcelable)
 
+witness_account_statistics_record = record {
+    # Success if request succeeded, otherwise an error message
+    request_status : string;
+    # Current state of the witness account, one of: "empty", "empty_with_remainder", "pending", "witnessing", "ended", "expired", "emptying"
+    account_status : string;
+    # Account weight
+    account_weight : i64;
+    # Account weight when it was created
+    account_weight_at_creation : i64;
+    # Current network weight
+    network_tip_total_weight : i64;
+    # Network weight when account was created
+    network_total_weight_at_account_creation_time : i64;
+    # Account total lock period in blocks (from creation block)
+    account_initial_lock_period_in_blocks : i64;
+    # Account remaining lock period in blocks (from chain tip)
+    account_remaining_lock_period_in_blocks : i64;
+    # How often the account is "expected" by the network to witness in order to not be kicked off
+    account_expected_witness_period_in_blocks : i64;
+    # How often the account is estimated to witness
+    account_estimated_witness_period_in_blocks : i64;
+    # Height at which the account lock first entered the chain
+    account_initial_lock_creation_block_height : i64;
+} deriving(parcelable)
+
 # C++ interface to control witness accounts
 i_witness_controller = interface +c {
     # Get information on min/max witness periods, weights etc.
     static getNetworkLimits() : map<string, string>;
     
     # Get an estimate of weights/parts that a witness account will be funded with
-    static getEstimatedWeight(amount_to_lock : i64, lock_period_in_days : i64) : witness_estimate_info_record;
+    static getEstimatedWeight(amount_to_lock : i64, lock_period_in_blocks : i64) : witness_estimate_info_record;
     
     # Fund a witness account
     static fundWitnessAccount(funding_account_UUID : string, witness_account_UUID : string, funding_amount : i64, requestedLockPeriodInBlocks : i64) : witness_funding_result_record;
+    
+    # Get information on account weight and other witness statistics for account
+    static getAccountWitnessStatistics(witnessAccountUUID : string) : witness_account_statistics_record;
 }
 
 # C++ interface to control generation of blocks (proof of work)
