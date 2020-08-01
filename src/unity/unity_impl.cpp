@@ -1423,8 +1423,8 @@ std::unordered_map<std::string, std::string> ILibraryController::getClientInfo()
     
     ret.insert(std::pair("client_version", FormatFullVersion()));
     ret.insert(std::pair("user_agent", strSubVersion));
-    ret.insert(std::pair("datadir_path", GetDataDir().c_str()));
-    std::string logfilePath = (GetDataDir() / "debug.log").c_str();
+    ret.insert(std::pair("datadir_path", GetDataDir().string()));
+    std::string logfilePath = (GetDataDir() / "debug.log").string();
     ret.insert(std::pair("logfile_path", logfilePath));
     ret.insert(std::pair("startup_timestamp", i64tostr(nClientStartupTime)));
     
