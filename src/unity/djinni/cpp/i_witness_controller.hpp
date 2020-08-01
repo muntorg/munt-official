@@ -7,6 +7,7 @@
 #include <string>
 #include <unordered_map>
 
+struct WitnessAccountStatisticsRecord;
 struct WitnessEstimateInfoRecord;
 struct WitnessFundingResultRecord;
 
@@ -23,4 +24,7 @@ public:
 
     /** Fund a witness account */
     static WitnessFundingResultRecord fundWitnessAccount(const std::string & funding_account_UUID, const std::string & witness_account_UUID, int64_t funding_amount, int64_t requestedLockPeriodInBlocks);
+
+    /** Get information on account weight and other witness statistics for account */
+    static WitnessAccountStatisticsRecord getAccountWitnessStatistics(const std::string & witnessAccountUUID);
 };

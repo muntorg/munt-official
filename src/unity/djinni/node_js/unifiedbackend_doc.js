@@ -308,6 +308,8 @@ declare class NJSIWitnessController
     static declare function getEstimatedWeight(amount_to_lock: number, lock_period_in_blocks: number): WitnessEstimateInfoRecord;
     /** Fund a witness account */
     static declare function fundWitnessAccount(funding_account_UUID: string, witness_account_UUID: string, funding_amount: number, requestedLockPeriodInBlocks: number): WitnessFundingResultRecord;
+    /** Get information on account weight and other witness statistics for account */
+    static declare function getAccountWitnessStatistics(witnessAccountUUID: string): WitnessAccountStatisticsRecord;
 }
 /** C++ interface to control generation of blocks (proof of work) */
 declare class NJSIGenerationController

@@ -3,6 +3,7 @@
 
 #import "DBIWitnessController+Private.h"
 #import "DBIWitnessController.h"
+#import "DBWitnessAccountStatisticsRecord+Private.h"
 #import "DBWitnessEstimateInfoRecord+Private.h"
 #import "DBWitnessFundingResultRecord+Private.h"
 #import "DJICppWrapperCache+Private.h"
@@ -58,6 +59,13 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
                                                                        ::djinni::I64::toCpp(fundingAmount),
                                                                        ::djinni::I64::toCpp(requestedLockPeriodInBlocks));
         return ::djinni_generated::WitnessFundingResultRecord::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull DBWitnessAccountStatisticsRecord *)getAccountWitnessStatistics:(nonnull NSString *)witnessAccountUUID {
+    try {
+        auto objcpp_result_ = ::IWitnessController::getAccountWitnessStatistics(::djinni::String::toCpp(witnessAccountUUID));
+        return ::djinni_generated::WitnessAccountStatisticsRecord::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

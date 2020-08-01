@@ -3,6 +3,7 @@
 
 #include "NativeIWitnessController.hpp"  // my header
 #include "Marshal.hpp"
+#include "NativeWitnessAccountStatisticsRecord.hpp"
 #include "NativeWitnessEstimateInfoRecord.hpp"
 #include "NativeWitnessFundingResultRecord.hpp"
 
@@ -49,6 +50,15 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IWitnessController_00
                                                           ::djinni::I64::toCpp(jniEnv, j_fundingAmount),
                                                           ::djinni::I64::toCpp(jniEnv, j_requestedLockPeriodInBlocks));
         return ::djinni::release(::djinni_generated::NativeWitnessFundingResultRecord::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IWitnessController_00024CppProxy_getAccountWitnessStatistics(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IWitnessController::getAccountWitnessStatistics(::djinni::String::toCpp(jniEnv, j_witnessAccountUUID));
+        return ::djinni::release(::djinni_generated::NativeWitnessAccountStatisticsRecord::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
