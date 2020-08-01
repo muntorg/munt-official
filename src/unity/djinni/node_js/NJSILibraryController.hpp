@@ -22,6 +22,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <napi.h>
@@ -189,6 +190,8 @@ private:
     void RegisterMonitorListener(const Napi::CallbackInfo& info);
 
     void UnregisterMonitorListener(const Napi::CallbackInfo& info);
+
+    Napi::Value getClientInfo(const Napi::CallbackInfo& info);
 
     /**
      * Get list of wallet mutations

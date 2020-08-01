@@ -260,6 +260,8 @@ i_library_controller = interface +c {
     static RegisterMonitorListener(listener : monitor_listener);
     static UnregisterMonitorListener(listener : monitor_listener);
 
+    static getClientInfo() : map<string, string>;
+    
     # Interface constants
     const version: i32 = 1;
     

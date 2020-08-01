@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #ifdef DJINNI_NODEJS
@@ -192,6 +193,8 @@ public:
     static void RegisterMonitorListener(const std::shared_ptr<MonitorListener> & listener);
 
     static void UnregisterMonitorListener(const std::shared_ptr<MonitorListener> & listener);
+
+    static std::unordered_map<std::string, std::string> getClientInfo();
 
     /**
      * Get list of wallet mutations

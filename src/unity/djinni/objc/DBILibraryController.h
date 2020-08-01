@@ -203,6 +203,8 @@ extern int32_t const DBILibraryControllerVersion;
 
 + (void)UnregisterMonitorListener:(nullable id<DBMonitorListener>)listener;
 
++ (nonnull NSDictionary<NSString *, NSString *> *)getClientInfo;
+
 /**
  * Get list of wallet mutations
  *NB! This is SPV specific, non SPV wallets should use account specific getMutationHistory on an accounts controller instead
