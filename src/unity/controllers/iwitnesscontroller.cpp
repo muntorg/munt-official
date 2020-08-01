@@ -36,14 +36,24 @@ std::unordered_map<std::string, std::string> IWitnessController::getNetworkLimit
 {
     std::unordered_map<std::string, std::string> ret;
     if (pactiveWallet)
-    {        
-        ret.insert(std::pair("expected_blocks_per_day", i64tostr(DailyBlocksTarget())));
+    {
+        // Testnet does these calculations on "mainnet time" even though its block targer may be faster/slower (giving a sort of "time warp" illusion for testers)
+        if (IsArgSet)
+        {
+            ret.insert(std::pair("expected_blocks_per_day", i64tostr(gRefactorDailyBlocksUsage)));
+            ret.insert(std::pair("minimum_lock_period_blocks", i64tostr(gMinimumWitnessLockDays*gRefactorDailyBlocksUsage)));
+            ret.insert(std::pair("maximum_lock_period_blocks", i64tostr(gMaximumWitnessLockDays*gRefactorDailyBlocksUsage)));
+        }
+        else
+        {
+            ret.insert(std::pair("expected_blocks_per_day", i64tostr(DailyBlocksTarget())));
+            ret.insert(std::pair("minimum_lock_period_blocks", i64tostr(gMinimumWitnessLockDays*DailyBlocksTarget())));
+            ret.insert(std::pair("maximum_lock_period_blocks", i64tostr(gMaximumWitnessLockDays*DailyBlocksTarget())));
+        }
         ret.insert(std::pair("witness_cooldown_period", i64tostr(gMinimumParticipationAge)));
         ret.insert(std::pair("minimum_witness_amount", i64tostr(gMinimumWitnessAmount)));
         ret.insert(std::pair("minimum_witness_weight", i64tostr(gMinimumWitnessWeight)));
-        ret.insert(std::pair("minimum_lock_period_blocks", i64tostr(gMinimumWitnessLockDays*DailyBlocksTarget())));
-        ret.insert(std::pair("minimum_lock_period_days", i64tostr(gMinimumWitnessLockDays)));
-        ret.insert(std::pair("maximum_lock_period_blocks", i64tostr(gMaximumWitnessLockDays*DailyBlocksTarget())));
+        ret.insert(std::pair("minimum_lock_period_days", i64tostr(gMinimumWitnessLockDays)));        
         ret.insert(std::pair("maximum_lock_period_days", i64tostr(gMaximumWitnessLockDays)));
     }
     return ret;
@@ -51,7 +61,7 @@ std::unordered_map<std::string, std::string> IWitnessController::getNetworkLimit
 
 static int64_t GetNetworkWeight()
 {
-    int64_t nNetworkWeight = 20000;
+    int64_t nNetworkWeight = 200000;
     if (chainActive.Tip())
     {
         static uint64_t lastUpdate = 0;
@@ -86,9 +96,9 @@ WitnessEstimateInfoRecord IWitnessController::getEstimatedWeight(int64_t amountT
     
     uint64_t networkWeight = GetNetworkWeight();
     const auto optimalAmounts = optimalWitnessDistribution(amountToLock, lockPeriodInBlocks, networkWeight);
-    int64_t ourTotalWeight = combinedWeight(optimalAmounts, lockPeriodInDays);
+    int64_t ourTotalWeight = combinedWeight(optimalAmounts, lockPeriodInBlocks);
     
-    double witnessProbability = witnessFraction(optimalAmounts, lockPeriodInDays, networkWeight);
+    double witnessProbability = witnessFraction(optimalAmounts, lockPeriodInBlocks, networkWeight);
     double estimatedBlocksPerDay = DailyBlocksTarget() * witnessProbability;
     
     CAmount witnessSubsidy = GetBlockSubsidyWitness(chainActive.Tip()?chainActive.Tip()->nHeight:1);

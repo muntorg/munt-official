@@ -179,7 +179,7 @@ void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* wi
     if (IsSegSigEnabled(chainActive.TipPrev()) && requestedPeriodInBlocks > 1000)
     {
         CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
-        amounts = optimalWitnessDistribution(amount, requestedPeriodInBlocks, witnessInfo.nTotalWeightEligibleRaw);
+        amounts = optimalWitnessDistribution(amount, requestedPeriodInBlocks, witnessInfo.nTotalWeightEligibleRaw<200000?200000:witnessInfo.nTotalWeightEligibleRaw);
     }
     else
         amounts = { amount };
