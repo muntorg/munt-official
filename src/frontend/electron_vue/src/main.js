@@ -6,6 +6,10 @@ import i18n from "./i18n";
 
 import "./components";
 
+import VueSlider from "vue-slider-component";
+import "vue-slider-component/theme/antd.css";
+Vue.component("VueSlider", VueSlider);
+
 import PortalVue from "portal-vue";
 Vue.use(PortalVue);
 

@@ -27,14 +27,9 @@
 <script>
 import { mapState } from "vuex";
 import UnityBackend from "../../../unity/UnityBackend";
-import VueSlider from "vue-slider-component";
-import "vue-slider-component/theme/antd.css";
 
 export default {
   name: "MiningAccount",
-  components: {
-    VueSlider
-  },
   props: {
     account: null
   },
