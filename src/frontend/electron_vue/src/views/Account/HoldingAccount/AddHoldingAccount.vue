@@ -76,11 +76,13 @@
             ref="accountName"
           />
         </novo-form-field>
-        <novo-form-field :title="$t('common.password')">
+        <novo-form-field
+          :title="$t('common.password')"
+          v-if="walletPassword === null"
+        >
           <input
             v-model="password"
             type="password"
-            v-show="walletPassword === null"
             :class="passwordClass"
             @keydown="onPasswordKeydown"
           />
@@ -175,6 +177,7 @@ export default {
         this.amount * 100000000,
         this.lockTimeInBlocks
       );
+      console.log(`${this.amount} : ${this.lockTimeInBlocks}`);
       return estimation;
     },
     passwordClass() {
