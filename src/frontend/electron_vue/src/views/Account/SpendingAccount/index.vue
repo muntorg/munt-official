@@ -7,7 +7,7 @@
           :title="account.label"
           :subtitle="account.balance"
         />
-        <div class="settings flex-col">
+        <div class="settings flex-col" v-if="false /* not implemented yet */">
           <span>
             <fa-icon :icon="['fal', 'cog']" />
           </span>
