@@ -30,7 +30,12 @@ const generateInfo = [
   {
     className: "NJSIAccountsController",
     controller: "accountsController",
-    functions: ["CreateAccount", "GetActiveAccountBalance", "SetActiveAccount"],
+    functions: [
+      "CreateAccount",
+      "DeleteAccount",
+      "GetActiveAccountBalance",
+      "SetActiveAccount"
+    ],
     results: []
   },
   {

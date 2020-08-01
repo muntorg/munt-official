@@ -133,6 +133,14 @@ class UnityBackend {
     return ipc.callMain("CreateAccount", { accountName, accountType });
   }
 
+  static DeleteAccount(accountUUID) {
+    return ipc.sendSync("DeleteAccount", accountUUID);
+  }
+
+  static DeleteAccountAsync(accountUUID) {
+    return ipc.callMain("DeleteAccount", { accountUUID });
+  }
+
   static GetActiveAccountBalance() {
     return ipc.sendSync("GetActiveAccountBalance");
   }
@@ -165,18 +173,18 @@ class UnityBackend {
     return ipc.callMain("GetNetworkLimits");
   }
 
-  static GetEstimatedWeight(amount_to_lock, lock_period_in_days) {
+  static GetEstimatedWeight(amount_to_lock, lock_period_in_blocks) {
     return ipc.sendSync(
       "GetEstimatedWeight",
       amount_to_lock,
-      lock_period_in_days
+      lock_period_in_blocks
     );
   }
 
-  static GetEstimatedWeightAsync(amount_to_lock, lock_period_in_days) {
+  static GetEstimatedWeightAsync(amount_to_lock, lock_period_in_blocks) {
     return ipc.callMain("GetEstimatedWeight", {
       amount_to_lock,
-      lock_period_in_days
+      lock_period_in_blocks
     });
   }
 

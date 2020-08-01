@@ -6,11 +6,20 @@
       "holding": "Holding"
     }
   },
+  "add_holding_account": {
+    "daily": "per dag",
+    "estimated_earnings": "Geschatte opbrengst",
+    "funding_account": "Financieringsrekening",
+    "lock_for": "Vastzetten voor",
+    "overall": "totaal",
+    "title": "Holding rekening aanmaken"
+  },
   "buttons": {
     "back": "Terug",
     "change_password": "Verander wachtwoord",
     "create_mining_account": "Mining rekening aanmaken",
     "finish": "Klaar",
+    "lock": "Vastzetten",
     "next": "Volgende",
     "ok": "OK",
     "previous": "Vorige",
@@ -21,8 +30,11 @@
     "unlock": "Ontgrendelen"
   },
   "common": {
+    "account_name": "Rekeningnaam",
     "amount": "Bedrag",
+    "enter_your_password": "Voer jouw wachtwoord in",
     "important": "Belangrijk",
+    "months": "Maanden",
     "password": "Wachtwoord",
     "receiving_address": "Ontvangstadres"
   },
@@ -44,7 +56,6 @@
     "create_new": "Ik wil een nieuwe portemonnee starten",
     "enter_existing_recovery_phrase": "Voer jouw herstelzin in om jouw portemonnee te herstellen.",
     "enter_recovery_phrase": "Voer herstelzin in",
-    "enter_your_password": "Voer jouw wachtwoord in",
     "invalid_recovery_phrase": {
       "title": "Ongeldige herstelzin",
       "message": "Deze combinatie vormt geen geldige herstelzin. Corrigeer de fout(en) en probeer het nogmaals."
@@ -65,7 +76,6 @@
   },
   "send_novo": {
     "enter_label": "Voer label in",
-    "enter_novo_address": "Voer Novo adres in",
-    "enter_password": "Voer jouw wachtwoord in"
+    "enter_novo_address": "Voer Novo adres in"
   }
 }

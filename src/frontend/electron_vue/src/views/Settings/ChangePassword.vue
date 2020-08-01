@@ -1,7 +1,7 @@
 <template>
   <div class="change-password-view">
     <h2>
-      <span v-if="current === 1">{{ $t("setup.enter_your_password") }}</span>
+      <span v-if="current === 1">{{ $t("common.enter_your_password") }}</span>
       <span v-else>{{ $t("setup.choose_password") }}</span>
     </h2>
 

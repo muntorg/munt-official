@@ -1,7 +1,7 @@
 <template>
   <div class="view-recovery-phrase-view">
     <h2>
-      <span v-if="current === 1">{{ $t("setup.enter_your_password") }}</span>
+      <span v-if="current === 1">{{ $t("common.enter_your_password") }}</span>
       <span class="important" v-else>{{ $t("common.important") }}</span>
     </h2>
 

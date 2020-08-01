@@ -5,60 +5,109 @@
     </portal>
 
     <section class="content">
-      <novo-form-field title="account name">
-        <input
-          type="text"
-          v-model="accountName"
-          maxlength="30"
-          ref="accountName"
-          :placeholder="$t('common.account_name')"
-        />
-      </novo-form-field>
-      <novo-form-field title="funding account">
-        <select v-model="fundingAccount">
-          <option
-            v-for="account in fundingAccounts"
-            :key="account.UUID"
-            :value="account"
-            >{{ account.label }}</option
-          >
-        </select>
-      </novo-form-field>
-      <novo-form-field title="amount">
-        <input
-          type="number"
-          min="50"
-          v-model="amount"
-          :max="maxAmounForAccount"
-        />
-      </novo-form-field>
-      <novo-form-field title="lock time (months)">
-        <vue-slider
-          :min="2"
-          :max="36"
-          :value="lockTimeInMonths"
-          v-model="lockTimeInMonths"
-        />
-      </novo-form-field>
+      <section class="step-1" v-if="current === 1">
+        <novo-form-field :title="$t('add_holding_account.funding_account')">
+          <select v-model="fundingAccount">
+            <option
+              v-for="account in fundingAccounts"
+              :key="account.UUID"
+              :value="account"
+              >{{ account.label }}</option
+            >
+          </select>
+        </novo-form-field>
+        <novo-form-field :title="$t('common.amount')">
+          <input
+            type="number"
+            min="50"
+            v-model="amount"
+            :max="maxAmountForAccount"
+            :class="amountClass"
+          />
+        </novo-form-field>
+        <novo-form-field :title="$t('add_holding_account.lock_for')">
+          <div class="flex-row">
+            <vue-slider
+              :min="2"
+              :max="36"
+              class="lock-time-slider"
+              :class="lockTimeClass"
+              :value="lockTimeInMonths"
+              v-model="lockTimeInMonths"
+            />
+            <div class="lock-time-info">
+              {{ lockTimeInMonths }} {{ $t("common.months") }}
+            </div>
+          </div>
+        </novo-form-field>
 
-      <novo-form-field title="password">
-        <input
-          v-model="password"
-          type="password"
-          v-show="walletPassword === null"
-          :placeholder="$t('common.enter_password')"
-          :class="passwordClass"
-          @keydown="onPasswordKeydown"
-        />
-      </novo-form-field>
-
-      <pre>{{ estimatedWeight }}</pre>
+        <novo-form-field
+          :title="$t('add_holding_account.estimated_earnings')"
+          v-if="isWeightSufficient"
+        >
+          <div class="flex-row">
+            <div>{{ $t("add_holding_account.daily") }}</div>
+            <div class="flex-1 align-right">
+              {{
+                (
+                  this.estimatedWeight.estimated_daily_earnings / 100000000
+                ).toFixed(2)
+              }}
+            </div>
+          </div>
+          <div class="flex-row">
+            <div>{{ $t("add_holding_account.overall") }}</div>
+            <div class="flex-1 align-right">
+              {{
+                (
+                  this.estimatedWeight.estimated_lifetime_earnings / 100000000
+                ).toFixed(2)
+              }}
+            </div>
+          </div>
+        </novo-form-field>
+      </section>
+      <section class="step-2" v-else>
+        <novo-form-field :title="$t('common.account_name')">
+          <input
+            type="text"
+            v-model="accountName"
+            maxlength="30"
+            ref="accountName"
+          />
+        </novo-form-field>
+        <novo-form-field :title="$t('common.password')">
+          <input
+            v-model="password"
+            type="password"
+            v-show="walletPassword === null"
+            :class="passwordClass"
+            @keydown="onPasswordKeydown"
+          />
+        </novo-form-field>
+      </section>
     </section>
 
     <portal to="footer-slot">
       <novo-button-section>
-        <button @click="createAndFundHoldingAccount" :disabled="disableButton">
-          {{ $t("buttons.fund") }}
+        <template v-slot:left>
+          <button @click="current--" v-if="current !== 1">
+            {{ $t("buttons.previous") }}
+          </button>
+        </template>
+        <button
+          @click="nextStep"
+          :disabled="!isWeightSufficient"
+          v-if="current === 1"
+        >
+          {{ $t("buttons.next") }}
+        </button>
+        <button
+          @click="createAndFundHoldingAccount"
+          :disabled="disableLockButton"
+          v-else
+        >
+          {{ $t("buttons.lock") }}
         </button>
       </novo-button-section>
     </portal>
@@ -73,10 +122,12 @@ export default {
   name: "AddHoldingAccount",
   data() {
     return {
+      current: 1,
+      networkLimits: null,
       accountName: "",
       fundingAccount: null,
       amount: 50,
-      lockTimeInMonths: 2,
+      lockTimeInMonths: 36,
       password: "",
       isPasswordInvalid: false
     };
@@ -87,6 +138,13 @@ export default {
     computedPassword() {
       return this.walletPassword ? this.walletPassword : this.password || "";
     },
+    amountClass() {
+      return this.amount <
+        parseInt(this.networkLimits.minimum_witness_amount) ||
+        this.amount > this.maxAmountForAccount
+        ? "error"
+        : "";
+    },
     fundingAccounts() {
       return this.accounts.filter(
         x =>
@@ -95,13 +153,27 @@ export default {
           x.balance >= 50
       );
     },
-    maxAmounForAccount() {
-      return this.fundingAccount ? this.fundingAccount.balance : 0;
+    maxAmountForAccount() {
+      return this.fundingAccount ? Math.floor(this.fundingAccount.balance) : 0;
+    },
+    lockTimeInBlocks() {
+      return (
+        this.lockTimeInMonths *
+        (this.networkLimits.maximum_lock_period_blocks / 36)
+      );
+    },
+    isWeightSufficient() {
+      return (
+        this.estimatedWeight.weight >= this.networkLimits.minimum_witness_weight
+      );
+    },
+    lockTimeClass() {
+      return this.isWeightSufficient ? "" : "insufficient";
     },
     estimatedWeight() {
       let estimation = UnityBackend.GetEstimatedWeight(
         this.amount * 100000000,
-        Math.floor((1095 / 36) * this.lockTimeInMonths)
+        this.lockTimeInBlocks
       );
       return estimation;
     },
@@ -111,14 +183,16 @@ export default {
     hasErrors() {
       return this.isPasswordInvalid;
     },
-    disableButton() {
+    disableLockButton() {
       if (this.accountName.trim().length === 0) return true;
       if (this.computedPassword.trim().length === 0) return true;
       return false;
     }
   },
+  created() {
+    this.networkLimits = UnityBackend.GetNetworkLimits();
+  },
   mounted() {
-    this.$refs.accountName.focus();
     if (this.fundingAccounts.length) {
       this.fundingAccount = this.fundingAccounts[0];
     }
@@ -126,6 +200,12 @@ export default {
   methods: {
     onPasswordKeydown() {
       this.isPasswordInvalid = false;
+    },
+    nextStep() {
+      this.current++;
+      this.$nextTick(() => {
+        this.$refs.accountName.focus();
+      });
     },
     createAndFundHoldingAccount() {
       // wallet needs to be unlocked to make a payment
@@ -138,20 +218,34 @@ export default {
       UnityBackend.UnlockWallet(this.computedPassword);
       let accountId = UnityBackend.CreateAccount(this.accountName, "Witness");
 
-      console.log(this.fundingAccount);
-      console.log(accountId);
-
       let result = UnityBackend.FundWitnessAccount(
         this.fundingAccount.UUID,
         accountId,
         this.amount * 100000000,
-        this.lockTimeInMonths * 8640
+        this.lockTimeInBlocks
       );
 
-      console.log(result);
+      if (result.status === "success") {
+        this.$router.push({ name: "account", params: { id: accountId } });
+      } else {
+        console.log(result);
+        UnityBackend.DeleteAccount(accountId); // something went wrong, so delete the account
+      }
 
       UnityBackend.LockWallet();
     }
   }
 };
 </script>
+
+<style lang="less" scoped>
+.lock-time-slider {
+  width: calc(100% - 100px) !important;
+  display: inline-block;
+}
+.lock-time-info {
+  text-align: right;
+  line-height: 18px;
+  flex: 1;
+}
+</style>

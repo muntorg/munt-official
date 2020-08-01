@@ -183,6 +183,14 @@ input[type=range] {
   flex-direction: column;
 }
 
+.flex-1 {
+  flex: 1;
+}
+
+.align-right {
+  text-align: right;
+}
+
 .scrollable {
   overflow: hidden;
   
@@ -214,8 +222,17 @@ input[type=range] {
 
 // set the range slider color to let it fit in the UI
 .vue-slider-process {
-  background-color: var(--primary-color) !important;
+  background-color: var(--primary-color) !important;    
 }
 .vue-slider-dot-handle {
   border-color: var(--primary-color) !important;
+}
+
+.insufficient {
+  & .vue-slider-process {
+    background-color: var(--error-color) !important;
+  }
+  & .vue-slider-dot-handle {
+    border-color: var(--error-color) !important;
+  }
 }

@@ -33,7 +33,7 @@
         v-model="password"
         type="password"
         v-show="walletPassword === null"
-        :placeholder="$t('send_novo.enter_password')"
+        :placeholder="$t('common.enter_your_password')"
         :class="passwordClass"
         @keydown="onPasswordKeydown"
       />

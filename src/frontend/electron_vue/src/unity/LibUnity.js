@@ -698,6 +698,24 @@ class LibUnity {
       return result;
     });
 
+    ipc.on("DeleteAccount", (event, accountUUID) => {
+      let result = this._preExecuteIpcCommand("DeleteAccount");
+      if (result === undefined) {
+        result = this.accountsController.deleteAccount(accountUUID);
+      }
+      this._postExecuteIpcCommand("DeleteAccount", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("DeleteAccount", async data => {
+      let result = this._preExecuteIpcCommand("DeleteAccount");
+      if (result === undefined) {
+        result = this.accountsController.deleteAccount(data.accountUUID);
+      }
+      this._postExecuteIpcCommand("DeleteAccount", result);
+      return result;
+    });
+
     ipc.on("GetActiveAccountBalance", event => {
       let result = this._preExecuteIpcCommand("GetActiveAccountBalance");
       if (result === undefined) {
@@ -776,12 +794,12 @@ class LibUnity {
 
     ipc.on(
       "GetEstimatedWeight",
-      (event, amount_to_lock, lock_period_in_days) => {
+      (event, amount_to_lock, lock_period_in_blocks) => {
         let result = this._preExecuteIpcCommand("GetEstimatedWeight");
         if (result === undefined) {
           result = this.witnessController.getEstimatedWeight(
             amount_to_lock,
-            lock_period_in_days
+            lock_period_in_blocks
           );
         }
         this._postExecuteIpcCommand("GetEstimatedWeight", result);
@@ -794,7 +812,7 @@ class LibUnity {
       if (result === undefined) {
         result = this.witnessController.getEstimatedWeight(
           data.amount_to_lock,
-          data.lock_period_in_days
+          data.lock_period_in_blocks
         );
       }
       this._postExecuteIpcCommand("GetEstimatedWeight", result);

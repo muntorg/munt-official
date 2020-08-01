@@ -6,11 +6,20 @@
       "holding": "Holding"
     }
   },
+  "add_holding_account": {
+    "daily": "daily",
+    "estimated_eanings": "Estimated earnings",
+    "funding_account": "Funding account",
+    "lock_for": "Lock for",
+    "overall": "overall",
+    "title": "Add holding account"
+  },
   "buttons": {
     "back": "Back",
     "change_password": "Change password",
     "create_mining_account": "Create mining account",
     "finish": "Finish",
+    "lock": "Lock",
     "next": "Next",
     "ok": "OK",
     "previous": "Previous",
@@ -21,8 +30,11 @@
     "unlock": "Unlock"
   },
   "common": {
+    "account_name": "Account name",
     "amount": "Amount",
+    "enter_your_password": "Enter your password",
     "important": "Important",
+    "months": "Months",
     "password": "Password",
     "receiving_address": "Receiving address"
   },
@@ -44,7 +56,6 @@
     "create_new": "I want to create a new wallet",
     "enter_existing_recovery_phrase": "Enter your recovery phrase in the boxes below to restore your wallet.",
     "enter_recovery_phrase": "Enter recovery phrase",
-    "enter_your_password": "Enter your password",
     "invalid_recovery_phrase": {
       "title": "Invalid recovery phrase",
       "message": "This combinatie is not a valid recovery phrase. Correct the error(s) and try again."
@@ -65,7 +76,6 @@
   },
   "send_novo": {
     "enter_label": "Enter label",
-    "enter_novo_address": "Enter Novo address",
-    "enter_password": "Enter your password"
+    "enter_novo_address": "Enter Novo address"
   }
 }
