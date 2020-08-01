@@ -38,7 +38,7 @@ std::unordered_map<std::string, std::string> IWitnessController::getNetworkLimit
     if (pactiveWallet)
     {
         // Testnet does these calculations on "mainnet time" even though its block targer may be faster/slower (giving a sort of "time warp" illusion for testers)
-        if (IsArgSet)
+        if (IsArgSet("-testnet"))
         {
             ret.insert(std::pair("expected_blocks_per_day", i64tostr(gRefactorDailyBlocksUsage)));
             ret.insert(std::pair("minimum_lock_period_blocks", i64tostr(gMinimumWitnessLockDays*gRefactorDailyBlocksUsage)));
@@ -90,9 +90,17 @@ static int64_t GetNetworkWeight()
     return nNetworkWeight;
 }
 
-WitnessEstimateInfoRecord IWitnessController::getEstimatedWeight(int64_t amountToLock, int64_t lockPeriodInDays)
+WitnessEstimateInfoRecord IWitnessController::getEstimatedWeight(int64_t amountToLock, int64_t lockPeriodInBlocks)
 {
-    int64_t lockPeriodInBlocks = lockPeriodInDays * DailyBlocksTarget();
+    int64_t lockPeriodInDays;
+    if (IsArgSet("-testnet"))
+    {
+        lockPeriodInDays = lockPeriodInBlocks / gRefactorDailyBlocksUsage;
+    }
+    else
+    {
+        lockPeriodInDays = lockPeriodInBlocks / DailyBlocksTarget();
+    }
     
     uint64_t networkWeight = GetNetworkWeight();
     const auto optimalAmounts = optimalWitnessDistribution(amountToLock, lockPeriodInBlocks, networkWeight);

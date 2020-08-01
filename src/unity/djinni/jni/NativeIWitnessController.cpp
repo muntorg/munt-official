@@ -30,12 +30,12 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IWitnessController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IWitnessController_00024CppProxy_getEstimatedWeight(JNIEnv* jniEnv, jobject /*this*/, jlong j_amountToLock, jlong j_lockPeriodInDays)
+CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IWitnessController_00024CppProxy_getEstimatedWeight(JNIEnv* jniEnv, jobject /*this*/, jlong j_amountToLock, jlong j_lockPeriodInBlocks)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::IWitnessController::getEstimatedWeight(::djinni::I64::toCpp(jniEnv, j_amountToLock),
-                                                          ::djinni::I64::toCpp(jniEnv, j_lockPeriodInDays));
+                                                          ::djinni::I64::toCpp(jniEnv, j_lockPeriodInBlocks));
         return ::djinni::release(::djinni_generated::NativeWitnessEstimateInfoRecord::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }

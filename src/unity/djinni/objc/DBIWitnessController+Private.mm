@@ -40,10 +40,10 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
 }
 
 + (nonnull DBWitnessEstimateInfoRecord *)getEstimatedWeight:(int64_t)amountToLock
-                                           lockPeriodInDays:(int64_t)lockPeriodInDays {
+                                         lockPeriodInBlocks:(int64_t)lockPeriodInBlocks {
     try {
         auto objcpp_result_ = ::IWitnessController::getEstimatedWeight(::djinni::I64::toCpp(amountToLock),
-                                                                       ::djinni::I64::toCpp(lockPeriodInDays));
+                                                                       ::djinni::I64::toCpp(lockPeriodInBlocks));
         return ::djinni_generated::WitnessEstimateInfoRecord::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }

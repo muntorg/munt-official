@@ -14,7 +14,7 @@
 
 /** Get an estimate of weights/parts that a witness account will be funded with */
 + (nonnull DBWitnessEstimateInfoRecord *)getEstimatedWeight:(int64_t)amountToLock
-                                           lockPeriodInDays:(int64_t)lockPeriodInDays;
+                                         lockPeriodInBlocks:(int64_t)lockPeriodInBlocks;
 
 /** Fund a witness account */
 + (nonnull DBWitnessFundingResultRecord *)fundWitnessAccount:(nonnull NSString *)fundingAccountUUID

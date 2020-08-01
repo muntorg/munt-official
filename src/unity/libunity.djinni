@@ -482,7 +482,7 @@ i_witness_controller = interface +c {
     static getNetworkLimits() : map<string, string>;
     
     # Get an estimate of weights/parts that a witness account will be funded with
-    static getEstimatedWeight(amount_to_lock : i64, lock_period_in_days : i64) : witness_estimate_info_record;
+    static getEstimatedWeight(amount_to_lock : i64, lock_period_in_blocks : i64) : witness_estimate_info_record;
     
     # Fund a witness account
     static fundWitnessAccount(funding_account_UUID : string, witness_account_UUID : string, funding_amount : i64, requestedLockPeriodInBlocks : i64) : witness_funding_result_record;
