@@ -177,7 +177,7 @@ export default {
         this.amount * 100000000,
         this.lockTimeInBlocks
       );
-      console.log(`${this.amount} : ${this.lockTimeInBlocks}`);
+
       return estimation;
     },
     passwordClass() {
