@@ -95,7 +95,10 @@ class UnityBackend {
   }
 
   static PerformPaymentToRecipientAsync(request, substract_fee) {
-    return ipc.callMain("PerformPaymentToRecipient", { request, substract_fee });
+    return ipc.callMain("PerformPaymentToRecipient", {
+      request,
+      substract_fee
+    });
   }
 
   static ResendTransaction(txHash) {
