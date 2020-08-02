@@ -13,7 +13,7 @@
             </div>
             <div class="balance">{{ getBalanceFor(category) }}</div>
           </div>
-          <div class="add">
+          <div class="add" v-if="category !== 'spending'">
             <div class="button" @click="addAccountFor(category)">
               <fa-icon :icon="['fal', 'plus']" />
             </div>
