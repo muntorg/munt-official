@@ -222,10 +222,22 @@ input[type=range] {
 
 // set the range slider color to let it fit in the UI
 .vue-slider-process {
-  background-color: var(--primary-color) !important;    
+  background-color: var(--primary-color) !important;
 }
+
 .vue-slider-dot-handle {
   border-color: var(--primary-color) !important;
+}
+
+.vue-slider-disabled {
+  .vue-slider-process {
+    background-color: #a7a7a7 !important;
+  }
+}
+
+.vue-slider-dot-handle-disabled {
+  cursor: not-allowed;
+  border-color: #ddd !important;
 }
 
 .insufficient {

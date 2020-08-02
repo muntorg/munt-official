@@ -42,6 +42,16 @@
     "shutdown": "Shutting down...",
     "synchronizing": "Your wallet is now synchronizing with the Novo network. This may take some time to complete."
   },
+  "mining": {
+    "arena_setup_time": "Arena setup time",
+    "best_reported_speed": "Best reported speed",
+    "last_reported_speed": "Last reported speed",
+    "memory_to_use": "Memory to use",
+    "moving_average": "Moving average",
+    "number_of_threads": "Number of threads",
+    "statistics": "Statistics",
+    "thread" : "thread | threads"
+  },
   "password_dialog": {
     "unlock_wallet": "Unlock wallet"
   },

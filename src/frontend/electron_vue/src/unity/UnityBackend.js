@@ -173,6 +173,30 @@ class UnityBackend {
     return ipc.callMain("StopGeneration");
   }
 
+  static GetAvailableCores() {
+    return ipc.sendSync("GetAvailableCores");
+  }
+
+  static GetAvailableCoresAsync() {
+    return ipc.callMain("GetAvailableCores");
+  }
+
+  static GetMinimumMemory() {
+    return ipc.sendSync("GetMinimumMemory");
+  }
+
+  static GetMinimumMemoryAsync() {
+    return ipc.callMain("GetMinimumMemory");
+  }
+
+  static GetMaximumMemory() {
+    return ipc.sendSync("GetMaximumMemory");
+  }
+
+  static GetMaximumMemoryAsync() {
+    return ipc.callMain("GetMaximumMemory");
+  }
+
   static GetNetworkLimits() {
     return ipc.sendSync("GetNetworkLimits");
   }

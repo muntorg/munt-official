@@ -42,7 +42,13 @@ const generateInfo = [
   {
     className: "NJSIGenerationController",
     controller: "generationController",
-    functions: ["StartGeneration", "StopGeneration"],
+    functions: [
+      "GetAvailableCores",
+      "GetMaximumMemory",
+      "GetMinimumMemory",
+      "StartGeneration",
+      "StopGeneration"
+    ],
     results: []
   },
   {

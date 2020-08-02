@@ -791,6 +791,60 @@ class LibUnity {
       this._postExecuteIpcCommand("StopGeneration", result);
       return result;
     });
+
+    ipc.on("GetAvailableCores", event => {
+      let result = this._preExecuteIpcCommand("GetAvailableCores");
+      if (result === undefined) {
+        result = this.generationController.getAvailableCores();
+      }
+      this._postExecuteIpcCommand("GetAvailableCores", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("GetAvailableCores", async () => {
+      let result = this._preExecuteIpcCommand("GetAvailableCores");
+      if (result === undefined) {
+        result = this.generationController.getAvailableCores();
+      }
+      this._postExecuteIpcCommand("GetAvailableCores", result);
+      return result;
+    });
+
+    ipc.on("GetMinimumMemory", event => {
+      let result = this._preExecuteIpcCommand("GetMinimumMemory");
+      if (result === undefined) {
+        result = this.generationController.getMinimumMemory();
+      }
+      this._postExecuteIpcCommand("GetMinimumMemory", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("GetMinimumMemory", async () => {
+      let result = this._preExecuteIpcCommand("GetMinimumMemory");
+      if (result === undefined) {
+        result = this.generationController.getMinimumMemory();
+      }
+      this._postExecuteIpcCommand("GetMinimumMemory", result);
+      return result;
+    });
+
+    ipc.on("GetMaximumMemory", event => {
+      let result = this._preExecuteIpcCommand("GetMaximumMemory");
+      if (result === undefined) {
+        result = this.generationController.getMaximumMemory();
+      }
+      this._postExecuteIpcCommand("GetMaximumMemory", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("GetMaximumMemory", async () => {
+      let result = this._preExecuteIpcCommand("GetMaximumMemory");
+      if (result === undefined) {
+        result = this.generationController.getMaximumMemory();
+      }
+      this._postExecuteIpcCommand("GetMaximumMemory", result);
+      return result;
+    });
     ipc.on("GetNetworkLimits", event => {
       let result = this._preExecuteIpcCommand("GetNetworkLimits");
       if (result === undefined) {
