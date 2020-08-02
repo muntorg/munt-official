@@ -88,7 +88,7 @@ class LibUnity {
     this.walletController.setListener(this.walletListener);
   }
 
-  async _initializeAccountsController() {
+  _initializeAccountsController() {
     let self = this;
     let libraryController = this.libraryController;
 
@@ -113,17 +113,17 @@ class LibUnity {
       });
     };
 
-    this.accountsListener.onAccountAdded = async function() {
+    this.accountsListener.onAccountAdded = function() {
       store.dispatch({
         type: "SET_ACCOUNTS",
-        accounts: await self._getAccountsWithBalancesAsync()
+        accounts: self._getAccountsWithBalances()
       });
     };
 
-    this.accountsListener.onAccountDeleted = async function() {
+    this.accountsListener.onAccountDeleted = function() {
       store.dispatch({
         type: "SET_ACCOUNTS",
-        accounts: await self._getAccountsWithBalancesAsync()
+        accounts: self._getAccountsWithBalances()
       });
     };
 
@@ -195,18 +195,19 @@ class LibUnity {
     );
   }
 
-  async _getAccountsWithBalancesAsync() {
+  _getAccountsWithBalances() {
     let accounts = this.accountsController.listAccounts();
-    let accountBalances =this.accountsController.getAllAccountBalances();
+    let accountBalances = this.accountsController.getAllAccountBalances();
 
-     Object.keys(accountBalances).forEach(key => {
-        accounts.find(x => x.UUID === key).balance = accountBalances[key].availableIncludingLocked/100000000;
+    Object.keys(accountBalances).forEach(key => {
+      accounts.find(x => x.UUID === key).balance =
+        accountBalances[key].availableIncludingLocked / 100000000;
     });
 
     return accounts;
   }
 
-  async _coreReady() {
+  _coreReady() {
     this._initializeWalletController();
     this._initializeAccountsController();
     this._initializeGenerationController();
@@ -220,7 +221,7 @@ class LibUnity {
 
     store.dispatch({
       type: "SET_ACCOUNTS",
-      accounts: await this._getAccountsWithBalancesAsync()
+      accounts: this._getAccountsWithBalances()
     });
 
     store.dispatch({
@@ -241,7 +242,7 @@ class LibUnity {
     store.dispatch({ type: "SET_CORE_READY", coreReady: true });
   }
 
-  async _registerSignalHandlers() {
+  _registerSignalHandlers() {
     let self = this;
     let libraryListener = this.libraryListener;
     let libraryController = this.libraryController;
@@ -260,12 +261,12 @@ class LibUnity {
       // todo: set progress property in store?
     };
 
-    libraryListener.notifyBalanceChange = async function(new_balance) {
+    libraryListener.notifyBalanceChange = function(new_balance) {
       console.log("received: notifyBalanceChange");
       store.dispatch({ type: "SET_BALANCE", balance: new_balance });
     };
 
-    libraryListener.notifyNewMutation = async function(/*mutation, self_committed*/) {
+    libraryListener.notifyNewMutation = function(/*mutation, self_committed*/) {
       console.log("received: notifyNewMutation");
 
       store.dispatch({
@@ -276,10 +277,10 @@ class LibUnity {
         type: "SET_RECEIVE_ADDRESS",
         receiveAddress: libraryController.GetReceiveAddress()
       });
-      // todo: find a better way to update the balances for the accounts
+
       store.dispatch({
         type: "SET_ACCOUNTS",
-        accounts: await self._getAccountsWithBalancesAsync()
+        accounts: self._getAccountsWithBalances()
       });
     };
 
