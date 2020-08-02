@@ -16,10 +16,13 @@
 
 void IRpcController::execute(const std::string& rpcCommandLine, const std::shared_ptr<IRpcListener>& resultListener)
 {
-    RPCController controller;
-    const std::function<void(const std::string&)>& errorHandler = [=](const std::string& errorMessage) {resultListener->onError(errorMessage);};
-    const std::function<void(const std::string&, const std::string&)>& successHandler = [=](const std::string& filteredCommand, const std::string& result) {resultListener->onSuccess(filteredCommand, result);};
-    controller.executeCommandLine(rpcCommandLine, errorHandler, successHandler);
+    std::thread([=]
+    {
+        RPCController controller;
+        const std::function<void(const std::string&)>& errorHandler = [=](const std::string& errorMessage) {resultListener->onError(errorMessage);};
+        const std::function<void(const std::string&, const std::string&)>& successHandler = [=](const std::string& filteredCommand, const std::string& result) {resultListener->onSuccess(filteredCommand, result);};
+        controller.executeCommandLine(rpcCommandLine, errorHandler, successHandler);
+    }).detach();
 }
 
 std::vector<std::string> IRpcController::getAutocompleteList()

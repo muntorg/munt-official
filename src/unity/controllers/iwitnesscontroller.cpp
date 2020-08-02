@@ -87,7 +87,10 @@ static int64_t GetNetworkWeight()
                 {
                     return nNetworkWeight;
                 }
-                nNetworkWeight = witnessInfo.nTotalWeightEligibleRaw;
+                if (witnessInfo.nTotalWeightEligibleRaw != 0)
+                {
+                    nNetworkWeight = witnessInfo.nTotalWeightEligibleRaw;
+                }
             }
         }
     }
@@ -314,20 +317,21 @@ WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(c
     WitnessInfoForAccount infoForAccount;
     if (!GetWitnessInfoForAccount(witnessAccount, infoForAccount))
     {
-        std::string accountStatus;
-        switch (infoForAccount.accountStatus.status)
-        {
-            case WitnessStatus::Empty: accountStatus = "empty"; break;
-            case WitnessStatus::EmptyWithRemainder: accountStatus = "empty_with_remainder"; break;
-            case WitnessStatus::Pending: accountStatus = "pending"; break;
-            case WitnessStatus::Witnessing: accountStatus = "witnessing"; break;
-            case WitnessStatus::Ended: accountStatus = "ended"; break;
-            case WitnessStatus::Expired: accountStatus = "expired"; break;
-            case WitnessStatus::Emptying: accountStatus = "emptying"; break;
-        }
-        return WitnessAccountStatisticsRecord("success", accountStatus, infoForAccount.nOurWeight, infoForAccount.nOriginWeight, 
+        return WitnessAccountStatisticsRecord("failed to get witness info for account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    }
+    std::string accountStatus;
+    switch (infoForAccount.accountStatus.status)
+    {
+        case WitnessStatus::Empty: accountStatus = "empty"; break;
+        case WitnessStatus::EmptyWithRemainder: accountStatus = "empty_with_remainder"; break;
+        case WitnessStatus::Pending: accountStatus = "pending"; break;
+        case WitnessStatus::Witnessing: accountStatus = "witnessing"; break;
+        case WitnessStatus::Ended: accountStatus = "ended"; break;
+        case WitnessStatus::Expired: accountStatus = "expired"; break;
+        case WitnessStatus::Emptying: accountStatus = "emptying"; break;
+    }
+    return WitnessAccountStatisticsRecord("success", accountStatus, infoForAccount.nOurWeight, infoForAccount.nOriginWeight, 
                                               infoForAccount.nTotalNetworkWeightTip, infoForAccount.nOriginNetworkWeight, 
                                               infoForAccount.nOriginLength, infoForAccount.nLockBlocksRemaining, infoForAccount.nExpectedWitnessBlockPeriod,
                                               infoForAccount.nEstimatedWitnessBlockPeriod, infoForAccount.nOriginBlock);
-    }
 }

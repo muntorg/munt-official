@@ -15,11 +15,48 @@
 #include "unity/djinni/cpp/i_library_controller.hpp"
 
 #include <boost/thread.hpp>
+#include <thread>
+
+
+class NodeRPCTimer : public RPCTimerBase
+{
+public:
+    NodeRPCTimer(std::function<void(void)>& func, int64_t millis)
+    {
+        std::thread([=]()
+        {
+            MilliSleep(millis);
+            func();
+        }).detach();
+    }
+private:
+};
+
+class NodeRPCTimerInterface : public RPCTimerInterface
+{
+public:
+    NodeRPCTimerInterface()
+    {
+    }
+    const char* Name()
+    {
+        return "Node";
+    }
+    RPCTimerBase* NewTimer(std::function<void(void)>& func, int64_t millis)
+    {
+        return new NodeRPCTimer(func, millis);
+    }
+private:
+};
+
 
 extern std::string HelpMessage(HelpMessageMode mode)
 {
     return "";
 }
+
+
+NodeRPCTimerInterface* timerInterface = nullptr;
 
 void InitRegisterRPC()
 {
@@ -27,6 +64,9 @@ void InitRegisterRPC()
     #ifdef ENABLE_WALLET
         RegisterWalletRPCCommands(tableRPC);
     #endif
+        
+    timerInterface = new NodeRPCTimerInterface();
+    RPCSetTimerInterface(timerInterface);
 }
 
 void ServerInterrupt(boost::thread_group& threadGroup)
@@ -49,6 +89,7 @@ bool InitRPCWarmup(boost::thread_group& threadGroup)
 
 void ServerShutdown(boost::thread_group& threadGroup)
 {
+    RPCUnsetTimerInterface(timerInterface);
     //StopRPC();
 }
 
