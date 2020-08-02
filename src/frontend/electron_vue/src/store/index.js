@@ -93,6 +93,9 @@ export default new Vuex.Store({
       commit(payload);
     },
     SET_ACTIVE_ACCOUNT({ commit }, payload) {
+      // clear mutations and receive address
+      commit("SET_MUTATIONS", { mutations: null });
+      commit("SET_RECEIVE_ADDRESS", { receiveAddress: "" });
       commit(payload);
     },
     SET_BALANCE({ commit }, payload) {
