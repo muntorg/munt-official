@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "DBUnifiedBackend.h"
-#import "DBUnifiedBackend.h"
 
 NSString* GuldenCoreStaticFilterPath(BOOL testnet)
 {
