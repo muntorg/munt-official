@@ -87,7 +87,10 @@ static int64_t GetNetworkWeight()
                 {
                     return nNetworkWeight;
                 }
-                nNetworkWeight = witnessInfo.nTotalWeightEligibleRaw;
+                if (witnessInfo.nTotalWeightEligibleRaw != 0)
+                {
+                    nNetworkWeight = witnessInfo.nTotalWeightEligibleRaw;
+                }
             }
         }
     }
