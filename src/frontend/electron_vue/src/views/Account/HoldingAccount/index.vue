@@ -25,6 +25,9 @@
 
 <script>
 import UnityBackend from "../../../unity/UnityBackend";
+
+let timeout;
+
 export default {
   name: "HoldingAccount",
   props: {
@@ -38,14 +41,27 @@ export default {
     };
   },
   created() {
-    this.statistics = UnityBackend.GetAccountWitnessStatistics(
-      this.account.UUID
-    );
+    this.updateStatistics();
+  },
+  beforeDestroy() {
+    clearTimeout(timeout);
+  },
+  watch: {
+    account() {
+      this.updateStatistics();
+    }
   },
   methods: {
     closeRightSection() {
       this.rightSection = null;
       this.rightSectionComponent = null;
+    },
+    updateStatistics() {
+      clearTimeout(timeout);
+      this.statistics = UnityBackend.GetAccountWitnessStatistics(
+        this.account.UUID
+      );
+      timeout = setTimeout(this.updateStatistics, 5000);
     }
   }
 };
