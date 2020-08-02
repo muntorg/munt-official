@@ -15,6 +15,8 @@
       </section>
     </portal>
 
+    <pre>{{ statistics }}</pre>
+
     <portal to="footer-slot">
       <div />
     </portal>
@@ -22,6 +24,7 @@
 </template>
 
 <script>
+import UnityBackend from "../../../unity/UnityBackend";
 export default {
   name: "HoldingAccount",
   props: {
@@ -30,8 +33,14 @@ export default {
   data() {
     return {
       rightSection: null,
-      rightSectionComponent: null
+      rightSectionComponent: null,
+      statistics: null
     };
+  },
+  created() {
+    this.statistics = UnityBackend.GetAccountWitnessStatistics(
+      this.account.UUID
+    );
   },
   methods: {
     closeRightSection() {
