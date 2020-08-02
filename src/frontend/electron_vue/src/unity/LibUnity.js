@@ -197,13 +197,11 @@ class LibUnity {
 
   async _getAccountsWithBalancesAsync() {
     let accounts = this.accountsController.listAccounts();
-    let accountBalances = await this._executeRpcAsync("getaccountbalances");
+    let accountBalances =this.accountsController.getAllAccountBalances();
 
-    for (var i = 0; i < accountBalances.length; i++) {
-      let accountBalance = accountBalances[i];
-      accounts.find(x => x.UUID === accountBalance.UUID).balance =
-        accountBalance.balance;
-    }
+     Object.keys(accountBalances).forEach(key => {
+        accounts.find(x => x.UUID === key).balance = accountBalances[key].availableIncludingLocked/100000000;
+    });
 
     return accounts;
   }
