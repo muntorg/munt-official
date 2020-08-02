@@ -109,6 +109,14 @@ class UnityBackend {
     return ipc.callMain("ResendTransaction", { txHash });
   }
 
+  static GetClientInfo() {
+    return ipc.sendSync("GetClientInfo");
+  }
+
+  static GetClientInfoAsync() {
+    return ipc.callMain("GetClientInfo");
+  }
+
   static GetTransactionHistory() {
     return ipc.sendSync("GetTransactionHistory");
   }
@@ -215,6 +223,14 @@ class UnityBackend {
       funding_amount,
       requestedLockPeriodInBlocks
     });
+  }
+
+  static GetAccountWitnessStatistics(witnessAccountUUID) {
+    return ipc.sendSync("GetAccountWitnessStatistics", witnessAccountUUID);
+  }
+
+  static GetAccountWitnessStatisticsAsync(witnessAccountUUID) {
+    return ipc.callMain("GetAccountWitnessStatistics", { witnessAccountUUID });
   }
 
   /* inject:code */

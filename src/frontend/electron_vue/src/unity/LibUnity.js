@@ -639,6 +639,24 @@ class LibUnity {
       return result;
     });
 
+    ipc.on("GetClientInfo", event => {
+      let result = this._preExecuteIpcCommand("GetClientInfo");
+      if (result === undefined) {
+        result = this.libraryController.getClientInfo();
+      }
+      this._postExecuteIpcCommand("GetClientInfo", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("GetClientInfo", async () => {
+      let result = this._preExecuteIpcCommand("GetClientInfo");
+      if (result === undefined) {
+        result = this.libraryController.getClientInfo();
+      }
+      this._postExecuteIpcCommand("GetClientInfo", result);
+      return result;
+    });
+
     ipc.on("GetTransactionHistory", event => {
       let result = this._preExecuteIpcCommand("GetTransactionHistory");
       if (result === undefined) {
@@ -853,6 +871,28 @@ class LibUnity {
         );
       }
       this._postExecuteIpcCommand("FundWitnessAccount", result);
+      return result;
+    });
+
+    ipc.on("GetAccountWitnessStatistics", (event, witnessAccountUUID) => {
+      let result = this._preExecuteIpcCommand("GetAccountWitnessStatistics");
+      if (result === undefined) {
+        result = this.witnessController.getAccountWitnessStatistics(
+          witnessAccountUUID
+        );
+      }
+      this._postExecuteIpcCommand("GetAccountWitnessStatistics", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("GetAccountWitnessStatistics", async data => {
+      let result = this._preExecuteIpcCommand("GetAccountWitnessStatistics");
+      if (result === undefined) {
+        result = this.witnessController.getAccountWitnessStatistics(
+          data.witnessAccountUUID
+        );
+      }
+      this._postExecuteIpcCommand("GetAccountWitnessStatistics", result);
       return result;
     });
     /* inject:code */

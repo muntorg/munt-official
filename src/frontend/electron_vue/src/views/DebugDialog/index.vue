@@ -11,15 +11,14 @@
       </div>
     </div>
     <div class="main">
-      <div v-show="current === 0">
-        // Placeholder, values from getClientInfo() go here...
-      </div>
+      <information-page v-if="current === 0" />
       <debug-console v-show="current === 1" />
     </div>
   </div>
 </template>
 
 <script>
+import InformationPage from "./InformationPage";
 import DebugConsole from "./DebugConsole";
 
 export default {
@@ -28,7 +27,7 @@ export default {
       current: 0,
       tabs: [
         {
-          title: "About"
+          title: "Information"
         },
         {
           title: "Console"
@@ -37,6 +36,7 @@ export default {
     };
   },
   components: {
+    InformationPage,
     DebugConsole
   },
   methods: {
@@ -54,6 +54,7 @@ export default {
 .app-debug {
   width: 100%;
   height: 100vh;
+  overflow: hidden;
 }
 
 .topbar {
@@ -82,5 +83,7 @@ export default {
 .main {
   height: calc(100% - 48px);
   padding: 12px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 </style>

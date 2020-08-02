@@ -13,6 +13,7 @@ const generateInfo = [
     functions: [
       "ChangePassword",
       "GenerateRecoveryMnemonic",
+      "GetClientInfo",
       "GetMnemonicDictionary",
       "GetRecoveryPhrase",
       "GetTransactionHistory",
@@ -47,7 +48,12 @@ const generateInfo = [
   {
     className: "NJSIWitnessController",
     controller: "witnessController",
-    functions: ["GetNetworkLimits", "GetEstimatedWeight", "FundWitnessAccount"],
+    functions: [
+      "GetNetworkLimits",
+      "GetEstimatedWeight",
+      "GetAccountWitnessStatistics",
+      "FundWitnessAccount"
+    ],
     results: []
   }
 ];
