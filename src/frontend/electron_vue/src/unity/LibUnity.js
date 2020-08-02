@@ -201,7 +201,7 @@ class LibUnity {
 
     Object.keys(accountBalances).forEach(key => {
       accounts.find(x => x.UUID === key).balance =
-        accountBalances[key].availableIncludingLocked / 100000000;
+        (accountBalances[key].availableIncludingLocked+accountBalances[key].immatureIncludingLocked) / 100000000;
     });
 
     return accounts;
