@@ -193,7 +193,7 @@ int64_t IGenerationController::getAvailableCores()
 
 int64_t IGenerationController::getMinimumMemory()
 {
-    return 128*1024*1024L;
+    return 128;
 }
 
 int64_t IGenerationController::getMaximumMemory()
