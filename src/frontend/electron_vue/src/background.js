@@ -99,30 +99,24 @@ function createMainWindow() {
     {
       label: "Edit",
       submenu: [{ role: "cut" }, { role: "copy" }, { role: "paste" }]
-    },
-    {
-      label: "Help",
-      submenu:
-      [
-        {
-          label: "Debug window",
-          click() {
-            createDebugWindow();
-          }
-        }
-      ]
     }
   ];
 
   if (isDevelopment) {
     menuTemplate.push({
-      label: "Developer tools",
+      label: "Debug",
       submenu: [
         { role: "toggleDevTools" },
         {
           label: "Generate genesis keys",
           click() {
             console.log(libUnity.backend.GenerateGenesisKeys());
+          }
+        },
+        {
+          label: "Debug Window",
+          click() {
+            createDebugWindow();
           }
         },
         {
