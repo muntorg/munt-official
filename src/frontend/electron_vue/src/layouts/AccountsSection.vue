@@ -3,7 +3,7 @@
     <h4>{{ $t("accounts_section.accounts") }}</h4>
     <section class="scrollable dark">
       <div v-for="category in categories" :key="category">
-        <div class="category flex-row" :class="getCategoryClass(category)">
+        <div class="category flex-row">
           <div class="toggle" @click="toggleCategory(category)">
             <fa-icon :icon="['fal', getCategoryToggleIcon(category)]" />
           </div>
@@ -100,9 +100,6 @@ export default {
       return this.accounts.filter(
         x => x.state === "Normal" && types.indexOf(x.type) !== -1
       );
-    },
-    getCategoryClass(category) {
-      return this.getAccountsFor(category).length === 0 ? "empty" : "";
     },
     getCategoryToggleIcon(category) {
       return this.opened[category] ? "chevron-down" : "chevron-right";
