@@ -36,7 +36,7 @@
         <div>{{ numberOfConnections }}</div>
       </div>
     </novo-section>
-    
+
     <novo-section>
       <h4>Block chain</h4>
       <div class="flex-row">
@@ -52,7 +52,7 @@
         <div>{{ clientInfo.chain_tip_hash }}</div>
       </div>
     </novo-section>
-    
+
     <novo-section>
       <h4>Memory pool</h4>
       <div class="flex-row">

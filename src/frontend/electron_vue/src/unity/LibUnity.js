@@ -163,9 +163,15 @@ class LibUnity {
       store.dispatch({
         type: "SET_GENERATION_STATS",
         generationStats: {
-          hashesPerSecond: `${hashesPerSecond.toFixed(2)}${hashesPerSecondUnit}`,
-          rollingHashesPerSecond: `${rollingHashesPerSecond.toFixed(2)}${rollingHashesPerSecondUnit}`,
-          bestHashesPerSecond: `${bestHashesPerSecond.toFixed(2)}${bestHashesPerSecondUnit}`,
+          hashesPerSecond: `${hashesPerSecond.toFixed(
+            2
+          )}${hashesPerSecondUnit}`,
+          rollingHashesPerSecond: `${rollingHashesPerSecond.toFixed(
+            2
+          )}${rollingHashesPerSecondUnit}`,
+          bestHashesPerSecond: `${bestHashesPerSecond.toFixed(
+            2
+          )}${bestHashesPerSecondUnit}`,
           arenaSetupTime: arenaSetupTime
         }
       });
@@ -201,7 +207,9 @@ class LibUnity {
 
     Object.keys(accountBalances).forEach(key => {
       accounts.find(x => x.UUID === key).balance =
-        (accountBalances[key].availableIncludingLocked+accountBalances[key].immatureIncludingLocked) / 100000000;
+        (accountBalances[key].availableIncludingLocked +
+          accountBalances[key].immatureIncludingLocked) /
+        100000000;
     });
 
     return accounts;

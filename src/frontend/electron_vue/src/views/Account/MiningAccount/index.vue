@@ -97,7 +97,8 @@ export default {
   },
   created() {
     this.availableCores = UnityBackend.GetAvailableCores();
-    this.miningThreadCount = this.availableCores < 4 ? 1 : this.availableCores - 2;
+    this.miningThreadCount =
+      this.availableCores < 4 ? 1 : this.availableCores - 2;
     this.minimumMemory = 1; // for now just use 1 Gb as a minimum
     this.maximumMemory = Math.floor(UnityBackend.GetMaximumMemory() / 1024);
     this.miningMemorySize = this.maximumMemory;

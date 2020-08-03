@@ -102,8 +102,7 @@ function createMainWindow() {
     },
     {
       label: "Help",
-      submenu:
-      [
+      submenu: [
         {
           label: "Debug window",
           click() {
