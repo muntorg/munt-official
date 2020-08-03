@@ -16,8 +16,8 @@
         <div class="address">{{ receiveAddress }}</div>
       </div>
     </div>
-    <button @click="receiveNovo">
-      {{ $t("receive_novo.receive_acquired_novo") }}
+    <button @click="buyOrReceiveNovo">
+      {{ $t("receive_novo.buy_or_receive_novo") }}
     </button>
   </div>
 </template>
@@ -36,7 +36,7 @@ export default {
     ...mapState(["receiveAddress"])
   },
   methods: {
-    receiveNovo() {
+    buyOrReceiveNovo() {
       window.open(
         `https://novocurrency.com/transfer?receive_address=${this.receiveAddress}`,
         "_blank"
