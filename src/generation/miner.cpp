@@ -1104,6 +1104,19 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
             }
         }
         #endif
+        // Prevent premature mining of invalid blocks (can't generate valid blocks until witnessing is enabled which will happen at 1596571200)
+        //TODO: Remove after launch
+        if (!regTest && !testnet)
+        {
+            while (true)
+            {
+                if (GetTime() > 1596571200)
+                {
+                    break;
+                }
+                MilliSleep(1000);
+            }
+        }
 
         while (true)
         {
