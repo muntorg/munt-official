@@ -114,6 +114,7 @@ export default {
     },
     closeRightSidebar() {
       this.rightSidebar = null;
+      this.txHash = null;
     },
     onTxHash(txHash) {
       this.txHash = txHash;

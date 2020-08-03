@@ -142,7 +142,10 @@ h4 {
     text-align: right;
   }
 
-  &:hover,
+  &:hover {
+    background: var(--main-border-color);
+  }
+
   &.selected {
     background: var(--primary-color);
     color: #fff;
