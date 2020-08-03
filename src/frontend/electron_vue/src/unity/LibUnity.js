@@ -956,6 +956,55 @@ class LibUnity {
       this._postExecuteIpcCommand("GetAccountWitnessStatistics", result);
       return result;
     });
+
+    ipc.on(
+      "SetAccountCompounding",
+      (event, witnessAccountUUID, should_compound) => {
+        let result = this._preExecuteIpcCommand("SetAccountCompounding");
+        if (result === undefined) {
+          result = this.witnessController.setAccountCompounding(
+            witnessAccountUUID,
+            should_compound
+          );
+        }
+        this._postExecuteIpcCommand("SetAccountCompounding", result);
+        event.returnValue = result;
+      }
+    );
+
+    ipc.answerRenderer("SetAccountCompounding", async data => {
+      let result = this._preExecuteIpcCommand("SetAccountCompounding");
+      if (result === undefined) {
+        result = this.witnessController.setAccountCompounding(
+          data.witnessAccountUUID,
+          data.should_compound
+        );
+      }
+      this._postExecuteIpcCommand("SetAccountCompounding", result);
+      return result;
+    });
+
+    ipc.on("IsAccountCompounding", (event, witnessAccountUUID) => {
+      let result = this._preExecuteIpcCommand("IsAccountCompounding");
+      if (result === undefined) {
+        result = this.witnessController.isAccountCompounding(
+          witnessAccountUUID
+        );
+      }
+      this._postExecuteIpcCommand("IsAccountCompounding", result);
+      event.returnValue = result;
+    });
+
+    ipc.answerRenderer("IsAccountCompounding", async data => {
+      let result = this._preExecuteIpcCommand("IsAccountCompounding");
+      if (result === undefined) {
+        result = this.witnessController.isAccountCompounding(
+          data.witnessAccountUUID
+        );
+      }
+      this._postExecuteIpcCommand("IsAccountCompounding", result);
+      return result;
+    });
     /* inject:code */
   }
 }

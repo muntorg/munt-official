@@ -33,10 +33,28 @@
     "account_name": "Rekeningnaam",
     "amount": "Bedrag",
     "enter_your_password": "Voer jouw wachtwoord in",
+    "information": "Informatie",
     "important": "Belangrijk",
     "months": "Maanden",
+    "on": "aan",
+    "off": "uit",
     "password": "Wachtwoord",
     "receiving_address": "Ontvangstadres"
+  },
+  "holding_account": {
+    "compound_earnings": "cumulatieve inkomsten",
+    "status": "Status",
+    "novo_locked": "Novo vastgezet",
+    "novo_earned": "Novo verdiend",
+    "locked_from_block": "Vastgezet vanaf blok",
+    "locked_until_block": "Vastgezet tot blok",
+    "lock_duration": "Looptijd",
+    "blocks": "blokken",
+    "remaining_lock_period": "Resterende looptijd",
+    "required_earnings_frequency": "Benodigde beloningstijd",
+    "expected_earnings_frequency": "Verwachte beloningstijd",
+    "account_weight": "Gewicht",
+    "network_weight": "Netwerk gewicht"
   },
   "loader": {
     "shutdown": "Bezig met afsluiten...",

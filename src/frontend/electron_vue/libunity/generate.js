@@ -55,10 +55,12 @@ const generateInfo = [
     className: "NJSIWitnessController",
     controller: "witnessController",
     functions: [
+      "FundWitnessAccount",
       "GetNetworkLimits",
       "GetEstimatedWeight",
       "GetAccountWitnessStatistics",
-      "FundWitnessAccount"
+      "IsAccountCompounding",
+      "SetAccountCompounding"
     ],
     results: []
   }

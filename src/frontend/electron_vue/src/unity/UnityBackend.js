@@ -257,6 +257,29 @@ class UnityBackend {
     return ipc.callMain("GetAccountWitnessStatistics", { witnessAccountUUID });
   }
 
+  static SetAccountCompounding(witnessAccountUUID, should_compound) {
+    return ipc.sendSync(
+      "SetAccountCompounding",
+      witnessAccountUUID,
+      should_compound
+    );
+  }
+
+  static SetAccountCompoundingAsync(witnessAccountUUID, should_compound) {
+    return ipc.callMain("SetAccountCompounding", {
+      witnessAccountUUID,
+      should_compound
+    });
+  }
+
+  static IsAccountCompounding(witnessAccountUUID) {
+    return ipc.sendSync("IsAccountCompounding", witnessAccountUUID);
+  }
+
+  static IsAccountCompoundingAsync(witnessAccountUUID) {
+    return ipc.callMain("IsAccountCompounding", { witnessAccountUUID });
+  }
+
   /* inject:code */
 }
 

@@ -10,6 +10,9 @@ import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
 Vue.component("VueSlider", VueSlider);
 
+import ToggleButton from "vue-js-toggle-button";
+Vue.use(ToggleButton);
+
 import PortalVue from "portal-vue";
 Vue.use(PortalVue);
 

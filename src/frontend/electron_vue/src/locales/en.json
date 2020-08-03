@@ -34,9 +34,27 @@
     "amount": "Amount",
     "enter_your_password": "Enter your password",
     "important": "Important",
+    "information": "Information",
     "months": "Months",
+    "on": "on",
+    "off": "off",
     "password": "Password",
     "receiving_address": "Receiving address"
+  },
+  "holding_account": {
+    "compound_earnings": "compound earnings",
+    "status": "Status",
+    "novo_locked": "Novo locked",
+    "novo_earned": "Novo earned",
+    "locked_from_block": "Locked from block",
+    "locked_until_block": "Locked until block",
+    "lock_duration": "Lock duration",
+    "blocks": "blocks",
+    "remaining_lock_period": "Remaining lock period",
+    "required_earnings_frequency": "Required earnings frequency",
+    "expected_earnings_frequency": "Expected earnings frequency",
+    "account_weight": "Account weight",
+    "network_weight": "Network weight"
   },
   "loader": {
     "shutdown": "Shutting down...",
