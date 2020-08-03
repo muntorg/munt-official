@@ -1441,7 +1441,17 @@ std::unordered_map<std::string, std::string> ILibraryController::getClientInfo()
         std::string connectionsOut = i64tostr(g_connman->GetNodeCount(CConnman::NumConnections::CONNECTIONS_OUT));
         ret.insert(std::pair("num_connections_in", connectionsIn));
         ret.insert(std::pair("num_connections_out", connectionsOut));
-    }    
+    }
+    
+    if (chainActive.Tip())
+    {
+        ret.insert(std::pair("chain_tip_height", i64tostr(chainActive.Tip()->nHeight)));
+        ret.insert(std::pair("chain_tip_time", i64tostr(chainActive.Tip()->GetBlockTime())));
+        ret.insert(std::pair("chain_tip_hash", chainActive.Tip()->GetBlockHashPoW2().ToString()));
+    }
+    
+    ret.insert(std::pair("mempool_transaction_count", i64tostr(mempool.size())));
+    ret.insert(std::pair("mempool_memory_size", i64tostr(mempool.GetTotalTxSize())));
     
     return ret;
 }

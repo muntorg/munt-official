@@ -32,8 +32,36 @@
         <div>{{ clientInfo.network_status }}</div>
       </div>
       <div class="flex-row">
-        <div>Number of connections</div>
+        <div>Connection count</div>
         <div>{{ numberOfConnections }}</div>
+      </div>
+    </novo-section>
+    
+    <novo-section>
+      <h4>Block chain</h4>
+      <div class="flex-row">
+        <div>Number of blocks</div>
+        <div>{{ clientInfo.chain_tip_height }}</div>
+      </div>
+      <div class="flex-row">
+        <div>Last block time</div>
+        <div>{{ clientInfo.chain_tip_time }}</div>
+      </div>
+      <div class="flex-row">
+        <div>Last block hash</div>
+        <div>{{ clientInfo.chain_tip_hash }}</div>
+      </div>
+    </novo-section>
+    
+    <novo-section>
+      <h4>Memory pool</h4>
+      <div class="flex-row">
+        <div>Number of transactions</div>
+        <div>{{ clientInfo.mempool_transaction_count }}</div>
+      </div>
+      <div class="flex-row">
+        <div>Memory usage</div>
+        <div>{{ clientInfo.mempool_memory_size }}</div>
       </div>
     </novo-section>
   </div>
