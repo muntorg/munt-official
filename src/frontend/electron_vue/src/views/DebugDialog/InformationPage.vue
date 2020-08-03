@@ -131,7 +131,7 @@ export default {
   & .flex-row > div {
     line-height: 18px;
   }
-  &.flex-row :first-child {
+  & .flex-row :first-child {
     min-width: 180px;
   }
 }
