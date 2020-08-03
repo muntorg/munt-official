@@ -27,4 +27,10 @@ public:
 
     /** Get information on account weight and other witness statistics for account */
     static WitnessAccountStatisticsRecord getAccountWitnessStatistics(const std::string & witnessAccountUUID);
+
+    /** Turn compounding on/off */
+    static void setAccountCompounding(const std::string & witnessAccountUUID, bool should_compound);
+
+    /** Check state of compounding */
+    static bool isAccountCompounding(const std::string & witnessAccountUUID);
 };

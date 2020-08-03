@@ -26,4 +26,11 @@
 /** Get information on account weight and other witness statistics for account */
 + (nonnull DBWitnessAccountStatisticsRecord *)getAccountWitnessStatistics:(nonnull NSString *)witnessAccountUUID;
 
+/** Turn compounding on/off */
++ (void)setAccountCompounding:(nonnull NSString *)witnessAccountUUID
+               shouldCompound:(BOOL)shouldCompound;
+
+/** Check state of compounding */
++ (BOOL)isAccountCompounding:(nonnull NSString *)witnessAccountUUID;
+
 @end

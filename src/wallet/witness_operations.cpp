@@ -563,7 +563,8 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
 
     bool hasUnconfirmedBalance = pactiveWallet->GetUnconfirmedBalance(account, true, true) > 0;
     bool hasImmatureBalance = pactiveWallet->GetImmatureBalance(account, true, true) > 0;
-    bool hasLockedBalance = pactiveWallet->GetLockedBalance(account, true) > 0;
+    CAmount lockedBalance = pactiveWallet->GetLockedBalance(account, true);
+    bool hasLockedBalance = lockedBalance > 0;
     bool hasMatureBalance = pactiveWallet->GetBalance(account, true, false, true) > 0;
     
     bool hasBalance = hasUnconfirmedBalance||hasImmatureBalance||hasMatureBalance||hasLockedBalance;
@@ -634,6 +635,7 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
         networkWeight,
         //NB! We always want the account weight (even if expired) - otherwise how do we e.g. draw a historical graph of the expected earnings for the expired account?
         std::accumulate(accountItems.begin(), accountItems.end(), uint64_t(0), [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }),
+        lockedBalance,
         hasScriptLegacyOutput,
         hasUnconfirmedWittnessTx,
         nLockFromBlock,

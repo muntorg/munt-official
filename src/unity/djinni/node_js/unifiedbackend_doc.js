@@ -310,6 +310,10 @@ declare class NJSIWitnessController
     static declare function fundWitnessAccount(funding_account_UUID: string, witness_account_UUID: string, funding_amount: number, requestedLockPeriodInBlocks: number): WitnessFundingResultRecord;
     /** Get information on account weight and other witness statistics for account */
     static declare function getAccountWitnessStatistics(witnessAccountUUID: string): WitnessAccountStatisticsRecord;
+    /** Turn compounding on/off */
+    static declare function setAccountCompounding(witnessAccountUUID: string, should_compound: boolean);
+    /** Check state of compounding */
+    static declare function isAccountCompounding(witnessAccountUUID: string): boolean;
 }
 /** C++ interface to control generation of blocks (proof of work) */
 declare class NJSIGenerationController

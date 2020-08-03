@@ -483,6 +483,8 @@ witness_account_statistics_record = record {
     account_status : string;
     # Account weight
     account_weight : i64;
+    # Account amount locked
+    account_amount_locked : i64;
     # Account weight when it was created
     account_weight_at_creation : i64;
     # Current network weight
@@ -499,6 +501,8 @@ witness_account_statistics_record = record {
     account_estimated_witness_period_in_blocks : i64;
     # Height at which the account lock first entered the chain
     account_initial_lock_creation_block_height : i64;
+    # Is this account currently set to compound
+    account_is_compounding : bool;
 } deriving(parcelable)
 
 # C++ interface to control witness accounts
@@ -514,6 +518,12 @@ i_witness_controller = interface +c {
     
     # Get information on account weight and other witness statistics for account
     static getAccountWitnessStatistics(witnessAccountUUID : string) : witness_account_statistics_record;
+    
+    # Turn compounding on/off
+    static setAccountCompounding(witnessAccountUUID : string, should_compound : bool);
+    
+    # Check state of compounding
+    static isAccountCompounding(witnessAccountUUID : string) : bool;
 }
 
 # C++ interface to control generation of blocks (proof of work)

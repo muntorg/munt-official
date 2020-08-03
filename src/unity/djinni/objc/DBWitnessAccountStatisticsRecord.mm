@@ -9,6 +9,7 @@
 - (nonnull instancetype)initWithRequestStatus:(nonnull NSString *)requestStatus
                                 accountStatus:(nonnull NSString *)accountStatus
                                 accountWeight:(int64_t)accountWeight
+                          accountAmountLocked:(int64_t)accountAmountLocked
                       accountWeightAtCreation:(int64_t)accountWeightAtCreation
                         networkTipTotalWeight:(int64_t)networkTipTotalWeight
       networkTotalWeightAtAccountCreationTime:(int64_t)networkTotalWeightAtAccountCreationTime
@@ -17,11 +18,13 @@
          accountExpectedWitnessPeriodInBlocks:(int64_t)accountExpectedWitnessPeriodInBlocks
         accountEstimatedWitnessPeriodInBlocks:(int64_t)accountEstimatedWitnessPeriodInBlocks
         accountInitialLockCreationBlockHeight:(int64_t)accountInitialLockCreationBlockHeight
+                         accountIsCompounding:(BOOL)accountIsCompounding
 {
     if (self = [super init]) {
         _requestStatus = [requestStatus copy];
         _accountStatus = [accountStatus copy];
         _accountWeight = accountWeight;
+        _accountAmountLocked = accountAmountLocked;
         _accountWeightAtCreation = accountWeightAtCreation;
         _networkTipTotalWeight = networkTipTotalWeight;
         _networkTotalWeightAtAccountCreationTime = networkTotalWeightAtAccountCreationTime;
@@ -30,6 +33,7 @@
         _accountExpectedWitnessPeriodInBlocks = accountExpectedWitnessPeriodInBlocks;
         _accountEstimatedWitnessPeriodInBlocks = accountEstimatedWitnessPeriodInBlocks;
         _accountInitialLockCreationBlockHeight = accountInitialLockCreationBlockHeight;
+        _accountIsCompounding = accountIsCompounding;
     }
     return self;
 }
@@ -37,6 +41,7 @@
 + (nonnull instancetype)witnessAccountStatisticsRecordWithRequestStatus:(nonnull NSString *)requestStatus
                                                           accountStatus:(nonnull NSString *)accountStatus
                                                           accountWeight:(int64_t)accountWeight
+                                                    accountAmountLocked:(int64_t)accountAmountLocked
                                                 accountWeightAtCreation:(int64_t)accountWeightAtCreation
                                                   networkTipTotalWeight:(int64_t)networkTipTotalWeight
                                 networkTotalWeightAtAccountCreationTime:(int64_t)networkTotalWeightAtAccountCreationTime
@@ -45,10 +50,12 @@
                                    accountExpectedWitnessPeriodInBlocks:(int64_t)accountExpectedWitnessPeriodInBlocks
                                   accountEstimatedWitnessPeriodInBlocks:(int64_t)accountEstimatedWitnessPeriodInBlocks
                                   accountInitialLockCreationBlockHeight:(int64_t)accountInitialLockCreationBlockHeight
+                                                   accountIsCompounding:(BOOL)accountIsCompounding
 {
     return [(DBWitnessAccountStatisticsRecord*)[self alloc] initWithRequestStatus:requestStatus
                                                                     accountStatus:accountStatus
                                                                     accountWeight:accountWeight
+                                                              accountAmountLocked:accountAmountLocked
                                                           accountWeightAtCreation:accountWeightAtCreation
                                                             networkTipTotalWeight:networkTipTotalWeight
                                           networkTotalWeightAtAccountCreationTime:networkTotalWeightAtAccountCreationTime
@@ -56,12 +63,13 @@
                                                accountRemainingLockPeriodInBlocks:accountRemainingLockPeriodInBlocks
                                              accountExpectedWitnessPeriodInBlocks:accountExpectedWitnessPeriodInBlocks
                                             accountEstimatedWitnessPeriodInBlocks:accountEstimatedWitnessPeriodInBlocks
-                                            accountInitialLockCreationBlockHeight:accountInitialLockCreationBlockHeight];
+                                            accountInitialLockCreationBlockHeight:accountInitialLockCreationBlockHeight
+                                                             accountIsCompounding:accountIsCompounding];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p requestStatus:%@ accountStatus:%@ accountWeight:%@ accountWeightAtCreation:%@ networkTipTotalWeight:%@ networkTotalWeightAtAccountCreationTime:%@ accountInitialLockPeriodInBlocks:%@ accountRemainingLockPeriodInBlocks:%@ accountExpectedWitnessPeriodInBlocks:%@ accountEstimatedWitnessPeriodInBlocks:%@ accountInitialLockCreationBlockHeight:%@>", self.class, (void *)self, self.requestStatus, self.accountStatus, @(self.accountWeight), @(self.accountWeightAtCreation), @(self.networkTipTotalWeight), @(self.networkTotalWeightAtAccountCreationTime), @(self.accountInitialLockPeriodInBlocks), @(self.accountRemainingLockPeriodInBlocks), @(self.accountExpectedWitnessPeriodInBlocks), @(self.accountEstimatedWitnessPeriodInBlocks), @(self.accountInitialLockCreationBlockHeight)];
+    return [NSString stringWithFormat:@"<%@ %p requestStatus:%@ accountStatus:%@ accountWeight:%@ accountAmountLocked:%@ accountWeightAtCreation:%@ networkTipTotalWeight:%@ networkTotalWeightAtAccountCreationTime:%@ accountInitialLockPeriodInBlocks:%@ accountRemainingLockPeriodInBlocks:%@ accountExpectedWitnessPeriodInBlocks:%@ accountEstimatedWitnessPeriodInBlocks:%@ accountInitialLockCreationBlockHeight:%@ accountIsCompounding:%@>", self.class, (void *)self, self.requestStatus, self.accountStatus, @(self.accountWeight), @(self.accountAmountLocked), @(self.accountWeightAtCreation), @(self.networkTipTotalWeight), @(self.networkTotalWeightAtAccountCreationTime), @(self.accountInitialLockPeriodInBlocks), @(self.accountRemainingLockPeriodInBlocks), @(self.accountExpectedWitnessPeriodInBlocks), @(self.accountEstimatedWitnessPeriodInBlocks), @(self.accountInitialLockCreationBlockHeight), @(self.accountIsCompounding)];
 }
 
 @end

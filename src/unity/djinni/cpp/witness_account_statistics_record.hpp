@@ -14,6 +14,8 @@ struct WitnessAccountStatisticsRecord final {
     std::string account_status;
     /** Account weight */
     int64_t account_weight;
+    /** Account amount locked */
+    int64_t account_amount_locked;
     /** Account weight when it was created */
     int64_t account_weight_at_creation;
     /** Current network weight */
@@ -30,10 +32,13 @@ struct WitnessAccountStatisticsRecord final {
     int64_t account_estimated_witness_period_in_blocks;
     /** Height at which the account lock first entered the chain */
     int64_t account_initial_lock_creation_block_height;
+    /** Is this account currently set to compound */
+    bool account_is_compounding;
 
     WitnessAccountStatisticsRecord(std::string request_status_,
                                    std::string account_status_,
                                    int64_t account_weight_,
+                                   int64_t account_amount_locked_,
                                    int64_t account_weight_at_creation_,
                                    int64_t network_tip_total_weight_,
                                    int64_t network_total_weight_at_account_creation_time_,
@@ -41,10 +46,12 @@ struct WitnessAccountStatisticsRecord final {
                                    int64_t account_remaining_lock_period_in_blocks_,
                                    int64_t account_expected_witness_period_in_blocks_,
                                    int64_t account_estimated_witness_period_in_blocks_,
-                                   int64_t account_initial_lock_creation_block_height_)
+                                   int64_t account_initial_lock_creation_block_height_,
+                                   bool account_is_compounding_)
     : request_status(std::move(request_status_))
     , account_status(std::move(account_status_))
     , account_weight(std::move(account_weight_))
+    , account_amount_locked(std::move(account_amount_locked_))
     , account_weight_at_creation(std::move(account_weight_at_creation_))
     , network_tip_total_weight(std::move(network_tip_total_weight_))
     , network_total_weight_at_account_creation_time(std::move(network_total_weight_at_account_creation_time_))
@@ -53,5 +60,6 @@ struct WitnessAccountStatisticsRecord final {
     , account_expected_witness_period_in_blocks(std::move(account_expected_witness_period_in_blocks_))
     , account_estimated_witness_period_in_blocks(std::move(account_estimated_witness_period_in_blocks_))
     , account_initial_lock_creation_block_height(std::move(account_initial_lock_creation_block_height_))
+    , account_is_compounding(std::move(account_is_compounding_))
     {}
 };

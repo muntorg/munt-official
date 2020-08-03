@@ -7,6 +7,7 @@
 - (nonnull instancetype)initWithRequestStatus:(nonnull NSString *)requestStatus
                                 accountStatus:(nonnull NSString *)accountStatus
                                 accountWeight:(int64_t)accountWeight
+                          accountAmountLocked:(int64_t)accountAmountLocked
                       accountWeightAtCreation:(int64_t)accountWeightAtCreation
                         networkTipTotalWeight:(int64_t)networkTipTotalWeight
       networkTotalWeightAtAccountCreationTime:(int64_t)networkTotalWeightAtAccountCreationTime
@@ -14,10 +15,12 @@
            accountRemainingLockPeriodInBlocks:(int64_t)accountRemainingLockPeriodInBlocks
          accountExpectedWitnessPeriodInBlocks:(int64_t)accountExpectedWitnessPeriodInBlocks
         accountEstimatedWitnessPeriodInBlocks:(int64_t)accountEstimatedWitnessPeriodInBlocks
-        accountInitialLockCreationBlockHeight:(int64_t)accountInitialLockCreationBlockHeight;
+        accountInitialLockCreationBlockHeight:(int64_t)accountInitialLockCreationBlockHeight
+                         accountIsCompounding:(BOOL)accountIsCompounding;
 + (nonnull instancetype)witnessAccountStatisticsRecordWithRequestStatus:(nonnull NSString *)requestStatus
                                                           accountStatus:(nonnull NSString *)accountStatus
                                                           accountWeight:(int64_t)accountWeight
+                                                    accountAmountLocked:(int64_t)accountAmountLocked
                                                 accountWeightAtCreation:(int64_t)accountWeightAtCreation
                                                   networkTipTotalWeight:(int64_t)networkTipTotalWeight
                                 networkTotalWeightAtAccountCreationTime:(int64_t)networkTotalWeightAtAccountCreationTime
@@ -25,7 +28,8 @@
                                      accountRemainingLockPeriodInBlocks:(int64_t)accountRemainingLockPeriodInBlocks
                                    accountExpectedWitnessPeriodInBlocks:(int64_t)accountExpectedWitnessPeriodInBlocks
                                   accountEstimatedWitnessPeriodInBlocks:(int64_t)accountEstimatedWitnessPeriodInBlocks
-                                  accountInitialLockCreationBlockHeight:(int64_t)accountInitialLockCreationBlockHeight;
+                                  accountInitialLockCreationBlockHeight:(int64_t)accountInitialLockCreationBlockHeight
+                                                   accountIsCompounding:(BOOL)accountIsCompounding;
 
 /** Success if request succeeded, otherwise an error message */
 @property (nonatomic, readonly, nonnull) NSString * requestStatus;
@@ -35,6 +39,9 @@
 
 /** Account weight */
 @property (nonatomic, readonly) int64_t accountWeight;
+
+/** Account amount locked */
+@property (nonatomic, readonly) int64_t accountAmountLocked;
 
 /** Account weight when it was created */
 @property (nonatomic, readonly) int64_t accountWeightAtCreation;
@@ -59,5 +66,8 @@
 
 /** Height at which the account lock first entered the chain */
 @property (nonatomic, readonly) int64_t accountInitialLockCreationBlockHeight;
+
+/** Is this account currently set to compound */
+@property (nonatomic, readonly) BOOL accountIsCompounding;
 
 @end

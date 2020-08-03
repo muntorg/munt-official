@@ -201,6 +201,7 @@ bool GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoF
     // the lock period could have been different initially if it was extended, this is not accounted for
     infoForAccount.nOriginLength = accountStatus.nLockPeriodInBlocks;
 
+    //fixme: (HIGH) This looks completely wrong...
     // if the witness was extended or rearranged the initial weight will have been different, this is not accounted for
     infoForAccount.nOriginWeight = accountStatus.accountWeight;
 
@@ -208,6 +209,7 @@ bool GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoF
 
     LOCK(cs_main);
     CBlockIndex* originIndex = chainActive[infoForAccount.nOriginBlock];
+    (unused) originIndex;
     #if 0
     infoForAccount.originDate = QDateTime::fromTime_t(originIndex->GetBlockTime());
     #endif
@@ -305,19 +307,19 @@ bool GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoF
 WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(const std::string& witnessAccountUUID)
 {
     if (!pactiveWallet)
-        return WitnessAccountStatisticsRecord("no active wallet present", "", 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        return WitnessAccountStatisticsRecord("no active wallet present", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
     
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
     
     auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(witnessAccountUUID));
     if (findIter == pactiveWallet->mapAccounts.end())
-        return WitnessAccountStatisticsRecord("invalid witness account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        return WitnessAccountStatisticsRecord("invalid witness account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
     CAccount* witnessAccount = findIter->second;
     
     WitnessInfoForAccount infoForAccount;
     if (!GetWitnessInfoForAccount(witnessAccount, infoForAccount))
     {
-        return WitnessAccountStatisticsRecord("failed to get witness info for account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        return WitnessAccountStatisticsRecord("failed to get witness info for account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
     }
     std::string accountStatus;
     switch (infoForAccount.accountStatus.status)
@@ -330,8 +332,52 @@ WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(c
         case WitnessStatus::Expired: accountStatus = "expired"; break;
         case WitnessStatus::Emptying: accountStatus = "emptying"; break;
     }
-    return WitnessAccountStatisticsRecord("success", accountStatus, infoForAccount.nOurWeight, infoForAccount.nOriginWeight, 
+    return WitnessAccountStatisticsRecord("success", accountStatus, infoForAccount.nOurWeight, infoForAccount.accountStatus.accountAmountLocked, infoForAccount.nOriginWeight, 
                                               infoForAccount.nTotalNetworkWeightTip, infoForAccount.nOriginNetworkWeight, 
                                               infoForAccount.nOriginLength, infoForAccount.nLockBlocksRemaining, infoForAccount.nExpectedWitnessBlockPeriod,
-                                              infoForAccount.nEstimatedWitnessBlockPeriod, infoForAccount.nOriginBlock);
+                                              infoForAccount.nEstimatedWitnessBlockPeriod, infoForAccount.nOriginBlock, (witnessAccount->getCompounding() != 0));
+}
+
+
+void IWitnessController::setAccountCompounding(const std::string& witnessAccountUUID, bool shouldCompound)
+{
+    if (pactiveWallet)
+    {
+        DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(witnessAccountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            CAccount* witnessAccount = findIter->second;
+            
+            CWalletDB db(*pactiveWallet->dbw);
+            if (!shouldCompound)
+            {
+                witnessAccount->setCompounding(0, &db);
+            }
+            else
+            {
+                witnessAccount->setCompounding(MAX_MONEY, &db); // Attempt to compound as much as the network will allow.
+            }
+        }
+    }
+}
+
+bool IWitnessController::isAccountCompounding(const std::string& witnessAccountUUID)
+{
+    if (pactiveWallet)
+    {
+        DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(witnessAccountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            CAccount* witnessAccount = findIter->second;
+            if (witnessAccount->getCompounding() != 0)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }

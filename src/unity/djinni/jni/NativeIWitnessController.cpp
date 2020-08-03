@@ -62,4 +62,22 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IWitnessController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_IWitnessController_00024CppProxy_setAccountCompounding(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID, jboolean j_shouldCompound)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        ::IWitnessController::setAccountCompounding(::djinni::String::toCpp(jniEnv, j_witnessAccountUUID),
+                                                    ::djinni::Bool::toCpp(jniEnv, j_shouldCompound));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
+CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IWitnessController_00024CppProxy_isAccountCompounding(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IWitnessController::isAccountCompounding(::djinni::String::toCpp(jniEnv, j_witnessAccountUUID));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 }  // namespace djinni_generated

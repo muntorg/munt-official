@@ -39,5 +39,11 @@ private:
     /** Get information on account weight and other witness statistics for account */
     Napi::Value getAccountWitnessStatistics(const Napi::CallbackInfo& info);
 
+    /** Turn compounding on/off */
+    void setAccountCompounding(const Napi::CallbackInfo& info);
+
+    /** Check state of compounding */
+    Napi::Value isAccountCompounding(const Napi::CallbackInfo& info);
+
 };
 #endif //DJINNI_GENERATED_NJSIWITNESSCONTROLLER_HPP

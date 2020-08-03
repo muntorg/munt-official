@@ -16,6 +16,7 @@ auto NativeWitnessAccountStatisticsRecord::fromCpp(JNIEnv* jniEnv, const CppType
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.request_status)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.account_status)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_weight)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_amount_locked)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_weight_at_creation)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.network_tip_total_weight)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.network_total_weight_at_account_creation_time)),
@@ -23,18 +24,20 @@ auto NativeWitnessAccountStatisticsRecord::fromCpp(JNIEnv* jniEnv, const CppType
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_remaining_lock_period_in_blocks)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_expected_witness_period_in_blocks)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_estimated_witness_period_in_blocks)),
-                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_initial_lock_creation_block_height)))};
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_initial_lock_creation_block_height)),
+                                                           ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.account_is_compounding)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
 }
 
 auto NativeWitnessAccountStatisticsRecord::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
-    ::djinni::JniLocalScope jscope(jniEnv, 12);
+    ::djinni::JniLocalScope jscope(jniEnv, 14);
     assert(j != nullptr);
     const auto& data = ::djinni::JniClass<NativeWitnessAccountStatisticsRecord>::get();
     return {::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mRequestStatus)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mAccountStatus)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountWeight)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountAmountLocked)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountWeightAtCreation)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mNetworkTipTotalWeight)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mNetworkTotalWeightAtAccountCreationTime)),
@@ -42,7 +45,8 @@ auto NativeWitnessAccountStatisticsRecord::toCpp(JNIEnv* jniEnv, JniType j) -> C
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountRemainingLockPeriodInBlocks)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountExpectedWitnessPeriodInBlocks)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountEstimatedWitnessPeriodInBlocks)),
-            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountInitialLockCreationBlockHeight))};
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountInitialLockCreationBlockHeight)),
+            ::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_mAccountIsCompounding))};
 }
 
 }  // namespace djinni_generated
