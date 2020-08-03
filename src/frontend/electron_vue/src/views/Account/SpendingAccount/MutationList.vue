@@ -10,6 +10,7 @@
         class="mutation-row flex-row"
         v-for="mutation in group.mutations"
         :key="mutation.txHash"
+        @click="emitTxHash(mutation.txHash)"
       >
         <div class="icon">
           <fa-icon :icon="['fal', mutationIcon(mutation)]" />
@@ -105,6 +106,9 @@ export default {
     },
     formatAmount(amount) {
       return `${(amount / 100000000).toFixed(2)}`;
+    },
+    emitTxHash(txHash) {
+      this.$emit("tx-hash", txHash);
     }
   }
 };
@@ -122,6 +126,7 @@ h4 {
 
 .mutation-row {
   margin-bottom: 4px;
+  cursor: pointer;
 
   & > div {
     padding-right: 8px;

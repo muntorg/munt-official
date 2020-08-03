@@ -15,7 +15,7 @@
       </section>
     </portal>
 
-    <mutation-list :mutations="mutations" />
+    <mutation-list :mutations="mutations" @tx-hash="onTxHash" />
 
     <portal to="footer-slot">
       <section class="footer">
@@ -39,7 +39,11 @@
     </portal>
 
     <portal to="sidebar-right">
-      <component v-if="rightSidebar" :is="rightSidebar" />
+      <component
+        v-if="rightSidebar"
+        :is="rightSidebar"
+        v-bind="rightSidebarProps"
+      />
     </portal>
   </div>
 </template>
@@ -51,6 +55,7 @@ import EventBus from "../../../EventBus";
 import MutationList from "./MutationList";
 import SendNovo from "./SendNovo";
 import ReceiveNovo from "./ReceiveNovo";
+import TransactionDetails from "./TransactionDetails";
 
 export default {
   name: "SpendingAccount",
@@ -59,7 +64,8 @@ export default {
   },
   data() {
     return {
-      rightSidebar: null
+      rightSidebar: null,
+      txHash: null
     };
   },
   mounted() {
@@ -78,6 +84,13 @@ export default {
     },
     showReceiveButton() {
       return !this.rightSidebar || this.rightSidebar !== ReceiveNovo;
+    },
+    rightSidebarProps() {
+      if (this.rightSidebar === TransactionDetails) {
+        console.log(this.txHash + "?>?!");
+        return { txHash: this.txHash };
+      }
+      return null;
     }
   },
   methods: {
@@ -93,6 +106,10 @@ export default {
     },
     closeRightSidebar() {
       this.rightSidebar = null;
+    },
+    onTxHash(txHash) {
+      this.txHash = txHash;
+      this.rightSidebar = TransactionDetails;
     }
   }
 };
