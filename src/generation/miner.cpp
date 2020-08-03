@@ -1110,7 +1110,7 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
         {
             while (true)
             {
-                if (GetTime() > 1596571200)
+                if (GetTime() > 1596556800)
                 {
                     break;
                 }
