@@ -13,7 +13,7 @@
         @click="selectTxHash(mutation.txHash)"
         :class="mutationRowClass(mutation.txHash)"
       >
-        <div class="icon">
+        <div class="icon transactionicon">
           <fa-icon :icon="['fal', mutationIcon(mutation)]" />
         </div>
         <div class="time">{{ formatTime(mutation.timestamp) }}</div>
