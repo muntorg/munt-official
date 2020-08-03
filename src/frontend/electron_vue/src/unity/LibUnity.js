@@ -163,9 +163,9 @@ class LibUnity {
       store.dispatch({
         type: "SET_GENERATION_STATS",
         generationStats: {
-          hashesPerSecond: `${hashesPerSecond}${hashesPerSecondUnit}`,
-          rollingHashesPerSecond: `${rollingHashesPerSecond}${rollingHashesPerSecondUnit}`,
-          bestHashesPerSecond: `${bestHashesPerSecond}${bestHashesPerSecondUnit}`,
+          hashesPerSecond: `${hashesPerSecond.toFixed(2)}${hashesPerSecondUnit}`,
+          rollingHashesPerSecond: `${rollingHashesPerSecond.toFixed(2)}${rollingHashesPerSecondUnit}`,
+          bestHashesPerSecond: `${bestHashesPerSecond.toFixed(2)}${bestHashesPerSecondUnit}`,
           arenaSetupTime: arenaSetupTime
         }
       });
