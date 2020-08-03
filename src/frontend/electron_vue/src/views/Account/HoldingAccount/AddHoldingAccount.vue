@@ -7,14 +7,19 @@
     <section class="content">
       <section class="step-1" v-if="current === 1">
         <novo-form-field :title="$t('add_holding_account.funding_account')">
-          <select v-model="fundingAccount">
-            <option
-              v-for="account in fundingAccounts"
-              :key="account.UUID"
-              :value="account"
-              >{{ account.label }}</option
-            >
-          </select>
+          <div class="selectfunding">
+            <select v-model="fundingAccount">
+              <option
+                v-for="account in fundingAccounts"
+                :key="account.UUID"
+                :value="account"
+                >{{ account.label }}</option
+              >
+            </select>
+            <span class="selectarrow">
+              <fa-icon :icon="['fal', 'chevron-down']" />
+            </span>
+          </div>
         </novo-form-field>
         <novo-form-field :title="$t('common.amount')">
           <input
@@ -46,7 +51,7 @@
           v-if="isWeightSufficient"
         >
           <div class="flex-row">
-            <div>{{ $t("add_holding_account.daily") }}</div>
+            <div class="earnings">{{ $t("add_holding_account.daily") }}</div>
             <div class="flex-1 align-right">
               {{
                 (
@@ -56,7 +61,7 @@
             </div>
           </div>
           <div class="flex-row">
-            <div>{{ $t("add_holding_account.overall") }}</div>
+            <div class="earnings">{{ $t("add_holding_account.overall") }}</div>
             <div class="flex-1 align-right">
               {{
                 (
@@ -242,6 +247,26 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.selectfunding {
+  position: relative;
+  float: left;
+  width: 100%;
+}
+.selectfunding select {
+  background-color: rgba(255, 255, 255, 0);
+  z-index: 999;
+}
+.selectarrow {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  line-height: 40px;
+  font-size: 12px;
+  z-index: -1;
+}
+.earnings {
+  line-height: 1.2em;
+}
 .lock-time-slider {
   width: calc(100% - 100px) !important;
   display: inline-block;

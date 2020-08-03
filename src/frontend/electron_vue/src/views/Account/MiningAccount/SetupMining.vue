@@ -5,7 +5,9 @@
     </portal>
 
     <novo-section>
-      {{ $t("setup_mining.information") }}
+      <div class="mining-info">
+        {{ $t("setup_mining.information") }}
+      </div>
     </novo-section>
     <novo-form-field :title="$t('common.password')">
       <input
@@ -84,5 +86,9 @@ export default {
   font-size: 1.1em;
   font-weight: 500;
   line-height: var(--header-height);
+}
+
+.mining-info {
+  line-height: 1.2em;
 }
 </style>

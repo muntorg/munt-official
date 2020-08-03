@@ -139,6 +139,7 @@ export default {
 
 .footer {
   text-align: center;
+  line-height: calc(var(--footer-height) - 1px);
 
   & svg {
     font-size: 14px;
