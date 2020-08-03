@@ -206,7 +206,7 @@ export default {
     & > .footer {
       height: var(--footer-height);
       border-top: 1px solid var(--main-border-color);
-      line-height: var(--footer-height);
+      line-height: calc(var(--footer-height) - 2px);
       padding: 0 20px;
     }
   }
