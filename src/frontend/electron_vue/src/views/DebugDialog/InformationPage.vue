@@ -127,12 +127,12 @@ export default {
 .information-page {
   width: 100%;
   height: 100%;
-}
 
-.flex-row > div {
-  line-height: 18px;
-}
-.flex-row :first-child {
-  min-width: 180px;
+  & .flex-row > div {
+    line-height: 18px;
+  }
+  &.flex-row :first-child {
+    min-width: 180px;
+  }
 }
 </style>

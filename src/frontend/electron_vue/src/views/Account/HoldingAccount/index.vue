@@ -164,10 +164,12 @@ export default {
   }
 }
 
-.flex-row > div {
-  line-height: 18px;
-}
-.flex-row :first-child {
-  min-width: 220px;
+.holding-information {
+  & .flex-row > div {
+    line-height: 18px;
+  }
+  & .flex-row :first-child {
+    min-width: 220px;
+  }
 }
 </style>
