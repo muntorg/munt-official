@@ -15,7 +15,11 @@
       </section>
     </portal>
 
-    <mutation-list :mutations="mutations" @tx-hash="onTxHash" />
+    <mutation-list
+      :mutations="mutations"
+      @tx-hash="onTxHash"
+      :tx-hash="txHash"
+    />
 
     <portal to="footer-slot">
       <section class="footer">
@@ -97,9 +101,14 @@ export default {
       switch (name) {
         case "Send":
           this.rightSidebar = SendNovo;
+          this.txHash = null;
           break;
         case "Receive":
           this.rightSidebar = ReceiveNovo;
+          this.txHash = null;
+          break;
+        case "TransactionDetails":
+          this.rightSidebar = TransactionDetails;
           break;
       }
     },
@@ -108,7 +117,7 @@ export default {
     },
     onTxHash(txHash) {
       this.txHash = txHash;
-      this.rightSidebar = TransactionDetails;
+      this.setRightSidebar("TransactionDetails");
     }
   }
 };

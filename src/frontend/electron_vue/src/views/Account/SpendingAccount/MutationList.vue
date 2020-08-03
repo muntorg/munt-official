@@ -10,7 +10,8 @@
         class="mutation-row flex-row"
         v-for="mutation in group.mutations"
         :key="mutation.txHash"
-        @click="emitTxHash(mutation.txHash)"
+        @click="selectTxHash(mutation.txHash)"
+        :class="mutationRowClass(mutation.txHash)"
       >
         <div class="icon">
           <fa-icon :icon="['fal', mutationIcon(mutation)]" />
@@ -26,7 +27,8 @@
 export default {
   name: "MutationList",
   props: {
-    mutations: null
+    mutations: null,
+    txHash: null
   },
   computed: {
     groupedMutations() {
@@ -107,8 +109,11 @@ export default {
     formatAmount(amount) {
       return `${(amount / 100000000).toFixed(2)}`;
     },
-    emitTxHash(txHash) {
+    selectTxHash(txHash) {
       this.$emit("tx-hash", txHash);
+    },
+    mutationRowClass(txHash) {
+      return txHash === this.txHash ? "selected" : "";
     }
   }
 };
@@ -125,7 +130,7 @@ h4 {
 }
 
 .mutation-row {
-  margin-bottom: 4px;
+  padding: 4px;
   cursor: pointer;
 
   & > div {
@@ -135,6 +140,12 @@ h4 {
   & .amount {
     flex: 1;
     text-align: right;
+  }
+
+  &:hover,
+  &.selected {
+    background: var(--primary-color);
+    color: #fff;
   }
 }
 </style>

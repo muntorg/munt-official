@@ -29,6 +29,7 @@ export default {
 
   .tx-hash {
     font-size: 0.55rem;
+    user-select: all;
   }
 }
 </style>
