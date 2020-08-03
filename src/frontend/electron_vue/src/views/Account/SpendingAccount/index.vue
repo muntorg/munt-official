@@ -87,7 +87,6 @@ export default {
     },
     rightSidebarProps() {
       if (this.rightSidebar === TransactionDetails) {
-        console.log(this.txHash + "?>?!");
         return { txHash: this.txHash };
       }
       return null;
