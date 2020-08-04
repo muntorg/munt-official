@@ -209,7 +209,7 @@ static void AppInit(int argc, char* argv[])
 
         if (GetBoolArg("-daemon", false))
         {
-            fprintf(stdout, "%s server starting\n", _(PACKAGE_NAME));
+            fprintf(stdout, "%s server starting\n", _(PACKAGE_NAME).c_str());
             if (!AppLifecycleManager::gApp->daemonise())
             {
                 LogPrintf("Failed to daemonise\n");
