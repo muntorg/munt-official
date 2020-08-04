@@ -110,18 +110,14 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
         }
     }
 
-    //fixme: (NOVO) - Temporarily disabled for launch
-    if (pblock->nTime > 1597060800)
+    if (pindexPrev->pprev)
     {
-        if (pindexPrev->pprev)
+        while (pblock->nTime - 10 > pindexPrev->GetMedianTimePastWitness()+1)
         {
-            while (pblock->nTime - 10 > pindexPrev->GetMedianTimePastWitness()+1)
-            {
-                int64_t nNumMissedSteps = CalculateMissedTimeSteps(pblock->nTime, pindexPrev->GetBlockTime());        
-                if (nNumMissedSteps <= nMaxMissedSteps)
-                    break;
-                pblock->nTime -= 10;
-            }
+            int64_t nNumMissedSteps = CalculateMissedTimeSteps(pblock->nTime, pindexPrev->GetBlockTime());        
+            if (nNumMissedSteps <= nMaxMissedSteps)
+                break;
+            pblock->nTime -= 10;
         }
     }
     
@@ -1095,7 +1091,6 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
 
         // Ensure we are reasonably caught up with peers, so we don't waste time mining on an obsolete chain.
         // In testnet/regtest mode we expect to be able to mine without peers.
-        #if 0
         if (!regTest && !testnet)
         {
             while (true)
@@ -1107,39 +1102,6 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
                 MilliSleep(1000);
             }
         }
-        #endif
-        // Prevent premature mining of invalid blocks (can't generate valid blocks until witnessing is enabled which will happen at 1596571200)
-        //TODO: Remove after launch
-        if (!regTest && !testnet)
-        {
-            while (true)
-            {
-                if (GetTime() > 1596556800)
-                {
-                    break;
-                }
-                MilliSleep(1000);
-            }
-        }
-        // Fair start, give everyone an opportunity at mining the first block
-        {
-            std::string strHash = "e8f155ab0d02c40c507d9368cadd88eec9bf14f2114cbc6b35be61fd92e41f7f";
-            uint256 hash(uint256S(strHash));
-            CValidationState state;
-
-            {
-                LOCK(cs_main);
-                if (mapBlockIndex.count(hash) != 0)
-                {
-                    CBlockIndex* pblockindex = mapBlockIndex[hash];
-                    InvalidateBlock(state, Params(), pblockindex);
-                    if (state.IsValid()) {
-                        ActivateBestChain(state, Params());
-                    }
-                }
-            }
-        }
-
         while (true)
         {
             // If we have no peers, pause mining until we do, otherwise theres no real point in mining.
