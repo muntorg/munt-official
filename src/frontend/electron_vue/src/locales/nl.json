@@ -98,6 +98,10 @@
     "title": "Mining instellen",
     "information": "Voordat je kunt beginnen met minen van Novo moet een mining rekening worden aangemaakt. Voer je wachtwoord in om je portemonnee te ontgrendelen en een mining rekening aan te maken."
   },
+  "transaction_details": {
+    "title": "Transactie details",
+    "hash": "Hash"
+  },
   "receive_novo": {
     "buy_or_receive_novo": "Koop of ontvang Novo",
     "your_address": "Jouw adres"

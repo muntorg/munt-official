@@ -98,6 +98,10 @@
     "title": "Setup mining",
     "information": "Before you can start mining Novo a mining account needs to be created. Enter your password to unlock your wallet and create a mining account."
   },
+  "transaction_details": {
+    "title": "Transaction details",
+    "hash": "Hash"
+  },
   "receive_novo": {
     "buy_or_receive_novo": "Buy or receive Novo",
     "your_address": "Your address"

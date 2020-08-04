@@ -1,13 +1,15 @@
 <template>
   <div class="transaction-details flex-col">
     <portal to="sidebar-right-title">
-      Transaction details
+      {{ $t("transaction_details.title") }}
     </portal>
 
     <div class="main">
+      <!--
       <h5>Send to</h5>
       <div class="tx-address">address here</div>
-      <h5>Hash</h5>
+      -->
+      <h5>{{ $t("transaction_details.hash") }}</h5>
       <div class="tx-hash">{{ txHash }}</div>
     </div>
   </div>
