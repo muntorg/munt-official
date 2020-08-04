@@ -199,6 +199,10 @@ int64_t IGenerationController::getMinimumMemory()
 int64_t IGenerationController::getMaximumMemory()
 {
     uint64_t systemMemoryInMb = systemPhysicalMemoryInBytes()/1024/1024;
+    if (systemMemoryInMb < 2048)
+        return std::min(systemMemoryInMb, 256);
+    
+    systemMemoryInMb -= 2048;
     uint64_t nMaxMemoryInMb = std::min(systemMemoryInMb, defaultSigmaSettings.arenaSizeKb/1024);
     // 32 bit windows can only address 2gb of memory per process (3gb if /largeaddressaware)
     // 32 bit linux is 4gb per process.
