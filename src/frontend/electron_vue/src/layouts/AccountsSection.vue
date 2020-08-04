@@ -143,8 +143,8 @@ export default {
   height: 100%;
 
   & h4 {
-    padding: 24px 20px 0 20px;
-    margin-bottom: 8px;
+    padding: 20px 20px 0 20px;
+    margin-bottom: 5px;
     font-weight: 500;
     font-size: 0.8em;
   }
@@ -155,7 +155,7 @@ export default {
 }
 
 .category {
-  padding: 12px 0;
+  padding: 10px 0;
 
   & > .toggle {
     width: 44px;
@@ -180,11 +180,11 @@ export default {
       font-weight: 600;
       letter-spacing: 0.02em;
       text-transform: uppercase;
-      margin: 0 0 6px 0;
     }
 
     & > .balance {
-      line-height: 10px;
+      margin: 4px 0 1px 0;
+      line-height: 12px;
       font-size: 0.8em;
       font-weight: 500;
       letter-spacing: 0.02em;
@@ -245,9 +245,9 @@ export default {
   }
 
   & .balance {
-    margin: 6px 0 0 0;
+    margin: 4px 0 1px 0;
     font-size: 0.8em;
-    line-height: 10px;
+    line-height: 12px;
   }
 }
 </style>
