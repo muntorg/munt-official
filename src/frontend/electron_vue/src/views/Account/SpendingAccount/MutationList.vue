@@ -130,12 +130,10 @@ h4 {
 }
 
 .mutation-row {
-  padding: 4px;
+  width: calc(100% + 40px);
+  margin: 0 0 0 -20px;
+  padding: 5px 20px 5px 20px;
   cursor: pointer;
-
-  & > div {
-    padding-right: 8px;
-  }
 
   & .amount {
     flex: 1;
@@ -143,7 +141,7 @@ h4 {
   }
 
   &:hover {
-    background: var(--main-border-color);
+    background: #f5f5f5;
   }
 
   &.selected {
