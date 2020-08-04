@@ -5,6 +5,9 @@
     </portal>
 
     <div class="main">
+      <h5>Send to</h5>
+      <div class="tx-address">address here</div>
+      <h5>Hash</h5>
       <div class="tx-hash">{{ txHash }}</div>
     </div>
   </div>
@@ -27,9 +30,23 @@ export default {
     flex: 1;
   }
 
+  .tx-address {
+    margin: 0 0 20px 0;
+    padding: 10px;
+    font-size: .9em;
+    line-height: 1.2em;
+    user-select: text;
+    word-wrap: break-word;
+    background-color: #fff;
+  }
+
   .tx-hash {
-    font-size: 0.55rem;
-    user-select: all;
+    padding: 10px;
+    font-size: .9em;
+    line-height: 1.2em;
+    user-select: text;
+    word-wrap: break-word;
+    background-color: #fff;
   }
 }
 </style>
