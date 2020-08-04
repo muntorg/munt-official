@@ -408,7 +408,14 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
     uint64_t genesisWeight=0;
     if (Params().numGenesisWitnesses > 0)
     {
-        genesisWeight = std::max(witnessInfo.nTotalWeightEligibleRaw / Params().genesisWitnessWeightDivisor, (uint64_t)1000);
+        if (nBlockHeight > 300)
+        {
+            genesisWeight = std::max(witnessInfo.nTotalWeightEligibleRaw / Params().genesisWitnessWeightDivisor, (uint64_t)1);
+        }
+        else
+        {
+            genesisWeight = std::max(witnessInfo.nTotalWeightEligibleRaw / Params().genesisWitnessWeightDivisor, (uint64_t)1000);
+        }
         witnessInfo.nTotalWeightEligibleRaw += Params().numGenesisWitnesses*genesisWeight;
     }
     
