@@ -446,8 +446,9 @@ void static GuldenWitness()
                 {
                     if (pactiveWallet && g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) > 0)
                     {
-                        LOCK(cs_main);
-                        if(!IsInitialBlockDownload())
+                        //fixme: (NOVO) Enable after initial release
+                        //LOCK(cs_main);
+                        //if(!IsInitialBlockDownload())
                             break;
                     }
                     else if (hashCity)
@@ -562,6 +563,10 @@ void static GuldenWitness()
                     boost::this_thread::interruption_point();
 
                     cacheAlreadySeenWitnessCandidates.insert(candidateIter);
+                    
+                    // Refuse to witness any blocks by people who 'cheated' and attempted to mine prematurely
+                    if (candidateIter->nTime < 1596556800+50)
+                        continue;
 
                     //Create new block
                     std::shared_ptr<CBlock> pWitnessBlock(new CBlock);

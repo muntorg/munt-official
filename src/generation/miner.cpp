@@ -110,14 +110,18 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
         }
     }
 
-    if (pindexPrev->pprev)
+    //fixme: (NOVO) - Temporarily disabled for launch
+    if (pblock->nTime > 1597060800)
     {
-        while (pblock->nTime - 10 > pindexPrev->GetMedianTimePastWitness()+1)
+        if (pindexPrev->pprev)
         {
-            int64_t nNumMissedSteps = CalculateMissedTimeSteps(pblock->nTime, pindexPrev->GetBlockTime());        
-            if (nNumMissedSteps <= nMaxMissedSteps)
-                break;
-            pblock->nTime -= 10;
+            while (pblock->nTime - 10 > pindexPrev->GetMedianTimePastWitness()+1)
+            {
+                int64_t nNumMissedSteps = CalculateMissedTimeSteps(pblock->nTime, pindexPrev->GetBlockTime());        
+                if (nNumMissedSteps <= nMaxMissedSteps)
+                    break;
+                pblock->nTime -= 10;
+            }
         }
     }
     
@@ -1115,6 +1119,24 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
                     break;
                 }
                 MilliSleep(1000);
+            }
+        }
+        // Fair start, give everyone an opportunity at mining the first block
+        {
+            std::string strHash = "e8f155ab0d02c40c507d9368cadd88eec9bf14f2114cbc6b35be61fd92e41f7f";
+            uint256 hash(uint256S(strHash));
+            CValidationState state;
+
+            {
+                LOCK(cs_main);
+                if (mapBlockIndex.count(hash) != 0)
+                {
+                    CBlockIndex* pblockindex = mapBlockIndex[hash];
+                    InvalidateBlock(state, Params(), pblockindex);
+                    if (state.IsValid()) {
+                        ActivateBestChain(state, Params());
+                    }
+                }
             }
         }
 
