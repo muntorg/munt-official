@@ -1,3 +1,19 @@
+1.0.0.3
+
+Downward adjustment of default genesis witness weight as it is too high for current network weight
+At larger network weights behaviour remains the same
+
+
+
+
+1.0.0.2
+
+More advanced wallet functionality, send/receive, mine, create holding accounts and lock funds, basic debug console and various other UI functionality
+Blockchain activation for both mining and holding accounts
+
+
+
+
 1.0.0.0
 
 Initial release, basic wallet functionality only (show balance, receive)
