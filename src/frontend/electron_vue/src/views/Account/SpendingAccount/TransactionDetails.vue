@@ -33,7 +33,7 @@ export default {
   .tx-address {
     margin: 0 0 20px 0;
     padding: 10px;
-    font-size: .9em;
+    font-size: 0.9em;
     line-height: 1.2em;
     user-select: text;
     word-wrap: break-word;
@@ -42,7 +42,7 @@ export default {
 
   .tx-hash {
     padding: 10px;
-    font-size: .9em;
+    font-size: 0.9em;
     line-height: 1.2em;
     user-select: text;
     word-wrap: break-word;
