@@ -137,7 +137,7 @@
 			children = (
 				E6EBCA1E2254AAFD00B02F24 /* Resources */,
 				E65D47B021639AF100033ED1 /* source */,
-				E64203EE21638CD6004A77FF /* GuldenCore */,
+				E64203EE21638CD6004A77FF /* NovoCore */,
 				E64203ED21638CD6004A77FF /* Products */,
 				E64203F721638D34004A77FF /* Frameworks */,
 			);
@@ -151,7 +151,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E64203EE21638CD6004A77FF /* GuldenCore */ = {
+		E64203EE21638CD6004A77FF /* NovoCore */ = {
 			isa = PBXGroup;
 			children = (
 				E67CDA65224A263400CC9F6E /* DBLegacyWalletResult.h */,
@@ -175,7 +175,7 @@
 				E64203EF21638CD6004A77FF /* GuldenCore.h */,
 				E64203F021638CD6004A77FF /* Info.plist */,
 			);
-			path = GuldenCore;
+			path = NovoCore;
 			sourceTree = "<group>";
 		};
 		E64203F721638D34004A77FF /* Frameworks */ = {
@@ -483,7 +483,7 @@
 				"GULDEN_BUILD[sdk=iphonesimulator*]" = "../../../../build/x86_64-ios";
 				"GULDEN_DEPENDS[sdk=iphoneos*]" = "../../../../depends/aarch64-ios";
 				"GULDEN_DEPENDS[sdk=iphonesimulator*]" = "../../../../depends/x86_64-ios";
-				INFOPLIST_FILE = "$(SRCROOT)/GuldenCore/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/NovoCore/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -512,7 +512,7 @@
 				"GULDEN_BUILD[sdk=iphonesimulator*]" = "../../../../build/x86_64-ios";
 				"GULDEN_DEPENDS[sdk=iphoneos*]" = "../../../../depends/aarch64-ios";
 				"GULDEN_DEPENDS[sdk=iphonesimulator*]" = "../../../../depends/x86_64-ios";
-				INFOPLIST_FILE = "$(SRCROOT)/GuldenCore/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/NovoCore/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
