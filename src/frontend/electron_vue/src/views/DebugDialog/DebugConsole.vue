@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import UnityBackend from "../../unity/UnityBackend";
+import { RpcController } from "../../unity/Controllers";
 
 export default {
   name: "DebugConsole",
@@ -65,7 +65,7 @@ export default {
         case 13: {
           this.output.push({ type: "command", data: this.command });
 
-          let result = UnityBackend.ExecuteRpc(this.command);
+          let result = RpcController.Execute(this.command);
 
           this.output.push({ type: "result", ...result });
 

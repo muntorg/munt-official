@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import UnityBackend from "../../unity/UnityBackend";
+import { LibraryController } from "../../unity/Controllers";
 let timeout;
 
 export default {
@@ -108,7 +108,7 @@ export default {
     updateClientInfo() {
       clearTimeout(timeout);
       if (this.enableTimeout === false) return;
-      this.clientInfo = UnityBackend.GetClientInfo();
+      this.clientInfo = LibraryController.GetClientInfo();
       timeout = setTimeout(this.updateClientInfo, 5000);
     },
     visibilityChange() {

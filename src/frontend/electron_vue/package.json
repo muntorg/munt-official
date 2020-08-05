@@ -14,7 +14,7 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
     "libunity:copy": "node ./libunity/copy.js",
-    "libunity:generate": "node ./libunity/generate.js"
+    "libunity:generate": "node ./libunity/generate.js && yarn lint"
   },
   "main": "background.js",
   "dependencies": {
@@ -23,7 +23,6 @@
     "@fortawesome/pro-light-svg-icons": "^5.13.0",
     "@fortawesome/vue-fontawesome": "^0.1.10",
     "core-js": "^3.6.5",
-    "electron-better-ipc": "^1.0.1",
     "electron-context-menu": "^2.0.1",
     "lodash.clonedeep": "^4.5.0",
     "portal-vue": "^2.1.7",

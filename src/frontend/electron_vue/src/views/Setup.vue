@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import UnityBackend from "../unity/UnityBackend";
+import { LibraryController } from "../unity/Controllers";
 import PhraseInput from "../components/PhraseInput";
 import EventBus from "../EventBus.js";
 
@@ -98,6 +98,7 @@ export default {
       recoveryPhrase: "",
       possiblePhrase: null,
       isRecoveryPhraseInvalid: null,
+      generatedRecoveryPhrase: null,
       password1: "",
       password2: "",
       reset: false
@@ -111,7 +112,7 @@ export default {
       if (this.isRecovery) {
         return {
           length: 12,
-          words: UnityBackend.GetMnemonicDictionary()
+          words: LibraryController.GetMnemonicDictionary()
         };
       } else {
         return this.recoveryPhrase;
@@ -192,11 +193,14 @@ export default {
             this.recoveryPhrase = "";
             next = 3;
           } else {
-            this.recoveryPhrase = UnityBackend.GenerateRecoveryMnemonic();
+            if (this.generatedRecoveryPhrase === null) {
+              this.generatedRecoveryPhrase = LibraryController.GenerateRecoveryMnemonic();
+            }
+            this.recoveryPhrase = this.generatedRecoveryPhrase;
           }
           break;
         case 3:
-          if (UnityBackend.IsValidRecoveryPhrase(this.possiblePhrase)) {
+          if (LibraryController.IsValidRecoveryPhrase(this.possiblePhrase)) {
             this.recoveryPhrase = this.possiblePhrase;
           } else {
             EventBus.$emit("show-dialog", {
@@ -211,7 +215,7 @@ export default {
           break;
         case 4:
           if (
-            UnityBackend.InitWalletFromRecoveryPhrase(
+            LibraryController.InitWalletFromRecoveryPhrase(
               this.recoveryPhrase,
               this.password1
             )

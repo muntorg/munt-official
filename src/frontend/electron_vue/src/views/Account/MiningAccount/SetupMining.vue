@@ -33,7 +33,10 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import UnityBackend from "../../../unity/UnityBackend";
+import {
+  LibraryController,
+  AccountsController
+} from "../../../unity/Controllers";
 
 export default {
   name: "SetupMining",
@@ -69,12 +72,12 @@ export default {
       if (event.keyCode === 13) this.createMiningAccount(this.password);
     },
     createMiningAccount(password) {
-      if (UnityBackend.UnlockWallet(password) === false) {
+      if (LibraryController.UnlockWallet(password) === false) {
         this.isPasswordInvalid = true;
         return;
       }
-      let uuid = UnityBackend.CreateAccount("Novo Mining", "Mining");
-      UnityBackend.LockWallet();
+      let uuid = AccountsController.CreateAccount("Novo Mining", "Mining");
+      LibraryController.LockWallet();
       this.$router.push({ name: "account", params: { id: uuid } });
     }
   }

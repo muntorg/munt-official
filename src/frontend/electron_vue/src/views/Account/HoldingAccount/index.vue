@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import UnityBackend from "../../../unity/UnityBackend";
+import { WitnessController } from "../../../unity/Controllers";
 
 let timeout;
 
@@ -157,7 +157,9 @@ export default {
   methods: {
     initialize() {
       this.updateStatistics();
-      this.isCompounding = UnityBackend.IsAccountCompounding(this.account.UUID);
+      this.isCompounding = WitnessController.IsAccountCompounding(
+        this.account.UUID
+      );
     },
     getStatistics(which) {
       return this.statistics[which] || null;
@@ -168,14 +170,13 @@ export default {
     },
     updateStatistics() {
       clearTimeout(timeout);
-      this.statistics = UnityBackend.GetAccountWitnessStatistics(
+      this.statistics = WitnessController.GetAccountWitnessStatistics(
         this.account.UUID
       );
       timeout = setTimeout(this.updateStatistics, 5000);
     },
     toggleCompounding() {
-      console.log("toggle");
-      UnityBackend.SetAccountCompounding(
+      WitnessController.SetAccountCompounding(
         this.account.UUID,
         !this.isCompounding
       );

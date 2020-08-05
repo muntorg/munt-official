@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import UnityBackend from "../unity/UnityBackend";
+import { LibraryController } from "../unity/Controllers";
 import EventBus from "../EventBus";
 
 export default {
@@ -54,8 +54,8 @@ export default {
       if (event.keyCode === 13) this.validatePassword();
     },
     validatePassword() {
-      if (UnityBackend.UnlockWallet(this.password)) {
-        UnityBackend.LockWallet();
+      if (LibraryController.UnlockWallet(this.password)) {
+        LibraryController.LockWallet();
         this.$store.dispatch({
           type: "SET_WALLET_PASSWORD",
           walletPassword: this.password

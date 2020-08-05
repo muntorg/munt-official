@@ -46,7 +46,10 @@
 
 <script>
 import { mapState } from "vuex";
-import UnityBackend from "../../../unity/UnityBackend";
+import {
+  LibraryController,
+  AccountsController
+} from "../../../unity/Controllers";
 
 export default {
   name: "SendNovo",
@@ -92,7 +95,7 @@ export default {
   created() {
     this.maxAmount =
       Math.floor(
-        UnityBackend.GetActiveAccountBalance().availableExcludingLocked /
+        AccountsController.GetActiveAccountBalance().availableExcludingLocked /
           1000000
       ) / 100;
   },
@@ -111,16 +114,18 @@ export default {
        */
 
       // validate amount
-      let accountBalance = UnityBackend.GetActiveAccountBalance();
+      let accountBalance = AccountsController.GetActiveAccountBalance();
       if (accountBalance.availableExcludingLocked / 100000000 < this.amount) {
         this.isAmountInvalid = true;
       }
 
       // validate address
-      this.isAddressInvalid = !UnityBackend.IsValidNativeAddress(this.address);
+      this.isAddressInvalid = !LibraryController.IsValidNativeAddress(
+        this.address
+      );
 
       // wallet needs to be unlocked to make a payment
-      if (UnityBackend.UnlockWallet(this.computedPassword) === false) {
+      if (LibraryController.UnlockWallet(this.computedPassword) === false) {
         this.isPasswordInvalid = true;
       }
 
@@ -136,7 +141,7 @@ export default {
       };
 
       // try to make the payment
-      let result = UnityBackend.PerformPaymentToRecipient(request, false);
+      let result = LibraryController.PerformPaymentToRecipient(request, false);
       if (result === 0) {
         // payment succeeded
         this.amount = null;
@@ -148,7 +153,7 @@ export default {
         console.log("someting went wrong, but don't exactly know what.");
       }
       // lock the wallet again
-      UnityBackend.LockWallet();
+      LibraryController.LockWallet();
     }
   }
 };

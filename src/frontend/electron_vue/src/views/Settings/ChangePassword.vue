@@ -54,7 +54,7 @@
 
 <script>
 import { mapState } from "vuex";
-import UnityBackend from "../../unity/UnityBackend";
+import { LibraryController } from "../../unity/Controllers";
 
 export default {
   data() {
@@ -106,7 +106,9 @@ export default {
           this.validatePassword();
           break;
         case 2:
-          if (UnityBackend.ChangePassword(this.passwordold, this.password2)) {
+          if (
+            LibraryController.ChangePassword(this.passwordold, this.password2)
+          ) {
             if (this.walletPassword) {
               this.$store.dispatch({
                 type: "SET_WALLET_PASSWORD",
@@ -126,8 +128,8 @@ export default {
       if (event.keyCode === 13 && this.passwordsValidated) this.nextStep();
     },
     validatePassword() {
-      if (UnityBackend.UnlockWallet(this.passwordold)) {
-        UnityBackend.LockWallet();
+      if (LibraryController.UnlockWallet(this.passwordold)) {
+        LibraryController.LockWallet();
         this.current++;
         this.$nextTick(() => {
           this.$refs.password1.focus();

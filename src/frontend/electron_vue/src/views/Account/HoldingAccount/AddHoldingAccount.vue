@@ -123,7 +123,11 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import UnityBackend from "../../../unity/UnityBackend";
+import {
+  WitnessController,
+  LibraryController,
+  AccountsController
+} from "../../../unity/Controllers";
 
 export default {
   name: "AddHoldingAccount",
@@ -178,7 +182,7 @@ export default {
       return this.isWeightSufficient ? "" : "insufficient";
     },
     estimatedWeight() {
-      let estimation = UnityBackend.GetEstimatedWeight(
+      let estimation = WitnessController.GetEstimatedWeight(
         this.amount * 100000000,
         this.lockTimeInBlocks
       );
@@ -198,7 +202,7 @@ export default {
     }
   },
   created() {
-    this.networkLimits = UnityBackend.GetNetworkLimits();
+    this.networkLimits = WitnessController.GetNetworkLimits();
   },
   mounted() {
     if (this.fundingAccounts.length) {
@@ -217,16 +221,18 @@ export default {
     },
     createAndFundHoldingAccount() {
       // wallet needs to be unlocked to make a payment
-      if (UnityBackend.UnlockWallet(this.computedPassword) === false) {
+      if (LibraryController.UnlockWallet(this.computedPassword) === false) {
         this.isPasswordInvalid = true;
       }
 
       if (this.hasErrors) return;
 
-      UnityBackend.UnlockWallet(this.computedPassword);
-      let accountId = UnityBackend.CreateAccount(this.accountName, "Witness");
+      let accountId = AccountsController.CreateAccount(
+        this.accountName,
+        "Witness"
+      );
 
-      let result = UnityBackend.FundWitnessAccount(
+      let result = WitnessController.FundWitnessAccount(
         this.fundingAccount.UUID,
         accountId,
         this.amount * 100000000,
@@ -237,10 +243,10 @@ export default {
         this.$router.push({ name: "account", params: { id: accountId } });
       } else {
         console.log(result);
-        UnityBackend.DeleteAccount(accountId); // something went wrong, so delete the account
+        AccountsController.DeleteAccount(accountId); // something went wrong, so delete the account
       }
 
-      UnityBackend.LockWallet();
+      LibraryController.LockWallet();
     }
   }
 };

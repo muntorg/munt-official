@@ -78,7 +78,7 @@
 
 <script>
 import { mapState } from "vuex";
-import UnityBackend from "../../../unity/UnityBackend";
+import { GenerationController } from "../../../unity/Controllers";
 
 export default {
   name: "MiningAccount",
@@ -96,11 +96,13 @@ export default {
     };
   },
   created() {
-    this.availableCores = UnityBackend.GetAvailableCores();
+    this.availableCores = GenerationController.GetAvailableCores();
     this.miningThreadCount =
       this.availableCores < 4 ? 1 : this.availableCores - 2;
     this.minimumMemory = 1; // for now just use 1 Gb as a minimum
-    this.maximumMemory = Math.floor(UnityBackend.GetMaximumMemory() / 1024);
+    this.maximumMemory = Math.floor(
+      GenerationController.GetMaximumMemory() / 1024
+    );
     this.miningMemorySize = this.maximumMemory;
   },
   computed: {
@@ -135,9 +137,9 @@ export default {
     toggleGeneration() {
       this.buttonDisabled = true;
       if (this.generationActive) {
-        UnityBackend.StopGeneration();
+        GenerationController.StopGeneration();
       } else {
-        let result = UnityBackend.StartGeneration(
+        let result = GenerationController.StartGeneration(
           this.miningThreadCount,
           this.miningMemorySize + "G"
         );

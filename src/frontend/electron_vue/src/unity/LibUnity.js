@@ -1,5 +1,4 @@
-import { app } from "electron";
-import { ipcMain as ipc } from "electron-better-ipc";
+import { app, ipcMain as ipc } from "electron";
 import fs from "fs";
 
 import store from "../store";
@@ -35,7 +34,7 @@ class LibUnity {
 
     this.witnessController = new libUnity.NJSIWitnessController();
 
-    this.rpcController = null;
+    this.rpcController = new libUnity.NJSIRpcController();
 
     let buildInfo = this.libraryController.BuildInfo();
 
@@ -320,58 +319,9 @@ class LibUnity {
     };
   }
 
-  _preExecuteIpcCommand(event) {
-    switch (event) {
-      case "GenerateRecoveryMnemonic":
-        return this.newRecoveryPhrase; // when a new recovery phrase is created it is stored in memory once to prevent multiple callse to GenerateRecoveryMnemonic
-    }
-    return undefined;
-  }
-
-  _postExecuteIpcCommand(event, result) {
-    switch (event) {
-      case "InitWalletFromRecoveryPhrase":
-        if (result === true) {
-          delete this.newRecoveryPhrase; // remove recoveryPhrase property because it isn't needed anymore
-          store.dispatch({
-            type: "SET_WALLET_EXISTS",
-            walletExists: true
-          });
-        }
-        break;
-    }
-  }
-
-  async _executeRpcAsync(command) {
-    let rpcListener = new libUnity.NJSIRpcListener();
-
-    if (this.rpcController === null) {
-      this.rpcController = new libUnity.NJSIRpcController();
-    }
-
-    this.rpcController.execute(command, rpcListener);
-
-    return new Promise((resolve, reject) => {
-      rpcListener.onSuccess = (filteredCommand, result) => {
-        console.log(`RPC success: ${result}`);
-
-        try {
-          resolve(JSON.parse(result));
-        } catch {
-          resolve(result);
-        }
-      };
-
-      rpcListener.onError = error => {
-        console.error(`RPC error: ${error}`);
-        reject(error);
-      };
-    });
-  }
-
   _registerIpcHandlers() {
     // ipc for rpc controller
-    ipc.on("ExecuteRpc", (event, command) => {
+    ipc.on("NJSIRpcController.Execute", (event, command) => {
       let rpcListener = new libUnity.NJSIRpcListener();
 
       rpcListener.onSuccess = (filteredCommand, result) => {
@@ -384,522 +334,351 @@ class LibUnity {
         event.returnValue = { success: false, data: error };
       };
 
-      if (this.rpcController === null) {
-        this.rpcController = new libUnity.NJSIRpcController();
-      }
-
       this.rpcController.execute(command, rpcListener);
     });
 
-    ipc.answerRenderer("ExecuteRpc", async data => {
-      let rpcListener = new libUnity.NJSIRpcListener();
-
-      rpcListener.onSuccess = (filteredCommand, result) => {
-        console.log(`RPC success: ${result}`);
-        return { success: true, data: result };
-      };
-
-      rpcListener.onError = error => {
-        console.error(`RPC error: ${error}`);
-        return { success: false, data: error };
-      };
-
-      if (this.rpcController === null) {
-        this.rpcController = new libUnity.NJSIRpcController();
-      }
-
-      this.rpcController.execute(data.command, rpcListener);
+    /* inject:generated-code */
+    // Register NJSILibraryController ipc handlers
+    ipc.on("NJSILibraryController.BuildInfo", event => {
+      event.returnValue = this.libraryController.BuildInfo();
     });
 
-    /* inject:code */
-    ipc.on("InitWalletFromRecoveryPhrase", (event, phrase, password) => {
-      let result = this._preExecuteIpcCommand("InitWalletFromRecoveryPhrase");
-      if (result === undefined) {
-        result = this.libraryController.InitWalletFromRecoveryPhrase(
+    ipc.on(
+      "NJSILibraryController.InitWalletFromRecoveryPhrase",
+      (event, phrase, password) => {
+        event.returnValue = this.libraryController.InitWalletFromRecoveryPhrase(
           phrase,
           password
         );
       }
-      this._postExecuteIpcCommand("InitWalletFromRecoveryPhrase", result);
-      event.returnValue = result;
+    );
+
+    ipc.on("NJSILibraryController.IsValidLinkURI", (event, phrase) => {
+      event.returnValue = this.libraryController.IsValidLinkURI(phrase);
     });
 
-    ipc.answerRenderer("InitWalletFromRecoveryPhrase", async data => {
-      let result = this._preExecuteIpcCommand("InitWalletFromRecoveryPhrase");
-      if (result === undefined) {
-        result = this.libraryController.InitWalletFromRecoveryPhrase(
-          data.phrase,
-          data.password
+    ipc.on(
+      "NJSILibraryController.ReplaceWalletLinkedFromURI",
+      (event, linked_uri, password) => {
+        event.returnValue = this.libraryController.ReplaceWalletLinkedFromURI(
+          linked_uri,
+          password
         );
       }
-      this._postExecuteIpcCommand("InitWalletFromRecoveryPhrase", result);
-      return result;
+    );
+
+    ipc.on("NJSILibraryController.EraseWalletSeedsAndAccounts", event => {
+      event.returnValue = this.libraryController.EraseWalletSeedsAndAccounts();
     });
 
-    ipc.on("IsValidRecoveryPhrase", (event, phrase) => {
-      let result = this._preExecuteIpcCommand("IsValidRecoveryPhrase");
-      if (result === undefined) {
-        result = this.libraryController.IsValidRecoveryPhrase(phrase);
+    ipc.on("NJSILibraryController.IsValidRecoveryPhrase", (event, phrase) => {
+      event.returnValue = this.libraryController.IsValidRecoveryPhrase(phrase);
+    });
+
+    ipc.on("NJSILibraryController.GenerateRecoveryMnemonic", event => {
+      event.returnValue = this.libraryController.GenerateRecoveryMnemonic();
+    });
+
+    ipc.on("NJSILibraryController.GenerateGenesisKeys", event => {
+      event.returnValue = this.libraryController.GenerateGenesisKeys();
+    });
+
+    ipc.on(
+      "NJSILibraryController.ComposeRecoveryPhrase",
+      (event, mnemonic, birthTime) => {
+        event.returnValue = this.libraryController.ComposeRecoveryPhrase(
+          mnemonic,
+          birthTime
+        );
       }
-      this._postExecuteIpcCommand("IsValidRecoveryPhrase", result);
-      event.returnValue = result;
+    );
+
+    ipc.on("NJSILibraryController.TerminateUnityLib", event => {
+      event.returnValue = this.libraryController.TerminateUnityLib();
     });
 
-    ipc.answerRenderer("IsValidRecoveryPhrase", async data => {
-      let result = this._preExecuteIpcCommand("IsValidRecoveryPhrase");
-      if (result === undefined) {
-        result = this.libraryController.IsValidRecoveryPhrase(data.phrase);
+    ipc.on(
+      "NJSILibraryController.QRImageFromString",
+      (event, qr_string, width_hint) => {
+        event.returnValue = this.libraryController.QRImageFromString(
+          qr_string,
+          width_hint
+        );
       }
-      this._postExecuteIpcCommand("IsValidRecoveryPhrase", result);
-      return result;
+    );
+
+    ipc.on("NJSILibraryController.GetReceiveAddress", event => {
+      event.returnValue = this.libraryController.GetReceiveAddress();
     });
 
-    ipc.on("GenerateRecoveryMnemonic", event => {
-      let result = this._preExecuteIpcCommand("GenerateRecoveryMnemonic");
-      if (result === undefined) {
-        result = this.libraryController.GenerateRecoveryMnemonic();
-      }
-      this._postExecuteIpcCommand("GenerateRecoveryMnemonic", result);
-      event.returnValue = result;
+    ipc.on("NJSILibraryController.GetRecoveryPhrase", event => {
+      event.returnValue = this.libraryController.GetRecoveryPhrase();
     });
 
-    ipc.answerRenderer("GenerateRecoveryMnemonic", async () => {
-      let result = this._preExecuteIpcCommand("GenerateRecoveryMnemonic");
-      if (result === undefined) {
-        result = this.libraryController.GenerateRecoveryMnemonic();
-      }
-      this._postExecuteIpcCommand("GenerateRecoveryMnemonic", result);
-      return result;
+    ipc.on("NJSILibraryController.IsMnemonicWallet", event => {
+      event.returnValue = this.libraryController.IsMnemonicWallet();
     });
 
-    ipc.on("GetRecoveryPhrase", event => {
-      let result = this._preExecuteIpcCommand("GetRecoveryPhrase");
-      if (result === undefined) {
-        result = this.libraryController.GetRecoveryPhrase();
-      }
-      this._postExecuteIpcCommand("GetRecoveryPhrase", result);
-      event.returnValue = result;
+    ipc.on("NJSILibraryController.IsMnemonicCorrect", (event, phrase) => {
+      event.returnValue = this.libraryController.IsMnemonicCorrect(phrase);
     });
 
-    ipc.answerRenderer("GetRecoveryPhrase", async () => {
-      let result = this._preExecuteIpcCommand("GetRecoveryPhrase");
-      if (result === undefined) {
-        result = this.libraryController.GetRecoveryPhrase();
-      }
-      this._postExecuteIpcCommand("GetRecoveryPhrase", result);
-      return result;
+    ipc.on("NJSILibraryController.GetMnemonicDictionary", event => {
+      event.returnValue = this.libraryController.GetMnemonicDictionary();
     });
 
-    ipc.on("GetMnemonicDictionary", event => {
-      let result = this._preExecuteIpcCommand("GetMnemonicDictionary");
-      if (result === undefined) {
-        result = this.libraryController.GetMnemonicDictionary();
-      }
-      this._postExecuteIpcCommand("GetMnemonicDictionary", result);
-      event.returnValue = result;
+    ipc.on("NJSILibraryController.UnlockWallet", (event, password) => {
+      event.returnValue = this.libraryController.UnlockWallet(password);
     });
 
-    ipc.answerRenderer("GetMnemonicDictionary", async () => {
-      let result = this._preExecuteIpcCommand("GetMnemonicDictionary");
-      if (result === undefined) {
-        result = this.libraryController.GetMnemonicDictionary();
-      }
-      this._postExecuteIpcCommand("GetMnemonicDictionary", result);
-      return result;
+    ipc.on("NJSILibraryController.LockWallet", event => {
+      event.returnValue = this.libraryController.LockWallet();
     });
 
-    ipc.on("UnlockWallet", (event, password) => {
-      let result = this._preExecuteIpcCommand("UnlockWallet");
-      if (result === undefined) {
-        result = this.libraryController.UnlockWallet(password);
-      }
-      this._postExecuteIpcCommand("UnlockWallet", result);
-      event.returnValue = result;
-    });
-
-    ipc.answerRenderer("UnlockWallet", async data => {
-      let result = this._preExecuteIpcCommand("UnlockWallet");
-      if (result === undefined) {
-        result = this.libraryController.UnlockWallet(data.password);
-      }
-      this._postExecuteIpcCommand("UnlockWallet", result);
-      return result;
-    });
-
-    ipc.on("LockWallet", event => {
-      let result = this._preExecuteIpcCommand("LockWallet");
-      if (result === undefined) {
-        result = this.libraryController.LockWallet();
-      }
-      this._postExecuteIpcCommand("LockWallet", result);
-      event.returnValue = result;
-    });
-
-    ipc.answerRenderer("LockWallet", async () => {
-      let result = this._preExecuteIpcCommand("LockWallet");
-      if (result === undefined) {
-        result = this.libraryController.LockWallet();
-      }
-      this._postExecuteIpcCommand("LockWallet", result);
-      return result;
-    });
-
-    ipc.on("ChangePassword", (event, oldPassword, newPassword) => {
-      let result = this._preExecuteIpcCommand("ChangePassword");
-      if (result === undefined) {
-        result = this.libraryController.ChangePassword(
+    ipc.on(
+      "NJSILibraryController.ChangePassword",
+      (event, oldPassword, newPassword) => {
+        event.returnValue = this.libraryController.ChangePassword(
           oldPassword,
           newPassword
         );
       }
-      this._postExecuteIpcCommand("ChangePassword", result);
-      event.returnValue = result;
+    );
+
+    ipc.on("NJSILibraryController.DoRescan", event => {
+      event.returnValue = this.libraryController.DoRescan();
     });
 
-    ipc.answerRenderer("ChangePassword", async data => {
-      let result = this._preExecuteIpcCommand("ChangePassword");
-      if (result === undefined) {
-        result = this.libraryController.ChangePassword(
-          data.oldPassword,
-          data.newPassword
-        );
-      }
-      this._postExecuteIpcCommand("ChangePassword", result);
-      return result;
+    ipc.on("NJSILibraryController.IsValidRecipient", (event, request) => {
+      event.returnValue = this.libraryController.IsValidRecipient(request);
     });
 
-    ipc.on("IsValidRecipient", (event, request) => {
-      let result = this._preExecuteIpcCommand("IsValidRecipient");
-      if (result === undefined) {
-        result = this.libraryController.IsValidRecipient(request);
-      }
-      this._postExecuteIpcCommand("IsValidRecipient", result);
-      event.returnValue = result;
+    ipc.on("NJSILibraryController.IsValidNativeAddress", (event, address) => {
+      event.returnValue = this.libraryController.IsValidNativeAddress(address);
     });
 
-    ipc.answerRenderer("IsValidRecipient", async data => {
-      let result = this._preExecuteIpcCommand("IsValidRecipient");
-      if (result === undefined) {
-        result = this.libraryController.IsValidRecipient(data.request);
-      }
-      this._postExecuteIpcCommand("IsValidRecipient", result);
-      return result;
+    ipc.on("NJSILibraryController.IsValidBitcoinAddress", (event, address) => {
+      event.returnValue = this.libraryController.IsValidBitcoinAddress(address);
     });
 
-    ipc.on("IsValidNativeAddress", (event, address) => {
-      let result = this._preExecuteIpcCommand("IsValidNativeAddress");
-      if (result === undefined) {
-        result = this.libraryController.IsValidNativeAddress(address);
-      }
-      this._postExecuteIpcCommand("IsValidNativeAddress", result);
-      event.returnValue = result;
+    ipc.on("NJSILibraryController.feeForRecipient", (event, request) => {
+      event.returnValue = this.libraryController.feeForRecipient(request);
     });
 
-    ipc.answerRenderer("IsValidNativeAddress", async data => {
-      let result = this._preExecuteIpcCommand("IsValidNativeAddress");
-      if (result === undefined) {
-        result = this.libraryController.IsValidNativeAddress(data.address);
-      }
-      this._postExecuteIpcCommand("IsValidNativeAddress", result);
-      return result;
-    });
-
-    ipc.on("PerformPaymentToRecipient", (event, request, substract_fee) => {
-      let result = this._preExecuteIpcCommand("PerformPaymentToRecipient");
-      if (result === undefined) {
-        result = this.libraryController.performPaymentToRecipient(
+    ipc.on(
+      "NJSILibraryController.performPaymentToRecipient",
+      (event, request, substract_fee) => {
+        event.returnValue = this.libraryController.performPaymentToRecipient(
           request,
           substract_fee
         );
       }
-      this._postExecuteIpcCommand("PerformPaymentToRecipient", result);
-      event.returnValue = result;
+    );
+
+    ipc.on("NJSILibraryController.getTransaction", (event, txHash) => {
+      event.returnValue = this.libraryController.getTransaction(txHash);
     });
 
-    ipc.answerRenderer("PerformPaymentToRecipient", async data => {
-      let result = this._preExecuteIpcCommand("PerformPaymentToRecipient");
-      if (result === undefined) {
-        result = this.libraryController.performPaymentToRecipient(
-          data.request,
-          data.substract_fee
+    ipc.on("NJSILibraryController.resendTransaction", (event, txHash) => {
+      event.returnValue = this.libraryController.resendTransaction(txHash);
+    });
+
+    ipc.on("NJSILibraryController.getAddressBookRecords", event => {
+      event.returnValue = this.libraryController.getAddressBookRecords();
+    });
+
+    ipc.on("NJSILibraryController.addAddressBookRecord", (event, address) => {
+      event.returnValue = this.libraryController.addAddressBookRecord(address);
+    });
+
+    ipc.on(
+      "NJSILibraryController.deleteAddressBookRecord",
+      (event, address) => {
+        event.returnValue = this.libraryController.deleteAddressBookRecord(
+          address
         );
       }
-      this._postExecuteIpcCommand("PerformPaymentToRecipient", result);
-      return result;
+    );
+
+    ipc.on("NJSILibraryController.ResetUnifiedProgress", event => {
+      event.returnValue = this.libraryController.ResetUnifiedProgress();
     });
 
-    ipc.on("ResendTransaction", (event, txHash) => {
-      let result = this._preExecuteIpcCommand("ResendTransaction");
-      if (result === undefined) {
-        result = this.libraryController.resendTransaction(txHash);
-      }
-      this._postExecuteIpcCommand("ResendTransaction", result);
-      event.returnValue = result;
+    ipc.on("NJSILibraryController.getLastSPVBlockInfos", event => {
+      event.returnValue = this.libraryController.getLastSPVBlockInfos();
     });
 
-    ipc.answerRenderer("ResendTransaction", async data => {
-      let result = this._preExecuteIpcCommand("ResendTransaction");
-      if (result === undefined) {
-        result = this.libraryController.resendTransaction(data.txHash);
-      }
-      this._postExecuteIpcCommand("ResendTransaction", result);
-      return result;
+    ipc.on("NJSILibraryController.getUnifiedProgress", event => {
+      event.returnValue = this.libraryController.getUnifiedProgress();
     });
 
-    ipc.on("GetClientInfo", event => {
-      let result = this._preExecuteIpcCommand("GetClientInfo");
-      if (result === undefined) {
-        result = this.libraryController.getClientInfo();
-      }
-      this._postExecuteIpcCommand("GetClientInfo", result);
-      event.returnValue = result;
+    ipc.on("NJSILibraryController.getMonitoringStats", event => {
+      event.returnValue = this.libraryController.getMonitoringStats();
     });
 
-    ipc.answerRenderer("GetClientInfo", async () => {
-      let result = this._preExecuteIpcCommand("GetClientInfo");
-      if (result === undefined) {
-        result = this.libraryController.getClientInfo();
+    ipc.on(
+      "NJSILibraryController.RegisterMonitorListener",
+      (event, listener) => {
+        event.returnValue = this.libraryController.RegisterMonitorListener(
+          listener
+        );
       }
-      this._postExecuteIpcCommand("GetClientInfo", result);
-      return result;
+    );
+
+    ipc.on(
+      "NJSILibraryController.UnregisterMonitorListener",
+      (event, listener) => {
+        event.returnValue = this.libraryController.UnregisterMonitorListener(
+          listener
+        );
+      }
+    );
+
+    ipc.on("NJSILibraryController.getClientInfo", event => {
+      event.returnValue = this.libraryController.getClientInfo();
     });
 
-    ipc.on("GetTransactionHistory", event => {
-      let result = this._preExecuteIpcCommand("GetTransactionHistory");
-      if (result === undefined) {
-        result = this.libraryController.getTransactionHistory();
-      }
-      this._postExecuteIpcCommand("GetTransactionHistory", result);
-      event.returnValue = result;
+    // Register NJSIWalletController ipc handlers
+    ipc.on("NJSIWalletController.HaveUnconfirmedFunds", event => {
+      event.returnValue = this.walletController.HaveUnconfirmedFunds();
     });
 
-    ipc.answerRenderer("GetTransactionHistory", async () => {
-      let result = this._preExecuteIpcCommand("GetTransactionHistory");
-      if (result === undefined) {
-        result = this.libraryController.getTransactionHistory();
-      }
-      this._postExecuteIpcCommand("GetTransactionHistory", result);
-      return result;
-    });
-    ipc.on("SetActiveAccount", (event, accountUUID) => {
-      let result = this._preExecuteIpcCommand("SetActiveAccount");
-      if (result === undefined) {
-        result = this.accountsController.setActiveAccount(accountUUID);
-      }
-      this._postExecuteIpcCommand("SetActiveAccount", result);
-      event.returnValue = result;
+    ipc.on("NJSIWalletController.GetBalanceSimple", event => {
+      event.returnValue = this.walletController.GetBalanceSimple();
     });
 
-    ipc.answerRenderer("SetActiveAccount", async data => {
-      let result = this._preExecuteIpcCommand("SetActiveAccount");
-      if (result === undefined) {
-        result = this.accountsController.setActiveAccount(data.accountUUID);
-      }
-      this._postExecuteIpcCommand("SetActiveAccount", result);
-      return result;
+    ipc.on("NJSIWalletController.GetBalance", event => {
+      event.returnValue = this.walletController.GetBalance();
     });
 
-    ipc.on("CreateAccount", (event, accountName, accountType) => {
-      let result = this._preExecuteIpcCommand("CreateAccount");
-      if (result === undefined) {
-        result = this.accountsController.createAccount(
+    // Register NJSIRpcController ipc handlers
+    ipc.on("NJSIRpcController.getAutocompleteList", event => {
+      event.returnValue = this.rpcController.getAutocompleteList();
+    });
+
+    // Register NJSIP2pNetworkController ipc handlers
+    ipc.on("NJSIP2pNetworkController.disableNetwork", event => {
+      event.returnValue = this.p2pNetworkController.disableNetwork();
+    });
+
+    ipc.on("NJSIP2pNetworkController.enableNetwork", event => {
+      event.returnValue = this.p2pNetworkController.enableNetwork();
+    });
+
+    ipc.on("NJSIP2pNetworkController.getPeerInfo", event => {
+      event.returnValue = this.p2pNetworkController.getPeerInfo();
+    });
+
+    // Register NJSIAccountsController ipc handlers
+    ipc.on("NJSIAccountsController.setActiveAccount", (event, accountUUID) => {
+      event.returnValue = this.accountsController.setActiveAccount(accountUUID);
+    });
+
+    ipc.on("NJSIAccountsController.getActiveAccount", event => {
+      event.returnValue = this.accountsController.getActiveAccount();
+    });
+
+    ipc.on(
+      "NJSIAccountsController.createAccount",
+      (event, accountName, accountType) => {
+        event.returnValue = this.accountsController.createAccount(
           accountName,
           accountType
         );
       }
-      this._postExecuteIpcCommand("CreateAccount", result);
-      event.returnValue = result;
-    });
-
-    ipc.answerRenderer("CreateAccount", async data => {
-      let result = this._preExecuteIpcCommand("CreateAccount");
-      if (result === undefined) {
-        result = this.accountsController.createAccount(
-          data.accountName,
-          data.accountType
-        );
-      }
-      this._postExecuteIpcCommand("CreateAccount", result);
-      return result;
-    });
-
-    ipc.on("DeleteAccount", (event, accountUUID) => {
-      let result = this._preExecuteIpcCommand("DeleteAccount");
-      if (result === undefined) {
-        result = this.accountsController.deleteAccount(accountUUID);
-      }
-      this._postExecuteIpcCommand("DeleteAccount", result);
-      event.returnValue = result;
-    });
-
-    ipc.answerRenderer("DeleteAccount", async data => {
-      let result = this._preExecuteIpcCommand("DeleteAccount");
-      if (result === undefined) {
-        result = this.accountsController.deleteAccount(data.accountUUID);
-      }
-      this._postExecuteIpcCommand("DeleteAccount", result);
-      return result;
-    });
-
-    ipc.on("GetActiveAccountBalance", event => {
-      let result = this._preExecuteIpcCommand("GetActiveAccountBalance");
-      if (result === undefined) {
-        result = this.accountsController.getActiveAccountBalance();
-      }
-      this._postExecuteIpcCommand("GetActiveAccountBalance", result);
-      event.returnValue = result;
-    });
-
-    ipc.answerRenderer("GetActiveAccountBalance", async () => {
-      let result = this._preExecuteIpcCommand("GetActiveAccountBalance");
-      if (result === undefined) {
-        result = this.accountsController.getActiveAccountBalance();
-      }
-      this._postExecuteIpcCommand("GetActiveAccountBalance", result);
-      return result;
-    });
-    ipc.on("StartGeneration", (event, numThreads, memoryLimit) => {
-      let result = this._preExecuteIpcCommand("StartGeneration");
-      if (result === undefined) {
-        result = this.generationController.startGeneration(
-          numThreads,
-          memoryLimit
-        );
-      }
-      this._postExecuteIpcCommand("StartGeneration", result);
-      event.returnValue = result;
-    });
-
-    ipc.answerRenderer("StartGeneration", async data => {
-      let result = this._preExecuteIpcCommand("StartGeneration");
-      if (result === undefined) {
-        result = this.generationController.startGeneration(
-          data.numThreads,
-          data.memoryLimit
-        );
-      }
-      this._postExecuteIpcCommand("StartGeneration", result);
-      return result;
-    });
-
-    ipc.on("StopGeneration", event => {
-      let result = this._preExecuteIpcCommand("StopGeneration");
-      if (result === undefined) {
-        result = this.generationController.stopGeneration();
-      }
-      this._postExecuteIpcCommand("StopGeneration", result);
-      event.returnValue = result;
-    });
-
-    ipc.answerRenderer("StopGeneration", async () => {
-      let result = this._preExecuteIpcCommand("StopGeneration");
-      if (result === undefined) {
-        result = this.generationController.stopGeneration();
-      }
-      this._postExecuteIpcCommand("StopGeneration", result);
-      return result;
-    });
-
-    ipc.on("GetAvailableCores", event => {
-      let result = this._preExecuteIpcCommand("GetAvailableCores");
-      if (result === undefined) {
-        result = this.generationController.getAvailableCores();
-      }
-      this._postExecuteIpcCommand("GetAvailableCores", result);
-      event.returnValue = result;
-    });
-
-    ipc.answerRenderer("GetAvailableCores", async () => {
-      let result = this._preExecuteIpcCommand("GetAvailableCores");
-      if (result === undefined) {
-        result = this.generationController.getAvailableCores();
-      }
-      this._postExecuteIpcCommand("GetAvailableCores", result);
-      return result;
-    });
-
-    ipc.on("GetMinimumMemory", event => {
-      let result = this._preExecuteIpcCommand("GetMinimumMemory");
-      if (result === undefined) {
-        result = this.generationController.getMinimumMemory();
-      }
-      this._postExecuteIpcCommand("GetMinimumMemory", result);
-      event.returnValue = result;
-    });
-
-    ipc.answerRenderer("GetMinimumMemory", async () => {
-      let result = this._preExecuteIpcCommand("GetMinimumMemory");
-      if (result === undefined) {
-        result = this.generationController.getMinimumMemory();
-      }
-      this._postExecuteIpcCommand("GetMinimumMemory", result);
-      return result;
-    });
-
-    ipc.on("GetMaximumMemory", event => {
-      let result = this._preExecuteIpcCommand("GetMaximumMemory");
-      if (result === undefined) {
-        result = this.generationController.getMaximumMemory();
-      }
-      this._postExecuteIpcCommand("GetMaximumMemory", result);
-      event.returnValue = result;
-    });
-
-    ipc.answerRenderer("GetMaximumMemory", async () => {
-      let result = this._preExecuteIpcCommand("GetMaximumMemory");
-      if (result === undefined) {
-        result = this.generationController.getMaximumMemory();
-      }
-      this._postExecuteIpcCommand("GetMaximumMemory", result);
-      return result;
-    });
-    ipc.on("GetNetworkLimits", event => {
-      let result = this._preExecuteIpcCommand("GetNetworkLimits");
-      if (result === undefined) {
-        result = this.witnessController.getNetworkLimits();
-      }
-      this._postExecuteIpcCommand("GetNetworkLimits", result);
-      event.returnValue = result;
-    });
-
-    ipc.answerRenderer("GetNetworkLimits", async () => {
-      let result = this._preExecuteIpcCommand("GetNetworkLimits");
-      if (result === undefined) {
-        result = this.witnessController.getNetworkLimits();
-      }
-      this._postExecuteIpcCommand("GetNetworkLimits", result);
-      return result;
-    });
+    );
 
     ipc.on(
-      "GetEstimatedWeight",
-      (event, amount_to_lock, lock_period_in_blocks) => {
-        let result = this._preExecuteIpcCommand("GetEstimatedWeight");
-        if (result === undefined) {
-          result = this.witnessController.getEstimatedWeight(
-            amount_to_lock,
-            lock_period_in_blocks
-          );
-        }
-        this._postExecuteIpcCommand("GetEstimatedWeight", result);
-        event.returnValue = result;
+      "NJSIAccountsController.renameAccount",
+      (event, accountUUID, newAccountName) => {
+        event.returnValue = this.accountsController.renameAccount(
+          accountUUID,
+          newAccountName
+        );
       }
     );
 
-    ipc.answerRenderer("GetEstimatedWeight", async data => {
-      let result = this._preExecuteIpcCommand("GetEstimatedWeight");
-      if (result === undefined) {
-        result = this.witnessController.getEstimatedWeight(
-          data.amount_to_lock,
-          data.lock_period_in_blocks
-        );
-      }
-      this._postExecuteIpcCommand("GetEstimatedWeight", result);
-      return result;
+    ipc.on("NJSIAccountsController.getAccountLinkURI", (event, accountUUID) => {
+      event.returnValue = this.accountsController.getAccountLinkURI(
+        accountUUID
+      );
+    });
+
+    ipc.on("NJSIAccountsController.getWitnessKeyURI", (event, accountUUID) => {
+      event.returnValue = this.accountsController.getWitnessKeyURI(accountUUID);
     });
 
     ipc.on(
-      "FundWitnessAccount",
+      "NJSIAccountsController.createAccountFromWitnessKeyURI",
+      (event, witnessKeyURI, newAccountName) => {
+        event.returnValue = this.accountsController.createAccountFromWitnessKeyURI(
+          witnessKeyURI,
+          newAccountName
+        );
+      }
+    );
+
+    ipc.on("NJSIAccountsController.deleteAccount", (event, accountUUID) => {
+      event.returnValue = this.accountsController.deleteAccount(accountUUID);
+    });
+
+    ipc.on("NJSIAccountsController.purgeAccount", (event, accountUUID) => {
+      event.returnValue = this.accountsController.purgeAccount(accountUUID);
+    });
+
+    ipc.on("NJSIAccountsController.listAccounts", event => {
+      event.returnValue = this.accountsController.listAccounts();
+    });
+
+    ipc.on("NJSIAccountsController.getActiveAccountBalance", event => {
+      event.returnValue = this.accountsController.getActiveAccountBalance();
+    });
+
+    ipc.on("NJSIAccountsController.getAccountBalance", (event, accountUUID) => {
+      event.returnValue = this.accountsController.getAccountBalance(
+        accountUUID
+      );
+    });
+
+    ipc.on("NJSIAccountsController.getAllAccountBalances", event => {
+      event.returnValue = this.accountsController.getAllAccountBalances();
+    });
+
+    ipc.on(
+      "NJSIAccountsController.getTransactionHistory",
+      (event, accountUUID) => {
+        event.returnValue = this.accountsController.getTransactionHistory(
+          accountUUID
+        );
+      }
+    );
+
+    ipc.on(
+      "NJSIAccountsController.getMutationHistory",
+      (event, accountUUID) => {
+        event.returnValue = this.accountsController.getMutationHistory(
+          accountUUID
+        );
+      }
+    );
+
+    // Register NJSIWitnessController ipc handlers
+    ipc.on("NJSIWitnessController.getNetworkLimits", event => {
+      event.returnValue = this.witnessController.getNetworkLimits();
+    });
+
+    ipc.on(
+      "NJSIWitnessController.getEstimatedWeight",
+      (event, amount_to_lock, lock_period_in_blocks) => {
+        event.returnValue = this.witnessController.getEstimatedWeight(
+          amount_to_lock,
+          lock_period_in_blocks
+        );
+      }
+    );
+
+    ipc.on(
+      "NJSIWitnessController.fundWitnessAccount",
       (
         event,
         funding_account_UUID,
@@ -907,105 +686,87 @@ class LibUnity {
         funding_amount,
         requestedLockPeriodInBlocks
       ) => {
-        let result = this._preExecuteIpcCommand("FundWitnessAccount");
-        if (result === undefined) {
-          result = this.witnessController.fundWitnessAccount(
-            funding_account_UUID,
-            witness_account_UUID,
-            funding_amount,
-            requestedLockPeriodInBlocks
-          );
-        }
-        this._postExecuteIpcCommand("FundWitnessAccount", result);
-        event.returnValue = result;
+        event.returnValue = this.witnessController.fundWitnessAccount(
+          funding_account_UUID,
+          witness_account_UUID,
+          funding_amount,
+          requestedLockPeriodInBlocks
+        );
       }
     );
 
-    ipc.answerRenderer("FundWitnessAccount", async data => {
-      let result = this._preExecuteIpcCommand("FundWitnessAccount");
-      if (result === undefined) {
-        result = this.witnessController.fundWitnessAccount(
-          data.funding_account_UUID,
-          data.witness_account_UUID,
-          data.funding_amount,
-          data.requestedLockPeriodInBlocks
-        );
-      }
-      this._postExecuteIpcCommand("FundWitnessAccount", result);
-      return result;
-    });
-
-    ipc.on("GetAccountWitnessStatistics", (event, witnessAccountUUID) => {
-      let result = this._preExecuteIpcCommand("GetAccountWitnessStatistics");
-      if (result === undefined) {
-        result = this.witnessController.getAccountWitnessStatistics(
+    ipc.on(
+      "NJSIWitnessController.getAccountWitnessStatistics",
+      (event, witnessAccountUUID) => {
+        event.returnValue = this.witnessController.getAccountWitnessStatistics(
           witnessAccountUUID
         );
       }
-      this._postExecuteIpcCommand("GetAccountWitnessStatistics", result);
-      event.returnValue = result;
-    });
+    );
 
-    ipc.answerRenderer("GetAccountWitnessStatistics", async data => {
-      let result = this._preExecuteIpcCommand("GetAccountWitnessStatistics");
-      if (result === undefined) {
-        result = this.witnessController.getAccountWitnessStatistics(
-          data.witnessAccountUUID
+    ipc.on(
+      "NJSIWitnessController.setAccountCompounding",
+      (event, witnessAccountUUID, should_compound) => {
+        event.returnValue = this.witnessController.setAccountCompounding(
+          witnessAccountUUID,
+          should_compound
         );
       }
-      this._postExecuteIpcCommand("GetAccountWitnessStatistics", result);
-      return result;
+    );
+
+    ipc.on(
+      "NJSIWitnessController.isAccountCompounding",
+      (event, witnessAccountUUID) => {
+        event.returnValue = this.witnessController.isAccountCompounding(
+          witnessAccountUUID
+        );
+      }
+    );
+
+    // Register NJSIGenerationController ipc handlers
+    ipc.on(
+      "NJSIGenerationController.startGeneration",
+      (event, numThreads, memoryLimit) => {
+        event.returnValue = this.generationController.startGeneration(
+          numThreads,
+          memoryLimit
+        );
+      }
+    );
+
+    ipc.on("NJSIGenerationController.stopGeneration", event => {
+      event.returnValue = this.generationController.stopGeneration();
+    });
+
+    ipc.on("NJSIGenerationController.getGenerationAddress", event => {
+      event.returnValue = this.generationController.getGenerationAddress();
+    });
+
+    ipc.on("NJSIGenerationController.getGenerationOverrideAddress", event => {
+      event.returnValue = this.generationController.getGenerationOverrideAddress();
     });
 
     ipc.on(
-      "SetAccountCompounding",
-      (event, witnessAccountUUID, should_compound) => {
-        let result = this._preExecuteIpcCommand("SetAccountCompounding");
-        if (result === undefined) {
-          result = this.witnessController.setAccountCompounding(
-            witnessAccountUUID,
-            should_compound
-          );
-        }
-        this._postExecuteIpcCommand("SetAccountCompounding", result);
-        event.returnValue = result;
+      "NJSIGenerationController.setGenerationOverrideAddress",
+      (event, overrideAddress) => {
+        event.returnValue = this.generationController.setGenerationOverrideAddress(
+          overrideAddress
+        );
       }
     );
 
-    ipc.answerRenderer("SetAccountCompounding", async data => {
-      let result = this._preExecuteIpcCommand("SetAccountCompounding");
-      if (result === undefined) {
-        result = this.witnessController.setAccountCompounding(
-          data.witnessAccountUUID,
-          data.should_compound
-        );
-      }
-      this._postExecuteIpcCommand("SetAccountCompounding", result);
-      return result;
+    ipc.on("NJSIGenerationController.getAvailableCores", event => {
+      event.returnValue = this.generationController.getAvailableCores();
     });
 
-    ipc.on("IsAccountCompounding", (event, witnessAccountUUID) => {
-      let result = this._preExecuteIpcCommand("IsAccountCompounding");
-      if (result === undefined) {
-        result = this.witnessController.isAccountCompounding(
-          witnessAccountUUID
-        );
-      }
-      this._postExecuteIpcCommand("IsAccountCompounding", result);
-      event.returnValue = result;
+    ipc.on("NJSIGenerationController.getMinimumMemory", event => {
+      event.returnValue = this.generationController.getMinimumMemory();
     });
 
-    ipc.answerRenderer("IsAccountCompounding", async data => {
-      let result = this._preExecuteIpcCommand("IsAccountCompounding");
-      if (result === undefined) {
-        result = this.witnessController.isAccountCompounding(
-          data.witnessAccountUUID
-        );
-      }
-      this._postExecuteIpcCommand("IsAccountCompounding", result);
-      return result;
+    ipc.on("NJSIGenerationController.getMaximumMemory", event => {
+      event.returnValue = this.generationController.getMaximumMemory();
     });
-    /* inject:code */
+    /* inject:generated-code */
   }
 }
 

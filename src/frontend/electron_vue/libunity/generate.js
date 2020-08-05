@@ -6,193 +6,81 @@ let inputFile = path.join(
   "../../../unity/djinni/node_js/unifiedbackend_doc.js"
 );
 
-const generateInfo = [
+let controllerFile = path.join(__dirname, "/../src/unity/Controllers.js");
+let libUnityFile = path.join(__dirname, "/../src/unity/LibUnity.js");
+
+let fileToParse = fs.readFileSync(inputFile, "utf8");
+let dataToParse = fileToParse.split("\n");
+
+let controllers = [
   {
     className: "NJSILibraryController",
-    controller: "libraryController",
-    functions: [
-      "ChangePassword",
-      "GenerateRecoveryMnemonic",
-      "GetClientInfo",
-      "GetMnemonicDictionary",
-      "GetRecoveryPhrase",
-      "GetTransactionHistory",
-      "InitWalletFromRecoveryPhrase",
-      "IsValidNativeAddress",
-      "IsValidRecipient",
-      "IsValidRecoveryPhrase",
-      "LockWallet",
-      "PerformPaymentToRecipient",
-      "ResendTransaction",
-      "UnlockWallet"
-    ],
-    results: []
+    exclude: [
+      "InitUnityLib",
+      "InitUnityLibThreaded",
+      "ContinueWalletFromRecoveryPhrase",
+      "InitWalletLinkedFromURI",
+      "ContinueWalletLinkedFromURI",
+      "InitWalletFromAndroidLegacyProtoWallet",
+      "isValidAndroidLegacyProtoWallet",
+      "PersistAndPruneForSPV",
+      "getMutationHistory",
+      "getTransactionHistory",
+      "HaveUnconfirmedFunds",
+      "GetBalance"
+    ]
+  },
+  {
+    className: "NJSIWalletController",
+    exclude: ["setListener"]
+  },
+  {
+    className: "NJSIRpcController",
+    exclude: ["execute"],
+    custom: [
+      {
+        name: "Execute",
+        args: ["command"]
+      }
+    ]
+  },
+  {
+    className: "NJSIP2pNetworkController",
+    exclude: ["setListener"]
   },
   {
     className: "NJSIAccountsController",
-    controller: "accountsController",
-    functions: [
-      "CreateAccount",
-      "DeleteAccount",
-      "GetActiveAccountBalance",
-      "SetActiveAccount"
-    ],
-    results: []
+    exclude: ["setListener"]
+  },
+  {
+    className: "NJSIWitnessController"
   },
   {
     className: "NJSIGenerationController",
-    controller: "generationController",
-    functions: [
-      "GetAvailableCores",
-      "GetMaximumMemory",
-      "GetMinimumMemory",
-      "StartGeneration",
-      "StopGeneration"
-    ],
-    results: []
-  },
-  {
-    className: "NJSIWitnessController",
-    controller: "witnessController",
-    functions: [
-      "FundWitnessAccount",
-      "GetNetworkLimits",
-      "GetEstimatedWeight",
-      "GetAccountWitnessStatistics",
-      "IsAccountCompounding",
-      "SetAccountCompounding"
-    ],
-    results: []
+    exclude: ["setListener"]
   }
 ];
 
-let backendFile = path.join(__dirname, "/../src/unity/UnityBackend.js");
-let libFile = path.join(__dirname, "/../src/unity/LibUnity.js");
-
-let inputFileData = fs.readFileSync(inputFile, "utf8");
-
-let txtUnityBackend = "";
-let txtLibUnity = "";
-
-for (var i = 0; i < generateInfo.length; i++) {
-  let o = generateInfo[i];
-  generateCodeFor(o);
-
-  for (var j = 0; j < o.results.length; j++) {
-    let f = o.results[j];
-
-    let tabs = 1;
-
-    // ipc.sendSync <- Sync
-    txtUnityBackend = addLine(
-      txtUnityBackend,
-      `static ${f.functionName}(${f.args}) {`,
-      tabs
-    );
-    txtUnityBackend = addLine(
-      txtUnityBackend,
-      `return ipc.sendSync("${f.functionName}"${
-        f.args.length > 0 ? ", " + f.args : ""
-      });`,
-      tabs + 1
-    );
-    txtUnityBackend = addLine(txtUnityBackend, "}", tabs, 2);
-
-    // ipc.callMain <- Async
-    txtUnityBackend = addLine(
-      txtUnityBackend,
-      `static ${f.functionName}Async(${f.args}) {`,
-      tabs
-    );
-    txtUnityBackend = addLine(
-      txtUnityBackend,
-      `return ipc.callMain("${f.functionName}"${
-        f.args.length > 0 ? ", { " + f.args + " }" : ""
-      });`,
-      tabs + 1
-    );
-    txtUnityBackend = addLine(txtUnityBackend, "}", tabs, 2);
-
-    // ipc.on -> Sync
-    tabs = 2;
-    txtLibUnity = addLine(
-      txtLibUnity,
-      `ipc.on("${f.functionName}", ${
-        f.args.length > 0 ? "(event, " + f.args + ")" : "event"
-      } => {`,
-      tabs
-    );
-    txtLibUnity = addLine(
-      txtLibUnity,
-      `let result = this._preExecuteIpcCommand("${f.functionName}");`,
-      tabs + 1
-    );
-    txtLibUnity = addLine(txtLibUnity, `if (result === undefined) {`, tabs + 1);
-    txtLibUnity = addLine(
-      txtLibUnity,
-      `result = this.${o.controller}.${f.name}(${f.args});`,
-      tabs + 2
-    );
-    txtLibUnity = addLine(txtLibUnity, `}`, tabs + 1);
-    txtLibUnity = addLine(
-      txtLibUnity,
-      `this._postExecuteIpcCommand("${f.functionName}", result);`,
-      tabs + 1
-    );
-    txtLibUnity = addLine(txtLibUnity, `event.returnValue = result;`, tabs + 1);
-    txtLibUnity = addLine(txtLibUnity, `});`, tabs, 2);
-
-    // ipc.answerRenderer -> Async
-    txtLibUnity = addLine(
-      txtLibUnity,
-      `ipc.answerRenderer("${f.functionName}", async ${
-        f.args.length > 0 ? "data" : "()"
-      } => {`,
-      tabs
-    );
-    txtLibUnity = addLine(
-      txtLibUnity,
-      `let result = this._preExecuteIpcCommand("${f.functionName}");`,
-      tabs + 1
-    );
-    txtLibUnity = addLine(txtLibUnity, `if (result === undefined) {`, tabs + 1);
-    txtLibUnity = addLine(
-      txtLibUnity,
-      `result = this.${o.controller}.${f.name}(${
-        f.args.length > 0 ? "data." + f.args.split(", ").join(", data.") : ""
-      });`,
-      tabs + 2
-    );
-    txtLibUnity = addLine(txtLibUnity, `}`, tabs + 1);
-    txtLibUnity = addLine(
-      txtLibUnity,
-      `this._postExecuteIpcCommand("${f.functionName}", result);`,
-      tabs + 1
-    );
-    txtLibUnity = addLine(txtLibUnity, `return result;`, tabs + 1);
-    txtLibUnity = addLine(
-      txtLibUnity,
-      `});`,
-      tabs,
-      j == o.results.length - 1 ? 1 : 2
-    );
-  }
+for (let i = 0; i < controllers.length; i++) {
+  getFunctionsFor(controllers[i]);
 }
 
-function generateCodeFor(o) {
+function getFunctionsFor(controller) {
+  controller.functions = [];
+  let exclude = controller.exclude || [];
+
   let startFound = false;
   let endFound = false;
-  let dataToParse = inputFileData.split("\n");
 
+  let i = 0;
   while (endFound === false) {
-    let line = dataToParse.shift().trim();
+    let line = dataToParse[i++].trim();
     if (startFound === false) {
-      if (line.indexOf(`class ${o.className}`) !== -1) {
+      if (line.indexOf(`declare class ${controller.className}`) !== -1) {
         startFound = true;
       }
       continue;
-    }
-    if (line === "}") {
+    } else if (line === "}") {
       endFound = true;
       continue;
     }
@@ -201,23 +89,22 @@ function generateCodeFor(o) {
     if (line.startsWith("static declare function") === false) continue;
     line = line.replace("static declare function", "").trim();
 
-    let functionOpeningBracketIdx = line.indexOf("(");
-    let functionClosingBracketIdx = line.indexOf(")");
-    let name = line.substr(0, functionOpeningBracketIdx);
+    let openingBracketIdx = line.indexOf("(");
+    let closingBracketIdx = line.indexOf(")");
+    let name = line.substr(0, openingBracketIdx);
 
-    let exists = false;
-    for (var i = 0; i < o.functions.length; i++) {
-      if (name.toLowerCase() === o.functions[i].toLowerCase()) {
-        exists = true;
+    let skip = false;
+    for (let j = 0; j < exclude.length; j++) {
+      if (name.toLowerCase() === exclude[j].toLowerCase()) {
+        skip = true;
         break;
       }
     }
-
-    if (exists === false) continue;
+    if (skip) continue;
 
     let args = line.substr(
-      functionOpeningBracketIdx + 1,
-      functionClosingBracketIdx - functionOpeningBracketIdx - 1
+      openingBracketIdx + 1,
+      closingBracketIdx - openingBracketIdx - 1
     );
 
     if (args.length > 0) {
@@ -230,39 +117,117 @@ function generateCodeFor(o) {
       args = arr.join(", ");
     }
 
-    o.results.push({
-      functionName: name.charAt(0).toUpperCase() + name.slice(1),
-      name,
-      args
-    });
+    controller.functions.push({ name: name, args: args });
   }
 }
 
+function getControllerCode() {
+  let code = [];
+
+  for (let i = 0; i < controllers.length; i++) {
+    let controller = controllers[i];
+    let custom = controller.custom || [];
+
+    code.push(`class ${controller.className.replace("NJSI", "")} {`);
+
+    for (let j = 0; j < custom.length; j++) {
+      let f = custom[j];
+      if (j > 0) code.push(``);
+      code.push(`static ${f.name}(${f.args}) {`);
+      code.push(
+        `return ipc.sendSync("${controller.className}.${f.name}"${
+          f.args.length > 0 ? ", " + f.args : ""
+        });`
+      );
+      code.push(`}`);
+    }
+
+    for (let j = 0; j < controller.functions.length; j++) {
+      let f = controller.functions[j];
+      if (j > 0) code.push(``);
+      code.push(`static ${PascalCase(f.name)}(${f.args}) {`);
+      code.push(
+        `return ipc.sendSync("${controller.className}.${f.name}"${
+          f.args.length > 0 ? ", " + f.args : ""
+        });`
+      );
+      code.push(`}`);
+    }
+
+    code.push(`}`);
+    code.push(``);
+  }
+
+  code.push(`export {`);
+
+  for (let i = 0; i < controllers.length; i++) {
+    code.push(
+      `${controllers[i].className.replace("NJSI", "")}${
+        i + 1 < controllers.length ? "," : ""
+      }`
+    );
+  }
+
+  code.push(`}`);
+  code.push(``);
+
+  return code;
+}
+
+function getLibUnityCode() {
+  let code = [];
+
+  for (let i = 0; i < controllers.length; i++) {
+    let controller = controllers[i];
+    let className = controller.className.replace("NJSI", "");
+    className = className.charAt(0).toLowerCase() + className.substr(1);
+
+    if (i > 0) code.push(``);
+    code.push(`// Register ${controller.className} ipc handlers`);
+
+    for (let j = 0; j < controller.functions.length; j++) {
+      let f = controller.functions[j];
+      if (j > 0) code.push(``);
+      code.push(
+        `ipc.on("${controller.className}.${f.name}", ${
+          f.args.length > 0 ? "(event, " + f.args + ")" : "event"
+        } => {`
+      );
+
+      code.push(`event.returnValue = this.${className}.${f.name}(${f.args});`);
+      code.push(`});`);
+    }
+  }
+
+  code.push(``);
+  return code;
+}
+
+let controllerData = fs.readFileSync(controllerFile, "utf-8");
+
 let replace = "";
-replace = addLine(replace, "/* inject:code */");
-replace += txtUnityBackend;
-replace = addLine(replace, "/* inject:code */", 1, 0);
-let backendData = fs.readFileSync(backendFile, "utf-8");
-var result = backendData.replace(
-  /\/\* inject:code \*\/(.)+\/\* inject:code \*\//s,
+replace += "/* inject:generated-code */\r\n";
+replace += getControllerCode().join("\r\n");
+replace += "/* inject:generated-code */";
+
+let result = controllerData.replace(
+  /\/\* inject:generated-code \*\/(.)+\/\* inject:generated-code \*\//s,
   replace
 );
+fs.writeFileSync(controllerFile, result, "utf-8");
 
-fs.writeFileSync(backendFile, result, "utf8");
-
+let libUnityData = fs.readFileSync(libUnityFile, "utf-8");
 replace = "";
-replace = addLine(replace, "/* inject:code */");
-replace += txtLibUnity;
-replace = addLine(replace, "/* inject:code */", 1, 0);
+replace += "/* inject:generated-code */\r\n";
+replace += getLibUnityCode().join("\r\n");
+replace += "/* inject:generated-code */";
 
-let libData = fs.readFileSync(libFile, "utf-8");
-result = libData.replace(
-  /\/\* inject:code \*\/(.)+\/\* inject:code \*\//s,
+result = libUnityData.replace(
+  /\/\* inject:generated-code \*\/(.)+\/\* inject:generated-code \*\//s,
   replace
 );
-fs.writeFileSync(libFile, result, "utf8");
+fs.writeFileSync(libUnityFile, result, "utf-8");
 
-function addLine(txt, line, tabs = 0, rns = 1) {
-  txt += `${" ".repeat(tabs * 2)}${line}${"\r\n".repeat(rns)}`;
-  return txt;
+function PascalCase(line) {
+  return line.charAt(0).toUpperCase() + line.substr(1);
 }

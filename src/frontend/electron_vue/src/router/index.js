@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Account from "../views/Account";
 
-import UnityBackend from "../unity/UnityBackend";
+import { AccountsController } from "../unity/Controllers";
 
 Vue.use(VueRouter);
 
@@ -86,7 +86,7 @@ router.beforeEach((to, from, next) => {
     case "account":
       if (to.params.id !== undefined) {
         // set active account to specified id
-        UnityBackend.SetActiveAccount(to.params.id);
+        AccountsController.SetActiveAccount(to.params.id);
       }
       break;
   }

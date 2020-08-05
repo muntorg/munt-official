@@ -40,7 +40,7 @@
 
 <script>
 import { mapState } from "vuex";
-import UnityBackend from "../../unity/UnityBackend";
+import { LibraryController } from "../../unity/Controllers";
 
 export default {
   data() {
@@ -76,9 +76,9 @@ export default {
       if (event.keyCode === 13) this.getRecoveryPhrase();
     },
     getRecoveryPhrase() {
-      if (UnityBackend.UnlockWallet(this.password)) {
-        this.recoveryPhrase = UnityBackend.GetRecoveryPhrase();
-        UnityBackend.LockWallet();
+      if (LibraryController.UnlockWallet(this.password)) {
+        this.recoveryPhrase = LibraryController.GetRecoveryPhrase();
+        LibraryController.LockWallet();
       } else {
         this.isPasswordInvalid = true;
       }
