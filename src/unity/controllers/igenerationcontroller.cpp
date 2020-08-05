@@ -200,7 +200,7 @@ int64_t IGenerationController::getMaximumMemory()
 {
     uint64_t systemMemoryInMb = systemPhysicalMemoryInBytes()/1024/1024;
     if (systemMemoryInMb < 2048)
-        return std::min(systemMemoryInMb, 256);
+        return std::min(systemMemoryInMb, (uint64_t)256);
     
     systemMemoryInMb -= 2048;
     uint64_t nMaxMemoryInMb = std::min(systemMemoryInMb, defaultSigmaSettings.arenaSizeKb/1024);
