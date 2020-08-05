@@ -1,16 +1,35 @@
 <template>
   <div class="debug-console flex-col">
     <div class="output-buttons">
-      <fa-icon :icon="['fal', 'eraser']" class="button" @click="output = []" />
+      <fa-icon
+        :icon="['fal', 'search-minus']"
+        class="button"
+        @click="decreaseFontSize"
+      />
+      <fa-icon
+        :icon="['fal', 'search-plus']"
+        class="button"
+        @click="increaseFontSize"
+      />
+      <fa-icon :icon="['fal', 'eraser']" class="button" @click="clearOutput" />
     </div>
-    <div ref="output" class="output">
+    <div
+      ref="output"
+      class="output scrollable scrollable-x"
+      :style="outputStyle"
+    >
+      <div class="info">
+        Use up and down arrows to navigate history. Type
+        <span class="help">help</span> for an overview of available commands.
+      </div>
+
       <div v-for="(item, index) in output" :key="index">
         <div v-if="item.type === 'command'">
           <fa-icon class="icon" :icon="['fal', 'angle-double-left']" />
           {{ item.data }}
         </div>
 
-        <pre v-else
+        <pre v-else :style="outputStyle"
           >{{ item.data }}
           </pre
         >
@@ -35,15 +54,38 @@ export default {
   data() {
     return {
       command: "",
-      commands: [],
-      output: [],
-      idx: 0
+      fontSize: 0.8
     };
   },
+  props: {
+    value: {
+      type: Object,
+      default: () => {
+        return {
+          output: [],
+          commands: [],
+          idx: 0
+        };
+      }
+    }
+  },
+  computed: {
+    output() {
+      return this.value.output;
+    },
+    commands() {
+      return this.value.commands;
+    },
+    idx() {
+      return this.value.idx;
+    },
+    outputStyle() {
+      return `font-size: ${this.fontSize}rem;`;
+    }
+  },
   mounted() {
-    this.$nextTick(() => {
-      this.$refs.command.focus();
-    });
+    this.scrollToBottom();
+    this.focusCommand();
   },
   methods: {
     formatData(input) {
@@ -63,34 +105,46 @@ export default {
     onRpcInputKeyDown() {
       switch (event.keyCode) {
         case 13: {
-          this.output.push({ type: "command", data: this.command });
-
-          let result = RpcController.Execute(this.command);
-
-          this.output.push({ type: "result", ...result });
-
-          this.$nextTick(() => {
-            this.$refs.output.scrollTop = this.$refs.output.scrollHeight;
-          });
-
-          let idx = this.commands.indexOf(this.command);
-          if (idx !== -1) {
-            this.commands.splice(idx, 1);
-          }
-          this.commands.push(this.command);
+          let cmd = this.command;
           this.command = "";
-          this.idx = this.commands.length;
+
+          let result = RpcController.Execute(cmd);
+
+          console.log(result);
+
+          if (cmd.split(" ")[0] === "walletpassphrase") {
+            cmd = "walletpassphrase (...)";
+          }
+
+          this.value.output.push({ type: "command", data: cmd });
+          this.value.output.push({ type: "result", ...result });
+
+          this.scrollToBottom();
+
+          if (
+            result.success === false &&
+            result.data === "Method not found (code -32601)"
+          ) {
+            return; // do not add invalid methods to the history
+          }
+
+          let index = this.commands.indexOf(cmd);
+          if (index !== -1) {
+            this.value.commands.splice(index, 1);
+          }
+          this.value.commands.push(cmd);
+          this.value.idx = this.commands.length;
           break;
         }
         case 38: // arrow up
-          if (this.idx > 0) this.idx--;
+          if (this.idx > 0) this.value.idx--;
           if (this.commands.length > 0) {
             this.command = this.commands[this.idx];
             this.moveToEnd();
           }
           break;
         case 40: // arrow down
-          if (this.idx < this.commands.length) this.idx++;
+          if (this.idx < this.commands.length) this.value.idx++;
           if (this.idx < this.commands.length && this.commands.length > 0) {
             this.command = this.commands[this.idx];
             this.moveToEnd();
@@ -99,6 +153,28 @@ export default {
           }
           break;
       }
+    },
+    clearOutput() {
+      this.$emit("clear-output");
+      this.focusCommand();
+    },
+    focusCommand() {
+      this.$nextTick(() => {
+        this.$refs.command.focus();
+      });
+    },
+    scrollToBottom() {
+      this.$nextTick(() => {
+        this.$refs.output.scrollTop = this.$refs.output.scrollHeight;
+      });
+    },
+    increaseFontSize() {
+      if (this.fontSize >= 1.3) return;
+      this.fontSize += 0.05;
+    },
+    decreaseFontSize() {
+      if (this.fontSize <= 0.6) return;
+      this.fontSize -= 0.05;
     }
   }
 };
@@ -124,18 +200,22 @@ export default {
   flex: 1;
   margin-bottom: 8px;
   border: 1px solid #ccc;
-  overflow-y: auto;
   user-select: text;
+  padding: 4px;
+
+  & > .info {
+    padding: 8px 0;
+  }
+
+  & .help {
+    color: var(--primary-color);
+  }
 
   & * {
     user-select: text;
   }
 
-  font-size: 0.8rem;
-
-  & .icon {
-    margin: 0 8px;
-  }
+  //font-size: 0.8rem;
 
   & .error {
     color: var(--error-color);
@@ -144,6 +224,6 @@ export default {
 
 pre {
   overflow-wrap: break-word;
-  font-size: 0.8rem;
+  //font-size: 0.8rem;
 }
 </style>

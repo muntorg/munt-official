@@ -12,7 +12,13 @@
     </div>
     <div class="main">
       <information-page v-if="current === 0" />
-      <debug-console v-show="current === 1" />
+      <debug-console
+        v-if="current === 1"
+        :value="console"
+        :output="console.output"
+        :commands="console.commands"
+        @clear-output="clearOutput"
+      />
     </div>
   </div>
 </template>
@@ -32,7 +38,12 @@ export default {
         {
           title: "Console"
         }
-      ]
+      ],
+      console: {
+        output: [],
+        commands: [],
+        idx: 0
+      }
     };
   },
   components: {
@@ -45,6 +56,9 @@ export default {
     },
     setTab(index) {
       this.current = index;
+    },
+    clearOutput() {
+      this.console.output = [];
     }
   }
 };

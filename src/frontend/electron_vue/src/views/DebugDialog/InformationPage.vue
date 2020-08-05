@@ -108,6 +108,7 @@ export default {
     updateClientInfo() {
       clearTimeout(timeout);
       if (this.enableTimeout === false) return;
+      console.log("call update GetClientInfo");
       this.clientInfo = LibraryController.GetClientInfo();
       timeout = setTimeout(this.updateClientInfo, 5000);
     },
