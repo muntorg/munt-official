@@ -423,7 +423,7 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
     /** NB!! this actually will end up a little bit more than 1% as the overall network weight will also be reduced as a result. **/
     /** This is however unimportant as 1% is in and of itself also somewhat arbitrary, simpler code is favoured here over exactness. **/
     /** So we delibritely make no attempt to compensate for this. **/
-    witnessInfo.nMaxIndividualWeight = std::max(witnessInfo.nTotalWeightEligibleRaw / 100, 1);
+    witnessInfo.nMaxIndividualWeight = std::max(witnessInfo.nTotalWeightEligibleRaw / 100, (uint64_t)1);
     witnessInfo.nTotalWeightEligibleAdjusted = 0;
     for (auto& item : witnessInfo.witnessSelectionPoolFiltered)
     {
