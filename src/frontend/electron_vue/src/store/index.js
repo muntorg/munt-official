@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import { createSharedMutations } from "vuex-electron";
 import syncState from "./syncState";
 import cloneDeep from "lodash.clonedeep";
+import { Menu } from "electron";
 
 Vue.use(Vuex);
 
@@ -104,6 +105,16 @@ export default new Vuex.Store({
     SET_CORE_READY({ commit }, payload) {
       commit("SET_STATUS", AppStatus.ready); // set status to ready. maybe core_ready is redundant and can be removed.
       commit(payload);
+
+      try {
+        let menu = Menu.getApplicationMenu();
+        if (menu === null) return;
+        menu.items
+          .find(x => x.label === "Help")
+          .submenu.items.find(x => x.label === "Debug window").enabled = true;
+      } catch (e) {
+        console.error(e);
+      }
     },
     SET_GULDEN_VERSION({ commit }, payload) {
       commit(payload);

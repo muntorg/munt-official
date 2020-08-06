@@ -67,8 +67,6 @@ protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } }
 ]);
 
-import lu from "native-ext-loader!./unity/lib_unity.node";
-
 function createMainWindow() {
   let options = {
     width: 800,
@@ -105,6 +103,7 @@ function createMainWindow() {
       submenu: [
         {
           label: "Debug window",
+          enabled: false,
           click() {
             createDebugWindow();
           }
@@ -115,31 +114,8 @@ function createMainWindow() {
 
   if (isDevelopment) {
     menuTemplate.push({
-      label: "Developer tools",
-      submenu: [
-        { role: "toggleDevTools" },
-        {
-          label: "Generate genesis keys",
-          click() {
-            console.log(libUnity.backend.GenerateGenesisKeys());
-          }
-        },
-        {
-          label: "RPC test - getpeerinfo",
-          click() {
-            let RPCController = new lu.NJSIRpcController();
-            let RPCListener = new lu.NJSIRpcListener();
-
-            RPCListener.onSuccess = function(filteredCommand, result) {
-              console.log("RPC success: " + result);
-            };
-            RPCListener.onError = function(error) {
-              console.log("RPC error: " + error);
-            };
-            RPCController.execute("getpeerinfo", RPCListener);
-          }
-        }
-      ]
+      label: "Development",
+      submenu: [{ role: "toggleDevTools" }]
     });
   }
 
