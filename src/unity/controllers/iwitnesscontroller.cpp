@@ -99,6 +99,12 @@ static int64_t GetNetworkWeight()
 
 WitnessEstimateInfoRecord IWitnessController::getEstimatedWeight(int64_t amountToLock, int64_t lockPeriodInBlocks)
 {
+    if (!pactiveWallet)
+        return WitnessEstimateInfoRecord(0, 0, 0, 0, 0, 0, 0);
+    
+    if (!chainActive.Tip() || chainActive.Tip()->nHeight < 10)
+        return WitnessEstimateInfoRecord(0, 0, 0, 0, 0, 0, 0);
+    
     int64_t lockPeriodInDays;
     if (IsArgSet("-testnet"))
     {
