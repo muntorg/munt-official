@@ -194,6 +194,18 @@ function getLibUnityCode() {
         } => {`
       );
 
+      let args = f.args.length > 0 ? f.args.split(", ") : [];
+      let consoleArgs = "";
+      if (args.length > 0) {
+        for (let k = 0; k < args.length; k++) {
+          consoleArgs += k > 0 ? ", " : "";
+          consoleArgs += "${" + args[k] + "}";
+        }
+      }
+
+      code.push(
+        "console.log(`" + `IPC: ${className}.${f.name}(${consoleArgs})` + "`);"
+      );
       code.push(`event.returnValue = this.${className}.${f.name}(${f.args});`);
       code.push(`});`);
     }
