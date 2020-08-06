@@ -105,18 +105,13 @@ export default {
     onRpcInputKeyDown() {
       switch (event.keyCode) {
         case 13: {
-          let cmd = this.command;
+          let result = RpcController.Execute(this.command);
           this.command = "";
 
-          let result = RpcController.Execute(cmd);
-
-          console.log(result);
-
-          if (cmd.split(" ")[0] === "walletpassphrase") {
-            cmd = "walletpassphrase (...)";
-          }
-
-          this.value.output.push({ type: "command", data: cmd });
+          this.value.output.push({
+            type: "command",
+            data: result.command
+          });
           this.value.output.push({ type: "result", ...result });
 
           this.scrollToBottom();
@@ -128,11 +123,11 @@ export default {
             return; // do not add invalid methods to the history
           }
 
-          let index = this.commands.indexOf(cmd);
+          let index = this.commands.indexOf(result.command);
           if (index !== -1) {
             this.value.commands.splice(index, 1);
           }
-          this.value.commands.push(cmd);
+          this.value.commands.push(result.command);
           this.value.idx = this.commands.length;
           break;
         }
