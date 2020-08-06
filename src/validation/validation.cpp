@@ -929,7 +929,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     }
 
     bool fScriptChecks = true;
-    if (!hashAssumeValid.IsNull())
+    if (pindex->nHeight != 0 && !hashAssumeValid.IsNull())
     {
         // We've been configured with the hash of a block which has been externally verified to have a valid history.
         // A suitable default value is included with the software and updated from time to time.  Because validity
