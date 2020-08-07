@@ -87,6 +87,23 @@ class LibUnity {
     this.walletController.setListener(this.walletListener);
   }
 
+  _updateAccounts() {
+    let accounts = this.accountsController.listAccounts();
+    let accountBalances = this.accountsController.getAllAccountBalances();
+
+    Object.keys(accountBalances).forEach(key => {
+      accounts.find(x => x.UUID === key).balance =
+        (accountBalances[key].availableIncludingLocked +
+          accountBalances[key].immatureIncludingLocked) /
+        100000000;
+    });
+
+    store.dispatch({
+      type: "SET_ACCOUNTS",
+      accounts: accounts
+    });
+  }
+
   _initializeAccountsController() {
     let self = this;
     let libraryController = this.libraryController;
@@ -113,17 +130,11 @@ class LibUnity {
     };
 
     this.accountsListener.onAccountAdded = function() {
-      store.dispatch({
-        type: "SET_ACCOUNTS",
-        accounts: self._getAccountsWithBalances()
-      });
+      self._updateAccounts();
     };
 
     this.accountsListener.onAccountDeleted = function() {
-      store.dispatch({
-        type: "SET_ACCOUNTS",
-        accounts: self._getAccountsWithBalances()
-      });
+      self._updateAccounts();
     };
 
     this.accountsController.setListener(this.accountsListener);
@@ -200,20 +211,6 @@ class LibUnity {
     );
   }
 
-  _getAccountsWithBalances() {
-    let accounts = this.accountsController.listAccounts();
-    let accountBalances = this.accountsController.getAllAccountBalances();
-
-    Object.keys(accountBalances).forEach(key => {
-      accounts.find(x => x.UUID === key).balance =
-        (accountBalances[key].availableIncludingLocked +
-          accountBalances[key].immatureIncludingLocked) /
-        100000000;
-    });
-
-    return accounts;
-  }
-
   _coreReady() {
     this._initializeWalletController();
     this._initializeAccountsController();
@@ -224,10 +221,7 @@ class LibUnity {
       walletBalance: this.walletController.GetBalance()
     });
 
-    store.dispatch({
-      type: "SET_ACCOUNTS",
-      accounts: this._getAccountsWithBalances()
-    });
+    this._updateAccounts();
 
     store.dispatch({
       type: "SET_ACTIVE_ACCOUNT",
@@ -283,10 +277,7 @@ class LibUnity {
         receiveAddress: libraryController.GetReceiveAddress()
       });
 
-      store.dispatch({
-        type: "SET_ACCOUNTS",
-        accounts: self._getAccountsWithBalances()
-      });
+      self._updateAccounts();
     };
 
     libraryListener.notifyUpdatedTransaction = function(/*transaction*/) {
