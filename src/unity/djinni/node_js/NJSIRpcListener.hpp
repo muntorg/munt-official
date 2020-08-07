@@ -21,6 +21,12 @@ public:
     NJSIRpcListener(const Napi::CallbackInfo& info) : Napi::ObjectWrap<NJSIRpcListener>(info){};
 
     /**
+     * Returns a filtered version of the command with sensitive information like passwords removed
+     * Any kind of 'command history' functionality should store this filtered command and not the original command
+     */
+    void onFilteredCommand(const std::string & filteredCommand);
+
+    /**
      * Returns the result and a filtered version of the command with sensitive information like passwords removed
      * Any kind of 'command history' functionality should store this filtered command and not the original command
      */
@@ -30,6 +36,13 @@ public:
     void onError(const std::string & errorMessage);
 
 private:
+    /**
+     * Returns a filtered version of the command with sensitive information like passwords removed
+     * Any kind of 'command history' functionality should store this filtered command and not the original command
+     */
+    void onFilteredCommand(const Napi::CallbackInfo& info);
+    void onFilteredCommand_aimpl__(const std::string & filteredCommand);
+
     /**
      * Returns the result and a filtered version of the command with sensitive information like passwords removed
      * Any kind of 'command history' functionality should store this filtered command and not the original command
