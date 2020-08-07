@@ -8,7 +8,7 @@
   },
   "add_holding_account": {
     "daily": "daily",
-    "estimated_eanings": "Estimated earnings",
+    "estimated_earnings": "Estimated earnings",
     "funding_account": "Funding account",
     "lock_for": "Lock for",
     "overall": "overall",
