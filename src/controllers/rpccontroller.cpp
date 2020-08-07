@@ -25,7 +25,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <set>
 
-void RPCController::executeCommandLine(const std::string& sCommandLine, const std::function<void(const std::string&)>& errorHandler, const std::function<void(const std::string&)>& filteredCommandHandler, const std::function<void(const std::string&, const std::string&)>& successHandler)
+void RPCController::executeCommandLine(const std::string& sCommandLine, const std::function<void(const std::string&)>& filteredCommandHandler, const std::function<void(const std::string&)>& errorHandler, const std::function<void(const std::string&, const std::string&)>& successHandler)
 {
     if(!sCommandLine.empty())
     {
