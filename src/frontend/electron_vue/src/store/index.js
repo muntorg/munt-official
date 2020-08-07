@@ -2,7 +2,6 @@ import Vue from "vue";
 import Vuex from "vuex";
 import { createSharedMutations } from "vuex-electron";
 import syncState from "./syncState";
-import cloneDeep from "lodash.clonedeep";
 import { Menu } from "electron";
 
 Vue.use(Vuex);
@@ -33,9 +32,6 @@ export default new Vuex.Store({
     walletVersion: null
   },
   mutations: {
-    REPLACE_STATE(state, payload) {
-      this.replaceState(cloneDeep(payload.state));
-    },
     SET_ACCOUNTS(state, payload) {
       state.accounts = payload.accounts;
     },
@@ -83,9 +79,6 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    REPLACE_STATE({ commit }, payload) {
-      commit(payload);
-    },
     SET_ACCOUNT_NAME({ state, commit }, payload) {
       let accounts = [...state.accounts];
       let account = accounts.find(x => x.UUID === payload.accountUUID);

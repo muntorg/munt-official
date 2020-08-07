@@ -9,6 +9,8 @@ class LibUnity {
   constructor(options) {
     this.initialized = false;
     this.isTerminated = false;
+    this.isCoreReady = false;
+    this.isMainWindowReady = false;
 
     this.options = {
       useTestnet: process.env.UNITY_USE_TESTNET
@@ -42,6 +44,12 @@ class LibUnity {
       type: "SET_UNITY_VERSION",
       version: buildInfo.substr(1, buildInfo.indexOf("-") - 1)
     });
+  }
+
+  SetMainWindowReady() {
+    if (this.isMainWindowReady === true) return; // set core state once
+    this.isMainWindowReady = true;
+    this._setStateWhenCoreAndMainWindowReady();
   }
 
   Initialize() {
@@ -90,7 +98,6 @@ class LibUnity {
   }
 
   _updateAccounts() {
-    console.log("_updateAccounts");
     let accounts = this.accountsController.listAccounts();
     let accountBalances = this.accountsController.getAllAccountBalances();
 
@@ -218,13 +225,10 @@ class LibUnity {
     );
   }
 
-  _coreReady() {
-    console.log("_coreReady");
-    this._initializeWalletController();
-    this._initializeAccountsController();
-    this._initializeGenerationController();
+  _setStateWhenCoreAndMainWindowReady() {
+    if (!this.isCoreReady || !this.isMainWindowReady) return;
+    console.log("_setStateWhenCoreAndMainWindowReady");
 
-    console.log("dispatch SET_WALLET_BALANCE");
     store.dispatch({
       type: "SET_WALLET_BALANCE",
       walletBalance: this.walletController.GetBalance()
@@ -232,26 +236,25 @@ class LibUnity {
 
     this._updateAccounts();
 
-    console.log("dispatch SET_ACTIVE_ACCOUNT");
     store.dispatch({
       type: "SET_ACTIVE_ACCOUNT",
       accountUUID: this.accountsController.getActiveAccount()
     });
 
-    console.log("dispatch SET_RECEIVE_ADDRESS");
     store.dispatch({
       type: "SET_RECEIVE_ADDRESS",
       receiveAddress: this.libraryController.GetReceiveAddress()
     });
 
-    console.log("dispatch SET_MUTATIONS");
     store.dispatch({
       type: "SET_MUTATIONS",
       mutations: this.libraryController.getMutationHistory()
     });
 
-    console.log("dispatch SET_CORE_READY");
-    store.dispatch({ type: "SET_CORE_READY", coreReady: true });
+    store.dispatch({
+      type: "SET_CORE_READY",
+      coreReady: true
+    });
   }
 
   _registerSignalHandlers() {
@@ -261,7 +264,13 @@ class LibUnity {
 
     libraryListener.notifyCoreReady = function() {
       console.log("received: notifyCoreReady");
-      self._coreReady();
+
+      self._initializeWalletController();
+      self._initializeAccountsController();
+      self._initializeGenerationController();
+
+      self.isCoreReady = true;
+      self._setStateWhenCoreAndMainWindowReady();
     };
 
     libraryListener.logPrint = function(message) {

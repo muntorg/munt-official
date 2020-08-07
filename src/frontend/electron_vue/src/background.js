@@ -140,6 +140,7 @@ function createMainWindow() {
 
   winMain.on("ready-to-show", () => {
     console.log("ready-to-show main window");
+    libUnity.SetMainWindowReady();
     winMain.show();
   });
 
