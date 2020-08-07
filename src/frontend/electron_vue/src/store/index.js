@@ -160,7 +160,7 @@ export default new Vuex.Store({
           balance.unconfirmedIncludingLocked +
           balance.immatureIncludingLocked) /
         100000000
-      ).toFixed(2);
+      );
     },
     accounts: state => {
       return state.accounts

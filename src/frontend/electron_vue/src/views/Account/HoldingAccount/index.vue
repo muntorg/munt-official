@@ -5,7 +5,7 @@
         <main-header
           class="info"
           :title="account.label"
-          :subtitle="account.balance"
+          :subtitle="account.balance.toFixed(2)"
         />
         <div class="settings"></div>
       </section>

@@ -1,7 +1,10 @@
 <template>
   <div class="mining-account">
     <portal to="header-slot">
-      <main-header :title="account.label" :subtitle="account.balance" />
+      <main-header
+        :title="account.label"
+        :subtitle="account.balance.toFixed(2)"
+      />
     </portal>
 
     <novo-form-field :title="$t('mining.number_of_threads')">

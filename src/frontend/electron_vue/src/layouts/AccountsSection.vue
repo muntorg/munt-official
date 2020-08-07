@@ -35,7 +35,7 @@
               :to="{ name: 'account', params: { id: account.UUID } }"
             >
               <span class="ellipsis">{{ account.label }}</span>
-              <span class="balance">{{ account.balance }}</span>
+              <span class="balance">{{ account.balance.toFixed(2) }}</span>
             </router-link>
           </div>
         </div>

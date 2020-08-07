@@ -5,7 +5,7 @@
         <main-header
           class="info"
           :title="account.label"
-          :subtitle="account.balance"
+          :subtitle="account.balance.toFixed(2)"
         />
         <div class="settings flex-col" v-if="false /* not implemented yet */">
           <span>
