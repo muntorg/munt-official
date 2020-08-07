@@ -131,6 +131,12 @@ std::string CWallet::GetWalletHelpString(bool showDebug)
     return strUsage;
 }
 
+//Assign the bare minimum keys here, let the rest take place in the background thread
+void PerformInitialMinimalKeyAllocation(CWallet* walletInstance)
+{
+    walletInstance->TopUpKeyPool(1);
+}
+
 void CWallet::CreateSeedAndAccountFromLink(CWallet *walletInstance)
 {
     walletInstance->nTimeFirstKey = AppLifecycleManager::gApp->getLinkedBirthTime();
@@ -158,8 +164,8 @@ void CWallet::CreateSeedAndAccountFromLink(CWallet *walletInstance)
         walletdb.WritePrimaryAccount(walletInstance->activeAccount);
     }
 
-    //Assign the bare minimum keys here, let the rest take place in the background thread
-    walletInstance->TopUpKeyPool(1);
+    // Assign initial keys to the wallet
+    PerformInitialMinimalKeyAllocation(walletInstance);
 
     //SPV special case - we need to allocate all the addresses now already for better filtering.
     if (GetBoolArg("-spv", DEFAULT_SPV))
@@ -300,8 +306,8 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 walletdb.WritePrimaryAccount(walletInstance->activeAccount);
             }
 
-            //Assign the bare minimum keys here, let the rest take place in the background thread
-            walletInstance->TopUpKeyPool(1);
+            // Assign initial keys to the wallet
+            PerformInitialMinimalKeyAllocation(walletInstance);
         }
 
         pactiveWallet = walletInstance;
@@ -777,8 +783,8 @@ void CWallet::CreateSeedAndAccountFromPhrase(CWallet* walletInstance)
 
     AppLifecycleManager::gApp->SecureWipeRecoveryDetails();
 
-    //Assign the bare minimum keys here, let the rest take place in the background thread
-    walletInstance->TopUpKeyPool(1);
+    // Assign initial keys to the wallet
+    PerformInitialMinimalKeyAllocation(walletInstance);
 
     //SPV special case - we need to allocate all the addresses now already for better filtering.
     if (GetBoolArg("-spv", DEFAULT_SPV))
