@@ -46,6 +46,7 @@ export default new Vuex.Store({
       state.balance = payload.balance;
     },
     SET_CORE_READY(state, payload) {
+      console.log(`< SET_CORE_READY: ${payload.coreReady}`);
       state.coreReady = payload.coreReady;
     },
     SET_GENERATION_ACTIVE(state, payload) {
@@ -62,6 +63,7 @@ export default new Vuex.Store({
     },
     SET_STATUS(state, status) {
       if (state.status === AppStatus.shutdown) return; // shutdown in progress, do not switch to other status
+      console.log(`< SET_STATUS: ${status}`);
       state.status = status;
     },
     SET_UNITY_VERSION(state, payload) {

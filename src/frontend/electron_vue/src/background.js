@@ -72,6 +72,7 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 function createMainWindow() {
+  console.log("createMainWindow");
   let options = {
     width: 800,
     minWidth: 800,
@@ -138,6 +139,7 @@ function createMainWindow() {
   }
 
   winMain.on("ready-to-show", () => {
+    console.log("ready-to-show main window");
     winMain.show();
   });
 
