@@ -82,11 +82,15 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  console.log(`route to ${to.name}`);
   switch (to.name) {
     case "account":
       if (to.params.id !== undefined) {
+        console.log(`account: ${to.params.id}`);
         // set active account to specified id
         AccountsController.SetActiveAccount(to.params.id);
+      } else {
+        console.log("account: undefined");
       }
       break;
   }

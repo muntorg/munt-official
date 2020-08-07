@@ -94,6 +94,7 @@ export default new Vuex.Store({
       commit(payload);
     },
     SET_ACTIVE_ACCOUNT({ commit }, payload) {
+      console.log("SET_ACTIVE_ACCOUNT");
       // clear mutations and receive address
       commit("SET_MUTATIONS", { mutations: null });
       commit("SET_RECEIVE_ADDRESS", { receiveAddress: "" });
@@ -103,6 +104,7 @@ export default new Vuex.Store({
       commit(payload);
     },
     SET_CORE_READY({ commit }, payload) {
+      console.log(`SET_CORE_READY: ${payload.coreReady}`);
       commit("SET_STATUS", AppStatus.ready); // set status to ready. maybe core_ready is redundant and can be removed.
       commit(payload);
 

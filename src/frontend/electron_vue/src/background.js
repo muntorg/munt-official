@@ -25,6 +25,10 @@ import store, { AppStatus } from "./store";
 
 // on vuex-connect send the current state to the renderer
 ipc.on("vuex-connect", event => {
+  console.log("vuex-connect");
+  console.log(
+    `coreReady: ${store.state.coreReady} status: ${store.state.status}`
+  );
   event.sender.send("vuex-connected", store.state);
 });
 

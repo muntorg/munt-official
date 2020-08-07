@@ -64,6 +64,8 @@ class LibUnity {
   }
 
   _initializeWalletController() {
+    console.log("_initializeWalletController");
+
     this.walletListener.notifyBalanceChange = function(new_balance) {
       console.log(`walletListener.notifyBalanceChange`);
       store.dispatch({
@@ -88,6 +90,7 @@ class LibUnity {
   }
 
   _updateAccounts() {
+    console.log("_updateAccounts");
     let accounts = this.accountsController.listAccounts();
     let accountBalances = this.accountsController.getAllAccountBalances();
 
@@ -105,6 +108,8 @@ class LibUnity {
   }
 
   _initializeAccountsController() {
+    console.log("_initializeAccountsController");
+
     let self = this;
     let libraryController = this.libraryController;
 
@@ -141,6 +146,8 @@ class LibUnity {
   }
 
   _initializeGenerationController() {
+    console.log("_initializeGenerationController");
+
     this.generationListener.onGenerationStarted = function() {
       console.log("GENERATION STARTED");
       store.dispatch({
@@ -212,10 +219,12 @@ class LibUnity {
   }
 
   _coreReady() {
+    console.log("_coreReady");
     this._initializeWalletController();
     this._initializeAccountsController();
     this._initializeGenerationController();
 
+    console.log("dispatch SET_WALLET_BALANCE");
     store.dispatch({
       type: "SET_WALLET_BALANCE",
       walletBalance: this.walletController.GetBalance()
@@ -223,21 +232,25 @@ class LibUnity {
 
     this._updateAccounts();
 
+    console.log("dispatch SET_ACTIVE_ACCOUNT");
     store.dispatch({
       type: "SET_ACTIVE_ACCOUNT",
       accountUUID: this.accountsController.getActiveAccount()
     });
 
+    console.log("dispatch SET_RECEIVE_ADDRESS");
     store.dispatch({
       type: "SET_RECEIVE_ADDRESS",
       receiveAddress: this.libraryController.GetReceiveAddress()
     });
 
+    console.log("dispatch SET_MUTATIONS");
     store.dispatch({
       type: "SET_MUTATIONS",
       mutations: this.libraryController.getMutationHistory()
     });
 
+    console.log("dispatch SET_CORE_READY");
     store.dispatch({ type: "SET_CORE_READY", coreReady: true });
   }
 
