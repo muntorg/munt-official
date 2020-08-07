@@ -4,6 +4,42 @@
 #include "NJSIRpcListener.hpp"
 using namespace std;
 
+void NJSIRpcListener::onFilteredCommand_aimpl__(const std::string & filteredCommand)
+{
+    const auto& env = Env();
+    Napi::HandleScope scope(env);
+    //Wrap parameters
+    std::vector<napi_value> args;
+    auto arg_0 = Napi::String::New(env, filteredCommand);
+    args.push_back(arg_0);
+    Napi::Value calling_function_as_value = Value().Get("onFilteredCommand");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
+    {
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_onFilteredCommand = calling_function.Call(args);
+        if(result_onFilteredCommand.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSIRpcListener::onFilteredCommand call failed").ThrowAsJavaScriptException();
+            return;
+        }
+    }
+}
+
+void NJSIRpcListener::onFilteredCommand(const std::string & filteredCommand)
+{
+    uv_work_t* request = new uv_work_t;
+    request->data = new std::tuple<NJSIRpcListener*, std::string>(this, filteredCommand);
+
+    uv_queue_work(uv_default_loop(), request, [](uv_work_t*) -> void{}, [](uv_work_t* req, int status) -> void
+    {
+        NJSIRpcListener* pthis = std::get<0>(*((std::tuple<NJSIRpcListener*, std::string>*)req->data));
+        pthis->onFilteredCommand_aimpl__(std::get<1>(*((std::tuple<NJSIRpcListener*, std::string>*)req->data)));
+        delete (std::tuple<NJSIRpcListener*, std::string>*)req->data;
+        req->data = nullptr;
+    }
+    );
+}
+
 void NJSIRpcListener::onSuccess_aimpl__(const std::string & filteredCommand, const std::string & result)
 {
     const auto& env = Env();

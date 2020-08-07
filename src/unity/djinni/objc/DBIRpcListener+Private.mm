@@ -18,6 +18,12 @@ class IRpcListener::ObjcProxy final
     friend class ::djinni_generated::IRpcListener;
 public:
     using ObjcProxyBase::ObjcProxyBase;
+    void onFilteredCommand(const std::string & c_filteredCommand) override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() onFilteredCommand:(::djinni::String::fromCpp(c_filteredCommand))];
+        }
+    }
     void onSuccess(const std::string & c_filteredCommand, const std::string & c_result) override
     {
         @autoreleasepool {

@@ -11,6 +11,12 @@
 @protocol DBIRpcListener
 
 /**
+ * Returns a filtered version of the command with sensitive information like passwords removed
+ * Any kind of 'command history' functionality should store this filtered command and not the original command
+ */
+- (void)onFilteredCommand:(nonnull NSString *)filteredCommand;
+
+/**
  * Returns the result and a filtered version of the command with sensitive information like passwords removed
  * Any kind of 'command history' functionality should store this filtered command and not the original command
  */

@@ -33,6 +33,7 @@ private:
         JavaProxy(JniType j);
         ~JavaProxy();
 
+        void onFilteredCommand(const std::string & filteredCommand) override;
         void onSuccess(const std::string & filteredCommand, const std::string & result) override;
         void onError(const std::string & errorMessage) override;
 
@@ -41,6 +42,7 @@ private:
     };
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/novo/jniunifiedbackend/IRpcListener") };
+    const jmethodID method_onFilteredCommand { ::djinni::jniGetMethodID(clazz.get(), "onFilteredCommand", "(Ljava/lang/String;)V") };
     const jmethodID method_onSuccess { ::djinni::jniGetMethodID(clazz.get(), "onSuccess", "(Ljava/lang/String;Ljava/lang/String;)V") };
     const jmethodID method_onError { ::djinni::jniGetMethodID(clazz.get(), "onError", "(Ljava/lang/String;)V") };
 };

@@ -14,6 +14,14 @@ NativeIRpcListener::JavaProxy::JavaProxy(JniType j) : Handle(::djinni::jniGetThr
 
 NativeIRpcListener::JavaProxy::~JavaProxy() = default;
 
+void NativeIRpcListener::JavaProxy::onFilteredCommand(const std::string & c_filteredCommand) {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeIRpcListener>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_onFilteredCommand,
+                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c_filteredCommand)));
+    ::djinni::jniExceptionCheck(jniEnv);
+}
 void NativeIRpcListener::JavaProxy::onSuccess(const std::string & c_filteredCommand, const std::string & c_result) {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);

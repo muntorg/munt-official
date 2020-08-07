@@ -22,8 +22,10 @@
 #include <rpc/client.h>
 
 #include "rpccontroller.h"
+#include <boost/algorithm/string/case_conv.hpp>
+#include <set>
 
-void RPCController::executeCommandLine(const std::string& sCommandLine, const std::function<void(const std::string&)>& errorHandler, const std::function<void(const std::string&, const std::string&)>& successHandler)
+void RPCController::executeCommandLine(const std::string& sCommandLine, const std::function<void(const std::string&)>& errorHandler, const std::function<void(const std::string&)>& filteredCommandHandler, const std::function<void(const std::string&, const std::string&)>& successHandler)
 {
     if(!sCommandLine.empty())
     {
@@ -43,6 +45,7 @@ void RPCController::executeCommandLine(const std::string& sCommandLine, const st
             errorHandler(strprintf("Error: %s", e.what()));
             return;
         }
+        filteredCommandHandler(strFilteredCmd);
 
         std::string result;
         try
@@ -91,6 +94,18 @@ std::vector<std::string> RPCController::getAutocompleteList()
     return wordList;
 }
 
+//fixme: (NOVO) - improve this list, e.g. command to import witness keys
+// don't add private key handling cmd's to the history
+const std::set<std::string> historyFilter = {
+    "importprivkey",
+    "importmulti",
+    "signmessagewithprivkey",
+    "signrawtransaction",
+    "walletpassphrase",
+    "walletpassphrasechange",
+    "encryptwallet"
+};
+
 bool RPCController::parseCommandLine(std::string& strResult, const std::string& strCommand, const bool fExecute, std::string* const pstrFilteredOut)
 {
     std::vector< std::vector<std::string> > stack;
@@ -117,7 +132,9 @@ bool RPCController::parseCommandLine(std::string& strResult, const std::string& 
 
     auto add_to_current_stack = [&](const std::string& strArg)
     {
-        if (!stack.empty() && stack.back().empty() && (!nDepthInsideSensitive))
+        std::string argLower = strArg;
+        boost::to_lower(argLower);
+        if (!stack.empty() && stack.back().empty() && (!nDepthInsideSensitive) && historyFilter.find(argLower) != historyFilter.end())
         {
             nDepthInsideSensitive = 1;
             filter_begin_pos = chpos;

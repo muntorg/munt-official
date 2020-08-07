@@ -356,6 +356,9 @@ i_rpc_controller = interface +c {
 # Interface to handle result of RPC commands
 # Calls either onSuccess or onError depending on whether command suceedes or fails
 i_rpc_listener = interface +j +o +n {
+    # Returns a filtered version of the command with sensitive information like passwords removed
+    # Any kind of 'command history' functionality should store this filtered command and not the original command
+    onFilteredCommand(filteredCommand : string) : &;
     # Returns the result and a filtered version of the command with sensitive information like passwords removed
     # Any kind of 'command history' functionality should store this filtered command and not the original command
     onSuccess(filteredCommand : string, result : string) : &;
