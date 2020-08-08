@@ -21,7 +21,9 @@ export default new Vuex.Store({
     balance: null,
     coreReady: false,
     generationActive: false,
+    generationMemorySize: null,
     generationStats: null,
+    generationThreadCount: null,
     mutations: null,
     receiveAddress: null,
     status: AppStatus.start,
@@ -48,8 +50,14 @@ export default new Vuex.Store({
     SET_GENERATION_ACTIVE(state, payload) {
       state.generationActive = payload.generationActive;
     },
+    SET_GENERATION_MEMORY_SIZE(state, payload) {
+      state.generationMemorySize = payload.generationMemorySize;
+    },
     SET_GENERATION_STATS(state, payload) {
       state.generationStats = payload.generationStats;
+    },
+    SET_GENERATION_THREAD_COUNT(state, payload) {
+      state.generationThreadCount = payload.generationThreadCount;
     },
     SET_MUTATIONS(state, payload) {
       state.mutations = payload.mutations;
@@ -119,7 +127,13 @@ export default new Vuex.Store({
     SET_GENERATION_ACTIVE({ commit }, payload) {
       commit(payload);
     },
+    SET_GENERATION_MEMORY_SIZE({ commit }, payload) {
+      commit(payload);
+    },
     SET_GENERATION_STATS({ commit }, payload) {
+      commit(payload);
+    },
+    SET_GENERATION_THREAD_COUNT({ commit }, payload) {
       commit(payload);
     },
     SET_MUTATIONS({ commit }, payload) {

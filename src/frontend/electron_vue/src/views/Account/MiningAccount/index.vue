@@ -101,15 +101,21 @@ export default {
   created() {
     this.availableCores = GenerationController.GetAvailableCores();
     this.miningThreadCount =
-      this.availableCores < 4 ? 1 : this.availableCores - 2;
+      this.generationThreadCount ||
+      (this.availableCores < 4 ? 1 : this.availableCores - 2);
     this.minimumMemory = 1; // for now just use 1 Gb as a minimum
     this.maximumMemory = Math.floor(
       GenerationController.GetMaximumMemory() / 1024
     );
-    this.miningMemorySize = this.maximumMemory;
+    this.miningMemorySize = this.generationMemorySize || this.maximumMemory;
   },
   computed: {
-    ...mapState(["generationActive", "generationStats"]),
+    ...mapState([
+      "generationActive",
+      "generationStats",
+      "generationMemorySize",
+      "generationThreadCount"
+    ]),
     hashesPerSecond() {
       return this.generationStats
         ? `${this.generationStats.hashesPerSecond}/s`
@@ -134,6 +140,18 @@ export default {
   watch: {
     generationActive() {
       this.buttonDisabled = false;
+    },
+    miningMemorySize() {
+      this.$store.dispatch({
+        type: "SET_GENERATION_MEMORY_SIZE",
+        generationMemorySize: this.miningMemorySize
+      });
+    },
+    miningThreadCount() {
+      this.$store.dispatch({
+        type: "SET_GENERATION_THREAD_COUNT",
+        generationThreadCount: this.miningThreadCount
+      });
     }
   },
   methods: {
