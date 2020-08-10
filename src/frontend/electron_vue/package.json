@@ -24,6 +24,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.10",
     "core-js": "^3.6.5",
     "electron-context-menu": "^2.0.1",
+    "electron-store": "^6.0.0",
     "lodash.clonedeep": "^4.5.0",
     "portal-vue": "^2.1.7",
     "qrcode": "^1.4.4",
@@ -34,7 +35,7 @@
     "vue-router": "^3.2.0",
     "vue-slider-component": "^3.2.2",
     "vuex": "^3.4.0",
-    "vuex-electron": "^1.0.3"
+    "vuex-electron": "devlz303/vuex-electron"
   },
   "devDependencies": {
     "@oshell/vue-cli-plugin-electron-builder-notarize": "^1.0.2",
