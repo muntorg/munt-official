@@ -37,7 +37,7 @@ const wallet = {
       let accounts = [...state.accounts];
       let account = accounts.find(x => x.UUID === payload.accountUUID);
       account.label = payload.newAccountName;
-      commit({ type: "SET_ACCOUNTS", accounts: accounts });
+      commit("SET_ACCOUNTS", accounts);
     },
     SET_ACCOUNTS({ commit }, accounts) {
       commit("SET_ACCOUNTS", accounts);
