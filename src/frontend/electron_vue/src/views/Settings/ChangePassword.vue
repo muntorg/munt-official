@@ -67,7 +67,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["walletPassword"]),
+    ...mapState("wallet", ["walletPassword"]),
     passwordOldStatus() {
       return this.isPasswordInvalid ? "error" : "";
     },
@@ -110,10 +110,10 @@ export default {
             LibraryController.ChangePassword(this.passwordold, this.password2)
           ) {
             if (this.walletPassword) {
-              this.$store.dispatch({
-                type: "SET_WALLET_PASSWORD",
-                walletPassword: this.password2
-              });
+              this.$store.dispatch(
+                "wallet/SET_WALLET_PASSWORD",
+                this.password2
+              );
             }
             this.$router.push({ name: "account" });
           }

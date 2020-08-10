@@ -76,8 +76,8 @@ export default {
     AccountsSection
   },
   computed: {
-    ...mapState(["activeAccount", "walletPassword"]),
-    ...mapGetters(["totalBalance", "miningAccount"]),
+    ...mapState("wallet", ["activeAccount", "walletPassword"]),
+    ...mapGetters("wallet", ["totalBalance", "miningAccount"]),
     walletLayoutClasses() {
       let classes = [];
       if (this.isHeaderSlotEmpty) classes.push("no-header");
@@ -117,10 +117,7 @@ export default {
     },
     changeLockSettings() {
       if (this.walletPassword) {
-        this.$store.dispatch({
-          type: "SET_WALLET_PASSWORD",
-          walletPassword: null
-        });
+        this.$store.dispatch("wallet/SET_WALLET_PASSWORD", null);
       } else {
         EventBus.$emit("show-dialog", {
           title: this.$t("password_dialog.unlock_wallet"),

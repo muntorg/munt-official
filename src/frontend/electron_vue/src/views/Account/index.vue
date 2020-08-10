@@ -25,7 +25,7 @@ export default {
     MiningAccount
   },
   computed: {
-    ...mapGetters(["account"])
+    ...mapGetters("wallet", ["account"])
   },
   watch: {
     account() {

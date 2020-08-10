@@ -6,7 +6,8 @@ export default store => {
     // replace the renderer state by the main state
     ipcRenderer.on("vuex-connected", (event, state) => {
       console.log("vuex-connected");
-      store.replaceState(cloneDeep(state));
+      let newState = cloneDeep(state);
+      store.replaceState(newState);
     });
     // send vuex-connect message to receive the main state
     ipcRenderer.send("vuex-connect");
@@ -14,9 +15,6 @@ export default store => {
     // on vuex-connect send the current state to the renderer
     ipcMain.on("vuex-connect", event => {
       console.log("vuex-connect");
-      console.log(
-        `coreReady: ${store.state.coreReady} status: ${store.state.status}`
-      );
       event.sender.send("vuex-connected", store.state);
     });
   }

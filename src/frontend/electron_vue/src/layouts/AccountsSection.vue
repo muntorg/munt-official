@@ -59,8 +59,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["activeAccount"]),
-    ...mapGetters(["accounts"]),
+    ...mapState("wallet", ["activeAccount"]),
+    ...mapGetters("wallet", ["accounts"]),
     activeCategory() {
       if (this.activeAccount === null) return null;
       let account = this.accounts.find(x => x.UUID === this.activeAccount);

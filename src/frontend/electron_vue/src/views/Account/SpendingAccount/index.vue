@@ -82,7 +82,7 @@ export default {
     MutationList
   },
   computed: {
-    ...mapState(["mutations"]),
+    ...mapState("wallet", ["mutations"]),
     showSendButton() {
       return !this.rightSidebar || this.rightSidebar !== SendNovo;
     },

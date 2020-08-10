@@ -12,13 +12,14 @@
         <vue-slider
           :min="1"
           :max="availableCores"
-          :value="miningThreadCount"
-          v-model="miningThreadCount"
+          :value="currentThreadCount"
+          v-model="currentThreadCount"
           class="slider"
-          :disabled="generationActive"
+          :disabled="isActive"
         />
         <div class="slider-info">
-          {{ miningThreadCount }} {{ $tc("mining.thread", miningThreadCount) }}
+          {{ currentThreadCount }}
+          {{ $tc("mining.thread", currentThreadCount) }}
         </div>
       </div>
     </novo-form-field>
@@ -28,19 +29,19 @@
         <vue-slider
           :min="minimumMemory"
           :max="maximumMemory"
-          :value="miningMemorySize"
-          v-model="miningMemorySize"
+          :value="currentMemorySize"
+          v-model="currentMemorySize"
           class="slider"
-          :disabled="generationActive"
+          :disabled="isActive"
         />
-        <div class="slider-info">{{ miningMemorySize }} Gb</div>
+        <div class="slider-info">{{ currentMemorySize }} Gb</div>
       </div>
     </novo-form-field>
 
     <novo-form-field
       class="mining-statistics"
       :title="$t('mining.statistics')"
-      v-if="generationActive"
+      v-if="isActive"
     >
       <div class="flex-row">
         <div>{{ $t("mining.last_reported_speed") }}</div>
@@ -71,7 +72,7 @@
     <portal to="footer-slot">
       <novo-button-section>
         <button @click="toggleGeneration" :disabled="buttonDisabled">
-          <span v-if="generationActive">{{ $t("buttons.stop") }}</span>
+          <span v-if="isActive">{{ $t("buttons.stop") }}</span>
           <span v-else>{{ $t("buttons.start") }}</span>
         </button>
       </novo-button-section>
@@ -90,8 +91,8 @@ export default {
   },
   data() {
     return {
-      miningMemorySize: 2,
-      miningThreadCount: 4,
+      currentMemorySize: 2,
+      currentThreadCount: 4,
       availableCores: 0,
       minimumMemory: 0,
       maximumMemory: 0,
@@ -100,69 +101,54 @@ export default {
   },
   created() {
     this.availableCores = GenerationController.GetAvailableCores();
-    this.miningThreadCount =
-      this.generationThreadCount ||
+    this.currentThreadCount =
+      this.settings.threadCount ||
       (this.availableCores < 4 ? 1 : this.availableCores - 2);
     this.minimumMemory = 1; // for now just use 1 Gb as a minimum
     this.maximumMemory = Math.floor(
       GenerationController.GetMaximumMemory() / 1024
     );
-    this.miningMemorySize = this.generationMemorySize || this.maximumMemory;
+    this.currentMemorySize = this.settings.memorySize || this.maximumMemory;
   },
   computed: {
-    ...mapState([
-      "generationActive",
-      "generationStats",
-      "generationMemorySize",
-      "generationThreadCount"
-    ]),
+    ...mapState("mining", {
+      isActive: "active",
+      stats: "stats",
+      settings: "settings"
+    }),
     hashesPerSecond() {
-      return this.generationStats
-        ? `${this.generationStats.hashesPerSecond}/s`
-        : null;
+      return this.stats ? `${this.stats.hashesPerSecond}/s` : null;
     },
     rollingHashesPerSecond() {
-      return this.generationStats
-        ? `${this.generationStats.rollingHashesPerSecond}/s`
-        : null;
+      return this.stats ? `${this.stats.rollingHashesPerSecond}/s` : null;
     },
     bestHashesPerSecond() {
-      return this.generationStats
-        ? `${this.generationStats.bestHashesPerSecond}/s`
-        : null;
+      return this.stats ? `${this.stats.bestHashesPerSecond}/s` : null;
     },
     arenaSetupTime() {
-      return this.generationStats
-        ? `${this.generationStats.arenaSetupTime}s`
-        : null;
+      return this.stats ? `${this.stats.arenaSetupTime}s` : null;
     }
   },
   watch: {
-    generationActive() {
+    isActive() {
       this.buttonDisabled = false;
     },
-    miningMemorySize() {
-      this.$store.dispatch({
-        type: "SET_GENERATION_MEMORY_SIZE",
-        generationMemorySize: this.miningMemorySize
-      });
+    currentMemorySize() {
+      this.$store.dispatch("mining/SET_MEMORY_SIZE", this.currentMemorySize);
     },
-    miningThreadCount() {
-      this.$store.dispatch({
-        type: "SET_GENERATION_THREAD_COUNT",
-        generationThreadCount: this.miningThreadCount
-      });
+    currentThreadCount() {
+      this.$store.dispatch("mining/SET_THREAD_COUNT", this.currentThreadCount);
     }
   },
   methods: {
     toggleGeneration() {
       this.buttonDisabled = true;
-      if (this.generationActive) {
+      if (this.isActive) {
         GenerationController.StopGeneration();
       } else {
         let result = GenerationController.StartGeneration(
-          this.miningThreadCount,
-          this.miningMemorySize + "G"
+          this.currentThreadCount,
+          this.currentMemorySize + "G"
         );
         if (result === false) {
           // todo: starting failed, notify user

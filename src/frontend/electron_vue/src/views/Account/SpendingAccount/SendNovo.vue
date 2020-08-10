@@ -66,7 +66,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["walletPassword"]),
+    ...mapState("wallet", ["walletPassword"]),
     computedPassword() {
       return this.walletPassword ? this.walletPassword : this.password || "";
     },

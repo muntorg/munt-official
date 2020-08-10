@@ -47,8 +47,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["walletPassword"]),
-    ...mapGetters(["miningAccount"]),
+    ...mapState("wallet", ["walletPassword"]),
+    ...mapGetters("wallet", ["miningAccount"]),
     computedStatus() {
       return this.isPasswordInvalid ? "error" : "";
     },

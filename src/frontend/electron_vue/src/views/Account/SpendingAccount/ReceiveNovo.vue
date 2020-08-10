@@ -33,7 +33,7 @@ export default {
     VueQrcode
   },
   computed: {
-    ...mapState(["receiveAddress"])
+    ...mapState("wallet", ["receiveAddress"])
   },
   methods: {
     buyOrReceiveNovo() {

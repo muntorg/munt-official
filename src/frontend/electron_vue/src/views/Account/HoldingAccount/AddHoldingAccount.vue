@@ -144,8 +144,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["walletPassword"]),
-    ...mapGetters(["accounts"]),
+    ...mapState("wallet", ["walletPassword"]),
+    ...mapGetters("wallet", ["accounts"]),
     computedPassword() {
       return this.walletPassword ? this.walletPassword : this.password || "";
     },

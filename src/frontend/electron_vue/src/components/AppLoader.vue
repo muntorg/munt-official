@@ -24,7 +24,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { AppStatus } from "../store";
+import AppStatus from "../AppStatus";
 
 export default {
   name: "AppLoader",
@@ -35,7 +35,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["status", "unityVersion", "walletVersion"]),
+    ...mapState("app", ["status", "unityVersion", "walletVersion"]),
     showLoader() {
       return (
         this.splashReady === false ||

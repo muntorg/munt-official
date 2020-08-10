@@ -56,10 +56,7 @@ export default {
     validatePassword() {
       if (LibraryController.UnlockWallet(this.password)) {
         LibraryController.LockWallet();
-        this.$store.dispatch({
-          type: "SET_WALLET_PASSWORD",
-          walletPassword: this.password
-        });
+        this.$store.dispatch("wallet/SET_WALLET_PASSWORD", this.password);
         EventBus.$emit("close-dialog");
       } else {
         this.isPasswordInvalid = true;

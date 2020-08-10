@@ -14,23 +14,15 @@ import path from "path";
 import fs from "fs";
 
 import LibUnity from "./unity/LibUnity";
-import store, { AppStatus } from "./store";
+import walletPath from "./walletPath";
+
+import store from "./store";
+import AppStatus from "./AppStatus";
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let winMain;
 let winDebug;
-let walletPath;
-if (os.platform() === "linux") {
-  walletPath = path.join(
-    app.getPath("home"),
-    isDevelopment ? ".novo_dev" : ".novo"
-  );
-} else {
-  walletPath = app.getPath("userData");
-  if (isDevelopment) walletPath = walletPath + "_dev";
-}
-
 let libUnity = new LibUnity({ walletPath });
 
 /* TODO: refactor into function and add option to libgulden to remove existing wallet folder */
@@ -210,7 +202,7 @@ function createDebugWindow() {
 app.on("will-quit", event => {
   console.log("app.on:will-quit");
   if (libUnity === null || libUnity.isTerminated) return;
-  store.dispatch({ type: "SET_STATUS", status: AppStatus.shutdown });
+  store.dispatch("app/SET_STATUS", AppStatus.shutdown);
   event.preventDefault();
   libUnity.TerminateUnityLib();
 });
@@ -251,7 +243,7 @@ app.on("ready", async () => {
     // }
   }
 
-  store.dispatch({ type: "SET_WALLET_VERSION", version: app.getVersion() });
+  store.dispatch("app/SET_WALLET_VERSION", app.getVersion());
   libUnity.Initialize();
 
   createMainWindow();
@@ -259,7 +251,7 @@ app.on("ready", async () => {
 
 function EnsureUnityLibTerminated(event) {
   if (libUnity === null || libUnity.isTerminated) return;
-  store.dispatch({ type: "SET_STATUS", status: AppStatus.shutdown });
+  store.dispatch("app/SET_STATUS", AppStatus.shutdown);
   event.preventDefault();
   libUnity.TerminateUnityLib();
 }

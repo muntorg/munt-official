@@ -59,7 +59,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["walletPassword"]),
+    ...mapState("wallet", ["walletPassword"]),
     current() {
       return this.recoveryPhrase ? 2 : 1;
     },

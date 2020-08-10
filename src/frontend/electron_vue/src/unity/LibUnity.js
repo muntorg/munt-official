@@ -40,10 +40,10 @@ class LibUnity {
 
     let buildInfo = this.libraryController.BuildInfo();
 
-    store.dispatch({
-      type: "SET_UNITY_VERSION",
-      version: buildInfo.substr(1, buildInfo.indexOf("-") - 1)
-    });
+    store.dispatch(
+      "app/SET_UNITY_VERSION",
+      buildInfo.substr(1, buildInfo.indexOf("-") - 1)
+    );
   }
 
   SetMainWindowReady() {
@@ -76,10 +76,7 @@ class LibUnity {
 
     this.walletListener.notifyBalanceChange = function(new_balance) {
       console.log(`walletListener.notifyBalanceChange`);
-      store.dispatch({
-        type: "SET_WALLET_BALANCE",
-        walletBalance: new_balance
-      });
+      store.dispatch("wallet/SET_WALLET_BALANCE", new_balance);
     };
 
     this.walletListener.notifyNewMutation = function(
@@ -108,10 +105,7 @@ class LibUnity {
         100000000;
     });
 
-    store.dispatch({
-      type: "SET_ACCOUNTS",
-      accounts: accounts
-    });
+    store.dispatch("wallet/SET_ACCOUNTS", accounts);
   }
 
   _initializeAccountsController() {
@@ -124,21 +118,24 @@ class LibUnity {
       accountUUID,
       newAccountName
     ) {
-      store.dispatch({ type: "SET_ACCOUNT_NAME", accountUUID, newAccountName });
+      store.dispatch("wallet/SET_ACCOUNT_NAME", {
+        accountUUID,
+        newAccountName
+      });
     };
 
     this.accountsListener.onActiveAccountChanged = function(accountUUID) {
-      store.dispatch({ type: "SET_ACTIVE_ACCOUNT", accountUUID });
+      store.dispatch("wallet/SET_ACTIVE_ACCOUNT", accountUUID);
 
-      store.dispatch({
-        type: "SET_MUTATIONS",
-        mutations: libraryController.getMutationHistory()
-      });
+      store.dispatch(
+        "wallet/SET_MUTATIONS",
+        libraryController.getMutationHistory()
+      );
 
-      store.dispatch({
-        type: "SET_RECEIVE_ADDRESS",
-        receiveAddress: libraryController.GetReceiveAddress()
-      });
+      store.dispatch(
+        "wallet/SET_RECEIVE_ADDRESS",
+        libraryController.GetReceiveAddress()
+      );
     };
 
     this.accountsListener.onAccountAdded = function() {
@@ -157,22 +154,14 @@ class LibUnity {
 
     this.generationListener.onGenerationStarted = function() {
       console.log("GENERATION STARTED");
-      store.dispatch({
-        type: "SET_GENERATION_ACTIVE",
-        generationActive: true
-      });
+      store.dispatch("mining/SET_ACTIVE", true);
     };
 
     this.generationListener.onGenerationStopped = function() {
       console.log("GENERATION STOPPED");
-      store.dispatch({
-        type: "SET_GENERATION_ACTIVE",
-        generationActive: false
-      });
-      store.dispatch({
-        type: "SET_GENERATION_STATS",
-        generationStats: null
-      });
+
+      store.dispatch("mining/SET_ACTIVE", false);
+      store.dispatch("mining/SET_STATS", null);
     };
 
     this.generationListener.onStatsUpdated = function(
@@ -184,20 +173,15 @@ class LibUnity {
       bestHashesPerSecondUnit,
       arenaSetupTime
     ) {
-      store.dispatch({
-        type: "SET_GENERATION_STATS",
-        generationStats: {
-          hashesPerSecond: `${hashesPerSecond.toFixed(
-            2
-          )}${hashesPerSecondUnit}`,
-          rollingHashesPerSecond: `${rollingHashesPerSecond.toFixed(
-            2
-          )}${rollingHashesPerSecondUnit}`,
-          bestHashesPerSecond: `${bestHashesPerSecond.toFixed(
-            2
-          )}${bestHashesPerSecondUnit}`,
-          arenaSetupTime: arenaSetupTime
-        }
+      store.dispatch("mining/SET_STATS", {
+        hashesPerSecond: `${hashesPerSecond.toFixed(2)}${hashesPerSecondUnit}`,
+        rollingHashesPerSecond: `${rollingHashesPerSecond.toFixed(
+          2
+        )}${rollingHashesPerSecondUnit}`,
+        bestHashesPerSecond: `${bestHashesPerSecond.toFixed(
+          2
+        )}${bestHashesPerSecondUnit}`,
+        arenaSetupTime: arenaSetupTime
       });
     };
 
@@ -229,32 +213,29 @@ class LibUnity {
     if (!this.isCoreReady || !this.isMainWindowReady) return;
     console.log("_setStateWhenCoreAndMainWindowReady");
 
-    store.dispatch({
-      type: "SET_WALLET_BALANCE",
-      walletBalance: this.walletController.GetBalance()
-    });
+    store.dispatch(
+      "wallet/SET_WALLET_BALANCE",
+      this.walletController.GetBalance()
+    );
 
     this._updateAccounts();
 
-    store.dispatch({
-      type: "SET_ACTIVE_ACCOUNT",
-      accountUUID: this.accountsController.getActiveAccount()
-    });
+    store.dispatch(
+      "wallet/SET_ACTIVE_ACCOUNT",
+      this.accountsController.getActiveAccount()
+    );
 
-    store.dispatch({
-      type: "SET_RECEIVE_ADDRESS",
-      receiveAddress: this.libraryController.GetReceiveAddress()
-    });
+    store.dispatch(
+      "wallet/SET_RECEIVE_ADDRESS",
+      this.libraryController.GetReceiveAddress()
+    );
 
-    store.dispatch({
-      type: "SET_MUTATIONS",
-      mutations: this.libraryController.getMutationHistory()
-    });
+    store.dispatch(
+      "wallet/SET_MUTATIONS",
+      this.libraryController.getMutationHistory()
+    );
 
-    store.dispatch({
-      type: "SET_CORE_READY",
-      coreReady: true
-    });
+    store.dispatch("app/SET_CORE_READY");
   }
 
   _registerSignalHandlers() {
@@ -284,41 +265,41 @@ class LibUnity {
 
     libraryListener.notifyBalanceChange = function(new_balance) {
       console.log("received: notifyBalanceChange");
-      store.dispatch({ type: "SET_BALANCE", balance: new_balance });
+      store.dispatch("wallet/SET_BALANCE", new_balance);
     };
 
     libraryListener.notifyNewMutation = function(/*mutation, self_committed*/) {
       console.log("received: notifyNewMutation");
 
-      store.dispatch({
-        type: "SET_MUTATIONS",
-        mutations: libraryController.getMutationHistory()
-      });
-      store.dispatch({
-        type: "SET_RECEIVE_ADDRESS",
-        receiveAddress: libraryController.GetReceiveAddress()
-      });
+      store.dispatch(
+        "wallet/SET_MUTATIONS",
+        libraryController.getMutationHistory()
+      );
+      store.dispatch(
+        "wallet/SET_RECEIVE_ADDRESS",
+        libraryController.GetReceiveAddress()
+      );
 
       self._updateAccounts();
     };
 
     libraryListener.notifyUpdatedTransaction = function(/*transaction*/) {
       console.log("received: notifyUpdatedTransaction");
-      store.dispatch({
-        type: "SET_MUTATIONS",
-        mutations: libraryController.getMutationHistory()
-      });
+      store.dispatch(
+        "wallet/SET_MUTATIONS",
+        libraryController.getMutationHistory()
+      );
     };
 
     libraryListener.notifyInitWithExistingWallet = function() {
       console.log("received: notifyInitWithExistingWallet");
-      store.dispatch({ type: "SET_WALLET_EXISTS", walletExists: true });
+      store.dispatch("app/SET_WALLET_EXISTS", true);
     };
 
     libraryListener.notifyInitWithoutExistingWallet = function() {
       console.log("received: notifyInitWithoutExistingWallet");
       self.newRecoveryPhrase = libraryController.GenerateRecoveryMnemonic();
-      store.dispatch({ type: "SET_WALLET_EXISTS", walletExists: false });
+      store.dispatch("app/SET_WALLET_EXISTS", false);
     };
 
     libraryListener.notifyShutdown = function() {
