@@ -45,7 +45,7 @@
       </div>
       <div class="flex-row">
         <div>Last block time</div>
-        <div>{{ clientInfo.chain_tip_time }}</div>
+        <div>{{ lastBlockTime }}</div>
       </div>
       <div class="flex-row">
         <div>Last block hash</div>
@@ -81,8 +81,10 @@ export default {
   name: "InformationPage",
   computed: {
     startupTime() {
-      let date = new Date(this.clientInfo.startup_timestamp * 1000);
-      return date;
+      return new Date(this.clientInfo.startup_timestamp * 1000);
+    },
+    lastBlockTime() {
+      return new Date(this.clientInfo.chain_tip_time * 1000);
     },
     numberOfConnections() {
       let connections_in = parseInt(this.clientInfo.num_connections_in);
