@@ -10,6 +10,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+#include "appname.h"
 #include "amount.h"
 #include "base58.h"
 #include "chain.h"
@@ -171,12 +172,12 @@ UniValue getnewaddress(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() > 1)
         throw std::runtime_error(
             "getnewaddress ( \"account\" )\n"
-            "\nReturns a new Gulden address for receiving payments.\n"
+            "\nReturns a new " GLOBAL_APPNAME " address for receiving payments.\n"
             "If 'account' is not specified the currently active account is used \n"
             "\nArguments:\n"
             "1. \"account\"        (string, optional) The unique account name or UUID for the address to be linked to. If not provided, the currently active account is used. Account must already exist.\n"
             "\nResult:\n"
-            "\"address\"    (string) The new Gulden address\n"
+            "\"address\"    (string) The new " GLOBAL_APPNAME " address\n"
             "\nExamples:\n"
             + HelpExampleCli("getnewaddress", "")
             + HelpExampleRpc("getnewaddress", "")
@@ -214,11 +215,11 @@ UniValue getaccountaddress(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() > 1)
         throw std::runtime_error(
             "getaccountaddress ( \"account\" )\n"
-            "\nReturns the current Gulden address for receiving payments to this account.\n"
+            "\nReturns the current " GLOBAL_APPNAME " address for receiving payments to this account.\n"
             "\nArguments:\n"
             "1. \"account\"       (string, optional) The unique account name or UUID for the address to retrieve. If not provided, the currently active account is used. Account must already exist.\n"
             "\nResult:\n"
-            "\"address\"          (string) The current Gulden address\n"
+            "\"address\"          (string) The current " GLOBAL_APPNAME " address\n"
             "\nExamples:\n"
             + HelpExampleCli("getaccountaddress", "")
             + HelpExampleCli("getaccountaddress", "\"myaccount\"")
@@ -254,7 +255,7 @@ UniValue getrawchangeaddress(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() > 1)
         throw std::runtime_error(
             "getrawchangeaddress\n"
-            "\nReturns a new Gulden address, for receiving change.\n"
+            "\nReturns a new " GLOBAL_APPNAME " address, for receiving change.\n"
             "1. \"account\"        (string, optional) The unique account name or UUID for the address to be linked to. If not provided, the currently active account is used. Account must already exist.\n"
             "This is for use with raw transactions, NOT normal use.\n"
             "\nResult:\n"
@@ -305,11 +306,11 @@ UniValue getaccount(const JSONRPCRequest& request)
             "getaccount \"address\"\n"
             "\nReturns the UUID and label of the account associated with the given address.\n"
             "\nArguments:\n"
-            "1. \"address\"         (string, required) The Gulden address for account lookup.\n"
+            "1. \"address\"         (string, required) The " GLOBAL_APPNAME " address for account lookup.\n"
             "\nResult:\n"
             "[                     (json array of string)\n"
-            "  \"accountUUID\"   (string) a Gulden address associated with the given account\n"
-            "  \"accountLabel\"  (string) a Gulden address associated with the given account\n"
+            "  \"accountUUID\"   (string) a " GLOBAL_APPNAME " address associated with the given account\n"
+            "  \"accountLabel\"  (string) a " GLOBAL_APPNAME " address associated with the given account\n"
             "]\n"
             "\nExamples:\n"
             + HelpExampleCli("getaccount", "\"GD1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\"")
@@ -320,7 +321,7 @@ UniValue getaccount(const JSONRPCRequest& request)
 
     CNativeAddress address(request.params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid " GLOBAL_APPNAME " address");
 
     UniValue jsonGroupings(UniValue::VARR);
 
@@ -357,7 +358,7 @@ UniValue getaddressesbyaccount(const JSONRPCRequest& request)
             "1. \"account\"  (string, required) The UUID or unique label of the account to move funds from. May be the currently active account using \"\"\n"
             "\nResult:\n"
             "[                     (json array of string)\n"
-            "  \"address\"         (string) a Gulden address associated with the given account\n"
+            "  \"address\"         (string) a " GLOBAL_APPNAME " address associated with the given account\n"
             "  ,...\n"
             "]\n"
             "\nExamples:\n"
@@ -475,7 +476,7 @@ UniValue sendtoaddress(const JSONRPCRequest& request)
             "\nSend an amount to a given address using the currently active account. If you want to use a specific account then use sendtoaddressfromaccount instead\n"
             + HelpRequiringPassphrase(pwallet) +
             "\nArguments:\n"
-            "1. \"address\"            (string, required) The Gulden address to send to.\n"
+            "1. \"address\"            (string, required) The " GLOBAL_APPNAME " address to send to.\n"
             "2. \"amount\"             (numeric or string, required) The amount in " + CURRENCY_UNIT + " to send. eg 0.1\n"
             "3. \"comment\"            (string, optional) A comment used to store what the transaction is for. \n"
             "                             This is not part of the transaction, just kept in your wallet.\n"
@@ -483,7 +484,7 @@ UniValue sendtoaddress(const JSONRPCRequest& request)
             "                             to which you're sending the transaction. This is not part of the \n"
             "                             transaction, just kept in your wallet.\n"
             "5. subtractfeefromamount  (boolean, optional, default=false) The fee will be deducted from the amount being sent.\n"
-            "                             The recipient will receive less Gulden than you enter in the amount field.\n"
+            "                             The recipient will receive less " GLOBAL_APPNAME " than you enter in the amount field.\n"
             "\nResult:\n"
             "\"txid\"                  (string) The transaction id.\n"
             "\nExamples:\n"
@@ -497,7 +498,7 @@ UniValue sendtoaddress(const JSONRPCRequest& request)
 
     CNativeAddress address(request.params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid " GLOBAL_APPNAME " address");
 
     // Amount
     CAmount nAmount = AmountFromValue(request.params[1]);
@@ -537,12 +538,12 @@ UniValue sendtoaddressfromaccount(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 3 || request.params.size() > 6)
         throw std::runtime_error(
-            "sendtoaddressfromaccount \"from_account\" \"guldenaddress\" amount ( \"comment\" \"comment-to\" subtract_fee_from_amount )\n"
-            "\nSend an amount to \"guldenaddress\" using \"account\"\n"
+            "sendtoaddressfromaccount \"from_account\" \"novoaddress\" amount ( \"comment\" \"comment-to\" subtract_fee_from_amount )\n"
+            "\nSend an amount to \"novoaddress\" using \"account\"\n"
             + HelpRequiringPassphrase(pwallet) +
             "\nArguments:\n"
             "1. \"from_account\"           (string, required) The UUID or unique label of the account to move funds from. May be the currently active account using \"\".\n"
-            "2. \"guldenaddress\"          (string, required) The Gulden address to send to.\n"
+            "2. \"novoaddress\"            (string, required) The " GLOBAL_APPNAME " address to send to.\n"
             "3. \"amount\"                 (numeric or string, required) The amount in " + CURRENCY_UNIT + " to send. eg 0.1\n"
             "4. \"comment\"                (string, optional) A comment used to store what the transaction is for. \n"
             "                            This is not part of the transaction, just kept in your wallet.\n"
@@ -550,7 +551,7 @@ UniValue sendtoaddressfromaccount(const JSONRPCRequest& request)
             "                            to which you're sending the transaction. This is not part of the \n"
             "                            transaction, just kept in your wallet.\n"
             "6. subtract_fee_from_amount (boolean, optional, default=false) The fee will be deducted from the amount being sent.\n"
-            "                             The recipient will receive less Gulden than you enter in the amount field.\n"
+            "                             The recipient will receive less " GLOBAL_APPNAME " than you enter in the amount field.\n"
             "\nResult:\n"
             "\"transactionid\"  (string) The transaction id.\n"
             "\nExamples:\n"
@@ -564,7 +565,7 @@ UniValue sendtoaddressfromaccount(const JSONRPCRequest& request)
 
     CNativeAddress address(request.params[1].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid " GLOBAL_APPNAME " address");
 
     // Amount
     CAmount nAmount = AmountFromValue(request.params[2]);
@@ -606,7 +607,7 @@ UniValue listaddressgroupings(const JSONRPCRequest& request)
             "[\n"
             "  [\n"
             "    [\n"
-            "      \"address\",            (string) The Gulden address\n"
+            "      \"address\",            (string) The " GLOBAL_APPNAME " address\n"
             "      amount,                 (numeric) The amount in " + CURRENCY_UNIT + "\n"
             "      \"account\"             (string, optional) The account\n"
             "    ]\n"
@@ -659,7 +660,7 @@ UniValue signmessage(const JSONRPCRequest& request)
             "\nSign a message with the private key of an address"
             + HelpRequiringPassphrase(pwallet) + "\n"
             "\nArguments:\n"
-            "1. \"address\"         (string, required) The Gulden address to use for the private key.\n"
+            "1. \"address\"         (string, required) The " GLOBAL_APPNAME " address to use for the private key.\n"
             "2. \"message\"         (string, required) The message to create a signature of.\n"
             "\nResult:\n"
             "\"signature\"          (string) The signature of the message encoded in base 64\n"
@@ -718,7 +719,7 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
             "\nReturns the total amount received by the given address in transactions with at least minconf confirmations.\n"
             "\nNB! For witness addresses this will not return locked funds or earnings, but will return regular received funds that have been sent to either of the two address keys.\n"
             "\nArguments:\n"
-            "1. \"address\"     (string, required) The Gulden address for transactions.\n"
+            "1. \"address\"     (string, required) The " GLOBAL_APPNAME " address for transactions.\n"
             "2. min_conf      (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
             "\nResult:\n"
             "amount           (numeric) The total amount in " + CURRENCY_UNIT + " received at this address.\n"
@@ -738,7 +739,7 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
     // Gulden address
     CNativeAddress address = CNativeAddress(request.params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid " GLOBAL_APPNAME " address");
 
     // Below check handles both script, standard key hash and witness cases
     if (!IsMine(*pwallet, address.Get()))
@@ -1051,14 +1052,14 @@ UniValue sendfrom(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() < 3 || request.params.size() > 6)
         throw std::runtime_error(
             "sendfrom \"from_account\" \"to_address\" amount ( min_conf \"comment\" \"comment_to\" )\n"
-            "\nDEPRECATED (use sendtoaddress). Sent an amount from an account to a Gulden address."
+            "\nDEPRECATED (use sendtoaddress). Sent an amount from an account to a " GLOBAL_APPNAME " address."
             + HelpRequiringPassphrase(pwallet) + "\n"
             "\nArguments:\n"
             "1. \"from_account\"      (string, required) The UUID or unique label of the account to send funds from. May be the active account using \"\".\n"
             "                       Specifying an account does not influence coin selection, but it does associate the newly created\n"
             "                       transaction with the account, so the account's balance computation and transaction history can reflect\n"
             "                       the spend.\n"
-            "2. \"to_address\"        (string, required) The Gulden address to send funds to.\n"
+            "2. \"to_address\"        (string, required) The " GLOBAL_APPNAME " address to send funds to.\n"
             "3. amount              (numeric or string, required) The amount in " + CURRENCY_UNIT + " (transaction fee is added on top).\n"
             "4. min_conf            (numeric, optional, default=1) Only use funds with at least this many confirmations.\n"
             "5. \"comment\"           (string, optional) A comment used to store what the transaction is for. \n"
@@ -1082,7 +1083,7 @@ UniValue sendfrom(const JSONRPCRequest& request)
     CAccount* fromAccount = AccountFromValue(pwallet, request.params[0], true);
     CNativeAddress address(request.params[1].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid " GLOBAL_APPNAME " address");
     CAmount nAmount = AmountFromValue(request.params[2]);
     if (nAmount <= 0)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount for send");
@@ -1126,14 +1127,14 @@ UniValue sendmany(const JSONRPCRequest& request)
             "1. \"from_account\"        (string, required) The UUID or unique label of the account to send the funds from. Should be \"\" for the active account\n"
             "2. \"amounts\"             (string, required) A json object with addresses and amounts\n"
             "    {\n"
-            "      \"address_or_account\":amount   (numeric or string) The Gulden address or account is the key, the numeric amount (can be string) in " + CURRENCY_UNIT + " is the value\n"
+            "      \"address_or_account\":amount   (numeric or string) The " GLOBAL_APPNAME " address or account is the key, the numeric amount (can be string) in " + CURRENCY_UNIT + " is the value\n"
             "      ,...\n"
             "    }\n"
             "3. min_conf              (numeric, optional, default=1) Only use the balance confirmed at least this many times.\n"
             "4. \"comment\"             (string, optional) A comment\n"
             "5. subtract_fee_from     (array, optional) A json array with addresses.\n"
             "                         The fee will be equally deducted from the amount of each selected address.\n"
-            "                         Those recipients will receive less Gulden than you enter in their corresponding amount field.\n"
+            "                         Those recipients will receive less " GLOBAL_APPNAME " than you enter in their corresponding amount field.\n"
             "                         If no addresses are specified here, the sender pays the fee.\n"
             "    [\n"
             "      \"address_or_account\"          (string) Subtract fee from this address or account\n"
@@ -1205,7 +1206,7 @@ UniValue sendmany(const JSONRPCRequest& request)
         }
 
         if (!address.IsValid())
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Gulden address: ")+name_);
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid " GLOBAL_APPNAME " address: ")+name_);
 
         CAmount nAmount = AmountFromValue(sendTo[name_]);
         if (nAmount <= 0)
@@ -1266,20 +1267,20 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
     {
         std::string msg = "addmultisigaddress num_required [\"key\",...] ( \"account\" )\n"
             "\nAdd a num-required-to-sign multisignature address to the wallet.\n"
-            "Each key is a Gulden address or hex-encoded public key.\n"
+            "Each key is a " GLOBAL_APPNAME " address or hex-encoded public key.\n"
             "If 'account' is specified (DEPRECATED), assign address to that account.\n"
 
             "\nArguments:\n"
             "1. num_required   (numeric, required) The number of required signatures out of the n keys or addresses.\n"
-            "2. \"keys\"         (string, required) A json array of Gulden addresses or hex-encoded public keys\n"
+            "2. \"keys\"         (string, required) A json array of " GLOBAL_APPNAME " addresses or hex-encoded public keys\n"
             "     [\n"
-            "       \"address\"  (string) Gulden address or hex-encoded public key\n"
+            "       \"address\"  (string) " GLOBAL_APPNAME " address or hex-encoded public key\n"
             "       ...,\n"
             "     ]\n"
             "3. \"account\"      (string) An account to assign the addresses to.\n"
 
             "\nResult:\n"
-            "\"address\"         (string) A Gulden address associated with the keys.\n"
+            "\"address\"         (string) A " GLOBAL_APPNAME " address associated with the keys.\n"
 
             "\nExamples:\n"
             "\nAdd a multisig address from 2 addresses\n"
@@ -1671,7 +1672,7 @@ UniValue listtransactions(const JSONRPCRequest& request)
             "  {\n"
             "    \"account\":\"accountname\",       (string) The account name associated with the transaction. \n"
             "                                                It will be \"\" for the active account.\n"
-            "    \"address\":\"address\",    (string) The Gulden address of the transaction. Not present for \n"
+            "    \"address\":\"address\",    (string) The " GLOBAL_APPNAME " address of the transaction. Not present for \n"
             "                                                move transactions (category = move).\n"
             "    \"category\":\"send|receive|move\", (string) The transaction category. 'move' is a local (off blockchain)\n"
             "                                                transaction between accounts, and not associated with an address,\n"
@@ -1799,7 +1800,7 @@ UniValue listsinceblock(const JSONRPCRequest& request)
             "{\n"
             "  \"transactions\": [\n"
             "    \"account\":\"accountname\",       (string) The account name associated with the transaction.\n"
-            "    \"address\":\"address\",    (string) The Gulden address of the transaction. Not present for move transactions (category = move).\n"
+            "    \"address\":\"address\",    (string) The " GLOBAL_APPNAME " address of the transaction. Not present for move transactions (category = move).\n"
             "    \"category\":\"send|receive\",     (string) The transaction category. 'send' has negative amounts, 'receive' has positive amounts.\n"
             "    \"amount\": x.xxx,          (numeric) The amount in " + CURRENCY_UNIT + ". This is negative for the 'send' category, and for the 'move' category for moves \n"
             "                                          outbound. It is positive for the 'receive' category, and for the 'move' category for inbound funds.\n"
@@ -1918,7 +1919,7 @@ UniValue gettransaction(const JSONRPCRequest& request)
             "  \"details\" : [\n"
             "    {\n"
             "      \"account\" : \"accountname\",  (string) The account name involved in the transaction.\n"
-            "      \"address\" : \"address\",          (string) The Gulden address involved in the transaction\n"
+            "      \"address\" : \"address\",          (string) The " GLOBAL_APPNAME " address involved in the transaction\n"
             "      \"category\" : \"send|receive\",    (string) The category, either 'send' or 'receive'\n"
             "      \"amount\" : x.xxx,                 (numeric) The amount in " + CURRENCY_UNIT + "\n"
             "      \"label\" : \"label\",              (string) A comment for the address/transaction, if any\n"
@@ -2113,7 +2114,7 @@ UniValue walletpassphrase(const JSONRPCRequest& request)
         throw std::runtime_error(
             "walletpassphrase \"passphrase\" timeout\n"
             "\nStores the wallet decryption key in memory for 'timeout' seconds.\n"
-            "This is needed prior to performing transactions related to private keys such as sending Gulden\n"
+            "This is needed prior to performing transactions related to private keys such as sending " GLOBAL_APPNAME "\n"
             "\nArguments:\n"
             "1. \"passphrase\"     (string, required) The wallet passphrase\n"
             "2. timeout            (numeric, required) The time to keep the decryption key in seconds.\n"
@@ -2278,7 +2279,7 @@ UniValue encryptwallet(const JSONRPCRequest& request)
             "\nExamples:\n"
             "\nEncrypt you wallet\n"
             + HelpExampleCli("encryptwallet", "\"my pass phrase\"") +
-            "\nNow set the passphrase to use the wallet, such as for signing or sending Gulden\n"
+            "\nNow set the passphrase to use the wallet, such as for signing or sending " GLOBAL_APPNAME "\n"
             + HelpExampleCli("walletpassphrase", "\"my pass phrase\"") +
             "\nNow we can so something like sign\n"
             + HelpExampleCli("signmessage", "\"address\" \"test message\"") +
@@ -2316,7 +2317,7 @@ UniValue encryptwallet(const JSONRPCRequest& request)
     // slack space in .dat files; that is bad if the old data is
     // unencrypted private keys. So:
     AppLifecycleManager::gApp->shutdown();
-    return "wallet encrypted; Gulden server stopping, restart to run with encrypted wallet. The keypool has been flushed and a new HD seed was generated (if you are using HD). You need to make a new backup.";
+    return "wallet encrypted; " GLOBAL_APPNAME " server stopping, restart to run with encrypted wallet. The keypool has been flushed and a new HD seed was generated (if you are using HD). You need to make a new backup.";
 }
 
 UniValue lockunspent(const JSONRPCRequest& request)
@@ -2332,7 +2333,7 @@ UniValue lockunspent(const JSONRPCRequest& request)
             "\nUpdates list of temporarily unspendable outputs.\n"
             "Temporarily lock (unlock=false) or unlock (unlock=true) specified transaction outputs.\n"
             "If no transaction outputs are specified when unlocking then all current locked transaction outputs are unlocked.\n"
-            "A locked transaction output will not be chosen by automatic coin selection, when spending Gulden.\n"
+            "A locked transaction output will not be chosen by automatic coin selection, when spending " GLOBAL_APPNAME ".\n"
             "Locks are stored in memory only. Nodes start with zero locked outputs, and the locked output list\n"
             "is always cleared (by virtue of process exit) when a node stops or fails.\n"
             "Also see the listunspent call\n"
@@ -2654,7 +2655,7 @@ UniValue listunspentforaccounts(CWallet* pWallet, std::vector<CAccount*>& doForA
             const UniValue& input = inputs[idx];
             CNativeAddress address(input.get_str());
             if (!address.IsValid())
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Gulden address: ")+input.get_str());
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid " GLOBAL_APPNAME " address: ")+input.get_str());
             if (setAddress.count(address))
                 throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid parameter, duplicated address: ")+input.get_str());
            setAddress.insert(address);
@@ -2756,9 +2757,9 @@ UniValue listunspent(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. min_conf         (numeric, optional, default=1) The minimum confirmations to filter\n"
             "2. max_conf         (numeric, optional, default=9999999) The maximum confirmations to filter\n"
-            "3. \"addresses\"      (string) A json array of Gulden addresses to filter\n"
+            "3. \"addresses\"      (string) A json array of " GLOBAL_APPNAME " addresses to filter\n"
             "    [\n"
-            "      \"address\"     (string) Gulden address\n"
+            "      \"address\"     (string) " GLOBAL_APPNAME " address\n"
             "      ,...\n"
             "    ]\n"
             "4. include_unsafe (bool, optional, default=true) Include outputs that are not safe to spend\n"
@@ -2775,7 +2776,7 @@ UniValue listunspent(const JSONRPCRequest& request)
             "  {\n"
             "    \"txid\" : \"txid\",          (string) the transaction id \n"
             "    \"vout\" : n,               (numeric) the vout value\n"
-            "    \"address\" : \"address\",    (string) the Gulden address\n"
+            "    \"address\" : \"address\",    (string) the " GLOBAL_APPNAME " address\n"
             "    \"account\" : \"account\",    (string) The associated account."
             "    \"scriptPubKey\" : \"key\",   (string) the script key\n"
             "    \"amount\" : x.xxx,         (numeric) the transaction output amount in " + CURRENCY_UNIT + "\n"
@@ -2851,9 +2852,9 @@ UniValue listunspentforaccount(const JSONRPCRequest& request)
             "1. account          (string) Account UUID or label. If empty the active account is used.\n"
             "2. min_conf         (numeric, optional, default=1) The minimum confirmations to filter\n"
             "3. max_conf         (numeric, optional, default=9999999) The maximum confirmations to filter\n"
-            "4. \"addresses\"      (string) A json array of Gulden addresses to filter\n"
+            "4. \"addresses\"      (string) A json array of " GLOBAL_APPNAME " addresses to filter\n"
             "    [\n"
-            "      \"address\"     (string) Gulden address\n"
+            "      \"address\"     (string) " GLOBAL_APPNAME " address\n"
             "      ,...\n"
             "    ]\n"
             "5. include_unsafe (bool, optional, default=true) Include outputs that are not safe to spend\n"
@@ -2870,7 +2871,7 @@ UniValue listunspentforaccount(const JSONRPCRequest& request)
             "  {\n"
             "    \"txid\" : \"txid\",          (string) the transaction id \n"
             "    \"vout\" : n,               (numeric) the vout value\n"
-            "    \"address\" : \"address\",    (string) the Gulden address\n"
+            "    \"address\" : \"address\",    (string) the " GLOBAL_APPNAME " address\n"
             "    \"account\" : \"account\",    (string) The associated account."
             "    \"scriptPubKey\" : \"key\",   (string) the script key\n"
             "    \"amount\" : x.xxx,         (numeric) the transaction output amount in " + CURRENCY_UNIT + "\n"
@@ -2948,7 +2949,7 @@ UniValue fundrawtransaction(const JSONRPCRequest& request)
                             "2. \"account\"           (string, required) The account from which to fund the transaction. \"\" to use the currently active account.\n"
                             "3. options               (object, optional)\n"
                             "   {\n"
-                            "     \"changeAddress\"          (string, optional, default pool address) The Gulden address to receive the change\n"
+                            "     \"changeAddress\"          (string, optional, default pool address) The " GLOBAL_APPNAME " address to receive the change\n"
                             "     \"changePosition\"         (numeric, optional, default random) The index of the change output\n"
                             "     \"includeWatching\"        (boolean, optional, default false) Also select inputs which are watch only\n"
                             "     \"lockUnspents\"           (boolean, optional, default false) Lock selected unspent outputs\n"
@@ -2957,7 +2958,7 @@ UniValue fundrawtransaction(const JSONRPCRequest& request)
                             "     \"subtractFeeFromOutputs\" (array, optional) A json array of integers.\n"
                             "                              The fee will be equally deducted from the amount of each specified output.\n"
                             "                              The outputs are specified by their zero-based index, before any change output is added.\n"
-                            "                              Those recipients will receive less Gulden than you enter in their corresponding amount field.\n"
+                            "                              Those recipients will receive less " GLOBAL_APPNAME " than you enter in their corresponding amount field.\n"
                             "                              If no outputs are specified here, the sender pays the fee.\n"
                             "                                  [vout_index,...]\n"
                             "     \"optIntoRbf\"             (boolean, optional) Allow this transaction to be replaced by a transaction with higher fees\n"
@@ -3020,7 +3021,7 @@ UniValue fundrawtransaction(const JSONRPCRequest& request)
             CNativeAddress address(options["changeAddress"].get_str());
 
             if (!address.IsValid())
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "changeAddress must be a valid Gulden address");
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "changeAddress must be a valid " GLOBAL_APPNAME " address");
 
             coinControl.destChange = address.Get();
         }
@@ -3271,7 +3272,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "getlockedbalance",         &getlockedbalance,         false,  {} },
     { "wallet",             "getwalletinfo",            &getwalletinfo,            false,  {} },
     { "wallet",             "importmulti",              &importmulti,              true,   {"account","requests","options"} },
-    { "wallet",             "importprivkey",            &importprivkey,            true,   {"guldenprivkey", "account", "label","rescan"} },
+    { "wallet",             "importprivkey",            &importprivkey,            true,   {"privkey", "account", "label","rescan"} },
     { "wallet",             "importwallet",             &importwallet,             true,   {"filename"} },
     { "wallet",             "importaddress",            &importaddress,            true,   {"address","label","rescan","p2sh"} },
     { "wallet",             "importprunedfunds",        &importprunedfunds,        true,   {"rawtransaction","txoutproof"} },

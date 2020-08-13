@@ -778,12 +778,12 @@ CHDSeed* CExtWallet::ImportHDSeedFromPubkey(SecureString pubKeyString)
     }
     catch(...)
     {
-        throw std::runtime_error("Not a valid Gulden extended public key");
+        throw std::runtime_error("Not a valid " GLOBAL_APPNAME " extended public key");
     }
 
     if (!pubkey.pubkey.IsValid())
     {
-        throw std::runtime_error("Not a valid Gulden extended public key");
+        throw std::runtime_error("Not a valid " GLOBAL_APPNAME " extended public key");
     }
 
     CHDSeed* newSeed = new CHDSeed(pubkey, CHDSeed::CHDSeed::BIP44NoHardening);
@@ -812,7 +812,7 @@ CHDSeed* CExtWallet::ImportHDSeed(SecureString mnemonic, CHDSeed::SeedType type)
 
     if (!checkMnemonic(mnemonic))
     {
-        throw std::runtime_error("Not a valid Gulden mnemonic");
+        throw std::runtime_error("Not a valid " GLOBAL_APPNAME " mnemonic");
     }
 
     std::vector<unsigned char> entropy(16);
@@ -1007,7 +1007,7 @@ std::vector<std::pair<CKey, uint64_t>> CExtWallet::ParseWitnessKeyURL(SecureStri
         std::vector<SecureString> encodedPrivateWitnessKeyAndBirthDate;
         boost::split(encodedPrivateWitnessKeyAndBirthDate, encodedPrivateWitnessKeyString, boost::is_any_of("#"));
         if (encodedPrivateWitnessKeyAndBirthDate.size() > 2)
-            throw std::runtime_error("Not a valid Gulden private witness key/birthdate pair");
+            throw std::runtime_error("Not a valid " GLOBAL_APPNAME " private witness key/birthdate pair");
 
         uint64_t nKeyBirthDate = 1;
         if (encodedPrivateWitnessKeyAndBirthDate.size() == 2)
@@ -1033,7 +1033,7 @@ std::vector<std::pair<CKey, uint64_t>> CExtWallet::ParseWitnessKeyURL(SecureStri
         }
         if (keyError)
         {
-            throw std::runtime_error("Not a valid Gulden private witness key");
+            throw std::runtime_error("Not a valid " GLOBAL_APPNAME " private witness key");
         }
     }
     return privateWitnessKeys;
@@ -1086,7 +1086,7 @@ CAccountHD* CExtWallet::CreateReadOnlyAccount(std::string strAccount, SecureStri
     }
     catch(...)
     {
-        throw std::runtime_error("Not a valid Gulden extended public key");
+        throw std::runtime_error("Not a valid " GLOBAL_APPNAME " extended public key");
     }
 
     newAccount = new CAccountHD(pubkey, boost::uuids::nil_generator()(), AccountType::Desktop);

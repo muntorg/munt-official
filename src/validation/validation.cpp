@@ -68,7 +68,7 @@
 #include <boost/thread.hpp>
 
 #if defined(NDEBUG)
-# error "Gulden cannot be compiled without assertions."
+# error "Cannot be compiled without assertions."
 #endif
 
 #define DEBUG_PARTIAL_SYNC
