@@ -1012,6 +1012,19 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose, bool fSelf
             wtx.nBlockTime = wtxIn.nBlockTime;
             fUpdated = true;
         }
+        // If height changed, update
+        if (wtxIn.nHeight != -1 && (wtxIn.nHeight != wtx.nHeight))
+        {
+            wtx.nHeight = wtxIn.nHeight;
+            fUpdated = true;
+        }
+        // If block time changed, update
+        if (wtxIn.nBlockTime != -1 && (wtxIn.nBlockTime != wtx.nBlockTime))
+        {
+            wtx.nBlockTime = wtxIn.nBlockTime;
+            fUpdated = true;
+        }
+        // If index changed, update
         if (wtxIn.nIndex != -1 && (wtxIn.nIndex != wtx.nIndex))
         {
             wtx.nIndex = wtxIn.nIndex;
