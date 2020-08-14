@@ -39,6 +39,7 @@
       <input
         ref="command"
         type="text"
+        spellcheck="false"
         v-model="command"
         @keydown="onRpcInputKeyDown"
       />
