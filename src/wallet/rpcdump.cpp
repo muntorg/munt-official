@@ -9,6 +9,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+#include "appname.h"
 #include "base58.h"
 #include "chain.h"
 #include "rpc/server.h"
@@ -90,10 +91,10 @@ UniValue importprivkey(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 4)
         throw std::runtime_error(
-            "importprivkey \"guldenprivkey\" \"account\" ( \"label\" ) ( rescan )\n"
+            "importprivkey \"privkey\" \"account\" ( \"label\" ) ( rescan )\n"
             "\nAdds a private key (as returned by dumpprivkey) to your wallet.\n"
             "\nArguments:\n"
-            "1. \"guldenprivkey\"   (string, required) The private key (see dumpprivkey)\n"
+            "1. \"privkey\"          (string, required) The private key (see dumpprivkey)\n"
             "2. \"account\"          (string, required) The account in which to import the key. \"\" for the currently active account. NB! Must be a legacy account, cannot import keys into an HD account.\n"
             "3. \"label\"            (string, optional, default=\"\") An optional label\n"
             "4. rescan               (boolean, optional, default=true) Rescan the wallet for transactions\n"
@@ -293,7 +294,7 @@ UniValue importaddress(const JSONRPCRequest& request)
         std::vector<unsigned char> data(ParseHex(request.params[0].get_str()));
         ImportScript(pwallet, CScript(data.begin(), data.end()), strLabel, fP2SH);
     } else {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address or script");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid " GLOBAL_APPNAME " address or script");
     }
 
     if (fRescan)
@@ -597,7 +598,7 @@ UniValue dumpprivkey(const JSONRPCRequest& request)
             "Then the importprivkey can be used with this output\n"
             "WARNING! If a dumped private key from an HD account is exposed or given out -all- keys within that account (current and future) are also at risk, if the attacker can also get hold of your public key for that account.\n"
             "\nArguments:\n"
-            "1. \"address\"   (string, required) The Gulden address for the private key\n"
+            "1. \"address\"   (string, required) The " GLOBAL_APPNAME " address for the private key\n"
             "2. \"HDConsent\"        (string, optional) If dumping from an HD account please pass the string 'I_UNDERSTAND_AND_ACCEPT_THE_RISK_OF_DUMPING_AN_HD_PRIVKEY' for this paramater, if you do not understand the risk then please do not do this.\n"
             "\nResult:\n"
             "\"key\"                (string) The private key\n"
@@ -614,7 +615,7 @@ UniValue dumpprivkey(const JSONRPCRequest& request)
     std::string strAddress = request.params[0].get_str();
     CNativeAddress address;
     if (!address.SetString(strAddress))
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Gulden address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid " GLOBAL_APPNAME " address");
     CKeyID keyID;
     if (!address.GetKeyID(keyID))
         throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to a key");
@@ -655,11 +656,11 @@ UniValue dumpwallet(const JSONRPCRequest& request)
             "WARNING! If a dumped private key from an HD account is exposed or given out -all- keys within that account (current and future) are also at risk, if the attacker can also get hold of your public key for that account.\n"
             "It is strongly advised not to use this function with an HD wallet, please proceed at your own risk.\n"
             "\nArguments:\n"
-            "1. \"filename\"    (string, required) The filename with path (either absolute or relative to GuldenD)\n"
+            "1. \"filename\"         (string, required) The filename with path (either absolute or relative to " GLOBAL_APPNAME " executable)\n"
             "2. \"HDConsent\"        (string, optional) If dumping from an HD account please pass the string 'I_UNDERSTAND_AND_ACCEPT_THE_RISK_OF_DUMPING_AN_HD_PRIVKEY' for this paramater, if you do not understand the risk then please do not do this.\n"
             "\nResult:\n"
-            "{                           (json object)\n"
-            "  \"filename\" : {        (string) The filename with full absolute path\n"
+            "{                     (json object)\n"
+            "  \"filename\" : {      (string) The filename with full absolute path\n"
             "}\n"
             "\nExamples:\n"
             + HelpExampleCli("dumpwallet", "\"test\"")
@@ -702,7 +703,7 @@ UniValue dumpwallet(const JSONRPCRequest& request)
     std::sort(vKeyBirth.begin(), vKeyBirth.end());
 
     // produce output
-    file << strprintf("# Wallet dump created by Gulden %s\n", CLIENT_BUILD);
+    file << strprintf("# Wallet dump created by " GLOBAL_APPNAME " %s\n", CLIENT_BUILD);
     file << strprintf("# * Created on %s\n", EncodeDumpTime(GetTime()));
     file << strprintf("# * Best block at time of backup was %i (%s),\n", chainActive.Height(), chainActive.Tip()->GetBlockHashPoW2().ToString());
     file << strprintf("#   timestamp %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));
@@ -1234,7 +1235,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
                     result.pushKV("success", UniValue(false));
                     std::string errorMessage = strprintf("Rescan failed for key with creation timestamp %d. There was an error reading a block from time %d, which is after or within %d seconds of key creation, and "
                                       "could contain transactions pertaining to the key. As a result, transactions and coins using this key may not appear in the wallet. This error could be "
-                                      "caused by pruning or data corruption (see Gulden log for details) and could be dealt with by downloading and rescanning the relevant blocks (see -reindex and -rescan options).", GetImportTimestamp(request, now), scannedTime - TIMESTAMP_WINDOW - 1, TIMESTAMP_WINDOW);
+                                      "caused by pruning or data corruption (see " GLOBAL_APPNAME " log for details) and could be dealt with by downloading and rescanning the relevant blocks (see -reindex and -rescan options).", GetImportTimestamp(request, now), scannedTime - TIMESTAMP_WINDOW - 1, TIMESTAMP_WINDOW);
                     result.pushKV("error", JSONRPCError(RPC_MISC_ERROR,errorMessage));
                     response.push_back(std::move(result));
                 }

@@ -434,7 +434,7 @@ static UniValue generatetoaddress(const JSONRPCRequest& request)
             "\nGenerate blocks immediately to a specified address (before the RPC call returns)\n"
             "\nArguments:\n"
             "1. nblocks      (numeric, required) How many blocks are generated immediately.\n"
-            "2. address      (string, required) The address to send the newly generated Gulden to.\n"
+            "2. address      (string, required) The address to send the newly generated " GLOBAL_APPNAME " to.\n"
             "3. maxtries     (numeric, optional) How many iterations to try (default = 1000000).\n"
             "\nResult:\n"
             "[ blockhashes ]     (array) hashes of blocks generated\n"

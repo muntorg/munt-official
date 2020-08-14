@@ -12,6 +12,7 @@
 
 #include "rpc/blockchain.h"
 
+#include "appname.h"
 #include "amount.h"
 #include "chain.h"
 #include "chainparams.h"
@@ -1022,8 +1023,8 @@ static UniValue gettxout(const JSONRPCRequest& request)
             "     \"hex\" : \"hex\",        (string) \n"
             "     \"reqSigs\" : n,          (numeric) Number of required signatures\n"
             "     \"type\" : \"pubkeyhash\", (string) The type, eg pubkeyhash\n"
-            "     \"addresses\" : [          (array of string) array of Gulden addresses\n"
-            "        \"address\"     (string) Gulden address\n"
+            "     \"addresses\" : [          (array of string) array of " GLOBAL_APPNAME " addresses\n"
+            "        \"address\"     (string) " GLOBAL_APPNAME " address\n"
             "        ,...\n"
             "     ]\n"
             "  },\n"

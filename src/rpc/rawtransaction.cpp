@@ -126,7 +126,7 @@ UniValue getrawtransaction(const JSONRPCRequest& request)
             "         \"reqSigs\" : n,             (numeric) The required sigs\n"
             "         \"type\" : \"pubkeyhash\",   (string) The type, eg 'pubkeyhash'\n"
             "         \"addresses\" : [            (json array of string)\n"
-            "           \"address\"                (string) Gulden address\n"
+            "           \"address\"                (string) " GLOBAL_APPNAME " address\n"
             "           ,...\n"
             "         ]\n"
             "       }\n"
@@ -322,7 +322,7 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
             "     ]\n"
             "2. \"outputs\"               (object, required) a json object with outputs\n"
             "    {\n"
-            "      \"address\": x.xxx,    (numeric or string, required) The key is the Gulden address, the numeric value (can be string) is the " + CURRENCY_UNIT + " amount\n"
+            "      \"address\": x.xxx,    (numeric or string, required) The key is the " GLOBAL_APPNAME " address, the numeric value (can be string) is the " + CURRENCY_UNIT + " amount\n"
             "      \"data\": \"hex\"        (string, required) The key is \"data\", the value is hex encoded data\n"
             "      ,...\n"
             "    }\n"
@@ -432,7 +432,7 @@ UniValue createrawtransaction(const JSONRPCRequest& request)
         {
             CNativeAddress address(name_);
             if (!address.IsValid())
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Gulden address: ")+name_);
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid " GLOBAL_APPNAME " address: ")+name_);
 
             if (setAddress.count(address))
                 throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid parameter, duplicated address: ")+name_);
@@ -506,7 +506,7 @@ UniValue decoderawtransaction(const JSONRPCRequest& request)
             "         \"reqSigs\" : n,            (numeric) The required sigs\n"
             "         \"type\" : \"pubkeyhash\",  (string) The type, eg 'pubkeyhash'\n"
             "         \"addresses\" : [           (json array of string)\n"
-            "           \"G2tvKAXCxZjSmdNbao16dKXC8tRWfcF5oc\"   (string) Gulden address\n"
+            "           \"G2tvKAXCxZjSmdNbao16dKXC8tRWfcF5oc\"   (string) " GLOBAL_APPNAME " address\n"
             "           ,...\n"
             "         ]\n"
             "       }\n"
@@ -549,7 +549,7 @@ UniValue decodescript(const JSONRPCRequest& request)
             "  \"type\":\"type\", (string) The output type\n"
             "  \"reqSigs\": n,    (numeric) The required signatures\n"
             "  \"addresses\": [   (json array of string)\n"
-            "     \"address\"     (string) Gulden address\n"
+            "     \"address\"     (string) " GLOBAL_APPNAME " address\n"
             "     ,...\n"
             "  ],\n"
             "  \"p2sh\",\"address\" (string) address of P2SH script wrapping this redeem script (not returned if the script is already a P2SH).\n"

@@ -11,6 +11,7 @@
 
 #include "rpc/server.h"
 
+#include "appname.h"
 #include "chainparams.h"
 #include "clientversion.h"
 #include "validation/validation.h"
@@ -303,7 +304,7 @@ static UniValue getaddednodeinfo(const JSONRPCRequest& request)
             "    \"connected\" : true|false,          (boolean) If connected\n"
             "    \"addresses\" : [                    (list of objects) Only when connected = true\n"
             "       {\n"
-            "         \"address\" : \"192.168.0.201:9231\",  (string) The Gulden server IP and port we're connected to\n"
+            "         \"address\" : \"192.168.0.201:9231\",  (string) The " GLOBAL_APPNAME " server IP and port we're connected to\n"
             "         \"connected\" : \"outbound\"           (string) connection, inbound or outbound\n"
             "       }\n"
             "     ]\n"
