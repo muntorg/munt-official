@@ -1,3 +1,23 @@
+w2.2.0.10
+
+CORE    - Change dev subsidy reward to 80 NLG per block, as decided by GAB
+CORE    - Activate changes to the Delta difficulty adjustment algorithm, which should see slightly smoother block times
+CORE    - Fix a bug that was preventing witnesses from taking advantage of the ability to add transactions to the block they witness
+          This should lead to smoother transaction verification (lower average time until first confirm) and also allow witnesses to earn a small amount extra through transaction rewards
+CMDFLAG - Implement blockmaxsize flag for witness block creation as well, previously was only for mining block creation
+RPC     - Introduce some special case code to 'move' command to assist a small amount of 'legacy' phase3 witness accounts that otherwise experience difficulty being emptied when lock expires
+RPC     - Fix balance display for 'getaccountbalances'
+RPC     - Add rescan paramater to 'importwitnesskeys'
+UI      - Improve estimated earnings calculation in UI
+CORE    - Fix a bug where in rare instances a "null" transaction could potentially be added to the wallet and make the wallet falsely appear corrupted on reload. There is no known release version of the code that could trigger this, however we protect against any future mistakes that might allow it to be sure
+CORE    - Remove various phase3 related parts of the codebase, these removals improve application performance and simplify the codebase
+CORE    - Remove old official testnet and start a new improved testnet in its place
+CORE    - Introduce "genesis witness" concept for testnet, that allows accelerated testnets to start with witnessing/phase5 already active from block 0
+CORE    - Introduce various unity/node.js/electron related changes to the codebase, that will allow for electron UI to be adopted in future. Electron UI already in relatively advanced stages but needs further work before merge
+
+
+
+
 2.2.0.7
 
 NET     - Improve networking performance
