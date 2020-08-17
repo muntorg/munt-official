@@ -280,7 +280,7 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
             {
                 if (txout.output.witnessDetails.lockFromBlock != 1)
                 {
-                    return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d NLG not allowed.", gMinimumWitnessAmount));
+                    return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d " GLOBAL_COIN_CODE " not allowed.", gMinimumWitnessAmount));
                 }
             }
 
@@ -885,7 +885,7 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
             {
                 if (witnessDetails.lockFromBlock != 1)
                 {
-                    return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d NLG not allowed.", gMinimumWitnessAmount));
+                    return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d " GLOBAL_COIN_CODE " not allowed.", gMinimumWitnessAmount));
                 }
             }
             

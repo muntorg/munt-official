@@ -12,5 +12,6 @@
 
 #define GLOBAL_APPNAME "Novo"
 #define GLOBAL_APP_URIPREFIX "novo"
+#define GLOBAL_COIN_CODE "NOV"
 
 #endif

@@ -1229,7 +1229,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() < 4 || request.params.size() > 5)
         throw std::runtime_error(
             "fundwitnessaccount \"funding_account\" \"witness_account\" \"amount\" \"time\" \"force_multiple\" \n"
-            "Lock \"amount\" NLG in \"witness_account\" for time period \"time\" using funds from \"funding_account\"\n"
+            "Lock \"amount\" " GLOBAL_COIN_CODE " in \"witness_account\" for time period \"time\" using funds from \"funding_account\"\n"
             "NB! Though it is possible to fund a witness account that already has a balance, this can cause UI issues and is not strictly supported.\n"
             "It is highly recommended to rather use 'extendwitnessaccount' in this case which behaves more like what most people would expect.\n"
             "By default this command will fail if an account already contains an existing funded address.\n"
@@ -1237,7 +1237,7 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. \"funding_account\"      (string, required) The unique UUID or label for the account from which money will be removed. Use \"\" for the active account or \"*\" for all accounts to be considered.\n"
             "2. \"witness_account\"      (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
-            "3. \"amount\"               (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
+            "3. \"amount\"               (string, required) The amount of " GLOBAL_COIN_CODE " to hold locked in the witness account. Minimum amount of 5000 " GLOBAL_COIN_CODE " is allowed.\n"
             "4. \"time\"                 (string, required) The time period for which the funds should be locked in the witness account. Minimum of 1 month and a maximum of 3 years. By default this is interpreted as blocks e.g. \"1000\", suffix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "5. force_multiple         (boolean, optional, default=false) Allow funding an account that already contains a valid witness address. \n"
             "\nResult:\n"
@@ -1246,11 +1246,11 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
             "     \"fee_amount\":n   (number) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
-            "\nTake 10000NLG out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 2 years.\n"
+            "\nTake 10000" GLOBAL_COIN_CODE " out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 2 years.\n"
             + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", "")
-            + "\nTake 10000NLG out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 2 months.\n"
+            + "\nTake 10000" GLOBAL_COIN_CODE " out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 2 months.\n"
             + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2m\"", "")
-            + "\nTake 10000NLG out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 100 days.\n"
+            + "\nTake 10000" GLOBAL_COIN_CODE " out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 100 days.\n"
             + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"100d\"", "")
             + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", ""));
 
@@ -1325,7 +1325,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed.\n"
             "2. \"witness_address\"  (string, required) The " GLOBAL_APPNAME " address for the witness key.\n"
-            "3. \"amount\"           (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
+            "3. \"amount\"           (string, required) The amount of " GLOBAL_COIN_CODE " to hold locked in the witness account. Minimum amount of 5000 " GLOBAL_COIN_CODE " is allowed.\n"
             "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", suffix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "\nResult:\n"
             "[\n"
@@ -1411,7 +1411,7 @@ static UniValue extendwitnessaccount(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. \"funding_account\" (string, required) The unique UUID or label for the account from which money will be removed.\n"
             "2. \"witness_account\" (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
-            "3. \"amount\"          (string, required) The amount of NLG to hold locked in the witness account. Minimum amount of 5000 NLG is allowed.\n"
+            "3. \"amount\"          (string, required) The amount of " GLOBAL_COIN_CODE " to hold locked in the witness account. Minimum amount of 5000 " GLOBAL_COIN_CODE " is allowed.\n"
             "4. \"time\"            (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", suffix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "\nResult:\n"
             "[\n"
@@ -2897,7 +2897,7 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
             "\n    3) When set to a negative number \"n\", \"n\" will be deducted and sent to a non-compound output (as described in 1) and the remainder will be compounded.\n"
             "\nIn all cases it is important to remember the following:\n"
             "\n    4) Transaction fees and not just the witness reward can be compounded, so while the witness reward is 20 NLG compounding amount should be set considering possible transaction fees as well.\n"
-            "\n    5) A maximum of 40 NLG can be compounded, regardless of whether a block contains more fees. In the event that there are additional fees to distribute after applying the compounding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
+            "\n    5) A maximum of 40 " GLOBAL_COIN_CODE " can be compounded, regardless of whether a block contains more fees. In the event that there are additional fees to distribute after applying the compounding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
             "\nArguments:\n"
             "1. \"witness_account\"            (string) The UUID or unique label of the account.\n"
             "2. amount                        (numeric or string, required) The amount in " + CURRENCY_UNIT + "\n"
@@ -2954,8 +2954,8 @@ static UniValue getwitnesscompound(const JSONRPCRequest& request)
             "\n    2) When set to a positive number \"n\", earnings up until \"n\" will be compounded, and the remainder will be sent to the non-compound output (as describe in 1).\n"
             "\n    3) When set to a negative number \"n\", \"n\" will be deducted and sent to a non-compound output (as described in 1) and the remainder will be compounded.\n"
             "\nIn all cases it is important to remember the following:\n"
-            "\n    4) Transaction fees and not just the witness reward can be compounded, so while the witness reward is 20 NLG compounding amount should be set considering possible transaction fees as well.\n"
-            "\n    5) A maximum of 40 NLG can be compounded, regardless of whether a block contains more fees. In the event that there are additional fees to distribute after applying the compounding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
+            "\n    4) Transaction fees and not just the witness reward can be compounded, so while the witness reward is 20 " GLOBAL_COIN_CODE " compounding amount should be set considering possible transaction fees as well.\n"
+            "\n    5) A maximum of 40 " GLOBAL_COIN_CODE " can be compounded, regardless of whether a block contains more fees. In the event that there are additional fees to distribute after applying the compounding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
             "\nExamples:\n"
             + HelpExampleCli("getwitnesscompound \"My witness account\"", "")
             + HelpExampleRpc("getwitnesscompound \"My witness account\"", ""));
@@ -3145,8 +3145,8 @@ static UniValue setwitnessrewardtemplate(const JSONRPCRequest& request)
             "3. Any remaining amount goes to the remainder destination.\n"
             "4. If the compound amount resulting from above calculation exceeds the maximum allowed compound amount, then the maximum will be compounded and any excess amount will go to compound_overflow.\n"
             "\nExamples:\n"
-            "Assuming there is 90 NLG witness reward to divide, then in the example below the fixed amount to divide is 40 (10 + 30), leaving 50 for percentage splits. Only 40% (20 NLG) is specified (5% + 5% + 30%), leaving 30 NLG as remainder.\n"
-            "So the distribution is: 2.5 NLG to TRVQzTaFGt1cQcDdgAJGwnzFfFgUbR1PnF, 40 non-compounding to the witness account, 2.5 NLG to TBb5KJ3jnq7Xk5uwWV7dAyRmSEgfvszevo (compound overflow = 0) and 45 is compounded into the witness.\n"
+            "Assuming there is 90 " GLOBAL_COIN_CODE " witness reward to divide, then in the example below the fixed amount to divide is 40 (10 + 30), leaving 50 for percentage splits. Only 40% (20 " GLOBAL_COIN_CODE ") is specified (5% + 5% + 30%), leaving 30 " GLOBAL_COIN_CODE " as remainder.\n"
+            "So the distribution is: 2.5 " GLOBAL_COIN_CODE " to TRVQzTaFGt1cQcDdgAJGwnzFfFgUbR1PnF, 40 non-compounding to the witness account, 2.5 " GLOBAL_COIN_CODE " to TBb5KJ3jnq7Xk5uwWV7dAyRmSEgfvszevo (compound overflow = 0) and 45 is compounded into the witness.\n"
             + HelpExampleCli("setwitnessrewardtemplate \"my witness account\" '[[\"TRVQzTaFGt1cQcDdgAJGwnzFfFgUbR1PnF\", \"5%\"], [\"account\", \"10\", \"remainder\"],[\"TBb5KJ3jnq7Xk5uwWV7dAyRmSEgfvszevo\", \"5%\", \"compound_overflow\"], [\"compound\", \"30\", \"30%\"]]'", "")
             + HelpExampleRpc("setwitnessrewardtemplate \"my witness account\" '[[\"TRVQzTaFGt1cQcDdgAJGwnzFfFgUbR1PnF\", \"5%\"], [\"account\", \"10\", \"remainder\"],[\"TBb5KJ3jnq7Xk5uwWV7dAyRmSEgfvszevo\", \"5%\", \"compound_overflow\"], [\"compound\", \"30\", \"30%\"]]'", ""));
 
