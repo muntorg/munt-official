@@ -234,12 +234,10 @@ export default {
   }
 
   &.active {
-    font-weight: 500;
     color: #fff;
     background-color: #009572;
 
     & a {
-      font-weight: 500;
       color: #fff;
     }
   }
