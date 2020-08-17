@@ -18,7 +18,20 @@ void NJSIRpcController::execute(const Napi::CallbackInfo& info) {
     std::string arg_0 = info[0].As<Napi::String>();
     std::shared_ptr<NJSIRpcListener> arg_1(std::shared_ptr<NJSIRpcListener>{}, NJSIRpcListener::Unwrap(info[1].As<Napi::Object>()));
 
-    IRpcController::execute(arg_0,arg_1);
+    try
+    {
+        IRpcController::execute(arg_0,arg_1);
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 Napi::Value NJSIRpcController::getAutocompleteList(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -32,18 +45,31 @@ Napi::Value NJSIRpcController::getAutocompleteList(const Napi::CallbackInfo& inf
 
     //Check if parameters have correct types
 
-    auto result = IRpcController::getAutocompleteList();
-
-    //Wrap result in node object
-    auto arg_0 = Napi::Array::New(env);
-    for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+    try
     {
-        auto arg_0_elem = Napi::String::New(env, result[arg_0_id]);
-        arg_0.Set((int)arg_0_id,arg_0_elem);
+        auto result = IRpcController::getAutocompleteList();
+
+        //Wrap result in node object
+        auto arg_0 = Napi::Array::New(env);
+        for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+        {
+            auto arg_0_elem = Napi::String::New(env, result[arg_0_id]);
+            arg_0.Set((int)arg_0_id,arg_0_elem);
+        }
+
+
+        return arg_0;
     }
-
-
-    return arg_0;
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 
 Napi::FunctionReference NJSIRpcController::constructor;

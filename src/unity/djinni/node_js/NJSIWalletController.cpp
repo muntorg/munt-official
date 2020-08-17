@@ -17,7 +17,20 @@ void NJSIWalletController::setListener(const Napi::CallbackInfo& info) {
     //Check if parameters have correct types
     std::shared_ptr<NJSIWalletListener> arg_0(std::shared_ptr<NJSIWalletListener>{}, NJSIWalletListener::Unwrap(info[0].As<Napi::Object>()));
 
-    IWalletController::setListener(arg_0);
+    try
+    {
+        IWalletController::setListener(arg_0);
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 Napi::Value NJSIWalletController::HaveUnconfirmedFunds(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -31,12 +44,25 @@ Napi::Value NJSIWalletController::HaveUnconfirmedFunds(const Napi::CallbackInfo&
 
     //Check if parameters have correct types
 
-    auto result = IWalletController::HaveUnconfirmedFunds();
+    try
+    {
+        auto result = IWalletController::HaveUnconfirmedFunds();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::Value::From(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSIWalletController::GetBalanceSimple(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -50,12 +76,25 @@ Napi::Value NJSIWalletController::GetBalanceSimple(const Napi::CallbackInfo& inf
 
     //Check if parameters have correct types
 
-    auto result = IWalletController::GetBalanceSimple();
+    try
+    {
+        auto result = IWalletController::GetBalanceSimple();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::Value::From(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSIWalletController::GetBalance(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -69,33 +108,46 @@ Napi::Value NJSIWalletController::GetBalance(const Napi::CallbackInfo& info) {
 
     //Check if parameters have correct types
 
-    auto result = IWalletController::GetBalance();
+    try
+    {
+        auto result = IWalletController::GetBalance();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::Object::New(env);
-    auto arg_0_1 = Napi::Value::From(env, result.availableIncludingLocked);
-    arg_0.Set("availableIncludingLocked", arg_0_1);
-    auto arg_0_2 = Napi::Value::From(env, result.availableExcludingLocked);
-    arg_0.Set("availableExcludingLocked", arg_0_2);
-    auto arg_0_3 = Napi::Value::From(env, result.availableLocked);
-    arg_0.Set("availableLocked", arg_0_3);
-    auto arg_0_4 = Napi::Value::From(env, result.unconfirmedIncludingLocked);
-    arg_0.Set("unconfirmedIncludingLocked", arg_0_4);
-    auto arg_0_5 = Napi::Value::From(env, result.unconfirmedExcludingLocked);
-    arg_0.Set("unconfirmedExcludingLocked", arg_0_5);
-    auto arg_0_6 = Napi::Value::From(env, result.unconfirmedLocked);
-    arg_0.Set("unconfirmedLocked", arg_0_6);
-    auto arg_0_7 = Napi::Value::From(env, result.immatureIncludingLocked);
-    arg_0.Set("immatureIncludingLocked", arg_0_7);
-    auto arg_0_8 = Napi::Value::From(env, result.immatureExcludingLocked);
-    arg_0.Set("immatureExcludingLocked", arg_0_8);
-    auto arg_0_9 = Napi::Value::From(env, result.immatureLocked);
-    arg_0.Set("immatureLocked", arg_0_9);
-    auto arg_0_10 = Napi::Value::From(env, result.totalLocked);
-    arg_0.Set("totalLocked", arg_0_10);
+        //Wrap result in node object
+        auto arg_0 = Napi::Object::New(env);
+        auto arg_0_1 = Napi::Value::From(env, result.availableIncludingLocked);
+        arg_0.Set("availableIncludingLocked", arg_0_1);
+        auto arg_0_2 = Napi::Value::From(env, result.availableExcludingLocked);
+        arg_0.Set("availableExcludingLocked", arg_0_2);
+        auto arg_0_3 = Napi::Value::From(env, result.availableLocked);
+        arg_0.Set("availableLocked", arg_0_3);
+        auto arg_0_4 = Napi::Value::From(env, result.unconfirmedIncludingLocked);
+        arg_0.Set("unconfirmedIncludingLocked", arg_0_4);
+        auto arg_0_5 = Napi::Value::From(env, result.unconfirmedExcludingLocked);
+        arg_0.Set("unconfirmedExcludingLocked", arg_0_5);
+        auto arg_0_6 = Napi::Value::From(env, result.unconfirmedLocked);
+        arg_0.Set("unconfirmedLocked", arg_0_6);
+        auto arg_0_7 = Napi::Value::From(env, result.immatureIncludingLocked);
+        arg_0.Set("immatureIncludingLocked", arg_0_7);
+        auto arg_0_8 = Napi::Value::From(env, result.immatureExcludingLocked);
+        arg_0.Set("immatureExcludingLocked", arg_0_8);
+        auto arg_0_9 = Napi::Value::From(env, result.immatureLocked);
+        arg_0.Set("immatureLocked", arg_0_9);
+        auto arg_0_10 = Napi::Value::From(env, result.totalLocked);
+        arg_0.Set("totalLocked", arg_0_10);
 
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 
 Napi::FunctionReference NJSIWalletController::constructor;

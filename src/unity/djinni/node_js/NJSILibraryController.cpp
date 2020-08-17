@@ -16,12 +16,25 @@ Napi::Value NJSILibraryController::BuildInfo(const Napi::CallbackInfo& info) {
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::BuildInfo();
+    try
+    {
+        auto result = ILibraryController::BuildInfo();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::String::New(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::String::New(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::InitUnityLib(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -44,12 +57,25 @@ Napi::Value NJSILibraryController::InitUnityLib(const Napi::CallbackInfo& info) 
 
     std::string arg_7 = info[7].As<Napi::String>();
 
-    auto result = ILibraryController::InitUnityLib(arg_0,arg_1,arg_2,arg_3,arg_4,arg_5,arg_6,arg_7);
+    try
+    {
+        auto result = ILibraryController::InitUnityLib(arg_0,arg_1,arg_2,arg_3,arg_4,arg_5,arg_6,arg_7);
 
-    //Wrap result in node object
-    auto arg_8 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_8 = Napi::Value::From(env, result);
 
-    return arg_8;
+        return arg_8;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 void NJSILibraryController::InitUnityLibThreaded(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -71,7 +97,20 @@ void NJSILibraryController::InitUnityLibThreaded(const Napi::CallbackInfo& info)
     std::shared_ptr<NJSILibraryListener> arg_6(std::shared_ptr<NJSILibraryListener>{}, NJSILibraryListener::Unwrap(info[6].As<Napi::Object>()));
 
     std::string arg_7 = info[7].As<Napi::String>();
-    ILibraryController::InitUnityLibThreaded(arg_0,arg_1,arg_2,arg_3,arg_4,arg_5,arg_6,arg_7);
+    try
+    {
+        ILibraryController::InitUnityLibThreaded(arg_0,arg_1,arg_2,arg_3,arg_4,arg_5,arg_6,arg_7);
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 Napi::Value NJSILibraryController::InitWalletFromRecoveryPhrase(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -87,12 +126,25 @@ Napi::Value NJSILibraryController::InitWalletFromRecoveryPhrase(const Napi::Call
     std::string arg_0 = info[0].As<Napi::String>();
     std::string arg_1 = info[1].As<Napi::String>();
 
-    auto result = ILibraryController::InitWalletFromRecoveryPhrase(arg_0,arg_1);
+    try
+    {
+        auto result = ILibraryController::InitWalletFromRecoveryPhrase(arg_0,arg_1);
 
-    //Wrap result in node object
-    auto arg_2 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_2 = Napi::Value::From(env, result);
 
-    return arg_2;
+        return arg_2;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::ContinueWalletFromRecoveryPhrase(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -108,12 +160,25 @@ Napi::Value NJSILibraryController::ContinueWalletFromRecoveryPhrase(const Napi::
     std::string arg_0 = info[0].As<Napi::String>();
     std::string arg_1 = info[1].As<Napi::String>();
 
-    auto result = ILibraryController::ContinueWalletFromRecoveryPhrase(arg_0,arg_1);
+    try
+    {
+        auto result = ILibraryController::ContinueWalletFromRecoveryPhrase(arg_0,arg_1);
 
-    //Wrap result in node object
-    auto arg_2 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_2 = Napi::Value::From(env, result);
 
-    return arg_2;
+        return arg_2;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::InitWalletLinkedFromURI(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -129,12 +194,25 @@ Napi::Value NJSILibraryController::InitWalletLinkedFromURI(const Napi::CallbackI
     std::string arg_0 = info[0].As<Napi::String>();
     std::string arg_1 = info[1].As<Napi::String>();
 
-    auto result = ILibraryController::InitWalletLinkedFromURI(arg_0,arg_1);
+    try
+    {
+        auto result = ILibraryController::InitWalletLinkedFromURI(arg_0,arg_1);
 
-    //Wrap result in node object
-    auto arg_2 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_2 = Napi::Value::From(env, result);
 
-    return arg_2;
+        return arg_2;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::ContinueWalletLinkedFromURI(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -150,12 +228,25 @@ Napi::Value NJSILibraryController::ContinueWalletLinkedFromURI(const Napi::Callb
     std::string arg_0 = info[0].As<Napi::String>();
     std::string arg_1 = info[1].As<Napi::String>();
 
-    auto result = ILibraryController::ContinueWalletLinkedFromURI(arg_0,arg_1);
+    try
+    {
+        auto result = ILibraryController::ContinueWalletLinkedFromURI(arg_0,arg_1);
 
-    //Wrap result in node object
-    auto arg_2 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_2 = Napi::Value::From(env, result);
 
-    return arg_2;
+        return arg_2;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::InitWalletFromAndroidLegacyProtoWallet(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -172,12 +263,25 @@ Napi::Value NJSILibraryController::InitWalletFromAndroidLegacyProtoWallet(const 
     std::string arg_1 = info[1].As<Napi::String>();
     std::string arg_2 = info[2].As<Napi::String>();
 
-    auto result = ILibraryController::InitWalletFromAndroidLegacyProtoWallet(arg_0,arg_1,arg_2);
+    try
+    {
+        auto result = ILibraryController::InitWalletFromAndroidLegacyProtoWallet(arg_0,arg_1,arg_2);
 
-    //Wrap result in node object
-    auto arg_3 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_3 = Napi::Value::From(env, result);
 
-    return arg_3;
+        return arg_3;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::isValidAndroidLegacyProtoWallet(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -193,12 +297,25 @@ Napi::Value NJSILibraryController::isValidAndroidLegacyProtoWallet(const Napi::C
     std::string arg_0 = info[0].As<Napi::String>();
     std::string arg_1 = info[1].As<Napi::String>();
 
-    auto result = ILibraryController::isValidAndroidLegacyProtoWallet(arg_0,arg_1);
+    try
+    {
+        auto result = ILibraryController::isValidAndroidLegacyProtoWallet(arg_0,arg_1);
 
-    //Wrap result in node object
-    auto arg_2 = Napi::Value::From(env, (int)result);
+        //Wrap result in node object
+        auto arg_2 = Napi::Value::From(env, (int)result);
 
-    return arg_2;
+        return arg_2;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::IsValidLinkURI(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -213,12 +330,25 @@ Napi::Value NJSILibraryController::IsValidLinkURI(const Napi::CallbackInfo& info
     //Check if parameters have correct types
     std::string arg_0 = info[0].As<Napi::String>();
 
-    auto result = ILibraryController::IsValidLinkURI(arg_0);
+    try
+    {
+        auto result = ILibraryController::IsValidLinkURI(arg_0);
 
-    //Wrap result in node object
-    auto arg_1 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_1 = Napi::Value::From(env, result);
 
-    return arg_1;
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::ReplaceWalletLinkedFromURI(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -234,12 +364,25 @@ Napi::Value NJSILibraryController::ReplaceWalletLinkedFromURI(const Napi::Callba
     std::string arg_0 = info[0].As<Napi::String>();
     std::string arg_1 = info[1].As<Napi::String>();
 
-    auto result = ILibraryController::ReplaceWalletLinkedFromURI(arg_0,arg_1);
+    try
+    {
+        auto result = ILibraryController::ReplaceWalletLinkedFromURI(arg_0,arg_1);
 
-    //Wrap result in node object
-    auto arg_2 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_2 = Napi::Value::From(env, result);
 
-    return arg_2;
+        return arg_2;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::EraseWalletSeedsAndAccounts(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -253,12 +396,25 @@ Napi::Value NJSILibraryController::EraseWalletSeedsAndAccounts(const Napi::Callb
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::EraseWalletSeedsAndAccounts();
+    try
+    {
+        auto result = ILibraryController::EraseWalletSeedsAndAccounts();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::Value::From(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::IsValidRecoveryPhrase(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -273,12 +429,25 @@ Napi::Value NJSILibraryController::IsValidRecoveryPhrase(const Napi::CallbackInf
     //Check if parameters have correct types
     std::string arg_0 = info[0].As<Napi::String>();
 
-    auto result = ILibraryController::IsValidRecoveryPhrase(arg_0);
+    try
+    {
+        auto result = ILibraryController::IsValidRecoveryPhrase(arg_0);
 
-    //Wrap result in node object
-    auto arg_1 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_1 = Napi::Value::From(env, result);
 
-    return arg_1;
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::GenerateRecoveryMnemonic(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -292,12 +461,25 @@ Napi::Value NJSILibraryController::GenerateRecoveryMnemonic(const Napi::Callback
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::GenerateRecoveryMnemonic();
+    try
+    {
+        auto result = ILibraryController::GenerateRecoveryMnemonic();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::String::New(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::String::New(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::GenerateGenesisKeys(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -311,12 +493,25 @@ Napi::Value NJSILibraryController::GenerateGenesisKeys(const Napi::CallbackInfo&
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::GenerateGenesisKeys();
+    try
+    {
+        auto result = ILibraryController::GenerateGenesisKeys();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::String::New(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::String::New(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::ComposeRecoveryPhrase(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -332,12 +527,25 @@ Napi::Value NJSILibraryController::ComposeRecoveryPhrase(const Napi::CallbackInf
     std::string arg_0 = info[0].As<Napi::String>();
     auto arg_1 = info[1].ToNumber().Int64Value();
 
-    auto result = ILibraryController::ComposeRecoveryPhrase(arg_0,arg_1);
+    try
+    {
+        auto result = ILibraryController::ComposeRecoveryPhrase(arg_0,arg_1);
 
-    //Wrap result in node object
-    auto arg_2 = Napi::String::New(env, result);
+        //Wrap result in node object
+        auto arg_2 = Napi::String::New(env, result);
 
-    return arg_2;
+        return arg_2;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 void NJSILibraryController::TerminateUnityLib(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -350,7 +558,20 @@ void NJSILibraryController::TerminateUnityLib(const Napi::CallbackInfo& info) {
     }
 
     //Check if parameters have correct types
-    ILibraryController::TerminateUnityLib();
+    try
+    {
+        ILibraryController::TerminateUnityLib();
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 Napi::Value NJSILibraryController::QRImageFromString(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -366,23 +587,36 @@ Napi::Value NJSILibraryController::QRImageFromString(const Napi::CallbackInfo& i
     std::string arg_0 = info[0].As<Napi::String>();
     auto arg_1 = info[1].ToNumber().Int32Value();
 
-    auto result = ILibraryController::QRImageFromString(arg_0,arg_1);
-
-    //Wrap result in node object
-    auto arg_2 = Napi::Object::New(env);
-    auto arg_2_1 = Napi::Value::From(env, result.width);
-    arg_2.Set("width", arg_2_1);
-    auto arg_2_2 = Napi::Array::New(env);
-    for(size_t arg_2_2_id = 0; arg_2_2_id < result.pixel_data.size(); arg_2_2_id++)
+    try
     {
-        auto arg_2_2_elem = Napi::Value::From(env, result.pixel_data[arg_2_2_id]);
-        arg_2_2.Set((int)arg_2_2_id,arg_2_2_elem);
+        auto result = ILibraryController::QRImageFromString(arg_0,arg_1);
+
+        //Wrap result in node object
+        auto arg_2 = Napi::Object::New(env);
+        auto arg_2_1 = Napi::Value::From(env, result.width);
+        arg_2.Set("width", arg_2_1);
+        auto arg_2_2 = Napi::Array::New(env);
+        for(size_t arg_2_2_id = 0; arg_2_2_id < result.pixel_data.size(); arg_2_2_id++)
+        {
+            auto arg_2_2_elem = Napi::Value::From(env, result.pixel_data[arg_2_2_id]);
+            arg_2_2.Set((int)arg_2_2_id,arg_2_2_elem);
+        }
+
+        arg_2.Set("pixel_data", arg_2_2);
+
+
+        return arg_2;
     }
-
-    arg_2.Set("pixel_data", arg_2_2);
-
-
-    return arg_2;
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::GetReceiveAddress(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -396,12 +630,25 @@ Napi::Value NJSILibraryController::GetReceiveAddress(const Napi::CallbackInfo& i
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::GetReceiveAddress();
+    try
+    {
+        auto result = ILibraryController::GetReceiveAddress();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::String::New(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::String::New(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::GetRecoveryPhrase(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -415,12 +662,25 @@ Napi::Value NJSILibraryController::GetRecoveryPhrase(const Napi::CallbackInfo& i
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::GetRecoveryPhrase();
+    try
+    {
+        auto result = ILibraryController::GetRecoveryPhrase();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::String::New(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::String::New(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::IsMnemonicWallet(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -434,12 +694,25 @@ Napi::Value NJSILibraryController::IsMnemonicWallet(const Napi::CallbackInfo& in
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::IsMnemonicWallet();
+    try
+    {
+        auto result = ILibraryController::IsMnemonicWallet();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::Value::From(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::IsMnemonicCorrect(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -454,12 +727,25 @@ Napi::Value NJSILibraryController::IsMnemonicCorrect(const Napi::CallbackInfo& i
     //Check if parameters have correct types
     std::string arg_0 = info[0].As<Napi::String>();
 
-    auto result = ILibraryController::IsMnemonicCorrect(arg_0);
+    try
+    {
+        auto result = ILibraryController::IsMnemonicCorrect(arg_0);
 
-    //Wrap result in node object
-    auto arg_1 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_1 = Napi::Value::From(env, result);
 
-    return arg_1;
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::GetMnemonicDictionary(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -473,18 +759,31 @@ Napi::Value NJSILibraryController::GetMnemonicDictionary(const Napi::CallbackInf
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::GetMnemonicDictionary();
-
-    //Wrap result in node object
-    auto arg_0 = Napi::Array::New(env);
-    for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+    try
     {
-        auto arg_0_elem = Napi::String::New(env, result[arg_0_id]);
-        arg_0.Set((int)arg_0_id,arg_0_elem);
+        auto result = ILibraryController::GetMnemonicDictionary();
+
+        //Wrap result in node object
+        auto arg_0 = Napi::Array::New(env);
+        for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+        {
+            auto arg_0_elem = Napi::String::New(env, result[arg_0_id]);
+            arg_0.Set((int)arg_0_id,arg_0_elem);
+        }
+
+
+        return arg_0;
     }
-
-
-    return arg_0;
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::UnlockWallet(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -499,12 +798,25 @@ Napi::Value NJSILibraryController::UnlockWallet(const Napi::CallbackInfo& info) 
     //Check if parameters have correct types
     std::string arg_0 = info[0].As<Napi::String>();
 
-    auto result = ILibraryController::UnlockWallet(arg_0);
+    try
+    {
+        auto result = ILibraryController::UnlockWallet(arg_0);
 
-    //Wrap result in node object
-    auto arg_1 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_1 = Napi::Value::From(env, result);
 
-    return arg_1;
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::LockWallet(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -518,12 +830,25 @@ Napi::Value NJSILibraryController::LockWallet(const Napi::CallbackInfo& info) {
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::LockWallet();
+    try
+    {
+        auto result = ILibraryController::LockWallet();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::Value::From(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::ChangePassword(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -539,12 +864,25 @@ Napi::Value NJSILibraryController::ChangePassword(const Napi::CallbackInfo& info
     std::string arg_0 = info[0].As<Napi::String>();
     std::string arg_1 = info[1].As<Napi::String>();
 
-    auto result = ILibraryController::ChangePassword(arg_0,arg_1);
+    try
+    {
+        auto result = ILibraryController::ChangePassword(arg_0,arg_1);
 
-    //Wrap result in node object
-    auto arg_2 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_2 = Napi::Value::From(env, result);
 
-    return arg_2;
+        return arg_2;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 void NJSILibraryController::DoRescan(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -557,7 +895,20 @@ void NJSILibraryController::DoRescan(const Napi::CallbackInfo& info) {
     }
 
     //Check if parameters have correct types
-    ILibraryController::DoRescan();
+    try
+    {
+        ILibraryController::DoRescan();
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 Napi::Value NJSILibraryController::IsValidRecipient(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -605,23 +956,36 @@ Napi::Value NJSILibraryController::IsValidRecipient(const Napi::CallbackInfo& in
     UriRecord arg_0(arg_0_1, arg_0_2, arg_0_3);
 
 
-    auto result = ILibraryController::IsValidRecipient(arg_0);
+    try
+    {
+        auto result = ILibraryController::IsValidRecipient(arg_0);
 
-    //Wrap result in node object
-    auto arg_1 = Napi::Object::New(env);
-    auto arg_1_1 = Napi::Value::From(env, result.valid);
-    arg_1.Set("valid", arg_1_1);
-    auto arg_1_2 = Napi::String::New(env, result.address);
-    arg_1.Set("address", arg_1_2);
-    auto arg_1_3 = Napi::String::New(env, result.label);
-    arg_1.Set("label", arg_1_3);
-    auto arg_1_4 = Napi::String::New(env, result.desc);
-    arg_1.Set("desc", arg_1_4);
-    auto arg_1_5 = Napi::Value::From(env, result.amount);
-    arg_1.Set("amount", arg_1_5);
+        //Wrap result in node object
+        auto arg_1 = Napi::Object::New(env);
+        auto arg_1_1 = Napi::Value::From(env, result.valid);
+        arg_1.Set("valid", arg_1_1);
+        auto arg_1_2 = Napi::String::New(env, result.address);
+        arg_1.Set("address", arg_1_2);
+        auto arg_1_3 = Napi::String::New(env, result.label);
+        arg_1.Set("label", arg_1_3);
+        auto arg_1_4 = Napi::String::New(env, result.desc);
+        arg_1.Set("desc", arg_1_4);
+        auto arg_1_5 = Napi::Value::From(env, result.amount);
+        arg_1.Set("amount", arg_1_5);
 
 
-    return arg_1;
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::IsValidNativeAddress(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -636,12 +1000,25 @@ Napi::Value NJSILibraryController::IsValidNativeAddress(const Napi::CallbackInfo
     //Check if parameters have correct types
     std::string arg_0 = info[0].As<Napi::String>();
 
-    auto result = ILibraryController::IsValidNativeAddress(arg_0);
+    try
+    {
+        auto result = ILibraryController::IsValidNativeAddress(arg_0);
 
-    //Wrap result in node object
-    auto arg_1 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_1 = Napi::Value::From(env, result);
 
-    return arg_1;
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::IsValidBitcoinAddress(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -656,12 +1033,25 @@ Napi::Value NJSILibraryController::IsValidBitcoinAddress(const Napi::CallbackInf
     //Check if parameters have correct types
     std::string arg_0 = info[0].As<Napi::String>();
 
-    auto result = ILibraryController::IsValidBitcoinAddress(arg_0);
+    try
+    {
+        auto result = ILibraryController::IsValidBitcoinAddress(arg_0);
 
-    //Wrap result in node object
-    auto arg_1 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_1 = Napi::Value::From(env, result);
 
-    return arg_1;
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::feeForRecipient(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -717,12 +1107,25 @@ Napi::Value NJSILibraryController::feeForRecipient(const Napi::CallbackInfo& inf
     UriRecipient arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4, arg_0_5);
 
 
-    auto result = ILibraryController::feeForRecipient(arg_0);
+    try
+    {
+        auto result = ILibraryController::feeForRecipient(arg_0);
 
-    //Wrap result in node object
-    auto arg_1 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_1 = Napi::Value::From(env, result);
 
-    return arg_1;
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::performPaymentToRecipient(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -779,12 +1182,25 @@ Napi::Value NJSILibraryController::performPaymentToRecipient(const Napi::Callbac
 
     auto arg_1 = info[1].ToBoolean().Value();
 
-    auto result = ILibraryController::performPaymentToRecipient(arg_0,arg_1);
+    try
+    {
+        auto result = ILibraryController::performPaymentToRecipient(arg_0,arg_1);
 
-    //Wrap result in node object
-    auto arg_2 = Napi::Value::From(env, (int)result);
+        //Wrap result in node object
+        auto arg_2 = Napi::Value::From(env, (int)result);
 
-    return arg_2;
+        return arg_2;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::getTransaction(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -799,65 +1215,78 @@ Napi::Value NJSILibraryController::getTransaction(const Napi::CallbackInfo& info
     //Check if parameters have correct types
     std::string arg_0 = info[0].As<Napi::String>();
 
-    auto result = ILibraryController::getTransaction(arg_0);
-
-    //Wrap result in node object
-    auto arg_1 = Napi::Object::New(env);
-    auto arg_1_1 = Napi::String::New(env, result.txHash);
-    arg_1.Set("txHash", arg_1_1);
-    auto arg_1_2 = Napi::Value::From(env, result.timeStamp);
-    arg_1.Set("timeStamp", arg_1_2);
-    auto arg_1_3 = Napi::Value::From(env, result.amount);
-    arg_1.Set("amount", arg_1_3);
-    auto arg_1_4 = Napi::Value::From(env, result.fee);
-    arg_1.Set("fee", arg_1_4);
-    auto arg_1_5 = Napi::Value::From(env, (int)result.status);
-    arg_1.Set("status", arg_1_5);
-    auto arg_1_6 = Napi::Value::From(env, result.height);
-    arg_1.Set("height", arg_1_6);
-    auto arg_1_7 = Napi::Value::From(env, result.blockTime);
-    arg_1.Set("blockTime", arg_1_7);
-    auto arg_1_8 = Napi::Value::From(env, result.depth);
-    arg_1.Set("depth", arg_1_8);
-    auto arg_1_9 = Napi::Array::New(env);
-    for(size_t arg_1_9_id = 0; arg_1_9_id < result.inputs.size(); arg_1_9_id++)
+    try
     {
-        auto arg_1_9_elem = Napi::Object::New(env);
-        auto arg_1_9_elem_1 = Napi::String::New(env, result.inputs[arg_1_9_id].address);
-        arg_1_9_elem.Set("address", arg_1_9_elem_1);
-        auto arg_1_9_elem_2 = Napi::String::New(env, result.inputs[arg_1_9_id].label);
-        arg_1_9_elem.Set("label", arg_1_9_elem_2);
-        auto arg_1_9_elem_3 = Napi::String::New(env, result.inputs[arg_1_9_id].desc);
-        arg_1_9_elem.Set("desc", arg_1_9_elem_3);
-        auto arg_1_9_elem_4 = Napi::Value::From(env, result.inputs[arg_1_9_id].isMine);
-        arg_1_9_elem.Set("isMine", arg_1_9_elem_4);
+        auto result = ILibraryController::getTransaction(arg_0);
 
-        arg_1_9.Set((int)arg_1_9_id,arg_1_9_elem);
+        //Wrap result in node object
+        auto arg_1 = Napi::Object::New(env);
+        auto arg_1_1 = Napi::String::New(env, result.txHash);
+        arg_1.Set("txHash", arg_1_1);
+        auto arg_1_2 = Napi::Value::From(env, result.timeStamp);
+        arg_1.Set("timeStamp", arg_1_2);
+        auto arg_1_3 = Napi::Value::From(env, result.amount);
+        arg_1.Set("amount", arg_1_3);
+        auto arg_1_4 = Napi::Value::From(env, result.fee);
+        arg_1.Set("fee", arg_1_4);
+        auto arg_1_5 = Napi::Value::From(env, (int)result.status);
+        arg_1.Set("status", arg_1_5);
+        auto arg_1_6 = Napi::Value::From(env, result.height);
+        arg_1.Set("height", arg_1_6);
+        auto arg_1_7 = Napi::Value::From(env, result.blockTime);
+        arg_1.Set("blockTime", arg_1_7);
+        auto arg_1_8 = Napi::Value::From(env, result.depth);
+        arg_1.Set("depth", arg_1_8);
+        auto arg_1_9 = Napi::Array::New(env);
+        for(size_t arg_1_9_id = 0; arg_1_9_id < result.inputs.size(); arg_1_9_id++)
+        {
+            auto arg_1_9_elem = Napi::Object::New(env);
+            auto arg_1_9_elem_1 = Napi::String::New(env, result.inputs[arg_1_9_id].address);
+            arg_1_9_elem.Set("address", arg_1_9_elem_1);
+            auto arg_1_9_elem_2 = Napi::String::New(env, result.inputs[arg_1_9_id].label);
+            arg_1_9_elem.Set("label", arg_1_9_elem_2);
+            auto arg_1_9_elem_3 = Napi::String::New(env, result.inputs[arg_1_9_id].desc);
+            arg_1_9_elem.Set("desc", arg_1_9_elem_3);
+            auto arg_1_9_elem_4 = Napi::Value::From(env, result.inputs[arg_1_9_id].isMine);
+            arg_1_9_elem.Set("isMine", arg_1_9_elem_4);
+
+            arg_1_9.Set((int)arg_1_9_id,arg_1_9_elem);
+        }
+
+        arg_1.Set("inputs", arg_1_9);
+        auto arg_1_10 = Napi::Array::New(env);
+        for(size_t arg_1_10_id = 0; arg_1_10_id < result.outputs.size(); arg_1_10_id++)
+        {
+            auto arg_1_10_elem = Napi::Object::New(env);
+            auto arg_1_10_elem_1 = Napi::Value::From(env, result.outputs[arg_1_10_id].amount);
+            arg_1_10_elem.Set("amount", arg_1_10_elem_1);
+            auto arg_1_10_elem_2 = Napi::String::New(env, result.outputs[arg_1_10_id].address);
+            arg_1_10_elem.Set("address", arg_1_10_elem_2);
+            auto arg_1_10_elem_3 = Napi::String::New(env, result.outputs[arg_1_10_id].label);
+            arg_1_10_elem.Set("label", arg_1_10_elem_3);
+            auto arg_1_10_elem_4 = Napi::String::New(env, result.outputs[arg_1_10_id].desc);
+            arg_1_10_elem.Set("desc", arg_1_10_elem_4);
+            auto arg_1_10_elem_5 = Napi::Value::From(env, result.outputs[arg_1_10_id].isMine);
+            arg_1_10_elem.Set("isMine", arg_1_10_elem_5);
+
+            arg_1_10.Set((int)arg_1_10_id,arg_1_10_elem);
+        }
+
+        arg_1.Set("outputs", arg_1_10);
+
+
+        return arg_1;
     }
-
-    arg_1.Set("inputs", arg_1_9);
-    auto arg_1_10 = Napi::Array::New(env);
-    for(size_t arg_1_10_id = 0; arg_1_10_id < result.outputs.size(); arg_1_10_id++)
+    catch (std::exception& e)
     {
-        auto arg_1_10_elem = Napi::Object::New(env);
-        auto arg_1_10_elem_1 = Napi::Value::From(env, result.outputs[arg_1_10_id].amount);
-        arg_1_10_elem.Set("amount", arg_1_10_elem_1);
-        auto arg_1_10_elem_2 = Napi::String::New(env, result.outputs[arg_1_10_id].address);
-        arg_1_10_elem.Set("address", arg_1_10_elem_2);
-        auto arg_1_10_elem_3 = Napi::String::New(env, result.outputs[arg_1_10_id].label);
-        arg_1_10_elem.Set("label", arg_1_10_elem_3);
-        auto arg_1_10_elem_4 = Napi::String::New(env, result.outputs[arg_1_10_id].desc);
-        arg_1_10_elem.Set("desc", arg_1_10_elem_4);
-        auto arg_1_10_elem_5 = Napi::Value::From(env, result.outputs[arg_1_10_id].isMine);
-        arg_1_10_elem.Set("isMine", arg_1_10_elem_5);
-
-        arg_1_10.Set((int)arg_1_10_id,arg_1_10_elem);
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
     }
-
-    arg_1.Set("outputs", arg_1_10);
-
-
-    return arg_1;
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::resendTransaction(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -872,12 +1301,25 @@ Napi::Value NJSILibraryController::resendTransaction(const Napi::CallbackInfo& i
     //Check if parameters have correct types
     std::string arg_0 = info[0].As<Napi::String>();
 
-    auto result = ILibraryController::resendTransaction(arg_0);
+    try
+    {
+        auto result = ILibraryController::resendTransaction(arg_0);
 
-    //Wrap result in node object
-    auto arg_1 = Napi::String::New(env, result);
+        //Wrap result in node object
+        auto arg_1 = Napi::String::New(env, result);
 
-    return arg_1;
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::getAddressBookRecords(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -891,27 +1333,40 @@ Napi::Value NJSILibraryController::getAddressBookRecords(const Napi::CallbackInf
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::getAddressBookRecords();
-
-    //Wrap result in node object
-    auto arg_0 = Napi::Array::New(env);
-    for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+    try
     {
-        auto arg_0_elem = Napi::Object::New(env);
-        auto arg_0_elem_1 = Napi::String::New(env, result[arg_0_id].address);
-        arg_0_elem.Set("address", arg_0_elem_1);
-        auto arg_0_elem_2 = Napi::String::New(env, result[arg_0_id].name);
-        arg_0_elem.Set("name", arg_0_elem_2);
-        auto arg_0_elem_3 = Napi::String::New(env, result[arg_0_id].desc);
-        arg_0_elem.Set("desc", arg_0_elem_3);
-        auto arg_0_elem_4 = Napi::String::New(env, result[arg_0_id].purpose);
-        arg_0_elem.Set("purpose", arg_0_elem_4);
+        auto result = ILibraryController::getAddressBookRecords();
 
-        arg_0.Set((int)arg_0_id,arg_0_elem);
+        //Wrap result in node object
+        auto arg_0 = Napi::Array::New(env);
+        for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+        {
+            auto arg_0_elem = Napi::Object::New(env);
+            auto arg_0_elem_1 = Napi::String::New(env, result[arg_0_id].address);
+            arg_0_elem.Set("address", arg_0_elem_1);
+            auto arg_0_elem_2 = Napi::String::New(env, result[arg_0_id].name);
+            arg_0_elem.Set("name", arg_0_elem_2);
+            auto arg_0_elem_3 = Napi::String::New(env, result[arg_0_id].desc);
+            arg_0_elem.Set("desc", arg_0_elem_3);
+            auto arg_0_elem_4 = Napi::String::New(env, result[arg_0_id].purpose);
+            arg_0_elem.Set("purpose", arg_0_elem_4);
+
+            arg_0.Set((int)arg_0_id,arg_0_elem);
+        }
+
+
+        return arg_0;
     }
-
-
-    return arg_0;
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 void NJSILibraryController::addAddressBookRecord(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -958,7 +1413,20 @@ void NJSILibraryController::addAddressBookRecord(const Napi::CallbackInfo& info)
     std::string arg_0_4 = field_arg_0_4.As<Napi::String>();
     AddressRecord arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4);
 
-    ILibraryController::addAddressBookRecord(arg_0);
+    try
+    {
+        ILibraryController::addAddressBookRecord(arg_0);
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 void NJSILibraryController::deleteAddressBookRecord(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -1005,7 +1473,20 @@ void NJSILibraryController::deleteAddressBookRecord(const Napi::CallbackInfo& in
     std::string arg_0_4 = field_arg_0_4.As<Napi::String>();
     AddressRecord arg_0(arg_0_1, arg_0_2, arg_0_3, arg_0_4);
 
-    ILibraryController::deleteAddressBookRecord(arg_0);
+    try
+    {
+        ILibraryController::deleteAddressBookRecord(arg_0);
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 void NJSILibraryController::PersistAndPruneForSPV(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -1018,7 +1499,20 @@ void NJSILibraryController::PersistAndPruneForSPV(const Napi::CallbackInfo& info
     }
 
     //Check if parameters have correct types
-    ILibraryController::PersistAndPruneForSPV();
+    try
+    {
+        ILibraryController::PersistAndPruneForSPV();
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 void NJSILibraryController::ResetUnifiedProgress(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -1031,7 +1525,20 @@ void NJSILibraryController::ResetUnifiedProgress(const Napi::CallbackInfo& info)
     }
 
     //Check if parameters have correct types
-    ILibraryController::ResetUnifiedProgress();
+    try
+    {
+        ILibraryController::ResetUnifiedProgress();
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 Napi::Value NJSILibraryController::getLastSPVBlockInfos(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -1045,25 +1552,38 @@ Napi::Value NJSILibraryController::getLastSPVBlockInfos(const Napi::CallbackInfo
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::getLastSPVBlockInfos();
-
-    //Wrap result in node object
-    auto arg_0 = Napi::Array::New(env);
-    for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+    try
     {
-        auto arg_0_elem = Napi::Object::New(env);
-        auto arg_0_elem_1 = Napi::Value::From(env, result[arg_0_id].height);
-        arg_0_elem.Set("height", arg_0_elem_1);
-        auto arg_0_elem_2 = Napi::Value::From(env, result[arg_0_id].timeStamp);
-        arg_0_elem.Set("timeStamp", arg_0_elem_2);
-        auto arg_0_elem_3 = Napi::String::New(env, result[arg_0_id].blockHash);
-        arg_0_elem.Set("blockHash", arg_0_elem_3);
+        auto result = ILibraryController::getLastSPVBlockInfos();
 
-        arg_0.Set((int)arg_0_id,arg_0_elem);
+        //Wrap result in node object
+        auto arg_0 = Napi::Array::New(env);
+        for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+        {
+            auto arg_0_elem = Napi::Object::New(env);
+            auto arg_0_elem_1 = Napi::Value::From(env, result[arg_0_id].height);
+            arg_0_elem.Set("height", arg_0_elem_1);
+            auto arg_0_elem_2 = Napi::Value::From(env, result[arg_0_id].timeStamp);
+            arg_0_elem.Set("timeStamp", arg_0_elem_2);
+            auto arg_0_elem_3 = Napi::String::New(env, result[arg_0_id].blockHash);
+            arg_0_elem.Set("blockHash", arg_0_elem_3);
+
+            arg_0.Set((int)arg_0_id,arg_0_elem);
+        }
+
+
+        return arg_0;
     }
-
-
-    return arg_0;
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::getUnifiedProgress(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -1077,12 +1597,25 @@ Napi::Value NJSILibraryController::getUnifiedProgress(const Napi::CallbackInfo& 
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::getUnifiedProgress();
+    try
+    {
+        auto result = ILibraryController::getUnifiedProgress();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::Value::From(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::getMonitoringStats(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -1096,23 +1629,36 @@ Napi::Value NJSILibraryController::getMonitoringStats(const Napi::CallbackInfo& 
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::getMonitoringStats();
+    try
+    {
+        auto result = ILibraryController::getMonitoringStats();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::Object::New(env);
-    auto arg_0_1 = Napi::Value::From(env, result.partialHeight);
-    arg_0.Set("partialHeight", arg_0_1);
-    auto arg_0_2 = Napi::Value::From(env, result.partialOffset);
-    arg_0.Set("partialOffset", arg_0_2);
-    auto arg_0_3 = Napi::Value::From(env, result.prunedHeight);
-    arg_0.Set("prunedHeight", arg_0_3);
-    auto arg_0_4 = Napi::Value::From(env, result.processedSPVHeight);
-    arg_0.Set("processedSPVHeight", arg_0_4);
-    auto arg_0_5 = Napi::Value::From(env, result.probableHeight);
-    arg_0.Set("probableHeight", arg_0_5);
+        //Wrap result in node object
+        auto arg_0 = Napi::Object::New(env);
+        auto arg_0_1 = Napi::Value::From(env, result.partialHeight);
+        arg_0.Set("partialHeight", arg_0_1);
+        auto arg_0_2 = Napi::Value::From(env, result.partialOffset);
+        arg_0.Set("partialOffset", arg_0_2);
+        auto arg_0_3 = Napi::Value::From(env, result.prunedHeight);
+        arg_0.Set("prunedHeight", arg_0_3);
+        auto arg_0_4 = Napi::Value::From(env, result.processedSPVHeight);
+        arg_0.Set("processedSPVHeight", arg_0_4);
+        auto arg_0_5 = Napi::Value::From(env, result.probableHeight);
+        arg_0.Set("probableHeight", arg_0_5);
 
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 void NJSILibraryController::RegisterMonitorListener(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -1127,7 +1673,20 @@ void NJSILibraryController::RegisterMonitorListener(const Napi::CallbackInfo& in
     //Check if parameters have correct types
     std::shared_ptr<NJSMonitorListener> arg_0(std::shared_ptr<NJSMonitorListener>{}, NJSMonitorListener::Unwrap(info[0].As<Napi::Object>()));
 
-    ILibraryController::RegisterMonitorListener(arg_0);
+    try
+    {
+        ILibraryController::RegisterMonitorListener(arg_0);
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 void NJSILibraryController::UnregisterMonitorListener(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -1142,7 +1701,20 @@ void NJSILibraryController::UnregisterMonitorListener(const Napi::CallbackInfo& 
     //Check if parameters have correct types
     std::shared_ptr<NJSMonitorListener> arg_0(std::shared_ptr<NJSMonitorListener>{}, NJSMonitorListener::Unwrap(info[0].As<Napi::Object>()));
 
-    ILibraryController::UnregisterMonitorListener(arg_0);
+    try
+    {
+        ILibraryController::UnregisterMonitorListener(arg_0);
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 Napi::Value NJSILibraryController::getClientInfo(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -1156,19 +1728,32 @@ Napi::Value NJSILibraryController::getClientInfo(const Napi::CallbackInfo& info)
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::getClientInfo();
-
-    //Wrap result in node object
-    auto arg_0 = Napi::Object::New(env);
-    for(auto const& arg_0_elem : result)
+    try
     {
-        auto arg_0_first = Napi::String::New(env, arg_0_elem.first);
-        auto arg_0_second = Napi::String::New(env, arg_0_elem.second);
-        arg_0.Set(arg_0_first, arg_0_second);
+        auto result = ILibraryController::getClientInfo();
+
+        //Wrap result in node object
+        auto arg_0 = Napi::Object::New(env);
+        for(auto const& arg_0_elem : result)
+        {
+            auto arg_0_first = Napi::String::New(env, arg_0_elem.first);
+            auto arg_0_second = Napi::String::New(env, arg_0_elem.second);
+            arg_0.Set(arg_0_first, arg_0_second);
+        }
+
+
+        return arg_0;
     }
-
-
-    return arg_0;
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::getMutationHistory(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -1182,29 +1767,42 @@ Napi::Value NJSILibraryController::getMutationHistory(const Napi::CallbackInfo& 
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::getMutationHistory();
-
-    //Wrap result in node object
-    auto arg_0 = Napi::Array::New(env);
-    for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+    try
     {
-        auto arg_0_elem = Napi::Object::New(env);
-        auto arg_0_elem_1 = Napi::Value::From(env, result[arg_0_id].change);
-        arg_0_elem.Set("change", arg_0_elem_1);
-        auto arg_0_elem_2 = Napi::Value::From(env, result[arg_0_id].timestamp);
-        arg_0_elem.Set("timestamp", arg_0_elem_2);
-        auto arg_0_elem_3 = Napi::String::New(env, result[arg_0_id].txHash);
-        arg_0_elem.Set("txHash", arg_0_elem_3);
-        auto arg_0_elem_4 = Napi::Value::From(env, (int)result[arg_0_id].status);
-        arg_0_elem.Set("status", arg_0_elem_4);
-        auto arg_0_elem_5 = Napi::Value::From(env, result[arg_0_id].depth);
-        arg_0_elem.Set("depth", arg_0_elem_5);
+        auto result = ILibraryController::getMutationHistory();
 
-        arg_0.Set((int)arg_0_id,arg_0_elem);
+        //Wrap result in node object
+        auto arg_0 = Napi::Array::New(env);
+        for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+        {
+            auto arg_0_elem = Napi::Object::New(env);
+            auto arg_0_elem_1 = Napi::Value::From(env, result[arg_0_id].change);
+            arg_0_elem.Set("change", arg_0_elem_1);
+            auto arg_0_elem_2 = Napi::Value::From(env, result[arg_0_id].timestamp);
+            arg_0_elem.Set("timestamp", arg_0_elem_2);
+            auto arg_0_elem_3 = Napi::String::New(env, result[arg_0_id].txHash);
+            arg_0_elem.Set("txHash", arg_0_elem_3);
+            auto arg_0_elem_4 = Napi::Value::From(env, (int)result[arg_0_id].status);
+            arg_0_elem.Set("status", arg_0_elem_4);
+            auto arg_0_elem_5 = Napi::Value::From(env, result[arg_0_id].depth);
+            arg_0_elem.Set("depth", arg_0_elem_5);
+
+            arg_0.Set((int)arg_0_id,arg_0_elem);
+        }
+
+
+        return arg_0;
     }
-
-
-    return arg_0;
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::getTransactionHistory(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -1218,71 +1816,84 @@ Napi::Value NJSILibraryController::getTransactionHistory(const Napi::CallbackInf
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::getTransactionHistory();
-
-    //Wrap result in node object
-    auto arg_0 = Napi::Array::New(env);
-    for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+    try
     {
-        auto arg_0_elem = Napi::Object::New(env);
-        auto arg_0_elem_1 = Napi::String::New(env, result[arg_0_id].txHash);
-        arg_0_elem.Set("txHash", arg_0_elem_1);
-        auto arg_0_elem_2 = Napi::Value::From(env, result[arg_0_id].timeStamp);
-        arg_0_elem.Set("timeStamp", arg_0_elem_2);
-        auto arg_0_elem_3 = Napi::Value::From(env, result[arg_0_id].amount);
-        arg_0_elem.Set("amount", arg_0_elem_3);
-        auto arg_0_elem_4 = Napi::Value::From(env, result[arg_0_id].fee);
-        arg_0_elem.Set("fee", arg_0_elem_4);
-        auto arg_0_elem_5 = Napi::Value::From(env, (int)result[arg_0_id].status);
-        arg_0_elem.Set("status", arg_0_elem_5);
-        auto arg_0_elem_6 = Napi::Value::From(env, result[arg_0_id].height);
-        arg_0_elem.Set("height", arg_0_elem_6);
-        auto arg_0_elem_7 = Napi::Value::From(env, result[arg_0_id].blockTime);
-        arg_0_elem.Set("blockTime", arg_0_elem_7);
-        auto arg_0_elem_8 = Napi::Value::From(env, result[arg_0_id].depth);
-        arg_0_elem.Set("depth", arg_0_elem_8);
-        auto arg_0_elem_9 = Napi::Array::New(env);
-        for(size_t arg_0_elem_9_id = 0; arg_0_elem_9_id < result[arg_0_id].inputs.size(); arg_0_elem_9_id++)
-        {
-            auto arg_0_elem_9_elem = Napi::Object::New(env);
-            auto arg_0_elem_9_elem_1 = Napi::String::New(env, result[arg_0_id].inputs[arg_0_elem_9_id].address);
-            arg_0_elem_9_elem.Set("address", arg_0_elem_9_elem_1);
-            auto arg_0_elem_9_elem_2 = Napi::String::New(env, result[arg_0_id].inputs[arg_0_elem_9_id].label);
-            arg_0_elem_9_elem.Set("label", arg_0_elem_9_elem_2);
-            auto arg_0_elem_9_elem_3 = Napi::String::New(env, result[arg_0_id].inputs[arg_0_elem_9_id].desc);
-            arg_0_elem_9_elem.Set("desc", arg_0_elem_9_elem_3);
-            auto arg_0_elem_9_elem_4 = Napi::Value::From(env, result[arg_0_id].inputs[arg_0_elem_9_id].isMine);
-            arg_0_elem_9_elem.Set("isMine", arg_0_elem_9_elem_4);
+        auto result = ILibraryController::getTransactionHistory();
 
-            arg_0_elem_9.Set((int)arg_0_elem_9_id,arg_0_elem_9_elem);
+        //Wrap result in node object
+        auto arg_0 = Napi::Array::New(env);
+        for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+        {
+            auto arg_0_elem = Napi::Object::New(env);
+            auto arg_0_elem_1 = Napi::String::New(env, result[arg_0_id].txHash);
+            arg_0_elem.Set("txHash", arg_0_elem_1);
+            auto arg_0_elem_2 = Napi::Value::From(env, result[arg_0_id].timeStamp);
+            arg_0_elem.Set("timeStamp", arg_0_elem_2);
+            auto arg_0_elem_3 = Napi::Value::From(env, result[arg_0_id].amount);
+            arg_0_elem.Set("amount", arg_0_elem_3);
+            auto arg_0_elem_4 = Napi::Value::From(env, result[arg_0_id].fee);
+            arg_0_elem.Set("fee", arg_0_elem_4);
+            auto arg_0_elem_5 = Napi::Value::From(env, (int)result[arg_0_id].status);
+            arg_0_elem.Set("status", arg_0_elem_5);
+            auto arg_0_elem_6 = Napi::Value::From(env, result[arg_0_id].height);
+            arg_0_elem.Set("height", arg_0_elem_6);
+            auto arg_0_elem_7 = Napi::Value::From(env, result[arg_0_id].blockTime);
+            arg_0_elem.Set("blockTime", arg_0_elem_7);
+            auto arg_0_elem_8 = Napi::Value::From(env, result[arg_0_id].depth);
+            arg_0_elem.Set("depth", arg_0_elem_8);
+            auto arg_0_elem_9 = Napi::Array::New(env);
+            for(size_t arg_0_elem_9_id = 0; arg_0_elem_9_id < result[arg_0_id].inputs.size(); arg_0_elem_9_id++)
+            {
+                auto arg_0_elem_9_elem = Napi::Object::New(env);
+                auto arg_0_elem_9_elem_1 = Napi::String::New(env, result[arg_0_id].inputs[arg_0_elem_9_id].address);
+                arg_0_elem_9_elem.Set("address", arg_0_elem_9_elem_1);
+                auto arg_0_elem_9_elem_2 = Napi::String::New(env, result[arg_0_id].inputs[arg_0_elem_9_id].label);
+                arg_0_elem_9_elem.Set("label", arg_0_elem_9_elem_2);
+                auto arg_0_elem_9_elem_3 = Napi::String::New(env, result[arg_0_id].inputs[arg_0_elem_9_id].desc);
+                arg_0_elem_9_elem.Set("desc", arg_0_elem_9_elem_3);
+                auto arg_0_elem_9_elem_4 = Napi::Value::From(env, result[arg_0_id].inputs[arg_0_elem_9_id].isMine);
+                arg_0_elem_9_elem.Set("isMine", arg_0_elem_9_elem_4);
+
+                arg_0_elem_9.Set((int)arg_0_elem_9_id,arg_0_elem_9_elem);
+            }
+
+            arg_0_elem.Set("inputs", arg_0_elem_9);
+            auto arg_0_elem_10 = Napi::Array::New(env);
+            for(size_t arg_0_elem_10_id = 0; arg_0_elem_10_id < result[arg_0_id].outputs.size(); arg_0_elem_10_id++)
+            {
+                auto arg_0_elem_10_elem = Napi::Object::New(env);
+                auto arg_0_elem_10_elem_1 = Napi::Value::From(env, result[arg_0_id].outputs[arg_0_elem_10_id].amount);
+                arg_0_elem_10_elem.Set("amount", arg_0_elem_10_elem_1);
+                auto arg_0_elem_10_elem_2 = Napi::String::New(env, result[arg_0_id].outputs[arg_0_elem_10_id].address);
+                arg_0_elem_10_elem.Set("address", arg_0_elem_10_elem_2);
+                auto arg_0_elem_10_elem_3 = Napi::String::New(env, result[arg_0_id].outputs[arg_0_elem_10_id].label);
+                arg_0_elem_10_elem.Set("label", arg_0_elem_10_elem_3);
+                auto arg_0_elem_10_elem_4 = Napi::String::New(env, result[arg_0_id].outputs[arg_0_elem_10_id].desc);
+                arg_0_elem_10_elem.Set("desc", arg_0_elem_10_elem_4);
+                auto arg_0_elem_10_elem_5 = Napi::Value::From(env, result[arg_0_id].outputs[arg_0_elem_10_id].isMine);
+                arg_0_elem_10_elem.Set("isMine", arg_0_elem_10_elem_5);
+
+                arg_0_elem_10.Set((int)arg_0_elem_10_id,arg_0_elem_10_elem);
+            }
+
+            arg_0_elem.Set("outputs", arg_0_elem_10);
+
+            arg_0.Set((int)arg_0_id,arg_0_elem);
         }
 
-        arg_0_elem.Set("inputs", arg_0_elem_9);
-        auto arg_0_elem_10 = Napi::Array::New(env);
-        for(size_t arg_0_elem_10_id = 0; arg_0_elem_10_id < result[arg_0_id].outputs.size(); arg_0_elem_10_id++)
-        {
-            auto arg_0_elem_10_elem = Napi::Object::New(env);
-            auto arg_0_elem_10_elem_1 = Napi::Value::From(env, result[arg_0_id].outputs[arg_0_elem_10_id].amount);
-            arg_0_elem_10_elem.Set("amount", arg_0_elem_10_elem_1);
-            auto arg_0_elem_10_elem_2 = Napi::String::New(env, result[arg_0_id].outputs[arg_0_elem_10_id].address);
-            arg_0_elem_10_elem.Set("address", arg_0_elem_10_elem_2);
-            auto arg_0_elem_10_elem_3 = Napi::String::New(env, result[arg_0_id].outputs[arg_0_elem_10_id].label);
-            arg_0_elem_10_elem.Set("label", arg_0_elem_10_elem_3);
-            auto arg_0_elem_10_elem_4 = Napi::String::New(env, result[arg_0_id].outputs[arg_0_elem_10_id].desc);
-            arg_0_elem_10_elem.Set("desc", arg_0_elem_10_elem_4);
-            auto arg_0_elem_10_elem_5 = Napi::Value::From(env, result[arg_0_id].outputs[arg_0_elem_10_id].isMine);
-            arg_0_elem_10_elem.Set("isMine", arg_0_elem_10_elem_5);
 
-            arg_0_elem_10.Set((int)arg_0_elem_10_id,arg_0_elem_10_elem);
-        }
-
-        arg_0_elem.Set("outputs", arg_0_elem_10);
-
-        arg_0.Set((int)arg_0_id,arg_0_elem);
+        return arg_0;
     }
-
-
-    return arg_0;
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::HaveUnconfirmedFunds(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -1296,12 +1907,25 @@ Napi::Value NJSILibraryController::HaveUnconfirmedFunds(const Napi::CallbackInfo
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::HaveUnconfirmedFunds();
+    try
+    {
+        auto result = ILibraryController::HaveUnconfirmedFunds();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::Value::From(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSILibraryController::GetBalance(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -1315,12 +1939,25 @@ Napi::Value NJSILibraryController::GetBalance(const Napi::CallbackInfo& info) {
 
     //Check if parameters have correct types
 
-    auto result = ILibraryController::GetBalance();
+    try
+    {
+        auto result = ILibraryController::GetBalance();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::Value::From(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 
 Napi::FunctionReference NJSILibraryController::constructor;

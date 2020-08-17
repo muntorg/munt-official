@@ -17,7 +17,20 @@ void NJSIP2pNetworkController::setListener(const Napi::CallbackInfo& info) {
     //Check if parameters have correct types
     std::shared_ptr<NJSIP2pNetworkListener> arg_0(std::shared_ptr<NJSIP2pNetworkListener>{}, NJSIP2pNetworkListener::Unwrap(info[0].As<Napi::Object>()));
 
-    IP2pNetworkController::setListener(arg_0);
+    try
+    {
+        IP2pNetworkController::setListener(arg_0);
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 void NJSIP2pNetworkController::disableNetwork(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -30,7 +43,20 @@ void NJSIP2pNetworkController::disableNetwork(const Napi::CallbackInfo& info) {
     }
 
     //Check if parameters have correct types
-    IP2pNetworkController::disableNetwork();
+    try
+    {
+        IP2pNetworkController::disableNetwork();
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 void NJSIP2pNetworkController::enableNetwork(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -43,7 +69,20 @@ void NJSIP2pNetworkController::enableNetwork(const Napi::CallbackInfo& info) {
     }
 
     //Check if parameters have correct types
-    IP2pNetworkController::enableNetwork();
+    try
+    {
+        IP2pNetworkController::enableNetwork();
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 Napi::Value NJSIP2pNetworkController::getPeerInfo(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -57,37 +96,50 @@ Napi::Value NJSIP2pNetworkController::getPeerInfo(const Napi::CallbackInfo& info
 
     //Check if parameters have correct types
 
-    auto result = IP2pNetworkController::getPeerInfo();
-
-    //Wrap result in node object
-    auto arg_0 = Napi::Array::New(env);
-    for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+    try
     {
-        auto arg_0_elem = Napi::Object::New(env);
-        auto arg_0_elem_1 = Napi::Value::From(env, result[arg_0_id].id);
-        arg_0_elem.Set("id", arg_0_elem_1);
-        auto arg_0_elem_2 = Napi::String::New(env, result[arg_0_id].ip);
-        arg_0_elem.Set("ip", arg_0_elem_2);
-        auto arg_0_elem_3 = Napi::String::New(env, result[arg_0_id].hostname);
-        arg_0_elem.Set("hostname", arg_0_elem_3);
-        auto arg_0_elem_4 = Napi::Value::From(env, result[arg_0_id].start_height);
-        arg_0_elem.Set("start_height", arg_0_elem_4);
-        auto arg_0_elem_5 = Napi::Value::From(env, result[arg_0_id].synced_height);
-        arg_0_elem.Set("synced_height", arg_0_elem_5);
-        auto arg_0_elem_6 = Napi::Value::From(env, result[arg_0_id].common_height);
-        arg_0_elem.Set("common_height", arg_0_elem_6);
-        auto arg_0_elem_7 = Napi::Value::From(env, result[arg_0_id].latency);
-        arg_0_elem.Set("latency", arg_0_elem_7);
-        auto arg_0_elem_8 = Napi::String::New(env, result[arg_0_id].userAgent);
-        arg_0_elem.Set("userAgent", arg_0_elem_8);
-        auto arg_0_elem_9 = Napi::Value::From(env, result[arg_0_id].protocol);
-        arg_0_elem.Set("protocol", arg_0_elem_9);
+        auto result = IP2pNetworkController::getPeerInfo();
 
-        arg_0.Set((int)arg_0_id,arg_0_elem);
+        //Wrap result in node object
+        auto arg_0 = Napi::Array::New(env);
+        for(size_t arg_0_id = 0; arg_0_id < result.size(); arg_0_id++)
+        {
+            auto arg_0_elem = Napi::Object::New(env);
+            auto arg_0_elem_1 = Napi::Value::From(env, result[arg_0_id].id);
+            arg_0_elem.Set("id", arg_0_elem_1);
+            auto arg_0_elem_2 = Napi::String::New(env, result[arg_0_id].ip);
+            arg_0_elem.Set("ip", arg_0_elem_2);
+            auto arg_0_elem_3 = Napi::String::New(env, result[arg_0_id].hostname);
+            arg_0_elem.Set("hostname", arg_0_elem_3);
+            auto arg_0_elem_4 = Napi::Value::From(env, result[arg_0_id].start_height);
+            arg_0_elem.Set("start_height", arg_0_elem_4);
+            auto arg_0_elem_5 = Napi::Value::From(env, result[arg_0_id].synced_height);
+            arg_0_elem.Set("synced_height", arg_0_elem_5);
+            auto arg_0_elem_6 = Napi::Value::From(env, result[arg_0_id].common_height);
+            arg_0_elem.Set("common_height", arg_0_elem_6);
+            auto arg_0_elem_7 = Napi::Value::From(env, result[arg_0_id].latency);
+            arg_0_elem.Set("latency", arg_0_elem_7);
+            auto arg_0_elem_8 = Napi::String::New(env, result[arg_0_id].userAgent);
+            arg_0_elem.Set("userAgent", arg_0_elem_8);
+            auto arg_0_elem_9 = Napi::Value::From(env, result[arg_0_id].protocol);
+            arg_0_elem.Set("protocol", arg_0_elem_9);
+
+            arg_0.Set((int)arg_0_id,arg_0_elem);
+        }
+
+
+        return arg_0;
     }
-
-
-    return arg_0;
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 
 Napi::FunctionReference NJSIP2pNetworkController::constructor;

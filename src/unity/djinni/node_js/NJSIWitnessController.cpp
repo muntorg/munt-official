@@ -16,19 +16,32 @@ Napi::Value NJSIWitnessController::getNetworkLimits(const Napi::CallbackInfo& in
 
     //Check if parameters have correct types
 
-    auto result = IWitnessController::getNetworkLimits();
-
-    //Wrap result in node object
-    auto arg_0 = Napi::Object::New(env);
-    for(auto const& arg_0_elem : result)
+    try
     {
-        auto arg_0_first = Napi::String::New(env, arg_0_elem.first);
-        auto arg_0_second = Napi::String::New(env, arg_0_elem.second);
-        arg_0.Set(arg_0_first, arg_0_second);
+        auto result = IWitnessController::getNetworkLimits();
+
+        //Wrap result in node object
+        auto arg_0 = Napi::Object::New(env);
+        for(auto const& arg_0_elem : result)
+        {
+            auto arg_0_first = Napi::String::New(env, arg_0_elem.first);
+            auto arg_0_second = Napi::String::New(env, arg_0_elem.second);
+            arg_0.Set(arg_0_first, arg_0_second);
+        }
+
+
+        return arg_0;
     }
-
-
-    return arg_0;
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSIWitnessController::getEstimatedWeight(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -44,27 +57,40 @@ Napi::Value NJSIWitnessController::getEstimatedWeight(const Napi::CallbackInfo& 
     auto arg_0 = info[0].ToNumber().Int64Value();
     auto arg_1 = info[1].ToNumber().Int64Value();
 
-    auto result = IWitnessController::getEstimatedWeight(arg_0,arg_1);
+    try
+    {
+        auto result = IWitnessController::getEstimatedWeight(arg_0,arg_1);
 
-    //Wrap result in node object
-    auto arg_2 = Napi::Object::New(env);
-    auto arg_2_1 = Napi::Value::From(env, result.network_weight);
-    arg_2.Set("network_weight", arg_2_1);
-    auto arg_2_2 = Napi::Value::From(env, result.weight);
-    arg_2.Set("weight", arg_2_2);
-    auto arg_2_3 = Napi::Value::From(env, result.parts);
-    arg_2.Set("parts", arg_2_3);
-    auto arg_2_4 = Napi::Value::From(env, result.estimated_witness_probability);
-    arg_2.Set("estimated_witness_probability", arg_2_4);
-    auto arg_2_5 = Napi::Value::From(env, result.estimated_blocks_per_day);
-    arg_2.Set("estimated_blocks_per_day", arg_2_5);
-    auto arg_2_6 = Napi::Value::From(env, result.estimated_daily_earnings);
-    arg_2.Set("estimated_daily_earnings", arg_2_6);
-    auto arg_2_7 = Napi::Value::From(env, result.estimated_lifetime_earnings);
-    arg_2.Set("estimated_lifetime_earnings", arg_2_7);
+        //Wrap result in node object
+        auto arg_2 = Napi::Object::New(env);
+        auto arg_2_1 = Napi::Value::From(env, result.network_weight);
+        arg_2.Set("network_weight", arg_2_1);
+        auto arg_2_2 = Napi::Value::From(env, result.weight);
+        arg_2.Set("weight", arg_2_2);
+        auto arg_2_3 = Napi::Value::From(env, result.parts);
+        arg_2.Set("parts", arg_2_3);
+        auto arg_2_4 = Napi::Value::From(env, result.estimated_witness_probability);
+        arg_2.Set("estimated_witness_probability", arg_2_4);
+        auto arg_2_5 = Napi::Value::From(env, result.estimated_blocks_per_day);
+        arg_2.Set("estimated_blocks_per_day", arg_2_5);
+        auto arg_2_6 = Napi::Value::From(env, result.estimated_daily_earnings);
+        arg_2.Set("estimated_daily_earnings", arg_2_6);
+        auto arg_2_7 = Napi::Value::From(env, result.estimated_lifetime_earnings);
+        arg_2.Set("estimated_lifetime_earnings", arg_2_7);
 
 
-    return arg_2;
+        return arg_2;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSIWitnessController::fundWitnessAccount(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -82,19 +108,32 @@ Napi::Value NJSIWitnessController::fundWitnessAccount(const Napi::CallbackInfo& 
     auto arg_2 = info[2].ToNumber().Int64Value();
     auto arg_3 = info[3].ToNumber().Int64Value();
 
-    auto result = IWitnessController::fundWitnessAccount(arg_0,arg_1,arg_2,arg_3);
+    try
+    {
+        auto result = IWitnessController::fundWitnessAccount(arg_0,arg_1,arg_2,arg_3);
 
-    //Wrap result in node object
-    auto arg_4 = Napi::Object::New(env);
-    auto arg_4_1 = Napi::String::New(env, result.status);
-    arg_4.Set("status", arg_4_1);
-    auto arg_4_2 = Napi::String::New(env, result.txid);
-    arg_4.Set("txid", arg_4_2);
-    auto arg_4_3 = Napi::Value::From(env, result.fee);
-    arg_4.Set("fee", arg_4_3);
+        //Wrap result in node object
+        auto arg_4 = Napi::Object::New(env);
+        auto arg_4_1 = Napi::String::New(env, result.status);
+        arg_4.Set("status", arg_4_1);
+        auto arg_4_2 = Napi::String::New(env, result.txid);
+        arg_4.Set("txid", arg_4_2);
+        auto arg_4_3 = Napi::Value::From(env, result.fee);
+        arg_4.Set("fee", arg_4_3);
 
 
-    return arg_4;
+        return arg_4;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSIWitnessController::getAccountWitnessStatistics(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -109,39 +148,52 @@ Napi::Value NJSIWitnessController::getAccountWitnessStatistics(const Napi::Callb
     //Check if parameters have correct types
     std::string arg_0 = info[0].As<Napi::String>();
 
-    auto result = IWitnessController::getAccountWitnessStatistics(arg_0);
+    try
+    {
+        auto result = IWitnessController::getAccountWitnessStatistics(arg_0);
 
-    //Wrap result in node object
-    auto arg_1 = Napi::Object::New(env);
-    auto arg_1_1 = Napi::String::New(env, result.request_status);
-    arg_1.Set("request_status", arg_1_1);
-    auto arg_1_2 = Napi::String::New(env, result.account_status);
-    arg_1.Set("account_status", arg_1_2);
-    auto arg_1_3 = Napi::Value::From(env, result.account_weight);
-    arg_1.Set("account_weight", arg_1_3);
-    auto arg_1_4 = Napi::Value::From(env, result.account_amount_locked);
-    arg_1.Set("account_amount_locked", arg_1_4);
-    auto arg_1_5 = Napi::Value::From(env, result.account_weight_at_creation);
-    arg_1.Set("account_weight_at_creation", arg_1_5);
-    auto arg_1_6 = Napi::Value::From(env, result.network_tip_total_weight);
-    arg_1.Set("network_tip_total_weight", arg_1_6);
-    auto arg_1_7 = Napi::Value::From(env, result.network_total_weight_at_account_creation_time);
-    arg_1.Set("network_total_weight_at_account_creation_time", arg_1_7);
-    auto arg_1_8 = Napi::Value::From(env, result.account_initial_lock_period_in_blocks);
-    arg_1.Set("account_initial_lock_period_in_blocks", arg_1_8);
-    auto arg_1_9 = Napi::Value::From(env, result.account_remaining_lock_period_in_blocks);
-    arg_1.Set("account_remaining_lock_period_in_blocks", arg_1_9);
-    auto arg_1_10 = Napi::Value::From(env, result.account_expected_witness_period_in_blocks);
-    arg_1.Set("account_expected_witness_period_in_blocks", arg_1_10);
-    auto arg_1_11 = Napi::Value::From(env, result.account_estimated_witness_period_in_blocks);
-    arg_1.Set("account_estimated_witness_period_in_blocks", arg_1_11);
-    auto arg_1_12 = Napi::Value::From(env, result.account_initial_lock_creation_block_height);
-    arg_1.Set("account_initial_lock_creation_block_height", arg_1_12);
-    auto arg_1_13 = Napi::Value::From(env, result.account_is_compounding);
-    arg_1.Set("account_is_compounding", arg_1_13);
+        //Wrap result in node object
+        auto arg_1 = Napi::Object::New(env);
+        auto arg_1_1 = Napi::String::New(env, result.request_status);
+        arg_1.Set("request_status", arg_1_1);
+        auto arg_1_2 = Napi::String::New(env, result.account_status);
+        arg_1.Set("account_status", arg_1_2);
+        auto arg_1_3 = Napi::Value::From(env, result.account_weight);
+        arg_1.Set("account_weight", arg_1_3);
+        auto arg_1_4 = Napi::Value::From(env, result.account_amount_locked);
+        arg_1.Set("account_amount_locked", arg_1_4);
+        auto arg_1_5 = Napi::Value::From(env, result.account_weight_at_creation);
+        arg_1.Set("account_weight_at_creation", arg_1_5);
+        auto arg_1_6 = Napi::Value::From(env, result.network_tip_total_weight);
+        arg_1.Set("network_tip_total_weight", arg_1_6);
+        auto arg_1_7 = Napi::Value::From(env, result.network_total_weight_at_account_creation_time);
+        arg_1.Set("network_total_weight_at_account_creation_time", arg_1_7);
+        auto arg_1_8 = Napi::Value::From(env, result.account_initial_lock_period_in_blocks);
+        arg_1.Set("account_initial_lock_period_in_blocks", arg_1_8);
+        auto arg_1_9 = Napi::Value::From(env, result.account_remaining_lock_period_in_blocks);
+        arg_1.Set("account_remaining_lock_period_in_blocks", arg_1_9);
+        auto arg_1_10 = Napi::Value::From(env, result.account_expected_witness_period_in_blocks);
+        arg_1.Set("account_expected_witness_period_in_blocks", arg_1_10);
+        auto arg_1_11 = Napi::Value::From(env, result.account_estimated_witness_period_in_blocks);
+        arg_1.Set("account_estimated_witness_period_in_blocks", arg_1_11);
+        auto arg_1_12 = Napi::Value::From(env, result.account_initial_lock_creation_block_height);
+        arg_1.Set("account_initial_lock_creation_block_height", arg_1_12);
+        auto arg_1_13 = Napi::Value::From(env, result.account_is_compounding);
+        arg_1.Set("account_is_compounding", arg_1_13);
 
 
-    return arg_1;
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 void NJSIWitnessController::setAccountCompounding(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -156,7 +208,20 @@ void NJSIWitnessController::setAccountCompounding(const Napi::CallbackInfo& info
     //Check if parameters have correct types
     std::string arg_0 = info[0].As<Napi::String>();
     auto arg_1 = info[1].ToBoolean().Value();
-    IWitnessController::setAccountCompounding(arg_0,arg_1);
+    try
+    {
+        IWitnessController::setAccountCompounding(arg_0,arg_1);
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 Napi::Value NJSIWitnessController::isAccountCompounding(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -171,12 +236,25 @@ Napi::Value NJSIWitnessController::isAccountCompounding(const Napi::CallbackInfo
     //Check if parameters have correct types
     std::string arg_0 = info[0].As<Napi::String>();
 
-    auto result = IWitnessController::isAccountCompounding(arg_0);
+    try
+    {
+        auto result = IWitnessController::isAccountCompounding(arg_0);
 
-    //Wrap result in node object
-    auto arg_1 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_1 = Napi::Value::From(env, result);
 
-    return arg_1;
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 
 Napi::FunctionReference NJSIWitnessController::constructor;

@@ -17,7 +17,20 @@ void NJSIGenerationController::setListener(const Napi::CallbackInfo& info) {
     //Check if parameters have correct types
     std::shared_ptr<NJSIGenerationListener> arg_0(std::shared_ptr<NJSIGenerationListener>{}, NJSIGenerationListener::Unwrap(info[0].As<Napi::Object>()));
 
-    IGenerationController::setListener(arg_0);
+    try
+    {
+        IGenerationController::setListener(arg_0);
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return;
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return;
+    }
 }
 Napi::Value NJSIGenerationController::startGeneration(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -33,12 +46,25 @@ Napi::Value NJSIGenerationController::startGeneration(const Napi::CallbackInfo& 
     auto arg_0 = info[0].ToNumber().Int32Value();
     std::string arg_1 = info[1].As<Napi::String>();
 
-    auto result = IGenerationController::startGeneration(arg_0,arg_1);
+    try
+    {
+        auto result = IGenerationController::startGeneration(arg_0,arg_1);
 
-    //Wrap result in node object
-    auto arg_2 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_2 = Napi::Value::From(env, result);
 
-    return arg_2;
+        return arg_2;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSIGenerationController::stopGeneration(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -52,12 +78,25 @@ Napi::Value NJSIGenerationController::stopGeneration(const Napi::CallbackInfo& i
 
     //Check if parameters have correct types
 
-    auto result = IGenerationController::stopGeneration();
+    try
+    {
+        auto result = IGenerationController::stopGeneration();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::Value::From(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSIGenerationController::getGenerationAddress(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -71,12 +110,25 @@ Napi::Value NJSIGenerationController::getGenerationAddress(const Napi::CallbackI
 
     //Check if parameters have correct types
 
-    auto result = IGenerationController::getGenerationAddress();
+    try
+    {
+        auto result = IGenerationController::getGenerationAddress();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::String::New(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::String::New(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSIGenerationController::getGenerationOverrideAddress(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -90,12 +142,25 @@ Napi::Value NJSIGenerationController::getGenerationOverrideAddress(const Napi::C
 
     //Check if parameters have correct types
 
-    auto result = IGenerationController::getGenerationOverrideAddress();
+    try
+    {
+        auto result = IGenerationController::getGenerationOverrideAddress();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::String::New(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::String::New(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSIGenerationController::setGenerationOverrideAddress(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -110,12 +175,25 @@ Napi::Value NJSIGenerationController::setGenerationOverrideAddress(const Napi::C
     //Check if parameters have correct types
     std::string arg_0 = info[0].As<Napi::String>();
 
-    auto result = IGenerationController::setGenerationOverrideAddress(arg_0);
+    try
+    {
+        auto result = IGenerationController::setGenerationOverrideAddress(arg_0);
 
-    //Wrap result in node object
-    auto arg_1 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_1 = Napi::Value::From(env, result);
 
-    return arg_1;
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSIGenerationController::getAvailableCores(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -129,12 +207,25 @@ Napi::Value NJSIGenerationController::getAvailableCores(const Napi::CallbackInfo
 
     //Check if parameters have correct types
 
-    auto result = IGenerationController::getAvailableCores();
+    try
+    {
+        auto result = IGenerationController::getAvailableCores();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::Value::From(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSIGenerationController::getMinimumMemory(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -148,12 +239,25 @@ Napi::Value NJSIGenerationController::getMinimumMemory(const Napi::CallbackInfo&
 
     //Check if parameters have correct types
 
-    auto result = IGenerationController::getMinimumMemory();
+    try
+    {
+        auto result = IGenerationController::getMinimumMemory();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::Value::From(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 Napi::Value NJSIGenerationController::getMaximumMemory(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -167,12 +271,25 @@ Napi::Value NJSIGenerationController::getMaximumMemory(const Napi::CallbackInfo&
 
     //Check if parameters have correct types
 
-    auto result = IGenerationController::getMaximumMemory();
+    try
+    {
+        auto result = IGenerationController::getMaximumMemory();
 
-    //Wrap result in node object
-    auto arg_0 = Napi::Value::From(env, result);
+        //Wrap result in node object
+        auto arg_0 = Napi::Value::From(env, result);
 
-    return arg_0;
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
 }
 
 Napi::FunctionReference NJSIGenerationController::constructor;
