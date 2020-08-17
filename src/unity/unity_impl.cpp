@@ -855,7 +855,7 @@ int32_t GuldenUnifiedBackend::InitUnityLib(const std::string& dataDir, const std
     // Testnet
     if (testnet)
     {
-        SoftSetArg("-testnet", "C1534687770:60");
+        SoftSetArg("-testnet", "S1596003003:60");
         SoftSetArg("-addnode", "devbak.net");
     }
 
