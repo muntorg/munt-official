@@ -42,7 +42,15 @@
         spellcheck="false"
         v-model="command"
         @keydown="onRpcInputKeyDown"
+        list="commands"
       />
+      <datalist id="commands">
+        <option
+          v-for="item in filteredAutocompleteList"
+          :key="item"
+          :value="item"
+        />
+      </datalist>
     </div>
   </div>
 </template>
@@ -50,12 +58,17 @@
 <script>
 import { RpcController } from "../../unity/Controllers";
 
+var updateFilterTimeout = null;
+
 export default {
   name: "DebugConsole",
   data() {
     return {
       command: "",
-      fontSize: 0.8
+      fontSize: 0.8,
+      autocompleteList: [],
+      filteredAutocompleteList: [],
+      preventAutocompleteList: false
     };
   },
   props: {
@@ -84,9 +97,17 @@ export default {
       return `font-size: ${this.fontSize}rem;`;
     }
   },
+  created() {
+    this.autocompleteList = RpcController.GetAutocompleteList();
+  },
   mounted() {
     this.scrollToBottom();
     this.focusCommand();
+  },
+  watch: {
+    command() {
+      this.filterAutocompleteList();
+    }
   },
   methods: {
     formatData(input) {
@@ -104,6 +125,7 @@ export default {
       }, 0);
     },
     onRpcInputKeyDown() {
+      this.preventAutocompleteList = false;
       switch (event.keyCode) {
         case 13: {
           let result = RpcController.Execute(this.command);
@@ -117,33 +139,30 @@ export default {
 
           this.scrollToBottom();
 
-          if (
-            result.success === false &&
-            result.data === "Method not found (code -32601)"
-          ) {
-            return; // do not add invalid methods to the history
-          }
-
           let index = this.commands.indexOf(result.command);
           if (index !== -1) {
             this.value.commands.splice(index, 1);
           }
           this.value.commands.push(result.command);
           this.value.idx = this.commands.length;
-          break;
+          return;
         }
         case 38: // arrow up
           if (this.idx > 0) this.value.idx--;
           if (this.commands.length > 0) {
+            this.preventAutocompleteList = true;
             this.command = this.commands[this.idx];
             this.moveToEnd();
+            event.preventDefault();
           }
           break;
         case 40: // arrow down
           if (this.idx < this.commands.length) this.value.idx++;
           if (this.idx < this.commands.length && this.commands.length > 0) {
+            this.preventAutocompleteList = true;
             this.command = this.commands[this.idx];
             this.moveToEnd();
+            event.preventDefault();
           } else {
             this.command = "";
           }
@@ -171,6 +190,28 @@ export default {
     decreaseFontSize() {
       if (this.fontSize <= 0.6) return;
       this.fontSize -= 0.05;
+    },
+    filterAutocompleteList(delay = true) {
+      clearTimeout(updateFilterTimeout);
+
+      if (this.preventAutocompleteList) return;
+      if (delay) {
+        updateFilterTimeout = setTimeout(() => {
+          this.filterAutocompleteList(false);
+        }, 500);
+        return;
+      }
+
+      let filteredAutocompleteList = [];
+
+      if (this.command && this.command.length > 0) {
+        filteredAutocompleteList = this.autocompleteList.filter(item => {
+          return item.startsWith(this.command);
+        });
+        if (filteredAutocompleteList.length > 20) filteredAutocompleteList = [];
+      }
+
+      this.filteredAutocompleteList = filteredAutocompleteList;
     }
   }
 };
@@ -218,8 +259,11 @@ export default {
   }
 }
 
+.input > input::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
 pre {
   overflow-wrap: break-word;
-  //font-size: 0.8rem;
 }
 </style>
