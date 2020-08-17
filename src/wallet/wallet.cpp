@@ -1023,7 +1023,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose, bool fSelf
             fUpdated = true;
         }
         // If block time changed, update
-        if (wtxIn.nBlockTime != -1 && (wtxIn.nBlockTime != wtx.nBlockTime))
+        if (wtxIn.nBlockTime != 0 && (wtxIn.nBlockTime != wtx.nBlockTime))
         {
             wtx.nBlockTime = wtxIn.nBlockTime;
             fUpdated = true;
