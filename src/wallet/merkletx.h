@@ -89,7 +89,7 @@ public:
         READWRITE(hashBlock);
 
         // From 2.1 (mobile unity wallets) and 2.2 (desktop wallets) we introduce block height and time for transactions.
-        if ( (s.GetType() & SER_DISK) && (s.GetVersion() >= 2020000))
+        if ( (s.GetType() & SER_DISK) && (s.GetVersion() >= 1000004))
         {
             READWRITE(nHeight);
             READWRITE(nBlockTime);
