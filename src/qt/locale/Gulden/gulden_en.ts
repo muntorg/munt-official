@@ -947,14 +947,14 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GUI</name>
     <message>
-        <location filename="../../GuldenGUI.cpp" line="+337"/>
+        <location filename="../../GuldenGUI.cpp" line="+336"/>
         <location line="+48"/>
-        <location line="+46"/>
+        <location line="+33"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
     <message>
-        <location line="-131"/>
+        <location line="-118"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
@@ -988,27 +988,27 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Conversion estimate</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="+405"/>
+        <location filename="../../gui.cpp" line="+402"/>
         <source>&amp;Address</source>
         <translation>&amp;Address</translation>
     </message>
     <message>
-        <location filename="../../GuldenGUI.cpp" line="+207"/>
+        <location filename="../../GuldenGUI.cpp" line="+194"/>
         <source>Withdrawable funds in this account is not yet mature, please wait and try again later.</source>
         <translation>Withdrawable funds in this account is not yet mature, please wait and try again later.</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="-149"/>
+        <location filename="../../gui.cpp" line="-148"/>
         <source>Operating in SPV mode (simple payment verification)</source>
         <translation>Operating in SPV mode (simple payment verification)</translation>
     </message>
     <message>
-        <location line="+1106"/>
+        <location line="+1105"/>
         <source>%1 block(s) remaining.</source>
         <translation>%1 block(s) remaining.</translation>
     </message>
     <message>
-        <location filename="../../GuldenGUI.cpp" line="-178"/>
+        <location filename="../../GuldenGUI.cpp" line="-165"/>
         <source>Wallet balances</source>
         <translation>Wallet balances</translation>
     </message>
@@ -1049,12 +1049,12 @@ The account will continue to be monitored and will be restored should it receive
         <translation>This feature is not yet available, please try again after block 797000.</translation>
     </message>
     <message>
-        <location line="+45"/>
+        <location line="+32"/>
         <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
         <translation>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</translation>
     </message>
     <message>
-        <location line="+36"/>
+        <location line="+35"/>
         <source>Tabs toolbar</source>
         <translation>Tabs toolbar</translation>
     </message>
@@ -1539,7 +1539,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GuldenSendCoinsEntry</name>
     <message>
-        <location filename="../../guldensendcoinsentry.cpp" line="+460"/>
+        <location filename="../../guldensendcoinsentry.cpp" line="+404"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
@@ -1586,8 +1586,8 @@ The account will continue to be monitored and will be restored should it receive
     </message>
     <message>
         <location line="+45"/>
-        <source>Enter receiving address (Gulden, IBAN)</source>
-        <translation>Enter receiving address (Gulden, IBAN)</translation>
+        <source>Enter receiving address</source>
+        <translation>Enter receiving address</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -1610,22 +1610,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Address book</translation>
     </message>
     <message>
-        <location filename="../../guldensendcoinsentry.cpp" line="-398"/>
-        <source>Amount exceeds maximum for IBAN payment.</source>
-        <translation>Amount exceeds maximum for IBAN payment.</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Amount below minimum for IBAN payment.</source>
-        <translation>Amount below minimum for IBAN payment.</translation>
-    </message>
-    <message>
-        <location line="+21"/>
-        <source>A recipient name is required for IBAN payments.</source>
-        <translation>A recipient name is required for IBAN payments.</translation>
-    </message>
-    <message>
-        <location line="+80"/>
+        <location filename="../../guldensendcoinsentry.cpp" line="-290"/>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
         <translation>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</translation>
     </message>
@@ -1648,11 +1633,6 @@ The account will continue to be monitored and will be restored should it receive
         <location line="+62"/>
         <source>Save</source>
         <translation>Save</translation>
-    </message>
-    <message>
-        <location line="+96"/>
-        <source>Will require approximately %1 Gulden including IBAN service fee</source>
-        <translation>Will require approximately %1 Gulden including IBAN service fee</translation>
     </message>
 </context>
 <context>
@@ -2041,8 +2021,8 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <location filename="../../newaccountdialog.cpp" line="-251"/>
-        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</translation>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2093,14 +2073,6 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <location filename="../../forms/newaccountdialog.ui" line="+190"/>
         <source>Scan QR to connect your mobile Gulden app</source>
         <translation>Scan QR to connect your mobile Gulden app</translation>
-    </message>
-</context>
-<context>
-    <name>NocksRequest</name>
-    <message>
-        <location filename="../../nocksrequest.cpp" line="+231"/>
-        <source>Okay</source>
-        <translation>Okay</translation>
     </message>
 </context>
 <context>
@@ -3731,12 +3703,12 @@ Remember to install the new key on any witness device (pi) or service you are us
 <context>
     <name>SendCoinsDialog</name>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="+514"/>
+        <location filename="../../sendcoinsdialog.cpp" line="+490"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location line="-359"/>
+        <location line="-336"/>
         <source>&amp;Delete</source>
         <translation>&amp;Delete</translation>
     </message>
@@ -3746,7 +3718,7 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>&amp;Edit</translation>
     </message>
     <message>
-        <location line="+911"/>
+        <location line="+884"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
     </message>
@@ -3786,7 +3758,7 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>Change:</translation>
     </message>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="-975"/>
+        <location filename="../../sendcoinsdialog.cpp" line="-948"/>
         <source>Copy amount</source>
         <translation>Copy amount</translation>
     </message>
@@ -3821,17 +3793,17 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>Copy change</translation>
     </message>
     <message>
-        <location line="+437"/>
+        <location line="+414"/>
         <source>Send</source>
         <translation>Send</translation>
     </message>
     <message>
-        <location line="-377"/>
+        <location line="-354"/>
         <source>&amp;Send</source>
         <translation>&amp;Send</translation>
     </message>
     <message>
-        <location line="+649"/>
+        <location line="+626"/>
         <source>Payment request expired.</source>
         <translation>Payment request expired.</translation>
     </message>
@@ -3841,13 +3813,13 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>Hide</translation>
     </message>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="-646"/>
+        <location filename="../../sendcoinsdialog.cpp" line="-623"/>
         <source>&amp;Clear</source>
         <translation>&amp;Clear</translation>
     </message>
     <message>
         <location filename="../../forms/sendcoinsdialog.ui" line="-749"/>
-        <location filename="../../sendcoinsdialog.cpp" line="+659"/>
+        <location filename="../../sendcoinsdialog.cpp" line="+632"/>
         <source>Send Coins</source>
         <translation>Send Coins</translation>
     </message>
@@ -3988,7 +3960,7 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>Balance:</translation>
     </message>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="-334"/>
+        <location filename="../../sendcoinsdialog.cpp" line="-330"/>
         <location line="+5"/>
         <location line="+5"/>
         <location line="+4"/>
@@ -4062,13 +4034,8 @@ If you  have recently received funds you may need to wait for them to clear befo
         <source>A fee higher than %1 is considered an absurdly high fee.</source>
         <translation>A fee higher than %1 is considered an absurdly high fee.</translation>
     </message>
-    <message>
-        <location line="+7"/>
-        <source>Nocks request failed [%1]</source>
-        <translation>Nocks request failed [%1]</translation>
-    </message>
     <message numerus="yes">
-        <location line="+63"/>
+        <location line="+66"/>
         <source>%n block(s)</source>
         <translation>
             <numerusform>%n block(s)</numerusform>
