@@ -1,7 +1,7 @@
-w2.2.0.10
+2.2.0.10
 
-CORE    - Change dev subsidy reward to 80 NLG per block, as decided by GAB
-CORE    - Activate changes to the Delta difficulty adjustment algorithm, which should see slightly smoother block times
+CORE    - Change dev subsidy reward to 80 NLG per block, as decided by GAB [Activate at block: 1226652 (Estimate 09/07/2020 @ 2:30pm (UTC+2)]
+CORE    - Activate changes to the Delta difficulty adjustment algorithm, which should see slightly smoother block times [Activates at timestamp: 1599494400 09/07/2020 @ 6:00pm (UTC+2)]
 CORE    - Fix a bug that was preventing witnesses from taking advantage of the ability to add transactions to the block they witness
           This should lead to smoother transaction verification (lower average time until first confirm) and also allow witnesses to earn a small amount extra through transaction rewards
 CMDFLAG - Implement blockmaxsize flag for witness block creation as well, previously was only for mining block creation
