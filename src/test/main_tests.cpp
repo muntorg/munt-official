@@ -24,7 +24,10 @@ BOOST_AUTO_TEST_CASE(block_subsidy_test)
     BOOST_CHECK_EQUAL(GetBlockSubsidy(1030001),    COIN * 110);
     BOOST_CHECK_EQUAL(GetBlockSubsidy(nP4First),   COIN * 110);
     BOOST_CHECK_EQUAL(GetBlockSubsidy(nP4First+1), COIN * 120);
-    BOOST_CHECK_EQUAL(GetBlockSubsidy(10888471),   COIN * 120);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(1226651),    COIN * 120);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(1226652),    COIN * 200);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(7023743),    COIN * 200);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(7023744),    0);
     BOOST_CHECK_EQUAL(GetBlockSubsidy(10888472),   0);
 }
 
