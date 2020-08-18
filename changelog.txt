@@ -8,12 +8,18 @@ CMDFLAG - Implement blockmaxsize flag for witness block creation as well, previo
 RPC     - Introduce some special case code to 'move' command to assist a small amount of 'legacy' phase3 witness accounts that otherwise experience difficulty being emptied when lock expires
 RPC     - Fix balance display for 'getaccountbalances'
 RPC     - Add rescan paramater to 'importwitnesskeys'
+RPC     - Remove 'getwitnessinfo' support for phase 3 blocks
 UI      - Improve estimated earnings calculation in UI
 CORE    - Fix a bug where in rare instances a "null" transaction could potentially be added to the wallet and make the wallet falsely appear corrupted on reload. There is no known release version of the code that could trigger this, however we protect against any future mistakes that might allow it to be sure
 CORE    - Remove various phase3 related parts of the codebase, these removals improve application performance and simplify the codebase
 CORE    - Remove old official testnet and start a new improved testnet in its place
 CORE    - Introduce "genesis witness" concept for testnet, that allows accelerated testnets to start with witnessing/phase5 already active from block 0
 CORE    - Introduce various unity/node.js/electron related changes to the codebase, that will allow for electron UI to be adopted in future. Electron UI already in relatively advanced stages but needs further work before merge
+
+NB! (Only relevant for old phase3 accounts, does not apply to phase4 accounts)
+With the removal of special purpose phase3 code this release introduces some potential oddities to transaction lists for accounts that locked/unlocked funds to a phase 3 witness, instead of showing as a lock/unlock these actions will show as sending/receiving external funds.
+Witness generation actions of old phase 3 accounts will still show correctly.
+This will be cleaned up as part of the ongoing work on a new UI, and will show correctly again in future.
 
 
 
