@@ -8,7 +8,7 @@ CMDFLAG - Implement blockmaxsize flag for witness block creation as well, previo
 RPC     - Introduce some special case code to 'move' command to assist a small amount of 'legacy' phase3 witness accounts that otherwise experience difficulty being emptied when lock expires
 RPC     - Fix balance display for 'getaccountbalances'
 RPC     - Add rescan paramater to 'importwitnesskeys'
-RPC     - Remove 'getwitnessinfo' support for phase 3 blocks
+RPC     - Remove 'getwitnessinfo' support for all blocks prior to phase5
 UI      - Improve estimated earnings calculation in UI
 CORE    - Fix a bug where in rare instances a "null" transaction could potentially be added to the wallet and make the wallet falsely appear corrupted on reload. There is no known release version of the code that could trigger this, however we protect against any future mistakes that might allow it to be sure
 CORE    - Remove various phase3 related parts of the codebase, these removals improve application performance and simplify the codebase
