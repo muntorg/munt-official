@@ -145,7 +145,7 @@
               <item>
                <widget class="QLineEdit" name="receivingAddress">
                 <property name="placeholderText">
-                 <string>Enter receiving address (Gulden, IBAN)</string>
+                 <string>Enter receiving address</string>
                 </property>
                </widget>
               </item>

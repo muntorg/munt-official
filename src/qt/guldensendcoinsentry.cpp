@@ -17,7 +17,6 @@
 
 #include "guiconstants.h"
 #include "guiutil.h"
-#include "nocksrequest.h"
 #include "optionsmodel.h"
 #include "units.h"
 #include "walletmodel.h"
@@ -41,9 +40,7 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
     QFrame(parent),
     ui(new Ui::GuldenSendCoinsEntry),
     model(0),
-    platformStyle(_platformStyle),
-    nocksQuote(nullptr),
-    nocksTimer(nullptr)
+    platformStyle(_platformStyle)
 {
     ui->setupUi(this);
 
@@ -97,8 +94,6 @@ GuldenSendCoinsEntry::GuldenSendCoinsEntry(const QStyle *_platformStyle, QWidget
 
 GuldenSendCoinsEntry::~GuldenSendCoinsEntry()
 {
-    delete nocksTimer;
-    cancelNocksQuote();
     delete ui;
 }
 
@@ -181,14 +176,6 @@ void GuldenSendCoinsEntry::setModel(WalletModel *_model)
 
         connect(ui->addressBookTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(addressBookSelectionChanged()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection)); 
         connect(ui->myAccountsTabTable->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(myAccountsSelectionChanged()), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection)); 
-
-        if (!nocksTimer)
-        {
-            nocksTimer = new QTimer(this);
-            nocksTimer->setInterval(60 * 1000); // if nothing changed update quote every 60s
-            connect(nocksTimer, SIGNAL(timeout()), this, SLOT(nocksTimeout()));
-            nocksTimer->start();
-        }
     }
 
     clear();
@@ -211,8 +198,8 @@ void GuldenSendCoinsEntry::addressChanged()
         }
         else if (val.paymentType == SendCoinsRecipient::PaymentType::IBANPayment)
         {
-            ui->payAmount->setPrimaryDisplayCurrency(GuldenAmountField::Currency::Euro);
-            ui->receivingAddressAccountName->setVisible(true);
+            //ui->payAmount->setPrimaryDisplayCurrency(GuldenAmountField::Currency::Euro);
+            //ui->receivingAddressAccountName->setVisible(true);
             //fixme: We don't set focus here because our matcher matches partial IBANs while people are typing
             //Improve the matcher first (make use of check digits) and then implement this again.
             //ui->receivingAddressAccountName->setFocus();
@@ -301,8 +288,6 @@ void GuldenSendCoinsEntry::deleteClicked()
 
 bool GuldenSendCoinsEntry::validate()
 {
-    cancelNocksQuote();
-
     if (!model)
         return false;
 
@@ -329,54 +314,11 @@ bool GuldenSendCoinsEntry::validate()
 
         if (val.paymentType == SendCoinsRecipient::PaymentType::BitcoinPayment)
         {
-            //ui->payAmount->setCurrency(NULL, NULL, GuldenAmountField::AmountFieldCurrency::CurrencyBitcoin);
-
-            CAmount currencyMax = model->getOptionsModel()->getNocksSettings()->getMaximumForCurrency("NLG-BTC");
-            CAmount currencyMin = model->getOptionsModel()->getNocksSettings()->getMinimumForCurrency("NLG-BTC");
-            if ( ui->payAmount->amount() > currencyMax || ui->payAmount->amount() < currencyMin )
-            {
-                ui->payAmount->setValid(false);
-                return false;
-            }
+            return false;
         }
         else if (val.paymentType == SendCoinsRecipient::PaymentType::IBANPayment)
         {
-            CAmount currencyMax = model->getOptionsModel()->getNocksSettings()->getMaximumForCurrency("NLG-EUR");
-            CAmount currencyMin = model->getOptionsModel()->getNocksSettings()->getMinimumForCurrency("NLG-EUR");
-
-            if (val.amount > currencyMax ) {
-                ui->payAmount->setValid(false);
-                setPayInfo(tr("Amount exceeds maximum for IBAN payment."), true);
-                return false;
-            }
-
-            if (val.amount < currencyMin)
-            {
-                ui->payAmount->setValid(false);
-                setPayInfo(tr("Amount below minimum for IBAN payment."), true);
-                return false;
-            }
-            
-            QString selDescription;
-            if (ui->sendCoinsRecipientBook->currentIndex() == 1)
-            {
-                if (proxyModelRecipients)
-                {
-                    QModelIndexList selection = ui->addressBookTabTable->selectionModel()->selectedRows();
-                    if (selection.count() > 0)
-                    {
-                        QModelIndex index = selection.at(0);
-                        selDescription = index.sibling(index.row(), AddressTableModel::ColumnIndex::Description).data(Qt::DisplayRole).toString().isEmpty();
-                    }
-                }
-            }               
-
-            if (ui->receivingAddressAccountName->text().isEmpty() && selDescription.isEmpty())
-            {
-                setValid(ui->receivingAddressAccountName, false);
-                setPayInfo(tr("A recipient name is required for IBAN payments."), true);
-                return false;
-            }
+            return false;
         }
         else
         {
@@ -418,6 +360,7 @@ SendCoinsRecipient::PaymentType GuldenSendCoinsEntry::getPaymentType(const QStri
         }
         else
         #endif
+        #ifdef SUPPORT_IBAN_AS_FOREX
         {
             // IBAN
             if (model->validateAddressIBAN(recipient.address))
@@ -425,6 +368,7 @@ SendCoinsRecipient::PaymentType GuldenSendCoinsEntry::getPaymentType(const QStri
                 ret = SendCoinsRecipient::PaymentType::IBANPayment;
             }
         }
+        #endif
     }
     return ret;
 }
@@ -810,54 +754,19 @@ bool GuldenSendCoinsEntry::updateLabel(const QString &address)
 
 void GuldenSendCoinsEntry::payInfoUpdateRequired()
 {
-    // any outstanding quote request is now outdated
-    cancelNocksQuote();
-
     if (!model)
         return;
 
-    // for IBAN payment that passes minimum amount request a quote
     SendCoinsRecipient val = getValue(false);
-    CAmount currencyMin = model->getOptionsModel()->getNocksSettings()->getMinimumForCurrency("NLG-EUR");
-    if (val.paymentType == SendCoinsRecipient::PaymentType::IBANPayment && val.amount > currencyMin) {
-        nocksQuote = new NocksRequest(this);
-        connect(nocksQuote, SIGNAL(requestProcessed()), this, SLOT(nocksQuoteProcessed()));
-        nocksQuote->startRequest(NULL, NocksRequest::RequestType::Quotation, "NLG", "EUR",
-                                 GuldenUnits::format(GuldenUnits::NLG, val.amount, false, GuldenUnits::separatorNever, 2));
+    if (val.paymentType == SendCoinsRecipient::PaymentType::IBANPayment)
+    {
+        
     }
     else
     {
         clearPayInfo();
     }
 
-}
-
-void GuldenSendCoinsEntry::nocksQuoteProcessed()
-{
-    if (nocksQuote->nativeAmount > 0) // for very small amounts, like EUR 0.01 Nocks will return a negative amount
-    {
-        QString msg = QString(tr("Will require approximately %1 Gulden including IBAN service fee")).arg(GuldenUnits::format(
-                                                                                           GuldenUnits::NLG,
-                                                                                           nocksQuote->nativeAmount,
-                                                                                           false, GuldenUnits::separatorAlways, 2));
-        setPayInfo(msg);
-    }
-    else
-    {
-        clearPayInfo();
-    }
-    nocksQuote->deleteLater();
-    nocksQuote = nullptr;
-}
-
-void GuldenSendCoinsEntry::nocksTimeout()
-{
-    // require an update of the payInfo to keep up with Nocks exchange rate changes
-    // if there is already a pending Nocks quote we can skip this timer update
-    if (!nocksQuote)
-    {
-        payInfoUpdateRequired();
-    }
 }
 
 void GuldenSendCoinsEntry::sendAllClicked()
@@ -881,15 +790,3 @@ void GuldenSendCoinsEntry::clearPayInfo()
     ui->payInfo->setText("");
     ui->payInfo->setStyleSheet("");
 }
-
-void GuldenSendCoinsEntry::cancelNocksQuote()
-{
-    if (nocksQuote) {
-        nocksQuote->cancel();
-        nocksQuote->deleteLater();
-        nocksQuote = nullptr;
-    }
-}
-
-
-

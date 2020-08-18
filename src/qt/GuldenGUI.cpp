@@ -69,7 +69,6 @@
 #include "backupdialog.h"
 #include "welcomedialog.h"
 #include "ticker.h"
-#include "nockssettings.h"
 #include "units.h"
 #include "optionsmodel.h"
 #include "askpassphrasedialog.h"
@@ -428,7 +427,6 @@ void GUI::setOptionsModel(OptionsModel* optionsModel_)
     {
         optionsModel = optionsModel_;
         optionsModel->setTicker(ticker);
-        optionsModel->setNocksSettings(nocksSettings);
         if (accountSummaryWidget)
             accountSummaryWidget->setOptionsModel(optionsModel);
         connect( optionsModel->guldenSettings, SIGNAL(  localCurrencyChanged(QString) ), this, SLOT( updateExchangeRates() ), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection) );

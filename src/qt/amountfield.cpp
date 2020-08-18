@@ -286,15 +286,13 @@ const QString ShortNameForCurrencyCode(const std::string& currencyCode)
 
 GuldenAmountField::GuldenAmountField(QWidget *parent) :
     QWidget(parent),
-    primaryCurrency(Currency::Euro),
+    primaryCurrency(Currency::Gulden),
     amountGulden(0),
     amountEuro(0),
     amountLocal(0),
     optionsModel(nullptr),
     ticker(nullptr)
 {
-    primaryCurrency = Currency::Gulden;
-
     QHBoxLayout *layout = new QHBoxLayout(this);
 
     primaryAmountDisplay = new AmountSpinBox(this);
@@ -543,9 +541,7 @@ GuldenAmountField::Currency GuldenAmountField::firstAuxCurrency() const
 
     switch (primaryCurrency) {
     case Currency::Gulden:
-        return Currency::Euro;
-    case Currency::Euro:
-        return Currency::Gulden;
+        return Currency::Local;
     case Currency::Local:
         return Currency::Gulden;
     default:
@@ -556,24 +552,7 @@ GuldenAmountField::Currency GuldenAmountField::firstAuxCurrency() const
 
 GuldenAmountField::Currency GuldenAmountField::secondAuxCurrency() const
 {
-    // options and ticker required to display auxilary currencies
-    if (!optionsModel || !ticker)
-        return Currency::None;
-
-    // no display of 2nd auxilary if local equal to Euro, just first Aux will do
-    if (optionsModel->guldenSettings->getLocalCurrency() == "EUR")
-        return Currency::None;
-
-    switch (primaryCurrency) {
-    case Currency::Gulden:
-        return Currency::Local;
-    case Currency::Euro:
-        return Currency::Local;
-    case Currency::Local:
-        return Currency::Euro;
-    default:
-        return Currency::None;
-    }
+    return Currency::None;
 }
 
 std::string GuldenAmountField::CurrencyCode(const Currency currency) const

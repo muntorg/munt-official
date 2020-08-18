@@ -55,8 +55,6 @@ qt/moc_viewaddressdialog.cpp \
 qt/moc_receivecoinsdialog.cpp \
 qt/moc_GuldenGUI.cpp \
 qt/moc_ticker.cpp \
-qt/moc_nockssettings.cpp \
-qt/moc_nocksrequest.cpp \
 qt/moc_clickablelabel.cpp \
 qt/moc_clickableqrimage.cpp \
 qt/moc_newaccountdialog.cpp \
@@ -103,8 +101,6 @@ qt/receivecoinsdialog.h \
 qt/miningaccountdialog.h \
 qt/GuldenGUI.h \
 qt/ticker.h \
-qt/nockssettings.h \
-qt/nocksrequest.h \
 qt/clickablelabel.h \
 qt/clickableqrimage.h \
 qt/newaccountdialog.h \
@@ -130,8 +126,6 @@ qt/receivecoinsdialog.cpp \
 qt/miningaccountdialog.cpp \
 qt/GuldenGUI.cpp \
 qt/ticker.cpp \
-qt/nockssettings.cpp \
-qt/nocksrequest.cpp \
 qt/clickablelabel.cpp \
 qt/clickableqrimage.cpp \
 qt/newaccountdialog.cpp \

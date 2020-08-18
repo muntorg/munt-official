@@ -14,8 +14,6 @@
 
 #include "amount.h"
 #include "ticker.h"
-#include "nockssettings.h"
-
 #include <QAbstractListModel>
 
 QT_BEGIN_NAMESPACE
@@ -146,15 +144,6 @@ public:
         return currencyTicker;
     }
 
-    void setNocksSettings(NocksSettings* settings)
-    {
-        nocksSettings = settings;
-    }
-    NocksSettings* getNocksSettings()
-    {
-        return nocksSettings;
-    }
-
 private:
     /* Qt-only settings */
     bool fHideTrayIcon;
@@ -175,7 +164,6 @@ private:
     QString strOverriddenByCommandLine;
 
     CurrencyTicker* currencyTicker;
-    NocksSettings* nocksSettings;
 
     // Add option to list of GUI options overridden through command line/config file
     void addOverriddenOption(const std::string &option);

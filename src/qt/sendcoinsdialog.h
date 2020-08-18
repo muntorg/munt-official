@@ -24,7 +24,6 @@ class OptionsModel;
 class QStyle;
 class GuldenSendCoinsEntry;
 class SendCoinsRecipient;
-class NocksRequest;
 
 namespace Ui {
     class SendCoinsDialog;
@@ -78,8 +77,6 @@ private:
     bool fNewRecipientAllowed;
     bool fFeeMinimized;
     const QStyle *platformStyle;
-
-    NocksRequest* nocksRequest;
 
     //fixme: (FUT) Make private again
 public:

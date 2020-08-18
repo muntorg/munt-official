@@ -19,7 +19,6 @@
 class WalletModel;
 class QStyle;
 class QSortFilterProxyModel;
-class NocksRequest;
 
 namespace Ui {
     class GuldenSendCoinsEntry;
@@ -84,8 +83,7 @@ private Q_SLOTS:
     void searchChangedAddressBook(const QString& searchString);
     void searchChangedMyAccounts(const QString& searchString);
     void payAmountChanged();
-    void nocksQuoteProcessed();
-    void nocksTimeout();
+   
     void sendAllClicked();
 
 private:
@@ -103,11 +101,6 @@ private:
     void payInfoUpdateRequired();
     void setPayInfo(const QString& msg, bool attention=false);
     void clearPayInfo();
-
-    void cancelNocksQuote();
-
-    NocksRequest* nocksQuote;
-    QTimer* nocksTimer;
 };
 
 #endif // GULDEN_QT_SENDCOINSENTRY_H

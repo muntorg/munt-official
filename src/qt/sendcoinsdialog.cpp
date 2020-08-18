@@ -19,7 +19,6 @@
 #include "guiutil.h"
 #include "optionsmodel.h"
 #include "guldensendcoinsentry.h"
-#include "nocksrequest.h"
 #include "gui.h"
 #include "walletmodel.h"
 
@@ -165,8 +164,6 @@ SendCoinsDialog::SendCoinsDialog(const QStyle *_platformStyle, QWidget *parent) 
     connect(editButton, SIGNAL(clicked()), this, SLOT(editAddressBookEntry()));
 
     addEntry();
-
-    nocksRequest = NULL;
 }
 
 void SendCoinsDialog::setClientModel(ClientModel *_clientModel)
@@ -248,12 +245,6 @@ SendCoinsDialog::~SendCoinsDialog()
     settings.setValue("fPayOnlyMinFee", ui->checkBoxMinimumFee->isChecked());
 
     delete ui;
-
-    if (nocksRequest)
-    {
-        nocksRequest->deleteLater();
-        nocksRequest = NULL;
-    }
 }
 
 void SendCoinsDialog::setAmount(CAmount amount)
@@ -303,31 +294,16 @@ void SendCoinsDialog::on_sendButton_clicked()
         return;
     }
 
-    if (nocksRequest)
-    {
-        nocksRequest->deleteLater();
-        nocksRequest = NULL;
-    }
-
     // Convert all our 'forex' requests into normal requests before commencing.
     pendingRecipients = recipients;
     for (int i=0; i < pendingRecipients.size(); ++i)
     {
         if (pendingRecipients[i].paymentType != SendCoinsRecipient::PaymentType::NormalPayment)
         {
-            nocksRequest = new NocksRequest(this);
-            connect(nocksRequest, SIGNAL(requestProcessed()), this, SLOT(on_sendButton_clicked()));
-            nocksRequest->startRequest(&pendingRecipients[i], NocksRequest::RequestType::Order, "NLG", "EUR");
-            ui->sendButton->setEnabled(false);
             return;
         }
         else if(!pendingRecipients[i].forexFailCode.empty())
         {
-            WalletModel::SendCoinsReturn errorRet;
-            errorRet.status = WalletModel::StatusCode::ForexFailed;
-            processSendCoinsReturn(errorRet, QString::fromStdString(pendingRecipients[i].forexFailCode));
-            ui->sendButton->setEnabled(true);
-            pendingRecipients.clear();
             return;
         }
     }
@@ -784,10 +760,6 @@ void SendCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsReturn 
         break;
     case WalletModel::PaymentRequestExpired:
         msgParams.first = tr("Payment request expired.");
-        msgParams.second = CClientUIInterface::MSG_ERROR;
-        break;
-    case WalletModel::ForexFailed:
-        msgParams.first = tr("Nocks request failed [%1]").arg(msgArg);
         msgParams.second = CClientUIInterface::MSG_ERROR;
         break;
     // included to prevent a compiler warning.

@@ -253,7 +253,6 @@ void OptionsModel::Init(bool resetSettings)
     language = settings.value("language").toString();
 
     currencyTicker = NULL;
-    nocksSettings = NULL;
     guldenSettings->InitSettings(settings);
 }
 

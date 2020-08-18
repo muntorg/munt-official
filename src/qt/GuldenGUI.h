@@ -28,7 +28,6 @@ class CAccount;
 class OptionsModel;
 class CReserveKeyOrScript;
 class CurrencyTicker;
-class NocksSettings;
 class QDialog;
 class NewAccountDialog;
 class AccountSettingsDialog;

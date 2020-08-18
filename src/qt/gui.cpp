@@ -137,11 +137,9 @@ GUI::GUI(const QStyle *_platformStyle, const NetworkStyle *networkStyle_, QWidge
     //fixme: (FUT) ex GuldenGUI code, integrate this better
     {
         ticker = new CurrencyTicker( this );
-        nocksSettings = new NocksSettings( this );
 
         //Start the ticker polling off - after the initial call the ticker will schedule the subsequent ones internally.
         ticker->pollTicker();
-        nocksSettings->pollSettings();
 
         connect( ticker, SIGNAL( exchangeRatesUpdated() ), this, SLOT( updateExchangeRates() ) );
 
@@ -354,7 +352,6 @@ GUI::~GUI()
 
     // Delete items that respond to timers
     delete ticker;
-    delete nocksSettings;
 
     // Unsubscribe from notifications from core
     unsubscribeFromCoreSignals();

@@ -127,7 +127,7 @@ public:
     bool IsValidWitness() const;
     bool IsValidWitness(const CChainParams& params) const;
 
-    //! Returns whether the address represents a valid Bitcoin address, which is used by some of the nocks integration.
+    //! Returns whether the address represents a valid Bitcoin address, which can be used by third party payment integrations
     bool IsValidBitcoin() const;
 
     CNativeAddress() {}

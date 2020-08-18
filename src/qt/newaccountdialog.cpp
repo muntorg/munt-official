@@ -63,7 +63,7 @@ NewAccountDialog::NewAccountDialog(const QStyle *_platformStyle, QWidget *parent
     ui->labelImportWitnessOnlyAccount->setObjectName("add_account_type_label_witnessonly");
     ui->labelImportPrivateKey->setObjectName("add_account_type_label_privkey");
 
-    toolTipTransactionalAccount = tr("<li>Day to day fund management</li><li>Send and receive Gulden</li><li>Send funds to any elligible IBAN account</li>");
+    toolTipTransactionalAccount = tr("<li>Day to day fund management</li><li>Send and receive Gulden</li>");
     toolTipMobileAccount = tr("<li>Top up, manage and control your mobile funds from the desktop</li><li>Empty your mobile funds with ease if phone is broken or stolen</li>");
     toolTipWitnessAccount = tr("<li>Grow your money</li><li>Flexible period of 1 month to 3 years</li><li>Help secure the network with minimal hardware equirements</li>");
     toolTipMiningAccount = tr("<li>Compete against other miners to create Gulden with your idle CPU time</li><li>Help secure the network</li>");

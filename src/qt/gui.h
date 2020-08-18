@@ -215,7 +215,6 @@ private:
     QWidget* cacheCurrentWidget = nullptr;
 
     CurrencyTicker* ticker = nullptr;
-    NocksSettings* nocksSettings = nullptr;
 
     QLabel* labelBalance = nullptr;
     QLabel* labelBalanceForex = nullptr;
