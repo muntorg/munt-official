@@ -12,6 +12,7 @@
 
 #include "rpc/server.h"
 
+#include "appname.h"
 #include "base58.h"
 #include "fs.h"
 #include "init.h"
@@ -263,14 +264,14 @@ static UniValue stop(const JSONRPCRequest& jsonRequest)
     if (jsonRequest.fHelp || jsonRequest.params.size() > 1)
         throw std::runtime_error(
             "stop\n"
-            "\nStop Gulden server.");
+            "\nStop " GLOBAL_APPNAME " server.");
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
     AppLifecycleManager::gApp->shutdown();
     if (jsonRequest.params[0].isNum()) {
         MilliSleep(jsonRequest.params[0].get_int());
     }
-    return "Gulden server stopping";
+    return GLOBAL_APPNAME" server stopping";
 }
 
 static UniValue uptime(const JSONRPCRequest& jsonRequest)
@@ -534,7 +535,7 @@ std::vector<std::string> CRPCTable::listCommands() const
 
 std::string HelpExampleCli(const std::string& methodname, const std::string& args)
 {
-    return "> Gulden-cli " + methodname + " " + args + "\n";
+    return "> " GLOBAL_APPNAME "-cli " + methodname + " " + args + "\n";
 }
 
 std::string HelpExampleRpc(const std::string& methodname, const std::string& args)

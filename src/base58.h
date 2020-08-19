@@ -27,6 +27,7 @@
 #include "script/script.h"
 #include "script/standard.h"
 #include "support/allocators/zeroafterfree.h"
+#include "appname.h"
 
 #include <string>
 #include <vector>
@@ -250,7 +251,7 @@ public:
 
     bool fromURIString(std::string uri)
     {
-        if (!boost::starts_with(uri, "guldensync:"))
+        if (!boost::starts_with(uri, GLOBAL_APPNAME"sync:"))
             return false;
 
         uri = std::string(uri.begin()+11,uri.end());

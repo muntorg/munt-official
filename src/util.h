@@ -21,6 +21,7 @@
 #include "config/build-config.h"
 #endif
 
+#include "appname.h"
 #include "compat.h"
 #include "fs.h"
 #include "sync.h"
@@ -402,7 +403,7 @@ void RenameThread(const char* name);
  */
 template <typename Callable> void TraceThread(const char* name,  Callable func)
 {
-    std::string s = strprintf("Gulden-%s", name);
+    std::string s = strprintf(GLOBAL_APPNAME "-%s", name);
     RenameThread(s.c_str());
     try
     {

@@ -107,7 +107,7 @@ static void AppInit(int argc, char* argv[])
     //
     // Parameters
     //
-    // If Qt is used, parameters/Gulden.conf are parsed in qt/Gulden.cpp's main()
+    // If Qt is used, parameters/.conf are parsed in the qt clients main() implementation
     ParseParameters(argc, argv);
 
     // Process help and version before taking care about datadir
@@ -121,7 +121,7 @@ static void AppInit(int argc, char* argv[])
         }
         else
         {
-            strUsage += "\n" + _("Usage:") + "\n" + "  GuldenD [options]                     " + strprintf(_("Start %s Daemon"), _(PACKAGE_NAME)) + "\n";
+            strUsage += "\n" + _("Usage:") + "\n" + "  " + DAEMON_NAME + " [options]                     " + strprintf(_("Start %s Daemon"), _(PACKAGE_NAME)) + "\n";
             strUsage += "\n" + HelpMessage(HMM_GULDEND);
         }
         fprintf(stdout, "%s", strUsage.c_str());
@@ -166,13 +166,13 @@ static void AppInit(int argc, char* argv[])
         {
             if (!IsSwitchChar(argv[i][0]))
             {
-                fprintf(stderr, "Error: Command line contains unexpected token '%s', see GuldenD -h for a list of options.\n", argv[i]);
+                fprintf(stderr, "Error: Command line contains unexpected token '%s', see " DAEMON_NAME " -h for a list of options.\n", argv[i]);
                 exitStatus = EXIT_FAILURE;
                 return;
             }
         }
 
-        // -server defaults to true for GuldenD but not for the GUI so do this here
+        // -server defaults to true for daemon but not for the GUI so do this here
         SoftSetBoolArg("-server", true);
         // Set this early so that parameter interactions go to console
         InitLogging();
@@ -180,7 +180,7 @@ static void AppInit(int argc, char* argv[])
 
         //fixme: (UNITY) - This is now duplicated, factor this out into a common helper.
         // NB! This has to happen before we deamonise
-        // Make sure only a single Gulden process is using the data directory.
+        // Make sure only a single process is using the data directory.
         {
             fs::path pathLockFile = GetDataDir() / ".lock";
             FILE* file = fopen(pathLockFile.string().c_str(), "a"); // empty lock file; created if it doesn't exist.
@@ -209,7 +209,7 @@ static void AppInit(int argc, char* argv[])
 
         if (GetBoolArg("-daemon", false))
         {
-            fprintf(stdout, "Gulden server starting\n");
+            fprintf(stdout, "%s server starting\n", _(PACKAGE_NAME).c_str());
             if (!AppLifecycleManager::gApp->daemonise())
             {
                 LogPrintf("Failed to daemonise\n");
@@ -238,7 +238,7 @@ int main(int argc, char* argv[])
 {
     SetupEnvironment();
 
-    // Connect GuldenD signal handlers
+    // Connect daemon signal handlers
     noui_connect();
 
     AppInit(argc, argv);

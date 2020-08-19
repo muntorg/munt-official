@@ -146,6 +146,7 @@ GULDEN_CORE_H = rpc/accounts.h \
   checkpoints.h \
   checkqueue.h \
   clientversion.h \
+  appname.h \
   coins.h \
   compat.h \
   compat/arch.h \

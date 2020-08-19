@@ -7,6 +7,7 @@
 #include "chainparamsbase.h"
 #include "compat.h"
 #include "util.h"
+#include "appname.h"
 #include "netbase.h"
 #include "rpc/protocol.h" // For HTTP status codes
 #include "sync.h"
@@ -304,7 +305,7 @@ static void http_reject_request_cb(struct evhttp_request* req, void*)
 static bool ThreadHTTP(struct event_base* base, struct evhttp* http)
 {
     (unused) http;
-    RenameThread("Gulden-http");
+    RenameThread(GLOBAL_APPNAME"-http");
     LogPrint(BCLog::HTTP, "Entering http event loop\n");
     event_base_dispatch(base);
     // Event loop will be interrupted by InterruptHTTPServer()
@@ -353,7 +354,7 @@ static bool HTTPBindAddresses(struct evhttp* http)
 /** Simple wrapper to set thread name and run work queue */
 static void HTTPWorkQueueRun(WorkQueue<HTTPClosure>* queue)
 {
-    RenameThread("Gulden-httpworker");
+    RenameThread(GLOBAL_APPNAME"-httpworker");
     queue->Run();
 }
 

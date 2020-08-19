@@ -3,6 +3,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include "appname.h"
 #include <boost/thread.hpp>
 #include "chain.h"
 #include "init.h"
@@ -60,7 +61,7 @@ bool GuldenUnifiedBackend::InitWalletFromAndroidLegacyProtoWallet(const std::str
         {
             if (wallet.walletSeedMnemonic.find("-") != std::string::npos && wallet.walletSeedMnemonic.find(":") != std::string::npos)
             {
-                return InitWalletLinkedFromURI("guldensync:"+wallet.walletSeedMnemonic+";unused_payout_address", newPassword.c_str());
+                return InitWalletLinkedFromURI(GLOBAL_APPNAME"sync:"+wallet.walletSeedMnemonic+";unused_payout_address", newPassword.c_str());
             }
             else
             {

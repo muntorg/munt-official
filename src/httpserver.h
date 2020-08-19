@@ -148,4 +148,4 @@ private:
     struct event* ev;
 };
 
-#endif // GULDEN_HTTPSERVER_H
+#endif

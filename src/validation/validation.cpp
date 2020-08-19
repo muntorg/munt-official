@@ -14,6 +14,7 @@
 #include "validation/witnessvalidation.h"
 
 #include "alert.h"
+#include "appname.h"
 #include "arith_uint256.h"
 #include "blockstore.h"
 #include "chain.h"
@@ -68,7 +69,7 @@
 #include <boost/thread.hpp>
 
 #if defined(NDEBUG)
-# error "Gulden cannot be compiled without assertions."
+# error "Cannot be compiled without assertions."
 #endif
 
 #define DEBUG_PARTIAL_SYNC
@@ -840,7 +841,7 @@ static bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, 
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
 void ThreadScriptCheck() {
-    RenameThread("Gulden-scriptch");
+    RenameThread(GLOBAL_APPNAME"-scriptch");
     scriptcheckqueue.Thread();
 }
 

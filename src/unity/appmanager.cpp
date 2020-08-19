@@ -3,6 +3,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
+#include "appname.h"
 #include "appmanager.h"
 #include "chainparams.h"
 #include "util.h"
@@ -54,7 +55,7 @@ void AppLifecycleManager::initialize()
 {
     std::thread([=]
     {
-        //RenameThread("Gulden-initialise");
+        //RenameThread(GLOBAL_APPNAME"-initialise");
         std::lock_guard<std::mutex> lock(appManagerInitShutDownMutex);
         try
         {
@@ -220,7 +221,7 @@ void AppLifecycleManager::shutdownThread()
 
     std::thread([=]
     {
-        RenameThread("Gulden-shutdown");
+        RenameThread(GLOBAL_APPNAME"-shutdown");
 
         // Block until we are signalled to commence
         #ifdef WIN32

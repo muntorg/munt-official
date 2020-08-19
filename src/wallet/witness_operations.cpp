@@ -20,6 +20,7 @@
 #include "coincontrol.h"
 #include "net.h"
 #include "alert.h"
+#include "appname.h"
 #include "utilmoneystr.h"
 #include "wallet.h"
 
@@ -1057,7 +1058,7 @@ std::string witnessKeysLinkUrlForAccount(CWallet* pWallet, CAccount* account)
     if (!witnessAccountKeys.empty())
     {
         witnessAccountKeys.pop_back();
-        witnessAccountKeys = "gulden://witnesskeys?keys=" + witnessAccountKeys;
+        witnessAccountKeys = GLOBAL_APP_URIPREFIX"://witnesskeys?keys=" + witnessAccountKeys;
     }
 
     return witnessAccountKeys;

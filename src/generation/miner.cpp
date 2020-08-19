@@ -17,6 +17,7 @@
 
 #include "alert.h"
 #include "amount.h"
+#include "appname.h"
 #include "chain.h"
 #include "chainparams.h"
 #include "coins.h"
@@ -220,7 +221,7 @@ static bool InsertPoW2WitnessIntoCoinbase(CBlock& block, const CBlockIndex* pind
     {
         LOCK(cs_main); // For ReadBlockFromDisk
         if (!ReadBlockFromDisk(*pWitnessBlock, pWitnessBlockToEmbed, params))
-            return error("GuldenGenerate: Could not read witness block in order to insert into coinbase. pindexprev=%s pWitnessBlockToEmbed=%s", pindexPrev->GetBlockHashPoW2().ToString(), pWitnessBlockToEmbed->GetBlockHashPoW2().ToString());
+            return error("PoWGenerate: Could not read witness block in order to insert into coinbase. pindexprev=%s pWitnessBlockToEmbed=%s", pindexPrev->GetBlockHashPoW2().ToString(), pWitnessBlockToEmbed->GetBlockHashPoW2().ToString());
     }
 
     if (commitpos == -1)
@@ -925,7 +926,7 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
 
                 if (!pIndexParent)
                 {
-                    strError = "GuldenGenerate: Stalled, unable to read the witness block we intend to embed.";
+                    strError = "PoWGenerate: Stalled, unable to read the witness block we intend to embed.";
                     return nullptr;
                 }
             }
@@ -984,7 +985,7 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
                     }
                     if (!pWitnessBlockToEmbed)
                     {
-                        strError = "GuldenGenerate: stalled, unable to locate suitable witness block to embed.\n";
+                        strError = "PoWGenerate: stalled, unable to locate suitable witness block to embed.\n";
                         return nullptr;
                     }
                     if (pIndexParent->nHeight != pWitnessBlockToEmbed->nHeight)
@@ -1003,7 +1004,7 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
     {
         if (pIndexParent->nVersionPoW2Witness == 0)
         {
-            strError = "GuldenGenerate: stalled, unable to locate suitable witness tip on which to build.\n";
+            strError = "PoWGenerate: stalled, unable to locate suitable witness tip on which to build.\n";
             return nullptr;
         }
     }
@@ -1041,8 +1042,8 @@ static const unsigned int hashPSTimerInterval = 200;
 
 void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemoryKb)
 {
-    LogPrintf("GuldenGenerate started\n");
-    RenameThread("gulden-generate");
+    LogPrintf("PoWGenerate thread started\n");
+    RenameThread(GLOBAL_APPNAME"-generate");
 
     int64_t nUpdateTimeStart = GetTimeMillis();
 
@@ -1166,7 +1167,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                 pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pindexParent, coinbaseScript, true, pWitnessBlockToEmbed, nExtraNonce);
                 if (!pblocktemplate.get())
                 {
-                    LogPrintf("GuldenGenerate: Failed to create block-template.\n");
+                    LogPrintf("PoWGenerate: Failed to create block-template.\n");
                     if (GetTimeMillis() - nUpdateTimeStart > 5000)
                         dHashesPerSec = 0;
                     continue;
@@ -1405,12 +1406,12 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
     }
     catch (const boost::thread_interrupted&)
     {
-        LogPrintf("GuldenGenerate terminated\n");
+        LogPrintf("Generate thread terminated\n");
         throw;
     }
     catch (const std::runtime_error &e)
     {
-        LogPrintf("GuldenGenerate runtime error: %s\n", e.what());
+        LogPrintf("Generate thread runtime error: %s\n", e.what());
         return;
     }
 }
