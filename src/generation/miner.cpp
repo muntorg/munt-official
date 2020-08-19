@@ -62,11 +62,6 @@
 #include "alert.h"
 #include "base58.h"
 
-//////////////////////////////////////////////////////////////////////////////
-//
-// GuldenGenerate
-//
-
 //
 // Unconfirmed transactions in the memory pool often depend on other
 // transactions in the memory pool. When we select transactions from the
@@ -1259,7 +1254,7 @@ void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount
                         BOOST_SCOPE_EXIT(&workerThreads, &interrupt) { interrupt=true; workerThreads->stop(); workerThreads->join(); delete workerThreads;} BOOST_SCOPE_EXIT_END
                         int nCount = 0;
                         while (true)
-                        {    
+                        {
                             //fixme: (SIGMA) - Instead of busy polling it would be better if we could wait here on various signals, we would need to wait on several signals
                             // 1) A signal for block found by one of our mining threads
                             // 2) A signal for chain tip change
