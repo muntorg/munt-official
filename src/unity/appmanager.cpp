@@ -59,7 +59,7 @@ void AppLifecycleManager::initialize()
         std::lock_guard<std::mutex> lock(appManagerInitShutDownMutex);
         try
         {
-            LogPrintf("AppManager::initialize: Running initialization in thread\n");
+            LogPrintf("AppLifecycleManager::initialize: Running initialization in thread\n");
             if (fShutDownHasBeenInitiated)
                 return;
             if (!AppInitBasicSetup())
