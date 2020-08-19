@@ -250,7 +250,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         pTipIndex = chainActive.Tip();
     }
 
-    if (!pTipIndex || (uint64_t)pTipIndex->nHeight < Params().GetConsensus().pow2Phase2FirstBlockHeight)
+    if (!pTipIndex || (uint64_t)pTipIndex->nHeight < Params().GetConsensus().pow2Phase2FirstBlockHeight || pTipIndex->nHeight == 0)
         return NullUniValue;
 
     if (request.params.size() >= 2)
