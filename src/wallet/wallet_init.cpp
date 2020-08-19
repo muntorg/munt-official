@@ -211,6 +211,13 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         }
         else if (nLoadWalletRet == DB_NONCRITICAL_ERROR)
         {
+            uiInterface.InitMessage(_("Zapping all transactions from wallet..."));
+            if (GetBoolArg("-zapwallettxes", false))
+            {
+                LOCK(walletInstance->cs_wallet);
+                CWalletDB db(*walletInstance->dbw);
+                db.ZapAllTx();
+            }
             InitWarning(strprintf(warningtr("Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect."),
                 walletFile));
         }
