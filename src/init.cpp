@@ -178,7 +178,7 @@ extern void ServerInterrupt(boost::thread_group& threadGroup);
 void CoreInterrupt(boost::thread_group& threadGroup)
 {
     LogPrintf("Core interrupt: commence core interrupt\n");
-    PoWGenerateGulden(false, 0, 0, Params());
+    PoWGenerateBlocks(false, 0, 0, Params());
     if (g_connman)
         g_connman->Interrupt();
     ServerInterrupt(threadGroup);
@@ -1807,20 +1807,20 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                 if (nGenProcLimit > 0 && nGenMemoryLimitKilobytes > 0)
                 {
                     LogPrintf("Mine at startup using -gen into mining account\n");
-                    PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams, miningAccount, readOverrideAddress);
+                    PoWGenerateBlocks(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams, miningAccount, readOverrideAddress);
                 }
             }
             else
             {
                 LogPrintf("Mine at startup using -gen into regular account\n");
-                PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams);
+                PoWGenerateBlocks(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams);
             }
         }
         else
         #endif
         {
             LogPrintf("Mine at startup using -gen into regular account\n");
-            PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams);
+            PoWGenerateBlocks(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams);
         }
     }
     // ********************************************************* Step 12: finished

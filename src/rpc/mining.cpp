@@ -440,7 +440,7 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     {
         try
         {
-            PoWGenerateGulden(true, nGenProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
+            PoWGenerateBlocks(true, nGenProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
         }
         catch(...)
         {

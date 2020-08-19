@@ -158,7 +158,7 @@ void MiningAccountDialog::startMining(CAccount* forAccount, uint64_t numThreads,
     {
         try
         {
-            PoWGenerateGulden(true, numThreads, mineMemoryKb, Params(), forAccount, overrideAddress);
+            PoWGenerateBlocks(true, numThreads, mineMemoryKb, Params(), forAccount, overrideAddress);
         }
         catch(...)
         {

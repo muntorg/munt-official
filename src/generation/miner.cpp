@@ -1433,7 +1433,7 @@ void PoWStopGeneration()
     }
 }
 
-void PoWGenerateGulden(bool fGenerate, int64_t nThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount, std::string generateAddress)
+void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount, std::string generateAddress)
 {
     LOCK(miningCS);
     if (nThreads < 0)
