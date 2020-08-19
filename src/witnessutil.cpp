@@ -319,6 +319,9 @@ CBlockIndex* GetPoWBlockForPoSBlock(const CBlockIndex* pIndex)
 
 int GetPow2ValidationCloneHeight(CChain& chain, const CBlockIndex* pIndex, int nMargin)
 {
+    if (pIndex->nHeight <= 10)
+        return 0;
+
     const CBlockIndex* pprevFork = chainActive.FindFork(pIndex);
     return (pprevFork->nHeight > nMargin ? pprevFork->nHeight - nMargin : 0);
 }
