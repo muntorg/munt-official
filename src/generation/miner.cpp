@@ -1173,8 +1173,6 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
             // Search
             //
             uint64_t nStart = GetTimeMillis();
-            //fixme: (2.1) Do away with this timeout once witness timestamps are available
-            std::uint64_t nTimeout =  120000 + GetRand(60000);
             std::uint64_t nMissedSteps = CalculateMissedTimeSteps(GetAdjustedFutureTime(), pindexParent->GetBlockTime());
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
             if (pblock->nTime > defaultSigmaSettings.activationDate)
