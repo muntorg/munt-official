@@ -205,7 +205,8 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
     DBErrors nLoadWalletRet = walletInstance->LoadWallet(loadState);
     if (nLoadWalletRet != DB_LOAD_OK)
     {
-        if (nLoadWalletRet == DB_CORRUPT) {
+        if (nLoadWalletRet == DB_CORRUPT)
+        {
             InitError(strprintf(errortr("Error loading %s: Wallet corrupted"), walletFile));
             return NULL;
         }
@@ -217,11 +218,14 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 LOCK(walletInstance->cs_wallet);
                 CWalletDB db(*walletInstance->dbw);
                 db.ZapAllTx();
+                walletInstance->mapWallet.empty();
+                walletInstance->mapWalletHash.empty();
+                walletInstance->mapTxSpends.empty();
             }
-            InitWarning(strprintf(warningtr("Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect."),
-                walletFile));
+            InitWarning(strprintf(warningtr("Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect."), walletFile));
         }
-        else if (nLoadWalletRet == DB_TOO_NEW) {
+        else if (nLoadWalletRet == DB_TOO_NEW)
+        {
             InitError(strprintf(errortr("Error loading %s: Wallet requires newer version of %s"), walletFile, _(PACKAGE_NAME)));
             return NULL;
         }
