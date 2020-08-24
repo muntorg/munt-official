@@ -325,9 +325,13 @@ class LibUnity {
         };
       };
 
-      rpcListener.onError = error => {
+      rpcListener.onError = (filteredCommand, error) => {
         console.error(`RPC error: ${error}`);
-        event.returnValue = { success: false, data: error, command: command };
+        event.returnValue = {
+          success: false,
+          data: error,
+          command: filteredCommand
+        };
       };
 
       this.rpcController.execute(command, rpcListener);
