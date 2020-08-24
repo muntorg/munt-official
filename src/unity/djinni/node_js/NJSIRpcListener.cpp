@@ -78,14 +78,16 @@ void NJSIRpcListener::onSuccess(const std::string & filteredCommand, const std::
     );
 }
 
-void NJSIRpcListener::onError_aimpl__(const std::string & errorMessage)
+void NJSIRpcListener::onError_aimpl__(const std::string & filteredCommand, const std::string & errorMessage)
 {
     const auto& env = Env();
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    auto arg_0 = Napi::String::New(env, errorMessage);
+    auto arg_0 = Napi::String::New(env, filteredCommand);
     args.push_back(arg_0);
+    auto arg_1 = Napi::String::New(env, errorMessage);
+    args.push_back(arg_1);
     Napi::Value calling_function_as_value = Value().Get("onError");
     if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
@@ -99,16 +101,16 @@ void NJSIRpcListener::onError_aimpl__(const std::string & errorMessage)
     }
 }
 
-void NJSIRpcListener::onError(const std::string & errorMessage)
+void NJSIRpcListener::onError(const std::string & filteredCommand, const std::string & errorMessage)
 {
     uv_work_t* request = new uv_work_t;
-    request->data = new std::tuple<NJSIRpcListener*, std::string>(this, errorMessage);
+    request->data = new std::tuple<NJSIRpcListener*, std::string, std::string>(this, filteredCommand, errorMessage);
 
     uv_queue_work(uv_default_loop(), request, [](uv_work_t*) -> void{}, [](uv_work_t* req, int status) -> void
     {
-        NJSIRpcListener* pthis = std::get<0>(*((std::tuple<NJSIRpcListener*, std::string>*)req->data));
-        pthis->onError_aimpl__(std::get<1>(*((std::tuple<NJSIRpcListener*, std::string>*)req->data)));
-        delete (std::tuple<NJSIRpcListener*, std::string>*)req->data;
+        NJSIRpcListener* pthis = std::get<0>(*((std::tuple<NJSIRpcListener*, std::string, std::string>*)req->data));
+        pthis->onError_aimpl__(std::get<1>(*((std::tuple<NJSIRpcListener*, std::string, std::string>*)req->data)), std::get<2>(*((std::tuple<NJSIRpcListener*, std::string, std::string>*)req->data)));
+        delete (std::tuple<NJSIRpcListener*, std::string, std::string>*)req->data;
         req->data = nullptr;
     }
     );

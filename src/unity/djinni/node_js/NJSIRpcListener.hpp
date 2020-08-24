@@ -32,8 +32,12 @@ public:
      */
     void onSuccess(const std::string & filteredCommand, const std::string & result);
 
-    /** Returns an error message which might be a plain string or JSON depending on the type of error */
-    void onError(const std::string & errorMessage);
+    /**
+     * Returns an error message which might be a plain string or JSON depending on the type of error
+     * Also returns a filtered version of the command with sensitive information like passwords removed
+     * Any kind of 'command history' functionality should store this filtered command and not the original command
+     */
+    void onError(const std::string & filteredCommand, const std::string & errorMessage);
 
 private:
     /**
@@ -50,9 +54,13 @@ private:
     void onSuccess(const Napi::CallbackInfo& info);
     void onSuccess_aimpl__(const std::string & filteredCommand, const std::string & result);
 
-    /** Returns an error message which might be a plain string or JSON depending on the type of error */
+    /**
+     * Returns an error message which might be a plain string or JSON depending on the type of error
+     * Also returns a filtered version of the command with sensitive information like passwords removed
+     * Any kind of 'command history' functionality should store this filtered command and not the original command
+     */
     void onError(const Napi::CallbackInfo& info);
-    void onError_aimpl__(const std::string & errorMessage);
+    void onError_aimpl__(const std::string & filteredCommand, const std::string & errorMessage);
 
 };
 #endif //DJINNI_GENERATED_NJSIRPCLISTENER_HPP

@@ -25,7 +25,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <set>
 
-void RPCController::executeCommandLine(const std::string& sCommandLine, const std::function<void(const std::string&)>& filteredCommandHandler, const std::function<void(const std::string&)>& errorHandler, const std::function<void(const std::string&, const std::string&)>& successHandler)
+void RPCController::executeCommandLine(const std::string& sCommandLine, const std::function<void(const std::string&)>& filteredCommandHandler, const std::function<void(const std::string&, const std::string&)>& errorHandler, const std::function<void(const std::string&, const std::string&)>& successHandler)
 {
     if(!sCommandLine.empty())
     {
@@ -36,13 +36,13 @@ void RPCController::executeCommandLine(const std::string& sCommandLine, const st
             if (!parseCommandLine(dummy, sCommandLine, false, &strFilteredCmd))
             {
                 // Failed to parse command, so we cannot even filter it for the history
-                errorHandler("Invalid command line");
+                errorHandler(strFilteredCmd, "Invalid command line");
                 return;
             }
         }
         catch (const std::exception& e)
         {
-            errorHandler(strprintf("Error: %s", e.what()));
+            errorHandler(strFilteredCmd, strprintf("Error: %s", e.what()));
             return;
         }
         filteredCommandHandler(strFilteredCmd);
@@ -59,25 +59,25 @@ void RPCController::executeCommandLine(const std::string& sCommandLine, const st
             {
                 int code = find_value(objError, "code").get_int();
                 std::string message = find_value(objError, "message").get_str();
-                errorHandler(strprintf("%s (code %d)", message, code));
+                errorHandler(strFilteredCmd, strprintf("%s (code %d)", message, code));
                 return;
             }
             catch (const std::runtime_error&) // raised when converting to invalid type, i.e. missing code or message
             {   // Show raw JSON object
                 //Q_EMIT reply(RPCConsole::CMD_ERROR, QString::fromStdString(objError.write()));
-                errorHandler(objError.write());
+                errorHandler(strFilteredCmd, objError.write());
                 return;
             }
         }
         catch (const std::exception& e)
         {
-            errorHandler(strprintf("Error: %s", e.what()));
+            errorHandler(strFilteredCmd, strprintf("Error: %s", e.what()));
             return;
         }
         successHandler(strFilteredCmd, result);
         return;
     }
-    errorHandler("Empty commandline");
+    errorHandler("", "Empty commandline");
 }
 
 std::vector<std::string> RPCController::getAutocompleteList()

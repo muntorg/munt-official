@@ -34,8 +34,6 @@ file COPYING
     <string name="transaction_list_empty_title">No Transactions received</string>
     <string name="transaction_list_empty_message">Touch here to buy your first Novo</string>
     <string name="send_coins_confirm_template">%1$s NOV\n\nto %2$s</string>
-    <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NOV)\n\nto %3$s</string>
-    <string name="send_coins_nocks_estimate_template">Approx. G %1$s including IBAN service fee</string>
     <string name="peer_list_fragment_empty">No peers connected</string>
     <string name="block_row_now">just now</string>
     <string name="action_browse">Browse</string>
@@ -149,14 +147,12 @@ file COPYING
     <string name="iban_account_holder_name">Name</string>
     <string name="iban_account_holder_description">Description (optional)</string>
     <string name="tx_detail_address_unavailable">unavailable</string>
-    <string name="nocks_error_unable_to_fetch_quote">Could not fetch transaction quote</string>
-    <string name="nocks_error_prefix">Error:</string>
     <string name="notification_transaction_channel_name">Transactions</string>
     <string name="notification_transaction_channel_description">Transaction notifications</string>
     <string name="notification_service_channel_name">Service</string>
     <string name="notification_service_channel_description">Service to keep data synchronised and monitor for transactions when the app is closed, can be turned on/off from inside the app settings</string>
     <string name="dialog_title_add_address">Add address</string>
-    <string name="hint_iban_or_novo_address">Novo or IBAN address</string>
+    <string name="hint_iban_or_novo_address">Novo address</string>
     <string name="toast_warn_uri_attempt_before_wallet_creation">You need to set up a Novo wallet before you can use this URI</string>
     <string name="preference_fragment_link_summary">Link your mobile wallet with your desktop wallet</string>
     <string name="preference_fragment_remove_summary">Remove this wallet in order to start or recover another wallet</string>
@@ -175,8 +171,6 @@ file COPYING
     <string name="send_all_btn">Send all</string>
     <string name="send_novo_title">Send Novo?</string>
     <string name="send_btn">Send</string>
-    <string name="send_to_iban_title">Send Novo to IBAN?</string>
-    <string name="iban_order_failed">IBAN order failed</string>
     <string name="core_not_ready_yet">Unity core not ready yet, please try again in a few seconds</string>
     <string name="send_insufficient_balance">Insufficient balance</string>
     <string name="not_novo_qr">Not a valid Novo QR:\n\n%1$s</string>

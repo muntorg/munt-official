@@ -30,7 +30,11 @@ public:
      */
     virtual void onSuccess(const std::string & filteredCommand, const std::string & result) = 0;
 
-    /** Returns an error message which might be a plain string or JSON depending on the type of error */
-    virtual void onError(const std::string & errorMessage) = 0;
+    /**
+     * Returns an error message which might be a plain string or JSON depending on the type of error
+     * Also returns a filtered version of the command with sensitive information like passwords removed
+     * Any kind of 'command history' functionality should store this filtered command and not the original command
+     */
+    virtual void onError(const std::string & filteredCommand, const std::string & errorMessage) = 0;
 };
 #endif

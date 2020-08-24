@@ -363,7 +363,9 @@ i_rpc_listener = interface +j +o +n {
     # Any kind of 'command history' functionality should store this filtered command and not the original command
     onSuccess(filteredCommand : string, result : string) : &;
     # Returns an error message which might be a plain string or JSON depending on the type of error
-    onError(errorMessage : string) : &;
+    # Also returns a filtered version of the command with sensitive information like passwords removed
+    # Any kind of 'command history' functionality should store this filtered command and not the original command
+    onError(filteredCommand : string, errorMessage : string) : &;
 }
 
 # C++ interface to control networking related aspects of the software

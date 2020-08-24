@@ -31,11 +31,12 @@ void NativeIRpcListener::JavaProxy::onSuccess(const std::string & c_filteredComm
                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c_result)));
     ::djinni::jniExceptionCheck(jniEnv);
 }
-void NativeIRpcListener::JavaProxy::onError(const std::string & c_errorMessage) {
+void NativeIRpcListener::JavaProxy::onError(const std::string & c_filteredCommand, const std::string & c_errorMessage) {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeIRpcListener>::get();
     jniEnv->CallVoidMethod(Handle::get().get(), data.method_onError,
+                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c_filteredCommand)),
                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c_errorMessage)));
     ::djinni::jniExceptionCheck(jniEnv);
 }

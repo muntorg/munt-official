@@ -31,10 +31,11 @@ public:
                                                          result:(::djinni::String::fromCpp(c_result))];
         }
     }
-    void onError(const std::string & c_errorMessage) override
+    void onError(const std::string & c_filteredCommand, const std::string & c_errorMessage) override
     {
         @autoreleasepool {
-            [djinni_private_get_proxied_objc_object() onError:(::djinni::String::fromCpp(c_errorMessage))];
+            [djinni_private_get_proxied_objc_object() onError:(::djinni::String::fromCpp(c_filteredCommand))
+                                                 errorMessage:(::djinni::String::fromCpp(c_errorMessage))];
         }
     }
 };

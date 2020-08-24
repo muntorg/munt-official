@@ -220,8 +220,12 @@ declare class NJSIRpcListener
      * Any kind of 'command history' functionality should store this filtered command and not the original command
      */
     declare function onSuccess(filteredCommand: string, result: string);
-    /** Returns an error message which might be a plain string or JSON depending on the type of error */
-    declare function onError(errorMessage: string);
+    /**
+     * Returns an error message which might be a plain string or JSON depending on the type of error
+     * Also returns a filtered version of the command with sensitive information like passwords removed
+     * Any kind of 'command history' functionality should store this filtered command and not the original command
+     */
+    declare function onError(filteredCommand: string, errorMessage: string);
 }
 /** C++ interface to control networking related aspects of the software */
 declare class NJSIP2pNetworkController

@@ -23,7 +23,12 @@
 - (void)onSuccess:(nonnull NSString *)filteredCommand
            result:(nonnull NSString *)result;
 
-/** Returns an error message which might be a plain string or JSON depending on the type of error */
-- (void)onError:(nonnull NSString *)errorMessage;
+/**
+ * Returns an error message which might be a plain string or JSON depending on the type of error
+ * Also returns a filtered version of the command with sensitive information like passwords removed
+ * Any kind of 'command history' functionality should store this filtered command and not the original command
+ */
+- (void)onError:(nonnull NSString *)filteredCommand
+   errorMessage:(nonnull NSString *)errorMessage;
 
 @end

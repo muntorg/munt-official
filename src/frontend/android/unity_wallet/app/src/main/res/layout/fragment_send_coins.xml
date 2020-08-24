@@ -142,15 +142,6 @@ file COPYING
             android:layout_weight="1"
             android:text="@string/send_coins_label_remove_from_address_book" />
 
-
-        <TextView
-            android:id="@+id/send_coins_nocks_estimate"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="" />
-
     </LinearLayout>
 
 

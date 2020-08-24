@@ -19,7 +19,7 @@ void IRpcController::execute(const std::string& rpcCommandLine, const std::share
     std::thread([=]
     {
         RPCController controller;
-        const std::function<void(const std::string&)>& errorHandler = [=](const std::string& errorMessage) {resultListener->onError(errorMessage);};
+        const std::function<void(const std::string&, const std::string&)>& errorHandler = [=](const std::string& filteredCommand, const std::string& errorMessage) {resultListener->onError(filteredCommand, errorMessage);};
         const std::function<void(const std::string&)>& filteredCommandHandler = [=](const std::string& filteredCommand) {resultListener->onFilteredCommand(filteredCommand);};
         const std::function<void(const std::string&, const std::string&)>& successHandler = [=](const std::string& filteredCommand, const std::string& result) {resultListener->onSuccess(filteredCommand, result);};
         controller.executeCommandLine(rpcCommandLine, filteredCommandHandler, errorHandler, successHandler);
