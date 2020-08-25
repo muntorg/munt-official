@@ -12,6 +12,8 @@
 		5537D3FB24CF0CAE00A27959 /* lib_unity_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5537D3F924CF0BDE00A27959 /* lib_unity_objc.a */; };
 		55960D9424D73DD20028FBBF /* DBILibraryController.h in Headers */ = {isa = PBXBuildFile; fileRef = 55960D9324D73DD20028FBBF /* DBILibraryController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		55960D9624D73DE00028FBBF /* DBILibraryListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 55960D9524D73DE00028FBBF /* DBILibraryListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		55B3960A24F54F40008A1DFB /* DBIP2pNetworkController.h in Headers */ = {isa = PBXBuildFile; fileRef = 55B3960924F54F40008A1DFB /* DBIP2pNetworkController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		55B3960C24F550D9008A1DFB /* DBIP2pNetworkListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 55B3960B24F550D9008A1DFB /* DBIP2pNetworkListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E61A12842171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */; };
 		E61A12862171360F000069F0 /* dummy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E61A12852171360F000069F0 /* dummy.cpp */; };
 		E61A1288217136DE000069F0 /* dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E61A1287217136DE000069F0 /* dummy.m */; };
@@ -59,6 +61,8 @@
 		5537D3F924CF0BDE00A27959 /* lib_unity_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = lib_unity_objc.a; sourceTree = "<group>"; };
 		55960D9324D73DD20028FBBF /* DBILibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBILibraryController.h; path = ../../../djinni/objc/DBILibraryController.h; sourceTree = "<group>"; };
 		55960D9524D73DE00028FBBF /* DBILibraryListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBILibraryListener.h; path = ../../../djinni/objc/DBILibraryListener.h; sourceTree = "<group>"; };
+		55B3960924F54F40008A1DFB /* DBIP2pNetworkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBIP2pNetworkController.h; path = ../../../djinni/objc/DBIP2pNetworkController.h; sourceTree = "<group>"; };
+		55B3960B24F550D9008A1DFB /* DBIP2pNetworkListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBIP2pNetworkListener.h; path = ../../../djinni/objc/DBIP2pNetworkListener.h; sourceTree = "<group>"; };
 		E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdjinni_support_lib_UNIVERSAL.a; path = "../../../../depends/aarch64-ios/lib/libdjinni_support_lib_UNIVERSAL.a"; sourceTree = "<group>"; };
 		E61A12852171360F000069F0 /* dummy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dummy.cpp; sourceTree = "<group>"; };
 		E61A1287217136DE000069F0 /* dummy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = dummy.m; sourceTree = "<group>"; };
@@ -172,6 +176,8 @@
 				5537D3F224CF098900A27959 /* DBMonitorListener.h */,
 				55960D9324D73DD20028FBBF /* DBILibraryController.h */,
 				55960D9524D73DE00028FBBF /* DBILibraryListener.h */,
+				55B3960924F54F40008A1DFB /* DBIP2pNetworkController.h */,
+				55B3960B24F550D9008A1DFB /* DBIP2pNetworkListener.h */,
 				E64203EF21638CD6004A77FF /* GuldenCore.h */,
 				E64203F021638CD6004A77FF /* Info.plist */,
 			);
@@ -232,6 +238,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55B3960C24F550D9008A1DFB /* DBIP2pNetworkListener.h in Headers */,
 				E6EC7D0D21EF24A900320806 /* DBAddressRecord.h in Headers */,
 				E6EC7D0E21EF24A900320806 /* DBTransactionRecord.h in Headers */,
 				E6EC7D0B21EF24A900320806 /* DBBalanceRecord.h in Headers */,
@@ -249,6 +256,7 @@
 				E6EC7D0A21EF24A900320806 /* DBUriRecipient.h in Headers */,
 				E67CDA64224A22F100CC9F6E /* DBInputRecord.h in Headers */,
 				E67CDA66224A263400CC9F6E /* DBLegacyWalletResult.h in Headers */,
+				55B3960A24F54F40008A1DFB /* DBIP2pNetworkController.h in Headers */,
 				5537D3F524CF098900A27959 /* DBMonitorListener.h in Headers */,
 				E6EBCA262254B7AF00B02F24 /* GuldenCoreUtil.h in Headers */,
 				E64203F121638CD6004A77FF /* GuldenCore.h in Headers */,

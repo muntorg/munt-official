@@ -35,5 +35,7 @@ FOUNDATION_EXPORT const unsigned char gulden_staticVersionString[];
 #import "DBMonitorListener.h"
 #import "DBMonitorRecord.h"
 #import "DBMutationRecord.h"
+#import "DBIP2pNetworkController.h"
+#import "DBIP2pNetworkListener.h"
 
 #import "GuldenCoreUtil.h"
