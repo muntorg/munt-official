@@ -936,6 +936,11 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBILibraryListener+Private.h \
   unity/djinni/objc/DBILibraryListener+Private.mm \
   unity/djinni/objc/DBILibraryController.h \
+  unity/djinni/objc/DBIP2pNetworkController+Private.h  \
+  unity/djinni/objc/DBIP2pNetworkController+Private.mm \
+  unity/djinni/objc/DBIP2pNetworkListener.h \
+  unity/djinni/objc/DBIP2pNetworkListener+Private.h \
+  unity/djinni/objc/DBIP2pNetworkListener+Private.mm \
   unity/djinni/objc/DBLegacyWalletResult.h \
   unity/djinni/objc/DBLegacyWalletResult+Private.h \
   unity/djinni/objc/DBMonitorListener+Private.h \
