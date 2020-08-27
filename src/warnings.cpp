@@ -92,7 +92,7 @@ std::string GetWarnings(const std::string& strFor)
 
 
     // Gulden: Warn if sync-checkpoint is too old (Don't enter safe mode)
-    if (!IsArgSet("-regtest"))
+    if (Params().UseSyncCheckpoints())
     {
         if (Checkpoints::IsSyncCheckpointTooOld(2 * 60 * 60))
         {

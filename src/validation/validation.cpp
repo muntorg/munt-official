@@ -2689,9 +2689,13 @@ static bool CheckIndexAgainstCheckpoint(const CBlockIndex* pindexPrev, CValidati
         return true;
 
     int nHeight = pindexPrev->nHeight+1;
-    // Gulden: check that the block satisfies synchronized checkpoint
-    if (!Checkpoints::CheckSync(hash, pindexPrev))
-        return error("AcceptBlock() : rejected by synchronized checkpoint");
+    
+    if (chainparams.UseSyncCheckpoints())
+    {
+        // Gulden: check that the block satisfies synchronized checkpoint
+        if (!Checkpoints::CheckSync(hash, pindexPrev))
+            return error("AcceptBlock() : rejected by synchronized checkpoint");
+    }
 
 
     // Don't accept any forks from the main chain prior to last checkpoint.
@@ -3163,14 +3167,17 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
             return error("%s: ActivateBestChain failed", __func__);
     }
 
-    if (!IsInitialBlockDownload())
+    if (chainparams.UseSyncCheckpoints())
     {
-        // Gulden: if responsible for sync-checkpoint send it
-        if (!CSyncCheckpoint::strMasterPrivKey.empty())
-            Checkpoints::SendSyncCheckpoint(Checkpoints::AutoSelectSyncCheckpoint(), chainparams);
+        if (!IsInitialBlockDownload())
+        {
+            // Gulden: if responsible for sync-checkpoint send it
+            if (!CSyncCheckpoint::strMasterPrivKey.empty())
+                Checkpoints::SendSyncCheckpoint(Checkpoints::AutoSelectSyncCheckpoint(), chainparams);
 
-        // Gulden: check pending sync-checkpoint
-        Checkpoints::AcceptPendingSyncCheckpoint(chainparams);
+            // Gulden: check pending sync-checkpoint
+            Checkpoints::AcceptPendingSyncCheckpoint(chainparams);
+        }
     }
 
     CheckAndNotifyHeaderTip();
@@ -3940,8 +3947,8 @@ bool InitBlockIndex(const CChainParams& chainparams)
                     if (!Checkpoints::ResetSyncCheckpoint(chainparams))
                         return error("LoadBlockIndex() : failed to reset sync-checkpoint");
                 }
+                LogPrintf("Wrote sync checkpoint...\n");
             }
-            LogPrintf("Wrote sync checkpoint...\n");
 
             // Force a chainstate write so that when we VerifyDB in a moment, it doesn't check stale data
             return FlushStateToDisk(chainparams, state, FLUSH_STATE_ALWAYS);
