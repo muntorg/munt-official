@@ -19,6 +19,7 @@
 #include "wallet/wallet.h"
 #include "wallet/account.h"
 #include "script/ismine.h"
+#include "script/script.h"
 #include <witnessutil.h>
 
 #include <stdint.h>
@@ -153,24 +154,31 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             for(const CTxOut& txout : wtx.tx->vout)
             {
                 isminetype mine = IsMine(*account, txout);
-                if (mine) {
+                if (mine)
+                {
                     received += txout.nValue;
                     if (mine & ISMINE_WATCH_ONLY)
                         involvesWatchAddress = true;
-                    if (IsPow2WitnessOutput(txout)) {
-                        // output is witness and ours => witness input is also ours, substract input value as we only want to show received rewards
+                    if (IsPow2WitnessOutput(txout))
+                    {
+                        // Output is witness and ours => witness input is also ours, subtract input value as we only want to show received rewards
                         received -= nDebit;
-                    }
-                        CTxDestination address;
-                        if (ExtractDestination(txout, address))
+                        // Prevent old phase3 rewards from displaying incorrectly 
+                        if (nDebit == 0 && txout.nValue > 4000 * COIN)
                         {
-                            if (!outAddresses.empty())
-                                outAddresses += " ";
-                            outAddresses += CNativeAddress(address).ToString();
+                            received -= txout.nValue;
                         }
+                    }
+                    CTxDestination address;
+                    if (ExtractDestination(txout, address))
+                    {
+                        if (!outAddresses.empty())
+                            outAddresses += " ";
+                        outAddresses += CNativeAddress(address).ToString();
+                    }
                 }
             }
-
+            
             if (received > 0) {
                 TransactionRecord sub(hash, nTime, TransactionRecord::GeneratedWitness, outAddresses, 0, received);
                 sub.actionAccountUUID = sub.receiveAccountUUID = account->getUUID();
@@ -524,20 +532,40 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     }
                     if (wtx.IsPoW2WitnessCoinBase())
                     {
-                        sub.type = TransactionRecord::GeneratedWitness;
-                        sub.address = addressOut;
+                        // Prevent old phase3 rewards from displaying incorrectly
+                        if (sub.credit > 4000 * COIN)
+                        {
+                            sub.type = TransactionRecord::WitnessRenew;
+                            sub.debit= nDebit-wtx.tx->GetValueOut();;
+                            sub.credit=0;
+                        }
+                        else
+                        {
+                            sub.type = TransactionRecord::GeneratedWitness;
+                            sub.address = addressOut;
+                        }
                     }
                     else if (wtx.IsCoinBase())
                     {
                         sub.address = addressOut;
                         // Generated
-                        if (sub.credit == 20 * COIN && sub.debit == 0)
+                        // Prevent old phase3 rewards from displaying incorrectly
+                        if (sub.credit > 4000 * COIN)
                         {
-                            sub.type = TransactionRecord::GeneratedWitness;
+                            sub.type = TransactionRecord::WitnessRenew;
+                            sub.debit= nDebit-wtx.tx->GetValueOut();;
+                            sub.credit=0;
                         }
                         else
                         {
-                            sub.type = TransactionRecord::Generated;
+                            if (sub.credit == 20 * COIN && sub.debit == 0)
+                            {
+                                sub.type = TransactionRecord::GeneratedWitness;
+                            }
+                            else
+                            {
+                                sub.type = TransactionRecord::Generated;
+                            }
                         }
                     }
 
@@ -668,21 +696,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                         //fixme: (FUT) (HIGH) (REFACTOR) - Are there cases when this isn't true?!?!?!? - if not we can clean the code after this up.
                         continue;
                     }
-
-                    CTxDestination address;
-                    if (ExtractDestination(txout, address))
-                    {
-                        // Sent to Gulden Address
-                        sub.type = TransactionRecord::SendToAddress;
-                        sub.address = CNativeAddress(address).ToString();
-                    }
-                    else
-                    {
-                        // Sent to IP, or other non-address transaction like OP_EVAL
-                        sub.type = TransactionRecord::SendToOther;
-                        sub.address = mapValue["to"];
-                    }
-
+                    
                     CAmount nValue = txout.nValue;
                     /* Add fee to first output */
                     if (nTxFee > 0)
@@ -697,6 +711,55 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     {
                         continue;
                     }
+
+                    // Fix up display of old phase 3 funding transactions
+                    CTxOutPoW2Witness phase3WitnessInfo;
+                    if (txout.GetType() == CTxOutType::ScriptLegacyOutput && txout.output.scriptPubKey.ExtractPoW2WitnessFromScript(phase3WitnessInfo))
+                    {
+                        sub.type = TransactionRecord::WitnessFundSend;
+                        CPoW2WitnessDestination witnessDest(phase3WitnessInfo.spendingKeyID, phase3WitnessInfo.witnessKeyID);
+                        sub.address = CNativeAddress(witnessDest).ToString();
+                        for(const auto& accountPair : wallet->mapAccounts)
+                        {
+                            if (IsMine(*accountPair.second, witnessDest) == ISMINE_SPENDABLE)
+                            {
+                                sub.receiveAccountUUID = accountPair.first;
+                                
+                                TransactionRecord subReceive(hash, nTime);
+                                subReceive.type = TransactionRecord::WitnessFundRecv;
+                                subReceive.address = CNativeAddress(witnessDest).ToString();
+                                subReceive.receiveAccountUUID = subReceive.actionAccountUUID = accountPair.first;
+                                subReceive.actionAccountParentUUID = accountPair.second->getParentUUID();
+                                subReceive.fromAccountUUID = sub.fromAccountUUID;
+                                subReceive.fromAccountParentUUID = sub.fromAccountParentUUID;
+                                subReceive.involvesWatchAddress = involvesWatchAddress;
+                                subReceive.idx = parts.size();
+                                subReceive.credit = sub.debit;
+                                subReceive.debit = sub.credit;
+                                sub.idx = parts.size()+1;
+                                parts.append(subReceive);
+                                
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        CTxDestination address;
+                        if (ExtractDestination(txout, address))
+                        {
+                            // Sent to Gulden Address
+                            sub.type = TransactionRecord::SendToAddress;
+                            sub.address = CNativeAddress(address).ToString();
+                        }
+                        else
+                        {
+                            // Sent to IP, or other non-address transaction like OP_EVAL
+                            sub.type = TransactionRecord::SendToOther;
+                            sub.address = mapValue["to"];
+                        }
+                    }
+
                     parts.append(sub);
                 }
             }
@@ -753,19 +816,39 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
 
                     if (wtx.IsPoW2WitnessCoinBase())
                     {
-                        sub.type = TransactionRecord::GeneratedWitness;
-                        sub.address = outAddresses;
-                    }
-                    else if (wtx.IsCoinBase())
-                    {
-                        sub.address = outAddresses;
-                        if (sub.credit == 20 * COIN && sub.debit == 0)
+                        // Prevent old phase3 rewards from displaying incorrectly
+                        if (nNetMixed > 4000 * COIN)
                         {
-                            sub.type = TransactionRecord::GeneratedWitness;
+                            sub.type = TransactionRecord::WitnessRenew;
+                            sub.debit= nDebit-wtx.tx->GetValueOut();;
+                            sub.credit=0;
                         }
                         else
                         {
-                            sub.type = TransactionRecord::Generated;
+                            sub.type = TransactionRecord::GeneratedWitness;
+                            sub.address = outAddresses;
+                        }
+                    }
+                    else if (wtx.IsCoinBase())
+                    {
+                        // Prevent old phase3 rewards from displaying incorrectly
+                        if (nNetMixed > 4000 * COIN)
+                        {
+                            sub.type = TransactionRecord::WitnessRenew;
+                            sub.debit= nDebit-wtx.tx->GetValueOut();;
+                            sub.credit=0;
+                        }
+                        else
+                        {
+                            sub.address = outAddresses;
+                            if (sub.credit == 20 * COIN && sub.debit == 0)
+                            {
+                                sub.type = TransactionRecord::GeneratedWitness;
+                            }
+                            else
+                            {
+                                sub.type = TransactionRecord::Generated;
+                            }
                         }
                     }
 
