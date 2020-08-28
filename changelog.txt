@@ -1,3 +1,10 @@
+2.2.0.11
+
+UI      - Fix up display of various phase3 related accounts/transactions for older wallets.
+
+
+
+
 2.2.0.10
 
 CORE    - Change dev subsidy reward to 80 NLG per block, as decided by GAB [Activate at block: 1226652 (Estimate 09/07/2020 @ 2:30pm (UTC+2)]
