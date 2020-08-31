@@ -1035,7 +1035,7 @@ inline void updateHashesPerSec(uint64_t& nStart, uint64_t nStop, uint64_t nCount
 
 static const unsigned int hashPSTimerInterval = 200;
 
-void static GuldenGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemoryKb)
+void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemoryKb)
 {
     LogPrintf("PoWGenerate thread started\n");
     RenameThread(GLOBAL_APPNAME"-generate");
@@ -1440,7 +1440,7 @@ void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nMemory, const 
         return;
 
     fixedGenerateAddress = generateAddress;
-    minerThread = new boost::thread(boost::bind(&GuldenGenerate, boost::cref(chainparams), forAccount, nThreads, nMemory));
+    minerThread = new boost::thread(boost::bind(&PoWGenerate, boost::cref(chainparams), forAccount, nThreads, nMemory));
 }
 
 bool PoWGenerationIsActive()
