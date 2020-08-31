@@ -8,6 +8,7 @@ BENCH_SRCDIR = bench
 BENCH_BINARY = bench/bench_sigma$(EXEEXT)
 
 bench_bench_sigma_SOURCES = \
+  util.cpp \
   bench/bench_sigma.cpp \
   utilstrencodings.cpp \
   support/cleanse.cpp

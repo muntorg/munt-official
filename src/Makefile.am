@@ -1087,6 +1087,7 @@ endif
 
 if ENABLE_BENCH
 #include Makefile.bench.include
+include Makefile.sigmabench.include
 endif
 
 if ENABLE_QT
