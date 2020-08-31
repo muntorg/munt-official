@@ -386,6 +386,11 @@ public:
         vAlertPubKey = ParseHex("06087071e40ddf2ecbdf1ae40f536fa8f78e9383006c710dd3ecce957a3cb9292038d0840e3be5042a6b863f75dfbe1cae8755a0f7887ae459af689f66caacab52");
         nDefaultPort = 9235;
         nPruneAfterHeight = 1000;
+        
+        //PoW paramaters for SIGMA
+        defaultSigmaSettings.arenaSizeKb = 4*1024*1024;
+        defaultSigmaSettings.argonSlowHashRoundCost = 12;
+        defaultSigmaSettings.fastHashSizeBytes = 300;
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -477,6 +482,11 @@ public:
         pchMessageStart[3] = 0xFF; // 0xFF
         nDefaultPort = 18444;
         nPruneAfterHeight = 1000;
+        
+        //PoW paramaters for SIGMA
+        defaultSigmaSettings.arenaSizeKb = 4*1024*1024;
+        defaultSigmaSettings.argonSlowHashRoundCost = 12;
+        defaultSigmaSettings.fastHashSizeBytes = 300;
 
         genesis = CreateGenesisBlock(1296688602, 2, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
         consensus.hashGenesisBlock = genesis.GetHashPoW2();

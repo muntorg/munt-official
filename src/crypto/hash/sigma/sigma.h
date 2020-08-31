@@ -80,13 +80,13 @@ public:
     void verify();
 public:
     uint64_t numVerifyThreads=4;         // Allow verification with 4 threads
-    uint64_t arenaSizeKb=4*1024*1024;    // 4gb overall arena size
+    uint64_t arenaSizeKb=12*1024*1024;   // 12gb overall arena size
     uint64_t argonMemoryCostKb=4*1024;   // 4mb per arena/slow hash
     uint64_t argonArenaRoundCost=8;      // 8 rounds per arena hash
-    uint64_t argonSlowHashRoundCost=12;  // 12 rounds per slow hash
+    uint64_t argonSlowHashRoundCost=14;  // 14 rounds per slow hash
     uint64_t numHashesPre=65536;         // 65536 pre-hashes
     uint64_t numHashesPost=65536;        // 65536 post-hashes 
-    uint64_t fastHashSizeBytes=300;      // 300 bytes per fast hash
+    uint64_t fastHashSizeBytes=400;      // 400 bytes per fast hash
     
     // Calculated from other values in constructor.
     uint64_t arenaChunkSizeBytes=0;
