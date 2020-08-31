@@ -12,7 +12,7 @@ static void addCoin(const CAmount& nValue, const CWallet& wallet, std::vector<CO
     int nInput = 0;
 
     static int nextLockTime = 0;
-    CMutableTransaction tx;
+    CMutableTransaction tx(1);
     tx.nLockTime = nextLockTime++; // so all transactions get different hashes
     tx.vout.resize(nInput + 1);
     tx.vout[nInput].nValue = nValue;
@@ -49,7 +49,7 @@ static void CoinSelection(benchmark::State& state)
 
         std::set<CInputCoin> setCoinsRet;
         CAmount nValueRet;
-        bool success = wallet.SelectCoinsMinConf(1003 * COIN, 1, 6, 0, vCoins, setCoinsRet, nValueRet);
+        bool success = wallet.SelectCoinsMinConf(1003 * COIN, 1, 6, 0, vCoins, setCoinsRet, nValueRet, false);
         assert(success);
         assert(nValueRet == 1003 * COIN);
         assert(setCoinsRet.size() == 2);
