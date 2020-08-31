@@ -9,16 +9,13 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.unity_wallet.main_activity_fragments.*
 import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -26,12 +23,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import com.gulden.unity_wallet.ui.getDisplayDimensions
 import com.gulden.unity_wallet.util.*
-import kotlinx.coroutines.async
+import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.contentView
-import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.design.snackbar
 import kotlin.concurrent.thread
 

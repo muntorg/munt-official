@@ -33,8 +33,6 @@ file COPYING
     <string name="transaction_list_empty_title">Brak otrzymanych transakcji</string>
     <string name="transaction_list_empty_message">Dotknij tutaj, aby kupić swój pierwszy Gulden</string>
     <string name="send_coins_confirm_template">%1$s NLG\n\nto %2$s</string>
-    <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nto %3$s</string>
-    <string name="send_coins_nocks_estimate_template">Około. G %1$s, w tym opłata za usługę IBAN</string>
     <string name="peer_list_fragment_empty">Brak połączonych partnerów</string>
     <string name="block_row_now">tylko teraz</string>
     <string name="action_browse">Przeglądaj</string>
@@ -142,12 +140,8 @@ file COPYING
     <string name="tx_detail_sending_address">Adres wysyłania</string>
     <string name="tx_detail_payment_address">Adres do płatności</string>
     <string name="tx_detail_network_fee">Opłata za sieć Gulden</string>
-    <string name="iban_account_holder_info_text">Wprowadź poprawną nazwę właściciela konta, aby zapobiec opóźnieniu.</string>
     <string name="iban_account_holder_name">Imię</string>
-    <string name="iban_account_holder_description">Opis (opcjonalnie)</string>
     <string name="tx_detail_address_unavailable">niedostępne</string>
-    <string name="nocks_error_unable_to_fetch_quote">Nie można pobrać wyceny transakcji</string>
-    <string name="nocks_error_prefix">Błąd:</string>
     <string name="notification_transaction_channel_name">Transakcje</string>
     <string name="notification_transaction_channel_description">Powiadomienia o transakcjach</string>
     <string name="notification_service_channel_name">Usługa</string>

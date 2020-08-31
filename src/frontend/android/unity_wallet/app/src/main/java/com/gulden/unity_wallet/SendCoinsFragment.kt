@@ -1,5 +1,5 @@
 // Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za), Willem de Jonge (willem@isnapp.nl)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com), Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -31,11 +31,8 @@ import com.gulden.unity_wallet.R.layout.text_input_address_label
 import com.gulden.unity_wallet.ui.getDisplayDimensions
 import com.gulden.unity_wallet.util.invokeNowOrOnSuccesfullCompletion
 import kotlinx.android.synthetic.main.fragment_send_coins.view.*
-import kotlinx.android.synthetic.main.iban_name_entry.view.*
-import kotlinx.android.synthetic.main.numeric_keypad.view.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
 import kotlinx.coroutines.*
-import org.apache.commons.validator.routines.IBANValidator
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.dimen
@@ -46,13 +43,9 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 {
     override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
 
-    private var nocksJob: Job? = null
-    private var orderResult: NocksOrderResult? = null
     private var localRate: Double = 0.0
     private lateinit var recipient: UriRecipient
     private var foreignCurrency = localCurrency
-    private var isIBAN = false
-    private var nocks: NocksService? = null
     private enum class EntryMode {
         Native,
         Local
@@ -105,7 +98,6 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     private var mBehavior: BottomSheetBehavior<*>? = null
     private lateinit var mSendCoinsReceivingStaticAddress : TextView
-    private lateinit var mSendCoinsNocksEstimate : TextView
     private lateinit var mSendCoinsReceivingStaticLabel : TextView
     private lateinit var mLabelRemoveFromAddressBook : TextView
     private lateinit var mLabelAddToAddressBook : TextView
@@ -142,7 +134,6 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         }
 
         mSendCoinsReceivingStaticAddress = mMainlayout.findViewById(R.id.send_coins_receiving_static_address)
-        mSendCoinsNocksEstimate = mMainlayout.findViewById(R.id.send_coins_nocks_estimate)
         mSendCoinsReceivingStaticLabel = mMainlayout.findViewById(R.id.send_coins_receiving_static_label)
         mLabelRemoveFromAddressBook = mMainlayout.findViewById(R.id.labelRemoveFromAddressBook)
         mLabelAddToAddressBook = mMainlayout.findViewById(R.id.labelAddToAddressBook)
@@ -201,17 +192,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
         setAddressLabel(recipient.label)
 
-        if (IBANValidator.getInstance().isValid(recipient.address)) {
-            foreignCurrency = Currencies.knownCurrencies["EUR"]!!
-            isIBAN = true
-            nocks = NocksService()
-        }
-        else {
-            foreignCurrency = localCurrency
-            isIBAN = false
-        }
-
-        mSendCoinsNocksEstimate.visibility = if (isIBAN) View.VISIBLE else View.GONE
+        foreignCurrency = localCurrency
 
         setupRate()
 
@@ -234,7 +215,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             EntryMode.Local -> {
                 primaryStr = "%s %s".format(foreignCurrency.short, amountEditStr)
                 if (localRate > 0.0) {
-                    secondaryStr = String.format("(G %.${Config.PRECISION_SHORT}f)", amount / localRate)
+                    secondaryStr = String.format("(G %.${PRECISION_SHORT}f)", amount / localRate)
                 }
             }
         }
@@ -245,8 +226,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     private fun performAuthenticatedPayment(d : Dialog, request : UriRecipient, msg: String?, substractFee: Boolean = false)
     {
-        val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", request.amount.toDouble() / 100000000)
-        val message = msg ?: getString(R.string.send_coins_confirm_template, nlgStr, recipientDisplayAddress)
+        val amountStr = String.format("%.${PRECISION_SHORT}f", request.amount.toDouble() / 100000000)
+        val message = msg ?: getString(R.string.send_coins_confirm_template, amountStr, recipientDisplayAddress)
         Authentication.instance.authenticate(this@SendCoinsFragment.activity!!,
                 null, msg = message) {
             try {
@@ -261,12 +242,12 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     private fun confirmAndCommitGuldenPayment()
     {
-        val amountNLG = when (entryMode) {
+        val amountStr = when (entryMode) {
             EntryMode.Local -> (amountEditStr.toDoubleOrZero() / localRate).toString()
             EntryMode.Native -> amountEditStr
         }.toDoubleOrZero()
 
-        val amountNative = amountNLG.toNative()
+        val amountNative = amountStr.toNative()
 
         try {
             val paymentRequest = UriRecipient(true, recipient.address, recipient.label, recipient.desc, amountNative)
@@ -290,8 +271,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                 }.show()
             } else {
                 // create styled message from resource template and arguments bundle
-                val nlgStr = String.format("%.${Config.PRECISION_SHORT}f", amountNLG)
-                val message = getString(R.string.send_coins_confirm_template, nlgStr, recipientDisplayAddress)
+                val amountStr = String.format("%.${PRECISION_SHORT}f", amountNative)
+                val message = getString(R.string.send_coins_confirm_template, amountStr, recipientDisplayAddress)
 
                 // alert dialog for confirmation
                 fragmentActivity.alert(Appcompat, message, getString(R.string.send_gulden_title)) {
@@ -309,89 +290,6 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         }
     }
 
-    private fun confirmAndCommitIBANPayment(name: String, description: String) {
-        mMainlayout.button_send.isEnabled = false
-        this.launch {
-            try {
-                val orderResult = nocks!!.nocksOrder(amount = foreignAmount, amtCurrency = NocksService.Symbol.EUR, destinationIBAN = recipient.address, name = name, description = description)
-
-                // test if amount exceeds balance
-                // note that testing if the transaction exceeds balance has to be done with an order (placed above already), when using a quote the actual rate when placing the order could already be different and also
-                // the recipient is needed to calculate the network fee
-                val amountNative = orderResult.depositAmountNLG.toNative()
-                val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, recipient.desc, amountNative)
-                val fee = GuldenUnifiedBackend.feeForRecipient(paymentRequest)
-                val balance = GuldenUnifiedBackend.GetBalance()
-                if (fee > balance) {
-                    errorMessage(getString(R.string.send_insufficient_balance))
-                    mMainlayout.button_send.isEnabled = true
-                    return@launch
-                }
-                if (fee + amountNative > balance) {
-                    // Desirable to cancel the previous transaction order with Nocks, this is however not possible with anonymous transactions (discussed with Patrick Kivits)
-
-                    // alert dialog for confirmation of payment and reduction of amount since amount + fee exceeds balance
-                    // a new Nocks order is placed now using max NLG amount
-                    fragmentActivity.alert(Appcompat, getString(R.string.send_all_instead_msg), getString(R.string.send_all_instead_title)) {
-
-                        // on confirmation compose recipient with reduced amount and execute payment with substract fee from amount
-                        positiveButton(getString(R.string.send_all_btn)) {
-                            this@SendCoinsFragment.launch {
-                                try {
-                                    val orderAllResult = nocks!!.nocksOrder(amount = balance / 100000000.0, amtCurrency = NocksService.Symbol.NLG, destinationIBAN = recipient.address, name = name, description = description)
-                                    finalConfirmAndCommitIBANPayment(orderAllResult, true)
-                                } catch (e: NocksException) {
-                                    errorMessage(e.errorText)
-                                    mMainlayout.button_send.isEnabled = true
-                                } catch (e: Throwable) {
-                                    errorMessage(getString(R.string.iban_order_failed))
-                                    mMainlayout.button_send.isEnabled = true
-                                }
-                            }
-                        }
-
-                        negativeButton(getString(R.string.cancel_btn)) {}
-                    }.show()
-                } else {
-                    finalConfirmAndCommitIBANPayment(orderResult)
-                }
-                mMainlayout.button_send.isEnabled = true
-            } catch (e: NocksException) {
-                errorMessage(e.errorText)
-                mMainlayout.button_send.isEnabled = true
-            } catch (e: Throwable) {
-                errorMessage(getString(R.string.iban_order_failed))
-                mMainlayout.button_send.isEnabled = true
-            }
-        }
-    }
-
-    private fun finalConfirmAndCommitIBANPayment(orderResult: NocksOrderResult, substractFee: Boolean = false) {
-        // create styled message from resource template and arguments bundle
-        val nlgStr = String.format("%.${PRECISION_SHORT}f", orderResult.depositAmountNLG)
-        val message = getString(R.string.send_coins_iban_confirm_template, String.format("%.${foreignCurrency.precision}f", orderResult.amountEUR), nlgStr, recipientDisplayAddress)
-
-        // alert dialog for confirmation
-        fragmentActivity.alert(Appcompat, message, getString(R.string.send_to_iban_title)) {
-
-            // on confirmation compose recipient and execute payment
-            positiveButton(getString(R.string.send_btn)) {
-                mMainlayout.button_send.isEnabled = true
-                val paymentRequest = UriRecipient(true, orderResult.depositAddress, recipient.label, recipient.desc, orderResult.depositAmountNLG.toNative())
-                try {
-                    performAuthenticatedPayment(dialog!!, paymentRequest, "%s\n\nG %s".format(paymentRequest.address, message), substractFee)
-                } catch (exception: RuntimeException) {
-                    errorMessage(exception.message!!)
-                    mMainlayout.button_send.isEnabled = true
-                }
-            }
-
-            negativeButton(getString(R.string.cancel_btn)) {
-                // Desirable to cancel transaction with Nocks, this is however not possible with anonymous transactions (discussed with Patrick Kivits)
-            }
-        }.show()
-    }
-
     private fun errorMessage(msg: String) {
         fragmentActivity.alert(Appcompat, msg, "") {
             positiveButton(getString(R.string.send_coins_error_acknowledge)) {}
@@ -400,9 +298,6 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     override fun onDestroy() {
         super.onDestroy()
-
-        if (nocks != null)
-            nocks = null
 
         coroutineContext[Job]!!.cancel()
 
@@ -417,55 +312,16 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     private fun setupRate()
     {
-        if (!isIBAN)
-            entryMode = EntryMode.Native
+        entryMode = EntryMode.Native
 
         this.launch( Dispatchers.Main) {
             try {
                 localRate = fetchCurrencyRate(foreignCurrency.code)
-
-                if (isIBAN)
-                    entryMode = EntryMode.Local
             }
             catch (e: Throwable) {
                 entryMode = EntryMode.Native
             }
             updateDisplayAmount()
-        }
-    }
-
-    private fun updateNocksEstimate() {
-        nocksJob?.cancel()
-        mSendCoinsNocksEstimate.text = " "
-        if (isIBAN && foreignAmount != 0.0) {
-            val prevJob = nocksJob
-            nocksJob = this.launch(Dispatchers.Main) {
-                try {
-                    mSendCoinsNocksEstimate.text = "..."
-
-                    // delay a bit so quick typing will make a limited number of requests
-                    // (this job will be canceled by the next key typed
-                    delay(700)
-
-                    prevJob?.join()
-
-                    try {
-                        val quote = nocks!!.nocksQuote(foreignAmount, NocksService.Symbol.EUR)
-                        val nlg = quote.amountNLG
-                        mSendCoinsNocksEstimate.text = getString(R.string.send_coins_nocks_estimate_template, nlg)
-                    }
-                    catch (e: NocksException) {
-                        e.errorText
-                        mSendCoinsNocksEstimate.text = getString(R.string.nocks_error_prefix) + e.errorText
-                    }
-                }
-                catch (_: CancellationException) {
-                    // silently pass job cancellation
-                }
-                catch (e: Throwable) {
-                    mSendCoinsNocksEstimate.text = getString(R.string.nocks_error_unable_to_fetch_quote)
-                }
-            }
         }
     }
 
@@ -577,49 +433,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                 amountEditStr = "0"
             }
         }
-        updateNocksEstimate()
         return true
-    }
-
-    private fun handleSendButtonIBAN()
-    {
-        val contentView = LayoutInflater.from(context).inflate(R.layout.iban_name_entry, null)
-        val builder = context!!.alert(Appcompat) {
-            this.title = "Enter recipient"
-            customView = contentView
-            if (recipient.label.isNotEmpty())
-                contentView.name.setText(recipient.label)
-            positiveButton("Pay") {
-                confirmAndCommitIBANPayment(contentView.name.text.toString(), contentView.description.text.toString())
-            }
-            negativeButton("Cancel") {
-            }
-        }
-        val dialog = builder.build()
-
-        dialog.setOnShowListener {
-            val okBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            okBtn.isEnabled = contentView.name.text.isNotEmpty()
-            contentView.name.addTextChangedListener(
-                    object : TextWatcher {
-                        override fun afterTextChanged(s: Editable?) {
-                            s?.run {
-                                okBtn.isEnabled = isNotEmpty()
-                            }
-                        }
-                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                    })
-
-            //Ensure keyboard/IMM shows by default
-            contentView.name.requestFocus()
-            contentView.name.post {
-                val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.showSoftInput(contentView.name, InputMethodManager.SHOW_IMPLICIT)
-            }
-        }
-
-        dialog.show()
     }
 
     private fun handleSendButton()
@@ -636,11 +450,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                 return@run
             }
 
-            when
-            {
-                isIBAN -> handleSendButtonIBAN()
-                else -> confirmAndCommitGuldenPayment()
-            }
+            confirmAndCommitGuldenPayment()
         }
     }
 
@@ -692,7 +502,6 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             }
 
         }
-        updateNocksEstimate()
     }
 
     private fun handleAddToAddressBookClick(view : View)

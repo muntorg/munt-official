@@ -23,14 +23,9 @@ import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.util.AppBaseActivity
 import com.gulden.unity_wallet.util.AppBaseFragment
 import kotlinx.android.synthetic.main.fragment_receive.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import org.jetbrains.anko.dimen
 import org.jetbrains.anko.sdk27.coroutines.onLongClick
 import java.nio.ByteBuffer
-import kotlin.coroutines.CoroutineContext
 
 
 /* Handle display of current address; as well as copying/sharing of address */
@@ -63,7 +58,7 @@ class ReceiveFragment : AppBaseFragment() {
     private fun copyToClipboard() {
         val clip: ClipData = ClipData.newPlainText(getString(R.string.gulden_address_clipboard_label), currentAddressLabel.text)
         val clipboard = getSystemService<ClipboardManager>(activity!!, ClipboardManager::class.java) as ClipboardManager
-        clipboard.primaryClip = clip
+        clipboard.setPrimaryClip(clip)
 
         val toast = Toast.makeText(context, getString(R.string.copied_to_clipboard_toast), Toast.LENGTH_SHORT)
         toast.setGravity(Gravity.TOP, 0, context!!.dimen(R.dimen.top_toast_offset) )

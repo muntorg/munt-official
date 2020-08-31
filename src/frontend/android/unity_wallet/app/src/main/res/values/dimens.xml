@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 Copyright (c) 2018 The Gulden developers
-Authored by: Malcolm MacLeod (mmacleod@webmail.co.za), Willem de Jonge (willem@isnapp.nl)
+Authored by: Malcolm MacLeod (mmacleod@gmx.com), Willem de Jonge (willem@isnapp.nl)
 Distributed under the GULDEN software license, see the accompanying
 file COPYING
 !-->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
 
     <!-- Bottom navigation bar. -->
     <dimen tools:override="true" name="design_bottom_navigation_height">64dp</dimen>
@@ -28,8 +27,6 @@ file COPYING
     <!--<dimen name="list_entry_padding_vertical_lax">10dp</dimen>-->
 
     <dimen name="transaction_details_item_spacing">30dp</dimen>
-
-    <dimen name="bottom_divider_margin">0dp</dimen>
 
     <!-- This is a hack/workaround to suppress enlargement of selected item -->
     <dimen tools:override="true" name="design_bottom_navigation_active_text_size">@dimen/design_bottom_navigation_text_size</dimen>

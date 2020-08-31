@@ -1,5 +1,5 @@
 // Copyright (c) 2018 The Gulden developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za) & Willem de Jonge (willem@isnapp.nl)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com) & Willem de Jonge (willem@isnapp.nl)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
@@ -99,14 +99,14 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
 
                 // Sets the notification light color for notifications posted to this, if the device supports this feature.
                 notificationChannel?.enableLights(true)
-                notificationChannel?.setLightColor(Color.GREEN)
+                notificationChannel?.lightColor = Color.GREEN
 
                 // Sets vibration for notifications
                 notificationChannel?.enableVibration(true)
-                notificationChannel?.setVibrationPattern(longArrayOf(0, 1000, 500, 1000))
+                notificationChannel?.vibrationPattern = longArrayOf(0, 1000, 500, 1000)
 
-                notificationChannel?.setDescription(description)
-                mNotificationManager.createNotificationChannel(notificationChannel)
+                notificationChannel?.description = description
+                mNotificationManager.createNotificationChannel(notificationChannel!!)
             }
             if (notificationChannel != null)
                 return notificationChannel?.id!!

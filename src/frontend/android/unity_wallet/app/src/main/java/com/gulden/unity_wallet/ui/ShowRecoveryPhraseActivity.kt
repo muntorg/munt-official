@@ -12,7 +12,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.ShareActionProvider
 import androidx.core.view.MenuItemCompat
@@ -136,7 +135,7 @@ class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
             {
                 val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText("backup", recoveryPhraseTrimmed)
-                clipboard.primaryClip = clip
+                clipboard.setPrimaryClip(clip)
                 mode.finish()
                 Toast.makeText(applicationContext, R.string.recovery_phrase_copy, Toast.LENGTH_LONG).show()
                 true
@@ -146,7 +145,7 @@ class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
         }
 
 
-        override fun onCreateActionMode(mode: androidx.appcompat.view.ActionMode, menu: Menu): Boolean
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean
         {
             mode.menuInflater.inflate(R.menu.share_menu, menu)
 

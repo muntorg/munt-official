@@ -17,13 +17,7 @@ import com.gulden.unity_wallet.UnityCore
 import com.gulden.unity_wallet.util.AppBaseFragment
 import kotlinx.android.synthetic.main.processing_fragment.*
 import kotlinx.android.synthetic.main.processing_fragment.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
-import org.jetbrains.anko.runOnUiThread
 import org.jetbrains.anko.support.v4.runOnUiThread
-import kotlin.coroutines.CoroutineContext
 
 class ProcessingFragment : AppBaseFragment() {
 

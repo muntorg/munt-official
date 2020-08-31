@@ -33,8 +33,6 @@ file COPYING
     <string name="transaction_list_empty_title">Keine Überweisungen erhalten</string>
     <string name="transaction_list_empty_message">Hier tippen um deine ersten Gulden zu kaufen.</string>
     <string name="send_coins_confirm_template">%1$s NLG\n\nnach %2$s</string>
-    <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nnach %3$s</string>
-    <string name="send_coins_nocks_estimate_template">Ungefähr G %1$s inklusive IBAN-Gebühr</string>
     <string name="peer_list_fragment_empty">Keine Peers verbunden</string>
     <string name="block_row_now">gerade eben</string>
     <string name="action_browse">Im Browser öffnen</string>
@@ -145,12 +143,8 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeich
     <string name="tx_detail_sending_address">Sendeadresse</string>
     <string name="tx_detail_payment_address">Zahlungsadresse</string>
     <string name="tx_detail_network_fee">Gulden Netzwerk-Gebühr</string>
-    <string name="iban_account_holder_info_text">Gib den korrekten Namen des Kontoinhabers ein, um eine Verzögerung zu vermeiden.</string>
     <string name="iban_account_holder_name">Name</string>
-    <string name="iban_account_holder_description">Beschreibung (optional)</string>
     <string name="tx_detail_address_unavailable">nicht verfügbar</string>
-    <string name="nocks_error_unable_to_fetch_quote">Der geschätzte Gulden-Betrag kann nicht abgerufen werden</string>
-    <string name="nocks_error_prefix">Fehler:</string>
     <string name="notification_transaction_channel_name">Transaktionen</string>
     <string name="notification_transaction_channel_description">Transaktionsbenachrichtigungen</string>
     <string name="notification_service_channel_name">Service</string>

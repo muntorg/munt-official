@@ -12,14 +12,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
 import com.gulden.jniunifiedbackend.LegacyWalletResult
 import com.gulden.unity_wallet.Constants.OLD_WALLET_PROTOBUF_FILENAME
 import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.upgrade_password.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.design.longSnackbar
@@ -131,7 +128,7 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
         // this prevents prompting for an upgrade again later should the user remove his wallet
         // still the data of the old wallet is retained so if (god forbid) should something go wrong with upgrades
         // in the field a fix can be published which could ignore the upgrade marker
-        val upgradedMarkerFile = getFileStreamPath(Constants.OLD_WALLET_PROTOBUF_FILENAME+".upgraded")
+        val upgradedMarkerFile = getFileStreamPath(OLD_WALLET_PROTOBUF_FILENAME+".upgraded")
         if (!upgradedMarkerFile.exists()) {
             val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 packageManager.getPackageInfo(packageName, 0).longVersionCode

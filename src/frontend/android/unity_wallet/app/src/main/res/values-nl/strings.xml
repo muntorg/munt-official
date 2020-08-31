@@ -33,8 +33,6 @@ file COPYING
     <string name="transaction_list_empty_title">Geen transacties ontvangen</string>
     <string name="transaction_list_empty_message">Tik hier om je eerste Guldens te kopen</string>
     <string name="send_coins_confirm_template">%1$s NLG\n\nnaar %2$s</string>
-    <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NLG)\n\nnaar %3$s</string>
-    <string name="send_coins_nocks_estimate_template">Ongeveer G %1$s inclusief IBAN-kosten.</string>
     <string name="peer_list_fragment_empty">Geen connecties</string>
     <string name="block_row_now">alleen nu</string>
     <string name="action_browse">Bladeren</string>
@@ -140,12 +138,8 @@ file COPYING
     <string name="tx_detail_sending_address">Verzendadres</string>
     <string name="tx_detail_payment_address">Betaaladres</string>
     <string name="tx_detail_network_fee">Gulden-netwerkkosten</string>
-    <string name="iban_account_holder_info_text">Voer de correcte naam in van de bankrekeninghouder om vertraging te voorkomen.</string>
     <string name="iban_account_holder_name">Naam</string>
-    <string name="iban_account_holder_description">Omschrijving (optioneel)</string>
     <string name="tx_detail_address_unavailable">niet beschikbaar</string>
-    <string name="nocks_error_unable_to_fetch_quote">Kan geschat Gulden-bedrag niet ophalen</string>
-    <string name="nocks_error_prefix">Fout:</string>
     <string name="notification_transaction_channel_name">Transacties</string>
     <string name="notification_transaction_channel_description">Transactie notificatie</string>
     <string name="notification_service_channel_name">Service</string>
