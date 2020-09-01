@@ -242,12 +242,12 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     private fun confirmAndCommitGuldenPayment()
     {
-        val amountStr = when (entryMode) {
+        val amountNativeStr = when (entryMode) {
             EntryMode.Local -> (amountEditStr.toDoubleOrZero() / localRate).toString()
             EntryMode.Native -> amountEditStr
         }.toDoubleOrZero()
 
-        val amountNative = amountStr.toNative()
+        val amountNative = amountNativeStr.toNative()
 
         try {
             val paymentRequest = UriRecipient(true, recipient.address, recipient.label, recipient.desc, amountNative)
@@ -271,7 +271,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                 }.show()
             } else {
                 // create styled message from resource template and arguments bundle
-                val amountStr = String.format("%.${PRECISION_SHORT}f", amountNative)
+                val amountStr = String.format("%.${PRECISION_SHORT}f", amountNativeStr)
                 val message = getString(R.string.send_coins_confirm_template, amountStr, recipientDisplayAddress)
 
                 // alert dialog for confirmation

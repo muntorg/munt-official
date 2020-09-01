@@ -10,18 +10,22 @@ void NJSGuldenMonitorListener::onPartialChain(int32_t height, int32_t probable_h
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    auto arg_0 = Napi::Number::New(env, height);
+    auto arg_0 = Napi::Value::From(env, height);
     args.push_back(arg_0);
-    auto arg_1 = Napi::Number::New(env, probable_height);
+    auto arg_1 = Napi::Value::From(env, probable_height);
     args.push_back(arg_1);
-    auto arg_2 = Napi::Number::New(env, offset);
+    auto arg_2 = Napi::Value::From(env, offset);
     args.push_back(arg_2);
-    Napi::Function calling_function = Value().Get("onPartialChain").As<Napi::Function>();
-    auto result_onPartialChain = calling_function.Call(args);
-    if(result_onPartialChain.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("onPartialChain");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSGuldenMonitorListener::onPartialChain call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_onPartialChain = calling_function.Call(args);
+        if(result_onPartialChain.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSGuldenMonitorListener::onPartialChain call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 
@@ -31,14 +35,18 @@ void NJSGuldenMonitorListener::onPruned(int32_t height)
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    auto arg_0 = Napi::Number::New(env, height);
+    auto arg_0 = Napi::Value::From(env, height);
     args.push_back(arg_0);
-    Napi::Function calling_function = Value().Get("onPruned").As<Napi::Function>();
-    auto result_onPruned = calling_function.Call(args);
-    if(result_onPruned.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("onPruned");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSGuldenMonitorListener::onPruned call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_onPruned = calling_function.Call(args);
+        if(result_onPruned.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSGuldenMonitorListener::onPruned call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 
@@ -48,14 +56,18 @@ void NJSGuldenMonitorListener::onProcessedSPVBlocks(int32_t height)
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    auto arg_0 = Napi::Number::New(env, height);
+    auto arg_0 = Napi::Value::From(env, height);
     args.push_back(arg_0);
-    Napi::Function calling_function = Value().Get("onProcessedSPVBlocks").As<Napi::Function>();
-    auto result_onProcessedSPVBlocks = calling_function.Call(args);
-    if(result_onProcessedSPVBlocks.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("onProcessedSPVBlocks");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSGuldenMonitorListener::onProcessedSPVBlocks call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_onProcessedSPVBlocks = calling_function.Call(args);
+        if(result_onProcessedSPVBlocks.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSGuldenMonitorListener::onProcessedSPVBlocks call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 

@@ -3,7 +3,7 @@
 
 #include <napi.h>
 
-#include "NJSGuldenUnifiedBackendCpp.hpp"
+#include "NJSGuldenUnifiedBackend.hpp"
 #include "NJSGuldenUnifiedFrontend.hpp"
 #include "NJSGuldenMonitorListener.hpp"
 

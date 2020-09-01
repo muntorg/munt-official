@@ -10,6 +10,11 @@ struct MutationRecord;
 struct TransactionRecord;
 
 /** Interface to receive events from the core */
+#ifdef DJINNI_NODEJS
+#include "NJSGuldenUnifiedFrontend.hpp" 
+#define GuldenUnifiedFrontend NJSGuldenUnifiedFrontend
+#else
+
 class GuldenUnifiedFrontend {
 public:
     virtual ~GuldenUnifiedFrontend() {}
@@ -43,3 +48,4 @@ public:
 
     virtual void logPrint(const std::string & str) = 0;
 };
+#endif

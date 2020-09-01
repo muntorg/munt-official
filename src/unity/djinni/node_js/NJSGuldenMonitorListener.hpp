@@ -13,7 +13,7 @@
 
 using namespace std;
 
-class NJSGuldenMonitorListener: public ::GuldenMonitorListener, public Napi::ObjectWrap<NJSGuldenMonitorListener> {
+class NJSGuldenMonitorListener: public Napi::ObjectWrap<NJSGuldenMonitorListener> {
 public:
 
     static Napi::FunctionReference constructor;

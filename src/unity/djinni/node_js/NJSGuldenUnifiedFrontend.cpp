@@ -10,14 +10,18 @@ void NJSGuldenUnifiedFrontend::notifyUnifiedProgress_aimpl__(float progress)
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    auto arg_0 = Napi::Number::New(env, progress);
+    auto arg_0 = Napi::Value::From(env, progress);
     args.push_back(arg_0);
-    Napi::Function calling_function = Value().Get("notifyUnifiedProgress").As<Napi::Function>();
-    auto result_notifyUnifiedProgress = calling_function.Call(args);
-    if(result_notifyUnifiedProgress.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("notifyUnifiedProgress");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyUnifiedProgress call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_notifyUnifiedProgress = calling_function.Call(args);
+        if(result_notifyUnifiedProgress.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyUnifiedProgress call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 
@@ -43,34 +47,38 @@ void NJSGuldenUnifiedFrontend::notifyBalanceChange_aimpl__(const BalanceRecord &
     //Wrap parameters
     std::vector<napi_value> args;
     auto arg_0 = Napi::Object::New(env);
-    auto arg_0_1 = Napi::Number::New(env, new_balance.availableIncludingLocked);
+    auto arg_0_1 = Napi::Value::From(env, new_balance.availableIncludingLocked);
     arg_0.Set("availableIncludingLocked", arg_0_1);
-    auto arg_0_2 = Napi::Number::New(env, new_balance.availableExcludingLocked);
+    auto arg_0_2 = Napi::Value::From(env, new_balance.availableExcludingLocked);
     arg_0.Set("availableExcludingLocked", arg_0_2);
-    auto arg_0_3 = Napi::Number::New(env, new_balance.availableLocked);
+    auto arg_0_3 = Napi::Value::From(env, new_balance.availableLocked);
     arg_0.Set("availableLocked", arg_0_3);
-    auto arg_0_4 = Napi::Number::New(env, new_balance.unconfirmedIncludingLocked);
+    auto arg_0_4 = Napi::Value::From(env, new_balance.unconfirmedIncludingLocked);
     arg_0.Set("unconfirmedIncludingLocked", arg_0_4);
-    auto arg_0_5 = Napi::Number::New(env, new_balance.unconfirmedExcludingLocked);
+    auto arg_0_5 = Napi::Value::From(env, new_balance.unconfirmedExcludingLocked);
     arg_0.Set("unconfirmedExcludingLocked", arg_0_5);
-    auto arg_0_6 = Napi::Number::New(env, new_balance.unconfirmedLocked);
+    auto arg_0_6 = Napi::Value::From(env, new_balance.unconfirmedLocked);
     arg_0.Set("unconfirmedLocked", arg_0_6);
-    auto arg_0_7 = Napi::Number::New(env, new_balance.immatureIncludingLocked);
+    auto arg_0_7 = Napi::Value::From(env, new_balance.immatureIncludingLocked);
     arg_0.Set("immatureIncludingLocked", arg_0_7);
-    auto arg_0_8 = Napi::Number::New(env, new_balance.immatureExcludingLocked);
+    auto arg_0_8 = Napi::Value::From(env, new_balance.immatureExcludingLocked);
     arg_0.Set("immatureExcludingLocked", arg_0_8);
-    auto arg_0_9 = Napi::Number::New(env, new_balance.immatureLocked);
+    auto arg_0_9 = Napi::Value::From(env, new_balance.immatureLocked);
     arg_0.Set("immatureLocked", arg_0_9);
-    auto arg_0_10 = Napi::Number::New(env, new_balance.totalLocked);
+    auto arg_0_10 = Napi::Value::From(env, new_balance.totalLocked);
     arg_0.Set("totalLocked", arg_0_10);
 
     args.push_back(arg_0);
-    Napi::Function calling_function = Value().Get("notifyBalanceChange").As<Napi::Function>();
-    auto result_notifyBalanceChange = calling_function.Call(args);
-    if(result_notifyBalanceChange.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("notifyBalanceChange");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyBalanceChange call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_notifyBalanceChange = calling_function.Call(args);
+        if(result_notifyBalanceChange.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyBalanceChange call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 
@@ -96,26 +104,30 @@ void NJSGuldenUnifiedFrontend::notifyNewMutation_aimpl__(const MutationRecord & 
     //Wrap parameters
     std::vector<napi_value> args;
     auto arg_0 = Napi::Object::New(env);
-    auto arg_0_1 = Napi::Number::New(env, mutation.change);
+    auto arg_0_1 = Napi::Value::From(env, mutation.change);
     arg_0.Set("change", arg_0_1);
-    auto arg_0_2 = Napi::Number::New(env, mutation.timestamp);
+    auto arg_0_2 = Napi::Value::From(env, mutation.timestamp);
     arg_0.Set("timestamp", arg_0_2);
     auto arg_0_3 = Napi::String::New(env, mutation.txHash);
     arg_0.Set("txHash", arg_0_3);
-    auto arg_0_4 = Napi::Number::New(env, (int)mutation.status);
+    auto arg_0_4 = Napi::Value::From(env, (int)mutation.status);
     arg_0.Set("status", arg_0_4);
-    auto arg_0_5 = Napi::Number::New(env, mutation.depth);
+    auto arg_0_5 = Napi::Value::From(env, mutation.depth);
     arg_0.Set("depth", arg_0_5);
 
     args.push_back(arg_0);
-    auto arg_1 = Napi::Boolean::New(env, self_committed);
+    auto arg_1 = Napi::Value::From(env, self_committed);
     args.push_back(arg_1);
-    Napi::Function calling_function = Value().Get("notifyNewMutation").As<Napi::Function>();
-    auto result_notifyNewMutation = calling_function.Call(args);
-    if(result_notifyNewMutation.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("notifyNewMutation");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyNewMutation call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_notifyNewMutation = calling_function.Call(args);
+        if(result_notifyNewMutation.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyNewMutation call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 
@@ -143,19 +155,19 @@ void NJSGuldenUnifiedFrontend::notifyUpdatedTransaction_aimpl__(const Transactio
     auto arg_0 = Napi::Object::New(env);
     auto arg_0_1 = Napi::String::New(env, transaction.txHash);
     arg_0.Set("txHash", arg_0_1);
-    auto arg_0_2 = Napi::Number::New(env, transaction.timeStamp);
+    auto arg_0_2 = Napi::Value::From(env, transaction.timeStamp);
     arg_0.Set("timeStamp", arg_0_2);
-    auto arg_0_3 = Napi::Number::New(env, transaction.amount);
+    auto arg_0_3 = Napi::Value::From(env, transaction.amount);
     arg_0.Set("amount", arg_0_3);
-    auto arg_0_4 = Napi::Number::New(env, transaction.fee);
+    auto arg_0_4 = Napi::Value::From(env, transaction.fee);
     arg_0.Set("fee", arg_0_4);
-    auto arg_0_5 = Napi::Number::New(env, (int)transaction.status);
+    auto arg_0_5 = Napi::Value::From(env, (int)transaction.status);
     arg_0.Set("status", arg_0_5);
-    auto arg_0_6 = Napi::Number::New(env, transaction.height);
+    auto arg_0_6 = Napi::Value::From(env, transaction.height);
     arg_0.Set("height", arg_0_6);
-    auto arg_0_7 = Napi::Number::New(env, transaction.blockTime);
+    auto arg_0_7 = Napi::Value::From(env, transaction.blockTime);
     arg_0.Set("blockTime", arg_0_7);
-    auto arg_0_8 = Napi::Number::New(env, transaction.depth);
+    auto arg_0_8 = Napi::Value::From(env, transaction.depth);
     arg_0.Set("depth", arg_0_8);
     auto arg_0_9 = Napi::Array::New(env);
     for(size_t arg_0_9_id = 0; arg_0_9_id < transaction.inputs.size(); arg_0_9_id++)
@@ -167,7 +179,7 @@ void NJSGuldenUnifiedFrontend::notifyUpdatedTransaction_aimpl__(const Transactio
         arg_0_9_elem.Set("label", arg_0_9_elem_2);
         auto arg_0_9_elem_3 = Napi::String::New(env, transaction.inputs[arg_0_9_id].desc);
         arg_0_9_elem.Set("desc", arg_0_9_elem_3);
-        auto arg_0_9_elem_4 = Napi::Boolean::New(env, transaction.inputs[arg_0_9_id].isMine);
+        auto arg_0_9_elem_4 = Napi::Value::From(env, transaction.inputs[arg_0_9_id].isMine);
         arg_0_9_elem.Set("isMine", arg_0_9_elem_4);
 
         arg_0_9.Set((int)arg_0_9_id,arg_0_9_elem);
@@ -178,7 +190,7 @@ void NJSGuldenUnifiedFrontend::notifyUpdatedTransaction_aimpl__(const Transactio
     for(size_t arg_0_10_id = 0; arg_0_10_id < transaction.outputs.size(); arg_0_10_id++)
     {
         auto arg_0_10_elem = Napi::Object::New(env);
-        auto arg_0_10_elem_1 = Napi::Number::New(env, transaction.outputs[arg_0_10_id].amount);
+        auto arg_0_10_elem_1 = Napi::Value::From(env, transaction.outputs[arg_0_10_id].amount);
         arg_0_10_elem.Set("amount", arg_0_10_elem_1);
         auto arg_0_10_elem_2 = Napi::String::New(env, transaction.outputs[arg_0_10_id].address);
         arg_0_10_elem.Set("address", arg_0_10_elem_2);
@@ -186,7 +198,7 @@ void NJSGuldenUnifiedFrontend::notifyUpdatedTransaction_aimpl__(const Transactio
         arg_0_10_elem.Set("label", arg_0_10_elem_3);
         auto arg_0_10_elem_4 = Napi::String::New(env, transaction.outputs[arg_0_10_id].desc);
         arg_0_10_elem.Set("desc", arg_0_10_elem_4);
-        auto arg_0_10_elem_5 = Napi::Boolean::New(env, transaction.outputs[arg_0_10_id].isMine);
+        auto arg_0_10_elem_5 = Napi::Value::From(env, transaction.outputs[arg_0_10_id].isMine);
         arg_0_10_elem.Set("isMine", arg_0_10_elem_5);
 
         arg_0_10.Set((int)arg_0_10_id,arg_0_10_elem);
@@ -195,12 +207,16 @@ void NJSGuldenUnifiedFrontend::notifyUpdatedTransaction_aimpl__(const Transactio
     arg_0.Set("outputs", arg_0_10);
 
     args.push_back(arg_0);
-    Napi::Function calling_function = Value().Get("notifyUpdatedTransaction").As<Napi::Function>();
-    auto result_notifyUpdatedTransaction = calling_function.Call(args);
-    if(result_notifyUpdatedTransaction.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("notifyUpdatedTransaction");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyUpdatedTransaction call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_notifyUpdatedTransaction = calling_function.Call(args);
+        if(result_notifyUpdatedTransaction.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyUpdatedTransaction call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 
@@ -225,12 +241,16 @@ void NJSGuldenUnifiedFrontend::notifyInitWithExistingWallet_aimpl__()
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    Napi::Function calling_function = Value().Get("notifyInitWithExistingWallet").As<Napi::Function>();
-    auto result_notifyInitWithExistingWallet = calling_function.Call(args);
-    if(result_notifyInitWithExistingWallet.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("notifyInitWithExistingWallet");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyInitWithExistingWallet call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_notifyInitWithExistingWallet = calling_function.Call(args);
+        if(result_notifyInitWithExistingWallet.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyInitWithExistingWallet call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 
@@ -255,12 +275,16 @@ void NJSGuldenUnifiedFrontend::notifyInitWithoutExistingWallet_aimpl__()
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    Napi::Function calling_function = Value().Get("notifyInitWithoutExistingWallet").As<Napi::Function>();
-    auto result_notifyInitWithoutExistingWallet = calling_function.Call(args);
-    if(result_notifyInitWithoutExistingWallet.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("notifyInitWithoutExistingWallet");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyInitWithoutExistingWallet call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_notifyInitWithoutExistingWallet = calling_function.Call(args);
+        if(result_notifyInitWithoutExistingWallet.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyInitWithoutExistingWallet call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 
@@ -285,12 +309,16 @@ void NJSGuldenUnifiedFrontend::notifyShutdown_aimpl__()
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    Napi::Function calling_function = Value().Get("notifyShutdown").As<Napi::Function>();
-    auto result_notifyShutdown = calling_function.Call(args);
-    if(result_notifyShutdown.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("notifyShutdown");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyShutdown call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_notifyShutdown = calling_function.Call(args);
+        if(result_notifyShutdown.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyShutdown call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 
@@ -315,12 +343,16 @@ void NJSGuldenUnifiedFrontend::notifyCoreReady_aimpl__()
     Napi::HandleScope scope(env);
     //Wrap parameters
     std::vector<napi_value> args;
-    Napi::Function calling_function = Value().Get("notifyCoreReady").As<Napi::Function>();
-    auto result_notifyCoreReady = calling_function.Call(args);
-    if(result_notifyCoreReady.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("notifyCoreReady");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyCoreReady call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_notifyCoreReady = calling_function.Call(args);
+        if(result_notifyCoreReady.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSGuldenUnifiedFrontend::notifyCoreReady call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 
@@ -347,12 +379,16 @@ void NJSGuldenUnifiedFrontend::logPrint_aimpl__(const std::string & str)
     std::vector<napi_value> args;
     auto arg_0 = Napi::String::New(env, str);
     args.push_back(arg_0);
-    Napi::Function calling_function = Value().Get("logPrint").As<Napi::Function>();
-    auto result_logPrint = calling_function.Call(args);
-    if(result_logPrint.IsEmpty())
+    Napi::Value calling_function_as_value = Value().Get("logPrint");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
     {
-        Napi::Error::New(env, "NJSGuldenUnifiedFrontend::logPrint call failed").ThrowAsJavaScriptException();
-        return;
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_logPrint = calling_function.Call(args);
+        if(result_logPrint.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSGuldenUnifiedFrontend::logPrint call failed").ThrowAsJavaScriptException();
+            return;
+        }
     }
 }
 

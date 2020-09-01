@@ -6,6 +6,11 @@
 #include <cstdint>
 
 /** Monitoring events */
+#ifdef DJINNI_NODEJS
+#include "NJSGuldenMonitorListener.hpp" 
+#define GuldenMonitorListener NJSGuldenMonitorListener
+#else
+
 class GuldenMonitorListener {
 public:
     virtual ~GuldenMonitorListener() {}
@@ -16,3 +21,4 @@ public:
 
     virtual void onProcessedSPVBlocks(int32_t height) = 0;
 };
+#endif
