@@ -111,6 +111,9 @@ libguldenconsensus.pc
 contrib/devtools/split-debug.sh
 contrib/gitian-descriptors/*.yml
 
+#Auto generated npm files
+src/frontend/electron/dist
+
 #Private local config file for developer tools
 private.conf
 
