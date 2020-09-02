@@ -431,6 +431,7 @@ void static GuldenWitness()
 
     static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
     static bool regTest = GetBoolArg("-regtest", false);
+    static bool testNet = GetBoolArg("-testnet", false);
 
     CChainParams chainparams = Params();
     try
@@ -438,7 +439,7 @@ void static GuldenWitness()
         std::map<boost::uuids::uuid, std::shared_ptr<CReserveKeyOrScript>> reserveKeys;
         while (true)
         {
-            if (!regTest)
+            if (!regTest && !testNet)
             {
                 // Busy-wait for the network to come online so we don't waste time mining
                 // on an obsolete chain. In regtest mode we expect to fly solo.

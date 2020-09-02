@@ -256,6 +256,11 @@ public:
         consensus.powLimit =  uint256S("0x003fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
 
+        //PoW paramaters for SIGMA
+        defaultSigmaSettings.arenaSizeKb = 4*1024*1024;
+        defaultSigmaSettings.argonSlowHashRoundCost = 12;
+        defaultSigmaSettings.fastHashSizeBytes = 300;
+
         std::string sTestnetParams = GetArg("-testnet", "");
         if (!sTestnetParams.empty())
         {
@@ -386,11 +391,6 @@ public:
         vAlertPubKey = ParseHex("06087071e40ddf2ecbdf1ae40f536fa8f78e9383006c710dd3ecce957a3cb9292038d0840e3be5042a6b863f75dfbe1cae8755a0f7887ae459af689f66caacab52");
         nDefaultPort = 9235;
         nPruneAfterHeight = 1000;
-        
-        //PoW paramaters for SIGMA
-        defaultSigmaSettings.arenaSizeKb = 4*1024*1024;
-        defaultSigmaSettings.argonSlowHashRoundCost = 12;
-        defaultSigmaSettings.fastHashSizeBytes = 300;
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -419,9 +419,10 @@ public:
         {
             
             checkpointData = {
-            {      0, { uint256S("0xbcb2ed2904a0800f8284919f8b941a96517e2858c6850a252d121e5c4ebb9ce9"), 1595347850 } },
+            {      0,  { uint256S("0xbcb2ed2904a0800f8284919f8b941a96517e2858c6850a252d121e5c4ebb9ce9"), 1595347850 } },
+            {      10, { uint256S("0x161eeef50952731d9c5de790cd27a788d4a6db51a0c57fe6e51cb8ee323baeb0"), 1596623436 } },
             };
-            consensus.defaultAssumeValid = uint256S("0xbcb2ed2904a0800f8284919f8b941a96517e2858c6850a252d121e5c4ebb9ce9");
+            consensus.defaultAssumeValid = uint256S("0x161eeef50952731d9c5de790cd27a788d4a6db51a0c57fe6e51cb8ee323baeb0");
         }
         
 
