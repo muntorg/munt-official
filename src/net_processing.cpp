@@ -2240,7 +2240,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         vRecv >> locator >> hashStop;
 
         LOCK(cs_main);
-        if (IsInitialBlockDownload() && !pfrom->fWhitelisted && !IsArgSet("-regtest"))
+        if (IsInitialBlockDownload() && !pfrom->fWhitelisted && !IsArgSet("-regtest") && !IsArgSet("-testnet"))
         {
             LogPrint(BCLog::NET, "Ignoring getheaders from peer=%d because node is in initial block download\n", pfrom->GetId());
             return true;
@@ -2297,7 +2297,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         vRecv >> height >> num;
 
         LOCK(cs_main);
-        if (IsInitialBlockDownload() && !pfrom->fWhitelisted && !IsArgSet("-regtest"))
+        if (IsInitialBlockDownload() && !pfrom->fWhitelisted && !IsArgSet("-regtest") && !IsArgSet("-testnet"))
         {
             LogPrint(BCLog::NET, "Ignoring getrheaders from peer=%d because node is in initial block download\n", pfrom->GetId());
             return true;
