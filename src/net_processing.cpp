@@ -1837,7 +1837,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
         // Disconnect any peers that are not yet synced beyond the last checkpoint height
         // They will only slow the sync down
-        if (IsInitialBlockDownload())
+        if (!IsArgSet("-testnet") && IsInitialBlockDownload())
         {
             if (pfrom->nStartingHeight < Checkpoints::LastCheckPointHeight())
             {
