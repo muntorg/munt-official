@@ -149,22 +149,7 @@ uint64_t WitnessDurationWidget::GetNetworkWeight()
             lastUpdate = GetTimeMillis();
             if (IsPow2WitnessingActive(chainActive.TipPrev()->nHeight))
             {
-                CGetWitnessInfo witnessInfo;
-                CBlock block;
-                if (!ReadBlockFromDisk(block, chainActive.Tip(), Params()))
-                {
-                    std::string strErrorMessage = "GuldenSendCoinsEntry::witnessSliderValueChanged Failed to read block from disk";
-                    LogPrintf(strErrorMessage.c_str());
-                    CAlert::Notify(strErrorMessage, true, true);
-                    return nNetworkWeight;
-                }
-                if (!GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight))
-                {
-                    std::string strErrorMessage = "GuldenSendCoinsEntry::witnessSliderValueChanged Failed to read block from disk";
-                    LogPrintf(strErrorMessage.c_str());
-                    CAlert::Notify(strErrorMessage, true, true);
-                    return nNetworkWeight;
-                }
+                CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
                 nNetworkWeight = witnessInfo.nTotalWeightEligibleRaw;
             }
         }
