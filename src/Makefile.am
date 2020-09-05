@@ -741,8 +741,8 @@ DJINNI_NODE_JS_GEN = \
   unity/djinni/node_js/guldenunifiedbackend.cpp \
   unity/djinni/node_js/NJSGuldenMonitorListener.cpp \
   unity/djinni/node_js/NJSGuldenMonitorListener.hpp \
-  unity/djinni/node_js/NJSGuldenUnifiedBackendCpp.cpp \
-  unity/djinni/node_js/NJSGuldenUnifiedBackendCpp.hpp \
+  unity/djinni/node_js/NJSGuldenUnifiedBackend.cpp \
+  unity/djinni/node_js/NJSGuldenUnifiedBackend.hpp \
   unity/djinni/node_js/NJSGuldenUnifiedFrontend.cpp \
   unity/djinni/node_js/NJSGuldenUnifiedFrontend.hpp
 
