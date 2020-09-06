@@ -87,6 +87,8 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const CChainPar
     return false;
 }
 
+
+const int finalSubsidyBlock = 8472678;
 CAmount GetBlockSubsidy(uint64_t nHeight)
 {
     static bool fRegTest = GetBoolArg("-regtest", false);
@@ -114,9 +116,13 @@ CAmount GetBlockSubsidy(uint64_t nHeight)
     {
         nSubsidy = 120 * COIN; // 120 Gulden per block (fixed reward/no halving) - 50 mining, 40 development, 30 witness.
     }
-    else if(nHeight <= 7023743)
+    else if(nHeight <= 1228003)
     {
-        nSubsidy = 200 * COIN; // 200 Gulden per block (fixed reward/no halving) - 50 mining, 80 development, 30 witness.
+        nSubsidy = 200 * COIN; // 200 Gulden per block (fixed reward/no halving) - 90 mining, 80 development, 30 witness. (This was a mistake which is rectified at block 1228000
+    }
+    else if(nHeight <= finalSubsidyBlock)
+    {
+        nSubsidy = 160 * COIN; // 160 Gulden per block (fixed reward/no halving) - 50 mining, 80 development, 30 witness.
     }
     return nSubsidy;
 }
@@ -136,9 +142,9 @@ CAmount GetBlockSubsidyWitness(uint64_t nHeight)
     {
         nSubsidy = 30 * COIN; // 120 Gulden per block (fixed reward/no halving) - 50 mining, 40 development, 30 witness.
     }
-    else if(nHeight <= 7023743)
+    else if(nHeight <= finalSubsidyBlock)
     {
-        nSubsidy = 30 * COIN; // 200 Gulden per block (fixed reward/no halving) - 50 mining, 80 development, 30 witness.
+        nSubsidy = 30 * COIN; // 160 Gulden per block (fixed reward/no halving) - 50 mining, 80 development, 30 witness.
     }
     return nSubsidy;
 }
@@ -150,7 +156,7 @@ CAmount GetBlockSubsidyDev(uint64_t nHeight)
     {
         nSubsidy = 40 * COIN;
     }
-    else if(nHeight >= Params().GetConsensus().devBlockSubsidyActivationHeight && nHeight <= 7023743) // 200 Gulden per block (no halving) - 50 mining, 80 development, 30 witness.
+    else if(nHeight >= Params().GetConsensus().devBlockSubsidyActivationHeight && nHeight <= finalSubsidyBlock) // 160 Gulden per block (no halving) - 50 mining, 80 development, 30 witness.
     {
         nSubsidy = 80 * COIN;
     }

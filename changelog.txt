@@ -1,5 +1,6 @@
 2.2.0.12
 
+CORE    - Undo accidental increase in mining subsidy [Activate at block: 1228004]
 UI      - Fix a minor regression in witness funding dialog
 
 
