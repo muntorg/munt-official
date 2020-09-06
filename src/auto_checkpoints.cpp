@@ -178,7 +178,7 @@ namespace Checkpoints
 
         try
         {
-            fs::ifstream checkpointFile( GetDataDir() / "autocheckpoints" / "curr_checkpoint" );
+            fs::ifstream checkpointFile( GetDataDir() / "autocheckpoints" / "latest_auto_checkpoint" );
             std::string temp;
             checkpointFile >> temp;
             hashCheckpoint = uint256S(temp);
@@ -238,7 +238,7 @@ namespace Checkpoints
             checkpointFile << hashCheckpoint.ToString();
             checkpointFile.close();
 
-            fs::rename( GetDataDir() / "autocheckpoints" / "new_checkpoint", GetDataDir() / "autocheckpoints" / "curr_checkpoint" );
+            fs::rename( GetDataDir() / "autocheckpoints" / "new_checkpoint", GetDataDir() / "autocheckpoints" / "latest_auto_checkpoint" );
         }
         catch (...)
         {
