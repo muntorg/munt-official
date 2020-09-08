@@ -1,3 +1,11 @@
+2.2.0.14
+
+CORE    - Implement a change that improves mining efficiency for update miners
+CORE    - Increment protocol version and ban older peer versions, this will lead to some bandwidth savings for nodes and make the network more efficient
+
+
+
+
 2.2.0.12
 
 CORE    - Undo accidental increase in mining subsidy [Activate at block: 1228004]
