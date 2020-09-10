@@ -645,7 +645,7 @@ static UniValue disablenetwork(const JSONRPCRequest& request)
     if (!g_connman) { throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled"); }
 
     g_connman->SetNetworkActive(false);
-    return g_connman->GetNetworkActive();
+    return !g_connman->GetNetworkActive();
 }
 
 static UniValue enablenetwork(const JSONRPCRequest& request)
