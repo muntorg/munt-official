@@ -860,6 +860,7 @@ void WitnessDialog::displayUpdatedStatistics(const WitnessInfoForAccount& infoFo
         QString expectedEarningsDurationLabel = lastEarningsDateLabel;
         QString estimatedEarningsDurationLabel = lastEarningsDateLabel;
         QString lockTimeRemainingLabel = lastEarningsDateLabel;
+        QString lockTimeElapsedLabel = lastEarningsDateLabel;
         QString labelWeightValue = lastEarningsDateLabel;
         QString lockedUntilValue = lastEarningsDateLabel;
         QString lockedFromValue = lastEarningsDateLabel;
@@ -919,6 +920,8 @@ void WitnessDialog::displayUpdatedStatistics(const WitnessInfoForAccount& infoFo
                 estimatedEarningsDurationLabel = formatStr.arg(QString::number(infoForAccount.nEstimatedWitnessBlockPeriod/divideBy, 'f', roundTo));
             if (infoForAccount.nLockBlocksRemaining > 0)
                 lockTimeRemainingLabel = formatStr.arg(QString::number(infoForAccount.nLockBlocksRemaining/divideBy, 'f', roundTo));
+            if (infoForAccount.nLockBlocksRemaining > 0 && infoForAccount.nWitnessLength > 0)
+                lockTimeElapsedLabel = formatStr.arg(QString::number(infoForAccount.nWitnessLength/divideBy, 'f', roundTo) - QString::number(infoForAccount.nLockBlocksRemaining/divideBy, 'f', roundTo));
         }
 
         ui->labelLastEarningsDateValue->setText(lastEarningsDateLabel);
@@ -928,6 +931,7 @@ void WitnessDialog::displayUpdatedStatistics(const WitnessInfoForAccount& infoFo
         ui->labelExpectedEarningsDurationValue->setText(expectedEarningsDurationLabel);
         ui->labelEstimatedEarningsDurationValue->setText(estimatedEarningsDurationLabel);
         ui->labelLockTimeRemainingValue->setText(lockTimeRemainingLabel);
+        ui->labelLockTimeElapsedValue->setText(lockTimeElapsedLabel);
         ui->labelWeightValue->setText(labelWeightValue);
         ui->labelLockedFromValue->setText(lockedFromValue);
         ui->labelLockedUntilValue->setText(lockedUntilValue);
