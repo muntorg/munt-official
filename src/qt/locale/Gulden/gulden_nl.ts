@@ -869,6 +869,10 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
         <translation>n.v.t.</translation>
     </message>
     <message>
+        <source>Lock time elapsed</source>
+        <translation>Verstreken looptijd</translation>
+    </message>
+    <message>
         <source>Lock time remaining</source>
         <translation>Resterende looptijd</translation>
     </message>
