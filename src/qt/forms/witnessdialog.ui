@@ -505,7 +505,7 @@
             <layout class="QVBoxLayout" name="verticalLayout_5">
              <property name="spacing">
               <number>0</number>
-             </plabelLockTimeRemainingValueroperty>
+             </property>
              <property name="leftMargin">
               <number>0</number>
              </property>
