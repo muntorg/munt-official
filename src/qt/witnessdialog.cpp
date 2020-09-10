@@ -139,6 +139,7 @@ WitnessDialog::WitnessDialog(const QStyle* _platformStyle, QWidget* parent)
     ui->labelExpectedEarningsDurationValue->setText(tr("n/a"));
     ui->labelEstimatedEarningsDurationValue->setText(tr("n/a"));
     ui->labelLockTimeRemainingValue->setText(tr("n/a"));
+    ui->labelLockTimeElapsedValue->setText(tr("n/a"));
 
     // White background for plot
     ui->witnessEarningsPlot->setStyleSheet("QwtPlotCanvas { background: white; } * { font-size: 10px; font-family: \"Lato\", \"HelveticaNeue-Light\", \"Helvetica Neue Light\", \"Helvetica Neue\", Helvetica, Arial, \"Lucida Grande\",  \"guldensign\", \"'guldensign'\", \"FontAwesome\", \"'FontAwesome'\", sans-serif;}");
