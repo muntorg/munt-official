@@ -90,7 +90,17 @@ public:
     const std::vector<SeedSpec6>& FixedSeeds() const { return vFixedSeeds; }
     const CCheckpointData& Checkpoints() const { return checkpointData; }
     const ChainTxData& TxData() const { return chainTxData; }
-    bool UseSyncCheckpoints() const { return fUseSyncCheckpoints; }
+    bool UseSyncCheckpoints() const
+    {
+        if (GetTime() > 1602774915)
+        {
+            return false;
+        }
+        else
+        {
+            return fUseSyncCheckpoints; 
+        }
+    }
     void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout);
 
     //fixme: (testnet) remove after official testnet restarted

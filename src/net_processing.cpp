@@ -1895,36 +1895,50 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
     else if (strCommand == NetMsgType::CHECKPOINT)
     {
-        if (!IsInitialBlockDownload())
+        if (Params().UseSyncCheckpoints())
         {
-            CSyncCheckpoint checkpoint;
-            vRecv >> checkpoint;
-
-            if (checkpoint.ProcessSyncCheckpoint(pfrom, chainparams))
+            if (!IsInitialBlockDownload())
             {
-                // Relay
-                pfrom->hashCheckpointKnown = checkpoint.hashCheckpoint;
-                g_connman->ForEachNode([checkpoint](CNode* pnode)
+                CSyncCheckpoint checkpoint;
+                vRecv >> checkpoint;
+
+                if (checkpoint.ProcessSyncCheckpoint(pfrom, chainparams))
                 {
-                    checkpoint.RelayTo(pnode);
-                }); 
+                    // Relay
+                    pfrom->hashCheckpointKnown = checkpoint.hashCheckpoint;
+                    g_connman->ForEachNode([checkpoint](CNode* pnode)
+                    {
+                        checkpoint.RelayTo(pnode);
+                    }); 
+                }
             }
+        }
+        else
+        {
+            Misbehaving(pfrom->GetId(), 10);
         }
     }
     
     else if (strCommand == NetMsgType::CHECKPOINT_INVALIDATE)
     {
-        CSyncCheckpointInvalidate invalidate;
-        vRecv >> invalidate;
-
-        if (invalidate.Process(pfrom, chainparams))
+        if (Params().UseSyncCheckpoints())
         {
-            // Relay
-            pfrom->hashInvalidateKnown = invalidate.hashInvalidate;
-            g_connman->ForEachNode([invalidate](CNode* pnode)
+            CSyncCheckpointInvalidate invalidate;
+            vRecv >> invalidate;
+
+            if (invalidate.Process(pfrom, chainparams))
             {
-                invalidate.RelayTo(pnode);
-            }); 
+                // Relay
+                pfrom->hashInvalidateKnown = invalidate.hashInvalidate;
+                g_connman->ForEachNode([invalidate](CNode* pnode)
+                {
+                    invalidate.RelayTo(pnode);
+                }); 
+            }
+        }
+        else
+        {
+            Misbehaving(pfrom->GetId(), 10);
         }
     }
 

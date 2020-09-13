@@ -3646,15 +3646,12 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
 
     PruneBlockIndexCandidates();
 
-    //Temporary code to clean up old checkpoints database - We can remove this in future versions
-    if ( fs::exists(GetDataDir() / "checkpoints") )
+    if (Params().UseSyncCheckpoints())
     {
-        fs::remove_all( GetDataDir() / "checkpoints" );
+        // Gulden: load hashSyncCheckpoint
+        Checkpoints::ReadSyncCheckpoint(Checkpoints::hashSyncCheckpoint);
+        LogPrintf("LoadBlockIndexDB(): using synchronized checkpoint %s\n", Checkpoints::hashSyncCheckpoint.ToString().c_str());
     }
-
-    // Gulden: load hashSyncCheckpoint
-    Checkpoints::ReadSyncCheckpoint(Checkpoints::hashSyncCheckpoint);
-    LogPrintf("LoadBlockIndexDB(): using synchronized checkpoint %s\n", Checkpoints::hashSyncCheckpoint.ToString().c_str());
 
     LogPrintf("%s: hashBestChain=%s height=%d date=%s progress=%f\n", __func__,
         chainActive.Tip()->GetBlockHashPoW2().ToString(), chainActive.Height(),
@@ -3932,13 +3929,14 @@ bool InitBlockIndex(const CChainParams& chainparams)
             if (!ReceivedBlockTransactions(block, state, pindex, blockPos, chainparams.GetConsensus()))
                 return error("LoadBlockIndex(): genesis block not accepted");
 
-            // Gulden: initialize synchronized checkpoint
-            if (!Checkpoints::WriteSyncCheckpoint(Params().GenesisBlock().GetHashLegacy()))
-                return error("LoadBlockIndex() : failed to init sync checkpoint");
-            std::string strPubKey;
-            std::string strPubKeyComp = IsArgSet("-testnet") ? CSyncCheckpoint::strMasterPubKeyTestnet : CSyncCheckpoint::strMasterPubKey;
-            if (chainparams.UseSyncCheckpoints())
+            if (Params().UseSyncCheckpoints())
             {
+                // Gulden: initialize synchronized checkpoint
+                if (!Checkpoints::WriteSyncCheckpoint(Params().GenesisBlock().GetHashLegacy()))
+                    return error("LoadBlockIndex() : failed to init sync checkpoint");
+            
+                std::string strPubKey;
+                std::string strPubKeyComp = IsArgSet("-testnet") ? CSyncCheckpoint::strMasterPubKeyTestnet : CSyncCheckpoint::strMasterPubKey;
                 if (!Checkpoints::ReadCheckpointPubKey(strPubKey) || strPubKey != strPubKeyComp)
                 {
                     // write checkpoint master key to db
