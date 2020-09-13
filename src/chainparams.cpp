@@ -113,7 +113,6 @@ public:
         consensus.devBlockSubsidyActivationHeight=1030001;
         consensus.pow2Phase4FirstBlockHeight=1131652;
         consensus.pow2Phase5FirstBlockHeight=1140958;
-        consensus.deltaV3ActivationTime=1599494400;
 
         // Message start string to avoid accidental cross communication with other chains or software.
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
@@ -475,7 +474,6 @@ public:
             consensus.devBlockSubsidyActivationHeight=1;
             consensus.pow2Phase4FirstBlockHeight=0;
             consensus.pow2Phase5FirstBlockHeight=0;
-            consensus.deltaV3ActivationTime=1591188240;
 
             numGenesisWitnesses = 10;
             genesisWitnessWeightDivisor = 100;
@@ -681,7 +679,6 @@ public:
         consensus.devBlockSubsidyActivationHeight=50100;
         consensus.pow2Phase4FirstBlockHeight=50500;
         consensus.pow2Phase5FirstBlockHeight=50500;
-        consensus.deltaV3ActivationTime=1591188240;
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x00");

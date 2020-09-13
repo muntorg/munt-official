@@ -23,11 +23,7 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
 
     std::string sLogInfo;
     
-    uint32_t nDeltaVersion=2;
-    if (block->nTime >= Params().GetConsensus().deltaV3ActivationTime)
-    {
-        nDeltaVersion=3;
-    }
+    //uint32_t nDeltaVersion=3;
 
     // The spacing we want our blocks to come in at.
     int64_t nRetargetTimespan      = nPowTargetSpacing;
@@ -70,12 +66,8 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
     // NB!!! nLongTimeLimit MUST ALWAYS EXCEED THE THE MAXIMUM DRIFT ALLOWED (IN BOTH THE POSITIVE AND NEGATIVE DIRECTION)
     // SO AT LEAST DRIFT X2 OR MORE - OR ELSE CLIENTS CAN FORCE LOW DIFFICULTY BLOCKS BY MESSING WITH THE BLOCK TIMES.
     const int64_t nDrift   = 60; //Drift in seconds
-    int64_t nLongTimeLimit = ((6 * nDrift));
+    int64_t nLongTimeLimit = (3 * nDrift);
     int64_t nLongTimeStep  = nDrift;
-    if (nDeltaVersion>=3)
-    {
-        nLongTimeLimit = (3 * nDrift);
-    }
 
     // Limit adjustment amount to try prevent jumping too far in either direction.
     // min 75% of default time; 33.3% difficulty increase
@@ -106,39 +98,17 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
         int64_t nLBTimespanPoW = 0;
         pindexFirst = pindexLast->pprev;
         nLBTimespanPoW = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
-        if (nDeltaVersion<3)
-        {
-            nLBTimespan = nLBTimespanPoW;
-        }
-        else
-        {
-            nLBTimespan = pindexLast->GetBlockTimePoW2Witness() - pindexFirst->GetBlockTimePoW2Witness();
-        }
+        nLBTimespan = pindexLast->GetBlockTimePoW2Witness() - pindexFirst->GetBlockTimePoW2Witness();
 
-        if (nDeltaVersion<3)
-        {
-            // Check for very short and long blocks (algo specific)
-            // If last block was far too short, let difficulty raise faster by cutting 50% of last block time
-            if (nLBTimespan > nBadTimeLimit && nLBTimespan < nLBMinGap)
-                nLBTimespan = nLBTimespan * 50 / PERCENT_FACTOR;
-        }
         // Prevent bad/negative block times - switch them for a fixed time.
         if (nLBTimespan <= nBadTimeLimit)
             nLBTimespan = nBadTimeReplace;
-        if (nDeltaVersion>=3)
+        
+        // If last block was 'long block' with difficulty adjustment, treat it as a faster block at the lower difficulty
+        if (nLBTimespanPoW > (nLongTimeLimit + nLongTimeStep))
         {
-            // If last block was 'long block' with difficulty adjustment, treat it as a faster block at the lower difficulty
-            if (nLBTimespanPoW > (nLongTimeLimit + nLongTimeStep))
-            {
-                nLBTimespanPoW = (nLBTimespanPoW-nLongTimeLimit)%nLongTimeStep;
-                nLBTimespan = std::min(nLBTimespan, nLBTimespanPoW);
-            }
-        }
-        if (nDeltaVersion<3)
-        {
-            // If last block took far too long, let difficulty drop faster by adding 50% of last block time
-            if (nLBTimespan > nLBMaxGap)
-                nLBTimespan = nLBTimespan * 150 / PERCENT_FACTOR;
+            nLBTimespanPoW = (nLBTimespanPoW-nLongTimeLimit)%nLongTimeStep;
+            nLBTimespan = std::min(nLBTimespan, nLBTimespanPoW);
         }
     }
 
@@ -152,26 +122,17 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
         for (unsigned int i = 1; pindexFirst != NULL && i <= nQBFrame; i++)
         {
             nDeltaTimespanPoW = pindexFirst->GetBlockTime() - pindexFirst->pprev->GetBlockTime();
-            if (nDeltaVersion<3)
-            {
-                nDeltaTimespan = nDeltaTimespanPoW;
-            }
-            else
-            {
-                nDeltaTimespan = pindexFirst->GetBlockTimePoW2Witness() - pindexFirst->pprev->GetBlockTimePoW2Witness();
-            }
+            nDeltaTimespan = pindexFirst->GetBlockTimePoW2Witness() - pindexFirst->pprev->GetBlockTimePoW2Witness();
+
             // Prevent bad/negative block times - switch them for a fixed time.
             if (nDeltaTimespan <= nBadTimeLimit)
                 nDeltaTimespan = nBadTimeReplace;
             
-            if (nDeltaVersion>=3)
+            // If last block was 'long block' with difficulty adjustment, treat it as a faster block at the lower difficulty
+            if (nDeltaTimespanPoW > (nLongTimeLimit + nLongTimeStep))
             {
-                // If last block was 'long block' with difficulty adjustment, treat it as a faster block at the lower difficulty
-                if (nDeltaTimespanPoW > (nLongTimeLimit + nLongTimeStep))
-                {
-                    nDeltaTimespanPoW = (nDeltaTimespanPoW-nLongTimeLimit)%nLongTimeStep;
-                    nDeltaTimespan = std::min(nDeltaTimespan, nDeltaTimespanPoW);
-                }
+                nDeltaTimespanPoW = (nDeltaTimespanPoW-nLongTimeLimit)%nLongTimeStep;
+                nDeltaTimespan = std::min(nDeltaTimespan, nDeltaTimespanPoW);
             }
 
             if (i<= nShortFrame)
@@ -195,26 +156,17 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
             pindexFirst = pindexLast;
             for (unsigned int i = 1; pindexFirst != NULL && i <= nMiddleFrame; i++)
             {
-                if (nDeltaVersion<3)
-                {
-                    nDeltaTimespan = pindexFirst->GetBlockTime() - pindexFirst->pprev->GetBlockTime();
-                }
-                else
-                {
-                    nDeltaTimespan = pindexFirst->GetBlockTimePoW2Witness() - pindexFirst->pprev->GetBlockTimePoW2Witness();
-                }
+                nDeltaTimespan = pindexFirst->GetBlockTimePoW2Witness() - pindexFirst->pprev->GetBlockTimePoW2Witness();
+
                 // Prevent bad/negative block times - switch them for a fixed time.
                 if (nDeltaTimespan <= nBadTimeLimit)
                     nDeltaTimespan = nBadTimeReplace;
                 
-                if (nDeltaVersion>=3)
+                // If last block was 'long block' with difficulty adjustment, treat it as a faster block at the lower difficulty
+                if (nDeltaTimespanPoW > (nLongTimeLimit + nLongTimeStep))
                 {
-                    // If last block was 'long block' with difficulty adjustment, treat it as a faster block at the lower difficulty
-                    if (nDeltaTimespanPoW > (nLongTimeLimit + nLongTimeStep))
-                    {
-                        nDeltaTimespanPoW = (nDeltaTimespanPoW-nLongTimeLimit)%nLongTimeStep;
-                        nDeltaTimespan = std::min(nDeltaTimespan, nDeltaTimespanPoW);
-                    }
+                    nDeltaTimespanPoW = (nDeltaTimespanPoW-nLongTimeLimit)%nLongTimeStep;
+                    nDeltaTimespan = std::min(nDeltaTimespan, nDeltaTimespanPoW);
                 }
 
                 nMiddleTimespan += nDeltaTimespan;
@@ -236,27 +188,10 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
         {
             pindexFirst = pindexLast;
             for (unsigned int i = 1; pindexFirst != NULL && i <= nLongFrame; i++)
+            {
                 pindexFirst = pindexFirst->pprev;
-
-            if (nDeltaVersion<3)
-            {
-                nLongTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
             }
-            else
-            {
-                nLongTimespan = pindexLast->GetBlockTimePoW2Witness() - pindexFirst->GetBlockTimePoW2Witness();
-            }
-        }
-    }
-
-    // Check for multiple very short blocks, if last few blocks were far too short, and current block is still short, then calculate difficulty based on short blocks alone.
-    if (nDeltaVersion<3)
-    {
-        if ( (nQBTimespan > nBadTimeLimit) && (nQBTimespan < nQBMinGap) && (nLBTimespan < nRetargetTimespan * 40 / PERCENT_FACTOR) )
-        {
-            if (debugLogging && (nPrevHeight != pindexLast->nHeight ) )
-                sLogInfo += "<DELTA> Multiple fast blocks - ignoring long and medium weightings.\n";
-            nMiddleWeight = nMiddleTimespan = nLongWeight = nLongTimespan = 0;
+            nLongTimespan = pindexLast->GetBlockTimePoW2Witness() - pindexFirst->GetBlockTimePoW2Witness();
         }
     }
 
@@ -307,14 +242,7 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
     // Now that we have the difficulty we run a last few 'special purpose' exception rules which have the ability to override the calculation:
     // Exception 1 - Never adjust difficulty downward (human view) if previous block generation was already faster than what we wanted.
     {
-        if (nDeltaVersion<3)
-        {
-            nLBTimespan = pindexLast->GetBlockTime() - pindexLast->pprev->GetBlockTime();
-        }
-        else
-        {
-            nLBTimespan = pindexLast->GetBlockTimePoW2Witness() - pindexLast->pprev->GetBlockTimePoW2Witness();
-        }
+        nLBTimespan = pindexLast->GetBlockTimePoW2Witness() - pindexLast->pprev->GetBlockTimePoW2Witness();
         
         arith_uint256 bnComp;
         bnComp.SetCompact(pindexLast->nBits);
@@ -340,22 +268,11 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
 
     // Exception 2 - Reduce difficulty if current block generation time has already exceeded maximum time limit. (NB! nLongTimeLimit must exceed maximum possible drift in both positive and negative direction)
     {
-        int64_t lastBlockTime=pindexLast->GetBlockTime();
-        if (nDeltaVersion>=3)
-        {
-            lastBlockTime=pindexLast->GetBlockTimePoW2Witness();
-        }
+        int64_t lastBlockTime=pindexLast->GetBlockTimePoW2Witness();
         if ((block->nTime - lastBlockTime) > nLongTimeLimit)
         {
             // Fixed reduction for each missed step. 10% pre-SIGMA, 30% after SIGMA, 10% delta V3
             int32_t nDeltaDropPerStep=110;
-            if (block->nTime > defaultSigmaSettings.activationDate)
-                nDeltaDropPerStep=130;
-            if (nDeltaVersion>=3)
-            {
-                nDeltaDropPerStep=110;
-            }
-
             int64_t nNumMissedSteps = ((block->nTime - lastBlockTime - nLongTimeLimit) / nLongTimeStep) + 1;
             for(int i=0;i < nNumMissedSteps; ++i)
             {
