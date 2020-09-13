@@ -44,13 +44,8 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
     int64_t nMiddleWeight          =  2;
     int64_t nLongWeight            =  1;
 
-    // Minimum and maximum threshold for the last block, if it exceeds these thresholds then favour a larger swing in difficulty.
-    const int64_t nLBMinGap        = nRetargetTimespan / 6;
-    const int64_t nLBMaxGap        = nRetargetTimespan * 6;
-
     // Minimum threshold for the short window, if it exceeds these thresholds then favour a larger swing in difficulty.
     const int64_t nQBFrame         = nShortFrame + 1;
-    const int64_t nQBMinGap        = (nRetargetTimespan * PERCENT_FACTOR / 120 ) * nQBFrame;
 
     // Any block with a time lower than nBadTimeLimit is considered to have a 'bad' time, the time is replaced with the value of nBadTimeReplace.
     const int64_t nBadTimeLimit    = 0;
