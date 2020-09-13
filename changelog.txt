@@ -1,3 +1,13 @@
+2.3.0.0
+
+CORE    - Set timestamp server deactivation for 1602774915 (Thursday, 15-Oct-20 15:15:15 UTC)
+          Timestamping is now no longer required with witnessing now fully implemented and stable as per the original whitepaper specification
+NET     - Disallow all peers below protocol version 70018 after timestamp server deactivates
+RPC     - Correction to return value of 'enablenetwork' command
+
+
+
+
 2.2.0.14
 
 CORE    - Implement a change that improves mining efficiency for update miners
