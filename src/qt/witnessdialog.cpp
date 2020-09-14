@@ -921,7 +921,7 @@ void WitnessDialog::displayUpdatedStatistics(const WitnessInfoForAccount& infoFo
             if (infoForAccount.nLockBlocksRemaining > 0)
                 lockTimeRemainingLabel = formatStr.arg(QString::number(infoForAccount.nLockBlocksRemaining/divideBy, 'f', roundTo));
             if (infoForAccount.nLockBlocksRemaining > 0 && infoForAccount.nWitnessLength > 0)
-                lockTimeElapsedLabel = formatStr.arg(QString::number(infoForAccount.nWitnessLength/divideBy, 'f', roundTo) - QString::number(infoForAccount.nLockBlocksRemaining/divideBy, 'f', roundTo));
+                lockTimeElapsedLabel = formatStr.arg(QString::number(((infoForAccount.nWitnessLength-infoForAccount.nLockBlocksRemaining)/divideBy), 'f', roundTo));
         }
 
         ui->labelLastEarningsDateValue->setText(lastEarningsDateLabel);
