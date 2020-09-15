@@ -483,11 +483,6 @@ public:
         pchMessageStart[3] = 0xFF; // 0xFF
         nDefaultPort = 18444;
         nPruneAfterHeight = 1000;
-        
-        //PoW paramaters for SIGMA
-        defaultSigmaSettings.arenaSizeKb = 4*1024*1024;
-        defaultSigmaSettings.argonSlowHashRoundCost = 12;
-        defaultSigmaSettings.fastHashSizeBytes = 300;
 
         genesis = CreateGenesisBlock(1296688602, 2, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
         consensus.hashGenesisBlock = genesis.GetHashPoW2();
