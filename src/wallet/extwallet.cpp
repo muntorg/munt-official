@@ -20,10 +20,9 @@
 
 bool fShowChildAccountsSeperately = false;
 
-// TODO: consider moving shadow thread functionality into wallet class to reduce usage of global pactiveWallet
+//fixme: (MED) consider moving shadow thread functionality into wallet class to reduce usage of global pactiveWallet
 // and possibly make some members private.
-
-static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAccountPoolTargetSizeWitness, int& nNumNewAccountsAllocated, bool& tryLockWallet)
+void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAccountPoolTargetSizeWitness, int& nNumNewAccountsAllocated, bool& tryLockWallet)
 {
     for (const auto& seedIter : pactiveWallet->mapSeeds)
     {

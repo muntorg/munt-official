@@ -134,7 +134,10 @@ std::string CWallet::GetWalletHelpString(bool showDebug)
 //Assign the bare minimum keys here, let the rest take place in the background thread
 void PerformInitialMinimalKeyAllocation(CWallet* walletInstance)
 {
-    walletInstance->TopUpKeyPool(1);
+    int nNumAllocated;
+    bool tryLock;
+    AllocateShadowAccountsIfNeeded(2, 2, nNumAllocated, tryLock);
+    walletInstance->TopUpKeyPool(10);
 }
 
 void CWallet::CreateSeedAndAccountFromLink(CWallet *walletInstance)

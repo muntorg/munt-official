@@ -44,6 +44,8 @@ std::string accountNameForAddress(const CWallet &wallet, const CTxDestination& d
 isminetype IsMine(const CWallet &wallet, const CTxDestination& dest);
 isminetype IsMine(const CWallet &wallet, const CTxOut& out);
 
+extern void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAccountPoolTargetSizeWitness, int& nNumNewAccountsAllocated, bool& tryLockWallet);
+
 /** 
  * A CExtWallet maintains a set of transactions and balances
  * and provides the ability to create new transactions.
