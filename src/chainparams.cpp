@@ -261,6 +261,7 @@ public:
         defaultSigmaSettings.arenaSizeKb = 4*1024*1024;
         defaultSigmaSettings.argonSlowHashRoundCost = 12;
         defaultSigmaSettings.fastHashSizeBytes = 300;
+        defaultSigmaSettings.arenaChunkSizeBytes = (4*1024*1024*1024ULL)/defaultSigmaSettings.numHashesPost;
 
         std::string sTestnetParams = GetArg("-testnet", "");
         if (!sTestnetParams.empty())
@@ -489,6 +490,7 @@ public:
         defaultSigmaSettings.arenaSizeKb = 4*1024*1024;
         defaultSigmaSettings.argonSlowHashRoundCost = 12;
         defaultSigmaSettings.fastHashSizeBytes = 300;
+        defaultSigmaSettings.arenaChunkSizeBytes = (4*1024*1024*1024ULL)/defaultSigmaSettings.numHashesPost;
 
         genesis = CreateGenesisBlock(1296688602, 2, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
         consensus.hashGenesisBlock = genesis.GetHashPoW2();
