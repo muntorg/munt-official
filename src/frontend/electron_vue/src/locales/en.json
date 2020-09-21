@@ -108,6 +108,7 @@
   },
   "send_novo": {
     "enter_label": "Enter label",
-    "enter_novo_address": "Enter Novo address"
+    "enter_novo_address": "Enter Novo address",
+    "target_account": "Send to account:"
   }
 }

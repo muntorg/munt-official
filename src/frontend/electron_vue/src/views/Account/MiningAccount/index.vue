@@ -71,18 +71,39 @@
 
     <portal to="footer-slot">
       <novo-button-section>
+        <button
+          @click="emptyAccount"
+          v-show="sendButtonVisible"
+          :disabled="sendButtonDisabled"
+        >
+          {{ $t("buttons.send") }}
+        </button>
         <button @click="toggleGeneration" :disabled="buttonDisabled">
           <span v-if="isActive">{{ $t("buttons.stop") }}</span>
           <span v-else>{{ $t("buttons.start") }}</span>
         </button>
       </novo-button-section>
     </portal>
+
+    <portal to="sidebar-right">
+      <component
+        v-if="rightSidebar"
+        :is="rightSidebar"
+        v-bind="rightSidebarProps"
+      />
+    </portal>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import { GenerationController } from "../../../unity/Controllers";
+import {
+  GenerationController,
+  AccountsController
+} from "../../../unity/Controllers";
+import EventBus from "../../../EventBus";
+
+import SendNovo from "./SendNovo";
 
 export default {
   name: "MiningAccount",
@@ -96,8 +117,17 @@ export default {
       availableCores: 0,
       minimumMemory: 0,
       maximumMemory: 0,
-      buttonDisabled: false
+      buttonDisabled: false,
+      sendButtonDisabled: false,
+      sendButtonVisible: true,
+      rightSidebar: null
     };
+  },
+  mounted() {
+    EventBus.$on("close-right-sidebar", this.closeRightSidebar);
+  },
+  beforeDestroy() {
+    EventBus.$off("close-right-sidebar", this.closeRightSidebar);
   },
   created() {
     this.availableCores = GenerationController.GetAvailableCores();
@@ -109,6 +139,37 @@ export default {
       GenerationController.GetMaximumMemory() / 1024
     );
     this.currentMemorySize = this.settings.memorySize || this.maximumMemory;
+
+    // Disable/enable send button based on changes in balance
+    this.$store.subscribe(mutation => {
+      if (
+        mutation.type === "wallet/SET_WALLET_BALANCE" ||
+        mutation.type === "wallet/SET_BALANCE"
+      ) {
+        if (
+          AccountsController.GetActiveAccountBalance()
+            .availableExcludingLocked -
+            AccountsController.GetActiveAccountBalance()
+              .immatureExcludingLocked >
+          0
+        ) {
+          this.sendButtonDisabled = false;
+        } else {
+          this.closeRightSidebar();
+          this.sendButtonDisabled = true;
+        }
+      }
+    });
+    if (
+      AccountsController.GetActiveAccountBalance().availableExcludingLocked -
+        AccountsController.GetActiveAccountBalance().immatureExcludingLocked >
+      0
+    ) {
+      this.sendButtonDisabled = false;
+    } else {
+      this.closeRightSidebar();
+      this.sendButtonDisabled = true;
+    }
   },
   computed: {
     ...mapState("mining", {
@@ -127,6 +188,9 @@ export default {
     },
     arenaSetupTime() {
       return this.stats ? `${this.stats.arenaSetupTime}s` : null;
+    },
+    rightSidebarProps() {
+      return null;
     }
   },
   watch: {
@@ -154,6 +218,15 @@ export default {
           // todo: starting failed, notify user
         }
       }
+    },
+    closeRightSidebar() {
+      this.sendButtonVisible = true;
+      this.rightSidebar = null;
+      this.txHash = null;
+    },
+    emptyAccount() {
+      this.rightSidebar = SendNovo;
+      this.sendButtonVisible = false;
     }
   }
 };
