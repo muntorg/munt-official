@@ -32,6 +32,15 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_0002
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
+CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_listAccounts(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::listAccounts();
+        return ::djinni::release(::djinni::List<::djinni_generated::NativeAccountRecord>::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_setActiveAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
 {
     try {
@@ -70,6 +79,24 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_deleteAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::deleteAccount(::djinni::String::toCpp(jniEnv, j_accountUUID));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_purgeAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::purgeAccount(::djinni::String::toCpp(jniEnv, j_accountUUID));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_getAccountLinkURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
 {
     try {
@@ -98,30 +125,30 @@ CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_deleteAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_getReceiveAddress(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
-        auto r = ::IAccountsController::deleteAccount(::djinni::String::toCpp(jniEnv, j_accountUUID));
-        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+        auto r = ::IAccountsController::getReceiveAddress(::djinni::String::toCpp(jniEnv, j_accountUUID));
+        return ::djinni::release(::djinni::String::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_purgeAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_getTransactionHistory(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
-        auto r = ::IAccountsController::purgeAccount(::djinni::String::toCpp(jniEnv, j_accountUUID));
-        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+        auto r = ::IAccountsController::getTransactionHistory(::djinni::String::toCpp(jniEnv, j_accountUUID));
+        return ::djinni::release(::djinni::List<::djinni_generated::NativeTransactionRecord>::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_listAccounts(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_getMutationHistory(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
-        auto r = ::IAccountsController::listAccounts();
-        return ::djinni::release(::djinni::List<::djinni_generated::NativeAccountRecord>::fromCpp(jniEnv, r));
+        auto r = ::IAccountsController::getMutationHistory(::djinni::String::toCpp(jniEnv, j_accountUUID));
+        return ::djinni::release(::djinni::List<::djinni_generated::NativeMutationRecord>::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
@@ -149,24 +176,6 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_0
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::IAccountsController::getAllAccountBalances();
         return ::djinni::release(::djinni::Map<::djinni::String, ::djinni_generated::NativeBalanceRecord>::fromCpp(jniEnv, r));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
-}
-
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_getTransactionHistory(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
-        auto r = ::IAccountsController::getTransactionHistory(::djinni::String::toCpp(jniEnv, j_accountUUID));
-        return ::djinni::release(::djinni::List<::djinni_generated::NativeTransactionRecord>::fromCpp(jniEnv, r));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
-}
-
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IAccountsController_00024CppProxy_getMutationHistory(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
-        auto r = ::IAccountsController::getMutationHistory(::djinni::String::toCpp(jniEnv, j_accountUUID));
-        return ::djinni::release(::djinni::List<::djinni_generated::NativeMutationRecord>::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 

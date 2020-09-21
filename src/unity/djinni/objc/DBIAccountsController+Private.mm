@@ -41,6 +41,13 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (nonnull NSArray<DBAccountRecord *> *)listAccounts {
+    try {
+        auto objcpp_result_ = ::IAccountsController::listAccounts();
+        return ::djinni::List<::djinni_generated::AccountRecord>::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (BOOL)setActiveAccount:(nonnull NSString *)accountUUID {
     try {
         auto objcpp_result_ = ::IAccountsController::setActiveAccount(::djinni::String::toCpp(accountUUID));
@@ -73,6 +80,20 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (BOOL)deleteAccount:(nonnull NSString *)accountUUID {
+    try {
+        auto objcpp_result_ = ::IAccountsController::deleteAccount(::djinni::String::toCpp(accountUUID));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)purgeAccount:(nonnull NSString *)accountUUID {
+    try {
+        auto objcpp_result_ = ::IAccountsController::purgeAccount(::djinni::String::toCpp(accountUUID));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 + (nonnull NSString *)getAccountLinkURI:(nonnull NSString *)accountUUID {
     try {
         auto objcpp_result_ = ::IAccountsController::getAccountLinkURI(::djinni::String::toCpp(accountUUID));
@@ -96,24 +117,24 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (BOOL)deleteAccount:(nonnull NSString *)accountUUID {
++ (nonnull NSString *)getReceiveAddress:(nonnull NSString *)accountUUID {
     try {
-        auto objcpp_result_ = ::IAccountsController::deleteAccount(::djinni::String::toCpp(accountUUID));
-        return ::djinni::Bool::fromCpp(objcpp_result_);
+        auto objcpp_result_ = ::IAccountsController::getReceiveAddress(::djinni::String::toCpp(accountUUID));
+        return ::djinni::String::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (BOOL)purgeAccount:(nonnull NSString *)accountUUID {
++ (nonnull NSArray<DBTransactionRecord *> *)getTransactionHistory:(nonnull NSString *)accountUUID {
     try {
-        auto objcpp_result_ = ::IAccountsController::purgeAccount(::djinni::String::toCpp(accountUUID));
-        return ::djinni::Bool::fromCpp(objcpp_result_);
+        auto objcpp_result_ = ::IAccountsController::getTransactionHistory(::djinni::String::toCpp(accountUUID));
+        return ::djinni::List<::djinni_generated::TransactionRecord>::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (nonnull NSArray<DBAccountRecord *> *)listAccounts {
++ (nonnull NSArray<DBMutationRecord *> *)getMutationHistory:(nonnull NSString *)accountUUID {
     try {
-        auto objcpp_result_ = ::IAccountsController::listAccounts();
-        return ::djinni::List<::djinni_generated::AccountRecord>::fromCpp(objcpp_result_);
+        auto objcpp_result_ = ::IAccountsController::getMutationHistory(::djinni::String::toCpp(accountUUID));
+        return ::djinni::List<::djinni_generated::MutationRecord>::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
@@ -135,20 +156,6 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     try {
         auto objcpp_result_ = ::IAccountsController::getAllAccountBalances();
         return ::djinni::Map<::djinni::String, ::djinni_generated::BalanceRecord>::fromCpp(objcpp_result_);
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-+ (nonnull NSArray<DBTransactionRecord *> *)getTransactionHistory:(nonnull NSString *)accountUUID {
-    try {
-        auto objcpp_result_ = ::IAccountsController::getTransactionHistory(::djinni::String::toCpp(accountUUID));
-        return ::djinni::List<::djinni_generated::TransactionRecord>::fromCpp(objcpp_result_);
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-+ (nonnull NSArray<DBMutationRecord *> *)getMutationHistory:(nonnull NSString *)accountUUID {
-    try {
-        auto objcpp_result_ = ::IAccountsController::getMutationHistory(::djinni::String::toCpp(accountUUID));
-        return ::djinni::List<::djinni_generated::MutationRecord>::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

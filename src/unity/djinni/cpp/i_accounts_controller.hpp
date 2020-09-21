@@ -26,6 +26,9 @@ public:
     /** Register listener to be notified of account related events */
     static void setListener(const std::shared_ptr<IAccountsListener> & accountslistener);
 
+    /** List all currently visible accounts in the wallet */
+    static std::vector<AccountRecord> listAccounts();
+
     /** Set the currently active account */
     static bool setActiveAccount(const std::string & accountUUID);
 
@@ -37,6 +40,16 @@ public:
 
     /** Rename an account */
     static bool renameAccount(const std::string & accountUUID, const std::string & newAccountName);
+
+    /** Delete an account, account remains available in background but is hidden from user */
+    static bool deleteAccount(const std::string & accountUUID);
+
+    /**
+     * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
+     * If it is a Legacy or imported witness key or similar account then it will be gone forever
+     * Generally prefer 'deleteAccount' and use this with caution
+     */
+    static bool purgeAccount(const std::string & accountUUID);
 
     /** Get a URI that will enable 'linking' of this account in another wallet (for e.g. mobile wallet linking) for an account. Empty on failiure.  */
     static std::string getAccountLinkURI(const std::string & accountUUID);
@@ -50,18 +63,14 @@ public:
      */
     static std::string createAccountFromWitnessKeyURI(const std::string & witnessKeyURI, const std::string & newAccountName);
 
-    /** Delete an account, account remains available in background but is hidden from user */
-    static bool deleteAccount(const std::string & accountUUID);
+    /** Get a receive address for account */
+    static std::string getReceiveAddress(const std::string & accountUUID);
 
-    /**
-     * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
-     * If it is a Legacy or imported witness key or similar account then it will be gone forever
-     * Generally prefer 'deleteAccount' and use this with caution
-     */
-    static bool purgeAccount(const std::string & accountUUID);
+    /** Get list of all transactions account has been involved in */
+    static std::vector<TransactionRecord> getTransactionHistory(const std::string & accountUUID);
 
-    /** List all currently visible accounts in the wallet */
-    static std::vector<AccountRecord> listAccounts();
+    /** Get list of mutations for account */
+    static std::vector<MutationRecord> getMutationHistory(const std::string & accountUUID);
 
     /** Check balance for active account */
     static BalanceRecord getActiveAccountBalance();
@@ -71,10 +80,4 @@ public:
 
     /** Check balance for all accounts, returns a map of account_uuid->balance_record */
     static std::unordered_map<std::string, BalanceRecord> getAllAccountBalances();
-
-    /** Get list of all transactions account has been involved in */
-    static std::vector<TransactionRecord> getTransactionHistory(const std::string & accountUUID);
-
-    /** Get list of mutations for account */
-    static std::vector<MutationRecord> getMutationHistory(const std::string & accountUUID);
 };

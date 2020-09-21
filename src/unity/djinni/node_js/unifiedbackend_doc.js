@@ -256,6 +256,8 @@ declare class NJSIAccountsController
 {
     /** Register listener to be notified of account related events */
     static declare function setListener(accountslistener: NJSIAccountsListener);
+    /** List all currently visible accounts in the wallet */
+    static declare function listAccounts(): Array<AccountRecord>;
     /** Set the currently active account */
     static declare function setActiveAccount(accountUUID: string): boolean;
     /** Get the currently active account */
@@ -264,6 +266,14 @@ declare class NJSIAccountsController
     static declare function createAccount(accountName: string, accountType: string): string;
     /** Rename an account */
     static declare function renameAccount(accountUUID: string, newAccountName: string): boolean;
+    /** Delete an account, account remains available in background but is hidden from user */
+    static declare function deleteAccount(accountUUID: string): boolean;
+    /**
+     * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
+     * If it is a Legacy or imported witness key or similar account then it will be gone forever
+     * Generally prefer 'deleteAccount' and use this with caution
+     */
+    static declare function purgeAccount(accountUUID: string): boolean;
     /** Get a URI that will enable 'linking' of this account in another wallet (for e.g. mobile wallet linking) for an account. Empty on failiure.  */
     static declare function getAccountLinkURI(accountUUID: string): string;
     /** Get a URI that will enable creation of a "witness only" account in another wallet that can witness on behalf of this account */
@@ -273,26 +283,18 @@ declare class NJSIAccountsController
      * Returns UUID on success, empty string on failiure
      */
     static declare function createAccountFromWitnessKeyURI(witnessKeyURI: string, newAccountName: string): string;
-    /** Delete an account, account remains available in background but is hidden from user */
-    static declare function deleteAccount(accountUUID: string): boolean;
-    /**
-     * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
-     * If it is a Legacy or imported witness key or similar account then it will be gone forever
-     * Generally prefer 'deleteAccount' and use this with caution
-     */
-    static declare function purgeAccount(accountUUID: string): boolean;
-    /** List all currently visible accounts in the wallet */
-    static declare function listAccounts(): Array<AccountRecord>;
+    /** Get a receive address for account */
+    static declare function getReceiveAddress(accountUUID: string): string;
+    /** Get list of all transactions account has been involved in */
+    static declare function getTransactionHistory(accountUUID: string): Array<TransactionRecord>;
+    /** Get list of mutations for account */
+    static declare function getMutationHistory(accountUUID: string): Array<MutationRecord>;
     /** Check balance for active account */
     static declare function getActiveAccountBalance(): BalanceRecord;
     /** Check balance for account */
     static declare function getAccountBalance(accountUUID: string): BalanceRecord;
     /** Check balance for all accounts, returns a map of account_uuid->balance_record */
     static declare function getAllAccountBalances(): Map<string, BalanceRecord>;
-    /** Get list of all transactions account has been involved in */
-    static declare function getTransactionHistory(accountUUID: string): Array<TransactionRecord>;
-    /** Get list of mutations for account */
-    static declare function getMutationHistory(accountUUID: string): Array<MutationRecord>;
 }
 /** Interface to receive updates about accounts */
 declare class NJSIAccountsListener

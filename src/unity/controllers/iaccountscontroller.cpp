@@ -349,3 +349,26 @@ std::vector<MutationRecord> IAccountsController::getMutationHistory(const std::s
     }
     return std::vector<MutationRecord>();
 }
+
+std::string IAccountsController::getReceiveAddress(const std::string & accountUUID)
+{
+    if (pactiveWallet)
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            CReserveKeyOrScript* receiveAddress = new CReserveKeyOrScript(pactiveWallet, findIter->second, KEYCHAIN_EXTERNAL);
+            CPubKey pubKey;
+            if (receiveAddress->GetReservedKey(pubKey))
+            {
+                CKeyID keyID = pubKey.GetID();
+                receiveAddress->ReturnKey();
+                delete receiveAddress;
+                return CNativeAddress(keyID).ToString();
+            }
+        }
+    }
+    return "";
+}

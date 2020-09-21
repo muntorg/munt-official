@@ -34,6 +34,9 @@ private:
     /** Register listener to be notified of account related events */
     void setListener(const Napi::CallbackInfo& info);
 
+    /** List all currently visible accounts in the wallet */
+    Napi::Value listAccounts(const Napi::CallbackInfo& info);
+
     /** Set the currently active account */
     Napi::Value setActiveAccount(const Napi::CallbackInfo& info);
 
@@ -45,6 +48,16 @@ private:
 
     /** Rename an account */
     Napi::Value renameAccount(const Napi::CallbackInfo& info);
+
+    /** Delete an account, account remains available in background but is hidden from user */
+    Napi::Value deleteAccount(const Napi::CallbackInfo& info);
+
+    /**
+     * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
+     * If it is a Legacy or imported witness key or similar account then it will be gone forever
+     * Generally prefer 'deleteAccount' and use this with caution
+     */
+    Napi::Value purgeAccount(const Napi::CallbackInfo& info);
 
     /** Get a URI that will enable 'linking' of this account in another wallet (for e.g. mobile wallet linking) for an account. Empty on failiure.  */
     Napi::Value getAccountLinkURI(const Napi::CallbackInfo& info);
@@ -58,18 +71,14 @@ private:
      */
     Napi::Value createAccountFromWitnessKeyURI(const Napi::CallbackInfo& info);
 
-    /** Delete an account, account remains available in background but is hidden from user */
-    Napi::Value deleteAccount(const Napi::CallbackInfo& info);
+    /** Get a receive address for account */
+    Napi::Value getReceiveAddress(const Napi::CallbackInfo& info);
 
-    /**
-     * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
-     * If it is a Legacy or imported witness key or similar account then it will be gone forever
-     * Generally prefer 'deleteAccount' and use this with caution
-     */
-    Napi::Value purgeAccount(const Napi::CallbackInfo& info);
+    /** Get list of all transactions account has been involved in */
+    Napi::Value getTransactionHistory(const Napi::CallbackInfo& info);
 
-    /** List all currently visible accounts in the wallet */
-    Napi::Value listAccounts(const Napi::CallbackInfo& info);
+    /** Get list of mutations for account */
+    Napi::Value getMutationHistory(const Napi::CallbackInfo& info);
 
     /** Check balance for active account */
     Napi::Value getActiveAccountBalance(const Napi::CallbackInfo& info);
@@ -79,12 +88,6 @@ private:
 
     /** Check balance for all accounts, returns a map of account_uuid->balance_record */
     Napi::Value getAllAccountBalances(const Napi::CallbackInfo& info);
-
-    /** Get list of all transactions account has been involved in */
-    Napi::Value getTransactionHistory(const Napi::CallbackInfo& info);
-
-    /** Get list of mutations for account */
-    Napi::Value getMutationHistory(const Napi::CallbackInfo& info);
 
 };
 #endif //DJINNI_GENERATED_NJSIACCOUNTSCONTROLLER_HPP

@@ -15,6 +15,12 @@ public abstract class IAccountsController {
         CppProxy.setListener(accountslistener);
     }
 
+    /** List all currently visible accounts in the wallet */
+    public static ArrayList<AccountRecord> listAccounts()
+    {
+        return CppProxy.listAccounts();
+    }
+
     /** Set the currently active account */
     public static boolean setActiveAccount(String accountUUID)
     {
@@ -41,6 +47,22 @@ public abstract class IAccountsController {
                                       newAccountName);
     }
 
+    /** Delete an account, account remains available in background but is hidden from user */
+    public static boolean deleteAccount(String accountUUID)
+    {
+        return CppProxy.deleteAccount(accountUUID);
+    }
+
+    /**
+     * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
+     * If it is a Legacy or imported witness key or similar account then it will be gone forever
+     * Generally prefer 'deleteAccount' and use this with caution
+     */
+    public static boolean purgeAccount(String accountUUID)
+    {
+        return CppProxy.purgeAccount(accountUUID);
+    }
+
     /** Get a URI that will enable 'linking' of this account in another wallet (for e.g. mobile wallet linking) for an account. Empty on failiure.  */
     public static String getAccountLinkURI(String accountUUID)
     {
@@ -63,26 +85,22 @@ public abstract class IAccountsController {
                                                        newAccountName);
     }
 
-    /** Delete an account, account remains available in background but is hidden from user */
-    public static boolean deleteAccount(String accountUUID)
+    /** Get a receive address for account */
+    public static String getReceiveAddress(String accountUUID)
     {
-        return CppProxy.deleteAccount(accountUUID);
+        return CppProxy.getReceiveAddress(accountUUID);
     }
 
-    /**
-     * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
-     * If it is a Legacy or imported witness key or similar account then it will be gone forever
-     * Generally prefer 'deleteAccount' and use this with caution
-     */
-    public static boolean purgeAccount(String accountUUID)
+    /** Get list of all transactions account has been involved in */
+    public static ArrayList<TransactionRecord> getTransactionHistory(String accountUUID)
     {
-        return CppProxy.purgeAccount(accountUUID);
+        return CppProxy.getTransactionHistory(accountUUID);
     }
 
-    /** List all currently visible accounts in the wallet */
-    public static ArrayList<AccountRecord> listAccounts()
+    /** Get list of mutations for account */
+    public static ArrayList<MutationRecord> getMutationHistory(String accountUUID)
     {
-        return CppProxy.listAccounts();
+        return CppProxy.getMutationHistory(accountUUID);
     }
 
     /** Check balance for active account */
@@ -101,18 +119,6 @@ public abstract class IAccountsController {
     public static HashMap<String, BalanceRecord> getAllAccountBalances()
     {
         return CppProxy.getAllAccountBalances();
-    }
-
-    /** Get list of all transactions account has been involved in */
-    public static ArrayList<TransactionRecord> getTransactionHistory(String accountUUID)
-    {
-        return CppProxy.getTransactionHistory(accountUUID);
-    }
-
-    /** Get list of mutations for account */
-    public static ArrayList<MutationRecord> getMutationHistory(String accountUUID)
-    {
-        return CppProxy.getMutationHistory(accountUUID);
     }
 
     private static final class CppProxy extends IAccountsController
@@ -140,6 +146,8 @@ public abstract class IAccountsController {
 
         public static native void setListener(IAccountsListener accountslistener);
 
+        public static native ArrayList<AccountRecord> listAccounts();
+
         public static native boolean setActiveAccount(String accountUUID);
 
         public static native String getActiveAccount();
@@ -148,26 +156,26 @@ public abstract class IAccountsController {
 
         public static native boolean renameAccount(String accountUUID, String newAccountName);
 
+        public static native boolean deleteAccount(String accountUUID);
+
+        public static native boolean purgeAccount(String accountUUID);
+
         public static native String getAccountLinkURI(String accountUUID);
 
         public static native String getWitnessKeyURI(String accountUUID);
 
         public static native String createAccountFromWitnessKeyURI(String witnessKeyURI, String newAccountName);
 
-        public static native boolean deleteAccount(String accountUUID);
+        public static native String getReceiveAddress(String accountUUID);
 
-        public static native boolean purgeAccount(String accountUUID);
+        public static native ArrayList<TransactionRecord> getTransactionHistory(String accountUUID);
 
-        public static native ArrayList<AccountRecord> listAccounts();
+        public static native ArrayList<MutationRecord> getMutationHistory(String accountUUID);
 
         public static native BalanceRecord getActiveAccountBalance();
 
         public static native BalanceRecord getAccountBalance(String accountUUID);
 
         public static native HashMap<String, BalanceRecord> getAllAccountBalances();
-
-        public static native ArrayList<TransactionRecord> getTransactionHistory(String accountUUID);
-
-        public static native ArrayList<MutationRecord> getMutationHistory(String accountUUID);
     }
 }

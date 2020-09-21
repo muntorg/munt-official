@@ -15,6 +15,9 @@
 /** Register listener to be notified of account related events */
 + (void)setListener:(nullable id<DBIAccountsListener>)accountslistener;
 
+/** List all currently visible accounts in the wallet */
++ (nonnull NSArray<DBAccountRecord *> *)listAccounts;
+
 /** Set the currently active account */
 + (BOOL)setActiveAccount:(nonnull NSString *)accountUUID;
 
@@ -29,6 +32,16 @@
 + (BOOL)renameAccount:(nonnull NSString *)accountUUID
        newAccountName:(nonnull NSString *)newAccountName;
 
+/** Delete an account, account remains available in background but is hidden from user */
++ (BOOL)deleteAccount:(nonnull NSString *)accountUUID;
+
+/**
+ * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
+ * If it is a Legacy or imported witness key or similar account then it will be gone forever
+ * Generally prefer 'deleteAccount' and use this with caution
+ */
++ (BOOL)purgeAccount:(nonnull NSString *)accountUUID;
+
 /** Get a URI that will enable 'linking' of this account in another wallet (for e.g. mobile wallet linking) for an account. Empty on failiure.  */
 + (nonnull NSString *)getAccountLinkURI:(nonnull NSString *)accountUUID;
 
@@ -42,18 +55,14 @@
 + (nonnull NSString *)createAccountFromWitnessKeyURI:(nonnull NSString *)witnessKeyURI
                                       newAccountName:(nonnull NSString *)newAccountName;
 
-/** Delete an account, account remains available in background but is hidden from user */
-+ (BOOL)deleteAccount:(nonnull NSString *)accountUUID;
+/** Get a receive address for account */
++ (nonnull NSString *)getReceiveAddress:(nonnull NSString *)accountUUID;
 
-/**
- * Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
- * If it is a Legacy or imported witness key or similar account then it will be gone forever
- * Generally prefer 'deleteAccount' and use this with caution
- */
-+ (BOOL)purgeAccount:(nonnull NSString *)accountUUID;
+/** Get list of all transactions account has been involved in */
++ (nonnull NSArray<DBTransactionRecord *> *)getTransactionHistory:(nonnull NSString *)accountUUID;
 
-/** List all currently visible accounts in the wallet */
-+ (nonnull NSArray<DBAccountRecord *> *)listAccounts;
+/** Get list of mutations for account */
++ (nonnull NSArray<DBMutationRecord *> *)getMutationHistory:(nonnull NSString *)accountUUID;
 
 /** Check balance for active account */
 + (nonnull DBBalanceRecord *)getActiveAccountBalance;
@@ -63,11 +72,5 @@
 
 /** Check balance for all accounts, returns a map of account_uuid->balance_record */
 + (nonnull NSDictionary<NSString *, DBBalanceRecord *> *)getAllAccountBalances;
-
-/** Get list of all transactions account has been involved in */
-+ (nonnull NSArray<DBTransactionRecord *> *)getTransactionHistory:(nonnull NSString *)accountUUID;
-
-/** Get list of mutations for account */
-+ (nonnull NSArray<DBMutationRecord *> *)getMutationHistory:(nonnull NSString *)accountUUID;
 
 @end
