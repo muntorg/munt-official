@@ -632,6 +632,11 @@ class LibUnity {
     });
 
     // Register NJSIAccountsController ipc handlers
+    ipc.on("NJSIAccountsController.listAccounts", event => {
+      console.log(`IPC: accountsController.listAccounts()`);
+      event.returnValue = this.accountsController.listAccounts();
+    });
+
     ipc.on("NJSIAccountsController.setActiveAccount", (event, accountUUID) => {
       console.log(`IPC: accountsController.setActiveAccount(${accountUUID})`);
       event.returnValue = this.accountsController.setActiveAccount(accountUUID);
@@ -668,6 +673,16 @@ class LibUnity {
       }
     );
 
+    ipc.on("NJSIAccountsController.deleteAccount", (event, accountUUID) => {
+      console.log(`IPC: accountsController.deleteAccount(${accountUUID})`);
+      event.returnValue = this.accountsController.deleteAccount(accountUUID);
+    });
+
+    ipc.on("NJSIAccountsController.purgeAccount", (event, accountUUID) => {
+      console.log(`IPC: accountsController.purgeAccount(${accountUUID})`);
+      event.returnValue = this.accountsController.purgeAccount(accountUUID);
+    });
+
     ipc.on("NJSIAccountsController.getAccountLinkURI", (event, accountUUID) => {
       console.log(`IPC: accountsController.getAccountLinkURI(${accountUUID})`);
       event.returnValue = this.accountsController.getAccountLinkURI(
@@ -693,36 +708,11 @@ class LibUnity {
       }
     );
 
-    ipc.on("NJSIAccountsController.deleteAccount", (event, accountUUID) => {
-      console.log(`IPC: accountsController.deleteAccount(${accountUUID})`);
-      event.returnValue = this.accountsController.deleteAccount(accountUUID);
-    });
-
-    ipc.on("NJSIAccountsController.purgeAccount", (event, accountUUID) => {
-      console.log(`IPC: accountsController.purgeAccount(${accountUUID})`);
-      event.returnValue = this.accountsController.purgeAccount(accountUUID);
-    });
-
-    ipc.on("NJSIAccountsController.listAccounts", event => {
-      console.log(`IPC: accountsController.listAccounts()`);
-      event.returnValue = this.accountsController.listAccounts();
-    });
-
-    ipc.on("NJSIAccountsController.getActiveAccountBalance", event => {
-      console.log(`IPC: accountsController.getActiveAccountBalance()`);
-      event.returnValue = this.accountsController.getActiveAccountBalance();
-    });
-
-    ipc.on("NJSIAccountsController.getAccountBalance", (event, accountUUID) => {
-      console.log(`IPC: accountsController.getAccountBalance(${accountUUID})`);
-      event.returnValue = this.accountsController.getAccountBalance(
+    ipc.on("NJSIAccountsController.getReceiveAddress", (event, accountUUID) => {
+      console.log(`IPC: accountsController.getReceiveAddress(${accountUUID})`);
+      event.returnValue = this.accountsController.getReceiveAddress(
         accountUUID
       );
-    });
-
-    ipc.on("NJSIAccountsController.getAllAccountBalances", event => {
-      console.log(`IPC: accountsController.getAllAccountBalances()`);
-      event.returnValue = this.accountsController.getAllAccountBalances();
     });
 
     ipc.on(
@@ -748,6 +738,23 @@ class LibUnity {
         );
       }
     );
+
+    ipc.on("NJSIAccountsController.getActiveAccountBalance", event => {
+      console.log(`IPC: accountsController.getActiveAccountBalance()`);
+      event.returnValue = this.accountsController.getActiveAccountBalance();
+    });
+
+    ipc.on("NJSIAccountsController.getAccountBalance", (event, accountUUID) => {
+      console.log(`IPC: accountsController.getAccountBalance(${accountUUID})`);
+      event.returnValue = this.accountsController.getAccountBalance(
+        accountUUID
+      );
+    });
+
+    ipc.on("NJSIAccountsController.getAllAccountBalances", event => {
+      console.log(`IPC: accountsController.getAllAccountBalances()`);
+      event.returnValue = this.accountsController.getAllAccountBalances();
+    });
 
     // Register NJSIWitnessController ipc handlers
     ipc.on("NJSIWitnessController.getNetworkLimits", event => {

@@ -222,6 +222,10 @@ class P2pNetworkController {
 }
 
 class AccountsController {
+  static ListAccounts() {
+    return ipc.sendSync("NJSIAccountsController.listAccounts");
+  }
+
   static SetActiveAccount(accountUUID) {
     return ipc.sendSync("NJSIAccountsController.setActiveAccount", accountUUID);
   }
@@ -246,6 +250,14 @@ class AccountsController {
     );
   }
 
+  static DeleteAccount(accountUUID) {
+    return ipc.sendSync("NJSIAccountsController.deleteAccount", accountUUID);
+  }
+
+  static PurgeAccount(accountUUID) {
+    return ipc.sendSync("NJSIAccountsController.purgeAccount", accountUUID);
+  }
+
   static GetAccountLinkURI(accountUUID) {
     return ipc.sendSync(
       "NJSIAccountsController.getAccountLinkURI",
@@ -265,16 +277,25 @@ class AccountsController {
     );
   }
 
-  static DeleteAccount(accountUUID) {
-    return ipc.sendSync("NJSIAccountsController.deleteAccount", accountUUID);
+  static GetReceiveAddress(accountUUID) {
+    return ipc.sendSync(
+      "NJSIAccountsController.getReceiveAddress",
+      accountUUID
+    );
   }
 
-  static PurgeAccount(accountUUID) {
-    return ipc.sendSync("NJSIAccountsController.purgeAccount", accountUUID);
+  static GetTransactionHistory(accountUUID) {
+    return ipc.sendSync(
+      "NJSIAccountsController.getTransactionHistory",
+      accountUUID
+    );
   }
 
-  static ListAccounts() {
-    return ipc.sendSync("NJSIAccountsController.listAccounts");
+  static GetMutationHistory(accountUUID) {
+    return ipc.sendSync(
+      "NJSIAccountsController.getMutationHistory",
+      accountUUID
+    );
   }
 
   static GetActiveAccountBalance() {
@@ -290,20 +311,6 @@ class AccountsController {
 
   static GetAllAccountBalances() {
     return ipc.sendSync("NJSIAccountsController.getAllAccountBalances");
-  }
-
-  static GetTransactionHistory(accountUUID) {
-    return ipc.sendSync(
-      "NJSIAccountsController.getTransactionHistory",
-      accountUUID
-    );
-  }
-
-  static GetMutationHistory(accountUUID) {
-    return ipc.sendSync(
-      "NJSIAccountsController.getMutationHistory",
-      accountUUID
-    );
   }
 }
 
