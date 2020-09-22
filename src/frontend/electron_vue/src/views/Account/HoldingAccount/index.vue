@@ -83,12 +83,36 @@
       </div>
     </novo-section>
 
-    <portal to="footer-slot"> </portal>
+    <portal to="footer-slot">
+      <novo-button-section>
+        <button
+          @click="emptyAccount"
+          v-show="sendButtonVisible"
+          :disabled="sendButtonDisabled"
+        >
+          {{ $t("buttons.send") }}
+        </button>
+      </novo-button-section>
+    </portal>
+
+    <portal to="sidebar-right">
+      <component
+        v-if="rightSidebar"
+        :is="rightSidebar"
+        v-bind="rightSidebarProps"
+      />
+    </portal>
   </div>
 </template>
 
 <script>
-import { WitnessController } from "../../../unity/Controllers";
+import {
+  WitnessController,
+  AccountsController
+} from "../../../unity/Controllers";
+import EventBus from "../../../EventBus";
+import SendNovo from "../MiningAccount/SendNovo";
+
 
 let timeout;
 
@@ -102,7 +126,10 @@ export default {
       rightSection: null,
       rightSectionComponent: null,
       statistics: null,
-      isCompounding: false
+      isCompounding: false,
+      sendButtonDisabled: false,
+      sendButtonVisible: true,
+      rightSidebar: null
     };
   },
   computed: {
@@ -141,13 +168,51 @@ export default {
     },
     networkWeight() {
       return this.getStatistics("network_tip_total_weight");
+    },
+    rightSidebarProps() {
+      return null;
     }
+  },
+  mounted() {
+    EventBus.$on("close-right-sidebar", this.closeRightSidebar);
+  },
+  beforeDestroy() {
+    EventBus.$off("close-right-sidebar", this.closeRightSidebar);
+    clearTimeout(timeout);
   },
   created() {
     this.initialize();
-  },
-  beforeDestroy() {
-    clearTimeout(timeout);
+    
+    // Disable/enable send button based on changes in balance
+    this.$store.subscribe(mutation => {
+      if (
+        mutation.type === "wallet/SET_WALLET_BALANCE" ||
+        mutation.type === "wallet/SET_BALANCE"
+      ) {
+        if (
+          AccountsController.GetActiveAccountBalance()
+            .availableExcludingLocked -
+            AccountsController.GetActiveAccountBalance()
+              .immatureExcludingLocked >
+          0
+        ) {
+          this.sendButtonDisabled = false;
+        } else {
+          this.closeRightSidebar();
+          this.sendButtonDisabled = true;
+        }
+      }
+    });
+    if (
+      AccountsController.GetActiveAccountBalance().availableExcludingLocked -
+        AccountsController.GetActiveAccountBalance().immatureExcludingLocked >
+      0
+    ) {
+      this.sendButtonDisabled = false;
+    } else {
+      this.closeRightSidebar();
+      this.sendButtonDisabled = true;
+    }
   },
   watch: {
     account() {
@@ -181,6 +246,15 @@ export default {
         !this.isCompounding
       );
       this.isCompounding = !this.isCompounding;
+    },
+    closeRightSidebar() {
+      this.sendButtonVisible = true;
+      this.rightSidebar = null;
+      this.txHash = null;
+    },
+    emptyAccount() {
+      this.rightSidebar = SendNovo;
+      this.sendButtonVisible = false;
     }
   }
 };
