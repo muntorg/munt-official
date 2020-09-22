@@ -1609,6 +1609,8 @@ bool CWalletTx::IsTrusted() const
         const CWalletTx* parent = pwallet->GetWalletTx(txin.prevout);
         if (parent == NULL || parent->tx->vout.size() == 0)
             return false;
+        if (txin.prevout.n >= parent->tx->vout.size())
+            return false;
         const CTxOut& parentOut = parent->tx->vout[txin.prevout.n];
         if (pwallet->IsMine(parentOut) != ISMINE_SPENDABLE)
             return false;
