@@ -99,10 +99,17 @@ class LibUnity {
     let accountBalances = this.accountsController.getAllAccountBalances();
 
     Object.keys(accountBalances).forEach(key => {
-      accounts.find(x => x.UUID === key).balance =
-        (accountBalances[key].availableIncludingLocked +
-          accountBalances[key].immatureIncludingLocked) /
-        100000000;
+      let currentAccount = accounts.find(x => x.UUID === key);
+      let currentBalance = accountBalances[key];
+
+      currentAccount.balance = FormatBalance(
+        currentBalance.availableIncludingLocked +
+          currentBalance.immatureIncludingLocked
+      );
+      currentAccount.spendable = FormatBalance(
+        currentBalance.availableExcludingLocked -
+          currentBalance.immatureExcludingLocked
+      );
     });
 
     store.dispatch("wallet/SET_ACCOUNTS", accounts);
@@ -890,6 +897,10 @@ class LibUnity {
     });
     /* inject:generated-code */
   }
+}
+
+function FormatBalance(balance) {
+  return Math.floor(balance / 1000000) / 100;
 }
 
 export default LibUnity;
