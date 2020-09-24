@@ -38,6 +38,16 @@
       </div>
     </novo-form-field>
 
+    <novo-form-field>
+      <div class="flex-row">
+        <div class="flex-1 align-right">
+          <button @click="toggleGeneration" :disabled="buttonDisabled">
+            {{ isActive ? $t("buttons.stop") : $t("buttons.start") }}
+          </button>
+        </div>
+      </div>
+    </novo-form-field>
+
     <novo-form-field
       class="mining-statistics"
       :title="$t('mining.statistics')"
@@ -70,19 +80,17 @@
     </novo-form-field>
 
     <portal to="footer-slot">
-      <novo-button-section>
-        <button
+      <section class="footer">
+        <span
+          class="button"
           @click="emptyAccount"
-          v-show="sendButtonVisible"
+          v-if="sendButtonVisible"
           :disabled="sendButtonDisabled"
         >
+          <fa-icon :icon="['fal', 'arrow-from-bottom']" />
           {{ $t("buttons.send") }}
-        </button>
-        <button @click="toggleGeneration" :disabled="buttonDisabled">
-          <span v-if="isActive">{{ $t("buttons.stop") }}</span>
-          <span v-else>{{ $t("buttons.start") }}</span>
-        </button>
-      </novo-button-section>
+        </span>
+      </section>
     </portal>
 
     <portal to="sidebar-right">
@@ -249,5 +257,31 @@ export default {
 
 .mining-statistics .flex-row {
   line-height: 20px;
+}
+
+// todo: .footer styles below are copy/pasted from SpendingAccount/index.vue, maybe move to parent
+.footer {
+  text-align: center;
+  line-height: calc(var(--footer-height) - 1px);
+
+  & svg {
+    font-size: 14px;
+    margin-right: 5px;
+  }
+
+  & .button {
+    display: inline-block;
+    padding: 0 20px 0 20px;
+    line-height: 32px;
+    font-weight: 500;
+    font-size: 1em;
+    color: var(--primary-color);
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
 }
 </style>

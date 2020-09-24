@@ -84,15 +84,17 @@
     </novo-section>
 
     <portal to="footer-slot">
-      <novo-button-section>
-        <button
+      <section class="footer">
+        <span
+          class="button"
           @click="emptyAccount"
-          v-show="sendButtonVisible"
+          v-if="sendButtonVisible"
           :disabled="sendButtonDisabled"
         >
+          <fa-icon :icon="['fal', 'arrow-from-bottom']" />
           {{ $t("buttons.send") }}
-        </button>
-      </novo-button-section>
+        </span>
+      </section>
     </portal>
 
     <portal to="sidebar-right">
@@ -112,7 +114,6 @@ import {
 } from "../../../unity/Controllers";
 import EventBus from "../../../EventBus";
 import SendNovo from "../MiningAccount/SendNovo";
-
 
 let timeout;
 
@@ -182,7 +183,7 @@ export default {
   },
   created() {
     this.initialize();
-    
+
     // Disable/enable send button based on changes in balance
     this.$store.subscribe(mutation => {
       if (
@@ -288,6 +289,32 @@ export default {
   }
   & .flex-row :first-child {
     min-width: 220px;
+  }
+}
+
+// todo: .footer styles below are copy/pasted from SpendingAccount/index.vue, maybe move to parent
+.footer {
+  text-align: center;
+  line-height: calc(var(--footer-height) - 1px);
+
+  & svg {
+    font-size: 14px;
+    margin-right: 5px;
+  }
+
+  & .button {
+    display: inline-block;
+    padding: 0 20px 0 20px;
+    line-height: 32px;
+    font-weight: 500;
+    font-size: 1em;
+    color: var(--primary-color);
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
   }
 }
 </style>
