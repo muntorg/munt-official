@@ -85,12 +85,7 @@
 
     <portal to="footer-slot">
       <section class="footer">
-        <span
-          class="button"
-          @click="emptyAccount"
-          v-if="sendButtonVisible"
-          :disabled="sendButtonDisabled"
-        >
+        <span class="button" @click="emptyAccount" v-if="sendButtonVisible">
           <fa-icon :icon="['fal', 'arrow-from-bottom']" />
           {{ $t("buttons.send") }}
         </span>
@@ -108,10 +103,7 @@
 </template>
 
 <script>
-import {
-  WitnessController,
-  AccountsController
-} from "../../../unity/Controllers";
+import { WitnessController } from "../../../unity/Controllers";
 import EventBus from "../../../EventBus";
 import SendNovo from "../MiningAccount/SendNovo";
 
@@ -128,8 +120,6 @@ export default {
       rightSectionComponent: null,
       statistics: null,
       isCompounding: false,
-      sendButtonDisabled: false,
-      sendButtonVisible: true,
       rightSidebar: null
     };
   },
@@ -172,6 +162,12 @@ export default {
     },
     rightSidebarProps() {
       return null;
+    },
+    sendButtonDisabled() {
+      return this.account.spendable > 0;
+    },
+    sendButtonVisible() {
+      return this.sendButtonDisabled && this.rightSidebar === null;
     }
   },
   mounted() {
@@ -183,41 +179,14 @@ export default {
   },
   created() {
     this.initialize();
-
-    // Disable/enable send button based on changes in balance
-    this.$store.subscribe(mutation => {
-      if (
-        mutation.type === "wallet/SET_WALLET_BALANCE" ||
-        mutation.type === "wallet/SET_BALANCE"
-      ) {
-        if (
-          AccountsController.GetActiveAccountBalance()
-            .availableExcludingLocked -
-            AccountsController.GetActiveAccountBalance()
-              .immatureExcludingLocked >
-          0
-        ) {
-          this.sendButtonDisabled = false;
-        } else {
-          this.closeRightSidebar();
-          this.sendButtonDisabled = true;
-        }
-      }
-    });
-    if (
-      AccountsController.GetActiveAccountBalance().availableExcludingLocked -
-        AccountsController.GetActiveAccountBalance().immatureExcludingLocked >
-      0
-    ) {
-      this.sendButtonDisabled = false;
-    } else {
-      this.closeRightSidebar();
-      this.sendButtonDisabled = true;
-    }
   },
   watch: {
     account() {
       this.initialize();
+    },
+    sendButtonDisabled() {
+      if (this.rightSidebar !== null && this.sendButtonDisabled === false)
+        this.closeRightSidebar();
     }
   },
   methods: {
@@ -229,10 +198,6 @@ export default {
     },
     getStatistics(which) {
       return this.statistics[which] || null;
-    },
-    closeRightSection() {
-      this.rightSection = null;
-      this.rightSectionComponent = null;
     },
     updateStatistics() {
       clearTimeout(timeout);
@@ -249,13 +214,11 @@ export default {
       this.isCompounding = !this.isCompounding;
     },
     closeRightSidebar() {
-      this.sendButtonVisible = true;
       this.rightSidebar = null;
       this.txHash = null;
     },
     emptyAccount() {
       this.rightSidebar = SendNovo;
-      this.sendButtonVisible = false;
     }
   }
 };

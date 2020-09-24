@@ -13,7 +13,7 @@
         placeholder="0.00"
         :class="amountClass"
         min="0"
-        :max="maxAmount"
+        :max="account.spendable"
         @change="isAmountInvalid = false"
       />
       <novo-form-field :title="$t('send_novo.target_account')">
@@ -59,7 +59,6 @@ export default {
   data() {
     return {
       amount: null,
-      maxAmount: null,
       address: null,
       password: null,
       fundingAccount: null,
@@ -69,7 +68,7 @@ export default {
   },
   computed: {
     ...mapState("wallet", ["walletPassword"]),
-    ...mapGetters("wallet", ["accounts"]),
+    ...mapGetters("wallet", ["accounts", "account"]),
     computedPassword() {
       return this.walletPassword ? this.walletPassword : this.password || "";
     },
@@ -93,19 +92,13 @@ export default {
       return false;
     }
   },
-  created() {
-    this.maxAmount =
-      Math.floor(
-        AccountsController.GetActiveAccountBalance().availableExcludingLocked /
-          1000000
-      ) / 100;
-    this.amount = this.maxAmount;
-  },
   mounted() {
     this.$refs.amount.focus();
     if (this.fundingAccounts.length) {
       this.fundingAccount = this.fundingAccounts[0];
     }
+
+    this.amount = this.account.spendable;
   },
   methods: {
     onPasswordKeydown() {
@@ -119,8 +112,7 @@ export default {
        */
 
       // validate amount
-      let accountBalance = AccountsController.GetActiveAccountBalance();
-      if (accountBalance.availableExcludingLocked / 100000000 < this.amount) {
+      if (this.account.spendable < this.amount) {
         this.isAmountInvalid = true;
       }
 

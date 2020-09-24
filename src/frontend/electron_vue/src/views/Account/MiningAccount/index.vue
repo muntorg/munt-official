@@ -41,7 +41,10 @@
     <novo-form-field>
       <div class="flex-row">
         <div class="flex-1 align-right">
-          <button @click="toggleGeneration" :disabled="buttonDisabled">
+          <button
+            @click="toggleGeneration"
+            :disabled="generationButtonDisabled"
+          >
             {{ isActive ? $t("buttons.stop") : $t("buttons.start") }}
           </button>
         </div>
@@ -81,12 +84,7 @@
 
     <portal to="footer-slot">
       <section class="footer">
-        <span
-          class="button"
-          @click="emptyAccount"
-          v-if="sendButtonVisible"
-          :disabled="sendButtonDisabled"
-        >
+        <span class="button" @click="emptyAccount" v-if="sendButtonVisible">
           <fa-icon :icon="['fal', 'arrow-from-bottom']" />
           {{ $t("buttons.send") }}
         </span>
@@ -105,10 +103,7 @@
 
 <script>
 import { mapState } from "vuex";
-import {
-  GenerationController,
-  AccountsController
-} from "../../../unity/Controllers";
+import { GenerationController } from "../../../unity/Controllers";
 import EventBus from "../../../EventBus";
 
 import SendNovo from "./SendNovo";
@@ -125,9 +120,7 @@ export default {
       availableCores: 0,
       minimumMemory: 0,
       maximumMemory: 0,
-      buttonDisabled: false,
-      sendButtonDisabled: false,
-      sendButtonVisible: true,
+      generationButtonDisabled: false,
       rightSidebar: null
     };
   },
@@ -147,37 +140,6 @@ export default {
       GenerationController.GetMaximumMemory() / 1024
     );
     this.currentMemorySize = this.settings.memorySize || this.maximumMemory;
-
-    // Disable/enable send button based on changes in balance
-    this.$store.subscribe(mutation => {
-      if (
-        mutation.type === "wallet/SET_WALLET_BALANCE" ||
-        mutation.type === "wallet/SET_BALANCE"
-      ) {
-        if (
-          AccountsController.GetActiveAccountBalance()
-            .availableExcludingLocked -
-            AccountsController.GetActiveAccountBalance()
-              .immatureExcludingLocked >
-          0
-        ) {
-          this.sendButtonDisabled = false;
-        } else {
-          this.closeRightSidebar();
-          this.sendButtonDisabled = true;
-        }
-      }
-    });
-    if (
-      AccountsController.GetActiveAccountBalance().availableExcludingLocked -
-        AccountsController.GetActiveAccountBalance().immatureExcludingLocked >
-      0
-    ) {
-      this.sendButtonDisabled = false;
-    } else {
-      this.closeRightSidebar();
-      this.sendButtonDisabled = true;
-    }
   },
   computed: {
     ...mapState("mining", {
@@ -199,22 +161,32 @@ export default {
     },
     rightSidebarProps() {
       return null;
+    },
+    sendButtonDisabled() {
+      return this.account.spendable > 0;
+    },
+    sendButtonVisible() {
+      return this.sendButtonDisabled && this.rightSidebar === null;
     }
   },
   watch: {
     isActive() {
-      this.buttonDisabled = false;
+      this.generationButtonDisabled = false;
     },
     currentMemorySize() {
       this.$store.dispatch("mining/SET_MEMORY_SIZE", this.currentMemorySize);
     },
     currentThreadCount() {
       this.$store.dispatch("mining/SET_THREAD_COUNT", this.currentThreadCount);
+    },
+    sendButtonDisabled() {
+      if (this.rightSidebar !== null && this.sendButtonDisabled === false)
+        this.closeRightSidebar();
     }
   },
   methods: {
     toggleGeneration() {
-      this.buttonDisabled = true;
+      this.generationButtonDisabled = true;
       if (this.isActive) {
         GenerationController.StopGeneration();
       } else {
@@ -228,13 +200,11 @@ export default {
       }
     },
     closeRightSidebar() {
-      this.sendButtonVisible = true;
       this.rightSidebar = null;
       this.txHash = null;
     },
     emptyAccount() {
       this.rightSidebar = SendNovo;
-      this.sendButtonVisible = false;
     }
   }
 };
