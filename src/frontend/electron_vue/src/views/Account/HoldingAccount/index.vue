@@ -36,6 +36,11 @@
         <div>{{ accountStatus }}</div>
       </div>
       <div class="flex-row">
+        <div>{{ "Parts" }}</div>
+        <div>{{ accountParts }}</div>
+      </div>
+      
+      <div class="flex-row">
         <div>{{ $t("holding_account.novo_locked") }}</div>
         <div>{{ accountAmountLocked }}</div>
       </div>
@@ -159,6 +164,9 @@ export default {
     },
     networkWeight() {
       return this.getStatistics("network_tip_total_weight");
+    },
+    accountParts() {
+      return this.getStatistics("account_parts");
     },
     rightSidebarProps() {
       return null;
