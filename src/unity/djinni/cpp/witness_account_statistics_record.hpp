@@ -14,6 +14,8 @@ struct WitnessAccountStatisticsRecord final {
     std::string account_status;
     /** Account weight */
     int64_t account_weight;
+    /** How many parts the account weight is split up into */
+    int64_t account_parts;
     /** Account amount locked */
     int64_t account_amount_locked;
     /** Account weight when it was created */
@@ -38,6 +40,7 @@ struct WitnessAccountStatisticsRecord final {
     WitnessAccountStatisticsRecord(std::string request_status_,
                                    std::string account_status_,
                                    int64_t account_weight_,
+                                   int64_t account_parts_,
                                    int64_t account_amount_locked_,
                                    int64_t account_weight_at_creation_,
                                    int64_t network_tip_total_weight_,
@@ -51,6 +54,7 @@ struct WitnessAccountStatisticsRecord final {
     : request_status(std::move(request_status_))
     , account_status(std::move(account_status_))
     , account_weight(std::move(account_weight_))
+    , account_parts(std::move(account_parts_))
     , account_amount_locked(std::move(account_amount_locked_))
     , account_weight_at_creation(std::move(account_weight_at_creation_))
     , network_tip_total_weight(std::move(network_tip_total_weight_))

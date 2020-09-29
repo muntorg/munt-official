@@ -25,10 +25,11 @@ private:
     friend ::djinni::JniClass<NativeWitnessAccountStatisticsRecord>;
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/novo/jniunifiedbackend/WitnessAccountStatisticsRecord") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;JJJJJJJJJJZ)V") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;JJJJJJJJJJJZ)V") };
     const jfieldID field_mRequestStatus { ::djinni::jniGetFieldID(clazz.get(), "mRequestStatus", "Ljava/lang/String;") };
     const jfieldID field_mAccountStatus { ::djinni::jniGetFieldID(clazz.get(), "mAccountStatus", "Ljava/lang/String;") };
     const jfieldID field_mAccountWeight { ::djinni::jniGetFieldID(clazz.get(), "mAccountWeight", "J") };
+    const jfieldID field_mAccountParts { ::djinni::jniGetFieldID(clazz.get(), "mAccountParts", "J") };
     const jfieldID field_mAccountAmountLocked { ::djinni::jniGetFieldID(clazz.get(), "mAccountAmountLocked", "J") };
     const jfieldID field_mAccountWeightAtCreation { ::djinni::jniGetFieldID(clazz.get(), "mAccountWeightAtCreation", "J") };
     const jfieldID field_mNetworkTipTotalWeight { ::djinni::jniGetFieldID(clazz.get(), "mNetworkTipTotalWeight", "J") };

@@ -13,6 +13,7 @@ auto WitnessAccountStatisticsRecord::toCpp(ObjcType obj) -> CppType
     return {::djinni::String::toCpp(obj.requestStatus),
             ::djinni::String::toCpp(obj.accountStatus),
             ::djinni::I64::toCpp(obj.accountWeight),
+            ::djinni::I64::toCpp(obj.accountParts),
             ::djinni::I64::toCpp(obj.accountAmountLocked),
             ::djinni::I64::toCpp(obj.accountWeightAtCreation),
             ::djinni::I64::toCpp(obj.networkTipTotalWeight),
@@ -30,6 +31,7 @@ auto WitnessAccountStatisticsRecord::fromCpp(const CppType& cpp) -> ObjcType
     return [[DBWitnessAccountStatisticsRecord alloc] initWithRequestStatus:(::djinni::String::fromCpp(cpp.request_status))
                                                              accountStatus:(::djinni::String::fromCpp(cpp.account_status))
                                                              accountWeight:(::djinni::I64::fromCpp(cpp.account_weight))
+                                                              accountParts:(::djinni::I64::fromCpp(cpp.account_parts))
                                                        accountAmountLocked:(::djinni::I64::fromCpp(cpp.account_amount_locked))
                                                    accountWeightAtCreation:(::djinni::I64::fromCpp(cpp.account_weight_at_creation))
                                                      networkTipTotalWeight:(::djinni::I64::fromCpp(cpp.network_tip_total_weight))

@@ -16,6 +16,7 @@ auto NativeWitnessAccountStatisticsRecord::fromCpp(JNIEnv* jniEnv, const CppType
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.request_status)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.account_status)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_weight)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_parts)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_amount_locked)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_weight_at_creation)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.network_tip_total_weight)),
@@ -31,12 +32,13 @@ auto NativeWitnessAccountStatisticsRecord::fromCpp(JNIEnv* jniEnv, const CppType
 }
 
 auto NativeWitnessAccountStatisticsRecord::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
-    ::djinni::JniLocalScope jscope(jniEnv, 14);
+    ::djinni::JniLocalScope jscope(jniEnv, 15);
     assert(j != nullptr);
     const auto& data = ::djinni::JniClass<NativeWitnessAccountStatisticsRecord>::get();
     return {::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mRequestStatus)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mAccountStatus)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountWeight)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountParts)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountAmountLocked)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountWeightAtCreation)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mNetworkTipTotalWeight)),

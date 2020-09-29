@@ -313,19 +313,19 @@ bool GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoF
 WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(const std::string& witnessAccountUUID)
 {
     if (!pactiveWallet)
-        return WitnessAccountStatisticsRecord("no active wallet present", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
+        return WitnessAccountStatisticsRecord("no active wallet present", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
     
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
     
     auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(witnessAccountUUID));
     if (findIter == pactiveWallet->mapAccounts.end())
-        return WitnessAccountStatisticsRecord("invalid witness account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
+        return WitnessAccountStatisticsRecord("invalid witness account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
     CAccount* witnessAccount = findIter->second;
     
     WitnessInfoForAccount infoForAccount;
     if (!GetWitnessInfoForAccount(witnessAccount, infoForAccount))
     {
-        return WitnessAccountStatisticsRecord("failed to get witness info for account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
+        return WitnessAccountStatisticsRecord("failed to get witness info for account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
     }
     std::string accountStatus;
     switch (infoForAccount.accountStatus.status)
@@ -338,7 +338,7 @@ WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(c
         case WitnessStatus::Expired: accountStatus = "expired"; break;
         case WitnessStatus::Emptying: accountStatus = "emptying"; break;
     }
-    return WitnessAccountStatisticsRecord("success", accountStatus, infoForAccount.nOurWeight, infoForAccount.accountStatus.accountAmountLocked, infoForAccount.nOriginWeight, 
+    return WitnessAccountStatisticsRecord("success", accountStatus, infoForAccount.nOurWeight, infoForAccount.accountStatus.parts.size(), infoForAccount.accountStatus.accountAmountLocked, infoForAccount.nOriginWeight, 
                                               infoForAccount.nTotalNetworkWeightTip, infoForAccount.nOriginNetworkWeight, 
                                               infoForAccount.nOriginLength, infoForAccount.nLockBlocksRemaining, infoForAccount.nExpectedWitnessBlockPeriod,
                                               infoForAccount.nEstimatedWitnessBlockPeriod, infoForAccount.nOriginBlock, (witnessAccount->getCompounding() != 0));

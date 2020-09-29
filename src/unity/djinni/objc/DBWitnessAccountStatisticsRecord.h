@@ -7,6 +7,7 @@
 - (nonnull instancetype)initWithRequestStatus:(nonnull NSString *)requestStatus
                                 accountStatus:(nonnull NSString *)accountStatus
                                 accountWeight:(int64_t)accountWeight
+                                 accountParts:(int64_t)accountParts
                           accountAmountLocked:(int64_t)accountAmountLocked
                       accountWeightAtCreation:(int64_t)accountWeightAtCreation
                         networkTipTotalWeight:(int64_t)networkTipTotalWeight
@@ -20,6 +21,7 @@
 + (nonnull instancetype)witnessAccountStatisticsRecordWithRequestStatus:(nonnull NSString *)requestStatus
                                                           accountStatus:(nonnull NSString *)accountStatus
                                                           accountWeight:(int64_t)accountWeight
+                                                           accountParts:(int64_t)accountParts
                                                     accountAmountLocked:(int64_t)accountAmountLocked
                                                 accountWeightAtCreation:(int64_t)accountWeightAtCreation
                                                   networkTipTotalWeight:(int64_t)networkTipTotalWeight
@@ -39,6 +41,9 @@
 
 /** Account weight */
 @property (nonatomic, readonly) int64_t accountWeight;
+
+/** How many parts the account weight is split up into */
+@property (nonatomic, readonly) int64_t accountParts;
 
 /** Account amount locked */
 @property (nonatomic, readonly) int64_t accountAmountLocked;

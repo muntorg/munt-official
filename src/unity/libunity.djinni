@@ -495,6 +495,8 @@ witness_account_statistics_record = record {
     account_status : string;
     # Account weight
     account_weight : i64;
+    # How many parts the account weight is split up into
+    account_parts : i64;
     # Account amount locked
     account_amount_locked : i64;
     # Account weight when it was created

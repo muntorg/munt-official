@@ -12,6 +12,8 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
 
     /*package*/ final long mAccountWeight;
 
+    /*package*/ final long mAccountParts;
+
     /*package*/ final long mAccountAmountLocked;
 
     /*package*/ final long mAccountWeightAtCreation;
@@ -36,6 +38,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
             String requestStatus,
             String accountStatus,
             long accountWeight,
+            long accountParts,
             long accountAmountLocked,
             long accountWeightAtCreation,
             long networkTipTotalWeight,
@@ -49,6 +52,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         this.mRequestStatus = requestStatus;
         this.mAccountStatus = accountStatus;
         this.mAccountWeight = accountWeight;
+        this.mAccountParts = accountParts;
         this.mAccountAmountLocked = accountAmountLocked;
         this.mAccountWeightAtCreation = accountWeightAtCreation;
         this.mNetworkTipTotalWeight = networkTipTotalWeight;
@@ -74,6 +78,11 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
     /** Account weight */
     public long getAccountWeight() {
         return mAccountWeight;
+    }
+
+    /** How many parts the account weight is split up into */
+    public long getAccountParts() {
+        return mAccountParts;
     }
 
     /** Account amount locked */
@@ -132,6 +141,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
                 "mRequestStatus=" + mRequestStatus +
                 "," + "mAccountStatus=" + mAccountStatus +
                 "," + "mAccountWeight=" + mAccountWeight +
+                "," + "mAccountParts=" + mAccountParts +
                 "," + "mAccountAmountLocked=" + mAccountAmountLocked +
                 "," + "mAccountWeightAtCreation=" + mAccountWeightAtCreation +
                 "," + "mNetworkTipTotalWeight=" + mNetworkTipTotalWeight +
@@ -163,6 +173,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         this.mRequestStatus = in.readString();
         this.mAccountStatus = in.readString();
         this.mAccountWeight = in.readLong();
+        this.mAccountParts = in.readLong();
         this.mAccountAmountLocked = in.readLong();
         this.mAccountWeightAtCreation = in.readLong();
         this.mNetworkTipTotalWeight = in.readLong();
@@ -185,6 +196,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         out.writeString(this.mRequestStatus);
         out.writeString(this.mAccountStatus);
         out.writeLong(this.mAccountWeight);
+        out.writeLong(this.mAccountParts);
         out.writeLong(this.mAccountAmountLocked);
         out.writeLong(this.mAccountWeightAtCreation);
         out.writeLong(this.mNetworkTipTotalWeight);
