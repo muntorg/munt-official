@@ -633,6 +633,7 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
         account,
         status,
         networkWeight,
+        accountItems.size(),
         //NB! We always want the account weight (even if expired) - otherwise how do we e.g. draw a historical graph of the expected earnings for the expired account?
         std::accumulate(accountItems.begin(), accountItems.end(), uint64_t(0), [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }),
         lockedBalance,
