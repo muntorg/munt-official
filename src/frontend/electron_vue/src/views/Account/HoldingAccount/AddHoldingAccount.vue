@@ -232,11 +232,15 @@ export default {
         "Witness"
       );
 
+      // Always lock for slightly longer than the minimum to allow a bit of time for transaction to enter the chain
+      // If we don't then its possible that the transaction becomes invalid before entering the chain
+      let finalLockTime = (this.lockTimeInBlocks+50 < this.networkLimits.maximum_lock_period_blocks) ? this.lockTimeInBlocks+50 : this.lockTimeInBlocks;
+      
       let result = WitnessController.FundWitnessAccount(
         this.fundingAccount.UUID,
         accountId,
         this.amount * 100000000,
-        this.lockTimeInBlocks
+        finalLockTime
       );
 
       if (result.status === "success") {
