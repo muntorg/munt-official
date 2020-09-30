@@ -1,3 +1,10 @@
+2.3.0.1
+
+Maintenance release, update to new code signing certificates.
+
+
+
+
 2.3.0.0
 
 CORE    - Set timestamp server deactivation for 1602774915 (Thursday, 15-Oct-20 15:15:15 UTC)
