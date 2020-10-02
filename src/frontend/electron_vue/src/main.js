@@ -43,7 +43,8 @@ import {
   faTimes,
   faUniversity,
   faUnlock,
-  faUserCircle
+  faUserCircle,
+  faRedoAlt
 } from "@fortawesome/pro-light-svg-icons";
 
 library.add([
@@ -71,7 +72,8 @@ library.add([
   faTimes,
   faUniversity,
   faUnlock,
-  faUserCircle
+  faUserCircle,
+  faRedoAlt
 ]);
 
 Vue.component("fa-icon", FontAwesomeIcon);

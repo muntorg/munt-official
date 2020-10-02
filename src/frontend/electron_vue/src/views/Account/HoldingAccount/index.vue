@@ -39,7 +39,7 @@
         <div>{{ "Parts" }}</div>
         <div>{{ accountParts }}</div>
       </div>
-      
+
       <div class="flex-row">
         <div>{{ $t("holding_account.novo_locked") }}</div>
         <div>{{ accountAmountLocked }}</div>
@@ -90,6 +90,10 @@
 
     <portal to="footer-slot">
       <section class="footer">
+        <span class="button" @click="renewAccount" v-if="renewButtonVisible">
+          <fa-icon :icon="['fal', 'redo-alt']" />
+          {{ $t("buttons.renew") }}
+        </span>
         <span class="button" @click="emptyAccount" v-if="sendButtonVisible">
           <fa-icon :icon="['fal', 'arrow-from-bottom']" />
           {{ $t("buttons.send") }}
@@ -111,6 +115,7 @@
 import { WitnessController } from "../../../unity/Controllers";
 import EventBus from "../../../EventBus";
 import SendNovo from "../MiningAccount/SendNovo";
+import RenewAccount from "./RenewAccount";
 
 let timeout;
 
@@ -176,6 +181,9 @@ export default {
     },
     sendButtonVisible() {
       return this.sendButtonDisabled && this.rightSidebar === null;
+    },
+    renewButtonVisible() {
+      return this.accountStatus === "expired";
     }
   },
   mounted() {
@@ -194,6 +202,10 @@ export default {
     },
     sendButtonDisabled() {
       if (this.rightSidebar !== null && this.sendButtonDisabled === false)
+        this.closeRightSidebar();
+    },
+    renewButtonVisible() {
+      if (this.rightSidebar !== null)
         this.closeRightSidebar();
     }
   },
@@ -227,6 +239,9 @@ export default {
     },
     emptyAccount() {
       this.rightSidebar = SendNovo;
+    },
+    renewAccount() {
+      this.rightSidebar = RenewAccount;
     }
   }
 };

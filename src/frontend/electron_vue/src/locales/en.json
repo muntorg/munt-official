@@ -25,6 +25,7 @@
     "previous": "Previous",
     "receive": "Receive",
     "send": "Send",
+    "renew": "Renew",
     "start": "Start",
     "stop": "Stop",
     "unlock": "Unlock"
@@ -110,5 +111,8 @@
     "enter_label": "Enter label",
     "enter_novo_address": "Enter Novo address",
     "target_account": "Send to account:"
+  },
+  "renew_holding_account": {
+    "funding_account": "Pay renewal fee from account:"
   }
 }
