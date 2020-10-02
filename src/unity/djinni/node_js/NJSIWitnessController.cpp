@@ -135,6 +135,47 @@ Napi::Value NJSIWitnessController::fundWitnessAccount(const Napi::CallbackInfo& 
         return Napi::Value();
     }
 }
+Napi::Value NJSIWitnessController::renewWitnessAccount(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 2)
+    {
+        Napi::Error::New(env, "NJSIWitnessController::renewWitnessAccount needs 2 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+    std::string arg_1 = info[1].As<Napi::String>();
+
+    try
+    {
+        auto result = IWitnessController::renewWitnessAccount(arg_0,arg_1);
+
+        //Wrap result in node object
+        auto arg_2 = Napi::Object::New(env);
+        auto arg_2_1 = Napi::String::New(env, result.status);
+        arg_2.Set("status", arg_2_1);
+        auto arg_2_2 = Napi::String::New(env, result.txid);
+        arg_2.Set("txid", arg_2_2);
+        auto arg_2_3 = Napi::Value::From(env, result.fee);
+        arg_2.Set("fee", arg_2_3);
+
+
+        return arg_2;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+}
 Napi::Value NJSIWitnessController::getAccountWitnessStatistics(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -268,6 +309,7 @@ Napi::Object NJSIWitnessController::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("getNetworkLimits", &NJSIWitnessController::getNetworkLimits),
     InstanceMethod("getEstimatedWeight", &NJSIWitnessController::getEstimatedWeight),
     InstanceMethod("fundWitnessAccount", &NJSIWitnessController::fundWitnessAccount),
+    InstanceMethod("renewWitnessAccount", &NJSIWitnessController::renewWitnessAccount),
     InstanceMethod("getAccountWitnessStatistics", &NJSIWitnessController::getAccountWitnessStatistics),
     InstanceMethod("setAccountCompounding", &NJSIWitnessController::setAccountCompounding),
     InstanceMethod("isAccountCompounding", &NJSIWitnessController::isAccountCompounding),

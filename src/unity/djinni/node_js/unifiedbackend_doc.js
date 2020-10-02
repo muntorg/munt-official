@@ -319,6 +319,8 @@ declare class NJSIWitnessController
     static declare function getEstimatedWeight(amount_to_lock: number, lock_period_in_blocks: number): WitnessEstimateInfoRecord;
     /** Fund a witness account */
     static declare function fundWitnessAccount(funding_account_UUID: string, witness_account_UUID: string, funding_amount: number, requestedLockPeriodInBlocks: number): WitnessFundingResultRecord;
+    /** Renew a witness account */
+    static declare function renewWitnessAccount(funding_account_UUID: string, witness_account_UUID: string): WitnessFundingResultRecord;
     /** Get information on account weight and other witness statistics for account */
     static declare function getAccountWitnessStatistics(witnessAccountUUID: string): WitnessAccountStatisticsRecord;
     /** Turn compounding on/off */

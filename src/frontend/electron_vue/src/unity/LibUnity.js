@@ -804,6 +804,19 @@ class LibUnity {
     );
 
     ipc.on(
+      "NJSIWitnessController.renewWitnessAccount",
+      (event, funding_account_UUID, witness_account_UUID) => {
+        console.log(
+          `IPC: witnessController.renewWitnessAccount(${funding_account_UUID}, ${witness_account_UUID})`
+        );
+        event.returnValue = this.witnessController.renewWitnessAccount(
+          funding_account_UUID,
+          witness_account_UUID
+        );
+      }
+    );
+
+    ipc.on(
       "NJSIWitnessController.getAccountWitnessStatistics",
       (event, witnessAccountUUID) => {
         console.log(

@@ -530,6 +530,9 @@ i_witness_controller = interface +c {
     # Fund a witness account
     static fundWitnessAccount(funding_account_UUID : string, witness_account_UUID : string, funding_amount : i64, requestedLockPeriodInBlocks : i64) : witness_funding_result_record;
     
+    # Renew a witness account
+    static renewWitnessAccount(funding_account_UUID : string, witness_account_UUID : string) : witness_funding_result_record;
+    
     # Get information on account weight and other witness statistics for account
     static getAccountWitnessStatistics(witnessAccountUUID : string) : witness_account_statistics_record;
     

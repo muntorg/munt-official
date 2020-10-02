@@ -23,6 +23,10 @@
                                                fundingAmount:(int64_t)fundingAmount
                                  requestedLockPeriodInBlocks:(int64_t)requestedLockPeriodInBlocks;
 
+/** Renew a witness account */
++ (nonnull DBWitnessFundingResultRecord *)renewWitnessAccount:(nonnull NSString *)fundingAccountUUID
+                                           witnessAccountUUID:(nonnull NSString *)witnessAccountUUID;
+
 /** Get information on account weight and other witness statistics for account */
 + (nonnull DBWitnessAccountStatisticsRecord *)getAccountWitnessStatistics:(nonnull NSString *)witnessAccountUUID;
 

@@ -30,6 +30,13 @@ public abstract class IWitnessController {
                                            requestedLockPeriodInBlocks);
     }
 
+    /** Renew a witness account */
+    public static WitnessFundingResultRecord renewWitnessAccount(String fundingAccountUUID, String witnessAccountUUID)
+    {
+        return CppProxy.renewWitnessAccount(fundingAccountUUID,
+                                            witnessAccountUUID);
+    }
+
     /** Get information on account weight and other witness statistics for account */
     public static WitnessAccountStatisticsRecord getAccountWitnessStatistics(String witnessAccountUUID)
     {
@@ -77,6 +84,8 @@ public abstract class IWitnessController {
         public static native WitnessEstimateInfoRecord getEstimatedWeight(long amountToLock, long lockPeriodInBlocks);
 
         public static native WitnessFundingResultRecord fundWitnessAccount(String fundingAccountUUID, String witnessAccountUUID, long fundingAmount, long requestedLockPeriodInBlocks);
+
+        public static native WitnessFundingResultRecord renewWitnessAccount(String fundingAccountUUID, String witnessAccountUUID);
 
         public static native WitnessAccountStatisticsRecord getAccountWitnessStatistics(String witnessAccountUUID);
 

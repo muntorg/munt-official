@@ -36,6 +36,9 @@ private:
     /** Fund a witness account */
     Napi::Value fundWitnessAccount(const Napi::CallbackInfo& info);
 
+    /** Renew a witness account */
+    Napi::Value renewWitnessAccount(const Napi::CallbackInfo& info);
+
     /** Get information on account weight and other witness statistics for account */
     Napi::Value getAccountWitnessStatistics(const Napi::CallbackInfo& info);
 

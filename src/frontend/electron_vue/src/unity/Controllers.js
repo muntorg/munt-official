@@ -342,6 +342,14 @@ class WitnessController {
     );
   }
 
+  static RenewWitnessAccount(funding_account_UUID, witness_account_UUID) {
+    return ipc.sendSync(
+      "NJSIWitnessController.renewWitnessAccount",
+      funding_account_UUID,
+      witness_account_UUID
+    );
+  }
+
   static GetAccountWitnessStatistics(witnessAccountUUID) {
     return ipc.sendSync(
       "NJSIWitnessController.getAccountWitnessStatistics",

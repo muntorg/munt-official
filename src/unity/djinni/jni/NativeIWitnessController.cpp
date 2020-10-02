@@ -53,6 +53,16 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IWitnessController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IWitnessController_00024CppProxy_renewWitnessAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_fundingAccountUUID, jstring j_witnessAccountUUID)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IWitnessController::renewWitnessAccount(::djinni::String::toCpp(jniEnv, j_fundingAccountUUID),
+                                                           ::djinni::String::toCpp(jniEnv, j_witnessAccountUUID));
+        return ::djinni::release(::djinni_generated::NativeWitnessFundingResultRecord::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IWitnessController_00024CppProxy_getAccountWitnessStatistics(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID)
 {
     try {

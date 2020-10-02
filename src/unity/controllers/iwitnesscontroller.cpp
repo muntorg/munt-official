@@ -167,6 +167,43 @@ WitnessFundingResultRecord IWitnessController::fundWitnessAccount(const std::str
     }
 }
 
+WitnessFundingResultRecord IWitnessController::renewWitnessAccount(const std::string& fundingAccountUUID, const std::string& witnessAccountUUID)
+{
+    if (!pactiveWallet)
+        return WitnessFundingResultRecord("no active wallet present", "", 0);;
+    
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    
+    auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(fundingAccountUUID));
+    if (findIter == pactiveWallet->mapAccounts.end())
+        return WitnessFundingResultRecord("invalid funding account", "", 0);;
+    CAccount* fundingAccount = findIter->second;
+    
+    findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(witnessAccountUUID));
+    if (findIter == pactiveWallet->mapAccounts.end())
+        return WitnessFundingResultRecord("invalid witness account", "", 0);;
+    CAccount* witnessAccount = findIter->second;
+    
+    if (!witnessAccount->IsPoW2Witness())
+        return WitnessFundingResultRecord("not a witness account", "", 0);;
+        
+    try
+    {
+        std::string txid;
+        CAmount fee;
+        renewwitnessaccount(pactiveWallet, fundingAccount, witnessAccount, &txid, &fee);
+        return WitnessFundingResultRecord("success", txid, fee);
+    }
+    catch (witness_error& e)
+    {
+        return WitnessFundingResultRecord(e.what(), "", 0);
+    }
+    catch (std::runtime_error& e)
+    {
+        return WitnessFundingResultRecord(e.what(), "", 0);
+    }
+}
+
 
 struct WitnessInfoForAccount
 {
