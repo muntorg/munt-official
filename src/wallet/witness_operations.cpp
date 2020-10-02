@@ -302,6 +302,44 @@ void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* wi
         *pFee = transactionFee;
 }
 
+void renewwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, std::string* pTxid, CAmount* pFee)
+{
+    if (pwallet == nullptr || witnessAccount == nullptr || fundingAccount == nullptr)
+        throw witness_error(witness::RPC_INVALID_PARAMETER, "Require non-null pwallet, fundingAccount, witnessAccount");
+
+    LOCK2(cs_main, pwallet->cs_wallet);
+
+    if (pwallet->IsLocked()) {
+        throw std::runtime_error("Wallet locked");
+    }
+
+    if ((!witnessAccount->IsPoW2Witness()) || witnessAccount->IsFixedKeyPool())
+    {
+        throw witness_error(witness::RPC_MISC_ERROR, "Cannot renew a witness-only account as spend key is required to do this.");
+    }
+
+    std::string strError;
+    CMutableTransaction tx(CURRENT_TX_VERSION_POW2);
+    CReserveKeyOrScript changeReserveKey(pactiveWallet, fundingAccount, KEYCHAIN_EXTERNAL);
+    CAmount transactionFee;
+    if (!pwallet->PrepareRenewWitnessAccountTransaction(fundingAccount, witnessAccount, changeReserveKey, tx, transactionFee, strError))
+    {
+        throw std::runtime_error(strprintf("Failed to renew witness [%s]", strError.c_str()));
+    }
+
+    uint256 upgradeTransactionHash;
+    if (!pwallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &upgradeTransactionHash))
+    {
+        throw std::runtime_error(strprintf("Failed to sign transaction [%s]", strError.c_str()));
+    }
+
+    // Set result parameters
+    if (pTxid != nullptr)
+        *pTxid = upgradeTransactionHash.GetHex();
+    if (pFee != nullptr)
+        *pFee = transactionFee;
+}
+
 void rotatewitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVector unspentWitnessOutputs, CWallet* pwallet, std::string* pTxid, CAmount* pFee)
 {
     if (unspentWitnessOutputs.size() == 0)
@@ -633,7 +671,6 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
         account,
         status,
         networkWeight,
-        accountItems.size(),
         //NB! We always want the account weight (even if expired) - otherwise how do we e.g. draw a historical graph of the expected earnings for the expired account?
         std::accumulate(accountItems.begin(), accountItems.end(), uint64_t(0), [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }),
         lockedBalance,
