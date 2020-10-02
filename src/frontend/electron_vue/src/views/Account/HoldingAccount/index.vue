@@ -180,10 +180,12 @@ export default {
       return this.account.spendable > 0;
     },
     sendButtonVisible() {
-      return this.sendButtonDisabled && this.rightSidebar === null;
+      return this.sendButtonDisabled && this.rightSidebar !== SendNovo;
     },
     renewButtonVisible() {
-      return this.accountStatus === "expired";
+      return (
+        this.accountStatus === "expired" && this.rightSidebar !== RenewAccount
+      );
     }
   },
   mounted() {
@@ -202,10 +204,6 @@ export default {
     },
     sendButtonDisabled() {
       if (this.rightSidebar !== null && this.sendButtonDisabled === false)
-        this.closeRightSidebar();
-    },
-    renewButtonVisible() {
-      if (this.rightSidebar !== null)
         this.closeRightSidebar();
     }
   },
