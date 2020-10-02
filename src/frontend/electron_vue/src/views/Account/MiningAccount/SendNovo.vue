@@ -6,15 +6,11 @@
 
     <div class="main">
       <input
+        class="amount"
         v-model="amount"
         ref="amount"
-        type="number"
-        step="0.01"
-        placeholder="0.00"
-        :class="amountClass"
-        min="0"
-        :max="account.spendable"
-        @change="isAmountInvalid = false"
+        type="text"
+        readonly
       />
       <novo-form-field :title="$t('send_novo.target_account')">
         <div class="selectfunding">
@@ -53,6 +49,7 @@ import {
   LibraryController,
   AccountsController
 } from "../../../unity/Controllers";
+import EventBus from "../../../EventBus";
 
 export default {
   name: "SendNovo",
@@ -62,7 +59,6 @@ export default {
       address: null,
       password: null,
       fundingAccount: null,
-      isAmountInvalid: false,
       isPasswordInvalid: false
     };
   },
@@ -71,9 +67,6 @@ export default {
     ...mapGetters("wallet", ["accounts", "account"]),
     computedPassword() {
       return this.walletPassword ? this.walletPassword : this.password || "";
-    },
-    amountClass() {
-      return this.isAmountInvalid ? "error" : "";
     },
     passwordClass() {
       return this.isPasswordInvalid ? "error" : "";
@@ -84,7 +77,7 @@ export default {
       );
     },
     hasErrors() {
-      return this.isAmountInvalid || this.isPasswordInvalid;
+      return this.isPasswordInvalid;
     },
     disableSendButton() {
       if (isNaN(parseFloat(this.amount))) return true;
@@ -98,7 +91,7 @@ export default {
       this.fundingAccount = this.fundingAccounts[0];
     }
 
-    this.amount = this.account.spendable;
+    this.amount = this.account.spendable.toFixed(2);
   },
   methods: {
     onPasswordKeydown() {
@@ -107,14 +100,8 @@ export default {
     trySend() {
       /*
        todo:
-        - replace amount input by custom amount input (this one is too basic)
         - improve notifications / messages on success and error
        */
-
-      // validate amount
-      if (this.account.spendable < this.amount) {
-        this.isAmountInvalid = true;
-      }
 
       // wallet needs to be unlocked to make a payment
       if (LibraryController.UnlockWallet(this.computedPassword) === false) {
@@ -136,9 +123,7 @@ export default {
       let result = LibraryController.PerformPaymentToRecipient(request, true);
       if (result === 0) {
         // payment succeeded
-        this.amount = null;
-        this.address = null;
-        this.password = null;
+        EventBus.$emit("close-right-sidebar");
       } else {
         // payment failed
         console.log("someting went wrong, but don't exactly know what.");
@@ -182,6 +167,10 @@ input {
   margin: 0 0 10px 0;
   font-style: normal;
   font-size: 14px;
+}
+
+.amount {
+  cursor: default;
 }
 
 button {
