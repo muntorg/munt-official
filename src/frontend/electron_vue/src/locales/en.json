@@ -24,8 +24,8 @@
     "ok": "OK",
     "previous": "Previous",
     "receive": "Receive",
-    "send": "Send",
     "renew": "Renew",
+    "send": "Send",
     "start": "Start",
     "stop": "Stop",
     "unlock": "Unlock"
@@ -110,9 +110,9 @@
   "send_novo": {
     "enter_label": "Enter label",
     "enter_novo_address": "Enter Novo address",
-    "target_account": "Send to account:"
+    "target_account": "Send to account"
   },
   "renew_holding_account": {
-    "funding_account": "Pay renewal fee from account:"
+    "funding_account": "Pay renewal fee from account"
   }
 }

@@ -24,6 +24,7 @@
     "ok": "OK",
     "previous": "Vorige",
     "receive": "Ontvangen",
+    "renew": "Vernieuwen",
     "send": "Versturen",
     "start": "Start",
     "stop": "Stop",
@@ -108,6 +109,10 @@
   },
   "send_novo": {
     "enter_label": "Voer label in",
-    "enter_novo_address": "Voer Novo adres in"
+    "enter_novo_address": "Voer Novo adres in",
+    "target_account": "Verstuur naar account"
+  },
+  "renew_holding_account": {
+    "funding_account": "Betaal vergoeding van account"
   }
 }
