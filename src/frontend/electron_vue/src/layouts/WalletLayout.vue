@@ -274,4 +274,16 @@ export default {
     height: calc(100% - 72px);
   }
 }
+
+@media (max-width: 972px) {
+  .wallet-layout:not(.no-sidebar-right) {
+    & > .main {
+      display: none;
+    }
+
+    & > .sidebar-right {
+      width: calc(100% - var(--sidebar-left-width));
+    }
+  }
+}
 </style>
