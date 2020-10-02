@@ -109,7 +109,6 @@ export default {
         this.password = null;
         this.fundingAccount = null;
 
-        // close the right sidebar when switching accounts
         EventBus.$emit("close-right-sidebar");
       } else {
         console.log(result);
