@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Account from "../views/Account";
 
 import { AccountsController } from "../unity/Controllers";
+import EventBus from "../EventBus";
 
 Vue.use(VueRouter);
 
@@ -89,6 +90,9 @@ router.beforeEach((to, from, next) => {
         console.log(`account: ${to.params.id}`);
         // set active account to specified id
         AccountsController.SetActiveAccount(to.params.id);
+
+        // close the right sidebar when switching accounts
+        EventBus.$emit("close-right-sidebar");
       } else {
         console.log("account: undefined");
       }
