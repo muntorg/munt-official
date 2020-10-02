@@ -43,6 +43,7 @@ import {
   AccountsController,
   WitnessController
 } from "../../../unity/Controllers";
+import EventBus from "../../../EventBus";
 
 export default {
   name: "RenewAccount",
@@ -107,6 +108,9 @@ export default {
       if (result.status === "success") {
         this.password = null;
         this.fundingAccount = null;
+
+        // close the right sidebar when switching accounts
+        EventBus.$emit("close-right-sidebar");
       } else {
         console.log(result);
       }
