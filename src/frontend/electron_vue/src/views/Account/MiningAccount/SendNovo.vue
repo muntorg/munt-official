@@ -13,19 +13,11 @@
         readonly
       />
       <novo-form-field :title="$t('send_novo.target_account')">
-        <div class="selectfunding">
-          <select v-model="fundingAccount">
-            <option
-              v-for="account in fundingAccounts"
-              :key="account.UUID"
-              :value="account"
-              >{{ account.label }}</option
-            >
-          </select>
-          <span class="selectarrow">
-            <fa-icon :icon="['fal', 'chevron-down']" />
-          </span>
-        </div>
+        <select-list
+          :options="fundingAccounts"
+          :default="fundingAccount"
+          v-model="fundingAccount"
+        />
       </novo-form-field>
 
       <input
@@ -136,24 +128,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.selectfunding {
-  position: relative;
-  float: left;
-  width: 100%;
-}
-.selectfunding select {
-  background-color: rgba(255, 255, 255, 0);
-  z-index: 999;
-}
-.selectarrow {
-  position: absolute;
-  top: 0;
-  right: 10px;
-  line-height: 40px;
-  font-size: 12px;
-  z-index: -1;
-}
-
 .send-novo {
   height: 100%;
 
