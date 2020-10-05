@@ -1,12 +1,27 @@
-1.0.0.3
+1.0.5
 
-Downward adjustment of default genesis witness weight as it is too high for current network weight
+Fix an issue that was causing renewal of some holding accounts to fail (Fix requires peers to upgrade prior to block 21500)
+Fix an issue that was causing some minors to occasionally produce invalid blocks  (Fix requires peers to upgrade prior to timestamp 1602237600 - Friday 09/10/2020 08:00 UTC+2)
+Various minor UI improvements, additional UI functionality and stability fixes.
+
+
+
+1.0.4
+
+Fixes to wallet balance display and other minor UI improvements
+
+
+
+
+1.0.3
+
+Downward adjustment of default genesis holding weight as it is too high for current network weight
 At larger network weights behaviour remains the same
 
 
 
 
-1.0.0.2
+1.0.2
 
 More advanced wallet functionality, send/receive, mine, create holding accounts and lock funds, basic debug console and various other UI functionality
 Blockchain activation for both mining and holding accounts
@@ -14,8 +29,8 @@ Blockchain activation for both mining and holding accounts
 
 
 
-1.0.0.0
+1.0.0
 
 Initial release, basic wallet functionality only (show balance, receive)
-Blockchain fully functional, but blockchain delibritely frozen on genesis block via all witness accounts being kept offline - chain will only be allowed to move once full release is done
+Blockchain fully functional, but blockchain delibritely frozen on genesis block via all holding accounts being kept offline - chain will only be allowed to move once full release is done
 
