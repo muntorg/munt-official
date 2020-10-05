@@ -1192,8 +1192,8 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
                 sigma_settings sigmaMiningSettings = defaultSigmaSettings;
                 // Force recalculation of arenaChunkSizeBytes
                 //21500
-                //1601906283
-                if (pblock->nTime > 1601906283)
+                //1602237600
+                if (pblock->nTime > 1602237600)
                 {
                     sigmaMiningSettings.verify();
                 }
@@ -1272,7 +1272,7 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
                             if (foundBlockHash != uint256())
                                 break;
                             
-                            if (nStart < 1601906283 && pblock->nTime > 1601906283)
+                            if (nStart < 1602237600 && pblock->nTime > 1602237600)
                                 break;
                             
                             //fixme: (SIGMA) - This can be improved in cases where we have 'uneven' contexts, one may still have lots of work when another is finished, we might want to only restart one of them and not both...

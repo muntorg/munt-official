@@ -45,9 +45,9 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
     {
         sigma_settings sigmaMiningSettings = defaultSigmaSettings;
         //21500
-        //1599645600
+        //1602237600
         // Force recalculation of arenaChunkSizeBytes
-        if (block->nTime > 1599645600)
+        if (block->nTime > 1602237600)
         {
             sigmaMiningSettings.verify();
         }
