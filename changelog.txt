@@ -1,4 +1,4 @@
-1.0.5
+1.0.6
 
 Fix an issue that was causing renewal of some holding accounts to fail (Fix requires peers to upgrade prior to block 21500)
 Fix an issue that was causing some minors to occasionally produce invalid blocks  (Fix requires peers to upgrade prior to timestamp 1602237600 - Friday 09/10/2020 08:00 UTC+2)
