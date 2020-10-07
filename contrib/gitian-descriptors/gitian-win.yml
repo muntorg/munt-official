@@ -1,5 +1,5 @@
 ---
-name: "Novo-win-1.0.0"
+name: "Novo-win-1.0.7"
 enable_cache: true
 distro: "ubuntu"
 sudo: true
