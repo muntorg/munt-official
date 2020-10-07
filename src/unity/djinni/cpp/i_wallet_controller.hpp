@@ -5,6 +5,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <string>
 
 #ifdef DJINNI_NODEJS
 #include "NJSIWalletListener.hpp"
@@ -32,4 +33,7 @@ public:
 
     /** Check current wallet balance */
     static BalanceRecord GetBalance();
+
+    /** Abandon a transaction */
+    static bool AbandonTransaction(const std::string & txHash);
 };

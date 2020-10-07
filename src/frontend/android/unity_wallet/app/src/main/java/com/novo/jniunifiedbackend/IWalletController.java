@@ -34,6 +34,12 @@ public abstract class IWalletController {
         return CppProxy.GetBalance();
     }
 
+    /** Abandon a transaction */
+    public static boolean AbandonTransaction(String txHash)
+    {
+        return CppProxy.AbandonTransaction(txHash);
+    }
+
     private static final class CppProxy extends IWalletController
     {
         private final long nativeRef;
@@ -64,5 +70,7 @@ public abstract class IWalletController {
         public static native long GetBalanceSimple();
 
         public static native BalanceRecord GetBalance();
+
+        public static native boolean AbandonTransaction(String txHash);
     }
 }

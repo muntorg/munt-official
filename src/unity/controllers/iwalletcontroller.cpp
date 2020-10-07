@@ -163,4 +163,12 @@ int64_t IWalletController::GetBalanceSimple()
     return balances.availableIncludingLocked + balances.unconfirmedIncludingLocked + balances.immatureIncludingLocked;
 }
 
+bool IWalletController::AbandonTransaction(const std::string& txHash)
+{
+    if (!pactiveWallet)
+        return false;
+
+    uint256 hash = uint256S(txHash);
+    return pactiveWallet->AbandonTransaction(hash);
+}
 

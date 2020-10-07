@@ -59,6 +59,13 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (BOOL)AbandonTransaction:(nonnull NSString *)txHash {
+    try {
+        auto objcpp_result_ = ::IWalletController::AbandonTransaction(::djinni::String::toCpp(txHash));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 namespace djinni_generated {
 
 auto IWalletController::toCpp(ObjcType objc) -> CppType

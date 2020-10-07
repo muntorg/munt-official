@@ -616,6 +616,11 @@ class LibUnity {
       event.returnValue = this.walletController.GetBalance();
     });
 
+    ipc.on("NJSIWalletController.AbandonTransaction", (event, txHash) => {
+      console.log(`IPC: walletController.AbandonTransaction(${txHash})`);
+      event.returnValue = this.walletController.AbandonTransaction(txHash);
+    });
+
     // Register NJSIRpcController ipc handlers
     ipc.on("NJSIRpcController.getAutocompleteList", event => {
       console.log(`IPC: rpcController.getAutocompleteList()`);

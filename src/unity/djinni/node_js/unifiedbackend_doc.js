@@ -152,6 +152,8 @@ declare class NJSIWalletController
     static declare function GetBalanceSimple(): number;
     /** Check current wallet balance */
     static declare function GetBalance(): BalanceRecord;
+    /** Abandon a transaction */
+    static declare function AbandonTransaction(txHash: string): boolean;
 }
 /** Interface to receive wallet level events */
 declare class NJSIWalletListener

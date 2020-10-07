@@ -9,6 +9,7 @@
 #include "balance_record.hpp"
 #include <cstdint>
 #include <memory>
+#include <string>
 
 #include <napi.h>
 #include <uv.h>
@@ -35,6 +36,9 @@ private:
 
     /** Check current wallet balance */
     Napi::Value GetBalance(const Napi::CallbackInfo& info);
+
+    /** Abandon a transaction */
+    Napi::Value AbandonTransaction(const Napi::CallbackInfo& info);
 
 };
 #endif //DJINNI_GENERATED_NJSIWALLETCONTROLLER_HPP

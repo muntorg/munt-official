@@ -24,4 +24,7 @@
 /** Check current wallet balance */
 + (nonnull DBBalanceRecord *)GetBalance;
 
+/** Abandon a transaction */
++ (BOOL)AbandonTransaction:(nonnull NSString *)txHash;
+
 @end

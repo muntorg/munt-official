@@ -296,6 +296,9 @@ i_wallet_controller = interface +c {
     
     # Check current wallet balance
     static GetBalance(): balance_record;
+    
+    # Abandon a transaction
+    static AbandonTransaction(txHash : string): bool;
 }
 
 # Interface to receive wallet level events

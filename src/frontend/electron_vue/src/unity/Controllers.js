@@ -196,6 +196,10 @@ class WalletController {
   static GetBalance() {
     return ipc.sendSync("NJSIWalletController.GetBalance");
   }
+
+  static AbandonTransaction(txHash) {
+    return ipc.sendSync("NJSIWalletController.AbandonTransaction", txHash);
+  }
 }
 
 class RpcController {

@@ -56,4 +56,13 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IWalletController_000
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IWalletController_00024CppProxy_AbandonTransaction(JNIEnv* jniEnv, jobject /*this*/, jstring j_txHash)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IWalletController::AbandonTransaction(::djinni::String::toCpp(jniEnv, j_txHash));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 }  // namespace djinni_generated
