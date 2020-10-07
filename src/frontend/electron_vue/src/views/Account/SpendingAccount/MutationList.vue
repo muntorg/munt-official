@@ -11,6 +11,7 @@
         v-for="mutation in group.mutations"
         :key="mutation.txHash"
         @click="selectTxHash(mutation.txHash)"
+        @contextmenu="showTxMenu($event, mutation)"
         :class="mutationRowClass(mutation.txHash)"
       >
         <div class="icon transactionicon">
@@ -24,6 +25,9 @@
 </template>
 
 <script>
+const { remote } = require("electron");
+const { Menu, MenuItem } = remote;
+import { WalletController } from "../../../unity/Controllers";
 export default {
   name: "MutationList",
   props: {
@@ -111,6 +115,20 @@ export default {
     },
     selectTxHash(txHash) {
       this.$emit("tx-hash", txHash);
+    },
+    showTxMenu(e, mutation) {
+      if (mutation.status !== 1 && mutation.status !== 2 && mutation.status !== 3) {
+        const contextMenu = new Menu();
+        contextMenu.append(
+          new MenuItem({
+            label: "Abandon transaction",
+            click() {
+              WalletController.AbandonTransaction(mutation.txHash);
+            }
+          })
+        );
+        contextMenu.popup({ x: e.x, y: e.y });
+      }
     },
     mutationRowClass(txHash) {
       return txHash === this.txHash ? "selected" : "";
