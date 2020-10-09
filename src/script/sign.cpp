@@ -32,6 +32,7 @@ bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, 
     bool gotKey = false;
     for (const auto& forAccount : accountsToTry)
     {
+        LogPrintf(">>>CreateSig attempting to find key\n");
         if (forAccount->GetKey(address, key))
         {
             gotKey = true;
@@ -39,23 +40,35 @@ bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, 
         }
     }
     if (!gotKey)
+    {
+        LogPrintf(">>>CreateSig failed to find key\n");
         return false;
+    }
 
     // Signing with uncompressed keys is disabled for segsig transactions
     if (sigversion == SIGVERSION_SEGSIG && !key.IsCompressed())
+    {
+        LogPrintf(">>>CreateSig can't sign with uncompressed key\n");
         return false;
+    }
 
     uint256 hash = SignatureHash(scriptCode, *txTo, nIn, nHashType, amount, sigversion);
     if (sigversion == SIGVERSION_SEGSIG)
     {
         //fixme: (PHASE5) (SEGSIG) Lots of unit tests for this. (test also old style transactions)
         if (!key.SignCompact(hash, vchSig))
+        {
+            LogPrintf(">>>CreateSig compact signature failed\n");
             return false;
+        }
     }
     else
     {
         if (!key.Sign(hash, vchSig))
+        {
+            LogPrintf(">>>CreateSig non-compact signature failed\n");
             return false;
+        }
     }
     vchSig.push_back((unsigned char)nHashType);
     return true;
@@ -156,6 +169,8 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
 
 static bool SignStep(const BaseSignatureCreator& creator, const CTxOutPoW2Witness& pow2Witness, std::vector<valtype>& ret, SigVersion sigversion, SignType type)
 {
+    LogPrintf(">>>SignStep Attempting to sign for witness output\n");
+    
     CScript scriptRet;
     uint160 h160;
     ret.clear();
@@ -169,16 +184,29 @@ static bool SignStep(const BaseSignatureCreator& creator, const CTxOutPoW2Witnes
     {
         case Spend:
         {
+            LogPrintf(">>>SignStep Attempting spend signature\n");
+            
             if (!Sign1(pow2Witness.witnessKeyID, creator, scriptSignatureDataPlaceholder, ret, SIGVERSION_SEGSIG))
+            {
+                LogPrintf(">>>SignStep witness signature failed\n");
                 return false;
+            }
             if (!Sign1(pow2Witness.spendingKeyID, creator, scriptSignatureDataPlaceholder, ret, SIGVERSION_SEGSIG))
+            {
+                LogPrintf(">>>SignStep spend signature failed\n");
                 return false;
+            }
             return true;
         }
         case Witness:
         {
+            LogPrintf(">>>SignStep Attempting witness signature\n");
+            
             if (!Sign1(pow2Witness.witnessKeyID, creator, scriptSignatureDataPlaceholder, ret, SIGVERSION_SEGSIG))
+            {
+                LogPrintf(">>>SignStep witness signature failed\n");
                 return false;
+            }
             return true;
         }
     }
@@ -282,9 +310,12 @@ CKeyID ExtractSigningPubkeyFromTxOutput(const CTxOut& txOut, SignType type)
 
 bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOutput, SignatureData& sigdata, SignType type, uint64_t nVersion)
 {
+    LogPrintf(">>>CWallet::ProduceSignature Attempting to produce signature\n");
     SigVersion sigversion = IsOldTransactionVersion(nVersion) ? SIGVERSION_BASE : SIGVERSION_SEGSIG;
     if (fromOutput.GetType() <= CTxOutType::ScriptLegacyOutput)
     {
+        LogPrintf(">>>CWallet::ProduceSignature Attempting to produce signature ScriptLegacyOutput\n");
+        
         CScript script = fromOutput.output.scriptPubKey;
         std::vector<valtype> result;
         txnouttype whichType;
@@ -314,6 +345,8 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
     }
     else if (fromOutput.GetType() == CTxOutType::PoW2WitnessOutput)
     {
+        LogPrintf(">>>CWallet::ProduceSignature Attempting to produce signature PoW2WitnessOutput\n");
+        
         std::vector<valtype> result;
         bool solved = SignStep(creator, fromOutput.output.witnessDetails, result, sigversion, type);
         sigdata.segregatedSignatureData.stack = result;
@@ -322,6 +355,8 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CTxOut& fromOut
     }
     else if (fromOutput.GetType() == CTxOutType::StandardKeyHashOutput)
     {
+        LogPrintf(">>>CWallet::ProduceSignature Attempting to produce signature StandardKeyHashOutput\n");
+        
         std::vector<valtype> result;
         bool solved = SignStep(creator, fromOutput.output.standardKeyHash, result, sigversion, type);
         sigdata.segregatedSignatureData.stack = result;

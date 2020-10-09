@@ -67,32 +67,39 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
 {
     AssertLockHeld(cs_wallet); // mapWallet
 
+    LogPrintf(">>>CWallet::SignTransaction start\n");
     // sign the new tx
     CTransaction txNewConst(tx);
     int nIn = 0;
     for (const auto& input : tx.vin)
     {
+        LogPrintf(">>>CWallet::SignTransaction try sign input\n");
         if (input.prevout.IsNull() && txNewConst.IsPoW2WitnessCoinBase())
         {
+            LogPrintf(">>>CWallet::SignTransaction input is witness coinbase, skipping signature\n");
             nIn++;
             continue;
         }
 
+        LogPrintf(">>>CWallet::SignTransaction calculating prevout for signature\n");
         const CWalletTx* prev = GetWalletTx(input.prevout);
         const CTxOut* prevout = nullptr;
         if(!prev || input.prevout.n >= prev->tx->vout.size())
         {
             if (prevOutOverride)
             {
+                LogPrintf(">>>CWallet::SignTransaction failed to find prevout, using override\n");
                 prevout = prevOutOverride;
             }
             else
             {
+                LogPrintf(">>>CWallet::SignTransaction failed to find prevout, signing failed\n");
                 return false;
             }
         }
         else
         {
+            LogPrintf(">>>CWallet::SignTransaction found prevout\n");
             prevout = &prev->tx->vout[input.prevout.n];
         }
         
@@ -101,11 +108,20 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
         SignatureData sigdata;
         std::vector<CAccount*> accountsToTry;
         if (!fromAccount)
+        {
+            LogPrintf(">>>CWallet::SignTransaction searching for signing account\n");
             accountsToTry = FindAccountsForTransaction(*prevout);
+        }
         else
+        {
+            LogPrintf(">>>CWallet::SignTransaction using signing account passed from caller\n");
             accountsToTry.push_back(fromAccount);    
+        }
         if (accountsToTry.empty())
+        {
+            LogPrintf(">>>CWallet::SignTransaction could not determine signing account, signing failed\n");
             return false;
+        }
         
         std::vector<CKeyStore*> keystores;
         keystores.reserve(accountsToTry.size());
@@ -114,8 +130,10 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
             keystores.push_back(account);
         }
         
+        LogPrintf(">>>CWallet::SignTransaction Attempting to produce signature\n");
         if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, keystores, &txNewConst, nIn, amount, SIGHASH_ALL), *prevout, sigdata, type, txNewConst.nVersion))
         {
+            LogPrintf(">>>CWallet::SignTransaction Failed to produce signature\n");
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);
