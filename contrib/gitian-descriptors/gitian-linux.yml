@@ -1,5 +1,5 @@
 ---
-name: "Novo-linux-1.0.7"
+name: "Novo-linux-1.0.8"
 enable_cache: true
 distro: "ubuntu"
 suites:
