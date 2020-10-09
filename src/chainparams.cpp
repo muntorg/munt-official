@@ -124,7 +124,7 @@ public:
         defaultSigmaSettings.arenaSizeKb = 12*1024*1024;
         defaultSigmaSettings.argonSlowHashRoundCost = 14;
         defaultSigmaSettings.fastHashSizeBytes = 400;
-        defaultSigmaSettings.arenaChunkSizeBytes = (4*1024*1024*1024ULL)/defaultSigmaSettings.numHashesPost;
+        defaultSigmaSettings.verify();
 
         {
             numGenesisWitnesses = 400;
@@ -227,19 +227,20 @@ public:
         fUseSyncCheckpoints = true;
 
         checkpointData = {
-            { 0, { genesis.GetHashPoW2(), genesis.nTime } }
+            {      0, { genesis.GetHashPoW2(), genesis.nTime } },
+            {  21657, { uint256S("0x05e73b89f3fddd0f143f3348d5cf54b123ecfa06abd2087368091a05ccaf1deb"), 1602267538 } },
         };
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("");
+        consensus.defaultAssumeValid = uint256S("0x05e73b89f3fddd0f143f3348d5cf54b123ecfa06abd2087368091a05ccaf1deb");
         
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("");
+        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000000000000272bafe52");
         
         chainTxData = ChainTxData{
-            0,
-            0,
-            0
+            1602267538, // * UNIX timestamp of last checkpoint block
+            44110,
+            0.01
         };
     }
 };
@@ -261,7 +262,7 @@ public:
         defaultSigmaSettings.arenaSizeKb = 4*1024*1024;
         defaultSigmaSettings.argonSlowHashRoundCost = 12;
         defaultSigmaSettings.fastHashSizeBytes = 300;
-        defaultSigmaSettings.arenaChunkSizeBytes = (4*1024*1024*1024ULL)/defaultSigmaSettings.numHashesPost;
+        defaultSigmaSettings.verify();
 
         std::string sTestnetParams = GetArg("-testnet", "");
         if (!sTestnetParams.empty())
@@ -490,7 +491,7 @@ public:
         defaultSigmaSettings.arenaSizeKb = 4*1024*1024;
         defaultSigmaSettings.argonSlowHashRoundCost = 12;
         defaultSigmaSettings.fastHashSizeBytes = 300;
-        defaultSigmaSettings.arenaChunkSizeBytes = (4*1024*1024*1024ULL)/defaultSigmaSettings.numHashesPost;
+        defaultSigmaSettings.verify();
 
         genesis = CreateGenesisBlock(1296688602, 2, UintToArith256(consensus.powLimit).GetCompact(), 1, 0);
         consensus.hashGenesisBlock = genesis.GetHashPoW2();
