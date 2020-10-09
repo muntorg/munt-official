@@ -666,7 +666,7 @@ void static GuldenWitness()
                                 assemblerOptions.nBlockMaxWeight = GetArg("-blockmaxweight", DEFAULT_BLOCK_MAX_WEIGHT) - nStartingBlockWeight;
                                 assemblerOptions.nBlockMaxSize = GetArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE) - nStartingBlockWeight;
 
-                                std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params(), assemblerOptions).CreateNewBlock(candidateIter, coinbaseScript, true, nullptr, true));
+                                std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params(), assemblerOptions).CreateNewBlock(candidateIter, coinbaseScript, true, nullptr, true, 0));
                                 if (!pblocktemplate.get())
                                 {
                                     LogPrintf("GuldenWitness: [Error] Failed to get block template.\n");
