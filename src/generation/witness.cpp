@@ -140,7 +140,7 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     {
         std::string strErrorMessage = strprintf("Failed to obtain key to sign as witness: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
         CAlert::Notify(strErrorMessage, true, true);
-        LogPrintf("%s", strErrorMessage.c_str());
+        LogPrintf("%s\n", strErrorMessage.c_str());
         return false;
     }
 
@@ -149,7 +149,7 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     {
         std::string strErrorMessage = strprintf("Invalid witness key - uncompressed keys not allowed: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
         CAlert::Notify(strErrorMessage, true, true);
-        LogPrintf("%s", strErrorMessage.c_str());
+        LogPrintf("%s\n", strErrorMessage.c_str());
         return false;
     }
 
@@ -351,7 +351,7 @@ static std::pair<bool, CMutableTransaction> CreateWitnessCoinbase(int nWitnessHe
         {
             std::string strErrorMessage = strprintf("Failed to sign witness coinbase: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
             CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf("%s", strErrorMessage.c_str());
+            LogPrintf("%s\n", strErrorMessage.c_str());
             return std::pair(false, coinbaseTx);
         }
     }
@@ -584,7 +584,7 @@ void static GuldenWitness()
                             nLastErrorHeight = candidateIter->nHeight;
                             std::string strErrorMessage = strprintf("Failed to calculate witness info for candidate block.\n If this occurs frequently please contact a developer for assistance.\n height [%d] chain-tip-height [%d]", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
                             CAlert::Notify(strErrorMessage, true, true);
-                            LogPrintf("%s", strErrorMessage.c_str());
+                            LogPrintf("%s\n", strErrorMessage.c_str());
                             continue;
                         }
                         
