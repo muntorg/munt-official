@@ -42,7 +42,7 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
 
     //fixme: (SIGMA) - Post activation we can simplify this.
     // Check proof of work matches claimed amount
-    if (block->nTime > defaultSigmaSettings.activationDate)
+    if (block->nTime > 1602307283)
     {
         #ifdef VALIDATION_MOBILE
             //fixme: (SIGMA) (PHASE5) (HIGH) Remove/improve this once we have witness-header-sync; this is a temporary measure to keep SPV performance adequate on low power devices for now.
