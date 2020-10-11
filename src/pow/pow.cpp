@@ -96,7 +96,7 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
             return verify.verifyHeader<0>(*block);
         #endif
     }
-    else
+    else if (block->nTime <= defaultSigmaSettings.activationDate)
     {
         if (UintToArith256(block->GetPoWHash()) > bnTarget)
             return false;
