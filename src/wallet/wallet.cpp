@@ -55,6 +55,7 @@
 #include <unity/appmanager.h>
 #include <wallet/mnemonic.h>
 #include <script/ismine.h>
+#include <txdb.h>
 
 //fixme: (PHASE5) - we can remove these includes after phase4 activation.
 #include "witnessutil.h"
@@ -2582,6 +2583,82 @@ void CWallet::ListLockedCoins(std::vector<COutPoint>& vOutpts) const
          it != setLockedCoins.end(); it++) {
         COutPoint outpt = (*it);
         vOutpts.push_back(outpt);
+    }
+}
+
+
+void CWallet::CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, int64_t& nBalanceInQuestion)
+{
+    nMismatchFound = 0;
+    nBalanceInQuestion = 0;
+    nOrphansFound = 0;
+
+    LOCK2(cs_main, cs_wallet);
+    std::vector<CWalletTx*> allWalletCoins;
+    allWalletCoins.reserve(mapWallet.size());
+    for(auto& it : mapWallet)
+    {
+        allWalletCoins.push_back(&it.second);
+    }
+
+    CCoinsViewCache viewNew(pcoinsTip);
+    std::map<COutPoint, Coin> allUTXOCoins;
+    viewNew.GetAllCoins(allUTXOCoins);
+    
+    //Iterate all UTXO entries and check if they are ours
+    //If they are check they are in the wallet
+    //If they aren't this is an issue
+    for(const auto& [utxoOutpoint, utxoCoin] : allUTXOCoins)
+    {
+        if(IsMine(utxoCoin.out) >= ISMINE_SPENDABLE)
+        {
+            if (mapWalletHash.find(utxoOutpoint.getBucketHash()) == mapWalletHash.end())
+            {
+                LogPrintf("Found a utxo that is ours but that isn't in wallet %s %s[%d]\n", FormatMoney(utxoCoin.out.nValue).c_str(), utxoOutpoint.getBucketHash().ToString().c_str(), utxoOutpoint.n);
+                nMismatchFound++;
+                nBalanceInQuestion += utxoCoin.out.nValue;
+            }
+        }
+    }
+    //Iterate all wallet entries
+    //Ensure that they are in the UTXO if they are unspent
+    //Ensure that they aren't in the UTXO if they are spent
+    //If either of the above is untrue this is an issue
+    for(CWalletTx* walletCoin : allWalletCoins)
+    {
+        uint256 hash = walletCoin->GetHash();
+        uint n;
+
+        if(walletCoin->IsCoinBase() && (walletCoin->GetDepthInMainChain() < 0))
+        {
+           nOrphansFound++;
+           printf("Found orphaned generation tx [%s]\n", hash.ToString().c_str());
+        }
+        else
+        {
+            for(n = 0; n < walletCoin->tx->vout.size(); n++)
+            {
+                if(IsMine(walletCoin->tx->vout[n]) >= ISMINE_SPENDABLE)
+                {
+                    COutPoint walletCoinOutpoint(walletCoin->tx->GetHash(), n);
+                    COutPoint walletCoinOutpointIndex(walletCoin->nHeight, walletCoin->nIndex, n);
+                    bool outputIsInUTXO = (allUTXOCoins.find(walletCoinOutpoint) != allUTXOCoins.end()) || (allUTXOCoins.find(walletCoinOutpointIndex) != allUTXOCoins.end());
+                    bool outputSpentInWallet = pactiveWallet->IsSpent(walletCoinOutpoint) || IsSpent(walletCoinOutpointIndex);
+                    if(outputSpentInWallet && outputIsInUTXO)
+                    {
+                        LogPrintf("Found wallet-spent coins that are in the utxo and therefore shouldn't be spent %s %s[%d]\n", FormatMoney(walletCoin->tx->vout[n].nValue).c_str(), hash.ToString().c_str(), n);
+                        nMismatchFound++;
+                        nBalanceInQuestion += walletCoin->tx->vout[n].nValue;
+                    }
+                    else if(!outputSpentInWallet && !outputIsInUTXO)
+                    {
+                        printf("Found wallet-unspent coins that aren't in the chain utxo and therefore should be spent %s %s[%d]\n", FormatMoney(walletCoin->tx->vout[n].nValue).c_str(), hash.ToString().c_str(), n);
+                        nMismatchFound++;
+                        nBalanceInQuestion += walletCoin->tx->vout[n].nValue;
+                    }
+                }
+            }  
+        }
     }
 }
 

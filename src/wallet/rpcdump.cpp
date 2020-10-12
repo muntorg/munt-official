@@ -642,6 +642,43 @@ UniValue dumpprivkey(const JSONRPCRequest& request)
     return CEncodedSecretKey(vchSecret).ToString();
 }
 
+UniValue checkwalletagainstutxo(const JSONRPCRequest& request)
+{    
+    if (request.fHelp || request.params.size() > 0)
+        throw std::runtime_error(
+            "checkwalletagainstutxo\n"
+            "Check wallet transactions against UTXO and look for any inconsistencies\n"
+        );
+    
+    CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
+        return NullUniValue;
+    }
+
+    int nMismatchSpent;
+    int nOrphansFound;
+    int64_t nBalanceInQuestion;
+    pwallet->CompareWalletAgainstUTXO(nMismatchSpent, nOrphansFound, nBalanceInQuestion);
+    UniValue result(UniValue::VOBJ);
+    if(!nMismatchSpent && !nOrphansFound)
+    {
+        result.push_back(std::pair("wallet check passed", true));
+    }
+    else
+    {
+        if(nMismatchSpent)
+        {
+            result.push_back(std::pair("mismatched spent coins", nMismatchSpent));
+            result.push_back(std::pair("amount in question", ValueFromAmount(nBalanceInQuestion)));
+        }
+        if(nOrphansFound)
+        {
+            result.push_back(std::pair("orphans found", nOrphansFound));
+        }
+    }
+    return result;
+}
+
 UniValue dumpwallet(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
