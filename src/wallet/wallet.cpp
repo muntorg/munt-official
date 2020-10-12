@@ -2608,13 +2608,16 @@ void CWallet::CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, 
     //If they aren't this is an issue
     for(const auto& [utxoOutpoint, utxoCoin] : allUTXOCoins)
     {
-        if(IsMine(utxoCoin.out) >= ISMINE_SPENDABLE)
+        if (utxoOutpoint.isHash)
         {
-            if (mapWalletHash.find(utxoOutpoint.getBucketHash()) == mapWalletHash.end())
+            if(IsMine(utxoCoin.out) >= ISMINE_SPENDABLE)
             {
-                LogPrintf("Found a utxo that is ours but that isn't in wallet %s %s[%d]\n", FormatMoney(utxoCoin.out.nValue).c_str(), utxoOutpoint.getBucketHash().ToString().c_str(), utxoOutpoint.n);
-                nMismatchFound++;
-                nBalanceInQuestion += utxoCoin.out.nValue;
+                if (mapWallet.find(utxoOutpoint.getTransactionHash()) == mapWallet.end())
+                {
+                    LogPrintf("Found a utxo that is ours but that isn't in wallet %s %s[%d]\n", FormatMoney(utxoCoin.out.nValue).c_str(), utxoOutpoint.getTransactionHash().ToString().c_str(), utxoOutpoint.n);
+                    nMismatchFound++;
+                    nBalanceInQuestion += utxoCoin.out.nValue;
+                }
             }
         }
     }
