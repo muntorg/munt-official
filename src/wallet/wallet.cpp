@@ -2616,7 +2616,7 @@ void CWallet::CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, 
             {
                 if (mapWallet.find(utxoOutpoint.getTransactionHash()) == mapWallet.end())
                 {
-                    LogPrintf("Found a utxo that is ours but that isn't in wallet %s %s[%d]\n", FormatMoney(utxoCoin.out.nValue).c_str(), utxoOutpoint.getTransactionHash().ToString().c_str(), utxoOutpoint.n);
+                    LogPrintf("CompareWalletAgainstUTXO: Found a utxo that is ours but that isn't in wallet %s %s[%d]\n", FormatMoney(utxoCoin.out.nValue).c_str(), utxoOutpoint.getTransactionHash().ToString().c_str(), utxoOutpoint.n);
                     nMismatchFound++;
                     nBalanceInQuestion += utxoCoin.out.nValue;
                 }
@@ -2635,7 +2635,7 @@ void CWallet::CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, 
         if(walletCoin->IsCoinBase() && (walletCoin->GetDepthInMainChain() < 0))
         {
            nOrphansFound++;
-           printf("Found orphaned generation tx [%s]\n", hash.ToString().c_str());
+           printf("CompareWalletAgainstUTXO: Found orphaned generation tx [%s]\n", hash.ToString().c_str());
         }
         else
         {
@@ -2649,13 +2649,13 @@ void CWallet::CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, 
                     bool outputSpentInWallet = pactiveWallet->IsSpent(walletCoinOutpoint) || IsSpent(walletCoinOutpointIndex);
                     if(outputSpentInWallet && outputIsInUTXO)
                     {
-                        LogPrintf("Found wallet-spent coins that are in the utxo and therefore shouldn't be spent %s %s[%d]\n", FormatMoney(walletCoin->tx->vout[n].nValue).c_str(), hash.ToString().c_str(), n);
+                        LogPrintf("CompareWalletAgainstUTXO: Found wallet-spent coins that are in the utxo and therefore shouldn't be spent %s %s[%d]\n", FormatMoney(walletCoin->tx->vout[n].nValue).c_str(), hash.ToString().c_str(), n);
                         nMismatchFound++;
                         nBalanceInQuestion += walletCoin->tx->vout[n].nValue;
                     }
                     else if(!outputSpentInWallet && !outputIsInUTXO)
                     {
-                        printf("Found wallet-unspent coins that aren't in the chain utxo and therefore should be spent %s %s[%d]\n", FormatMoney(walletCoin->tx->vout[n].nValue).c_str(), hash.ToString().c_str(), n);
+                        printf("CompareWalletAgainstUTXO: Found wallet-unspent coins that aren't in the chain utxo and therefore should be spent %s %s[%d]\n", FormatMoney(walletCoin->tx->vout[n].nValue).c_str(), hash.ToString().c_str(), n);
                         nMismatchFound++;
                         nBalanceInQuestion += walletCoin->tx->vout[n].nValue;
                     }
