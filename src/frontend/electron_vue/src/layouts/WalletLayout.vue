@@ -275,7 +275,7 @@ export default {
   }
 }
 
-@media (max-width: 972px) {
+@media (max-width: 900px) {
   .wallet-layout:not(.no-sidebar-right) {
     & > .main {
       display: none;
