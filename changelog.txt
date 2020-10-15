@@ -1,3 +1,13 @@
+2.3.0.2
+
+RPC     - Implement new command "removeallorphans"
+RPC     - Introduce a new command "checkwalletagainstutxo"
+NET     - Increase minimum peer protocol version to ban old peers
+CORE    - Checkpoint server deactivation has kicked in, so take away check and permanently disable auto checkpoints instead
+
+
+
+
 2.3.0.1
 
 Maintenance release, update to new code signing certificates.
