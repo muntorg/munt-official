@@ -396,20 +396,24 @@ public:
             { 1215000, { uint256S("0xeee8b2c439207ef2bf67e7d35da49531ae50253fbabc311a84a8f0974a45a696"), 1597735210 } },
             { 1220000, { uint256S("0x6625d9d0047ca7cdcf07568c96de8a5b7797278c673dfaa745204fed2a85496a"), 1598436485 } },
             { 1225000, { uint256S("0x53d40b79a1c57e6f230d8a07841324b0e0bd8eba772350093c6cba88c185c0fb"), 1599134212 } },
-            { 1229334, { uint256S("0xc9937ca64833fdab9a599930f2b8693cdc74d4a9372586c5bdbc17abfe9dbceb"), 1599766218 } },
-            { 1230486, { uint256S("0xd5894799c158b44ab04265bf10a3ba7e91153a45ac41ab14983915b586bb456c"), 1599938339 } },
+            { 1230000, { uint256S("0xb151a07f8b99512a105e735f7da07e8fd3c1b96f18346aecf0397e7ede4f9343"), 1599865525 } },
+            { 1235000, { uint256S("0x488a9152c2d7bf33d054c44c5b2a226935ae30bef44da0d4bc45d68f499dc869"), 1600610142 } },
+            { 1240000, { uint256S("0xfe92e653d665cbb0d4c6b377d63629c67b5fd71a07516d9a6b38a3bbc83c3c40"), 1601355269 } },
+            { 1245000, { uint256S("0x342747aaf0c2a53fb918f0491a164ac94af567d8feab68fe66b0d20b2c4187d6"), 1602100920 } },
+            { 1247136, { uint256S("0xd839245f43fe13c68a5e85bca0a72f011ad9fd51bc95fc6874c9d0d357a0f8d5"), 1602418997 } },
+            { 1248288, { uint256S("0xaf70c1d30a727fc1b0ac10696076e02c2688c8759304d99f0ee36e419c97e8ee"), 1602591022 } },
         }
         };
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0xd5894799c158b44ab04265bf10a3ba7e91153a45ac41ab14983915b586bb456c");
+        consensus.defaultAssumeValid = uint256S("0xaf70c1d30a727fc1b0ac10696076e02c2688c8759304d99f0ee36e419c97e8ee");
         
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000013805bf06db3d7e88");
+        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000013805bf0c10f6c5f9");
         
         chainTxData = ChainTxData{
-            1599938339, // * UNIX timestamp of last checkpoint block
-            3101101,    // * total number of transactions between genesis and last checkpoint
+            1602591022, // * UNIX timestamp of last checkpoint block
+            3140446,    // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
