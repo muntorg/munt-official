@@ -2628,7 +2628,7 @@ void CWallet::CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, 
     for(CWalletTx* walletCoin : allWalletCoins)
     {
         uint256 hash = walletCoin->GetHash();
-        uint n;
+        uint64_t n;
 
         if(walletCoin->IsCoinBase() && (walletCoin->GetDepthInMainChain() < 0))
         {
