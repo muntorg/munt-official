@@ -146,7 +146,7 @@ public:
         fDefaultConsistencyChecks = false;
         fRequireStandard = true;
         fMineBlocksOnDemand = false;
-        fUseSyncCheckpoints = true;
+        fUseSyncCheckpoints = false;
 
         checkpointData = (CCheckpointData){
         {

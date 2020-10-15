@@ -92,14 +92,7 @@ public:
     const ChainTxData& TxData() const { return chainTxData; }
     bool UseSyncCheckpoints() const
     {
-        if (GetTime() > 1602774915)
-        {
-            return false;
-        }
-        else
-        {
-            return fUseSyncCheckpoints; 
-        }
+        return fUseSyncCheckpoints;
     }
     void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout);
 
