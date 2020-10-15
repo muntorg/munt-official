@@ -642,6 +642,8 @@ public:
     
     // Checks for wallet vs. UTXO inconsistency; reports any spent state inconsistency found
     void CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, int64_t& nBalanceInQuestion);
+    // Clear all orphan transactions from wallet
+    bool RemoveAllOrphans(uint64_t& numErased, uint64_t& numDetected, std::string& strError);
 
     /*
      * Rescan abort properties
