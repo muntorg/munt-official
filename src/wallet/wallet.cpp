@@ -2673,6 +2673,39 @@ void CWallet::CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, 
     }
 }
 
+bool CWallet::RemoveAllOrphans(uint64_t& numErased, uint64_t& numDetected, std::string& strError)
+{
+    std::vector<uint256> transactionsToZap;
+    std::vector<uint256> transactionsZapped;
+    numErased = 0;
+    for(auto& [hash, walletCoin] : mapWallet)
+    {
+        if(walletCoin.IsCoinBase() && (walletCoin.GetDepthInMainChain() < 0))
+        {
+           transactionsToZap.emplace_back(hash);
+        }
+    }
+    
+    numDetected = transactionsToZap.size();
+    if (numDetected > 0)
+    {
+        LogPrintf("Removing [%d] orphan transactions from wallet\n", numDetected);
+        
+        CWalletDB walletdb(*pactiveWallet->dbw);
+        bool ret = ZapSelectTx(walletdb, transactionsToZap, transactionsZapped) != DB_LOAD_OK;
+        numErased = transactionsZapped.size();
+        LogPrintf("Removed [%d] of [%d] orphan transactions from wallet\n", numErased, numDetected);
+        if (!ret)
+        {
+            strError = "Failed to erase orphan transactions for account.";
+            LogPrintf("%s\n", strError.c_str());
+            CAlert::Notify(strError, true, true);
+            return false;
+        }
+    }
+    return true;
+}
+
 /** @} */ // end of Actions
 
 class CAffectedKeysVisitor : public boost::static_visitor<void> {

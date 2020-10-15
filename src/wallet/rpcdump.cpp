@@ -701,6 +701,38 @@ UniValue repairwalletfromutxo(const JSONRPCRequest& request)
     return NullUniValue;
 }
 
+UniValue removeallorphans(const JSONRPCRequest& request)
+{    
+    if (request.fHelp || request.params.size() > 0)
+        throw std::runtime_error(
+            "removeallorphans\n"
+            "Remove all orphaned transactions from the wallet\n"
+        );
+    
+    CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
+        return NullUniValue;
+    }
+    
+    LOCK2(cs_main, pwallet->cs_wallet);
+
+    uint64_t numErased;
+    uint64_t numDetected;
+    std::string strError;
+    bool success = pwallet->RemoveAllOrphans(numErased, numDetected, strError);
+    
+    UniValue result(UniValue::VOBJ);
+    result.push_back(std::pair("succeeded", success));
+    if (!success)
+    {
+        result.push_back(std::pair("error_message", strError));
+    }
+    result.push_back(std::pair("num_erased", numErased));
+    result.push_back(std::pair("num_detected", numDetected));
+    
+    return result;
+}
+
 UniValue dumpwallet(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
