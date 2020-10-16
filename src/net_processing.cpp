@@ -1707,22 +1707,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             cleanSubVer = SanitizeString(strSubVer);
         }
         
-        // disconnect from peers of specific old subver
-        if (cleanSubVer == "/Gulden:2.2.0.10/" || cleanSubVer == "/Gulden:2.2.0.9/" || cleanSubVer == "/Gulden:2.2.0.8/" || cleanSubVer == "/Gulden:2.2.0.7/" || cleanSubVer == "/Gulden:2.2.0.6/"
-             || cleanSubVer == "/Gulden:2.2.0.5/" || cleanSubVer == "/Gulden:2.2.0.4/" || cleanSubVer == "/Gulden:2.2.0.3/" || cleanSubVer == "/Gulden:2.2.0.2/" || cleanSubVer == "/Gulden:2.2.0.1/"
-             || cleanSubVer == "/Gulden:2.1.0.22/" || cleanSubVer == "/Gulden:2.1.0.21/" || cleanSubVer == "/Gulden:2.1.0.20/" || cleanSubVer == "/Gulden:2.1.0.19/" || cleanSubVer == "/Gulden:2.1.0.18/"
-             || cleanSubVer == "/Gulden:2.1.0.17/" || cleanSubVer == "/Gulden:2.1.0.16/" || cleanSubVer == "/Gulden:2.1.0.15/" || cleanSubVer == "/Gulden:2.1.0.14/" || cleanSubVer == "/Gulden:2.1.0.13/"
-             || cleanSubVer == "/Gulden:2.1.0.12/" || cleanSubVer == "/Gulden:2.1.0.11/" || cleanSubVer == "/Gulden:2.1.0.10/" || cleanSubVer == "/Gulden:2.1.0.9/" || cleanSubVer == "/Gulden:2.1.0.8/"
-             || cleanSubVer == "/Gulden:2.1.0.7/" || cleanSubVer == "/Gulden:2.1.0.6/" || cleanSubVer == "/Gulden:2.1.0.5/" || cleanSubVer == "/Gulden:2.1.0.4/" || cleanSubVer == "/Gulden:2.1.0.3/"
-             || cleanSubVer == "/Gulden:2.1.0.2/" || cleanSubVer == "/Gulden:2.1.0.1/" || cleanSubVer == "/Gulden:2.1.0.0/" || cleanSubVer == "/Gulden:1.6.4.10/" || cleanSubVer == "/Gulden:1.6.3/")
-        {
-            
-            if (!gbMinimalLogging)
-                LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
-            connman.Ban(pfrom->addr, BanReasonNodeMisbehaving, 3600);
-            pfrom->fDisconnect = true;
-            return false;
-        }
         if (!vRecv.empty())
         {
             vRecv >> nStartingHeight;
