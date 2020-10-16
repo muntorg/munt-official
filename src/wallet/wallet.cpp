@@ -2653,7 +2653,7 @@ void CWallet::CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, 
                     }
                     else if(!outputSpentInWallet && !outputIsInUTXO)
                     {
-                        printf("CompareWalletAgainstUTXO: Found wallet-unspent coins that aren't in the chain utxo and therefore should be spent %s %s[%d]\n", FormatMoney(walletCoin->tx->vout[n].nValue).c_str(), hash.ToString().c_str(), n);
+                        printf("CompareWalletAgainstUTXO: Found wallet-unspent coins that aren't in the chain utxo and therefore should be spent %s %s[%ld]\n", FormatMoney(walletCoin->tx->vout[n].nValue).c_str(), hash.ToString().c_str(), n);
                         nMismatchFound++;
                         nBalanceInQuestion += walletCoin->tx->vout[n].nValue;
                     }
