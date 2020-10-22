@@ -367,14 +367,14 @@ void handlePostInitMain()
             }
             if (!haveFinishedHeaderSync && signalHandler && IsInitialBlockDownload())
             {
-                signalHandler->notifyUnifiedProgress((currentCount-startHeight/probableHeight-startHeight)*0.20);
+                signalHandler->notifyUnifiedProgress(((currentCount-startHeight/probableHeight-startHeight)*100*0.20)/100);
             }
         });
         uiInterface.NotifyBlockTip.connect([=](bool isInitialBlockDownload, const CBlockIndex* pNewTip)
         {
             if (haveFinishedHeaderSync && signalHandler)
             {
-                signalHandler->notifyUnifiedProgress(pNewTip->nHeight==totalHeaderCount?1:(0.20+(((float)pNewTip->nHeight-startHeight/totalHeaderCount-startHeight)*0.80)));
+                signalHandler->notifyUnifiedProgress(pNewTip->nHeight==totalHeaderCount?1:((20+(((float)pNewTip->nHeight-startHeight/totalHeaderCount-startHeight)*100*0.80))/100));
             }
         });
     }
