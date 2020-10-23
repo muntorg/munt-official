@@ -356,6 +356,7 @@ void handlePostInitMain()
         static bool haveFinishedHeaderSync=false;
         static int totalHeaderCount=0;
         static int startHeight = chainActive.Tip() ? chainActive.Tip()->nHeight : 0;
+        static float lastProgress=0;
         
         // Weight a full header sync as 20%, blocks as rest
         uiInterface.NotifyHeaderProgress.connect([=](int currentCount, int probableHeight, int headerTipHeight, int64_t headerTipTime)
@@ -367,14 +368,24 @@ void handlePostInitMain()
             }
             if (!haveFinishedHeaderSync && signalHandler && IsInitialBlockDownload())
             {
-                signalHandler->notifyUnifiedProgress((currentCount-startHeight/probableHeight-startHeight)*0.20);
+                float progress = ((((float)currentCount-startHeight)/((float)probableHeight-startHeight))*0.20);
+                if (lastProgress != 1 && (progress-lastProgress > 0.02 || progress == 1))
+                {
+                    lastProgress = progress;
+                    signalHandler->notifyUnifiedProgress(progress);
+                }
             }
         });
         uiInterface.NotifyBlockTip.connect([=](bool isInitialBlockDownload, const CBlockIndex* pNewTip)
         {
             if (haveFinishedHeaderSync && signalHandler)
             {
-                signalHandler->notifyUnifiedProgress(pNewTip->nHeight==totalHeaderCount?1:(0.20+(((float)pNewTip->nHeight-startHeight/totalHeaderCount-startHeight)*0.80)));
+                float progress = pNewTip->nHeight==totalHeaderCount?1:((0.20+((((float)pNewTip->nHeight-startHeight)/((float)totalHeaderCount-startHeight))*0.80)));
+                if (lastProgress != 1 && (progress-lastProgress > 0.02 || progress == 1))
+                {
+                    lastProgress = progress;
+                    signalHandler->notifyUnifiedProgress(progress);
+                }
             }
         });
     }
