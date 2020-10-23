@@ -17,6 +17,7 @@ const app = {
   namespaced: true,
   state: {
     coreReady: false,
+    progress: 0,
     status: AppStatus.start,
     unityVersion: null,
     walletExists: null,
@@ -25,6 +26,9 @@ const app = {
   mutations: {
     SET_CORE_READY(state) {
       state.coreReady = true;
+    },
+    SET_PROGRESS(state, progress) {
+      state.progress = progress;
     },
     SET_STATUS(state, status) {
       if (state.status === AppStatus.shutdown) return; // shutdown in progress, do not switch to other status
@@ -45,6 +49,9 @@ const app = {
       commit("SET_STATUS", AppStatus.ready); // set status to ready. maybe core_ready is redundant and can be removed.
       commit("SET_CORE_READY");
       EnableDebugWindowOnCoreReady();
+    },
+    SET_PROGRESS({ commit }, progress) {
+      commit("SET_PROGRESS", progress);
     },
     SET_STATUS({ commit }, status) {
       commit("SET_STATUS", status);

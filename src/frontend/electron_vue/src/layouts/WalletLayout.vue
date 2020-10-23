@@ -76,6 +76,7 @@ export default {
     AccountsSection
   },
   computed: {
+     ...mapState("app", ["progress"]),
     ...mapState("wallet", ["activeAccount", "walletPassword"]),
     ...mapGetters("wallet", ["totalBalance", "miningAccount"]),
     walletLayoutClasses() {
@@ -87,6 +88,11 @@ export default {
     },
     lockIcon() {
       return this.walletPassword ? "unlock" : "lock";
+    }
+  },
+  watch: {
+    progress() {
+      console.log(`${this.progress}`);
     }
   },
   methods: {
