@@ -300,7 +300,7 @@ std::vector<CAccount*> GetAccountsForAccount(CAccount* forAccount)
     return forAccounts;
 }
 
-
+static float lastProgress=0;
 void handlePostInitMain()
 {
     //fixme: (SIGMA) (PHASE4) Remove this once we have witness-header-sync
@@ -356,7 +356,13 @@ void handlePostInitMain()
         static bool haveFinishedHeaderSync=false;
         static int totalHeaderCount=0;
         static int startHeight = chainActive.Tip() ? chainActive.Tip()->nHeight : 0;
-        static float lastProgress=0;
+        
+        // If tip is relatively recent set progress to "completed" to begin with
+        if (chainActive.Tip() && ((GetTime() - chainActive.Tip()->nTime) < 3600))
+        {
+            lastProgress = 1.0;
+        }
+        
         
         // Weight a full header sync as 20%, blocks as rest
         uiInterface.NotifyHeaderProgress.connect([=](int currentCount, int probableHeight, int headerTipHeight, int64_t headerTipTime)
@@ -1422,7 +1428,14 @@ void ILibraryController::ResetUnifiedProgress()
 
 float ILibraryController::getUnifiedProgress()
 {
-    return CSPVScanner::lastProgressReported;
+    if (!GetBoolArg("-spv", DEFAULT_SPV))
+    {
+        return lastProgress;
+    }
+    else
+    {
+        return CSPVScanner::lastProgressReported;
+    }
 }
 
 std::vector<BlockInfoRecord> ILibraryController::getLastSPVBlockInfos()
