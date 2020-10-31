@@ -11,7 +11,7 @@ class LibUnity {
     this.isTerminated = false;
     this.isCoreReady = false;
     this.isMainWindowReady = false;
-    
+
     this.options = {
       useTestnet: process.env.UNITY_USE_TESTNET
         ? process.env.UNITY_USE_TESTNET
@@ -217,48 +217,39 @@ class LibUnity {
   }
 
   _setStateWhenCoreAndMainWindowReady() {
-    if (!this.isCoreReady || !this.isMainWindowReady) return console.log(`isCoreReady: ${this.isCoreReady}, isMainWindowReady: ${this.isMainWindowReady} -> return`);
+    if (!this.isCoreReady || !this.isMainWindowReady)
+      return console.log(
+        `isCoreReady: ${this.isCoreReady}, isMainWindowReady: ${this.isMainWindowReady} -> return`
+      );
     console.log("_setStateWhenCoreAndMainWindowReady: start");
 
     console.log("GetBalance: start");
     let balance = this.walletController.GetBalance();
     console.log("GetBalance: end");
 
-    store.dispatch(
-      "wallet/SET_WALLET_BALANCE",
-      balance
-    );
+    store.dispatch("wallet/SET_WALLET_BALANCE", balance);
 
     console.log("_updateAccounts: start");
     this._updateAccounts();
     console.log("_updateAccounts: end");
-    
+
     console.log("getActiveAccount: start");
     let activeAccount = this.accountsController.getActiveAccount();
     console.log("getActiveAccount: end");
-    
+
     console.log("GetReceiveAddress: start");
     let receiveAddress = this.libraryController.GetReceiveAddress();
     console.log("GetReceiveAddress: end");
 
     console.log("getMutationHistory: start");
-    let mutations = this.libraryController.getMutationHistory()
+    let mutations = this.libraryController.getMutationHistory();
     console.log("getMutationHistory: end");
 
-    store.dispatch(
-      "wallet/SET_ACTIVE_ACCOUNT",
-      activeAccount
-    );
+    store.dispatch("wallet/SET_ACTIVE_ACCOUNT", activeAccount);
 
-    store.dispatch(
-      "wallet/SET_RECEIVE_ADDRESS",
-      receiveAddress
-    );
+    store.dispatch("wallet/SET_RECEIVE_ADDRESS", receiveAddress);
 
-    store.dispatch(
-      "wallet/SET_MUTATIONS",
-      mutations
-    );
+    store.dispatch("wallet/SET_MUTATIONS", mutations);
 
     store.dispatch("app/SET_CORE_READY");
 

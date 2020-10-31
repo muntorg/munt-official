@@ -76,7 +76,7 @@ export default {
     AccountsSection
   },
   computed: {
-     ...mapState("app", ["progress"]),
+    ...mapState("app", ["progress"]),
     ...mapState("wallet", ["activeAccount", "walletPassword"]),
     ...mapGetters("wallet", ["totalBalance", "miningAccount"]),
     walletLayoutClasses() {

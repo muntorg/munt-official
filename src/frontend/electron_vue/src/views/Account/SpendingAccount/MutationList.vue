@@ -117,7 +117,11 @@ export default {
       this.$emit("tx-hash", txHash);
     },
     showTxMenu(e, mutation) {
-      if (mutation.status !== 1 && mutation.status !== 2 && mutation.status !== 3) {
+      if (
+        mutation.status !== 1 &&
+        mutation.status !== 2 &&
+        mutation.status !== 3
+      ) {
         const contextMenu = new Menu();
         contextMenu.append(
           new MenuItem({
