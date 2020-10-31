@@ -135,9 +135,10 @@ function getControllerCode() {
       if (j > 0) code.push(``);
       code.push(`static ${f.name}(${f.args}) {`);
       code.push(
-        `return ipc.sendSync("${controller.className}.${f.name}"${
+        `return handleError(ipc.sendSync("${controller.className}.${f.name}"${
           f.args.length > 0 ? ", " + f.args : ""
-        });`
+        })
+        );`
       );
       code.push(`}`);
     }
@@ -147,9 +148,9 @@ function getControllerCode() {
       if (j > 0) code.push(``);
       code.push(`static ${PascalCase(f.name)}(${f.args}) {`);
       code.push(
-        `return ipc.sendSync("${controller.className}.${f.name}"${
+        `return handleError(ipc.sendSync("${controller.className}.${f.name}"${
           f.args.length > 0 ? ", " + f.args : ""
-        });`
+        }));`
       );
       code.push(`}`);
     }
@@ -203,10 +204,19 @@ function getLibUnityCode() {
         }
       }
 
-      code.push(
-        "console.log(`" + `IPC: ${className}.${f.name}(${consoleArgs})` + "`);"
-      );
-      code.push(`event.returnValue = this.${className}.${f.name}(${f.args});`);
+      code.push(`
+        console.log(\`IPC: ${className}.${f.name}(${consoleArgs})\`);
+        try {
+          let result = this.${className}.${f.name}(${f.args});
+          event.returnValue = {
+            success: true,
+            result: result
+          };
+        }
+        catch(e) {
+          event.returnValue = handleError(e);
+        }
+      `);
       code.push(`});`);
     }
   }
