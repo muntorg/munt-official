@@ -11,7 +11,7 @@ class LibUnity {
     this.isTerminated = false;
     this.isCoreReady = false;
     this.isMainWindowReady = false;
-
+    
     this.options = {
       useTestnet: process.env.UNITY_USE_TESTNET
         ? process.env.UNITY_USE_TESTNET
@@ -217,32 +217,52 @@ class LibUnity {
   }
 
   _setStateWhenCoreAndMainWindowReady() {
-    if (!this.isCoreReady || !this.isMainWindowReady) return;
-    console.log("_setStateWhenCoreAndMainWindowReady");
+    if (!this.isCoreReady || !this.isMainWindowReady) return console.log(`isCoreReady: ${this.isCoreReady}, isMainWindowReady: ${this.isMainWindowReady} -> return`);
+    console.log("_setStateWhenCoreAndMainWindowReady: start");
+
+    console.log("GetBalance: start");
+    let balance = this.walletController.GetBalance();
+    console.log("GetBalance: end");
 
     store.dispatch(
       "wallet/SET_WALLET_BALANCE",
-      this.walletController.GetBalance()
+      balance
     );
 
+    console.log("_updateAccounts: start");
     this._updateAccounts();
+    console.log("_updateAccounts: end");
+    
+    console.log("getActiveAccount: start");
+    let activeAccount = this.accountsController.getActiveAccount();
+    console.log("getActiveAccount: end");
+    
+    console.log("GetReceiveAddress: start");
+    let receiveAddress = this.libraryController.GetReceiveAddress();
+    console.log("GetReceiveAddress: end");
+
+    console.log("getMutationHistory: start");
+    let mutations = this.libraryController.getMutationHistory()
+    console.log("getMutationHistory: end");
 
     store.dispatch(
       "wallet/SET_ACTIVE_ACCOUNT",
-      this.accountsController.getActiveAccount()
+      activeAccount
     );
 
     store.dispatch(
       "wallet/SET_RECEIVE_ADDRESS",
-      this.libraryController.GetReceiveAddress()
+      receiveAddress
     );
 
     store.dispatch(
       "wallet/SET_MUTATIONS",
-      this.libraryController.getMutationHistory()
+      mutations
     );
 
     store.dispatch("app/SET_CORE_READY");
+
+    console.log("_setStateWhenCoreAndMainWindowReady: end");
   }
 
   _registerSignalHandlers() {
@@ -260,14 +280,13 @@ class LibUnity {
       self.isCoreReady = true;
       self._setStateWhenCoreAndMainWindowReady();
     };
-
     libraryListener.logPrint = function(message) {
       console.log("unity_core: " + message);
     };
 
-    libraryListener.notifyUnifiedProgress = function(/*progress*/) {
-      console.log("received: notifyUnifiedProgress");
-      // todo: set progress property in store?
+    libraryListener.notifyUnifiedProgress = function(progress) {
+      console.log(`received: notifyUnifiedProgress -> ${progress}`);
+      store.dispatch("app/SET_PROGRESS", progress);
     };
 
     libraryListener.notifyBalanceChange = function(new_balance) {
@@ -297,7 +316,6 @@ class LibUnity {
         libraryController.getMutationHistory()
       );
     };
-
     libraryListener.notifyInitWithExistingWallet = function() {
       console.log("received: notifyInitWithExistingWallet");
       store.dispatch("app/SET_WALLET_EXISTS", true);

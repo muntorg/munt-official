@@ -1553,7 +1553,7 @@ static void ProcessPriorityRequests()
         }
         else
         {
-            throw std::runtime_error(std::string(__func__) + " No data for downloaded block, block index inconsistency.");
+            throw std::runtime_error(std::string(__func__) + strprintf(" No data for downloaded block [%s], block index inconsistency.", r.pindex->GetBlockHashPoW2().ToString()));
         }
     }
 }

@@ -36,7 +36,6 @@
 #include "utilmoneystr.h"
 #include "validation/validationinterface.h"
 #include "init.h"
-#include "core_io.h"
 
 #include <algorithm>
 #include <numeric>
@@ -350,7 +349,7 @@ static std::pair<bool, CMutableTransaction> CreateWitnessCoinbase(int nWitnessHe
         LOCK(pactiveWallet->cs_wallet);
         if (!pactiveWallet->SignTransaction(selectedWitnessAccount, coinbaseTx, SignType::Witness, &selectedWitnessOutput))
         {
-            std::string strErrorMessage = strprintf(">>>Failed to sign witness coinbase: height[%d] chain-tip-height[%d] hex[%s]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0, EncodeHexTx(coinbaseTx));
+            std::string strErrorMessage = strprintf("Failed to sign witness coinbase: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
             CAlert::Notify(strErrorMessage, true, true);
             LogPrintf("%s\n", strErrorMessage.c_str());
             return std::pair(false, coinbaseTx);

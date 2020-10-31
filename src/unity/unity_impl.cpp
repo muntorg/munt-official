@@ -28,6 +28,7 @@
 #include "net_processing.h"
 #include "wallet/spvscanner.h"
 #include "sync.h"
+#include "init.h"
 
 // Djinni generated files
 #include "i_library_controller.hpp"
@@ -299,7 +300,7 @@ std::vector<CAccount*> GetAccountsForAccount(CAccount* forAccount)
     return forAccounts;
 }
 
-
+static float lastProgress=0;
 void handlePostInitMain()
 {
     //fixme: (SIGMA) (PHASE4) Remove this once we have witness-header-sync
@@ -348,40 +349,97 @@ void handlePostInitMain()
         signalHandler->notifyCoreReady();
     }
 
+    
     // unified progress notification
-    uiInterface.NotifyUnifiedProgress.connect([=](float progress) {
-        if (signalHandler)
-            signalHandler->notifyUnifiedProgress(progress);
-    });
-
-    // monitoring listeners notifications
-    uiInterface.NotifyHeaderProgress.connect([=](int, int, int, int64_t) {
-        int32_t height, probable_height, offset;
+    if (!GetBoolArg("-spv", DEFAULT_SPV))
+    {
+        static bool haveFinishedHeaderSync=false;
+        static int totalHeaderCount=0;
+        static int startHeight = chainActive.Tip() ? chainActive.Tip()->nHeight : 0;
+        
+        // If tip is relatively recent set progress to "completed" to begin with
+        if (chainActive.Tip() && ((GetTime() - chainActive.Tip()->nTime) < 3600))
         {
-            LOCK(cs_main);
-            height = partialChain.Height();
-            probable_height = GetProbableHeight();
-            offset = partialChain.HeightOffset();
+            lastProgress = 1.0;
         }
-        LOCK(cs_monitoringListeners);
-        for (const auto &listener: monitoringListeners) {
-            listener->onPartialChain(height, probable_height, offset);
-        }
-    });
+        
+        
+        // Weight a full header sync as 20%, blocks as rest
+        uiInterface.NotifyHeaderProgress.connect([=](int currentCount, int probableHeight, int headerTipHeight, int64_t headerTipTime)
+        {
+            totalHeaderCount = currentCount;
+            if (currentCount == probableHeight)
+            {
+                haveFinishedHeaderSync = true;
+            }
+            if (!haveFinishedHeaderSync && signalHandler && IsInitialBlockDownload())
+            {
+                float progress = ((((float)currentCount-startHeight)/((float)probableHeight-startHeight))*0.20);
+                if (lastProgress != 1 && (progress-lastProgress > 0.02 || progress == 1))
+                {
+                    lastProgress = progress;
+                    signalHandler->notifyUnifiedProgress(progress);
+                }
+            }
+        });
+        uiInterface.NotifyBlockTip.connect([=](bool isInitialBlockDownload, const CBlockIndex* pNewTip)
+        {
+            if (haveFinishedHeaderSync && signalHandler)
+            {
+                float progress = pNewTip->nHeight==totalHeaderCount?1:((0.20+((((float)pNewTip->nHeight-startHeight)/((float)totalHeaderCount-startHeight))*0.80)));
+                if (lastProgress != 1 && (progress-lastProgress > 0.02 || progress == 1))
+                {
+                    lastProgress = progress;
+                    signalHandler->notifyUnifiedProgress(progress);
+                }
+            }
+        });
+    }
+    else
+    {
+        uiInterface.NotifyUnifiedProgress.connect([=](float progress)
+        {
+            if (signalHandler)
+            {
+                signalHandler->notifyUnifiedProgress(progress);
+            }
+        });
+        
+        // monitoring listeners notifications
+        uiInterface.NotifyHeaderProgress.connect([=](int, int, int, int64_t)
+        {
+            int32_t height, probable_height, offset;
+            {
+                LOCK(cs_main);
+                height = partialChain.Height();
+                probable_height = GetProbableHeight();
+                offset = partialChain.HeightOffset();
+            }
+            LOCK(cs_monitoringListeners);
+            for (const auto &listener: monitoringListeners)
+            {
+                listener->onPartialChain(height, probable_height, offset);
+            }
+        });
 
-    uiInterface.NotifySPVPrune.connect([=](int height) {
-        LOCK(cs_monitoringListeners);
-        for (const auto &listener: monitoringListeners) {
-            listener->onPruned(height);
-        }
-    });
+        uiInterface.NotifySPVPrune.connect([=](int height)
+        {
+            LOCK(cs_monitoringListeners);
+            for (const auto &listener: monitoringListeners)
+            {
+                listener->onPruned(height);
+            }
+        });
 
-    uiInterface.NotifySPVProgress.connect([=](int /*start_height*/, int processed_height, int /*probable_height*/) {
-        LOCK(cs_monitoringListeners);
-        for (const auto &listener: monitoringListeners) {
-            listener->onProcessedSPVBlocks(processed_height);
-        }
-    });
+        uiInterface.NotifySPVProgress.connect([=](int /*start_height*/, int processed_height, int /*probable_height*/)
+        {
+            LOCK(cs_monitoringListeners);
+            for (const auto &listener: monitoringListeners)
+            {
+                listener->onProcessedSPVBlocks(processed_height);
+            }
+        });
+    }  
 
     // Update transaction/balance changes
     if (pactiveWallet)
@@ -1370,7 +1428,14 @@ void ILibraryController::ResetUnifiedProgress()
 
 float ILibraryController::getUnifiedProgress()
 {
-    return CSPVScanner::lastProgressReported;
+    if (!GetBoolArg("-spv", DEFAULT_SPV))
+    {
+        return lastProgress;
+    }
+    else
+    {
+        return CSPVScanner::lastProgressReported;
+    }
 }
 
 std::vector<BlockInfoRecord> ILibraryController::getLastSPVBlockInfos()

@@ -1187,17 +1187,7 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
                     nMemoryAllocatedKb += nMemoryChunkKb;
                     sigmaMemorySizes.emplace_back(nMemoryChunkKb);
                 }
-                
-                sigma_settings sigmaMiningSettings = defaultSigmaSettings;
-                // Force recalculation of arenaChunkSizeBytes
-                //21500
-                //1602237600
-                if (pblock->nTime > 1602237600)
-                {
-                    sigmaMiningSettings.verify();
-                }
-                
-                
+                                
                 //fixme: (SIGMA) - better memory size handling - right now we just blindly allocate until we succeed...
                 //And we don't even attempt to account for swap, so if the user sets a memory size too large for system memory we will just happily swap and perform worse than if the user picked a more reasonable size.
                 for (auto instanceMemorySizeKb : sigmaMemorySizes)
@@ -1208,7 +1198,7 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
                         normaliseBufferSize(trySizeBytes);
                         try
                         {
-                            sigmaContexts.push_back(std::unique_ptr<sigma_context>(new sigma_context(sigmaMiningSettings, trySizeBytes/1024, nThreads/sigmaMemorySizes.size())));
+                            sigmaContexts.push_back(std::unique_ptr<sigma_context>(new sigma_context(defaultSigmaSettings, trySizeBytes/1024, nThreads/sigmaMemorySizes.size())));
                             break;
                         }
                         catch (...)
@@ -1270,10 +1260,7 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
                             // If we have found a block then exit loop and process it immediately
                             if (foundBlockHash != uint256())
                                 break;
-                            
-                            if (nStart < 1602237600 && pblock->nTime > 1602237600)
-                                break;
-                            
+                                                       
                             //fixme: (SIGMA) - This can be improved in cases where we have 'uneven' contexts, one may still have lots of work when another is finished, we might want to only restart one of them and not both...
                             // If at least one of the threads is done working then abandon the rest of them, and then see if we have found a block or need to start again with a different block etc.
                             if (nThreadCounter < sigmaContexts.size())

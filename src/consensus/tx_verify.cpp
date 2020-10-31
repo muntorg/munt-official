@@ -289,24 +289,12 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
             uint64_t nLockLengthInBlocks = GetPoW2LockLengthInBlocksFromOutput(txout, checkHeight, nUnused1, nUnused2);
             if (nLockLengthInBlocks < int64_t(MinimumWitnessLockLength()))
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for less than minimum of 1 month.");
-            if (checkHeight > 21500)
+
+            if ((int64_t)nLockLengthInBlocks - (int64_t)checkHeight > int64_t(MaximumWitnessLockLength()))
             {
-                if ((int64_t)nLockLengthInBlocks - (int64_t)checkHeight > int64_t(MaximumWitnessLockLength()))
+                if (txout.output.witnessDetails.lockFromBlock != 1)
                 {
-                    if (txout.output.witnessDetails.lockFromBlock != 1)
-                    {
-                        return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
-                    }
-                }
-            }
-            else
-            {
-                if (nLockLengthInBlocks - checkHeight > int64_t(MaximumWitnessLockLength()))
-                {
-                    if (txout.output.witnessDetails.lockFromBlock != 1)
-                    {
-                        return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
-                    }
+                    return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
                 }
             }
 
@@ -908,24 +896,12 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
             {
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for less than minimum of 1 month.");
             }
-            if (nSpendHeight > 21500)
+            
+            if ((int64_t)nLockLengthInBlocks - (int64_t)nSpendHeight > int64_t(MaximumWitnessLockLength()))
             {
-                if ((int64_t)nLockLengthInBlocks - (int64_t)nSpendHeight > int64_t(MaximumWitnessLockLength()))
+                if (witnessDetails.lockFromBlock != 1)
                 {
-                    if (witnessDetails.lockFromBlock != 1)
-                    {
-                        return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
-                    }
-                }
-            }
-            else
-            {
-                if (nLockLengthInBlocks - nSpendHeight > int64_t(MaximumWitnessLockLength()))
-                {
-                    if (witnessDetails.lockFromBlock != 1)
-                    {
-                        return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
-                    }
+                    return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for greater than maximum of 3 years.");
                 }
             }
 
