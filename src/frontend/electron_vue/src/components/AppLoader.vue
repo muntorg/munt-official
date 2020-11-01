@@ -15,8 +15,8 @@
         {{ $t("loader.shutdown") }}
       </p>
       <div v-show="isSynchronizing">
-        <!-- todo: add progress bar -->
         <div>{{ $t("loader.synchronizing") }}</div>
+        <progress ref="progress" max="100" value="0"></progress>
       </div>
     </div>
   </div>
@@ -25,13 +25,18 @@
 <script>
 import { mapState } from "vuex";
 import AppStatus from "../AppStatus";
+import { LibraryController } from "../unity/Controllers";
+
+let progressTimeout = null;
+let progressCount = 0;
 
 export default {
   name: "AppLoader",
   data() {
     return {
       splashReady: false,
-      electronVersion: process.versions.electron
+      electronVersion: process.versions.electron,
+      progress: 0
     };
   },
   computed: {
@@ -52,6 +57,9 @@ export default {
   watch: {
     status() {
       this.onStatusChanged();
+    },
+    progress() {
+      this.$refs.progress.value = parseInt(this.progress * 100);
     }
   },
   created() {
@@ -70,12 +78,28 @@ export default {
           routeName = "setup";
           break;
         case AppStatus.synchronize:
+          routeName = "account";
+          this.updateProgress();
+          break;
         case AppStatus.ready:
           routeName = "account";
           break;
       }
       if (routeName === undefined || this.$route.name === routeName) return;
       this.$router.push({ name: routeName });
+    },
+    updateProgress() {
+      clearTimeout(progressTimeout);
+      if (this.status !== AppStatus.synchronize) return;
+      this.progress = LibraryController.GetUnifiedProgress();
+      if (
+        this.progress === 1 ||
+        (this.progress === 0 && progressCount++ === 5) // when progress doesn't update, set status ready after 5 updates to prevent a endless loading screen
+      ) {
+        this.$store.dispatch("app/SET_STATUS", AppStatus.ready);
+      } else {
+        progressTimeout = setTimeout(this.updateProgress, 2500);
+      }
     }
   }
 };
@@ -122,5 +146,19 @@ export default {
 
 .info {
   min-height: 100px;
+}
+
+progress[value] {
+  appearance: none;
+  width: 100%;
+  height: 4px;
+}
+
+progress[value]::-webkit-progress-bar {
+  background-color: #eee;
+}
+
+progress[value]::-webkit-progress-value {
+  background-color: var(--primary-color);
 }
 </style>

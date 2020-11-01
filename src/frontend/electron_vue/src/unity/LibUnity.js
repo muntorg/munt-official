@@ -246,11 +246,8 @@ class LibUnity {
     console.log("getMutationHistory: end");
 
     store.dispatch("wallet/SET_ACTIVE_ACCOUNT", activeAccount);
-
     store.dispatch("wallet/SET_RECEIVE_ADDRESS", receiveAddress);
-
     store.dispatch("wallet/SET_MUTATIONS", mutations);
-
     store.dispatch("app/SET_CORE_READY");
 
     console.log("_setStateWhenCoreAndMainWindowReady: end");
@@ -271,13 +268,9 @@ class LibUnity {
       self.isCoreReady = true;
       self._setStateWhenCoreAndMainWindowReady();
     };
+
     libraryListener.logPrint = function(message) {
       console.log("unity_core: " + message);
-    };
-
-    libraryListener.notifyUnifiedProgress = function(progress) {
-      console.log(`received: notifyUnifiedProgress -> ${progress}`);
-      store.dispatch("app/SET_PROGRESS", progress);
     };
 
     libraryListener.notifyBalanceChange = function(new_balance) {
