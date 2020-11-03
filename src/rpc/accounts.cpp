@@ -2283,7 +2283,7 @@ static UniValue repairwitnessaddress(const JSONRPCRequest& request)
     }
 
     // arg1 - 'to' address.
-    CNativeAddress witnessAddress(request.params[1].get_str());
+    CNativeAddress witnessAddress(request.params[0].get_str());
     bool isValid = witnessAddress.IsValidWitness(Params());
 
     if (!isValid)
@@ -2394,7 +2394,7 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
     }
 
     // arg1 - 'to' address.
-    CNativeAddress witnessAddress(request.params[1].get_str());
+    CNativeAddress witnessAddress(request.params[0].get_str());
     bool isValid = witnessAddress.IsValidWitness(Params());
 
     if (!isValid)
