@@ -328,18 +328,22 @@ class LibUnity {
       rpcListener.onSuccess = (filteredCommand, result) => {
         console.log(`RPC success: ${result}`);
         event.returnValue = {
-          success: true,
-          data: result,
-          command: filteredCommand
+          result: {
+            success: true,
+            data: result,
+            command: filteredCommand
+          }
         };
       };
 
       rpcListener.onError = (filteredCommand, error) => {
         console.error(`RPC error: ${error}`);
         event.returnValue = {
-          success: false,
-          data: error,
-          command: filteredCommand
+          result: {
+            success: false,
+            data: error,
+            command: filteredCommand
+          }
         };
       };
 
