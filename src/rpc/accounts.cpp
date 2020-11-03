@@ -2241,6 +2241,118 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
     }
 }
 
+
+                                    
+                    
+static UniValue repairwitnessaddress(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "repairwitnessaddress \"witness_address\" \n"
+            "\nRepair a witness address if the witness key is only available when wallet is unlocked. Make the witness key always available\n"
+            "1. \"witness_address\"  (string, required) The " GLOBAL_APPNAME " address for the witness key.\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"success\",    (boolean) True if all keys are present and in correct form, false otherwise.\n"
+            "     \"info\",       (string)  Information on the error.\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("repairwitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", "")
+            + HelpExampleRpc("repairwitnessaddress 2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN", ""));
+
+    // Basic sanity checks.
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+
+    UniValue result(UniValue::VOBJ);
+    // NB! Wallet should be locked for this test
+    if (!pwallet->IsCrypted())
+    {
+        result.push_back(Pair("success", false));
+        result.push_back(Pair("info", "repairwitnessaddress can only be used on encrypted wallets"));
+        return result;
+    }
+    if (pwallet->IsLocked())
+    {
+        result.push_back(Pair("success", false));
+        result.push_back(Pair("info", "repairwitnessaddress can only be used on unlocked wallets"));
+        return result;
+    }
+
+    // arg1 - 'to' address.
+    CNativeAddress witnessAddress(request.params[1].get_str());
+    bool isValid = witnessAddress.IsValidWitness(Params());
+
+    if (!isValid)
+    {
+        result.push_back(Pair("success", false));
+        result.push_back(Pair("info", "Not a valid witness address"));
+        return result;
+    }
+
+    const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAddress(witnessAddress);
+    if (unspentWitnessOutputs.size() == 0)
+    {
+        result.push_back(Pair("success", false));
+        result.push_back(Pair("info", "Not an active witness address"));
+        return result;
+    }
+
+    // Find the account
+    const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessTxIndex, currentWitnessOutpoint] = unspentWitnessOutputs[0];
+    (unused) currentWitnessHeight;
+    (unused) currentWitnessOutpoint;
+    (unused) currentWitnessTxIndex;
+    CAccount* witnessAccount = pwallet->FindBestWitnessAccountForTransaction(currentWitnessTxOut);
+    if (!witnessAccount)
+    {
+        result.push_back(Pair("success", false));
+        result.push_back(Pair("info", "Unable to determine account for witness address."));
+        return result;
+    }
+
+    // Get the current witness details
+    if (currentWitnessTxOut.GetType() != CTxOutType::PoW2WitnessOutput)
+        throw std::runtime_error("Cannot extract witness output from legacy script output");
+    CTxOutPoW2Witness currentWitnessDetails;
+    GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
+
+    CPubKey witnessPubKey;
+    if (!witnessAccount->GetPubKey(currentWitnessDetails.witnessKeyID, witnessPubKey))
+    {
+        result.push_back(Pair("validity", true));
+        result.push_back(Pair("info", "Unable to retrieve public witness key"));
+        return result;
+    }
+    CKey witnessPrivKey;
+    if (!witnessAccount->GetKey(currentWitnessDetails.witnessKeyID, witnessPrivKey))
+    {
+        result.push_back(Pair("validity", false));
+        result.push_back(Pair("info", "Unable to generate witness signing key."));
+        return result;
+    }
+    
+    if (!pwallet->AddKeyPubKey(witnessPrivKey, witnessPrivKey.GetPubKey(), *witnessAccount, KEYCHAIN_WITNESS))
+    {
+        result.push_back(Pair("validity", false));
+        result.push_back(Pair("info", "Failed to mark witnessing key for encrypted usage"));
+    }
+
+    result.push_back(Pair("validity", true));
+    result.push_back(Pair("info", ""));
+    return result;
+}
+
 static UniValue verifywitnessaddress(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
@@ -2304,13 +2416,6 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
     {
         result.push_back(Pair("validity", false));
         result.push_back(Pair("info", "Not an active witness address"));
-        return result;
-    }
-
-    if (unspentWitnessOutputs.size() > 1)
-    {
-        result.push_back(Pair("validity", false));
-        result.push_back(Pair("info", "Too many outputs for account so unsure which one to validate, aborting."));
         return result;
     }
 
@@ -3547,6 +3652,8 @@ static const CRPCCommand commands[] =
     { "witness",                 "splitwitnessaccount",             &splitwitnessaccount,            true,    {"funding_account", "witness_account", "amounts"} },
     { "witness",                 "enablewitnessing",                &enablewitnessing,               true,    {} },
     { "witness",                 "disablewitnessing",               &disablewitnessing,              true,    {} },
+    { "witness",                 "repairwitnessaddress",            &repairwitnessaddress,           true,    {"witness_address" } },
+    
 
     { "developer",               "dumpblockgaps",                   &dumpblockgaps,                  true,    {"start_height", "count"} },
     { "developer",               "dumpfiltercheckpoints",           &dumpfiltercheckpoints,          true,    {} },
