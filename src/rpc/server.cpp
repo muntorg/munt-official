@@ -527,9 +527,13 @@ std::vector<std::string> CRPCTable::listCommands() const
     std::vector<std::string> commandList;
     typedef std::map<std::string, const CRPCCommand*> commandMap;
 
-    std::transform( mapCommands.begin(), mapCommands.end(),
-                   std::back_inserter(commandList),
-                   boost::bind(&commandMap::value_type::first,_1) );
+    for (const auto& [commandName, command] : mapCommands)
+    {
+        if (command->category != "hidden")
+        {
+            commandList.push_back(commandName);
+        }
+    }
     return commandList;
 }
 
