@@ -22,6 +22,7 @@
 
 #include "chainparams.h"
 #include <validation/validation.h> //For VALIDATION_MOBILE
+#include <rpc/server.h>
 
 uint64_t verifyFactor=200;
 
@@ -30,6 +31,21 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
     bool fNegative;
     bool fOverflow;
     arith_uint256 bnTarget;
+    
+    std::string headerHex;
+    std::string blockHex;
+    {
+        CDataStream ssBlock(SER_NETWORK, PROTOCOL_VERSION);
+        ssBlock << block->GetBlockHeader();
+        headerHex = HexStr(ssBlock.begin(), ssBlock.end());
+    }
+    {
+        CDataStream ssBlock(SER_NETWORK, PROTOCOL_VERSION | RPCSerializationFlags());
+        ssBlock << *block;
+        blockHex = HexStr(ssBlock.begin(), ssBlock.end());
+    }
+    
+    LogPrintf(">>>>>CheckProofOfWork header:[%s] block:[%s]\n", headerHex.c_str(), blockHex.c_str());
 
     bnTarget.SetCompact(block->nBits, &fNegative, &fOverflow);
 
@@ -84,7 +100,7 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
             // We speed up verification by doing a half verify 40% of the time instead of a full verify
             // As a half verify has a 50% chance of detecting a 'half valid' hash an attacker has only a 20% chance of a node accepting his header without banning him
             // This should provide a ~20% speed up for slow machines
-            int verifyLevel = GetRand(100);
+            /*int verifyLevel = GetRand(100);
             if (verifyLevel < 20)
             {
                 return verify.verifyHeader<1>(*block);
@@ -92,7 +108,7 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
             else if (verifyLevel < 40)
             {
                 return verify.verifyHeader<2>(*block);
-            }
+            }*/
             return verify.verifyHeader<0>(*block);
         #endif
     }

@@ -1008,17 +1008,20 @@ sigma_verify_context::sigma_verify_context(sigma_settings settings_, uint64_t nu
 
 template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader headerData)
 {
+    LogPrintf(">>>>>verifyHeader\n");
+    
     arith_uint256 hashTarget = arith_uint256().SetCompact(headerData.nBits);
     
     uint32_t nBaseNonce = headerData.nBits ^ (uint32_t)(headerData.hashPrevBlock.GetCheapHash());
     uint64_t nPostNonce = headerData.nPostNonce;
     uint64_t nPreNonce = headerData.nPreNonce;
-    
+        
     // 1. Reset nonce to base nonce and select the pre nonce.
     // This leaves the post nonce in a 'default' but 'pseudo random' state.
     // We do this instead of zeroing out the post-nonce to reduce the predictability of the data to be hashed and therefore make it harder to attack the hash functions.
     headerData.nNonce = nBaseNonce;
     headerData.nPreNonce = nPreNonce;
+    LogPrintf(">>>>>verifyHeader1 nBaseNonce:%ld nPostNonce:%ld nPreNonce:%ld\n", nBaseNonce, nPostNonce, nPreNonce);
 
     // 2. Perform the "slow" (argon) hash of header with pre-nonce
     argon2_echo_context argonContext;
@@ -1033,11 +1036,14 @@ template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader h
 
     if (selected_argon2_echo_hash(&argonContext, true) != ARGON2_OK)
         assert(0);
+    
+    LogPrintf(">>>>>verifyHeader2\n");
 
     // 3. Set the initial state of the seed for the 'pseudo random' nonces.
     CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption prng;
     prng.SetKey((const unsigned char*)&argonContext.outHash[0], 32);
     unsigned char ciphered[32];
+    LogPrintf(">>>>>verifyHeader3\n");
                             
     // 4. Advance PRNG to 'post' nonce
     headerData.nPostNonce=0;
@@ -1047,6 +1053,7 @@ template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader h
         memcpy(&argonContext.outHash[0], &ciphered[0], (size_t)32);
         ++headerData.nPostNonce;
     }
+    LogPrintf(">>>>>verifyHeader4\n");
     
     [[maybe_unused]] uint64_t nPseudoRandomNonce1 = (argonContext.outHash[0] ^ argonContext.outHash[1]) % settings.numHashesPost;
     [[maybe_unused]] uint64_t nPseudoRandomNonce2 = (argonContext.outHash[2] ^ argonContext.outHash[3]) % settings.numHashesPost;
@@ -1060,6 +1067,7 @@ template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader h
     [[maybe_unused]] uint64_t nArenaMemoryOffset1 = (settings.arenaChunkSizeBytes*nPseudoRandomNonce1) % (settings.argonMemoryCostKb*1024);
     [[maybe_unused]] uint64_t nArenaMemoryIndex2  = (settings.arenaChunkSizeBytes*nPseudoRandomNonce2) / (settings.argonMemoryCostKb*1024);
     [[maybe_unused]] uint64_t nArenaMemoryOffset2 = (settings.arenaChunkSizeBytes*nPseudoRandomNonce2) % (settings.argonMemoryCostKb*1024);
+    LogPrintf(">>>>>verifyHeader4.2 nPseudoRandomNonce1:%ld nPseudoRandomNonce2:%ld nPseudoRandomAlg1:%ld nPseudoRandomAlg2:%ld nFastHashOffset1:%ld nFastHashOffset2:%ld nArenaMemoryIndex1:%ld nArenaMemoryOffset1:%ld nArenaMemoryIndex2:%ld nArenaMemoryOffset2:%ld\n", nPseudoRandomNonce1, nPseudoRandomNonce2, nPseudoRandomAlg1, nPseudoRandomAlg2, nFastHashOffset1, nFastHashOffset2, nArenaMemoryIndex1, nArenaMemoryOffset1, nArenaMemoryIndex2, nArenaMemoryOffset2);
     
     // 5. Generate the part(s) of the arena we need as we don't have the whole arena like a miner would.
     {
@@ -1071,6 +1079,7 @@ template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader h
         // NB!!! As a special optimisation we allow the caller to execute discretion and skip the check for one of the two fast hashes
         // This is fine if used sparingly and with other precautions in place but caution should be exercised as if used carelessly it can make it easier to split the chain
         // NB!!! Do not make use of this unless you fully understand the repercussions
+        LogPrintf(">>>>>verifyHeader5\n");
         
         // 6. Verify first fast hash
         if constexpr (verifyLevel == 0 || verifyLevel == 1)
@@ -1080,6 +1089,7 @@ template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader h
                 assert(0);        
             headerData.nPreNonce = nPreNonce;
             headerData.nPostNonce = nPostNonce;
+            LogPrintf(">>>>>verifyHeader6 nArenaMemoryOffset1:%ld nFastHashOffset1:%ld\n", nArenaMemoryOffset1, nFastHashOffset1);
             sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)slowHash.begin(), 32,  &argonContext.allocated_memory[nArenaMemoryOffset1+nFastHashOffset1], settings.fastHashSizeBytes, fastHash);
             if (UintToArith256(fastHash) > hashTarget)
             {
@@ -1095,6 +1105,7 @@ template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader h
                 assert(0);
             headerData.nPreNonce = nPreNonce;
             headerData.nPostNonce = nPostNonce;
+            LogPrintf(">>>>>verifyHeader7 nArenaMemoryOffset2:%ld nFastHashOffset2:%ld\n", nArenaMemoryOffset2, nFastHashOffset2);
             sigmaRandomFastHash(nPseudoRandomAlg2, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)slowHash.begin(), 32,  &argonContext.allocated_memory[nArenaMemoryOffset2+nFastHashOffset2], settings.fastHashSizeBytes, fastHash);
             if (UintToArith256(fastHash) > hashTarget)
             {
