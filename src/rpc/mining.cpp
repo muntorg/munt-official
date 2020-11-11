@@ -673,13 +673,20 @@ static UniValue submitheader(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Header decode failed");
     }
 
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair("hash", block.GetHashPoW2().ToString()));
+
     const CBlockIndex *pindex = NULL;
     CValidationState state;
     if (!ProcessNewBlockHeaders( {block.GetBlockHeader()}, state, Params(), &pindex))
     {
-        return "invalid";
+        result.push_back(Pair("status", "failed"));        
     }
-    return "valid";
+    else
+    {
+        result.push_back(Pair("status", "success"));
+    }
+    return result;
 }
 
 static UniValue estimatefee(const JSONRPCRequest& request)
