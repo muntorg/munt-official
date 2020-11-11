@@ -650,6 +650,38 @@ static UniValue submitblock(const JSONRPCRequest& request)
     return BIP22ValidationResult(sc.state);
 }
 
+static UniValue submitheader(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 1)
+    {
+        throw std::runtime_error(
+            "submitheader \"hexdata\"\n"
+            "\nAttempts to submit new header to network.\n"
+            "\nArguments\n"
+            "1. \"hexdata\"        (string, required) the hex-encoded block data to submit\n"
+            "\nResult:\n"
+            "\nExamples:\n"
+            + HelpExampleCli("submitblock", "\"mydata\"")
+            + HelpExampleRpc("submitblock", "\"mydata\"")
+        );
+    }
+
+    std::shared_ptr<CBlock> blockptr = std::make_shared<CBlock>();
+    CBlock& block = *blockptr;
+    if (!DecodeHexBlk(block, request.params[0].get_str()+"00"))
+    {
+        throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Header decode failed");
+    }
+
+    const CBlockIndex *pindex = NULL;
+    CValidationState state;
+    if (!ProcessNewBlockHeaders( {block.GetBlockHeader()}, state, Params(), &pindex))
+    {
+        return "invalid";
+    }
+    return "valid";
+}
+
 static UniValue estimatefee(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
@@ -863,6 +895,7 @@ static const CRPCCommand commands[] =
     { "block_generation",   "getmininginfo",          &getmininginfo,          true,  {} },
     { "block_generation",   "prioritisetransaction",  &prioritisetransaction,  true,  {"txid","dummy_value","fee_delta"} },
     { "block_generation",   "submitblock",            &submitblock,            true,  {"hexdata","parameters"} },
+    { "block_generation",   "submitheader",           &submitheader,           true,  {"hexdata"} },
 
     { "generating",         "generate",               &generate,               true,  {"num_blocks","max_tries"} },
     { "generating",         "generatetoaddress",      &generatetoaddress,      true,  {"num_blocks","address","max_tries"} },
