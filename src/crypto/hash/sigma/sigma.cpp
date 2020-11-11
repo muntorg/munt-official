@@ -1067,6 +1067,20 @@ template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader h
     [[maybe_unused]] uint64_t nArenaMemoryOffset1 = (settings.arenaChunkSizeBytes*nPseudoRandomNonce1) % (settings.argonMemoryCostKb*1024);
     [[maybe_unused]] uint64_t nArenaMemoryIndex2  = (settings.arenaChunkSizeBytes*nPseudoRandomNonce2) / (settings.argonMemoryCostKb*1024);
     [[maybe_unused]] uint64_t nArenaMemoryOffset2 = (settings.arenaChunkSizeBytes*nPseudoRandomNonce2) % (settings.argonMemoryCostKb*1024);
+    
+    if (nArenaMemoryOffset1+nFastHashOffset1 >= settings.argonMemoryCostKb*1024)
+    {
+        nArenaMemoryIndex1++;
+        nFastHashOffset1 = (nArenaMemoryOffset1+nFastHashOffset1)-(settings.argonMemoryCostKb*1024);
+        nArenaMemoryOffset1 = 0;
+    }
+    if (nArenaMemoryOffset2+nFastHashOffset2 >= settings.argonMemoryCostKb*1024)
+    {
+        nArenaMemoryIndex2++;
+        nFastHashOffset2 = (nArenaMemoryOffset2+nFastHashOffset2)-(settings.argonMemoryCostKb*1024);
+        nArenaMemoryOffset2 = 0;
+    }
+        
     LogPrintf(">>>>>verifyHeader4.2 nPseudoRandomNonce1:%ld nPseudoRandomNonce2:%ld nPseudoRandomAlg1:%ld nPseudoRandomAlg2:%ld nFastHashOffset1:%ld nFastHashOffset2:%ld nArenaMemoryIndex1:%ld nArenaMemoryOffset1:%ld nArenaMemoryIndex2:%ld nArenaMemoryOffset2:%ld\n", nPseudoRandomNonce1, nPseudoRandomNonce2, nPseudoRandomAlg1, nPseudoRandomAlg2, nFastHashOffset1, nFastHashOffset2, nArenaMemoryIndex1, nArenaMemoryOffset1, nArenaMemoryIndex2, nArenaMemoryOffset2);
     
     // 5. Generate the part(s) of the arena we need as we don't have the whole arena like a miner would.
@@ -1090,6 +1104,10 @@ template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader h
             headerData.nPreNonce = nPreNonce;
             headerData.nPostNonce = nPostNonce;
             LogPrintf(">>>>>verifyHeader6 nArenaMemoryOffset1:%ld nFastHashOffset1:%ld\n", nArenaMemoryOffset1, nFastHashOffset1);
+
+            if (nArenaMemoryOffset1+nFastHashOffset1 >= settings.argonMemoryCostKb*1024)
+                return false;
+
             sigmaRandomFastHash(nPseudoRandomAlg1, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)slowHash.begin(), 32,  &argonContext.allocated_memory[nArenaMemoryOffset1+nFastHashOffset1], settings.fastHashSizeBytes, fastHash);
             if (UintToArith256(fastHash) > hashTarget)
             {
@@ -1106,6 +1124,10 @@ template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader h
             headerData.nPreNonce = nPreNonce;
             headerData.nPostNonce = nPostNonce;
             LogPrintf(">>>>>verifyHeader7 nArenaMemoryOffset2:%ld nFastHashOffset2:%ld\n", nArenaMemoryOffset2, nFastHashOffset2);
+
+            if (nArenaMemoryOffset2+nFastHashOffset2 >= settings.argonMemoryCostKb*1024)
+                return false;
+
             sigmaRandomFastHash(nPseudoRandomAlg2, (uint8_t*)&headerData.nVersion, 80, (uint8_t*)slowHash.begin(), 32,  &argonContext.allocated_memory[nArenaMemoryOffset2+nFastHashOffset2], settings.fastHashSizeBytes, fastHash);
             if (UintToArith256(fastHash) > hashTarget)
             {
