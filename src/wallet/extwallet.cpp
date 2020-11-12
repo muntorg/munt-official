@@ -452,6 +452,12 @@ void CExtWallet::changeAccountName(CAccount* account, const std::string& newName
     // Force names to be unique
     std::string finalNewName = newName;
     std::string oldName = account->getLabel();
+    
+    if (newName == oldName)
+    {
+        return;
+    }
+
     {
         LOCK(cs_wallet);
 
