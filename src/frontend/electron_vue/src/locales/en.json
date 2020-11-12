@@ -6,6 +6,10 @@
       "holding": "Holding"
     }
   },
+  "account_settings": {
+    "title": "Account settings",
+    "name": "Name"
+  },
   "add_holding_account": {
     "daily": "daily",
     "estimated_earnings": "Estimated earnings",
