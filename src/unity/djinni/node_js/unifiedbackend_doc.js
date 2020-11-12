@@ -266,6 +266,8 @@ declare class NJSIAccountsController
     static declare function getActiveAccount(): string;
     /** Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account */
     static declare function createAccount(accountName: string, accountType: string): string;
+    /** Check name of account */
+    static declare function getAccountName(accountUUID: string): string;
     /** Rename an account */
     static declare function renameAccount(accountUUID: string, newAccountName: string): boolean;
     /** Delete an account, account remains available in background but is hidden from user */

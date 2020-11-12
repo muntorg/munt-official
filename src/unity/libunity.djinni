@@ -418,6 +418,8 @@ i_accounts_controller = interface +c {
     
     # Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account
     static createAccount(accountName : string, accountType : string) : string;
+    # Check name of account
+    static getAccountName(accountUUID : string): string;
     # Rename an account
     static renameAccount(accountUUID : string, newAccountName : string) : bool;
     # Delete an account, account remains available in background but is hidden from user

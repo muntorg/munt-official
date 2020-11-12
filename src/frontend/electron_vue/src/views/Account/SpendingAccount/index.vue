@@ -7,8 +7,8 @@
           :title="account.label"
           :subtitle="account.balance.toFixed(2)"
         />
-        <div class="settings flex-col" v-if="false /* not implemented yet */">
-          <span>
+        <div class="settings flex-col">
+          <span class="button" @click="setRightSidebar('Settings')">
             <fa-icon :icon="['fal', 'cog']" />
           </span>
         </div>
@@ -60,6 +60,7 @@ import MutationList from "./MutationList";
 import SendNovo from "./SendNovo";
 import ReceiveNovo from "./ReceiveNovo";
 import TransactionDetails from "./TransactionDetails";
+import AccountSettings from "../AccountSettings";
 
 export default {
   name: "SpendingAccount",
@@ -93,6 +94,9 @@ export default {
       if (this.rightSidebar === TransactionDetails) {
         return { txHash: this.txHash };
       }
+      if (this.rightSidebar === AccountSettings) {
+        return { account: this.account };
+      }
       return null;
     }
   },
@@ -109,6 +113,9 @@ export default {
           break;
         case "TransactionDetails":
           this.rightSidebar = TransactionDetails;
+          break;
+        case "Settings":
+          this.rightSidebar = AccountSettings;
           break;
       }
     },

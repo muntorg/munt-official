@@ -7,7 +7,11 @@
           :title="account.label"
           :subtitle="account.balance.toFixed(2)"
         />
-        <div class="settings"></div>
+        <div class="settings flex-col">
+          <span class="button" @click="setRightSidebar('Settings')">
+            <fa-icon :icon="['fal', 'cog']" />
+          </span>
+        </div>
       </section>
     </portal>
 
@@ -116,6 +120,7 @@ import { WitnessController } from "../../../unity/Controllers";
 import EventBus from "../../../EventBus";
 import SendNovo from "../MiningAccount/SendNovo";
 import RenewAccount from "./RenewAccount";
+import AccountSettings from "../AccountSettings";
 
 let timeout;
 
@@ -174,6 +179,9 @@ export default {
       return this.getStatistics("account_parts");
     },
     rightSidebarProps() {
+      if (this.rightSidebar === AccountSettings) {
+        return { account: this.account };
+      }
       return null;
     },
     sendButtonDisabled() {
@@ -230,6 +238,13 @@ export default {
         !this.isCompounding
       );
       this.isCompounding = !this.isCompounding;
+    },
+    setRightSidebar(name) {
+      switch (name) {
+        case "Settings":
+          this.rightSidebar = AccountSettings;
+          break;
+      }
     },
     closeRightSidebar() {
       this.rightSidebar = null;

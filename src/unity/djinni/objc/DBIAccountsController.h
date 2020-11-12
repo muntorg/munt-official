@@ -28,6 +28,9 @@
 + (nonnull NSString *)createAccount:(nonnull NSString *)accountName
                         accountType:(nonnull NSString *)accountType;
 
+/** Check name of account */
++ (nonnull NSString *)getAccountName:(nonnull NSString *)accountUUID;
+
 /** Rename an account */
 + (BOOL)renameAccount:(nonnull NSString *)accountUUID
        newAccountName:(nonnull NSString *)newAccountName;

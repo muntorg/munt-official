@@ -229,6 +229,22 @@ std::string IAccountsController::createAccount(const std::string& accountName, c
     return "";
 }
 
+std::string IAccountsController::getAccountName(const std::string& accountUUID)
+{
+    if (!pactiveWallet)
+        return "";
+    
+    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    CAccount* forAccount = NULL;
+    auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
+    if (findIter != pactiveWallet->mapAccounts.end())
+    {
+        forAccount = findIter->second;
+        return forAccount->getLabel();
+    }
+    return "";
+}
+
 bool IAccountsController::renameAccount(const std::string& accountUUID, const std::string& newAccountName)
 {
     if (!pactiveWallet)

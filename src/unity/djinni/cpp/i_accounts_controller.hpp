@@ -38,6 +38,9 @@ public:
     /** Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account */
     static std::string createAccount(const std::string & accountName, const std::string & accountType);
 
+    /** Check name of account */
+    static std::string getAccountName(const std::string & accountUUID);
+
     /** Rename an account */
     static bool renameAccount(const std::string & accountUUID, const std::string & newAccountName);
 

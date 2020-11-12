@@ -46,6 +46,9 @@ private:
     /** Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account */
     Napi::Value createAccount(const Napi::CallbackInfo& info);
 
+    /** Check name of account */
+    Napi::Value getAccountName(const Napi::CallbackInfo& info);
+
     /** Rename an account */
     Napi::Value renameAccount(const Napi::CallbackInfo& info);
 

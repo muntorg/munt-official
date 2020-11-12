@@ -40,6 +40,12 @@ public abstract class IAccountsController {
                                       accountType);
     }
 
+    /** Check name of account */
+    public static String getAccountName(String accountUUID)
+    {
+        return CppProxy.getAccountName(accountUUID);
+    }
+
     /** Rename an account */
     public static boolean renameAccount(String accountUUID, String newAccountName)
     {
@@ -153,6 +159,8 @@ public abstract class IAccountsController {
         public static native String getActiveAccount();
 
         public static native String createAccount(String accountName, String accountType);
+
+        public static native String getAccountName(String accountUUID);
 
         public static native boolean renameAccount(String accountUUID, String newAccountName);
 
