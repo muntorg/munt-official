@@ -33,8 +33,6 @@ file COPYING
     <string name="transaction_list_empty_title">Keine Überweisungen erhalten</string>
     <string name="transaction_list_empty_message">Hier tippen um deine ersten Novo zu kaufen.</string>
     <string name="send_coins_confirm_template">%1$s NOV\n\nnach %2$s</string>
-    <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NOV)\n\nnach %3$s</string>
-    <string name="send_coins_nocks_estimate_template">Ungefähr G %1$s inklusive IBAN-Gebühr</string>
     <string name="peer_list_fragment_empty">Keine Peers verbunden</string>
     <string name="block_row_now">gerade eben</string>
     <string name="action_browse">Im Browser öffnen</string>
