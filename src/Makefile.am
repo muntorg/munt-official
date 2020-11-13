@@ -653,7 +653,6 @@ lib_common_a_SOURCES = \
   unity/appmanager.cpp \
   base58.cpp \
   chainparams.cpp \
-  chainparams_mainnet_static_checkpoint_data.cpp \
   coins.cpp \
   compressor.cpp \
   blockfilter.cpp \
