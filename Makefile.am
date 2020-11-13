@@ -278,7 +278,9 @@ EXTRA_DIST += \
     test/util/data/txcreatescript4.json \
     test/util/data/txcreatesignv1.hex \
     test/util/data/txcreatesignv1.json \
-    test/util/data/txcreatesignv2.hex
+    test/util/data/txcreatesignv2.hex \
+    src/chainparams_mainnet_static_checkpoint_data.cpp
+
 
 CLEANFILES = $(OSX_DMG) $(WIN_INSTALLER)
 
