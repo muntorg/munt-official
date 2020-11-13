@@ -226,20 +226,22 @@ public:
         fMineBlocksOnDemand = false;
         fUseSyncCheckpoints = true;
 
-        checkpointData = {
-            {      0, { genesis.GetHashPoW2(), genesis.nTime } },
-            {  21657, { uint256S("0x05e73b89f3fddd0f143f3348d5cf54b123ecfa06abd2087368091a05ccaf1deb"), 1602267538 } },
+        checkpointData = (CCheckpointData)
+        {
+            {
+                #include "chainparams_mainnet_static_checkpoint_data.cpp"
+            }
         };
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x05e73b89f3fddd0f143f3348d5cf54b123ecfa06abd2087368091a05ccaf1deb");
+        consensus.defaultAssumeValid = uint256S("0x938211b632222b4127fcd60ef774805a30fcaea0548f07cd3ef55003fbb037eb");
         
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000000000000272bafe52");
         
         chainTxData = ChainTxData{
-            1602267538, // * UNIX timestamp of last checkpoint block
-            44110,
+            1604964758, // * UNIX timestamp of last checkpoint block
+            65356,
             0.01
         };
     }
