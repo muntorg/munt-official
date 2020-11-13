@@ -525,8 +525,6 @@ UniValue CRPCTable::execute(const JSONRPCRequest &request) const
 std::vector<std::string> CRPCTable::listCommands() const
 {
     std::vector<std::string> commandList;
-    typedef std::map<std::string, const CRPCCommand*> commandMap;
-
     for (const auto& [commandName, command] : mapCommands)
     {
         if (command->category != "hidden")
