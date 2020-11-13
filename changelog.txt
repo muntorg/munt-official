@@ -1,4 +1,4 @@
-2.3.0.3
+2.3.0.4
 
 CORE    - Fix a crash in SIGMA verification code that could be triggered in some (relatively rare) instances
 RPC     - Hide various "hidden" developer RPC commands from the autocomplete
