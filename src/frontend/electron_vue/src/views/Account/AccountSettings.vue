@@ -6,34 +6,35 @@
 
     <div class="main">
       <h5>{{ $t("account_settings.name") }}</h5>
-      <input type="text" v-model="accountName">
+      <input type="text" v-model="newAccountName" />
     </div>
   </div>
 </template>
 
 <script>
-import {
-  AccountsController
-} from "../../unity/Controllers";
+import { AccountsController } from "../../unity/Controllers";
 
 export default {
   name: "AccountSettings",
   props: {
-    account: null,
-    accountName: null
+    account: null
+  },
+  data() {
+    return {
+      newAccountName: null
+    };
   },
   created() {
-    this.accountName = this.account.label
+    this.newAccountName = this.account.label;
   },
   watch: {
-    account() {
-      this.accountName = this.account.label
-    },
-    accountName() {
-       if (this.accountName && this.accountName != this.account.label )
-       {
-           AccountsController.RenameAccount(this.account.UUID, this.accountName)
-       }
+    newAccountName() {
+      if (this.newAccountName && this.newAccountName !== this.account.label) {
+        AccountsController.RenameAccount(
+          this.account.UUID,
+          this.newAccountName
+        );
+      }
     }
   }
 };
@@ -45,25 +46,6 @@ export default {
 
   .main {
     flex: 1;
-  }
-
-  .tx-address {
-    margin: 0 0 20px 0;
-    padding: 10px;
-    font-size: 0.9em;
-    line-height: 1.2em;
-    user-select: text;
-    word-wrap: break-word;
-    background-color: #fff;
-  }
-
-  .tx-hash {
-    padding: 10px;
-    font-size: 0.9em;
-    line-height: 1.2em;
-    user-select: text;
-    word-wrap: break-word;
-    background-color: #fff;
   }
 }
 </style>
