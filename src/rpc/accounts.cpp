@@ -1237,8 +1237,8 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. \"funding_account\"      (string, required) The unique UUID or label for the account from which money will be removed. Use \"\" for the active account or \"*\" for all accounts to be considered.\n"
             "2. \"witness_account\"      (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
-            "3. \"amount\"               (string, required) The amount of " GLOBAL_COIN_CODE " to hold locked in the witness account. Minimum amount of 5000 " GLOBAL_COIN_CODE " is allowed.\n"
-            "4. \"time\"                 (string, required) The time period for which the funds should be locked in the witness account. Minimum of 1 month and a maximum of 3 years. By default this is interpreted as blocks e.g. \"1000\", suffix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "3. \"amount\"               (string, required) The amount of " GLOBAL_COIN_CODE " to hold locked in the witness account. Minimum amount of 50 " GLOBAL_COIN_CODE " is allowed.\n"
+            "4. \"time\"                 (string, required) The time period for which the funds should be locked in the witness account. Minimum of 2 months and a maximum of 3 years. By default this is interpreted as blocks e.g. \"1000\", suffix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "5. force_multiple         (boolean, optional, default=false) Allow funding an account that already contains a valid witness address. \n"
             "\nResult:\n"
             "[\n"
@@ -1246,13 +1246,13 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
             "     \"fee_amount\":n   (number) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
-            "\nTake 10000" GLOBAL_COIN_CODE " out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 2 years.\n"
-            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", "")
-            + "\nTake 10000" GLOBAL_COIN_CODE " out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 2 months.\n"
-            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2m\"", "")
-            + "\nTake 10000" GLOBAL_COIN_CODE " out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 100 days.\n"
-            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"100d\"", "")
-            + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"10000\" \"2y\"", ""));
+            "\nTake 100" GLOBAL_COIN_CODE " out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 2 years.\n"
+            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"100\" \"2y\"", "")
+            + "\nTake 250" GLOBAL_COIN_CODE " out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 2 months.\n"
+            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"250\" \"2m\"", "")
+            + "\nTake 150" GLOBAL_COIN_CODE " out of \"mysavingsaccount\" and lock in \"mywitnessaccount\" for 100 days.\n"
+            + HelpExampleCli("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"150\" \"100d\"", "")
+            + HelpExampleRpc("fundwitnessaccount \"mysavingsaccount\" \"mywitnessaccount\" \"100\" \"2y\"", ""));
 
     int nPoW2TipPhase = GetPoW2Phase(chainActive.Tip());
 
@@ -1325,7 +1325,7 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. \"funding_account\"  (string, required) The unique UUID or label for the account from which money will be removed.\n"
             "2. \"witness_address\"  (string, required) The " GLOBAL_APPNAME " address for the witness key.\n"
-            "3. \"amount\"           (string, required) The amount of " GLOBAL_COIN_CODE " to hold locked in the witness account. Minimum amount of 5000 " GLOBAL_COIN_CODE " is allowed.\n"
+            "3. \"amount\"           (string, required) The amount of " GLOBAL_COIN_CODE " to hold locked in the witness account. Minimum amount of 50 " GLOBAL_COIN_CODE " is allowed.\n"
             "4. \"time\"             (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", suffix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "\nResult:\n"
             "[\n"
@@ -1333,8 +1333,8 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
             "     \"fee_amount\":n   (number) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("extendwitnessaddress \"My account\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"50000\" \"2y\"", "")
-            + HelpExampleRpc("extendwitnessaddress \"My account\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"50000\" \"2y\"", ""));
+            + HelpExampleCli("extendwitnessaddress \"My account\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"120\" \"2y\"", "")
+            + HelpExampleRpc("extendwitnessaddress \"My account\" \"2ZnFwkJyYeEftAoQDe7PC96t2Y7XMmKdNtekRdtx32GNQRJztULieFRFwQoQqN\" \"120\" \"2y\"", ""));
 
     // Basic sanity checks.
     if (!pwallet)
@@ -1411,7 +1411,7 @@ static UniValue extendwitnessaccount(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. \"funding_account\" (string, required) The unique UUID or label for the account from which money will be removed.\n"
             "2. \"witness_account\" (string, required) The unique UUID or label for the witness account that will hold the locked funds.\n"
-            "3. \"amount\"          (string, required) The amount of " GLOBAL_COIN_CODE " to hold locked in the witness account. Minimum amount of 5000 " GLOBAL_COIN_CODE " is allowed.\n"
+            "3. \"amount\"          (string, required) The amount of " GLOBAL_COIN_CODE " to hold locked in the witness account. Minimum amount of 50 " GLOBAL_COIN_CODE " is allowed.\n"
             "4. \"time\"            (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", suffix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
             "\nResult:\n"
             "[\n"
@@ -1419,8 +1419,8 @@ static UniValue extendwitnessaccount(const JSONRPCRequest& request)
             "     \"fee_amount\":n  (string) The fee that was paid.\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("extendwitnessaccount \"My account\" \"My witness account\" \"50000\" \"2y\"", "")
-            + HelpExampleRpc("extendwitnessaccount \"My account\" \"My witness account\" \"50000\" \"2y\"", ""));
+            + HelpExampleCli("extendwitnessaccount \"My account\" \"My witness account\" \"120\" \"2y\"", "")
+            + HelpExampleRpc("extendwitnessaccount \"My account\" \"My witness account\" \"120\" \"2y\"", ""));
 
     // Basic sanity checks.
     if (!pwallet)
