@@ -244,7 +244,7 @@ script: |
     #Move lib results to outdir
     mkdir $OUTDIR/libs || true
     mv -f release/libnovo_win_${i}.node $OUTDIR/libs/libnovo_win_${i}.node
-    mv -f release/$OUTDIR/libs/libnovo_win_${i}.node.dbg $OUTDIR/libs/libnovo_win_${i}.node.dbg
+    mv -f release/libnovo_win_${i}.node.dbg $OUTDIR/libs/libnovo_win_${i}.node.dbg
 
     # Tarball of signed executables and debug info - direct to build host
     cd release
