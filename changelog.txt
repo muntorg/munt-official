@@ -1,3 +1,19 @@
+1.0.9
+
+UI:   Add a sync progress screen when opening app on a wallet that is still syncing
+CORE: Fix an issue that was causing periodic crashing of some machines (especially on windows)
+CORE: Lower default fee amounts
+CORE: Various holding account related fixes
+RPC:  New command repairwitnessaddress
+RPC:  Extend validateaddress behaviour for holding addresses, allow for easier debugging of any holding issues users may have
+UI:   Add a settings screen that allows renaming of accounts
+RPC:  Add various "holding account" related RPC commands
+RPC:  Improve usability of autocomplete, hide various rarely used developer specific commands from autocomplete
+RPC:  New debugging related commands "submitheader" and "forcesigseg"
+MISC: Various other stability related changes and minor UI tweaks
+
+
+
 1.0.6
 
 Fix an issue that was causing renewal of some holding accounts to fail (Fix requires peers to upgrade prior to block 21500)
