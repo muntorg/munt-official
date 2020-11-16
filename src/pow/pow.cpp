@@ -33,7 +33,6 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
 
     bnTarget.SetCompact(block->nBits, &fNegative, &fOverflow);
 
-    static bool fRegTest = IsArgSet("-regtest");
     defaultSigmaSettings.verify();
     
     // Check range
