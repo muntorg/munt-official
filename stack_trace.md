@@ -18,10 +18,14 @@ If you are reading this it is likely because a developer has asked you for a sta
 4. Launch the application
 5. Determine the pid of the application, on windows this can be found in `task manager` 
 6. Run `gdb` again this time passing it the PID e.g `gdb --pid 3956` (substitute your own PID here, it changes for every run of the application)
-7. Wait a bit for `gdb` to load, it will pause the application, type `continue` to allow the application to continue
-8. Execute the procedures you normally do to trigger a crash, the application will "freeze" instead of crashing as `gdb` will "catch" the crash and pause the application
-9. When this occurs type `bt` in gdb and then after that `thread apply all bt`
-10. Copy all the output (this is the stack trace) and provide it to the developer, along with any other pertinent information that might be helpful (debug.log, brief description of what you were doing at time of crash etc.)
+7. Wait a bit for `gdb` to load, it will pause the application
+8. Type `info shared` to get a list of shared libraries, look for the one ending with `.node` (it will have a randomised name e.g. `C:\Users\User\AppData\Local\Temp\410aa229-1397-4309-b200-c30cff6348d0.tmp.node`
+9. Copy the address (from the first column) that corresponds to it e.g. `0x0000000071861000`
+10. Type `add-symbol-file c:/mingw64/lib/debug/libnovo_win_x64.node.dbg 0x0000000071861000` substitute the address to match the one you took from step 9, and the path to match your path from step 3.
+11. type `continue` to allow the application to continue
+12. Execute the procedures you normally do to trigger a crash, the application will "freeze" instead of crashing as `gdb` will "catch" the crash and pause the application
+13. When this occurs type `bt` in gdb and then after that `thread apply all bt`
+14. Copy all the output (this is the stack trace) and provide it to the developer, along with any other pertinent information that might be helpful (debug.log, brief description of what you were doing at time of crash etc.)
 
 NB! It is possible to force the program to crash by typing `forcesigseg` in the debug console of the application.
 It is recommended to do this once as a trial run (after following the above procedures) to ensure your debug setup works properly and that you know how to do everything.
@@ -29,7 +33,10 @@ And only then once you are sure it works, proceed to try and trigger the real cr
 
 If your debug setup is correct you should see something like:
 ```
-
+Thread 1384 received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 6664.0x1e8]
+forcesigseg (request=...) at ../../src/rpc/misc.cpp:534
+534     ../../src/rpc/misc.cpp: No such file or directory
 ```
 While if there is a problem you will see something like:
 ```
