@@ -234,7 +234,7 @@ script: |
 
     # TODO - change all the --max-procs to pull args from gitian input somehow; instead of hardcoded
     # Strip in place
-    find release -name '*.exe' -o -name '*.dll' | xargs --max-procs 32 -i sh -c "${i}-objcopy --only-keep-debug {} {}.dbg ; ${i}-strip -s {} ; ${i}-objcopy --add-gnu-debuglink={}.dbg {}; (true)"
+    find release -name '*.exe' -o -name '*.node' | xargs --max-procs 32 -i sh -c "${i}-objcopy --only-keep-debug {} {}.dbg ; ${i}-strip -s {} ; ${i}-objcopy --add-gnu-debuglink={}.dbg {}; (true)"
 
     # Sign executables
     if [ -f "${BUILD_DIR}/codesign/codesign.spc" ]; then
