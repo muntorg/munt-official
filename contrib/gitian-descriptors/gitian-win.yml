@@ -231,8 +231,6 @@ script: |
 
     # Rename libraries to final names before splitting the debug info, otherwise gdb doesn't auto load the info properly
     mv -f release/lib_unity_node_js-0.dll release/libnovo_win_${i}.node
-    mv -f release/lib_unity_node_js-0.dll.dbg release/libnovo_win_${i}.dbg
-
 
     # TODO - change all the --max-procs to pull args from gitian input somehow; instead of hardcoded
     # Strip in place
