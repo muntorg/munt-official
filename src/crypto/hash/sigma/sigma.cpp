@@ -988,7 +988,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
 sigma_context::~sigma_context()
 {
     #if defined(__linux) && defined(DJINNI_NODEJS)
-    (uint8_t*)munmap(arena, (allocatedArenaSizeKb*1024));
+    munmap(arena, (allocatedArenaSizeKb*1024));
     #else
     free(arena);
     #endif
