@@ -2,7 +2,7 @@
   "name": "novo",
   "description": "Novo currency",
   "author": "Centure.com BV",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
