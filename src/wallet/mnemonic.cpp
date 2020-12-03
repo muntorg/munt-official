@@ -263,3 +263,8 @@ bool checkMnemonic(const SecureString& mnemonic)
 {
     return entropyFromMnemonic(mnemonic).size() > 0;
 }
+
+std::vector<std::string> getMnemonicDictionary()
+{
+    return std::vector<std::string>(std::begin(wordList), std::end(wordList));
+}

@@ -7,7 +7,7 @@
 #include "fs.h"
 #include <boost/thread.hpp>
 #include "../unity_impl.h"
-#include "gulden_unified_frontend.hpp"
+#include "i_library_listener.hpp"
 
 static boost::once_flag debugPrintInitFlag = BOOST_ONCE_INIT;
 

@@ -16,11 +16,12 @@ bench_bench_sigma_SOURCES = \
 bench_bench_sigma_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(SSL_CFLAGS) $(EVENT_CLFAGS) $(EVENT_PTHREADS_CFLAGS) -I$(builddir)/bench/
 bench_bench_sigma_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 bench_bench_sigma_LDADD = \
-  $(LIBGULDEN_SERVER) \
-  $(LIBGULDEN_COMMON) \
-  $(LIBGULDEN_UTIL) \
-  $(LIBGULDEN_CONSENSUS) \
-  $(LIBGULDEN_CRYPTO_ALL) \
+  $(LIB_SERVER) \
+  $(LIB_COMMON) \
+  $(LIB_UTIL) \
+  $(LIB_NODE) \
+  $(LIB_CONSENSUS) \
+  $(LIB_CRYPTO_ALL) \
   $(LIBLEVELDB) \
   $(LIBMEMENV) \
   $(LIBSECP256K1) \

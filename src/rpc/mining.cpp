@@ -272,42 +272,6 @@ static UniValue generate(const JSONRPCRequest& request)
     return generateBlocks(coinbaseScript, nGenerate, nMaxTries, true);
 }
 
-#ifdef ENABLE_WALLET
-//! Given a string specifier, calculate a memory size in bytes to match it e.g. 1K -> 1024; 2M -> 2097152;
-//! Returns 0 if specifier is invalid.
-static uint64_t GetMemLimitInBytesFromFormattedStringSpecifier(std::string formattedLockPeriodSpecifier)
-{
-    if (formattedLockPeriodSpecifier.empty())
-        return 0;
-
-    uint64_t memLimitInBytes = 0;
-    uint64_t nMultiplier = 1;
-    if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "B") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "b"))
-    {
-        formattedLockPeriodSpecifier.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "K") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "k"))
-    {
-        nMultiplier = 1024;
-        formattedLockPeriodSpecifier.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "M") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "m"))
-    {
-        nMultiplier = 1024*1024;
-        formattedLockPeriodSpecifier.pop_back();
-    }
-    else if (boost::algorithm::ends_with(formattedLockPeriodSpecifier, "G") || boost::algorithm::ends_with(formattedLockPeriodSpecifier, "g"))
-    {
-        nMultiplier = 1024*1024*1024;
-        formattedLockPeriodSpecifier.pop_back();
-    }
-    if (!ParseUInt64(formattedLockPeriodSpecifier, &memLimitInBytes))
-        return 0;
-    memLimitInBytes *=  nMultiplier;
-    return memLimitInBytes;
-}
-#endif
-
 static UniValue setgenerate(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET

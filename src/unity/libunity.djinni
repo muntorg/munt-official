@@ -117,19 +117,21 @@ payment_result_status = enum {
     insufficient_funds;
 }
 
-# This interface will be implemented in C++ and can be called from any language.
-gulden_unified_backend = interface +c {
+# The library controller is used to Init/Terminate the library, and other similar tasks.
+# It is also home to various generic utility functions that don't (yet) have a place in more specific controllers
+# Specific functionality should go in specific controllers; account related functionality -> accounts_controller, network related functionality -> network_controller and so on
+i_library_controller = interface +c {
 
     # Get the build information (ie. commit id and status)
     static BuildInfo(): string;
 
     # Start the library
-    # extraArgs - any additional commandline arguments as passed to GuldenD
+    # extraArgs - any additional commandline arguments as could normally be passed to the daemon binary
     # NB!!! This call blocks until the library is terminated, it is the callers responsibility to place it inside a thread or similar.
     # If you are in an environment where this is not possible (node.js for example use InitUnityLibThreaded instead which places it in a thread on your behalf)
-    static InitUnityLib(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool,spvMode : bool, signalHandler : gulden_unified_frontend, extraArgs : string): i32;
+    static InitUnityLib(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool,spvMode : bool, signalHandler : i_library_listener, extraArgs : string): i32;
     # Threaded implementation of InitUnityLib
-    static InitUnityLibThreaded(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool,spvMode : bool, signalHandler : gulden_unified_frontend, extraArgs : string);
+    static InitUnityLibThreaded(data_dir : string, staticFilterPath : string, staticFilterOffset : i64, staticFilterLength : i64,testnet : bool,spvMode : bool, signalHandler : i_library_listener, extraArgs : string);
 
     # Create the wallet - this should only be called after receiving a `notifyInit...` signal from InitUnityLib
     static InitWalletFromRecoveryPhrase(phrase : string, password : string): bool;
@@ -166,6 +168,8 @@ gulden_unified_backend = interface +c {
 
     # Generate a new recovery mnemonic
     static GenerateRecoveryMnemonic(): string;
+    
+    static GenerateGenesisKeys(): string;
 
     # Compute recovery phrase with birth number
     static ComposeRecoveryPhrase(mnemonic: string, birthTime: i64): string;
@@ -176,7 +180,7 @@ gulden_unified_backend = interface +c {
     # Generate a QR code for a string, QR code will be as close to width_hint as possible when applying simple scaling.
     static QRImageFromString(qr_string : string, width_hint : i32): qr_code_record;
 
-    # Get a receive address from the wallet
+    # Get a receive address for the active account
     static GetReceiveAddress(): string;
 
     # Get the recovery phrase for the wallet
@@ -187,6 +191,12 @@ gulden_unified_backend = interface +c {
 
     # Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time)
     static IsMnemonicCorrect(phrase: string): bool;
+    
+    # Get the 'dictionary' of valid words that a recovery phrase can be composed of
+    # NB! Not all combinations of these words are valid
+    # Do not use this to generate/compose your own phrases - always use 'GenerateRecoveryMnemonic' for this
+    # This function should only be used for input validation/auto-completion
+    static GetMnemonicDictionary(): list<string>;
 
     # Unlock wallet
     static UnlockWallet(password: string): bool;
@@ -194,20 +204,20 @@ gulden_unified_backend = interface +c {
     # Forcefully lock wallet again
     static LockWallet(): bool;
 
-    # Change the waller password
+    # Change the wallet password
     static ChangePassword(oldPassword: string, newPassword: string) : bool;
-
-    # Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait.
-    static HaveUnconfirmedFunds(): bool;
-
-    # Check current wallet balance (including unconfirmed funds)
-    static GetBalance(): i64;
 
     # Rescan blockchain for wallet transactions
     static DoRescan();
 
     # Check if text/address is something we are capable of sending money too
     static IsValidRecipient(request : uri_record): uri_recipient;
+    
+    # Check if text/address is a native (to our blockchain) address
+    static IsValidNativeAddress(address : string): bool;
+    
+    # Check if text/address is a valid bitcoin address
+    static IsValidBitcoinAddress(address : string): bool;
 
     # Compute the fee required to send amount to given recipient
     static feeForRecipient(request : uri_recipient) : i64;
@@ -215,15 +225,12 @@ gulden_unified_backend = interface +c {
     # Attempt to pay a recipient, will throw on failure with description
     static performPaymentToRecipient(request : uri_recipient, substract_fee: bool ) : payment_result_status;
 
-    # Get list of all transactions wallet has been involved in
-    static getTransactionHistory() : list<transaction_record>;
-
     # Get the wallet transaction for the hash
     # Will throw if not found
     static getTransaction(txHash : string) :  transaction_record;
-
-    # Get list of wallet mutations
-    static getMutationHistory() : list<mutation_record>;
+    
+    # resubmit a transaction to the network, returns the raw hex of the transaction as a string or empty on fail
+    static resendTransaction(txHash : string) : string;
 
     # Get list of all address book entries
     static getAddressBookRecords() : list<address_record>;
@@ -243,9 +250,6 @@ gulden_unified_backend = interface +c {
     # by the OS) this might make more sense then to continue the progress from where it was a day or more ago.
     static ResetUnifiedProgress();
 
-    # Get connected peer info
-    static getPeers() : list<peer_record>;
-
     # Get info of last blocks (at most 32) in SPV chain
     static getLastSPVBlockInfos() : list<block_info_record>;
 
@@ -253,15 +257,80 @@ gulden_unified_backend = interface +c {
 
     static getMonitoringStats(): monitor_record;
 
-    static RegisterMonitorListener(listener : gulden_monitor_listener);
-    static UnregisterMonitorListener(listener : gulden_monitor_listener);
+    static RegisterMonitorListener(listener : monitor_listener);
+    static UnregisterMonitorListener(listener : monitor_listener);
 
+    static getClientInfo() : map<string, string>;
+    
     # Interface constants
     const version: i32 = 1;
+    
+    # Get list of wallet mutations
+    #NB! This is SPV specific, non SPV wallets should use account specific getMutationHistory on an accounts controller instead
+    static getMutationHistory() : list<mutation_record>;
+    
+    # Get list of all transactions wallet has been involved in
+    #NB! This is SPV specific, non SPV wallets should use account specific getTransactionHistory on an accounts controller instead
+    static getTransactionHistory() : list<transaction_record>;
+    
+    # Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait.
+    #NB! This is SPV specific, non SPV wallets should use HaveUnconfirmedFunds on wallet controller instead
+    static HaveUnconfirmedFunds(): bool;
+
+    # Check current wallet balance (including unconfirmed funds)
+    #NB! This is SPV specific, non SPV wallets should use GetBalance on wallet controller instead
+    static GetBalance(): i64;
+}
+
+# Controller to perform functions at a wallet level (e.g. get balance of the entire wallet)
+# For per account functionality see accounts_controller
+i_wallet_controller = interface +c {
+    # Set listener to be notified of wallet events
+    static setListener(networklistener : i_wallet_listener);
+    
+    # Check if the wallet has any transactions that are still pending confirmation, to be used to determine if e.g. it is safe to perform a link or whether we should wait.
+    static HaveUnconfirmedFunds(): bool;
+        
+    # Check current wallet balance, as a single simple number that includes confirmed/unconfirmed/immature funds
+    static GetBalanceSimple(): i64;
+    
+    # Check current wallet balance
+    static GetBalance(): balance_record;
+    
+    # Abandon a transaction
+    static AbandonTransaction(txHash : string): bool;
+}
+
+# Interface to receive wallet level events
+i_wallet_listener = interface +j +o +n {
+    notifyBalanceChange(new_balance : balance_record): &;
+    # Notification of new mutations.
+    # If self_committed it is due to a call to performPaymentToRecipient, else it is because of a transaction
+    # reached us in another way. In general this will be because we received funds from someone, hower there are
+    # also cases where funds is send from our wallet while !self_committed (for example by a linked desktop wallet
+    # or another wallet instance using the same keys as ours).
+    notifyNewMutation(mutation : mutation_record, self_committed: bool): &;
+    notifyUpdatedTransaction(transaction : transaction_record): &;
+}
+
+# monitoring stats
+monitor_record = record {
+    partialHeight: i32;
+    partialOffset: i32;
+    prunedHeight: i32;
+    processedSPVHeight: i32;
+    probableHeight: i32;
+}
+
+# Monitoring events
+monitor_listener = interface +j +o +n {
+    onPartialChain(height : i32, probable_height : i32, offset : i32);
+    onPruned(height : i32);
+    onProcessedSPVBlocks(height : i32);
 }
 
 # Interface to receive events from the core
-gulden_unified_frontend = interface +j +o +n {
+i_library_listener = interface +j +o +n {
     # Fraction of work done since session start or last progress reset [0..1]
     # Unified progress combines connection state, header and block sync
     notifyUnifiedProgress(progress : f32): &;
@@ -281,18 +350,234 @@ gulden_unified_frontend = interface +j +o +n {
     logPrint(str : string): &;
 }
 
-# monitoring stats
-monitor_record = record {
-    partialHeight: i32;
-    partialOffset: i32;
-    prunedHeight: i32;
-    processedSPVHeight: i32;
-    probableHeight: i32;
+# C++ interface to execute RPC commands
+i_rpc_controller = interface +c {
+    static execute(rpcCommandLine : string, resultListener : i_rpc_listener);
+    static getAutocompleteList() : list<string>;
 }
 
-# Monitoring events
-gulden_monitor_listener = interface +j +o +n {
-    onPartialChain(height : i32, probable_height : i32, offset : i32);
-    onPruned(height : i32);
-    onProcessedSPVBlocks(height : i32);
+# Interface to handle result of RPC commands
+# Calls either onSuccess or onError depending on whether command suceedes or fails
+i_rpc_listener = interface +j +o +n {
+    # Returns a filtered version of the command with sensitive information like passwords removed
+    # Any kind of 'command history' functionality should store this filtered command and not the original command
+    onFilteredCommand(filteredCommand : string) : &;
+    # Returns the result and a filtered version of the command with sensitive information like passwords removed
+    # Any kind of 'command history' functionality should store this filtered command and not the original command
+    onSuccess(filteredCommand : string, result : string) : &;
+    # Returns an error message which might be a plain string or JSON depending on the type of error
+    # Also returns a filtered version of the command with sensitive information like passwords removed
+    # Any kind of 'command history' functionality should store this filtered command and not the original command
+    onError(filteredCommand : string, errorMessage : string) : &;
+}
+
+# C++ interface to control networking related aspects of the software
+i_p2p_network_controller = interface +c {
+    # Register listener to be notified of networking events
+    static setListener(networklistener : i_p2p_network_listener);
+    # Turn p2p networking off
+    static disableNetwork();
+    # Turn p2p networking on
+    static enableNetwork();
+    # Get connected peer info
+    static getPeerInfo() : list<peer_record>;
+}
+
+# Interface to receive updates about network status
+i_p2p_network_listener = interface +j +o +n {
+    # Notify that p2p networking has been enabled
+    onNetworkEnabled() : &;
+    # Notify that p2p networking has been disabled
+    onNetworkDisabled() : &;
+    # Notify that number of peers has changed
+    onConnectionCountChanged(numConnections : i32) : &;
+    # Notify that amount of data sent/received has changed
+    onBytesChanged(totalRecv : i32, totalSent : i32): &;
+}
+               
+account_record = record {
+    UUID : string;
+    label : string;
+    state : string;
+    type : string;
+    isHD : bool;
+}
+
+# C++ interface to control accounts
+i_accounts_controller = interface +c {
+    # Register listener to be notified of account related events
+    static setListener(accountslistener : i_accounts_listener);
+    
+    # List all currently visible accounts in the wallet
+    static listAccounts() : list<account_record>;
+
+    # Set the currently active account
+    static setActiveAccount(accountUUID : string) : bool;
+    # Get the currently active account
+    static getActiveAccount() : string;
+    
+    # Create an account, possible types are (HD/Mobile/Witness/Mining/Legacy). Returns the UUID of the new account
+    static createAccount(accountName : string, accountType : string) : string;
+    # Check name of account
+    static getAccountName(accountUUID : string): string;
+    # Rename an account
+    static renameAccount(accountUUID : string, newAccountName : string) : bool;
+    # Delete an account, account remains available in background but is hidden from user
+    static deleteAccount(accountUUID : string) : bool;
+    # Purge an account, account is permenently removed from wallet (but may still reappear in some instances if it is an HD account and user recovers from phrase in future)
+    # If it is a Legacy or imported witness key or similar account then it will be gone forever
+    # Generally prefer 'deleteAccount' and use this with caution
+    static purgeAccount(accountUUID : string) : bool;
+    
+    # Get a URI that will enable 'linking' of this account in another wallet (for e.g. mobile wallet linking) for an account. Empty on failiure. 
+    static getAccountLinkURI(accountUUID : string) : string;
+    # Get a URI that will enable creation of a "witness only" account in another wallet that can witness on behalf of this account
+    static getWitnessKeyURI(accountUUID : string) : string;
+    # Create a new "witness-only" account from a previously exported URI
+    # Returns UUID on success, empty string on failiure
+    static createAccountFromWitnessKeyURI(witnessKeyURI : string, newAccountName : string) : string;
+        
+    # Get a receive address for account
+    static getReceiveAddress(accountUUID : string): string;
+    
+    # Get list of all transactions account has been involved in
+    static getTransactionHistory(accountUUID : string) : list<transaction_record>;
+    # Get list of mutations for account
+    static getMutationHistory(accountUUID : string) : list<mutation_record>;
+    
+    # Check balance for active account
+    static getActiveAccountBalance(): balance_record;
+    # Check balance for account
+    static getAccountBalance(accountUUID : string): balance_record;
+    # Check balance for all accounts, returns a map of account_uuid->balance_record
+    static getAllAccountBalances(): map<string, balance_record>;
+}
+
+# Interface to receive updates about accounts
+i_accounts_listener = interface +j +o +n {
+    # Notify that the active account has changed
+    onActiveAccountChanged(accountUUID : string) : &;
+    # Notify that the active account name has changed
+    onActiveAccountNameChanged(newAccountName : string) : &;
+    # Notify that an account name has changed
+    onAccountNameChanged(accountUUID : string, newAccountName : string) : &;
+    # Notify that a new account has been added
+    onAccountAdded(accountUUID : string, accountName : string) : &;
+    # Notify that an account has been deleted
+    onAccountDeleted(accountUUID : string) : &;
+}
+
+witness_estimate_info_record = record {
+    # Current network weight
+    network_weight : i64;
+    # Weight of resulting witness account
+    weight : i64;
+    # How many parts this weight will be split into
+    parts : i64;
+    # The per block probability of resulting account witnesing
+    estimated_witness_probability : f64;
+    # The estimated number of blocks the resulting account should find per day
+    estimated_blocks_per_day : f64;
+    # The estimated earnings the account should make per day
+    estimated_daily_earnings: i64;
+    # The estimated earnings the account should make over its entire lifetime
+    estimated_lifetime_earnings: i64;
+} deriving(parcelable)
+
+witness_funding_result_record = record {
+    # "success" on success, otherwise an error message
+    status : string;
+    # txid of the funding transaction, empty on failure
+    txid : string;
+    # fee charged by the transaction, 0 on failure
+    fee : i64;
+} deriving(parcelable)
+
+witness_account_statistics_record = record {
+    # Success if request succeeded, otherwise an error message
+    request_status : string;
+    # Current state of the witness account, one of: "empty", "empty_with_remainder", "pending", "witnessing", "ended", "expired", "emptying"
+    account_status : string;
+    # Account weight
+    account_weight : i64;
+    # How many parts the account weight is split up into
+    account_parts : i64;
+    # Account amount locked
+    account_amount_locked : i64;
+    # Account weight when it was created
+    account_weight_at_creation : i64;
+    # Current network weight
+    network_tip_total_weight : i64;
+    # Network weight when account was created
+    network_total_weight_at_account_creation_time : i64;
+    # Account total lock period in blocks (from creation block)
+    account_initial_lock_period_in_blocks : i64;
+    # Account remaining lock period in blocks (from chain tip)
+    account_remaining_lock_period_in_blocks : i64;
+    # How often the account is "expected" by the network to witness in order to not be kicked off
+    account_expected_witness_period_in_blocks : i64;
+    # How often the account is estimated to witness
+    account_estimated_witness_period_in_blocks : i64;
+    # Height at which the account lock first entered the chain
+    account_initial_lock_creation_block_height : i64;
+    # Is this account currently set to compound
+    account_is_compounding : bool;
+} deriving(parcelable)
+
+# C++ interface to control witness accounts
+i_witness_controller = interface +c {
+    # Get information on min/max witness periods, weights etc.
+    static getNetworkLimits() : map<string, string>;
+    
+    # Get an estimate of weights/parts that a witness account will be funded with
+    static getEstimatedWeight(amount_to_lock : i64, lock_period_in_blocks : i64) : witness_estimate_info_record;
+    
+    # Fund a witness account
+    static fundWitnessAccount(funding_account_UUID : string, witness_account_UUID : string, funding_amount : i64, requestedLockPeriodInBlocks : i64) : witness_funding_result_record;
+    
+    # Renew a witness account
+    static renewWitnessAccount(funding_account_UUID : string, witness_account_UUID : string) : witness_funding_result_record;
+    
+    # Get information on account weight and other witness statistics for account
+    static getAccountWitnessStatistics(witnessAccountUUID : string) : witness_account_statistics_record;
+    
+    # Turn compounding on/off
+    static setAccountCompounding(witnessAccountUUID : string, should_compound : bool);
+    
+    # Check state of compounding
+    static isAccountCompounding(witnessAccountUUID : string) : bool;
+}
+
+# C++ interface to control generation of blocks (proof of work)
+i_generation_controller = interface +c {
+    # Register listener to be notified of generation related events
+    static setListener(generationListener : i_generation_listener);
+    # Activate block generation (proof of work)
+    # Number of threads should not exceed physical threads, memory limit is a string specifier in the form of #B/#K/#M/#G (e.g. 102400B, 10240K, 1024M, 1G)
+    static startGeneration(numThreads : i32, memoryLimit : string) : bool;
+    # Stop any active block generation (proof of work)
+    static stopGeneration() : bool;
+    # Get the address of the account that is used for generation by default. Empty on failiure
+    # Note that this isn't necessarily the actual generation address as there might be an override
+    # See: getGenerationOverrideAddress
+    static getGenerationAddress() : string;
+    # Get the 'override' address for generation, if one has been set
+    # The override address, when present it used for all block generation in place of the default account address
+    static getGenerationOverrideAddress() : string;
+    # Set an override address to use for block generation in place of the default
+    static setGenerationOverrideAddress(overrideAddress : string) : bool;
+    
+    static getAvailableCores() : i64;
+    static getMinimumMemory() : i64;
+    static getMaximumMemory() : i64;
+}
+
+# Interface to receive updates about block generation
+i_generation_listener = interface +j +o +n {
+    # Signal that block generation has started
+    onGenerationStarted() : &;
+    # Signal that block generation has stopped
+    onGenerationStopped() : &;
+    # Periodically signal latest block generation statistics
+    onStatsUpdated(hashesPerSecond : f64, hashesPerSecondUnit : string, rollingHashesPerSecond : f64, rollingHashesPerSecondUnit : string, bestHashesPerSecond : f64, bestHashesPerSecondUnit : string, arenaSetupTime : f64) : &;
 }

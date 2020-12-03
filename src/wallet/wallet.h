@@ -448,6 +448,7 @@ struct WalletBalances
     }
 };
 
+//fixme: (HIGH) Merge Cwallet and CExtWallet back into a single class
 /*
 All Gulden specific functionality goes in base class CExtWallet
 A little bit clumsy 

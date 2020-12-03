@@ -6,7 +6,7 @@ packages += libevent zeromq libcryptopp
 endif
 endif
 
-ios_packages = qrencode djinni libcryptoppunity
+ios_packages = qrencode djinni libcryptoppunity libevent
 ifeq ($(host_flavor),android)
 packages += libcryptoppunity
 endif

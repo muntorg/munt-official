@@ -111,15 +111,15 @@ TEST_SOURCES += \
 endif
 
 test_test_gulden_SOURCES = $(TEST_SOURCES) $(JSON_TEST_FILES) $(RAW_TEST_FILES)
-test_test_gulden_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) -DTESTDATADIR=\"$(abs_top_srcdir)/src/test/data/\" -I$(builddir)/test/ $(TESTDEFS) $(EVENT_CFLAGS)
-test_test_gulden_LDADD = $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE) $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE)
+test_test_gulden_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) -DTESTDATADIR=\"$(abs_top_srcdir)/src/test/data/\" -I$(builddir)/test/ $(TESTDEFS) $(EVENT_CFLAGS)
+test_test_gulden_LDADD = $(LIB_SERVER) $(LIB_NODE) $(LIB_SERVER) $(LIB_NODE)
 if ENABLE_WALLET
-test_test_gulden_LDADD += $(LIBGULDEN_WALLET)
+test_test_gulden_LDADD += $(LIB_WALLET)
 endif
 if ENABLE_ZMQ
-test_test_gulden_LDADD += $(LIBGULDEN_ZMQ) $(ZMQ_LIBS)
+test_test_gulden_LDADD += $(LIB_ZMQ) $(ZMQ_LIBS)
 endif
-test_test_gulden_LDADD += $(LIBGULDEN_CLI) $(LIBGULDEN_COMMON) $(LIBGULDEN_GENERIC) $(LIBGULDEN_UTIL) $(LIBGULDEN_CONSENSUS) $(LIBGULDEN_CRYPTO_ALL) $(LIBGULDEN_ANDROID_COMPAT) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
+test_test_gulden_LDADD += $(LIB_CLI) $(LIB_COMMON) $(LIB_GENERIC) $(LIB_UTIL) $(LIB_CONSENSUS) $(LIB_RPC) $(LIB_WALLET) $(LIB_NODE) $(LIB_CRYPTO_ALL) $(LIB_ANDROID_COMPAT) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
   $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(LIBSECP256K1) $(EVENT_LIBS) $(EVENT_PTHREADS_LIBS) $(PROTOBUF_LIBS)
 test_test_gulden_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
@@ -131,32 +131,36 @@ test_test_gulden_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) -st
 
 # test_gulden_fuzzy binary #
 test_test_gulden_fuzzy_SOURCES = test/test_fuzzy.cpp
-test_test_gulden_fuzzy_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES)
+test_test_gulden_fuzzy_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
 test_test_gulden_fuzzy_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 test_test_gulden_fuzzy_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
-test_test_gulden_fuzzy_LDADD = $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE) $(LIBGULDEN_SERVER) $(LIBGULDEN_NODE) $(MINIUPNPC_LIBS)
+test_test_gulden_fuzzy_LDADD = $(LIB_SERVER) $(LIB_NODE) $(LIB_SERVER) $(LIB_NODE) $(MINIUPNPC_LIBS)
 if ENABLE_WALLET
-test_test_gulden_fuzzy_LDADD += $(LIBGULDEN_WALLET)
+test_test_gulden_fuzzy_LDADD += $(LIB_WALLET)
 endif
 if ENABLE_ZMQ
-test_test_gulden_fuzzy_LDADD += $(LIBGULDEN_ZMQ) $(ZMQ_LIBS)
+test_test_gulden_fuzzy_LDADD += $(LIB_ZMQ) $(ZMQ_LIBS)
 endif
 test_test_gulden_fuzzy_LDADD += \
-  $(LIBGULDEN_COMMON) \
-  $(LIBGULDEN_GENERIC) \
-  $(LIBGULDEN_UTIL) \
-  $(LIBGULDEN_CONSENSUS) \
-  $(LIBGULDEN_CRYPTO_ALL) \
-  $(LIBGULDEN_NODE) \
-  $(LIBGULDEN_UTIL) \
-  $(LIBGULDEN_CONSENSUS) \
-  $(LIBGULDEN_COMMON) \
-  $(LIBGULDEN_WALLET) \
-  $(LIBGULDEN_CRYPTO_ALL) \
-  $(LIBGULDEN_COMMON) \
-  $(LIBGULDEN_WALLET) \
-  $(LIBGULDEN_CRYPTO_ALL) \
+  $(LIB_COMMON) \
+  $(LIB_GENERIC) \
+  $(LIB_UTIL) \
+  $(LIB_CONSENSUS) \
+  $(LIB_CRYPTO_ALL) \
+  $(LIB_NODE) \
+  $(LIB_UTIL) \
+  $(LIB_CONSENSUS) \
+  $(LIB_COMMON) \
+  $(LIB_WALLET) \
+  $(LIB_CRYPTO_ALL) \
+  $(LIB_COMMON) \
+  $(LIB_WALLET) \
+  $(LIB_RPC) \
+  $(LIB_NODE) \
+  $(LIB_WALLET) \
+  $(LIB_GENERIC) \
+  $(LIB_CRYPTO_ALL) \
   $(LIBLEVELDB) \
   $(BDB_LIBS) \
   $(EVENT_LIBS) \

@@ -69,6 +69,8 @@ std::string getUUIDAsString(const boost::uuids::uuid& uuid);
 boost::uuids::uuid getUUIDFromString(const std::string& uuid);
 std::string GetAccountTypeString(AccountType type);
 
+CAccount* CreateAccountHelper(CWallet* pwallet, std::string accountName, std::string accountType, bool bMakeActive=true);
+
 const int HDDesktopStartIndex = 0;
 const int HDMobileStartIndex  = 100000;
 const int HDWitnessStartIndex = 200000;

@@ -1,0 +1,67 @@
+<template>
+  <div class="wallet-password-dialog">
+    <gulden-form-field :title="$t('common.password')">
+      <input
+        ref="password"
+        type="password"
+        v-model="password"
+        @keydown="validatePasswordOnEnter"
+        :class="computedStatus"
+      />
+    </gulden-form-field>
+    <gulden-button-section class="buttons">
+      <template v-slot:right>
+        <button @click="validatePassword" :disabled="isButtonDisabled">
+          {{ $t("buttons.unlock") }}
+        </button>
+      </template>
+    </gulden-button-section>
+  </div>
+</template>
+
+<script>
+import { LibraryController } from "../unity/Controllers";
+import EventBus from "../EventBus";
+
+export default {
+  name: "WalletPasswordDialog",
+  props: {
+    value: {
+      type: String,
+      default: null
+    }
+  },
+  data() {
+    return {
+      password: "",
+      isPasswordInvalid: false
+    };
+  },
+  computed: {
+    computedStatus() {
+      return this.isPasswordInvalid ? "error" : "";
+    },
+    isButtonDisabled() {
+      return this.password.trim().length === 0;
+    }
+  },
+  mounted() {
+    this.$refs.password.focus();
+  },
+  methods: {
+    validatePasswordOnEnter() {
+      this.isPasswordInvalid = false;
+      if (event.keyCode === 13) this.validatePassword();
+    },
+    validatePassword() {
+      if (LibraryController.UnlockWallet(this.password)) {
+        LibraryController.LockWallet();
+        this.$store.dispatch("wallet/SET_WALLET_PASSWORD", this.password);
+        EventBus.$emit("close-dialog");
+      } else {
+        this.isPasswordInvalid = true;
+      }
+    }
+  }
+};
+</script>

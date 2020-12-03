@@ -63,7 +63,7 @@ typedef std::vector<std::tuple<CTxOut, uint64_t, uint64_t, COutPoint>> witnessOu
 // throw on failure
 void extendwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee);
 void extendwitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVector unspentWitnessOutputs, CWallet* pwallet, CAmount requestedAmount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee);
-void upgradewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, std::string* pTxid, CAmount* pFee);
+void renewwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, std::string* pTxid, CAmount* pFee);
 void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, CAmount amount, uint64_t requestedPeriodInBlocks, bool fAllowMultiple, std::string* pTxid, CAmount* pFee);
 void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, const std::vector<CAmount>& amounts, uint64_t requestedPeriodInBlocks, bool fAllowMultiple, std::string* pTxid, CAmount* pFee);
 void rotatewitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* witnessAccount, std::string* pTxid, CAmount* pFee);
@@ -90,6 +90,7 @@ struct CWitnessAccountStatus
     WitnessStatus status;
     uint64_t networkWeight;
     uint64_t accountWeight;
+    CAmount accountAmountLocked;
     bool hasScriptLegacyOutput;
     bool hasUnconfirmedWittnessTx;
     uint64_t nLockFromBlock;

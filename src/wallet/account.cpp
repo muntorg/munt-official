@@ -70,6 +70,37 @@ std::string GetAccountTypeString(AccountType type)
     return "Regular";
 }
 
+CAccount* CreateAccountHelper(CWallet* pwallet, std::string accountName, std::string accountType, bool bMakeActive)
+{
+    CAccount* account = nullptr;
+
+    if (pwallet->IsLocked())
+        return nullptr;
+
+    if (accountType == "HD")
+    {
+        account = pwallet->GenerateNewAccount(accountName, AccountState::Normal, AccountType::Desktop, bMakeActive);
+    }
+    else if (accountType == "Mobile")
+    {
+        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountState::Normal, AccountType::Mobi, bMakeActive);
+    }
+    else if (accountType == "Witness")
+    {
+        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountState::Normal, AccountType::PoW2Witness, bMakeActive);
+    }
+    else if (accountType == "Mining")
+    {
+        account = pwallet->GenerateNewAccount(accountName.c_str(), AccountState::Normal, AccountType::MiningAccount, bMakeActive);
+    }
+    else if (accountType == "Legacy")
+    {
+        account = pwallet->GenerateNewLegacyAccount(accountName.c_str());
+    }
+
+    return account;
+}
+
 
 CHDSeed::CHDSeed()
 : m_type(BIP44)
