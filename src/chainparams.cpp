@@ -303,7 +303,14 @@ public:
             consensus.nMinimumChainWork = uint256S("");
 
             // By default assume that the signatures in ancestors of this block are valid.
-            consensus.defaultAssumeValid = uint256S("");
+            if (!checkpointData.empty())
+            {
+                consensus.defaultAssumeValid = checkpointData.rbegin()->second.hash;
+            }
+            else
+            {
+                consensus.defaultAssumeValid = uint256S("");
+            }
 
             consensus.pow2Phase2FirstBlockHeight=0;
             consensus.pow2Phase3FirstBlockHeight=0;
