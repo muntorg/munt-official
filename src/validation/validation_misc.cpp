@@ -21,6 +21,7 @@
 #include "net.h"
 #include "chainparams.h"
 #include "versionbits.h"
+#include <net_processing.h>
 
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state)
@@ -207,21 +208,12 @@ int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Para
 }
 
 //! Guess how far we are in the verification process at the given block index
-double GuessVerificationProgress(const ChainTxData& data, CBlockIndex *pindex) {
+double GuessVerificationProgress(CBlockIndex *pindex) {
     if (pindex == NULL)
         return 0.0;
 
-    int64_t nNow = time(NULL);
-
-    double fTxTotal;
-
-    if (pindex->nChainTx <= data.nTxCount) {
-        fTxTotal = data.nTxCount + (nNow - data.nTime) * data.dTxRate;
-    } else {
-        fTxTotal = pindex->nChainTx + (nNow - pindex->GetBlockTime()) * data.dTxRate;
-    }
-
-    return pindex->nChainTx / fTxTotal;
+    double nSyncProgress = std::min(1.0, (double)pindex->nHeight / GetProbableHeight());
+    return nSyncProgress;
 }
 
 bool GetTxHash(const COutPoint& outpoint, uint256& txHash)

@@ -1646,7 +1646,7 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
             chainActive.Tip()->GetBlockHashPoW2().ToString(), chainActive.Height(), chainActive.Tip()->nVersion, chainActive.Tip()->nVersionPoW2Witness,
             log(chainActive.Tip()->nChainWork.getdouble())/log(2.0), (unsigned long)chainActive.Tip()->nChainTx,
             DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
-            GuessVerificationProgress(chainParams.TxData(), chainActive.Tip()), pcoinsTip->DynamicMemoryUsage() * (1.0 / (1<<20)), pcoinsTip->GetCacheSize());
+            GuessVerificationProgress(chainActive.Tip()), pcoinsTip->DynamicMemoryUsage() * (1.0 / (1<<20)), pcoinsTip->GetCacheSize());
         if (!warningMessages.empty())
             LogPrintf(" warning='%s'", boost::algorithm::join(warningMessages, ", "));
         LogPrintf("\n");
@@ -3599,7 +3599,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
     LogPrintf("%s: hashBestChain=%s height=%d date=%s progress=%f\n", __func__,
         chainActive.Tip()->GetBlockHashPoW2().ToString(), chainActive.Height(),
         DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
-        GuessVerificationProgress(chainparams.TxData(), chainActive.Tip()));
+        GuessVerificationProgress(chainActive.Tip()));
 
     return true;
 }

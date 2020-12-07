@@ -465,10 +465,10 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
         if (nStaticFilterLength == 0)
             std::numeric_limits<uint64_t>::max();
 
-        uint64_t nStartIndex = IsArgSet("-testnet") ? 0 : 250000;//Earliest possible recovery phrase (before this we didn't use phrases)
+        uint64_t nStartIndex = 0;//Earliest possible recovery phrase (before this we didn't use phrases)
         uint64_t nInterval1 = 500;
         uint64_t nInterval2 = 100;
-        uint64_t nCrossOver = IsArgSet("-testnet") ? 200000 : 500000;
+        uint64_t nCrossOver = 10000;
         uint32_t nRanges=0;
         dataFile.seekg(nStaticFilterOffset);
         while (((uint64_t)dataFile.tellg() - nStaticFilterOffset < nStaticFilterLength) && (dataFile.peek() != EOF))

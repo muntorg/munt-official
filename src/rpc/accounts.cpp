@@ -529,10 +529,10 @@ static UniValue dumpfiltercheckpoints(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
 
     LogPrintf("Dumping filter checkpoints:\n");
-    int nStart = IsArgSet("-testnet") ? 0 : 250000;//Earliest possible recovery phrase (before this we didn't use phrases)
+    int nStart = 0;//Earliest possible recovery phrase (before this we didn't use phrases)
     int nInterval1 = 500;
     int nInterval2 = 100;
-    int nCrossOver = IsArgSet("-testnet") ? 200000 : 500000;
+    int nCrossOver = 10000;
     if (chainActive.Tip() != NULL)
     {
         LOCK2(cs_main, pactiveWallet->cs_wallet); // cs_main required for ReadBlockFromDisk.

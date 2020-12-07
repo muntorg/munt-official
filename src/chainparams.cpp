@@ -238,12 +238,6 @@ public:
         
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000000000000272bafe52");
-        
-        chainTxData = ChainTxData{
-            1604964758, // * UNIX timestamp of last checkpoint block
-            65356,
-            0.01
-        };
     }
 };
 
@@ -308,7 +302,7 @@ public:
             consensus.pow2Phase3FirstBlockHeight=0;
             consensus.pow2Phase4FirstBlockHeight=0;
             consensus.pow2Phase5FirstBlockHeight=0;
-            
+
             numGenesisWitnesses = 10;
             genesisWitnessWeightDivisor = 100;
                 
@@ -422,21 +416,12 @@ public:
 
         if (fIsOfficialTestnetV1)
         {
-            
             checkpointData = {
             {      0,  { uint256S("0xbcb2ed2904a0800f8284919f8b941a96517e2858c6850a252d121e5c4ebb9ce9"), 1595347850 } },
             {      10, { uint256S("0x161eeef50952731d9c5de790cd27a788d4a6db51a0c57fe6e51cb8ee323baeb0"), 1596623436 } },
             };
             consensus.defaultAssumeValid = uint256S("0x161eeef50952731d9c5de790cd27a788d4a6db51a0c57fe6e51cb8ee323baeb0");
         }
-        
-
-        chainTxData = ChainTxData{
-            0,
-            0,
-            0
-        };
-
     }
 };
 
@@ -471,8 +456,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].type = Consensus::DEPLOYMENT_POW;
 
+        consensus.fixedRewardReductionHeight=40600;
         consensus.pow2Phase2FirstBlockHeight=40800;
         consensus.pow2Phase3FirstBlockHeight=50000;
+        consensus.devBlockSubsidyActivationHeight=50100;
         consensus.pow2Phase4FirstBlockHeight=50500;
         consensus.pow2Phase5FirstBlockHeight=50500;
 
@@ -512,11 +499,6 @@ public:
             { 0, { genesis.GetHashPoW2(), genesis.nTime } }
         };
 
-        chainTxData = ChainTxData{
-            0,
-            0,
-            0
-        };
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,60);// 'R'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,122);// 'r'
         base58Prefixes[POW2_WITNESS_ADDRESS] = std::vector<unsigned char>(1,123);// 'r'

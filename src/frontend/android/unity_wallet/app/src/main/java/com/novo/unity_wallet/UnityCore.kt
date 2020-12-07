@@ -77,8 +77,8 @@ class UnityCore {
                 // Thread.sleep(10000)
                 System.loadLibrary("_unity_jni")
                 buildInfo = ILibraryController.BuildInfo()
-                Log.i(TAG, "Unity librarry loaded: $buildInfo")
-                ILibraryController.InitUnityLib(cfg.dataDir, ""/*cfg.apkPath*/, 0/*cfg.staticFilterOffset*/, 0/*cfg.staticFilterLength*/, cfg.testnet, true, coreLibrarySignalHandler, "")
+                Log.i(TAG, "Unity library loaded: $buildInfo")
+                ILibraryController.InitUnityLib(cfg.dataDir, cfg.apkPath, cfg.staticFilterOffset, cfg.staticFilterLength, cfg.testnet, true, coreLibrarySignalHandler, "")
             }
 
             started = true

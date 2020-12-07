@@ -43,12 +43,6 @@ struct CheckPointEntry
 
 using CCheckpointData = std::map<int, CheckPointEntry>;
 
-struct ChainTxData {
-    int64_t nTime;
-    int64_t nTxCount;
-    double dTxRate;
-};
-
 /**
  * CChainParams defines various tweakable parameters of a given instance of the
  * Gulden system. There are three: the main network on which people trade goods
@@ -89,8 +83,10 @@ public:
     const std::vector<unsigned char>& Base58Prefix(Base58Type type) const { return base58Prefixes[type]; }
     const std::vector<SeedSpec6>& FixedSeeds() const { return vFixedSeeds; }
     const CCheckpointData& Checkpoints() const { return checkpointData; }
-    const ChainTxData& TxData() const { return chainTxData; }
-    bool UseSyncCheckpoints() const { return fUseSyncCheckpoints; }
+    bool UseSyncCheckpoints() const
+    {
+        return fUseSyncCheckpoints;
+    }
     void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout);
 
     //fixme: (testnet) remove after official testnet restarted
@@ -123,7 +119,6 @@ protected:
     bool fMineBlocksOnDemand;
     bool fUseSyncCheckpoints;
     CCheckpointData checkpointData;
-    ChainTxData chainTxData;
     bool fIsOfficialTestnetV1;
 };
 
