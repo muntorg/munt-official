@@ -234,7 +234,14 @@ public:
         };
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x938211b632222b4127fcd60ef774805a30fcaea0548f07cd3ef55003fbb037eb");
+        if (!checkpointData.empty())
+        {
+            consensus.defaultAssumeValid = checkpointData.rbegin()->second.hash;
+        }
+        else
+        {
+            consensus.defaultAssumeValid = uint256S("");
+        }
         
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000000000000272bafe52");
@@ -420,7 +427,14 @@ public:
             {      0,  { uint256S("0xbcb2ed2904a0800f8284919f8b941a96517e2858c6850a252d121e5c4ebb9ce9"), 1595347850 } },
             {      10, { uint256S("0x161eeef50952731d9c5de790cd27a788d4a6db51a0c57fe6e51cb8ee323baeb0"), 1596623436 } },
             };
-            consensus.defaultAssumeValid = uint256S("0x161eeef50952731d9c5de790cd27a788d4a6db51a0c57fe6e51cb8ee323baeb0");
+            if (!checkpointData.empty())
+            {
+                consensus.defaultAssumeValid = checkpointData.rbegin()->second.hash;
+            }
+            else
+            {
+                consensus.defaultAssumeValid = uint256S("");
+            }
         }
     }
 };
@@ -467,7 +481,14 @@ public:
         consensus.nMinimumChainWork = uint256S("0x00");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00");
+        if (!checkpointData.empty())
+        {
+            consensus.defaultAssumeValid = checkpointData.rbegin()->second.hash;
+        }
+        else
+        {
+            consensus.defaultAssumeValid = uint256S("");
+        }
 
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
         pchMessageStart[1] = 0xfe; // 'L' + 0xb0
