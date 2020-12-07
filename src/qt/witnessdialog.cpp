@@ -1105,7 +1105,7 @@ void WitnessDialog::updateAccountIndicators()
     }
 }
 
-void WitnessDialog::numBlocksChanged(int,QDateTime,double)
+void WitnessDialog::numBlocksChanged(int,QDateTime)
 {
     LOG_QT_METHOD;
 
@@ -1135,7 +1135,7 @@ void WitnessDialog::setClientModel(ClientModel* clientModel_)
     clientModel = clientModel_;
     if (clientModel)
     {
-        connect(clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double)), this, SLOT(numBlocksChanged(int,QDateTime,double)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+        connect(clientModel, SIGNAL(numBlocksChanged(int,QDateTime)), this, SLOT(numBlocksChanged(int,QDateTime)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
     }
 }
 

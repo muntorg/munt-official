@@ -543,8 +543,8 @@ void RPCConsole::setClientModel(ClientModel *model)
         connect(model, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)));
 
         if (isFullSyncMode())
-            setNumBlocks(model->getNumBlocks(), model->getLastBlockDate(), model->getVerificationProgress(NULL));
-        connect(model, SIGNAL(numBlocksChanged(int,QDateTime,double)), this, SLOT(setNumBlocks(int,QDateTime,double)));
+            setNumBlocks(model->getNumBlocks(), model->getLastBlockDate());
+        connect(model, SIGNAL(numBlocksChanged(int,QDateTime)), this, SLOT(setNumBlocks(int,QDateTime)));
 
         updateNetworkState();
         connect(model, SIGNAL(networkActiveChanged(bool)), this, SLOT(setNetworkActive(bool)));
@@ -827,7 +827,7 @@ void RPCConsole::setNetworkActive([[maybe_unused]] bool networkActive)
     updateNetworkState();
 }
 
-void RPCConsole::setNumBlocks(int count, const QDateTime& blockDate, [[maybe_unused]] double nVerificationProgress)
+void RPCConsole::setNumBlocks(int count, const QDateTime& blockDate)
 {
     if (!clientModel)
         return;

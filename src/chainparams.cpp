@@ -160,13 +160,6 @@ public:
         
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000013805bf10554d4553");
-        
-        chainTxData = ChainTxData{
-            1606315937, // * UNIX timestamp of last checkpoint block
-            3195316,    // * total number of transactions between genesis and last checkpoint
-                        //   (the tx=... number in the SetBestChain debug.log lines)
-            0.1         // * estimated number of transactions per second after that timestamp
-        };
     }
 };
 
@@ -385,13 +378,6 @@ public:
             };
             consensus.defaultAssumeValid = uint256S("0x924d4d8a9601594dc5a2adf14cefc354e9df230cb5215d5f42b61d0da60e0b03");
         }
-
-        chainTxData = ChainTxData{
-            0,
-            0,
-            0
-        };
-
     }
 };
 
@@ -464,11 +450,6 @@ public:
             { 0, { genesis.GetHashPoW2(), genesis.nTime } }
         };
 
-        chainTxData = ChainTxData{
-            0,
-            0,
-            0
-        };
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,60);// 'R'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,122);// 'r'
         base58Prefixes[POW2_WITNESS_ADDRESS] = std::vector<unsigned char>(1,123);// 'r'

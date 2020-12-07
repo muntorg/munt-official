@@ -721,11 +721,11 @@ void GUI::setClientModel(ClientModel *_clientModel)
         updateNetworkState();
         syncOverlay->setKnownBestHeight(_clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(_clientModel->getHeaderTipTime()));
         if (isFullSyncMode())
-            setNumBlocks(_clientModel->getNumBlocks(), _clientModel->getLastBlockDate(), _clientModel->getVerificationProgress(NULL));
+            setNumBlocks(_clientModel->getNumBlocks(), _clientModel->getLastBlockDate());
 
         connect(_clientModel, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         connect(_clientModel, SIGNAL(networkActiveChanged(bool)), this, SLOT(setNetworkActive(bool)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
-        connect(_clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double)), this, SLOT(setNumBlocks(int,QDateTime,double)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
+        connect(_clientModel, SIGNAL(numBlocksChanged(int,QDateTime)), this, SLOT(setNumBlocks(int,QDateTime)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         connect(_clientModel, SIGNAL(headerProgressChanged(int, int)), this, SLOT(setNumHeaders(int,int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         connect(_clientModel, SIGNAL(spvProgressChanged(int, int, int)), this, SLOT(spvProgress(int,int, int)), (Qt::ConnectionType)(Qt::AutoConnection|Qt::UniqueConnection));
         // Receive and report messages from client model
@@ -1186,7 +1186,7 @@ void GUI::updateWindowTitle()
     setWindowTitle(windowTitle);
 }
 
-void GUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress)
+void GUI::setNumBlocks(int count, const QDateTime& blockDate)
 {
     LogPrint(BCLog::QT, "GUI::setNumBlocks\n");
 

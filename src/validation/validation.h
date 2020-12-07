@@ -64,7 +64,6 @@ class CBlockPolicyEstimator;
 class CTxMemPool;
 class CValidationInterface;
 class CValidationState;
-struct ChainTxData;
 
 
 struct PrecomputedTransactionData;
@@ -362,7 +361,7 @@ CAmount GetBlockSubsidyWitness(uint64_t nHeight);
 inline std::string devSubsidyAddress = "03ae258dc3463de883e9fbda5239353fe9dc98805cf31800d5a6eeaa3ed4afcc70";
 
 /** Guess verification progress (as a fraction between 0.0=genesis and 1.0=current tip). */
-double GuessVerificationProgress(const ChainTxData& data, CBlockIndex* pindex);
+double GuessVerificationProgress(CBlockIndex* pindex);
 
 /**
  *  Mark one block file as pruned.

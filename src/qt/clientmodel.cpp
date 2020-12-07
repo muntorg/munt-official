@@ -153,17 +153,6 @@ size_t ClientModel::getMempoolDynamicUsage() const
     return mempool.DynamicMemoryUsage();
 }
 
-double ClientModel::getVerificationProgress(const CBlockIndex *tipIn) const
-{
-    CBlockIndex *tip = const_cast<CBlockIndex *>(tipIn);
-    if (!tip)
-    {
-        LOCK(cs_main);
-        tip = chainActive.Tip();
-    }
-    return GuessVerificationProgress(Params().TxData(), tip);
-}
-
 void ClientModel::updateTimer()
 {
     // no locking required at this point
@@ -347,8 +336,8 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
         //pass a async signal to the UI thread
         QMetaObject::invokeMethod(clientmodel, "numBlocksChanged", Qt::QueuedConnection,
                                   Q_ARG(int, pIndex->nHeight),
-                                  Q_ARG(QDateTime, QDateTime::fromTime_t(pIndex->GetBlockTime())),
-                                  Q_ARG(double, clientmodel->getVerificationProgress(pIndex)));
+                                  Q_ARG(QDateTime, QDateTime::fromTime_t(pIndex->GetBlockTime()))
+                                  );
         nLastUpdateNotification = now;
     }
 }
