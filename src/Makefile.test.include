@@ -158,6 +158,7 @@ test_test_gulden_fuzzy_LDADD += \
   $(LIB_WALLET) \
   $(LIB_RPC) \
   $(LIB_NODE) \
+  $(LIB_COMMON) \
   $(LIB_WALLET) \
   $(LIB_GENERIC) \
   $(LIB_CRYPTO_ALL) \
