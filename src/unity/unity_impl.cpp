@@ -557,6 +557,14 @@ bool ILibraryController::InitWalletFromRecoveryPhrase(const std::string& phrase,
     return true;
 }
 
+void DoRescanInternal()
+{
+    if (pactiveWallet)
+    {
+        ResetSPVStartRescanThread();
+    }
+}
+
 bool ValidateAndSplitRecoveryPhrase(const std::string & phrase, SecureString& mnemonic, int& birthNumber)
 {
     if (phrase.length() < 16)
@@ -598,7 +606,7 @@ bool ILibraryController::ContinueWalletFromRecoveryPhrase(const std::string& phr
     balanceChangeNotifier->trigger(0);
 
     // Rescan for transactions on the linked account
-    DoRescan();
+    DoRescanInternal();
 
     return true;
 }
@@ -692,7 +700,7 @@ bool ILibraryController::ContinueWalletLinkedFromURI(const std::string & linked_
     balanceChangeNotifier->trigger(0);
 
     // Rescan for transactions on the linked account
-    DoRescan();
+    DoRescanInternal();
 
     return true;
 }
@@ -795,7 +803,7 @@ bool ILibraryController::ReplaceWalletLinkedFromURI(const std::string& linked_ur
     balanceChangeNotifier->trigger(0);
 
     // Rescan for transactions on the linked account
-    DoRescan();
+    DoRescanInternal();
 
     return true;
 }
@@ -1129,10 +1137,18 @@ int64_t ILibraryController::GetBalance()
 
 void ILibraryController::DoRescan()
 {
-    if (pactiveWallet)
-    {
-        ResetSPVStartRescanThread();
-    }
+    if (!pactiveWallet)
+        return;
+
+    // Allocate some extra keys
+    //fixme: Persist this across runs in some way
+    static int32_t extraKeys=0;
+    extraKeys += 5;    
+    int nKeyPoolTargetDepth = GetArg("-keypool", DEFAULT_ACCOUNT_KEYPOOL_SIZE)+extraKeys;
+    pactiveWallet->TopUpKeyPool(nKeyPoolTargetDepth, 0, nullptr, 1);
+    
+    // Do the rescan
+    DoRescanInternal();
 }
 
 UriRecipient ILibraryController::IsValidRecipient(const UriRecord & request)
