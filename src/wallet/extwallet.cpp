@@ -105,7 +105,7 @@ static void ThreadShadowPoolManager()
     int depth = 1;
     int nAccountPoolTargetSize = GetArg("-accountpool", 10);
     int nAccountPoolTargetSizeWitness = GetArg("-accountpool", 2);
-    int nKeyPoolTargetDepth = GetArg("-keypool", 20);
+    int nKeyPoolTargetDepth = GetArg("-keypool", DEFAULT_ACCOUNT_KEYPOOL_SIZE);
     while (true)
     {
         long milliSleep = 500;
