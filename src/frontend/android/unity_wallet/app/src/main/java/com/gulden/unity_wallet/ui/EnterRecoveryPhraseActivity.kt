@@ -12,8 +12,7 @@ import android.widget.MultiAutoCompleteTextView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.unity_wallet.Authentication
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
@@ -158,14 +157,14 @@ class EnterRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
         Authentication.instance.chooseAccessCode(this, null) {
             password->
             if (UnityCore.instance.isCoreReady()) {
-                if (GuldenUnifiedBackend.ContinueWalletFromRecoveryPhrase(mnemonicPhrase, password.joinToString(""))) {
+                if (ILibraryController.ContinueWalletFromRecoveryPhrase(mnemonicPhrase, password.joinToString(""))) {
                     gotoWalletActivity(this)
                 } else {
                     internalErrorAlert(this, "$TAG continuation failed")
                 }
             } else {
                 // Create the new wallet, a coreReady event will follow which will proceed to the main activity
-                if (!GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(mnemonicPhrase, password.joinToString("")))
+                if (!ILibraryController.InitWalletFromRecoveryPhrase(mnemonicPhrase, password.joinToString("")))
                     internalErrorAlert(this, "$TAG init failed")
             }
         }
@@ -182,8 +181,8 @@ class EnterRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
                     val unixTime = System.currentTimeMillis() / 1000L
                     when (selection)
                     {
-                        0 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*31)))
-                        1 -> chooseAccessCodeAndProceed(GuldenUnifiedBackend.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*365)))
+                        0 -> chooseAccessCodeAndProceed(ILibraryController.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*31)))
+                        1 -> chooseAccessCodeAndProceed(ILibraryController.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*365)))
                         2 -> chooseAccessCodeAndProceed(recoveryPhrase)
                     }
                 }
@@ -192,7 +191,7 @@ class EnterRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
 
     fun onAcceptRecoverFromPhrase(view: View)
     {
-        if (!GuldenUnifiedBackend.IsValidRecoveryPhrase(recoveryPhrase))
+        if (!ILibraryController.IsValidRecoveryPhrase(recoveryPhrase))
         {
             Toast.makeText(applicationContext, "Invalid recovery phrase", Toast.LENGTH_LONG).show()
             return
@@ -211,7 +210,7 @@ class EnterRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
     fun updateView()
     {
         // Toggle button visual disabled/enabled indicator while still keeping it clickable
-        setFauxButtonEnabledState(recover_from_phrase_proceed_button, GuldenUnifiedBackend.IsValidRecoveryPhrase(recoveryPhrase))
+        setFauxButtonEnabledState(recover_from_phrase_proceed_button, ILibraryController.IsValidRecoveryPhrase(recoveryPhrase))
     }
 
 }

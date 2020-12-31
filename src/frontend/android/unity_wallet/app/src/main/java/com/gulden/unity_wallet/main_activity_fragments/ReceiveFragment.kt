@@ -16,11 +16,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.unity_wallet.R
-import com.gulden.unity_wallet.UnityCore
 import com.gulden.unity_wallet.WalletActivity
-import com.gulden.unity_wallet.util.AppBaseActivity
 import com.gulden.unity_wallet.util.AppBaseFragment
 import kotlinx.android.synthetic.main.fragment_receive.*
 import org.jetbrains.anko.dimen
@@ -69,8 +67,8 @@ class ReceiveFragment : AppBaseFragment() {
     {
         if (currentAddressQrView != null)
         {
-            val address = GuldenUnifiedBackend.GetReceiveAddress()
-            val imageData = GuldenUnifiedBackend.QRImageFromString("gulden://$address", 600)
+            val address = ILibraryController.GetReceiveAddress()
+            val imageData = ILibraryController.QRImageFromString("gulden://$address", 600)
             val bitmap = Bitmap.createBitmap(imageData.width, imageData.width, Bitmap.Config.ALPHA_8)
             bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageData.pixelData))
             currentAddressQrView.setImageBitmap(bitmap)

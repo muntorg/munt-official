@@ -30,7 +30,7 @@ class BlockListAdapter : ListAdapter<BlockInfoRecord, BlockListAdapter.ItemViewH
         )
     }
 
-    override fun onBindViewHolder(holder: BlockListAdapter.ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 

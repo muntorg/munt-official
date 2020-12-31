@@ -27,7 +27,7 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.AddressRecord
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.ui.AddressBookAdapter
@@ -126,7 +126,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
 
         ClipboardManager.OnPrimaryClipChangedListener { checkClipboardEnable() }
 
-        val addresses = GuldenUnifiedBackend.getAddressBookRecords()
+        val addresses = ILibraryController.getAddressBookRecords()
         val adapter = AddressBookAdapter(addresses) { position, address ->
             val recipient = UriRecipient(true, address.address, address.name, address.desc, 0)
             SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
@@ -231,7 +231,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
     }
 
     override fun onAddressBookChanged() {
-        val newAddresses = GuldenUnifiedBackend.getAddressBookRecords()
+        val newAddresses = ILibraryController.getAddressBookRecords()
         runOnUiThread {
             val adapter = addressBookList.adapter as AddressBookAdapter
             adapter.updateDataSource(newAddresses)

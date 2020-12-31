@@ -11,7 +11,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.jniunifiedbackend.MutationRecord
 import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.unity_wallet.*
@@ -38,7 +38,7 @@ class MutationFragment : AppBaseFragment(), UnityCore.Observer, CoroutineScope {
         // scroll position is kept on switching from and to this fragment
         UnityCore.instance.walletReady.invokeNowOrOnSuccesfullCompletion(this) {
             mutationList?.emptyView = emptyMutationListView
-            val mutations = GuldenUnifiedBackend.getMutationHistory()
+            val mutations = ILibraryController.getMutationHistory()
 
             val adapter = MutationAdapter(this@MutationFragment.context!!, mutations)
             mutationList.adapter = adapter
@@ -75,7 +75,7 @@ class MutationFragment : AppBaseFragment(), UnityCore.Observer, CoroutineScope {
 
     override fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {
         //TODO: Update only the single mutation we have received
-        val mutations = GuldenUnifiedBackend.getMutationHistory()
+        val mutations = ILibraryController.getMutationHistory()
         runOnUiThread {
             val adapter = mutationList.adapter as MutationAdapter
             adapter.updateDataSource(mutations)
@@ -85,7 +85,7 @@ class MutationFragment : AppBaseFragment(), UnityCore.Observer, CoroutineScope {
     override fun updatedTransaction(transaction: TransactionRecord)
     {
         //TODO: Update only the single mutation we have received
-        val mutations = GuldenUnifiedBackend.getMutationHistory()
+        val mutations = ILibraryController.getMutationHistory()
         runOnUiThread {
             val adapter = mutationList.adapter as MutationAdapter
             adapter.updateDataSource(mutations)

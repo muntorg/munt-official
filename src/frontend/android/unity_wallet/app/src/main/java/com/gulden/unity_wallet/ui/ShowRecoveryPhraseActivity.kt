@@ -15,7 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.ShareActionProvider
 import androidx.core.view.MenuItemCompat
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.util.AppBaseActivity
 import com.gulden.unity_wallet.util.gotoWalletActivity
@@ -103,14 +103,14 @@ class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
         Authentication.instance.chooseAccessCode(this, null) {
             password->
             if (UnityCore.instance.isCoreReady()) {
-                if (GuldenUnifiedBackend.ContinueWalletFromRecoveryPhrase(recoveryPhrase, password.joinToString(""))) {
+                if (ILibraryController.ContinueWalletFromRecoveryPhrase(recoveryPhrase, password.joinToString(""))) {
                     gotoWalletActivity(this)
                 } else {
                     internalErrorAlert(this, "$TAG continuation failed")
                 }
             } else {
                 // Create the new wallet, a coreReady event will follow which will proceed to the main activity
-                if (!GuldenUnifiedBackend.InitWalletFromRecoveryPhrase(recoveryPhrase, password.joinToString("")))
+                if (!ILibraryController.InitWalletFromRecoveryPhrase(recoveryPhrase, password.joinToString("")))
                     internalErrorAlert(this, "$TAG init failed")
             }
         }

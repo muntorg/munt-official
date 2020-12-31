@@ -2,7 +2,7 @@ package com.gulden.unity_wallet
 
 import android.content.Context
 import android.net.Uri
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.jniunifiedbackend.UriRecord
 import org.apache.commons.validator.routines.IBANValidator
@@ -64,7 +64,7 @@ fun createRecipient(text: String): UriRecipient {
         return UriRecipient(false, address, label, description, amount)
 
     // if there is a scheme it should equal gulden or guldencoin, but that will be checked inside C++, so just pass it through
-    val coreRecipient = GuldenUnifiedBackend.IsValidRecipient(UriRecord(uri.scheme, address, HashMap<String, String>()))
+    val coreRecipient = ILibraryController.IsValidRecipient(UriRecord(uri.scheme, address, HashMap<String, String>()))
     if (!coreRecipient.valid)
         throw InvalidRecipientException("Core deemed recipient invalid")
 

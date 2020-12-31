@@ -18,7 +18,7 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.jniunifiedbackend.MutationRecord
 import com.gulden.jniunifiedbackend.TransactionRecord
 import kotlinx.coroutines.CoroutineScope
@@ -167,8 +167,8 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
     {
         val deferred = UnityCore.instance.walletReady
         if (deferred.isCompleted && !deferred.isCancelled) {
-            GuldenUnifiedBackend.PersistAndPruneForSPV()
-            GuldenUnifiedBackend.LockWallet()
+            ILibraryController.PersistAndPruneForSPV()
+            ILibraryController.LockWallet()
             //TODO: This lock call should be powered via core events and not directly
             Authentication.instance.lock()
         }

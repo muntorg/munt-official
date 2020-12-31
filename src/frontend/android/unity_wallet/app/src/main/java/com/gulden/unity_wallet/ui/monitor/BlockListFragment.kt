@@ -13,8 +13,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.gulden.jniunifiedbackend.GuldenMonitorListener
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.MonitorListener
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
 import com.gulden.unity_wallet.util.AppBaseFragment
@@ -64,7 +64,7 @@ class BlockListFragment : AppBaseFragment() {
 
     private suspend fun updateBlocks() {
         val data = withContext(Dispatchers.IO) {
-            GuldenUnifiedBackend.getLastSPVBlockInfos()
+            ILibraryController.getLastSPVBlockInfos()
         }
         viewModel.setBlocks(data)
     }
@@ -81,7 +81,7 @@ class BlockListFragment : AppBaseFragment() {
         super.onPause()
     }
 
-    private val monitoringListener = object: GuldenMonitorListener() {
+    private val monitoringListener = object: MonitorListener() {
         override fun onPruned(height: Int) {}
 
         override fun onProcessedSPVBlocks(height: Int) {}

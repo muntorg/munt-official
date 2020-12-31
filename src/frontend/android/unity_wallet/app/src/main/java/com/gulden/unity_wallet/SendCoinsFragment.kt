@@ -24,7 +24,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.gulden.jniunifiedbackend.AddressRecord
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.Config.Companion.PRECISION_SHORT
 import com.gulden.unity_wallet.R.layout.text_input_address_label
@@ -231,7 +231,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         Authentication.instance.authenticate(this@SendCoinsFragment.activity!!,
                 null, msg = message) {
             try {
-                GuldenUnifiedBackend.performPaymentToRecipient(request, substractFee)
+                ILibraryController.performPaymentToRecipient(request, substractFee)
                 d.dismiss()
             }
             catch (exception: RuntimeException) {
@@ -251,8 +251,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
         try {
             val paymentRequest = UriRecipient(true, recipient.address, recipient.label, recipient.desc, amountNative)
-            val fee = GuldenUnifiedBackend.feeForRecipient(paymentRequest)
-            val balance = GuldenUnifiedBackend.GetBalance()
+            val fee = ILibraryController.feeForRecipient(paymentRequest)
+            val balance = ILibraryController.GetBalance()
             if (fee > balance) {
                 errorMessage(getString(R.string.send_insufficient_balance))
                 return
@@ -343,7 +343,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         UnityCore.instance.walletReady.invokeNowOrOnSuccesfullCompletion(this) {
             if (label.isNotEmpty())
             {
-                val isInAddressBook = GuldenUnifiedBackend.getAddressBookRecords().count { it.name.equals(other = label, ignoreCase = true) } > 0
+                val isInAddressBook = ILibraryController.getAddressBookRecords().count { it.name.equals(other = label, ignoreCase = true) } > 0
                 if (isInAddressBook) {
                     mLabelRemoveFromAddressBook.visibility = View.VISIBLE
                     mLabelAddToAddressBook.visibility = View.GONE

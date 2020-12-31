@@ -14,7 +14,7 @@ import android.view.LayoutInflater
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import androidx.preference.PreferenceManager
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.unity_wallet.Constants.ACCESS_CODE_ATTEMPTS_ALLOWED
 import com.gulden.unity_wallet.Constants.ACCESS_CODE_LENGTH
 import kotlinx.android.synthetic.main.access_code_entry.view.*
@@ -110,7 +110,7 @@ class Authentication {
             positiveButton(context.getString(R.string.authentication_blocked_later_btn)) {}
             // TODO: recovery using the mnemonic is not possible because the (core) wallet needs to be unlocked to verify the mnemonic
             // so this is a chicken egg problem. it could be fixed for example by storing a hashed version of the mnemonic for this purpose
-            if (false /*GuldenUnifiedBackend.IsMnemonicWallet()*/) {
+            if (false /*ILibraryController.IsMnemonicWallet()*/) {
                 this.message = context.getString(R.string.authentication_blocked_msg_recovery).format(
                         DateUtils.getRelativeTimeSpanString(blockedUntil, System.currentTimeMillis(), 0, 0).toString().toLowerCase())
                 neutralPressed(context.getString(R.string.authentication_blocked_choose_new_btn)) {
@@ -131,7 +131,7 @@ class Authentication {
             this.title = context.getString(R.string.authentication_blocked_title)
             negativeButton(android.R.string.cancel) { }
             positiveButton(android.R.string.ok) {
-                if (UnityCore.instance.walletReady.isCompleted && GuldenUnifiedBackend.IsMnemonicCorrect(contentView.recoveryPhrase.text.toString())) {
+                if (UnityCore.instance.walletReady.isCompleted && ILibraryController.IsMnemonicCorrect(contentView.recoveryPhrase.text.toString())) {
                     chooseAccessCode(context, null) {
                         unblock(context)
                     }
@@ -178,7 +178,7 @@ class Authentication {
                                 var chosenCode = CharArray(ACCESS_CODE_LENGTH)
                                 s.getChars(0, s.length, chosenCode, 0)
 
-                                if (UnityCore.instance.walletReady.isCompleted && GuldenUnifiedBackend.UnlockWallet(chosenCode.joinToString(""))) {
+                                if (UnityCore.instance.walletReady.isCompleted && ILibraryController.UnlockWallet(chosenCode.joinToString(""))) {
                                     Log.i(TAG, "successful authentication")
                                     resetFailedAttempts(context)
                                     it.dismiss()

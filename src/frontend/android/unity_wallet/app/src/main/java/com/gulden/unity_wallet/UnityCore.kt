@@ -75,10 +75,9 @@ class UnityCore {
                 // Use this sleep to delay loading of the library. This will catch most of premature usage of
                 // Unity API calls which will then blow up by an unsatisfied link error.
                 // Thread.sleep(10000)
-                System.loadLibrary("gulden_unity_jni")
-                buildInfo = GuldenUnifiedBackend.BuildInfo()
+                System.loadLibrary(ILibraryController.BuildInfo())
                 Log.i(TAG, "Unity library loaded: $buildInfo")
-                GuldenUnifiedBackend.InitUnityLib(cfg.dataDir, cfg.apkPath, cfg.staticFilterOffset, cfg.staticFilterLength, cfg.testnet, true, coreLibrarySignalHandler, "")
+                ILibraryController.InitUnityLib(cfg.dataDir, cfg.apkPath, cfg.staticFilterOffset, cfg.staticFilterLength, cfg.testnet, true, coreLibrarySignalHandler, "")
             }
 
             started = true
@@ -102,7 +101,7 @@ class UnityCore {
 
     val progressPercent: Float
         get() {
-            return GuldenUnifiedBackend.getUnifiedProgress() * 100
+            return ILibraryController.getUnifiedProgress() * 100
         }
 
     var balanceAmount: Long = 0
@@ -119,22 +118,22 @@ class UnityCore {
 
     // TODO wrappers here could be moved into core later
     fun addAddressBookRecord(record: AddressRecord) {
-        GuldenUnifiedBackend.addAddressBookRecord(record)
+        ILibraryController.addAddressBookRecord(record)
         coreLibrarySignalHandler.notifyAddressBookChanged()
     }
 
     fun deleteAddressBookRecord(record: AddressRecord) {
-        GuldenUnifiedBackend.deleteAddressBookRecord(record)
+        ILibraryController.deleteAddressBookRecord(record)
         coreLibrarySignalHandler.notifyAddressBookChanged()
     }
 
-    fun addMonitorObserver(observer: GuldenMonitorListener, wrapper: (() -> Unit)-> Unit = fun (body: () -> Unit) { body() }) {
+    fun addMonitorObserver(observer: MonitorListener, wrapper: (() -> Unit)-> Unit = fun (body: () -> Unit) { body() }) {
         monitorObserversLock.withLock {
             monitorObservers.add(MonitorObserverEntry(observer, wrapper))
         }
     }
 
-    fun removeMonitorObserver(observer: GuldenMonitorListener) {
+    fun removeMonitorObserver(observer: MonitorListener) {
         monitorObserversLock.withLock {
             monitorObservers.removeAll(
                     monitorObservers.filter { it.observer == observer }
@@ -142,11 +141,11 @@ class UnityCore {
         }
     }
 
-    class MonitorObserverEntry(val observer: GuldenMonitorListener, val wrapper: (() ->Unit) -> Unit)
+    class MonitorObserverEntry(val observer: MonitorListener, val wrapper: (() ->Unit) -> Unit)
     private var monitorObserversLock: Lock = ReentrantLock()
     private var monitorObservers: MutableSet<MonitorObserverEntry> = mutableSetOf()
 
-    private val monitorHandler = object: GuldenMonitorListener() {
+    private val monitorHandler = object: MonitorListener() {
         override fun onPartialChain(height: Int, probableHeight: Int, offset: Int) {
             monitorObserversLock.withLock {
                 monitorObservers.forEach {
@@ -174,7 +173,7 @@ class UnityCore {
     }
 
     // Handle signals from core library, convert and broadcast to all registered observers
-    private val coreLibrarySignalHandler = object : GuldenUnifiedFrontend() {
+    private val coreLibrarySignalHandler = object : ILibraryListener() {
         override fun logPrint(str: String?) {
             // logging already done at C++ level
         }
@@ -238,7 +237,7 @@ class UnityCore {
                 Log.e(TAG, "Exception in Java/Kotlin notification handler notifyCoreReady() $e")
             }
             monitorObserversLock.withLock {
-                GuldenUnifiedBackend.RegisterMonitorListener(monitorHandler)
+                ILibraryController.RegisterMonitorListener(monitorHandler)
             }
         }
 

@@ -13,7 +13,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.ILibraryController
+import com.gulden.jniunifiedbackend.IP2pNetworkController
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
 import com.gulden.unity_wallet.util.AppBaseFragment
@@ -51,7 +52,7 @@ class PeerListFragment : AppBaseFragment(), CoroutineScope {
                 UnityCore.instance.walletReady.await()
                 while (isActive) {
                     val peers = withContext(Dispatchers.IO) {
-                        GuldenUnifiedBackend.getPeers()
+                        IP2pNetworkController.getPeerInfo()
                     }
                     viewModel.setPeers(peers)
                     delay(3000)

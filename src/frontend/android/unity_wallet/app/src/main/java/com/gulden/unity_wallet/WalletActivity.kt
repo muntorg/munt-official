@@ -13,7 +13,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.unity_wallet.main_activity_fragments.*
 import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
 import kotlinx.coroutines.Dispatchers
@@ -161,7 +161,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
             // ReplaceWalletLinkedFromURI can be long running, so run it in a thread that isn't the UI thread.
             thread(start = true)
             {
-                if (!GuldenUnifiedBackend.ReplaceWalletLinkedFromURI(linkURI, password.joinToString("")))
+                if (!ILibraryController.ReplaceWalletLinkedFromURI(linkURI, password.joinToString("")))
                 {
                     runOnUiThread {
                         AlertDialog.Builder(this)
@@ -253,7 +253,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
     @Suppress("UNUSED_PARAMETER")
     fun gotoBuyActivity(view : View? = null)
     {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Config.PURCHASE_TEMPLATE.format(GuldenUnifiedBackend.GetReceiveAddress().toString())))
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Config.PURCHASE_TEMPLATE.format(ILibraryController.GetReceiveAddress().toString())))
         if (intent.resolveActivity(packageManager) != null)
         {
             startActivity(intent)

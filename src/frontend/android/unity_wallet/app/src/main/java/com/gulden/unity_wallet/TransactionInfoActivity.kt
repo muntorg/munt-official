@@ -11,8 +11,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.gulden.jniunifiedbackend.GuldenMonitorListener
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.MonitorListener
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.jniunifiedbackend.TransactionStatus
 import com.gulden.unity_wallet.util.AppBaseActivity
@@ -41,7 +41,7 @@ class TransactionInfoActivity : AppBaseActivity() {
     private fun fillTxInfo() {
         val txHash = intent.getStringExtra(EXTRA_TRANSACTION)
         try {
-            val tx = GuldenUnifiedBackend.getTransaction(txHash)
+            val tx = ILibraryController.getTransaction(txHash)
 
             // transaction id
             transactionId.text = tx.txHash
@@ -166,16 +166,16 @@ class TransactionInfoActivity : AppBaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        GuldenUnifiedBackend.RegisterMonitorListener(monitoringListener)
+        ILibraryController.RegisterMonitorListener(monitoringListener)
     }
 
     override fun onPause() {
-        GuldenUnifiedBackend.UnregisterMonitorListener(monitoringListener)
+        ILibraryController.UnregisterMonitorListener(monitoringListener)
 
         super.onPause()
     }
 
-    private val monitoringListener = object: GuldenMonitorListener() {
+    private val monitoringListener = object: MonitorListener() {
         override fun onPruned(height: Int) {}
 
         override fun onProcessedSPVBlocks(height: Int) {}
@@ -184,7 +184,7 @@ class TransactionInfoActivity : AppBaseActivity() {
             runOnUiThread {
                 val txHash = intent.getStringExtra(EXTRA_TRANSACTION)
                 try {
-                    val tx = GuldenUnifiedBackend.getTransaction(txHash)
+                    val tx = ILibraryController.getTransaction(txHash)
                     status.text = statusText(tx)
                 }
                 catch (e: Throwable)

@@ -9,9 +9,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.gulden.jniunifiedbackend.GuldenMonitorListener
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.MonitorListener
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
 import com.gulden.unity_wallet.util.AppBaseFragment
@@ -27,7 +26,7 @@ class ProcessingFragment : AppBaseFragment() {
     }
 
     override fun onWalletReady() {
-        val stats = GuldenUnifiedBackend.getMonitoringStats()
+        val stats = ILibraryController.getMonitoringStats()
         with(stats) {
             view?.let { view ->
                 view.processing_group_probable.text = probableHeight.toString()
@@ -52,7 +51,7 @@ class ProcessingFragment : AppBaseFragment() {
         super.onPause()
     }
 
-    private val monitoringListener = object : GuldenMonitorListener() {
+    private val monitoringListener = object : MonitorListener() {
         override fun onPruned(height: Int) {
             this@ProcessingFragment.processing_group_prune?.text = height.toString()
         }

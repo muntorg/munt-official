@@ -14,7 +14,7 @@ import androidx.preference.Preference
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.util.invokeNowOrOnSuccesfullCompletion
 import kotlinx.coroutines.CoroutineScope
@@ -34,7 +34,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
 
         // if wallet ready, setup preference fields immediately so settings don't get removed in sight of user
         UnityCore.instance.walletReady.invokeNowOrOnSuccesfullCompletion(this) {
-            if (GuldenUnifiedBackend.IsMnemonicWallet()) {
+            if (ILibraryController.IsMnemonicWallet()) {
                 preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
                 preferenceScreen.removePreferenceRecursively("preference_unlink_wallet")
             } else {
@@ -60,12 +60,12 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
             "preference_link_wallet" -> {
                 val intent = Intent(context, BarcodeCaptureActivity::class.java)
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true)
-                startActivityForResult(intent, WalletSettingsFragment.REQUEST_CODE_SCAN_FOR_LINK)
+                startActivityForResult(intent, REQUEST_CODE_SCAN_FOR_LINK)
             }
             "preference_change_pass_code" -> {
                 Authentication.instance.authenticate(activity!!, getString(R.string.change_passcode_auth_title), getString(R.string.change_passcode_auth_desc)) { oldPassword ->
                     Authentication.instance.chooseAccessCode(activity!!, getString(R.string.change_passcode_auth_title)) { newPassword ->
-                        if (!GuldenUnifiedBackend.ChangePassword(oldPassword.joinToString(""), newPassword.joinToString(""))) {
+                        if (!ILibraryController.ChangePassword(oldPassword.joinToString(""), newPassword.joinToString(""))) {
                             Toast.makeText(context, "Failed to change password", Toast.LENGTH_LONG).show()
                         }
                     }
@@ -76,7 +76,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
 
                     // on confirmation compose recipient and execute payment
                     positiveButton(getString(R.string.rescan_confirm_btn)) {
-                        GuldenUnifiedBackend.DoRescan()
+                        ILibraryController.DoRescan()
                         activity?.contentView?.snackbar(getString(R.string.rescan_started))
                     }
                     negativeButton(getString(R.string.cancel_btn)) {}
@@ -84,12 +84,12 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
             }
             "preference_remove_wallet", "preference_unlink_wallet" -> {
                 val msg = "%s%s".format(
-                        if (GuldenUnifiedBackend.IsMnemonicWallet())
+                        if (ILibraryController.IsMnemonicWallet())
                             getString(R.string.remove_wallet_auth_desc_recovery_warn)
                         else "",
                         getString(R.string.remove_wallet_auth_desc))
                 Authentication.instance.authenticate(activity!!, getString(R.string.remove_wallet_auth_title), msg) {
-                    GuldenUnifiedBackend.EraseWalletSeedsAndAccounts()
+                    ILibraryController.EraseWalletSeedsAndAccounts()
                     val intent = Intent(activity, WelcomeActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     startActivity(intent)
@@ -101,12 +101,12 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == WalletSettingsFragment.REQUEST_CODE_SCAN_FOR_LINK) {
+        if (requestCode == REQUEST_CODE_SCAN_FOR_LINK) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
 
-                    if (!GuldenUnifiedBackend.IsValidLinkURI(barcode.displayValue)) {
+                    if (!ILibraryController.IsValidLinkURI(barcode.displayValue)) {
                         AlertDialog.Builder(context!!)
                                 .setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title))
                                 .setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning))
@@ -135,7 +135,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
                         builder.create().show()
                     }
 
-                    if (GuldenUnifiedBackend.HaveUnconfirmedFunds()) {
+                    if (ILibraryController.HaveUnconfirmedFunds()) {
                         performDialog(R.string.failed_guldensync_warning_title, R.string.failed_guldensync_unconfirmed_funds_message, false) {
                             it.dismiss()
                         }
@@ -146,7 +146,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
 
                     performDialog(
                             R.string.guldensync_info_title,
-                            if (GuldenUnifiedBackend.GetBalance() > 0) R.string.guldensync_info_message_non_empty_wallet else R.string.guldensync_info_message_empty_wallet, true
+                            if (ILibraryController.GetBalance() > 0) R.string.guldensync_info_message_non_empty_wallet else R.string.guldensync_info_message_empty_wallet, true
                     ) {
                         it.dismiss()
                         (activity as WalletActivity).performLink(barcode.displayValue)

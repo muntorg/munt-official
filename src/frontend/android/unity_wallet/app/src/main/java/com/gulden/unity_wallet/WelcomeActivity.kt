@@ -11,7 +11,7 @@ import android.view.View
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.unity_wallet.ui.EnterRecoveryPhraseActivity
 import com.gulden.unity_wallet.ui.ShowRecoveryPhraseActivity
 import com.gulden.unity_wallet.util.AppBaseActivity
@@ -55,7 +55,7 @@ class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
     {
         thread(true)
         {
-            val recoveryPhrase = GuldenUnifiedBackend.GenerateRecoveryMnemonic()
+            val recoveryPhrase = ILibraryController.GenerateRecoveryMnemonic()
             this.runOnUiThread()
             {
                 val newIntent = Intent(this, ShowRecoveryPhraseActivity::class.java)
@@ -86,7 +86,7 @@ class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
                     password->
                     if (UnityCore.instance.isCoreReady())
                     {
-                        if (GuldenUnifiedBackend.ContinueWalletLinkedFromURI(barcode.displayValue, password.joinToString("")))
+                        if (ILibraryController.ContinueWalletLinkedFromURI(barcode.displayValue, password.joinToString("")))
                         {
                             gotoWalletActivity(this)
                             return@chooseAccessCode
@@ -95,7 +95,7 @@ class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
                     else
                     {
                         // Create the new wallet, a coreReady event will follow which will proceed to the main activity
-                        if (GuldenUnifiedBackend.InitWalletLinkedFromURI(barcode.displayValue, password.joinToString("")))
+                        if (ILibraryController.InitWalletLinkedFromURI(barcode.displayValue, password.joinToString("")))
                         {
                             return@chooseAccessCode
                         }

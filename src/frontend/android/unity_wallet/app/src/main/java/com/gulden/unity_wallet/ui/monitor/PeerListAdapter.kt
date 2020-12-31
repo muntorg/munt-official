@@ -27,7 +27,7 @@ class PeerListAdapter : ListAdapter<PeerRecord, PeerListAdapter.ItemViewHolder>(
         )
     }
 
-    override fun onBindViewHolder(holder: PeerListAdapter.ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 

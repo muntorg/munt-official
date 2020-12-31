@@ -12,7 +12,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import com.gulden.jniunifiedbackend.GuldenUnifiedBackend
+import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.jniunifiedbackend.LegacyWalletResult
 import com.gulden.unity_wallet.Constants.OLD_WALLET_PROTOBUF_FILENAME
 import com.gulden.unity_wallet.util.AppBaseActivity
@@ -43,7 +43,7 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
     {
         thread(true)
         {
-            val result = GuldenUnifiedBackend.isValidAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword)
+            val result = ILibraryController.isValidAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword)
             try
             {
                 when (result)
@@ -72,7 +72,7 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
 
         thread(true)
         {
-            when (GuldenUnifiedBackend.isValidAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, ""))
+            when (ILibraryController.isValidAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, ""))
             {
                 LegacyWalletResult.ENCRYPTED_PASSWORD_REQUIRED ->
                 {
@@ -115,7 +115,7 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
             Authentication.instance.chooseAccessCode(this, getString(R.string.access_code_choose_upgrade_title)) { accessCode ->
                 thread(true) {
                     val newPassword = accessCode.joinToString("")
-                    GuldenUnifiedBackend.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword, newPassword)
+                    ILibraryController.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword, newPassword)
                 }
 
                 this.runOnUiThread { view.longSnackbar("Wallet upgrade in progress") }
