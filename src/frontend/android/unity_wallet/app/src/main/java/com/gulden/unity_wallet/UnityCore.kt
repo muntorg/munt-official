@@ -75,7 +75,8 @@ class UnityCore {
                 // Use this sleep to delay loading of the library. This will catch most of premature usage of
                 // Unity API calls which will then blow up by an unsatisfied link error.
                 // Thread.sleep(10000)
-                System.loadLibrary(ILibraryController.BuildInfo())
+                System.loadLibrary("_unity_jni")
+                buildInfo = ILibraryController.BuildInfo()
                 Log.i(TAG, "Unity library loaded: $buildInfo")
                 ILibraryController.InitUnityLib(cfg.dataDir, cfg.apkPath, cfg.staticFilterOffset, cfg.staticFilterLength, cfg.testnet, true, coreLibrarySignalHandler, "")
             }
