@@ -97,7 +97,7 @@ std::string CWallet::GetWalletHelpString(bool showDebug)
     std::string strUsage = HelpMessageGroup(helptr("Wallet options:"));
     strUsage += HelpMessageOpt("-disablewallet", helptr("Do not load the wallet and disable wallet RPC calls"));
     strUsage += HelpMessageOpt("-disableui", helptr("Load the wallet in a special console only mode"));
-    strUsage += HelpMessageOpt("-keypool=<n>", strprintf(helptr("Set key pool size to <n> (default: %u)"), DEFAULT_KEYPOOL_SIZE));
+    strUsage += HelpMessageOpt("-keypool=<n>", strprintf(helptr("Set key pool size to <n> (default: %u)"), DEFAULT_ACCOUNT_KEYPOOL_SIZE));
     strUsage += HelpMessageOpt("-accountpool=<n>", strprintf(helptr("Set account pool size to <n> (default: %u)"), 10));
     strUsage += HelpMessageOpt("-fallbackfee=<amt>", strprintf(helptr("A fee rate (in %s/kB) that will be used when fee estimation has insufficient data (default: %s)"),
                                                                CURRENCY_UNIT, FormatMoney(DEFAULT_FALLBACK_FEE)));
