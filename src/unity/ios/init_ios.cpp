@@ -8,7 +8,7 @@
 #include "init.h"
 
 #include "unity/djinni/cpp/legacy_wallet_result.hpp"
-#include "unity/djinni/cpp/gulden_unified_backend.hpp"
+#include "unity/djinni/cpp/i_library_controller.hpp"
 
 extern std::string HelpMessage(HelpMessageMode mode)
 {
