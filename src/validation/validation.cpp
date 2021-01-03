@@ -4288,7 +4288,7 @@ void ComputeNewFilterRanges(uint64_t nWalletBirthBlockHard, uint64_t& nWalletBir
         LOCK(partialChain.cs_blockFilterRanges);
         partialChain.blockFilterRanges.clear();
         partialChain.blockFilterRanges.shrink_to_fit();
-        LogPrintf("Hard birth block passed last checkpoint, cleared filter ranges.\n");
+        LogPrintf("Hard birth block [%d] passed last checkpoint [%d], cleared filter ranges.\n", nWalletBirthBlockHard, Checkpoints::LastCheckPointHeight());
         return;
     }
 
@@ -4349,7 +4349,9 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
         if (youngestBefore->nHeight < Checkpoints::LastCheckPointHeight())
         {
             // Determine the first checkpoint that comes before wallet birth date
-            uint64_t nWalletBirthBlockHard = Checkpoints::LastCheckpointBeforeTime(time);
+            int64_t nWalletBirthBlockHard = Checkpoints::LastCheckpointBeforeTime(time);
+            if (nWalletBirthBlockHard < 0)
+                nWalletBirthBlockHard = 0;
 
             // Now determine the first checkpoint of actual interest using block filters
             uint64_t nWalletBirthBlockSoft = Checkpoints::LastCheckPointHeight();
@@ -4366,7 +4368,9 @@ bool StartPartialHeaders(int64_t time, const std::function<void(const CBlockInde
         }
 
         // Determine the first checkpoint that comes before wallet birth date
-        uint64_t nWalletBirthBlockHard = Checkpoints::LastCheckpointBeforeTime(time);
+        int64_t nWalletBirthBlockHard = Checkpoints::LastCheckpointBeforeTime(time);
+        if (nWalletBirthBlockHard < 0)
+            nWalletBirthBlockHard = 0;
 
         // Now determine the first checkpoint of actual interest using block filters
         uint64_t nWalletBirthBlockSoft = Checkpoints::LastCheckPointHeight();

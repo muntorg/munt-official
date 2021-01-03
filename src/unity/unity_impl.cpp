@@ -543,9 +543,9 @@ bool ILibraryController::InitWalletFromRecoveryPhrase(const std::string& phrase,
     }
 
     // ensure that wallet is initialized with a starting time (else it will start from now and old tx will not be scanned)
-    // Use the hardcoded timestamp 1441212522 of block 250000, we didn't have any recovery phrase style wallets (using current phrase system) before that.
+    // Use the hardcoded timestamp of genesis block
     if (phraseBirthNumber == 0)
-        phraseBirthNumber = timeToBirthNumber(1441212522L);
+        phraseBirthNumber = timeToBirthNumber(1593524096L);
 
     //fixme: (UNITY) (SPV) - Handle all the various birth date (or lack of birthdate) cases here instead of just the one.
     AppLifecycleManager::gApp->setRecoveryPhrase(phraseOnly);
