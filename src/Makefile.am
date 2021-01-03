@@ -842,6 +842,10 @@ lib_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeILibraryController.cpp \
   unity/djinni/jni/NativeILibraryListener.hpp \
   unity/djinni/jni/NativeILibraryListener.cpp \
+  unity/djinni/jni/NativeIP2pNetworkController.hpp \
+  unity/djinni/jni/NativeIP2pNetworkController.cpp \
+  unity/djinni/jni/NativeIP2pNetworkListener.hpp \
+  unity/djinni/jni/NativeIP2pNetworkListener.cpp \
   unity/djinni/jni/NativeLegacyWalletResult.hpp \
   unity/djinni/jni/NativeMonitorRecord.cpp \
   unity/djinni/jni/NativeMonitorRecord.hpp \
