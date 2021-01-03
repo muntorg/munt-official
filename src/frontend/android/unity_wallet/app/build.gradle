@@ -56,7 +56,7 @@ android {
             resValue "string", "app_name", "Novo-testnet"
             buildConfigField "boolean", "TESTNET", "true"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf-testnet"'
-            versionCode 300015
+            versionCode 300016
             versionName = "1.0.8"
             resValue "string", "about_text_app_name", "Novo testnet $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2020 Centure.com BV"
@@ -68,7 +68,7 @@ android {
             resValue "string", "app_name", "Novo"
             buildConfigField "boolean", "TESTNET", "false"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf"'
-            versionCode 13
+            versionCode 14
             versionName = "1.0.8"
             resValue "string", "about_text_app_name", "Novo $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2020 Centure.com BV"
