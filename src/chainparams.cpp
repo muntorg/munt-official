@@ -470,10 +470,8 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 999999999999ULL;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].type = Consensus::DEPLOYMENT_POW;
 
-        consensus.fixedRewardReductionHeight=40600;
         consensus.pow2Phase2FirstBlockHeight=40800;
         consensus.pow2Phase3FirstBlockHeight=50000;
-        consensus.devBlockSubsidyActivationHeight=50100;
         consensus.pow2Phase4FirstBlockHeight=50500;
         consensus.pow2Phase5FirstBlockHeight=50500;
 
