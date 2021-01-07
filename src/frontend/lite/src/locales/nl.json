@@ -1,0 +1,118 @@
+{
+  "accounts_section": {
+    "accounts": "Rekeningen",
+    "categories": {
+      "spending": "Spending",
+      "holding": "Holding"
+    }
+  },
+  "add_holding_account": {
+    "daily": "per dag",
+    "estimated_earnings": "Geschatte opbrengst",
+    "funding_account": "Financieringsrekening",
+    "lock_for": "Vastzetten voor",
+    "overall": "totaal",
+    "title": "Holding rekening aanmaken"
+  },
+  "buttons": {
+    "back": "Terug",
+    "change_password": "Verander wachtwoord",
+    "create_mining_account": "Mining rekening aanmaken",
+    "finish": "Klaar",
+    "lock": "Vastzetten",
+    "next": "Volgende",
+    "ok": "OK",
+    "previous": "Vorige",
+    "receive": "Ontvangen",
+    "renew": "Vernieuwen",
+    "send": "Versturen",
+    "start": "Start",
+    "stop": "Stop",
+    "unlock": "Ontgrendelen"
+  },
+  "common": {
+    "account_name": "Rekeningnaam",
+    "amount": "Bedrag",
+    "enter_your_password": "Voer jouw wachtwoord in",
+    "information": "Informatie",
+    "important": "Belangrijk",
+    "months": "Maanden",
+    "on": "aan",
+    "off": "uit",
+    "password": "Wachtwoord",
+    "receiving_address": "Ontvangstadres"
+  },
+  "holding_account": {
+    "compound_earnings": "cumulatieve inkomsten",
+    "status": "Status",
+    "gulden_locked": "Gulden vastgezet",
+    "gulden_earned": "Gulden verdiend",
+    "locked_from_block": "Vastgezet vanaf blok",
+    "locked_until_block": "Vastgezet tot blok",
+    "lock_duration": "Looptijd",
+    "blocks": "blokken",
+    "remaining_lock_period": "Resterende looptijd",
+    "required_earnings_frequency": "Benodigde beloningstijd",
+    "expected_earnings_frequency": "Verwachte beloningstijd",
+    "account_weight": "Gewicht",
+    "network_weight": "Netwerk gewicht"
+  },
+  "loader": {
+    "shutdown": "Bezig met afsluiten...",
+    "synchronizing": "Jouw portemonnee is aan het synchroniseren met het Gulden netwerk. Dit kan enige tijd duren."
+  },
+  "mining": {
+    "arena_setup_time": "Arena setup tijd",
+    "best_reported_speed": "Beste geregistreerde snelheid",
+    "last_reported_speed": "Laatst geregistreerde snelheid",
+    "memory_to_use": "Geheugengebruik",
+    "moving_average": "Voortschrijdend gemiddelde",
+    "number_of_threads": "Aantal threads",
+    "statistics": "Statistieken",
+    "thread" : "thread | threads"
+  },
+  "password_dialog": {
+    "unlock_wallet": "Ontgrendel portemonnee"
+  },
+  "settings": {
+    "header": "Instellingen",
+    "change_password": "Verander wachtwoord",
+    "view_recovery_phrase": "Bekijk herstelzin"
+  },
+  "setup": {
+    "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
+    "choose_password_information": "Een wachtwoord is vereist voor het ontgrendelen van jouw portemonnee. Kies een sterk wachtwoord, zodat niemand anders toegang kan krijgen tot jouw Gulden.",
+    "create_new": "Ik wil een nieuwe portemonnee starten",
+    "enter_existing_recovery_phrase": "Voer jouw herstelzin in om jouw portemonnee te herstellen.",
+    "enter_recovery_phrase": "Voer herstelzin in",
+    "invalid_recovery_phrase": {
+      "title": "Ongeldige herstelzin",
+      "message": "Deze combinatie vormt geen geldige herstelzin. Corrigeer de fout(en) en probeer het nogmaals."
+    },
+    "recover_existing": "Ik wil mijn portemonnee herstellen met mijn herstelzin",
+    "repeat_password": "Herhaal wachtwoord",
+    "repeat_your_recovery_phrase": "Voer jouw herstelzin in om te controleren dat je deze goed hebt opgeschreven.",
+    "setup_gulden_wallet": "Installeer jouw Gulden portemonnee",
+    "this_is_your_recovery_phrase": "Dit is jouw herstelzin. Bewaar de herstelzin op een veilige plek. Zin kwijt of iemand toegang tot je zin = Gulden weg."
+  },
+  "setup_mining": {
+    "title": "Mining instellen",
+    "information": "Voordat je kunt beginnen met minen van Gulden moet een mining rekening worden aangemaakt. Voer je wachtwoord in om je portemonnee te ontgrendelen en een mining rekening aan te maken."
+  },
+  "transaction_details": {
+    "title": "Transactie details",
+    "hash": "Hash"
+  },
+  "receive_gulden": {
+    "buy_or_receive_gulden": "Koop of ontvang Gulden",
+    "your_address": "Jouw adres"
+  },
+  "send_gulden": {
+    "enter_label": "Voer label in",
+    "enter_gulden_address": "Voer Gulden adres in",
+    "target_account": "Verstuur naar account"
+  },
+  "renew_holding_account": {
+    "funding_account": "Betaal vergoeding van account"
+  }
+}

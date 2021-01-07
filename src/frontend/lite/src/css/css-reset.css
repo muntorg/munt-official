@@ -1,0 +1,35 @@
+html, body, div, span, h1, h2, h3, h4, h5, h6, h7, p, a, img, strong, b, form, label {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+ul,li {
+	list-style: none;
+}
+
+body {
+	line-height: 1;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	background-repeat: no-repeat;
+	background-position: center center;
+	user-select: none; /* remove user-select from all elements */
+}
+
+html, *, *:before, *:after {
+  box-sizing: border-box;
+}
+
+* :focus {outline: none;}
+
+html,
+body {
+  height: 100%;
+}
