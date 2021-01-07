@@ -1,0 +1,43 @@
+@primary-color: #0039cc;
+
+@success-color: @primary-color;
+@error-color: #dd3333;
+@disabled-color: #eee;
+
+@success-color--hover: lighten(@success-color, 4%); 
+@error-color--hover: lighten(@error-color, 8%);
+
+:root {
+  --primary-color: @primary-color;
+  
+  --error-color: @error-color;
+
+  --success-color: @success-color;
+  --error-color: @error-color;
+  --disabled-color: @disabled-color;
+
+  --success-color--hover: @success-color--hover;
+  --error-color--hover: @error-color--hover;
+
+  --header-height: 62px;
+  --footer-height: 53px;
+
+  --sidebar-left-width: 240px;
+  --sidebar-left-background-color: #111444;
+  --sidebar-left-color: #ccc;
+  --sidebar-left-border-color: #2e315b;
+
+  --account-background-color--active: var(--primary-color);
+  --account-background-color--hover: #292c57;
+  
+  --main-border-color: #ddd;
+
+  --sidebar-right-width: 360px;
+  --sidebar-right-background-color: #f5f5f5;
+
+  --scrollbar-background-color: #fff;
+  --thumb-background-color: var(--main-border-color);
+  
+  --scrollbar-background-color-dark: var(--sidebar-left-background-color);
+  --thumb-background-color-dark: var(--main-border-color);
+}

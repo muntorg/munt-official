@@ -1,0 +1,122 @@
+{
+  "accounts_section": {
+    "accounts": "Accounts",
+    "categories": {
+      "spending": "Spending",
+      "holding": "Holding"
+    }
+  },
+  "account_settings": {
+    "title": "Account settings",
+    "name": "Name"
+  },
+  "add_holding_account": {
+    "daily": "daily",
+    "estimated_earnings": "Estimated earnings",
+    "funding_account": "Funding account",
+    "lock_for": "Lock for",
+    "overall": "overall",
+    "title": "Add holding account"
+  },
+  "buttons": {
+    "back": "Back",
+    "change_password": "Change password",
+    "create_mining_account": "Create mining account",
+    "finish": "Finish",
+    "lock": "Lock",
+    "next": "Next",
+    "ok": "OK",
+    "previous": "Previous",
+    "receive": "Receive",
+    "renew": "Renew",
+    "send": "Send",
+    "start": "Start",
+    "stop": "Stop",
+    "unlock": "Unlock"
+  },
+  "common": {
+    "account_name": "Account name",
+    "amount": "Amount",
+    "enter_your_password": "Enter your password",
+    "important": "Important",
+    "information": "Information",
+    "months": "Months",
+    "on": "on",
+    "off": "off",
+    "password": "Password",
+    "receiving_address": "Receiving address"
+  },
+  "holding_account": {
+    "compound_earnings": "compound earnings",
+    "status": "Status",
+    "gulden_locked": "Gulden locked",
+    "gulden_earned": "Gulden earned",
+    "locked_from_block": "Locked from block",
+    "locked_until_block": "Locked until block",
+    "lock_duration": "Lock duration",
+    "blocks": "blocks",
+    "remaining_lock_period": "Remaining lock period",
+    "required_earnings_frequency": "Required earnings frequency",
+    "expected_earnings_frequency": "Expected earnings frequency",
+    "account_weight": "Account weight",
+    "network_weight": "Network weight"
+  },
+  "loader": {
+    "shutdown": "Shutting down...",
+    "synchronizing": "Your wallet is now synchronizing with the Gulden network. This may take some time to complete."
+  },
+  "mining": {
+    "arena_setup_time": "Arena setup time",
+    "best_reported_speed": "Best reported speed",
+    "last_reported_speed": "Last reported speed",
+    "memory_to_use": "Memory to use",
+    "moving_average": "Moving average",
+    "number_of_threads": "Number of threads",
+    "statistics": "Statistics",
+    "thread" : "thread | threads"
+  },
+  "password_dialog": {
+    "unlock_wallet": "Unlock wallet"
+  },
+  "settings": {
+    "header": "Settings",
+    "change_password": "Change password",
+    "view_recovery_phrase": "View recovery phrase"
+  },
+  "setup": {
+    "choose_password": "Choose a password of at least 6 characters",
+    "choose_password_information": "You will need your password to unlock your wallet. Make sure it is not easy to guess because anyone who knows your password can access your funds.",
+    "create_new": "I want to create a new wallet",
+    "enter_existing_recovery_phrase": "Enter your recovery phrase in the boxes below to restore your wallet.",
+    "enter_recovery_phrase": "Enter recovery phrase",
+    "invalid_recovery_phrase": {
+      "title": "Invalid recovery phrase",
+      "message": "This combinatie is not a valid recovery phrase. Correct the error(s) and try again."
+    },
+    "recover_existing": "I want to recover my wallet using my recovery phrase",
+    "repeat_password": "Repeat password",
+    "repeat_your_recovery_phrase": "To make sure you have correctly written down your recovery phrase, enter your phrase in the boxes below.",
+    "setup_gulden_wallet": "Setup your Gulden wallet",
+    "this_is_your_recovery_phrase": "This is your recovery phrase. Keep your backup phrase in a safe place. Lose phrase or someone else with access to the phrase = lose Gulden."
+  },
+  "setup_mining": {
+    "title": "Setup mining",
+    "information": "Before you can start mining Gulden a mining account needs to be created. Enter your password to unlock your wallet and create a mining account."
+  },
+  "transaction_details": {
+    "title": "Transaction details",
+    "hash": "Hash"
+  },
+  "receive_gulden": {
+    "buy_or_receive_gulden": "Buy or receive Gulden",
+    "your_address": "Your address"
+  },
+  "send_gulden": {
+    "enter_label": "Enter label",
+    "enter_gulden_address": "Enter Gulden address",
+    "target_account": "Send to account"
+  },
+  "renew_holding_account": {
+    "funding_account": "Pay renewal fee from account"
+  }
+}
