@@ -5,6 +5,12 @@ import store from "../store";
 
 import libUnity from "native-ext-loader!./lib_unity.node";
 
+// Needed to get index/offset of staticfiltercp file inside asar
+import asar from "asar";
+import disk from "asar/lib/disk"
+import path from "path"
+const isDevelopment = process.env.NODE_ENV !== "production";
+
 class LibUnity {
   constructor(options) {
     this.initialized = false;
@@ -203,14 +209,29 @@ class LibUnity {
       console.log(`wallet folder ${this.options.walletPath} already exists`);
     }
 
+    var staticFilterPath = "";
+    var staticFilterOffset = 0;
+    var staticFilterLength = 0;
+    if (isDevelopment)
+    {
+        staticFilterPath = path.join(app.getAppPath(), "../../../data/staticfiltercp");
+    }
+    else
+    {
+        staticFilterPath = app.getAppPath();
+        const filesystem = disk.readFilesystemSync(staticFilterPath);
+        staticFilterOffset = parseInt(filesystem.getFile('background.js', true).offset) + parseInt(8) + parseInt(filesystem.headerSize)
+    }
+
+
     console.log(`init unity lib threaded`);
     this.libraryController.InitUnityLibThreaded(
       this.options.walletPath,
-      "",
-      -1,
-      -1,
+      staticFilterPath,
+      staticFilterOffset,
+      staticFilterLength,
       this.options.useTestnet,
-      false, // non spv mode
+      true, //spv mode
       this.libraryListener,
       this.options.extraArgs
     );

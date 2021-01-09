@@ -10,7 +10,13 @@ module.exports = {
       builderOptions: {
         appId: "com.novocurrency.desktop-wallet",
         productName: "Novo",
-        extraFiles: [],
+        extraFiles: [
+            {
+              "from": "../../data",
+              "to": "data",
+              "filter": ["staticfiltercp"]
+            }
+        ],
         publish: null,
         afterSign: "./notarize.js",
         mac: {
