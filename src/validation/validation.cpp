@@ -2572,6 +2572,22 @@ static bool CheckBlockHeader(const CBlock& block, CValidationState& state, const
         if (checkedPoWCache.contains(blockHash))
             return checkedPoWCache.get(blockHash);
 
+        //fixme: (HIGH) (SYNC) (SPV)
+        //Temporary performance boost (at the cost of possible bandwidth attacks) until we can implement witness based syncing
+        if (fSPV)
+        {
+            LOCK(cs_main);
+            const auto& prevIndex = mapBlockIndex.find(block.hashPrevBlock);
+            if (prevIndex != mapBlockIndex.end())
+            {
+                if (prevIndex->second->nHeight+1 < Checkpoints::LastCheckPointHeight())
+                {
+                    checkedPoWCache.insert(blockHash, true);
+                    return true;
+                }
+            }
+        }
+
         // Nested if statement for easier breakpoint management
         if (!CheckProofOfWork(&block, consensusParams))
         {
