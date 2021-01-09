@@ -20,6 +20,8 @@
 #include "blockstore.h"
 #include "checkpoints.h"
 
+#include <filesystem>
+
 /// SerType used to serialize parameters in GCS filter encoding.
 static constexpr int GCS_SER_TYPE = SER_NETWORK;
 
@@ -463,7 +465,7 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
         uint64_t nStaticFilterOffset = GetArg("-spvstaticfilterfileoffset", (uint64_t)0);
         uint64_t nStaticFilterLength = GetArg("-spvstaticfilterfilelength", std::numeric_limits<uint64_t>::max());
         if (nStaticFilterLength == 0)
-            std::numeric_limits<uint64_t>::max();
+            nStaticFilterLength = std::filesystem::file_size(dataFilePath);
 
         uint64_t nStartIndex = IsArgSet("-testnet") ? 0 : 250000;//Earliest possible recovery phrase (before this we didn't use phrases)
         uint64_t nInterval1 = 500;
