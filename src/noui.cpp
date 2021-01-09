@@ -22,6 +22,9 @@
 #include <stdint.h>
 #include <string>
 
+#include <boost/bind/bind.hpp> 
+using namespace boost::placeholders;
+
 static bool noui_ThreadSafeMessageBox(const std::string& message, const std::string& caption, unsigned int style)
 {
     bool fSecure = style & CClientUIInterface::SECURE;

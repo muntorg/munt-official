@@ -73,6 +73,9 @@
 
 #define DEBUG_PARTIAL_SYNC
 
+#include <boost/bind/bind.hpp>
+using namespace boost::placeholders;
+
 /**
  * Global state
  */
