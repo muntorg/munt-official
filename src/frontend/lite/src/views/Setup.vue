@@ -194,9 +194,10 @@ export default {
             next = 3;
           } else {
             if (this.generatedRecoveryPhrase === null) {
-              this.generatedRecoveryPhrase = LibraryController.GenerateRecoveryMnemonic();
+              var mnemonic = LibraryController.GenerateRecoveryMnemonic();
+              this.generatedRecoveryPhrase = mnemonic.phrase_with_birth_number;
+              this.recoveryPhrase = mnemonic.phrase;
             }
-            this.recoveryPhrase = this.generatedRecoveryPhrase;
           }
           break;
         case 3:
@@ -214,13 +215,19 @@ export default {
           }
           break;
         case 4:
-          if (
-            LibraryController.InitWalletFromRecoveryPhrase(
-              this.recoveryPhrase,
-              this.password1
-            )
-          ) {
-            this.$router.push({ name: "account" });
+          if (this.isRecovery)
+          {
+              if (LibraryController.InitWalletFromRecoveryPhrase(this.recoveryPhrase, this.password1))
+              {
+                  this.$router.push({ name: "account" });
+              }
+          }
+          else
+          {
+              if (LibraryController.InitWalletFromRecoveryPhrase(this.generatedRecoveryPhrase, this.password1))
+              {
+                  this.$router.push({ name: "account" });
+              }
           }
           break;
       }

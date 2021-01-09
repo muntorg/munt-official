@@ -181,8 +181,8 @@ class EnterRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
                     val unixTime = System.currentTimeMillis() / 1000L
                     when (selection)
                     {
-                        0 -> chooseAccessCodeAndProceed(ILibraryController.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*31)))
-                        1 -> chooseAccessCodeAndProceed(ILibraryController.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*365)))
+                        0 -> chooseAccessCodeAndProceed(ILibraryController.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*31)).phraseWithBirthNumber)
+                        1 -> chooseAccessCodeAndProceed(ILibraryController.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*365)).phraseWithBirthNumber)
                         2 -> chooseAccessCodeAndProceed(recoveryPhrase)
                     }
                 }

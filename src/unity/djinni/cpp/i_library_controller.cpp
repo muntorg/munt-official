@@ -5,6 +5,7 @@
 #include "address_record.hpp"
 #include "block_info_record.hpp"
 #include "legacy_wallet_result.hpp"
+#include "mnemonic_record.hpp"
 #include "monitor_record.hpp"
 #include "mutation_record.hpp"
 #include "payment_result_status.hpp"

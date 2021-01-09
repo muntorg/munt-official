@@ -466,7 +466,14 @@ Napi::Value NJSILibraryController::GenerateRecoveryMnemonic(const Napi::Callback
         auto result = ILibraryController::GenerateRecoveryMnemonic();
 
         //Wrap result in node object
-        auto arg_0 = Napi::String::New(env, result);
+        auto arg_0 = Napi::Object::New(env);
+        auto arg_0_1 = Napi::String::New(env, result.phrase_with_birth_number);
+        arg_0.Set("phrase_with_birth_number", arg_0_1);
+        auto arg_0_2 = Napi::String::New(env, result.phrase);
+        arg_0.Set("phrase", arg_0_2);
+        auto arg_0_3 = Napi::Value::From(env, result.birth_number);
+        arg_0.Set("birth_number", arg_0_3);
+
 
         return arg_0;
     }
@@ -532,7 +539,14 @@ Napi::Value NJSILibraryController::ComposeRecoveryPhrase(const Napi::CallbackInf
         auto result = ILibraryController::ComposeRecoveryPhrase(arg_0,arg_1);
 
         //Wrap result in node object
-        auto arg_2 = Napi::String::New(env, result);
+        auto arg_2 = Napi::Object::New(env);
+        auto arg_2_1 = Napi::String::New(env, result.phrase_with_birth_number);
+        arg_2.Set("phrase_with_birth_number", arg_2_1);
+        auto arg_2_2 = Napi::String::New(env, result.phrase);
+        arg_2.Set("phrase", arg_2_2);
+        auto arg_2_3 = Napi::Value::From(env, result.birth_number);
+        arg_2.Set("birth_number", arg_2_3);
+
 
         return arg_2;
     }
@@ -667,7 +681,14 @@ Napi::Value NJSILibraryController::GetRecoveryPhrase(const Napi::CallbackInfo& i
         auto result = ILibraryController::GetRecoveryPhrase();
 
         //Wrap result in node object
-        auto arg_0 = Napi::String::New(env, result);
+        auto arg_0 = Napi::Object::New(env);
+        auto arg_0_1 = Napi::String::New(env, result.phrase_with_birth_number);
+        arg_0.Set("phrase_with_birth_number", arg_0_1);
+        auto arg_0_2 = Napi::String::New(env, result.phrase);
+        arg_0.Set("phrase", arg_0_2);
+        auto arg_0_3 = Napi::Value::From(env, result.birth_number);
+        arg_0.Set("birth_number", arg_0_3);
+
 
         return arg_0;
     }

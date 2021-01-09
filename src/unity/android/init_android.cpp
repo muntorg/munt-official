@@ -67,11 +67,11 @@ bool ILibraryController::InitWalletFromAndroidLegacyProtoWallet(const std::strin
             {
                 if (wallet.walletBirth > 0)
                 {
-                    return InitWalletFromRecoveryPhrase(ComposeRecoveryPhrase(wallet.walletSeedMnemonic, wallet.walletBirth), newPassword.c_str());
+                    return InitWalletFromRecoveryPhrase(ComposeRecoveryPhrase(wallet.walletSeedMnemonic, wallet.walletBirth), newPassword.c_str()).first;
                 }
                 else
                 {
-                    return InitWalletFromRecoveryPhrase(wallet.walletSeedMnemonic.c_str(), newPassword.c_str());
+                    return InitWalletFromRecoveryPhrase(wallet.walletSeedMnemonic.c_str(), newPassword.c_str()).first;
                 }
             }
         }

@@ -47,10 +47,10 @@ declare class NJSILibraryController
      */
     static declare function IsValidRecoveryPhrase(phrase: string): boolean;
     /** Generate a new recovery mnemonic */
-    static declare function GenerateRecoveryMnemonic(): string;
+    static declare function GenerateRecoveryMnemonic(): MnemonicRecord;
     static declare function GenerateGenesisKeys(): string;
     /** Compute recovery phrase with birth number */
-    static declare function ComposeRecoveryPhrase(mnemonic: string, birthTime: number): string;
+    static declare function ComposeRecoveryPhrase(mnemonic: string, birthTime: number): MnemonicRecord;
     /** Stop the library */
     static declare function TerminateUnityLib();
     /** Generate a QR code for a string, QR code will be as close to width_hint as possible when applying simple scaling. */
@@ -58,7 +58,7 @@ declare class NJSILibraryController
     /** Get a receive address for the active account */
     static declare function GetReceiveAddress(): string;
     /** Get the recovery phrase for the wallet */
-    static declare function GetRecoveryPhrase(): string;
+    static declare function GetRecoveryPhrase(): MnemonicRecord;
     /** Check if the wallet is using a mnemonic seed ie. recovery phrase (else it is a linked wallet) */
     static declare function IsMnemonicWallet(): boolean;
     /** Check if the phrase mnemonic is a correct one for the wallet (phrase can be with or without birth time) */

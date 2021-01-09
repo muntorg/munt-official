@@ -7,6 +7,7 @@
 #include "NativeBlockInfoRecord.hpp"
 #include "NativeILibraryListener.hpp"
 #include "NativeLegacyWalletResult.hpp"
+#include "NativeMnemonicRecord.hpp"
 #include "NativeMonitorListener.hpp"
 #include "NativeMonitorRecord.hpp"
 #include "NativeMutationRecord.hpp"
@@ -169,12 +170,12 @@ CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController_00024CppProxy_GenerateRecoveryMnemonic(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController_00024CppProxy_GenerateRecoveryMnemonic(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::ILibraryController::GenerateRecoveryMnemonic();
-        return ::djinni::release(::djinni::String::fromCpp(jniEnv, r));
+        return ::djinni::release(::djinni_generated::NativeMnemonicRecord::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
@@ -187,13 +188,13 @@ CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController_00024CppProxy_ComposeRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/, jstring j_mnemonic, jlong j_birthTime)
+CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController_00024CppProxy_ComposeRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/, jstring j_mnemonic, jlong j_birthTime)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::ILibraryController::ComposeRecoveryPhrase(::djinni::String::toCpp(jniEnv, j_mnemonic),
                                                              ::djinni::I64::toCpp(jniEnv, j_birthTime));
-        return ::djinni::release(::djinni::String::fromCpp(jniEnv, r));
+        return ::djinni::release(::djinni_generated::NativeMnemonicRecord::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
@@ -224,12 +225,12 @@ CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController_00024CppProxy_GetRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController_00024CppProxy_GetRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::ILibraryController::GetRecoveryPhrase();
-        return ::djinni::release(::djinni::String::fromCpp(jniEnv, r));
+        return ::djinni::release(::djinni_generated::NativeMnemonicRecord::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 

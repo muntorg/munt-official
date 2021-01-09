@@ -117,6 +117,12 @@ payment_result_status = enum {
     insufficient_funds;
 }
 
+mnemonic_record = record {
+    phrase_with_birth_number : string;
+    phrase : string;
+    birth_number : i64;
+}
+
 # The library controller is used to Init/Terminate the library, and other similar tasks.
 # It is also home to various generic utility functions that don't (yet) have a place in more specific controllers
 # Specific functionality should go in specific controllers; account related functionality -> accounts_controller, network related functionality -> network_controller and so on
@@ -167,12 +173,12 @@ i_library_controller = interface +c {
     static IsValidRecoveryPhrase(phrase: string): bool;
 
     # Generate a new recovery mnemonic
-    static GenerateRecoveryMnemonic(): string;
+    static GenerateRecoveryMnemonic(): mnemonic_record;
     
     static GenerateGenesisKeys(): string;
 
     # Compute recovery phrase with birth number
-    static ComposeRecoveryPhrase(mnemonic: string, birthTime: i64): string;
+    static ComposeRecoveryPhrase(mnemonic: string, birthTime: i64): mnemonic_record;
 
     # Stop the library
     static TerminateUnityLib();
@@ -184,7 +190,7 @@ i_library_controller = interface +c {
     static GetReceiveAddress(): string;
 
     # Get the recovery phrase for the wallet
-    static GetRecoveryPhrase(): string;
+    static GetRecoveryPhrase(): mnemonic_record;
 
     # Check if the wallet is using a mnemonic seed ie. recovery phrase (else it is a linked wallet)
     static IsMnemonicWallet(): bool;

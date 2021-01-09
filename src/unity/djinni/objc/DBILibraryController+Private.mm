@@ -7,6 +7,7 @@
 #import "DBBlockInfoRecord+Private.h"
 #import "DBILibraryListener+Private.h"
 #import "DBLegacyWalletResult+Private.h"
+#import "DBMnemonicRecord+Private.h"
 #import "DBMonitorListener+Private.h"
 #import "DBMonitorRecord+Private.h"
 #import "DBMutationRecord+Private.h"
@@ -176,10 +177,10 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (nonnull NSString *)GenerateRecoveryMnemonic {
++ (nonnull DBMnemonicRecord *)GenerateRecoveryMnemonic {
     try {
         auto objcpp_result_ = ::ILibraryController::GenerateRecoveryMnemonic();
-        return ::djinni::String::fromCpp(objcpp_result_);
+        return ::djinni_generated::MnemonicRecord::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
@@ -190,12 +191,12 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (nonnull NSString *)ComposeRecoveryPhrase:(nonnull NSString *)mnemonic
-                                  birthTime:(int64_t)birthTime {
++ (nonnull DBMnemonicRecord *)ComposeRecoveryPhrase:(nonnull NSString *)mnemonic
+                                          birthTime:(int64_t)birthTime {
     try {
         auto objcpp_result_ = ::ILibraryController::ComposeRecoveryPhrase(::djinni::String::toCpp(mnemonic),
                                                                           ::djinni::I64::toCpp(birthTime));
-        return ::djinni::String::fromCpp(objcpp_result_);
+        return ::djinni_generated::MnemonicRecord::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
@@ -221,10 +222,10 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (nonnull NSString *)GetRecoveryPhrase {
++ (nonnull DBMnemonicRecord *)GetRecoveryPhrase {
     try {
         auto objcpp_result_ = ::ILibraryController::GetRecoveryPhrase();
-        return ::djinni::String::fromCpp(objcpp_result_);
+        return ::djinni_generated::MnemonicRecord::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

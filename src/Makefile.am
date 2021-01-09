@@ -738,6 +738,7 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/monitor_listener.hpp \
   unity/djinni/cpp/monitor_record.hpp \
   unity/djinni/cpp/mutation_record.hpp \
+  unity/djinni/cpp/mnemonic_record.hpp \
   unity/djinni/cpp/peer_record.hpp \
   unity/djinni/cpp/qr_code_record.hpp \
   unity/djinni/cpp/transaction_record.hpp \
@@ -853,6 +854,7 @@ lib_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeMonitorRecord.cpp \
   unity/djinni/jni/NativeMonitorRecord.hpp \
   unity/djinni/jni/NativeMutationRecord.cpp \
+  unity/djinni/jni/NativeMnemonicRecord.cpp \
   unity/djinni/jni/NativeMutationRecord.hpp \
   unity/djinni/jni/NativePaymentResultStatus.hpp \
   unity/djinni/jni/NativePeerRecord.hpp \
@@ -913,6 +915,7 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/monitor_listener.hpp \
   unity/djinni/cpp/monitor_record.hpp \
   unity/djinni/cpp/mutation_record.hpp \
+  unity/djinni/cpp/mnemonic_record.hpp \
   unity/djinni/cpp/payment_result_status.hpp \
   unity/djinni/cpp/peer_record.hpp \
   unity/djinni/cpp/qr_code_record.hpp \
@@ -959,6 +962,10 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBMutationRecord+Private.mm \
   unity/djinni/objc/DBMutationRecord.h \
   unity/djinni/objc/DBMutationRecord.mm \
+  unity/djinni/objc/DBMnemonicRecord+Private.h \
+  unity/djinni/objc/DBMnemonicRecord+Private.mm \
+  unity/djinni/objc/DBMnemonicRecord.h \
+  unity/djinni/objc/DBMnemonicRecord.mm \
   unity/djinni/objc/DBMonitorRecord.h \
   unity/djinni/objc/DBMonitorRecord.mm \
   unity/djinni/objc/DBInputRecord+Private.h \

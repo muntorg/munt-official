@@ -129,7 +129,7 @@ public abstract class ILibraryController {
     }
 
     /** Generate a new recovery mnemonic */
-    public static String GenerateRecoveryMnemonic()
+    public static MnemonicRecord GenerateRecoveryMnemonic()
     {
         return CppProxy.GenerateRecoveryMnemonic();
     }
@@ -140,7 +140,7 @@ public abstract class ILibraryController {
     }
 
     /** Compute recovery phrase with birth number */
-    public static String ComposeRecoveryPhrase(String mnemonic, long birthTime)
+    public static MnemonicRecord ComposeRecoveryPhrase(String mnemonic, long birthTime)
     {
         return CppProxy.ComposeRecoveryPhrase(mnemonic,
                                               birthTime);
@@ -166,7 +166,7 @@ public abstract class ILibraryController {
     }
 
     /** Get the recovery phrase for the wallet */
-    public static String GetRecoveryPhrase()
+    public static MnemonicRecord GetRecoveryPhrase()
     {
         return CppProxy.GetRecoveryPhrase();
     }
@@ -416,11 +416,11 @@ public abstract class ILibraryController {
 
         public static native boolean IsValidRecoveryPhrase(String phrase);
 
-        public static native String GenerateRecoveryMnemonic();
+        public static native MnemonicRecord GenerateRecoveryMnemonic();
 
         public static native String GenerateGenesisKeys();
 
-        public static native String ComposeRecoveryPhrase(String mnemonic, long birthTime);
+        public static native MnemonicRecord ComposeRecoveryPhrase(String mnemonic, long birthTime);
 
         public static native void TerminateUnityLib();
 
@@ -428,7 +428,7 @@ public abstract class ILibraryController {
 
         public static native String GetReceiveAddress();
 
-        public static native String GetRecoveryPhrase();
+        public static native MnemonicRecord GetRecoveryPhrase();
 
         public static native boolean IsMnemonicWallet();
 

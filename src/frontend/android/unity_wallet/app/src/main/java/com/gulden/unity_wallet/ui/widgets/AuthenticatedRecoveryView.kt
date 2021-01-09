@@ -22,7 +22,7 @@ class AuthenticatedRecoveryView(context: Context?, attrs: AttributeSet?) : ViewS
             Authentication.instance.authenticate(context!!, null, context?.getString(R.string.show_recovery_msg)) {
                 displayedChild = 1
                 //TODO: Reintroduce showing birth time here if/when we decide we want it in future
-                recoveryPhrase.text = ILibraryController.GetRecoveryPhrase()?.trimEnd('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ')
+                recoveryPhrase.text = ILibraryController.GetRecoveryPhrase().phrase
             }
         }
         recoveryPhrase.setOnClickListener {
