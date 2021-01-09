@@ -29,6 +29,8 @@
 #include "net.h"
 #include <unity/appmanager.h>
 
+#include <boost/bind/bind.hpp>
+using namespace boost::placeholders;
 #include <boost/thread.hpp>
 #include <boost/interprocess/sync/file_lock.hpp>
 

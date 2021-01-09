@@ -14,6 +14,8 @@
 #include <wallet/mnemonic.h>
 #include <vector>
 #include "random.h"
+#include <boost/bind/bind.hpp> 
+using namespace boost::placeholders;
 
 static void InitMessage(WelcomeDialog* welcomeDialog, const std::string &message)
 {

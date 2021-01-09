@@ -35,6 +35,9 @@
 
 #include "witnessutil.h"
 
+#include <boost/bind/bind.hpp>
+using namespace boost::placeholders;
+
 class CBlockIndex;
 
 static const int64_t nClientStartupTime = GetTime();

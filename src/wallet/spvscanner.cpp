@@ -12,6 +12,9 @@
 
 #include <algorithm>
 
+#include <boost/bind/bind.hpp>
+using namespace boost::placeholders;
+
 // Maximum number of requests pending. This number should be high enough so that
 // the requests can be reasonably distributed over our peers.
 const int MAX_PENDING_REQUESTS = 512;

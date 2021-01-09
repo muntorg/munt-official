@@ -93,6 +93,9 @@
 #include <QUrlQuery>
 #endif
 
+#include <boost/bind/bind.hpp>
+using namespace boost::placeholders;
+
 static void NotifyRequestUnlockS(GUI* parent, CWallet* wallet, std::string reason)
 {
     QMetaObject::invokeMethod(parent, "NotifyRequestUnlock", Qt::QueuedConnection, Q_ARG(void*, wallet), Q_ARG(QString, QString::fromStdString(reason)));
