@@ -59,6 +59,8 @@ $(package)_env+=$($(package)_env_arch_$(host_arch))
 endif
 
 define $(package)_preprocess_cmds
+    sed -Ei.old "s|// [#]define CRYPTOPP_NO_CXX17|#define CRYPTOPP_NO_CXX17|" config.h && \
+    sed -Ei.old "s|[#] define CRYPTOPP_UNCAUGHT_EXCEPTION_AVAILABLE|//# define CRYPTOPP_UNCAUGHT_EXCEPTION_AVAILABLE|" config.h 
 endef
 
 define $(package)_set_vars
