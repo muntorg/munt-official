@@ -569,6 +569,17 @@ UniValue decodescript(const JSONRPCRequest& request)
     } else {
         // Empty scripts are valid
     }
+    
+    CTxOutPoW2Witness phase3WitnessInfo;
+    if (script.ExtractPoW2WitnessFromScript(phase3WitnessInfo))
+    {
+        r.push_back(Pair("type", "pow2_phase3_witness"));
+        r.push_back(Pair("witness_address", CNativeAddress(CPoW2WitnessDestination(phase3WitnessInfo.spendingKeyID, phase3WitnessInfo.witnessKeyID)).ToString()));
+        r.push_back(Pair("spending_key_address", CNativeAddress(phase3WitnessInfo.spendingKeyID).ToString()));
+        r.push_back(Pair("witness_key_address", CNativeAddress(phase3WitnessInfo.witnessKeyID).ToString()));
+        return r;
+    }
+    
     ScriptPubKeyToUniv(script, r, false);
 
     UniValue type;
