@@ -11,11 +11,11 @@ module.exports = {
         appId: "com.novocurrency.desktop-wallet",
         productName: "Novo",
         extraFiles: [
-            {
-              "from": "../../data",
-              "to": "data",
-              "filter": ["staticfiltercp"]
-            }
+          {
+            from: "../../data",
+            to: "data",
+            filter: ["staticfiltercp"]
+          }
         ],
         publish: null,
         afterSign: "./notarize.js",

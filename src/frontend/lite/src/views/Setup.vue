@@ -215,19 +215,24 @@ export default {
           }
           break;
         case 4:
-          if (this.isRecovery)
-          {
-              if (LibraryController.InitWalletFromRecoveryPhrase(this.recoveryPhrase, this.password1))
-              {
-                  this.$router.push({ name: "account" });
-              }
-          }
-          else
-          {
-              if (LibraryController.InitWalletFromRecoveryPhrase(this.generatedRecoveryPhrase, this.password1))
-              {
-                  this.$router.push({ name: "account" });
-              }
+          if (this.isRecovery) {
+            if (
+              LibraryController.InitWalletFromRecoveryPhrase(
+                this.recoveryPhrase,
+                this.password1
+              )
+            ) {
+              this.$router.push({ name: "account" });
+            }
+          } else {
+            if (
+              LibraryController.InitWalletFromRecoveryPhrase(
+                this.generatedRecoveryPhrase,
+                this.password1
+              )
+            ) {
+              this.$router.push({ name: "account" });
+            }
           }
           break;
       }
