@@ -577,6 +577,10 @@ UniValue decodescript(const JSONRPCRequest& request)
         r.push_back(Pair("witness_address", CNativeAddress(CPoW2WitnessDestination(phase3WitnessInfo.spendingKeyID, phase3WitnessInfo.witnessKeyID)).ToString()));
         r.push_back(Pair("spending_key_address", CNativeAddress(phase3WitnessInfo.spendingKeyID).ToString()));
         r.push_back(Pair("witness_key_address", CNativeAddress(phase3WitnessInfo.witnessKeyID).ToString()));
+        r.push_back(Pair("lock_from_block", i64tostr(phase3WitnessInfo.lockFromBlock)));
+        r.push_back(Pair("lock_until_block", i64tostr(phase3WitnessInfo.lockUntilBlock)));
+        r.push_back(Pair("fail_count", i64tostr(phase3WitnessInfo.failCount)));
+        r.push_back(Pair("action_nonce", i64tostr(phase3WitnessInfo.actionNonce)));
         return r;
     }
     
