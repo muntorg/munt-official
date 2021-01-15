@@ -23,7 +23,7 @@ bool fShowChildAccountsSeperately = false;
 // TODO: consider moving shadow thread functionality into wallet class to reduce usage of global pactiveWallet
 // and possibly make some members private.
 
-static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAccountPoolTargetSizeWitness, int& nNumNewAccountsAllocated, bool& tryLockWallet)
+static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAccountPoolTargetSizeWitness, int nAccountPoolTargetSizeMobi, int& nNumNewAccountsAllocated, bool& tryLockWallet)
 {
     // Special SPV optimisation
     // Prevent extra accounts from generating until after we have found the first transaction
@@ -55,6 +55,7 @@ static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAcco
                 case AccountType::Mobi:
                 case AccountType::WitnessOnlyWitnessAccount:
                 case AccountType::ImportedPrivateKeyAccount:
+                    nFinalAccountPoolTargetSize = nAccountPoolTargetSizeMobi;
                     break;
             }
             int numShadow = 0;
@@ -114,6 +115,16 @@ static void ThreadShadowPoolManager()
     int depth = 1;
     int nAccountPoolTargetSize = GetArg("-accountpool", 10);
     int nAccountPoolTargetSizeWitness = GetArg("-accountpool", 2);
+    if (IsArgSet("-accountpoolwitness"))
+    {
+        nAccountPoolTargetSizeWitness = GetArg("-accountpoolwitness", nAccountPoolTargetSizeWitness);
+    }
+    int nAccountPoolTargetSizeMobi = nAccountPoolTargetSize;
+    if (IsArgSet("-accountpoolmobi"))
+    {
+        nAccountPoolTargetSizeMobi = GetArg("-accountpoolmobi", nAccountPoolTargetSizeMobi);
+    }
+    
     int nKeyPoolTargetDepth = GetArg("-keypool", DEFAULT_ACCOUNT_KEYPOOL_SIZE);
     while (true)
     {
@@ -127,7 +138,7 @@ static void ThreadShadowPoolManager()
             int nNumNewAccountsAllocated = 0;
 
             // First we expand the amount of shadow accounts until we have the desired amount.
-            AllocateShadowAccountsIfNeeded(nAccountPoolTargetSize, nAccountPoolTargetSizeWitness, nNumNewAccountsAllocated, tryLockWallet);
+            AllocateShadowAccountsIfNeeded(nAccountPoolTargetSize, nAccountPoolTargetSizeWitness, nAccountPoolTargetSizeMobi, nNumNewAccountsAllocated, tryLockWallet);
             if (nNumNewAccountsAllocated > 0)
             {
                 // Reset the depth to 1, so that our new accounts get their first keys as a priority instead of expanding deeper the other accounts.
