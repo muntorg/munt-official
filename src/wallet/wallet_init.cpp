@@ -728,7 +728,19 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
     }
 
     // Ensure we leave the wallet in a locked state
-    walletInstance->Lock();
+    if (!walletInstance->IsLocked())
+    {
+        if (fSPV)
+        {
+            walletInstance->fAutoLock = true;
+            walletInstance->nUnlockSessions++;
+            walletInstance->nUnlockedSessionsOwnedByShadow++;
+        }
+        else
+        {
+            walletInstance->Lock();
+        }
+    }
 
     return walletInstance;
 }
