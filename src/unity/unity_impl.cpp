@@ -864,7 +864,13 @@ int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::
         // Turn SPV mode on
         SoftSetArg("-fullsync", "0");
         SoftSetArg("-spv", "1");
-    
+            
+        #ifdef DJINNI_NODEJS
+        SoftSetArg("-accountpool", "3");
+        SoftSetArg("-accountpoolmobi", "1");
+        SoftSetArg("-accountpoolwitness", "1");
+        SoftSetArg("-keypool", "10");
+        #else
         // Minimise lookahead size for performance reasons
         SoftSetArg("-accountpool", "1");
 
@@ -874,10 +880,11 @@ int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::
         SoftSetArg("-dbcache", "4");
         SoftSetArg("-maxmempool", "5");
         SoftSetArg("-maxconnections", "8");
-        
+
         //fixme: (FUT) (UNITY) Reverse headers
         // Temporarily disable reverse headers for mobile until memory requirements can be reduced.
         SoftSetArg("-reverseheaders", "false");
+        #endif
     }
     
     SoftSetArg("-spvstaticfilterfile", staticFilterPath);
