@@ -3492,9 +3492,22 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
             pindexBestPartial = pindex;
     }
 
+     if (fSPV && !pindexBestPartial)
+     {
+         LogPrintf("Cannot load a full blockchain with a SPV wallet, index will have to be regenerated");
+         return false;
+     }
+
     // initialize partial chain and cleanup block index
     if (pindexBestPartial)
     {
+        if (!fSPV)
+        {
+            LogPrintf("Cannot load an SPV blockchain with non SPV wallet, index will have to be regenerated");
+            exit(EXIT_FAILURE);
+            return false;
+        }
+
         CBlockIndex* pindex = pindexBestPartial;
         while (pindex->pprev && pindex->pprev->IsPartialValid(BLOCK_PARTIAL_TREE))
             pindex = pindex->pprev;
