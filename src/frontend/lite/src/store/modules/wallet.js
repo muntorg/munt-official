@@ -93,11 +93,6 @@ const wallet = {
     },
     account: state => {
       return state.accounts.find(x => x.UUID === state.activeAccount);
-    },
-    miningAccount: state => {
-      return state.accounts.find(
-        x => x.type === "Mining" && x.state === "Normal"
-      ); // this will retrieve the first account of type Mining
     }
   }
 };

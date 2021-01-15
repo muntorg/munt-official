@@ -3,7 +3,8 @@
     "accounts": "Accounts",
     "categories": {
       "spending": "Spending",
-      "holding": "Holding"
+      "holding": "Holding",
+      "Accounts": "Accounts"
     }
   },
   "account_settings": {

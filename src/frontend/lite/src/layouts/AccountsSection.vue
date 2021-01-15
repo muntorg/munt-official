@@ -1,6 +1,5 @@
 <template>
   <section class="accounts">
-    <h4>{{ $t("accounts_section.accounts") }}</h4>
     <section class="scrollable dark">
       <div v-for="category in categories" :key="category">
         <div class="category flex-row">
@@ -11,17 +10,10 @@
             <div class="title ellipsis">
               {{ $t(`accounts_section.categories.${category}`) }}
             </div>
-            <div class="balance">{{ getBalanceFor(category) }}</div>
           </div>
-          <div class="add" v-if="category !== 'spending'">
-            <div class="button" @click="addAccountFor(category)">
-              <fa-icon :icon="['fal', 'plus']" />
-            </div>
+          <div class="button" @click="addAccountFor(category)">
+            <fa-icon :icon="['fal', 'plus']" />
           </div>
-        </div>
-        <div class="account active" v-if="showNewAccountFor(category) && false">
-          <div>New account</div>
-          <div class="balance">0</div>
         </div>
         <div v-if="opened[category]">
           <div
@@ -51,10 +43,9 @@ export default {
   name: "AccountsSection",
   data() {
     return {
-      categories: ["spending", "holding"],
+      categories: ["Accounts"],
       opened: {
-        spending: false,
-        holding: false
+        Accounts: true
       }
     };
   },
@@ -65,13 +56,7 @@ export default {
       if (this.activeAccount === null) return null;
       let account = this.accounts.find(x => x.UUID === this.activeAccount);
       if (account === undefined) return null;
-      switch (account.type) {
-        case "Desktop":
-          return "spending";
-        case "Witness":
-          return "holding";
-      }
-      return null;
+      return "Accounts";
     }
   },
   watch: {
@@ -86,17 +71,8 @@ export default {
         ? "active"
         : "";
     },
-    getAccountsFor(category) {
-      let types;
-      switch (category) {
-        case "spending":
-          types = ["Desktop"];
-          break;
-        case "holding":
-          types = ["Witness"];
-          break;
-      }
-      if (types === undefined) return [];
+    getAccountsFor() {
+      let types = ["Desktop", "Mining", "Witness"];
       return this.accounts.filter(
         x => x.state === "Normal" && types.indexOf(x.type) !== -1
       );
@@ -116,23 +92,8 @@ export default {
         }, 0)
         .toFixed(2);
     },
-    showNewAccountFor(category) {
-      switch (category) {
-        case "holding":
-          return this.$route.name === "add-holding-account";
-        default:
-          return false;
-      }
-    },
-    addAccountFor(category) {
-      switch (category) {
-        case "holding":
-          this.$router.push({ name: "add-holding-account" });
-          break;
-        default:
-          console.log(`add account for ${category} not implemented yet`);
-          break;
-      }
+    addAccountFor() {
+      return true;
     }
   }
 };

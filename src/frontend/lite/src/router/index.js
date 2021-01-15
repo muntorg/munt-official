@@ -15,22 +15,6 @@ const routes = [
     component: Account
   },
   {
-    path: "/setup-mining",
-    name: "setup-mining",
-    component: () =>
-      import(
-        /* webpackChunkName: "setup-mining" */ "../views/Account/MiningAccount/SetupMining.vue"
-      )
-  },
-  {
-    path: "/add-holding-account",
-    name: "add-holding-account",
-    component: () =>
-      import(
-        /* webpackChunkName: "add-holding-account" */ "../views/Account/HoldingAccount/AddHoldingAccount.vue"
-      )
-  },
-  {
     path: "/setup",
     name: "setup",
     component: () =>

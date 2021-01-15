@@ -13,9 +13,6 @@
         <div class="button" @click="changeLockSettings">
           <fa-icon :icon="['fal', lockIcon]" />
         </div>
-        <div class="button" @click="showMining">
-          <fa-icon :icon="['fal', 'gem']" />
-        </div>
         <div class="button" @click="showSettings">
           <fa-icon :icon="['fal', 'user-circle']" />
         </div>
@@ -78,7 +75,7 @@ export default {
   computed: {
     ...mapState("app", ["progress"]),
     ...mapState("wallet", ["activeAccount", "walletPassword"]),
-    ...mapGetters("wallet", ["totalBalance", "miningAccount"]),
+    ...mapGetters("wallet", ["totalBalance"]),
     walletLayoutClasses() {
       let classes = [];
       if (this.isHeaderSlotEmpty) classes.push("no-header");
@@ -104,18 +101,6 @@ export default {
     },
     sidebarRightSlotChanged(newContent) {
       this.isSidebarRightSlotEmpty = !newContent;
-    },
-    showMining() {
-      if (this.miningAccount) {
-        if (this.$route.path === `/account/${this.miningAccount.UUID}`) return;
-        this.$router.push({
-          name: "account",
-          params: { id: this.miningAccount.UUID }
-        });
-      } else {
-        if (this.$route.name === "setup-mining") return;
-        this.$router.push({ name: "setup-mining" });
-      }
     },
     showSettings() {
       if (this.$route.path === "/settings/") return;
