@@ -765,7 +765,12 @@ void CWallet::CreateSeedAndAccountFromPhrase(CWallet* walletInstance)
 
     // Now generate children shadow accounts to handle legacy transactions
     // Only for recovery wallets though, new ones don't need them
+    #ifdef DJINNI_NODEJS
+    //fixme: (UNITY) We seem to unwittingly create these unnecessarily when creating new wallets (because we treat them as a "recovery")
+    if (!fSPV && AppLifecycleManager::gApp->isRecovery)
+    #else
     if (AppLifecycleManager::gApp->isRecovery)
+    #endif
     {
         //fixme: (UNITY) (SPV) extract firstkeytime from recovery
         //Temporary seeds for shadow children
