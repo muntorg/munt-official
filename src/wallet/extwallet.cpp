@@ -409,6 +409,22 @@ void CExtWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                         else
                         {
                             name = _("Restored");
+                            switch(forAccount->m_Type)
+                            {
+                                case AccountType::MiningAccount:
+                                    name += " mining";
+                                    break;
+                                case AccountType::PoW2Witness:
+                                    name += " mining";
+                                    break;
+                                case AccountType::Mobi:
+                                    name += " mobile";
+                                    break;
+                                case AccountType::Desktop:
+                                case AccountType::WitnessOnlyWitnessAccount:
+                                case AccountType::ImportedPrivateKeyAccount:
+                                    break;
+                            }
                         }
                         addAccount(forAccount, name);
 
