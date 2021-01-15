@@ -23,7 +23,7 @@ bool fShowChildAccountsSeperately = false;
 // TODO: consider moving shadow thread functionality into wallet class to reduce usage of global pactiveWallet
 // and possibly make some members private.
 
-static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAccountPoolTargetSizeWitness, int& nNumNewAccountsAllocated, bool& tryLockWallet)
+static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAccountPoolTargetSizeWitness, int nAccountPoolTargetSizeMobi, int& nNumNewAccountsAllocated, bool& tryLockWallet)
 {
     // Special SPV optimisation
     // Prevent extra accounts from generating until after we have found the first transaction
@@ -55,6 +55,7 @@ static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAcco
                 case AccountType::Mobi:
                 case AccountType::WitnessOnlyWitnessAccount:
                 case AccountType::ImportedPrivateKeyAccount:
+                    nFinalAccountPoolTargetSize = nAccountPoolTargetSizeMobi;
                     break;
             }
             int numShadow = 0;
@@ -114,7 +115,17 @@ static void ThreadShadowPoolManager()
     int depth = 1;
     int nAccountPoolTargetSize = GetArg("-accountpool", 10);
     int nAccountPoolTargetSizeWitness = GetArg("-accountpool", 2);
-    int nKeyPoolTargetDepth = GetArg("-keypool", 20);
+    if (IsArgSet("-accountpoolwitness"))
+    {
+        nAccountPoolTargetSizeWitness = GetArg("-accountpoolwitness", nAccountPoolTargetSizeWitness);
+    }
+    int nAccountPoolTargetSizeMobi = nAccountPoolTargetSize;
+    if (IsArgSet("-accountpoolmobi"))
+    {
+        nAccountPoolTargetSizeMobi = GetArg("-accountpoolmobi", nAccountPoolTargetSizeMobi);
+    }
+    
+    int nKeyPoolTargetDepth = GetArg("-keypool", DEFAULT_ACCOUNT_KEYPOOL_SIZE);
     while (true)
     {
         long milliSleep = 500;
@@ -127,7 +138,7 @@ static void ThreadShadowPoolManager()
             int nNumNewAccountsAllocated = 0;
 
             // First we expand the amount of shadow accounts until we have the desired amount.
-            AllocateShadowAccountsIfNeeded(nAccountPoolTargetSize, nAccountPoolTargetSizeWitness, nNumNewAccountsAllocated, tryLockWallet);
+            AllocateShadowAccountsIfNeeded(nAccountPoolTargetSize, nAccountPoolTargetSizeWitness, nAccountPoolTargetSizeMobi, nNumNewAccountsAllocated, tryLockWallet);
             if (nNumNewAccountsAllocated > 0)
             {
                 // Reset the depth to 1, so that our new accounts get their first keys as a priority instead of expanding deeper the other accounts.
@@ -461,12 +472,6 @@ void CExtWallet::changeAccountName(CAccount* account, const std::string& newName
     // Force names to be unique
     std::string finalNewName = newName;
     std::string oldName = account->getLabel();
-    
-    if (newName == oldName)
-    {
-        return;
-    }
-
     {
         LOCK(cs_wallet);
 
@@ -1012,7 +1017,7 @@ std::vector<std::pair<CKey, uint64_t>> CExtWallet::ParseWitnessKeyURL(SecureStri
         throw std::runtime_error("Not a valid \"witness only\" witness account URI");
 
     std::vector<SecureString> encodedPrivateWitnessKeyStrings;
-    SecureString encPrivWitnessKeyWithoutPrefix(sEncodedPrivWitnessKeysURL.begin()+24, sEncodedPrivWitnessKeysURL.end());
+    SecureString encPrivWitnessKeyWithoutPrefix(sEncodedPrivWitnessKeysURL.begin()+26, sEncodedPrivWitnessKeysURL.end());
     boost::split(encodedPrivateWitnessKeyStrings, encPrivWitnessKeyWithoutPrefix, boost::is_any_of(":"));
 
     std::vector<std::pair<CKey, uint64_t>> privateWitnessKeys;
