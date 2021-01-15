@@ -2035,7 +2035,7 @@ static UniValue listallaccounts(const JSONRPCRequest& request)
             }
             continue;
         }
-        if (accountPair.second->m_State == AccountState::Shadow && !(sStateSearch == "Shadow"||sStateSearch == "ShadowChild"))
+        if (accountPair.second->m_State == AccountState::Shadow && !(sStateSearch == "Shadow"||sStateSearch == "ShadowChild"||sStateSearch == "*"))
             continue;
         if (forSeed && ((CAccountHD*)accountPair.second)->getSeedUUID() != forSeed->getUUID())
             continue;
