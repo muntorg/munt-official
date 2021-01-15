@@ -25,6 +25,15 @@ bool fShowChildAccountsSeperately = false;
 
 static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAccountPoolTargetSizeWitness, int& nNumNewAccountsAllocated, bool& tryLockWallet)
 {
+    // Special SPV optimisation
+    // Prevent extra accounts from generating until after we have found the first transaction
+    // This keeps our filter ranges smaller and speeds up sync
+    if (fSPV && IsInitialBlockDownload() && pactiveWallet->mapAccounts.size() == 1 && pactiveWallet->wtxOrdered.size() == 0)
+    {
+        tryLockWallet = false;
+        return;
+    }
+    
     for (const auto& seedIter : pactiveWallet->mapSeeds)
     {
         //fixme: (FUT) (ACCOUNTS) (Support other seed types here)
