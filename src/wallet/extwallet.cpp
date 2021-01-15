@@ -480,7 +480,16 @@ void CExtWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
     }
 
     //Only assign the bare minimum keys - let the background thread do the rest.
-    static_cast<CWallet*>(this)->TopUpKeyPool(1);
+    #ifdef DJINNI_NODEJS
+    if (fSPV)
+    {
+        static_cast<CWallet*>(this)->TopUpKeyPool(10);
+    }
+    else
+    #endif
+    {
+        static_cast<CWallet*>(this)->TopUpKeyPool(1);
+    }
 }
 
 void CExtWallet::changeAccountName(CAccount* account, const std::string& newName, bool notify)
