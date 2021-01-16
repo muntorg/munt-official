@@ -452,7 +452,7 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
     }
     else
     {
-        std::ifstream dataFile(dataFilePath);
+        std::ifstream dataFile(dataFilePath, std::ios::in|std::ios::binary);
         if (!dataFile.good() || dataFile.peek() == EOF)
         {
             LogPrintf("Failed to read static filtercp file\n");
@@ -460,9 +460,9 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
             return;
         }
         uint64_t nStaticFilterOffset = GetArg("-spvstaticfilterfileoffset", (uint64_t)0);
-        uint64_t nStaticFilterLength = GetArg("-spvstaticfilterfilelength", std::numeric_limits<uint64_t>::max());
+        uint64_t nStaticFilterLength = GetArg("-spvstaticfilterfilelength", (uint64_t)0);
         
-        LogPrintf("Loading static filtercp file [%s] [%d] [%d]\n", dataFilePath, nStaticFilterOffset, nStaticFilterLength);
+        LogPrintf("Loading staticfiltercp file [%s] [%d] [%d]\n", dataFilePath, nStaticFilterOffset, nStaticFilterLength);
         if (nStaticFilterLength == 0)
             std::numeric_limits<uint64_t>::max();
 
