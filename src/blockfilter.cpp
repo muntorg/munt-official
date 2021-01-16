@@ -457,7 +457,7 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
         std::ifstream dataFile(dataFilePath);
         if (!dataFile.good() || dataFile.peek() == EOF)
         {
-            LogPrintf("Failed to read static filtercp file\n");
+            LogPrintf("Failed to read staticfiltercp file [%s]\n", dataFilePath.c_str());
             nSoftBirthDate = nHardBirthDate;
             return;
         }
