@@ -38,7 +38,7 @@ export default {
   methods: {
     buyOrReceiveGulden() {
       window.open(
-        `https://guldencurrency.com/transfer?receive_address=${this.receiveAddress}`,
+        `https://gulden.com/transfer?receive_address=${this.receiveAddress}`,
         "_blank"
       );
     },
