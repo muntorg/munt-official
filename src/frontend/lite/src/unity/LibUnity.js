@@ -219,9 +219,7 @@ class LibUnity {
     } else {
       staticFilterPath = app.getAppPath();
       if (staticFilterPath.endsWith(".asar")) {
-        console.log("path: " + staticFilterPath);
         const filesystem = disk.readFilesystemSync(staticFilterPath);
-        console.log(filesystem);
         const fileInfo = filesystem.getFile("staticfiltercp", true);
         staticFilterOffset =
           parseInt(fileInfo.offset) +
