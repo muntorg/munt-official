@@ -1,4 +1,4 @@
-# Novo Electron Wallet
+# Gulden-lite Electron Wallet
 
 ## Project setup
 ```
