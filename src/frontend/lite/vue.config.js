@@ -8,15 +8,8 @@ module.exports = {
       mainProcessWatch: [],
       mainProcessArgs: [],
       builderOptions: {
-        appId: "com.novocurrency.desktop-wallet",
-        productName: "Novo",
-        extraFiles: [
-          {
-            from: "../../data",
-            to: "data",
-            filter: ["staticfiltercp"]
-          }
-        ],
+        appId: "com.gulden.desktop-wallet",
+        productName: "Gulden",
         publish: null,
         afterSign: "./notarize.js",
         mac: {
