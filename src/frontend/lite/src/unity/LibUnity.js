@@ -219,10 +219,13 @@ class LibUnity {
     } else {
       staticFilterPath = app.getAppPath();
       const filesystem = disk.readFilesystemSync(staticFilterPath);
+      console.log(filesystem);
+      const fileInfo = filesystem.getFile("staticfiltercp", true);
       staticFilterOffset =
-        parseInt(filesystem.getFile("background.js", true).offset) +
+        parseInt(fileInfo.offset) +
         parseInt(8) +
         parseInt(filesystem.headerSize);
+      staticFilterLength = parseInt(fileInfo.size);
     }
 
     console.log(`init unity lib threaded`);
