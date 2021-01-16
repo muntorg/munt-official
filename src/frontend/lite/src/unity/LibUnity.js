@@ -218,14 +218,19 @@ class LibUnity {
       );
     } else {
       staticFilterPath = app.getAppPath();
-      const filesystem = disk.readFilesystemSync(staticFilterPath);
-      console.log(filesystem);
-      const fileInfo = filesystem.getFile("staticfiltercp", true);
-      staticFilterOffset =
-        parseInt(fileInfo.offset) +
-        parseInt(8) +
-        parseInt(filesystem.headerSize);
-      staticFilterLength = parseInt(fileInfo.size);
+      if (staticFilterPath.endsWith(".asar")) {
+        console.log("path: " + staticFilterPath);
+        const filesystem = disk.readFilesystemSync(staticFilterPath);
+        console.log(filesystem);
+        const fileInfo = filesystem.getFile("staticfiltercp", true);
+        staticFilterOffset =
+          parseInt(fileInfo.offset) +
+          parseInt(8) +
+          parseInt(filesystem.headerSize);
+        staticFilterLength = parseInt(fileInfo.size);
+      } else {
+        staticFilterPath = path.join(staticFilterPath, "staticfiltercp");
+      }
     }
 
     console.log(`init unity lib threaded`);
