@@ -8,8 +8,8 @@ module.exports = {
       mainProcessWatch: [],
       mainProcessArgs: [],
       builderOptions: {
-        appId: "com.gulden.desktop-wallet",
-        productName: "Gulden",
+        appId: "com.gulden.lite-desktop-wallet",
+        productName: "Gulden-lite",
         publish: null,
         afterSign: "./notarize.js",
         mac: {
