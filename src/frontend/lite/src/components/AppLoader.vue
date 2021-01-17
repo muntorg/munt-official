@@ -34,13 +34,12 @@ export default {
   name: "AppLoader",
   data() {
     return {
-      splashReady: false,
       electronVersion: process.versions.electron,
       progress: 0
     };
   },
   computed: {
-    ...mapState("app", ["status", "unityVersion", "walletVersion"]),
+    ...mapState("app", ["splashReady", "status", "unityVersion", "walletVersion"]),
     showLoader() {
       return (
         this.splashReady === false ||
@@ -67,7 +66,7 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.splashReady = true;
+      this.$store.dispatch("app/SET_SPLASH_READY");
     }, 2500);
   },
   methods: {
