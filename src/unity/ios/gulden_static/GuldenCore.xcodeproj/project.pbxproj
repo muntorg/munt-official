@@ -33,7 +33,7 @@
 		E68FAE0D216C964E0038C745 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE01216C964E0038C745 /* libssl.a */; };
 		E68FAE0F216C964E0038C745 /* libdb_cxx-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */; };
 		E698B375233E670A00458186 /* libcryptopp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E698B374233E66D700458186 /* libcryptopp.a */; };
-		E698B376233E674900458186 /* libgulden_unity_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65180AD218A1080009283A8 /* libgulden_unity_objc.a */; };
+		E698B376233E674900458186 /* lib_unity_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65180AD218A1080009283A8 /* lib_unity_objc.a */; };
 		E6CEA4252264AA2D00C87DC5 /* DBOutputRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6CEA4232264AA2D00C87DC5 /* DBOutputRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6CEA4262264AA2D00C87DC5 /* DBPaymentResultStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = E6CEA4242264AA2D00C87DC5 /* DBPaymentResultStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EBCA222254B2BA00B02F24 /* staticfiltercp in Resources */ = {isa = PBXBuildFile; fileRef = E6EBCA212254B2BA00B02F24 /* staticfiltercp */; };
@@ -50,7 +50,7 @@
 		E6EC7D0E21EF24A900320806 /* DBTransactionRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7D0121EF24A800320806 /* DBTransactionRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6ED8385228ED8F700DD0BC9 /* core-packages.licenses in Resources */ = {isa = PBXBuildFile; fileRef = E6ED8384228ED8F700DD0BC9 /* core-packages.licenses */; };
 		E6EFA49E22735748002484C6 /* staticfiltercptestnet in Resources */ = {isa = PBXBuildFile; fileRef = E6EFA49D227352BB002484C6 /* staticfiltercptestnet */; };
-		E6F2DCA42343609F002B3CEA /* libgulden_unity_crypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F2DCA32343609F002B3CEA /* libgulden_unity_crypto.a */; };
+		E6F2DCA42343609F002B3CEA /* lib_unity_crypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F2DCA32343609F002B3CEA /* lib_unity_crypto.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,7 +63,7 @@
 		E64203EC21638CD6004A77FF /* GuldenCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GuldenCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E64203EF21638CD6004A77FF /* GuldenCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GuldenCore.h; sourceTree = "<group>"; };
 		E64203F021638CD6004A77FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E65180AD218A1080009283A8 /* libgulden_unity_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgulden_unity_objc.a; sourceTree = "<group>"; };
+		E65180AD218A1080009283A8 /* lib_unity_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = lib_unity_objc.a; sourceTree = "<group>"; };
 		E65D1677218A22540080637D /* libsecp256k1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsecp256k1.a; sourceTree = "<group>"; };
 		E65D1679218A229F0080637D /* libleveldb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libleveldb.a; sourceTree = "<group>"; };
 		E65D167B218A22B70080637D /* libmemenv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmemenv.a; sourceTree = "<group>"; };
@@ -100,7 +100,7 @@
 		E6ED7E97234216F3009C4DAB /* libgulden_crypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgulden_crypto.a; path = "../../../../build/aarch64-ios/src/crypto/libgulden_crypto.a"; sourceTree = "<group>"; };
 		E6ED8384228ED8F700DD0BC9 /* core-packages.licenses */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "core-packages.licenses"; path = "../../../../data/core-packages.licenses"; sourceTree = "<group>"; };
 		E6EFA49D227352BB002484C6 /* staticfiltercptestnet */ = {isa = PBXFileReference; lastKnownFileType = file; name = staticfiltercptestnet; path = ../../../../data/staticfiltercptestnet; sourceTree = "<group>"; };
-		E6F2DCA32343609F002B3CEA /* libgulden_unity_crypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgulden_unity_crypto.a; sourceTree = "<group>"; };
+		E6F2DCA32343609F002B3CEA /* lib_unity_crypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = lib_unity_crypto.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,7 +108,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6F2DCA42343609F002B3CEA /* libgulden_unity_crypto.a in Frameworks */,
+				E6F2DCA42343609F002B3CEA /* lib_unity_crypto.a in Frameworks */,
 				E65D167C218A22B70080637D /* libmemenv.a in Frameworks */,
 				E65D167A218A229F0080637D /* libleveldb.a in Frameworks */,
 				E65D1678218A22540080637D /* libsecp256k1.a in Frameworks */,
@@ -125,7 +125,7 @@
 				E68FAE0C216C964E0038C745 /* libcrypto.a in Frameworks */,
 				E68FAE0D216C964E0038C745 /* libssl.a in Frameworks */,
 				E68FAE0F216C964E0038C745 /* libdb_cxx-4.8.a in Frameworks */,
-				E698B376233E674900458186 /* libgulden_unity_objc.a in Frameworks */,
+				E698B376233E674900458186 /* lib_unity_objc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,13 +181,13 @@
 		E64203F721638D34004A77FF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E6F2DCA32343609F002B3CEA /* libgulden_unity_crypto.a */,
+				E6F2DCA32343609F002B3CEA /* lib_unity_crypto.a */,
 				E6ED7E97234216F3009C4DAB /* libgulden_crypto.a */,
 				E698B374233E66D700458186 /* libcryptopp.a */,
 				E65D167B218A22B70080637D /* libmemenv.a */,
 				E65D1679218A229F0080637D /* libleveldb.a */,
 				E65D1677218A22540080637D /* libsecp256k1.a */,
-				E65180AD218A1080009283A8 /* libgulden_unity_objc.a */,
+				E65180AD218A1080009283A8 /* lib_unity_objc.a */,
 				E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */,
 				E68FADFF216C964E0038C745 /* libboost_chrono-mt-s.a */,
 				E68FADFA216C964D0038C745 /* libboost_filesystem-mt-s.a */,
