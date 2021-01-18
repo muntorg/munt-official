@@ -1,5 +1,5 @@
 <template>
-  <div class="app-loader flex-col" v-if="showLoader">
+  <div class="app-loader flex-col">
     <div class="logo-outer flex-col">
       <div class="logo-inner"></div>
     </div>
@@ -39,13 +39,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("app", ["splashReady", "status", "unityVersion", "walletVersion"]),
-    showLoader() {
-      return (
-        this.splashReady === false ||
-        (this.status !== AppStatus.ready && this.status !== AppStatus.setup)
-      );
-    },
+    ...mapState("app", ["status", "unityVersion", "walletVersion"]),
     isShuttingDown() {
       return this.status === AppStatus.shutdown;
     },
@@ -71,21 +65,9 @@ export default {
   },
   methods: {
     onStatusChanged() {
-      let routeName;
-      switch (this.status) {
-        case AppStatus.setup:
-          routeName = "setup";
-          break;
-        case AppStatus.synchronize:
-          routeName = "account";
+      if (this.status === AppStatus.synchronize) {
           this.updateProgress();
-          break;
-        case AppStatus.ready:
-          routeName = "account";
-          break;
       }
-      if (routeName === undefined || this.$route.name === routeName) return;
-      this.$router.push({ name: routeName });
     },
     updateProgress() {
       clearTimeout(progressTimeout);
