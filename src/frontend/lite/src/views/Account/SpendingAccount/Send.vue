@@ -1,46 +1,46 @@
 <template>
-  <div class="send-gulden flex-col">
-    <portal to="sidebar-right-title">
-      {{ $t("buttons.send") }}
-    </portal>
+  <div class="send-view">
+    <input
+      v-model="amount"
+      ref="amount"
+      type="number"
+      step="0.01"
+      placeholder="0.00"
+      :class="amountClass"
+      min="0"
+      :max="maxAmount"
+      @change="isAmountInvalid = false"
+    />
+    <input
+      v-model="address"
+      type="text"
+      :placeholder="$t('send_gulden.enter_gulden_address')"
+      :class="addressClass"
+      @keydown="isAddressInvalid = false"
+    />
+    <input
+      v-model="label"
+      type="text"
+      :placeholder="$t('send_gulden.enter_label')"
+    />
 
-    <div class="main">
-      <input
-        v-model="amount"
-        ref="amount"
-        type="number"
-        step="0.01"
-        placeholder="0.00"
-        :class="amountClass"
-        min="0"
-        :max="maxAmount"
-        @change="isAmountInvalid = false"
-      />
-      <input
-        v-model="address"
-        type="text"
-        :placeholder="$t('send_gulden.enter_gulden_address')"
-        :class="addressClass"
-        @keydown="isAddressInvalid = false"
-      />
-      <input
-        v-model="label"
-        type="text"
-        :placeholder="$t('send_gulden.enter_label')"
-      />
-
-      <input
-        v-model="password"
-        type="password"
-        v-show="walletPassword === null"
-        :placeholder="$t('common.enter_your_password')"
-        :class="passwordClass"
-        @keydown="onPasswordKeydown"
-      />
+    <input
+      v-model="password"
+      type="password"
+      v-show="walletPassword === null"
+      :placeholder="$t('common.enter_your_password')"
+      :class="passwordClass"
+      @keydown="onPasswordKeydown"
+    />
+    <div class="spacer" />
+    <div class="buttons">
+      <button @click="clearInput" class="clear" :disabled="disableClearButton">
+        {{ $t("buttons.clear") }}
+      </button>
+      <button @click="trySend" class="send" :disabled="disableSendButton">
+        {{ $t("buttons.send") }}
+      </button>
     </div>
-    <button @click="trySend" :disabled="disableSendButton">
-      {{ $t("buttons.send") }}
-    </button>
   </div>
 </template>
 
@@ -52,7 +52,7 @@ import {
 } from "../../../unity/Controllers";
 
 export default {
-  name: "SendGulden",
+  name: "Send",
   data() {
     return {
       amount: null,
@@ -84,6 +84,13 @@ export default {
         this.isAmountInvalid || this.isAddressInvalid || this.isPasswordInvalid
       );
     },
+    disableClearButton() {
+      if (this.amount !== null && !isNaN(parseFloat(this.amount))) return false;
+      if (this.address !== null && this.address.length > 0) return false;
+      if (this.label !== null && this.label.length > 0) return false;
+      if (this.password !== null && this.password.length > 0) return false;
+      return true;
+    },
     disableSendButton() {
       if (isNaN(parseFloat(this.amount))) return true;
       if (this.address === null || this.address.trim().length === 0)
@@ -105,6 +112,13 @@ export default {
   methods: {
     onPasswordKeydown() {
       this.isPasswordInvalid = false;
+    },
+    clearInput() {
+      this.amount = null;
+      this.address = null;
+      this.label = null;
+      this.password = null;
+      this.$refs.amount.focus();
     },
     trySend() {
       /*
@@ -160,22 +174,29 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.send-gulden {
+.send-view {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-  .main {
-    flex: 1;
+.buttons {
+  & > .clear {
+    width: 170px;
+  }
+  & > .clear:not([disabled]) {
+    background-color: #fff;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+  }
+
+  & > .send {
+    margin: 0 0 0 30px;
+    width: calc(100% - 200px);
   }
 }
 
-input {
-  border: 0;
-  margin: 0 0 10px 0;
-  font-style: normal;
-  font-size: 14px;
-}
-
-button {
-  width: 100%;
+.spacer {
+  flex: 1;
 }
 </style>
