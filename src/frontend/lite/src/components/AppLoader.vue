@@ -39,7 +39,18 @@ export default {
     };
   },
   computed: {
-    ...mapState("app", ["status", "unityVersion", "walletVersion"]),
+    ...mapState("app", [
+      "splashReady",
+      "status",
+      "unityVersion",
+      "walletVersion"
+    ]),
+    showLoader() {
+      return (
+        this.splashReady === false ||
+        (this.status !== AppStatus.ready && this.status !== AppStatus.setup)
+      );
+    },
     isShuttingDown() {
       return this.status === AppStatus.shutdown;
     },
@@ -66,7 +77,7 @@ export default {
   methods: {
     onStatusChanged() {
       if (this.status === AppStatus.synchronize) {
-          this.updateProgress();
+        this.updateProgress();
       }
     },
     updateProgress() {

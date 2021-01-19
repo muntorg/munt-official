@@ -1,5 +1,5 @@
 <template>
-  <div class="mutation-list">
+  <div class="transactions-view">
     <div
       class="mutation-group"
       v-for="group in groupedMutations"
@@ -11,13 +11,13 @@
         v-for="mutation in group.mutations"
         :key="mutation.txHash"
         @click="selectTxHash(mutation.txHash)"
-        @contextmenu="showTxMenu($event, mutation)"
         :class="mutationRowClass(mutation.txHash)"
       >
-        <div class="icon transactionicon">
+        <div class="icon">
           <fa-icon :icon="['fal', mutationIcon(mutation)]" />
         </div>
         <div class="time">{{ formatTime(mutation.timestamp) }}</div>
+        <div class="txhash">{{ mutation.txHash }}</div>
         <div class="amount">{{ formatAmount(mutation.change) }}</div>
       </div>
     </div>
@@ -25,16 +25,12 @@
 </template>
 
 <script>
-const { remote } = require("electron");
-const { Menu, MenuItem } = remote;
-import { WalletController } from "../../../unity/Controllers";
+import { mapState } from "vuex";
+
 export default {
-  name: "MutationList",
-  props: {
-    mutations: null,
-    txHash: null
-  },
+  name: "Transactions",
   computed: {
+    ...mapState("wallet", ["mutations"]),
     groupedMutations() {
       if (this.mutations === null) return [];
       let groupedMutations = [];
@@ -116,24 +112,6 @@ export default {
     selectTxHash(txHash) {
       this.$emit("tx-hash", txHash);
     },
-    showTxMenu(e, mutation) {
-      if (
-        mutation.status !== 1 &&
-        mutation.status !== 2 &&
-        mutation.status !== 3
-      ) {
-        const contextMenu = new Menu();
-        contextMenu.append(
-          new MenuItem({
-            label: "Abandon transaction",
-            click() {
-              WalletController.AbandonTransaction(mutation.txHash);
-            }
-          })
-        );
-        contextMenu.popup({ x: e.x, y: e.y });
-      }
-    },
     mutationRowClass(txHash) {
       return txHash === this.txHash ? "selected" : "";
     }
@@ -143,11 +121,10 @@ export default {
 
 <style lang="less" scoped>
 .mutation-group {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 h4 {
-  color: #999;
   margin-bottom: 10px;
 }
 
@@ -157,18 +134,27 @@ h4 {
   padding: 5px 20px 5px 20px;
   cursor: pointer;
 
+  & > .icon {
+    flex: 0 0 30px;
+  }
+
+  & > .time {
+    flex: 0 0 70px;
+  }
+
   & .amount {
     flex: 1;
     text-align: right;
   }
 
   &:hover {
-    background: #f5f5f5;
+    color: var(--primary-color);
+    background: #eff3ff;
   }
 
   &.selected {
-    background: var(--primary-color);
     color: #fff;
+    background: var(--primary-color);
   }
 }
 </style>
