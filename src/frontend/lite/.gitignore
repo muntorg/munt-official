@@ -30,3 +30,5 @@ pnpm-debug.log*
 # We use public folder to work around electron builders/webpack deficiencies (no other way to include files like staticfiltercp in app.asar)
 # However we automatically copy all files into here when building, so shouldn't ever commit them
 /public/staticfiltercp
+
+yarn.lock
