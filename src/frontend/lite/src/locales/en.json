@@ -22,6 +22,7 @@
   "buttons": {
     "back": "Back",
     "change_password": "Change password",
+    "clear": "Clear",
     "create_mining_account": "Create mining account",
     "finish": "Finish",
     "lock": "Lock",
@@ -33,6 +34,7 @@
     "send": "Send",
     "start": "Start",
     "stop": "Stop",
+    "transactions": "Transactions",
     "unlock": "Unlock"
   },
   "common": {
@@ -109,6 +111,7 @@
     "hash": "Hash"
   },
   "receive_gulden": {
+    "address_copied_to_clipboard": "Address copied to clipboard",
     "buy_or_receive_gulden": "Buy or receive Gulden",
     "your_address": "Your address"
   },

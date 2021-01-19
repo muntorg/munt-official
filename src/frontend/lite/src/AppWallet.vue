@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 import AppStatus from "./AppStatus";
 import AppLoader from "./components/AppLoader";
 import ModalDialog from "./components/ModalDialog";
@@ -52,7 +52,7 @@ export default {
         this.splashReady === false ||
         (this.status !== AppStatus.ready && this.status !== AppStatus.setup)
       );
-    },
+    }
   },
   watch: {
     status() {
@@ -67,10 +67,10 @@ export default {
           routeName = "setup";
           break;
         case AppStatus.synchronize:
-          routeName = "account";
+          routeName = "transactions";
           break;
         case AppStatus.ready:
-          routeName = "account";
+          routeName = "transactions";
           break;
       }
       if (routeName === undefined || this.$route.name === routeName) return;

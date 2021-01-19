@@ -1,88 +1,55 @@
 <template>
-  <section class="wallet-layout flex-row" :class="walletLayoutClasses">
-    <section class="sidebar-left">
-      <section class="header flex-row">
-        <div class="logo" />
-        <div class="total-balance">
-          {{ totalBalance.toFixed(2) }}
-        </div>
-      </section>
-      <accounts-section class="accounts" />
-      <section class="footer flex-row">
-        <div class="status" />
-        <div class="button" @click="changeLockSettings">
-          <fa-icon :icon="['fal', lockIcon]" />
-        </div>
-        <div class="button" @click="showSettings">
-          <fa-icon :icon="['fal', 'user-circle']" />
-        </div>
-      </section>
+  <section class="wallet-layout">
+    <section class="header flex-row">
+      <div class="logo" />
+      <div class="balance flex-row">
+        <div class="coin">{{ totalBalance.toFixed(2) }}</div>
+        <div class="fiat">€ {{ totalBalance.toFixed(2) }}</div>
+      </div>
+      <div class="spacer"></div>
+      <div class="button" @click="showSettings">
+        <fa-icon :icon="['fal', 'cog']" />
+      </div>
+      <div class="button" @click="changeLockSettings">
+        <fa-icon :icon="['fal', lockIcon]" />
+      </div>
     </section>
-    <section class="main">
-      <portal-target
-        ref="headerSlot"
-        name="header-slot"
-        class="header"
-        @change="headerSlotChanged"
-      ></portal-target>
-      <section class="content scrollable">
-        <router-view />
-      </section>
-      <portal-target
-        ref="footerSlot"
-        name="footer-slot"
-        class="footer"
-        @change="footerSlotChanged"
-      ></portal-target>
+    <section class="content scrollable">
+      <router-view />
     </section>
-    <section class="sidebar-right">
-      <section class="header flex-row">
-        <div class="title">
-          <portal-target name="sidebar-right-title" />
-        </div>
-        <div class="close" @click="closeRightSidebar">
-          <fa-icon :icon="['fal', 'times']" />
-        </div>
-      </section>
-      <portal-target
-        class="component"
-        ref="sidebarRight"
-        name="sidebar-right"
-        @change="sidebarRightSlotChanged"
-      />
+    <section class="footer flex-row">
+      <div class="spacer"></div>
+      <div
+        :class="getButtonClassNames('transactions')"
+        @click="routeTo('transactions')"
+      >
+        <fa-icon :icon="['fal', 'list-ul']" />
+        {{ $t("buttons.transactions") }}
+      </div>
+      <div :class="getButtonClassNames('send')" @click="routeTo('send')">
+        <fa-icon :icon="['fas', 'arrow-circle-up']" />
+        {{ $t("buttons.send") }}
+      </div>
+      <div :class="getButtonClassNames('receive')" @click="routeTo('receive')">
+        <fa-icon :icon="['fas', 'arrow-circle-down']" />
+        {{ $t("buttons.receive") }}
+      </div>
+      <div class="spacer"></div>
     </section>
   </section>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import AccountsSection from "./AccountsSection";
 import WalletPasswordDialog from "../components/WalletPasswordDialog";
 import EventBus from "../EventBus";
 
 export default {
   name: "WalletLayout",
-  data() {
-    return {
-      isHeaderSlotEmpty: true,
-      isFooterSlotEmpty: true,
-      isSidebarRightSlotEmpty: true
-    };
-  },
-  components: {
-    AccountsSection
-  },
   computed: {
     ...mapState("app", ["progress"]),
     ...mapState("wallet", ["activeAccount", "walletPassword"]),
     ...mapGetters("wallet", ["totalBalance"]),
-    walletLayoutClasses() {
-      let classes = [];
-      if (this.isHeaderSlotEmpty) classes.push("no-header");
-      if (this.isFooterSlotEmpty) classes.push("no-footer");
-      if (this.isSidebarRightSlotEmpty) classes.push("no-sidebar-right");
-      return classes;
-    },
     lockIcon() {
       return this.walletPassword ? "unlock" : "lock";
     }
@@ -93,14 +60,13 @@ export default {
     }
   },
   methods: {
-    headerSlotChanged(newContent) {
-      this.isHeaderSlotEmpty = !newContent;
+    routeTo(route) {
+      this.$router.push({ name: route });
     },
-    footerSlotChanged(newContent) {
-      this.isFooterSlotEmpty = !newContent;
-    },
-    sidebarRightSlotChanged(newContent) {
-      this.isSidebarRightSlotEmpty = !newContent;
+    getButtonClassNames(route) {
+      let classNames = ["button"];
+      if (route === this.$route.name) classNames.push("active");
+      return classNames;
     },
     showSettings() {
       if (this.$route.path === "/settings/") return;
@@ -116,9 +82,6 @@ export default {
           showButtons: false
         });
       }
-    },
-    closeRightSidebar() {
-      EventBus.$emit("close-right-sidebar");
     }
   }
 };
@@ -129,152 +92,76 @@ export default {
   height: 100vh;
   overflow: hidden;
 
-  --header-height-main: var(--header-height);
-  --footer-height-main: var(--footer-height);
-
-  &.no-header {
-    --header-height-main: 0px;
-
-    & > .main > .header {
-      display: none;
-    }
-  }
-
-  &.no-footer {
-    --footer-height-main: 0px;
-    & > .main > .footer {
-      display: none;
-    }
-  }
-
-  &.no-sidebar-right {
-    --sidebar-right-width: 0px;
-
-    & > .sidebar-right {
-      display: none;
-    }
-  }
-
-  & > .sidebar-left {
-    width: var(--sidebar-left-width);
-    background: var(--sidebar-left-background-color);
-    color: var(--sidebar-left-color);
-
-    & > .header {
-      height: var(--header-height);
-      border-bottom: 1px solid var(--sidebar-left-border-color);
-    }
-
-    & > .accounts {
-      height: calc(100% - var(--header-height) - var(--footer-height));
-    }
-
-    & > .footer {
-      height: var(--footer-height);
-      border-top: 1px solid var(--sidebar-left-border-color);
-    }
-  }
-
-  & > .main {
-    width: calc(100% - var(--sidebar-left-width) - var(--sidebar-right-width));
-
-    & > .header {
-      height: var(--header-height);
-      border-bottom: 1px solid var(--main-border-color);
-      padding: 0 20px;
-    }
-
-    & > .content {
-      height: calc(
-        100% - var(--header-height-main) - var(--footer-height-main)
-      );
-      padding: 20px;
-    }
-
-    & > .footer {
-      height: var(--footer-height);
-      border-top: 1px solid var(--main-border-color);
-      line-height: calc(var(--footer-height) - 2px);
-      padding: 0 20px;
-    }
-  }
-
-  & > .sidebar-right {
-    width: var(--sidebar-right-width);
-    background: var(--sidebar-right-background-color);
-  }
-}
-
-.sidebar-left > .header {
-  padding: 20px;
-  color: #fff;
-
-  & .logo {
-    width: 22px;
-    min-width: 22px;
-    height: 22px;
-    min-height: 22px;
-    background: url("../img/logo.svg"),
-      linear-gradient(transparent, transparent);
-    background-size: cover;
-  }
-
-  & .total-balance {
-    padding: 0 0 0 10px;
-    line-height: 22px;
-  }
-}
-
-.sidebar-left > .footer {
-  font-size: 16px;
-  font-weight: 400;
-
-  & .status {
-    flex: 1;
-  }
-
-  & .button {
-    line-height: 52px;
-    padding: 0 20px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #292c57;
-    }
-  }
-}
-
-.sidebar-right {
-  padding: 0 24px;
-
   & > .header {
-    line-height: 62px;
+    height: var(--header-height);
+    padding: 10px 20px 10px 20px;
+    border-bottom: 1px solid var(--main-border-color);
     font-size: 1.1em;
+    line-height: 42px;
+
+    & > .logo {
+      margin: 10px;
+      width: 22px;
+      min-width: 22px;
+      height: 22px;
+      min-height: 22px;
+      background: url("../img/logo-start.svg"),
+        linear-gradient(transparent, transparent);
+      background-size: cover;
+    }
+    & > .balance {
+      & > .coin {
+        font-weight: 600;
+      }
+      & > .fiat {
+        margin: 0 0 0 10px;
+      }
+    }
+    & .button {
+      line-height: 42px;
+      font-size: 1.2em;
+      font-weight: 300;
+      padding: 0 10px;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary-color);
+        background-color: #eff3ff;
+      }
+    }
+  }
+
+  & > .content {
+    height: calc(100% - var(--header-height) - var(--footer-height));
+    padding: 20px;
+  }
+
+  & > .footer {
+    height: var(--footer-height);
+    border-top: 1px solid var(--main-border-color);
+    line-height: 32px;
+    padding: 10px 20px;
+
+    font-size: 1em;
     font-weight: 500;
 
-    & .title {
-      flex: 1;
-    }
-
-    & .close {
+    & > .button {
+      padding: 0 30px;
       cursor: pointer;
     }
-  }
 
-  & .component {
-    height: calc(100% - 72px);
+    & > .button.active {
+      color: var(--primary-color);
+    }
+
+    & > .button:not(.active):hover {
+      color: var(--primary-color);
+      background-color: #eff3ff;
+    }
   }
 }
 
-@media (max-width: 900px) {
-  .wallet-layout:not(.no-sidebar-right) {
-    & > .main {
-      display: none;
-    }
-
-    & > .sidebar-right {
-      width: calc(100% - var(--sidebar-left-width));
-    }
-  }
+.spacer {
+  flex: 1;
 }
 </style>
