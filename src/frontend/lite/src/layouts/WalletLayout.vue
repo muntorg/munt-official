@@ -6,7 +6,7 @@
         <div class="coin">{{ totalBalance.toFixed(2) }}</div>
         <div class="fiat">€ {{ totalBalance.toFixed(2) }}</div>
       </div>
-      <div class="spacer"></div>
+      <div class="flex-1" />
       <div class="button" @click="showSettings">
         <fa-icon :icon="['fal', 'cog']" />
       </div>
@@ -18,7 +18,7 @@
       <router-view />
     </section>
     <section class="footer flex-row">
-      <div class="spacer"></div>
+      <div class="flex-1" />
       <div
         :class="getButtonClassNames('transactions')"
         @click="routeTo('transactions')"
@@ -34,7 +34,7 @@
         <fa-icon :icon="['fas', 'arrow-circle-down']" />
         {{ $t("buttons.receive") }}
       </div>
-      <div class="spacer"></div>
+      <div class="flex-1" />
     </section>
   </section>
 </template>
@@ -159,9 +159,5 @@ export default {
       background-color: #eff3ff;
     }
   }
-}
-
-.spacer {
-  flex: 1;
 }
 </style>

@@ -7,11 +7,11 @@
         <gulden-section>
           <div class="settings-row" @click="setupWallet(false)">
             {{ $t("setup.create_new") }}
-            <fa-icon :icon="['fal', 'long-arrow-right']" class="arrow" />
+            <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
           </div>
           <div class="settings-row" @click="setupWallet(true)">
             {{ $t("setup.recover_existing") }}
-            <fa-icon :icon="['fal', 'long-arrow-right']" class="arrow" />
+            <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
           </div>
         </gulden-section>
       </gulden-section>
@@ -272,18 +272,18 @@ export default {
 }
 
 .settings-row {
-  padding: 4px 0;
-  border-bottom: 1px solid #ccc;
+  margin: 0 -10px;
+  padding: 10px;
   cursor: pointer;
+}
+
+.settings-row:hover {
+  color: var(--primary-color);
+  background-color: #eff3ff;
 }
 
 .arrow {
   float: right;
-  color: #fff;
-}
-
-.settings-row:hover > .arrow {
-  color: #000;
 }
 
 .phrase {

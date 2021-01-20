@@ -1,46 +1,39 @@
 <template>
   <div class="settings-list-view">
-    <portal to="header-slot">
-      <main-header :title="$t('settings.header')" />
-    </portal>
+    <h2>{{ $t("settings.header") }}</h2>
     <div class="settings-row">
       <router-link :to="{ name: 'view-recovery-phrase' }">
         {{ $t("settings.view_recovery_phrase") }}
-        <fa-icon :icon="['fal', 'long-arrow-right']" class="arrow" />
+        <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
       </router-link>
     </div>
     <div class="settings-row">
       <router-link :to="{ name: 'change-password' }">
         {{ $t("settings.change_password") }}
-        <fa-icon :icon="['fal', 'long-arrow-right']" class="arrow" />
+        <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
       </router-link>
     </div>
-
-    <portal to="footer-slot">
-      <div />
-    </portal>
   </div>
 </template>
 
 <style lang="less" scoped>
 .settings-row {
-  padding: 4px 0;
-  border-bottom: 1px solid #ccc;
+  margin: 0 -10px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.settings-row:hover {
+  color: var(--primary-color);
+  background-color: #eff3ff;
 }
 
 .settings-row a {
   display: inline-block;
   width: 100%;
-  line-height: 20px;
 }
 
 .arrow {
   float: right;
-  margin: 6px 0 0 0;
-  color: #fff;
-}
-
-a:hover > .arrow {
-  color: #000;
 }
 </style>

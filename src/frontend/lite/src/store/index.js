@@ -18,7 +18,7 @@ if (process.type !== "renderer") {
   userSettingsPersistedState = createPersistedState({
     storage: store,
     invertIgnored: true, // use invertIgnored because we only want to store the paths in the ignoredPaths list
-    ignoredPaths: ["mining.settings"]
+    ignoredPaths: []
   });
 }
 export default new Vuex.Store({
