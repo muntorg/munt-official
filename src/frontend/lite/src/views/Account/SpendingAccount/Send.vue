@@ -1,5 +1,5 @@
 <template>
-  <div class="send-view">
+  <div class="send-view flex-col">
     <input
       v-model="amount"
       ref="amount"
@@ -32,7 +32,7 @@
       :class="passwordClass"
       @keydown="onPasswordKeydown"
     />
-    <div class="spacer" />
+    <div class="flex-1" />
     <div class="buttons">
       <button @click="clearInput" class="clear" :disabled="disableClearButton">
         {{ $t("buttons.clear") }}
@@ -176,8 +176,6 @@ export default {
 <style lang="less" scoped>
 .send-view {
   height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 .buttons {
@@ -194,9 +192,5 @@ export default {
     margin: 0 0 0 30px;
     width: calc(100% - 200px);
   }
-}
-
-.spacer {
-  flex: 1;
 }
 </style>

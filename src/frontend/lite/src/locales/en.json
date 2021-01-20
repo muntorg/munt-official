@@ -89,17 +89,17 @@
   "setup": {
     "choose_password": "Choose a password of at least 6 characters",
     "choose_password_information": "You will need your password to unlock your wallet. Make sure it is not easy to guess because anyone who knows your password can access your funds.",
-    "create_new": "I want to create a new wallet",
+    "create_new": "I do not have a Gulden wallet yet",
     "enter_existing_recovery_phrase": "Enter your recovery phrase in the boxes below to restore your wallet.",
     "enter_recovery_phrase": "Enter recovery phrase",
     "invalid_recovery_phrase": {
       "title": "Invalid recovery phrase",
       "message": "This combinatie is not a valid recovery phrase. Correct the error(s) and try again."
     },
-    "recover_existing": "I want to recover my wallet using my recovery phrase",
+    "recover_existing": "I already have a Gulden wallet",
     "repeat_password": "Repeat password",
     "repeat_your_recovery_phrase": "To make sure you have correctly written down your recovery phrase, enter your phrase in the boxes below.",
-    "setup_gulden_wallet": "Setup your Gulden wallet",
+    "setup_gulden_wallet": "Choose your option",
     "this_is_your_recovery_phrase": "This is your recovery phrase. Keep your backup phrase in a safe place. Lose phrase or someone else with access to the phrase = lose Gulden."
   },
   "setup_mining": {

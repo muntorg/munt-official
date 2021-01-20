@@ -8,8 +8,8 @@
         :margin="0"
         :value="receiveAddress"
       />
-      <div class="address-row">
-        <div class="spacer"></div>
+      <div class="address-row flex-row">
+        <div class="flex-1" />
         <div class="address">
           <span v-if="confirmCopy">
             {{ $t("receive_gulden.address_copied_to_clipboard") }}
@@ -19,7 +19,7 @@
             <fa-icon :icon="['fal', 'copy']" class="copy" />
           </span>
         </div>
-        <div class="spacer"></div>
+        <div class="flex-1" />
       </div>
     </div>
   </div>
@@ -69,15 +69,6 @@ export default {
     width: 100%;
     max-width: 248px;
     padding: 16px;
-  }
-
-  & .address-row {
-    display: flex;
-    flex-direction: row;
-  }
-
-  & .spacer {
-    flex: 1;
   }
 
   & .address {

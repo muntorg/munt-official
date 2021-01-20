@@ -84,17 +84,17 @@
   "setup": {
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
     "choose_password_information": "Een wachtwoord is vereist voor het ontgrendelen van jouw portemonnee. Kies een sterk wachtwoord, zodat niemand anders toegang kan krijgen tot jouw Gulden.",
-    "create_new": "Ik wil een nieuwe portemonnee starten",
+    "create_new": "Ik heb nog geen Gulden portemonnee",
     "enter_existing_recovery_phrase": "Voer jouw herstelzin in om jouw portemonnee te herstellen.",
     "enter_recovery_phrase": "Voer herstelzin in",
     "invalid_recovery_phrase": {
       "title": "Ongeldige herstelzin",
       "message": "Deze combinatie vormt geen geldige herstelzin. Corrigeer de fout(en) en probeer het nogmaals."
     },
-    "recover_existing": "Ik wil mijn portemonnee herstellen met mijn herstelzin",
+    "recover_existing": "Ik heb al een Gulden portemonnee",
     "repeat_password": "Herhaal wachtwoord",
     "repeat_your_recovery_phrase": "Voer jouw herstelzin in om te controleren dat je deze goed hebt opgeschreven.",
-    "setup_gulden_wallet": "Installeer jouw Gulden portemonnee",
+    "setup_gulden_wallet": "Maak een keuze",
     "this_is_your_recovery_phrase": "Dit is jouw herstelzin. Bewaar de herstelzin op een veilige plek. Zin kwijt of iemand toegang tot je zin = Gulden weg."
   },
   "setup_mining": {
