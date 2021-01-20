@@ -51,13 +51,6 @@ let controllers = [
   {
     className: "NJSIAccountsController",
     exclude: ["setListener"]
-  },
-  {
-    className: "NJSIWitnessController"
-  },
-  {
-    className: "NJSIGenerationController",
-    exclude: ["setListener"]
   }
 ];
 
