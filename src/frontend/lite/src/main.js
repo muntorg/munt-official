@@ -20,27 +20,20 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faAngleDoubleLeft,
-  faArrowLeft,
   faBan,
   faChevronDown,
   faChevronRight,
   faCog,
   faCopy,
-  faCreditCard,
   faEraser,
-  faGem,
   faHourglassStart,
   faListUl,
   faLock,
-  faLongArrowLeft,
-  faLongArrowRight,
-  faPlus,
   faSearchMinus,
   faSearchPlus,
   faShield,
   faShieldCheck,
   faTimes,
-  faUniversity,
   faUnlock,
   faRedoAlt
 } from "@fortawesome/pro-light-svg-icons";
@@ -52,7 +45,6 @@ import {
 
 library.add([
   faAngleDoubleLeft,
-  faArrowLeft,
   faArrowCircleDown,
   faArrowCircleUp,
   faBan,
@@ -60,21 +52,15 @@ library.add([
   faChevronRight,
   faCog,
   faCopy,
-  faCreditCard,
   faEraser,
-  faGem,
   faHourglassStart,
   faListUl,
   faLock,
-  faLongArrowLeft,
-  faLongArrowRight,
-  faPlus,
   faSearchMinus,
   faSearchPlus,
   faShield,
   faShieldCheck,
   faTimes,
-  faUniversity,
   faUnlock,
   faRedoAlt
 ]);

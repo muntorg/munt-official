@@ -55,7 +55,7 @@ function createMainWindow() {
     height: 600,
     minHeight: 600,
     show: false,
-    title: "Gulden",
+    title: "Gulden-lite",
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info

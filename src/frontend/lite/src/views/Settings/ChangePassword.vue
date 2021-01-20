@@ -1,5 +1,5 @@
 <template>
-  <div class="change-password-view">
+  <div class="change-password-view flex-col">
     <h2>
       <span v-if="current === 1">{{ $t("common.enter_your_password") }}</span>
       <span v-else>{{ $t("setup.choose_password") }}</span>
@@ -31,24 +31,16 @@
       </gulden-form-field>
     </div>
 
-    <portal to="footer-slot">
-      <gulden-button-section>
-        <button
-          v-if="current === 1"
-          @click="nextStep"
-          :disabled="isNextDisabled"
-        >
-          {{ $t("buttons.next") }}
-        </button>
-        <button
-          v-if="current === 2"
-          @click="nextStep"
-          :disabled="isNextDisabled"
-        >
-          {{ $t("buttons.change_password") }}
-        </button>
-      </gulden-button-section>
-    </portal>
+    <div class="flex-1" />
+
+    <gulden-button-section>
+      <button v-if="current === 1" @click="nextStep" :disabled="isNextDisabled">
+        {{ $t("buttons.next") }}
+      </button>
+      <button v-if="current === 2" @click="nextStep" :disabled="isNextDisabled">
+        {{ $t("buttons.change_password") }}
+      </button>
+    </gulden-button-section>
   </div>
 </template>
 
@@ -115,7 +107,7 @@ export default {
                 this.password2
               );
             }
-            this.$router.push({ name: "account" });
+            this.$router.push({ name: "transactions" });
           }
           break;
       }
@@ -141,3 +133,9 @@ export default {
   }
 };
 </script>
+
+<style lang="less" scoped>
+.change-password-view {
+  height: 100%;
+}
+</style>
