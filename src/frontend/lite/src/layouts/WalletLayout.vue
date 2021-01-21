@@ -4,7 +4,7 @@
       <div class="logo" />
       <div class="balance flex-row">
         <div class="coin">{{ totalBalance.toFixed(2) }}</div>
-        <div class="fiat">€ {{ totalBalance.toFixed(2) }}</div>
+        <div class="fiat">{{ totalBalanceFiat }}</div>
       </div>
       <div class="flex-1" />
       <div class="button" @click="showSettings">
@@ -47,11 +47,15 @@ import EventBus from "../EventBus";
 export default {
   name: "WalletLayout",
   computed: {
-    ...mapState("app", ["progress"]),
+    ...mapState("app", ["progress", "rate"]),
     ...mapState("wallet", ["activeAccount", "walletPassword"]),
     ...mapGetters("wallet", ["totalBalance"]),
     lockIcon() {
       return this.walletPassword ? "unlock" : "lock";
+    },
+    totalBalanceFiat() {
+      if (!this.rate) return "";
+      return `€ ${(this.totalBalance * this.rate).toFixed(2)}`;
     }
   },
   watch: {
