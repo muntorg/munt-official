@@ -34,12 +34,22 @@
     <div class="flex-1" />
 
     <gulden-button-section>
-      <button v-if="current === 1" @click="nextStep" :disabled="isNextDisabled">
-        {{ $t("buttons.next") }}
-      </button>
-      <button v-if="current === 2" @click="nextStep" :disabled="isNextDisabled">
-        {{ $t("buttons.change_password") }}
-      </button>
+      <template v-slot:left>
+        <button
+          v-if="current === 1"
+          @click="nextStep"
+          :disabled="isNextDisabled"
+        >
+          {{ $t("buttons.next") }}
+        </button>
+        <button
+          v-if="current === 2"
+          @click="nextStep"
+          :disabled="isNextDisabled"
+        >
+          {{ $t("buttons.change_password") }}
+        </button>
+      </template>
     </gulden-button-section>
   </div>
 </template>
