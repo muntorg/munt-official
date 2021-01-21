@@ -23,7 +23,7 @@
         :class="getButtonClassNames('transactions')"
         @click="routeTo('transactions')"
       >
-        <fa-icon :icon="['fal', 'list-ul']" />
+        <fa-icon :icon="['far', 'list-ul']" />
         {{ $t("buttons.transactions") }}
       </div>
       <div :class="getButtonClassNames('send')" @click="routeTo('send')">
