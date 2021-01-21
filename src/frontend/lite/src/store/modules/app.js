@@ -17,6 +17,7 @@ const app = {
   namespaced: true,
   state: {
     coreReady: false,
+    rate: null,
     splashReady: false,
     status: AppStatus.start,
     unityVersion: null,
@@ -26,6 +27,9 @@ const app = {
   mutations: {
     SET_CORE_READY(state) {
       state.coreReady = true;
+    },
+    SET_RATE(state, rate) {
+      state.rate = rate;
     },
     SET_SPLASH_READY(state) {
       state.splashReady = true;
@@ -52,6 +56,9 @@ const app = {
       );
       commit("SET_CORE_READY");
       EnableDebugWindowOnCoreReady();
+    },
+    SET_RATE({ commit }, rate) {
+      commit("SET_RATE", rate);
     },
     SET_SPLASH_READY({ commit }) {
       commit("SET_SPLASH_READY");

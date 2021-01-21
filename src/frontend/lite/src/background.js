@@ -18,6 +18,7 @@ import walletPath from "./walletPath";
 
 import store from "./store";
 import AppStatus from "./AppStatus";
+import axios from "axios";
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -243,11 +244,29 @@ app.on("ready", async () => {
     // }
   }
 
+  updateRate(60);
+
   store.dispatch("app/SET_WALLET_VERSION", app.getVersion());
   libUnity.Initialize();
 
   createMainWindow();
 });
+
+async function updateRate(seconds) {
+  try {
+    const response = await axios.get("https://api.gulden.com/api/v1/ticker");
+    const eur = response.data.data.find(item => {
+      return item.code === "EUR";
+    });
+    store.dispatch("app/SET_RATE", eur.rate);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setTimeout(() => {
+      updateRate(seconds);
+    }, seconds * 1000);
+  }
+}
 
 function EnsureUnityLibTerminated(event) {
   if (libUnity === null || libUnity.isTerminated) return;
