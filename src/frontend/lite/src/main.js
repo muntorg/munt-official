@@ -27,7 +27,6 @@ import {
   faCopy,
   faEraser,
   faHourglassStart,
-  faListUl,
   faLock,
   faSearchMinus,
   faSearchPlus,
@@ -37,6 +36,8 @@ import {
   faUnlock,
   faRedoAlt
 } from "@fortawesome/pro-light-svg-icons";
+
+import { faListUl } from "@fortawesome/pro-regular-svg-icons";
 
 import {
   faArrowCircleDown,
