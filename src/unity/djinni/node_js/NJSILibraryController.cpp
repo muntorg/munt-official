@@ -1803,10 +1803,12 @@ Napi::Value NJSILibraryController::getMutationHistory(const Napi::CallbackInfo& 
             arg_0_elem.Set("timestamp", arg_0_elem_2);
             auto arg_0_elem_3 = Napi::String::New(env, result[arg_0_id].txHash);
             arg_0_elem.Set("txHash", arg_0_elem_3);
-            auto arg_0_elem_4 = Napi::Value::From(env, (int)result[arg_0_id].status);
-            arg_0_elem.Set("status", arg_0_elem_4);
-            auto arg_0_elem_5 = Napi::Value::From(env, result[arg_0_id].depth);
-            arg_0_elem.Set("depth", arg_0_elem_5);
+            auto arg_0_elem_4 = Napi::String::New(env, result[arg_0_id].recipient_addresses);
+            arg_0_elem.Set("recipient_addresses", arg_0_elem_4);
+            auto arg_0_elem_5 = Napi::Value::From(env, (int)result[arg_0_id].status);
+            arg_0_elem.Set("status", arg_0_elem_5);
+            auto arg_0_elem_6 = Napi::Value::From(env, result[arg_0_id].depth);
+            arg_0_elem.Set("depth", arg_0_elem_6);
 
             arg_0.Set((int)arg_0_id,arg_0_elem);
         }

@@ -72,6 +72,21 @@ boost::thread run_thread(boost::bind(&boost::asio::io_context::run, boost::ref(i
 
 static const int64_t nClientStartupTime = GetTime();
 
+std::vector<CAccount*> GetAccountsForAccount(CAccount* forAccount)
+{
+    std::vector<CAccount*> forAccounts;
+    forAccounts.push_back(forAccount);
+    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+    {
+        (unused) accountUUID;
+        if (account->getParentUUID() == forAccount->getUUID())
+        {
+            forAccounts.push_back(account);
+        }
+    }
+    return forAccounts;
+}
+
 TransactionStatus getStatusForTransaction(const CWalletTx* wtx)
 {
     TransactionStatus status;
@@ -91,6 +106,36 @@ TransactionStatus getStatusForTransaction(const CWalletTx* wtx)
         status = TransactionStatus::CONFIRMED;
     }
     return status;
+}
+
+std::string getRecipientAddressesForWalletTransaction(CAccount* forAccount, CWallet* pWallet, const CWalletTx* wtx, bool isSentByUs)
+{
+    std::string address = "";
+    for (const CTxOut& txout: wtx->tx->vout)
+    {
+        bool isMine = false;
+        if (IsMine(*forAccount, txout))
+        {
+            isMine = true;
+        }
+        if ((isSentByUs && !isMine) || (!isSentByUs && isMine))
+        {
+            CNativeAddress addr;
+            CTxDestination dest;
+            if (!ExtractDestination(txout, dest) && !txout.IsUnspendable())
+            {
+                dest = CNoDestination();
+            }
+
+            if (addr.Set(dest))
+            {
+                if (!address.empty())
+                    address += ", ";
+                address += addr.ToString();
+            }
+        }
+    }
+    return address;
 }
 
 void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord>& mutations, CAccount* forAccount)
@@ -115,23 +160,26 @@ void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord
         int64_t fee = subtracted - wtx->tx->GetValueOut();
         int64_t change = wtx->GetChange();
 
+        std::string recipientAddresses = getRecipientAddressesForWalletTransaction(forAccount, pactiveWallet, wtx, true);
+
         // detect internal transfer and split it
         if (subtracted - fee == added)
         {
             // amount received
-            mutations.push_back(MutationRecord(added - change, time, hash, status, depth));
+            mutations.push_back(MutationRecord(added - change, time, hash, recipientAddresses, status, depth));
 
             // amount send including fee
-            mutations.push_back(MutationRecord(change - subtracted, time, hash, status, depth));
+            mutations.push_back(MutationRecord(change - subtracted, time, hash, recipientAddresses, status, depth));
         }
         else
         {
-            mutations.push_back(MutationRecord(added - subtracted, time, hash, status, depth));
+            mutations.push_back(MutationRecord(added - subtracted, time, hash, recipientAddresses, status, depth));
         }
     }
     else if (added != 0) // nothing subtracted so we received funds
     {
-        mutations.push_back(MutationRecord(added, time, hash, status, depth));
+        std::string recipientAddresses = getRecipientAddressesForWalletTransaction(forAccount, pactiveWallet, wtx, false);
+        mutations.push_back(MutationRecord(added, time, hash, recipientAddresses, status, depth));
     }
 }
 
@@ -285,21 +333,6 @@ void terminateUnityFrontend()
 }
 
 #include <boost/chrono/thread_clock.hpp>
-
-std::vector<CAccount*> GetAccountsForAccount(CAccount* forAccount)
-{
-    std::vector<CAccount*> forAccounts;
-    forAccounts.push_back(forAccount);
-    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
-    {
-        (unused) accountUUID;
-        if (account->getParentUUID() == forAccount->getUUID())
-        {
-            forAccounts.push_back(account);
-        }
-    }
-    return forAccounts;
-}
 
 static float lastProgress=0;
 void handlePostInitMain()

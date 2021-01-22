@@ -39,6 +39,8 @@ mutation_record = record {
     change : i64;
     timestamp : i64;
     txHash : string;
+    # Address(es) of transaction recipient(s) (if transaction is sent by us then this excludes e.g. change and only has other wallets addresses)
+    recipient_addresses : string;
     status : transaction_status;
     depth : i32;
 }
