@@ -9,6 +9,7 @@
 - (nonnull instancetype)initWithChange:(int64_t)change
                              timestamp:(int64_t)timestamp
                                 txHash:(nonnull NSString *)txHash
+                    recipientAddresses:(nonnull NSString *)recipientAddresses
                                 status:(DBTransactionStatus)status
                                  depth:(int32_t)depth
 {
@@ -16,6 +17,7 @@
         _change = change;
         _timestamp = timestamp;
         _txHash = [txHash copy];
+        _recipientAddresses = [recipientAddresses copy];
         _status = status;
         _depth = depth;
     }
@@ -25,19 +27,21 @@
 + (nonnull instancetype)mutationRecordWithChange:(int64_t)change
                                        timestamp:(int64_t)timestamp
                                           txHash:(nonnull NSString *)txHash
+                              recipientAddresses:(nonnull NSString *)recipientAddresses
                                           status:(DBTransactionStatus)status
                                            depth:(int32_t)depth
 {
     return [(DBMutationRecord*)[self alloc] initWithChange:change
                                                  timestamp:timestamp
                                                     txHash:txHash
+                                        recipientAddresses:recipientAddresses
                                                     status:status
                                                      depth:depth];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p change:%@ timestamp:%@ txHash:%@ status:%@ depth:%@>", self.class, (void *)self, @(self.change), @(self.timestamp), self.txHash, @(self.status), @(self.depth)];
+    return [NSString stringWithFormat:@"<%@ %p change:%@ timestamp:%@ txHash:%@ recipientAddresses:%@ status:%@ depth:%@>", self.class, (void *)self, @(self.change), @(self.timestamp), self.txHash, self.recipientAddresses, @(self.status), @(self.depth)];
 }
 
 @end

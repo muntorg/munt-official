@@ -12,17 +12,21 @@ struct MutationRecord final {
     int64_t change;
     int64_t timestamp;
     std::string txHash;
+    /** Address(es) of transaction recipient(s) (if transaction is sent by us then this excludes e.g. change and only has other wallets addresses) */
+    std::string recipient_addresses;
     TransactionStatus status;
     int32_t depth;
 
     MutationRecord(int64_t change_,
                    int64_t timestamp_,
                    std::string txHash_,
+                   std::string recipient_addresses_,
                    TransactionStatus status_,
                    int32_t depth_)
     : change(std::move(change_))
     , timestamp(std::move(timestamp_))
     , txHash(std::move(txHash_))
+    , recipient_addresses(std::move(recipient_addresses_))
     , status(std::move(status_))
     , depth(std::move(depth_))
     {}

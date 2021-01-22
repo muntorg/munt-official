@@ -74,10 +74,12 @@ void NJSIWalletListener::notifyNewMutation_aimpl__(const MutationRecord & mutati
     arg_0.Set("timestamp", arg_0_2);
     auto arg_0_3 = Napi::String::New(env, mutation.txHash);
     arg_0.Set("txHash", arg_0_3);
-    auto arg_0_4 = Napi::Value::From(env, (int)mutation.status);
-    arg_0.Set("status", arg_0_4);
-    auto arg_0_5 = Napi::Value::From(env, mutation.depth);
-    arg_0.Set("depth", arg_0_5);
+    auto arg_0_4 = Napi::String::New(env, mutation.recipient_addresses);
+    arg_0.Set("recipient_addresses", arg_0_4);
+    auto arg_0_5 = Napi::Value::From(env, (int)mutation.status);
+    arg_0.Set("status", arg_0_5);
+    auto arg_0_6 = Napi::Value::From(env, mutation.depth);
+    arg_0.Set("depth", arg_0_6);
 
     args.push_back(arg_0);
     auto arg_1 = Napi::Value::From(env, self_committed);

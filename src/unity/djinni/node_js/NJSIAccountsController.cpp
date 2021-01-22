@@ -566,10 +566,12 @@ Napi::Value NJSIAccountsController::getMutationHistory(const Napi::CallbackInfo&
             arg_1_elem.Set("timestamp", arg_1_elem_2);
             auto arg_1_elem_3 = Napi::String::New(env, result[arg_1_id].txHash);
             arg_1_elem.Set("txHash", arg_1_elem_3);
-            auto arg_1_elem_4 = Napi::Value::From(env, (int)result[arg_1_id].status);
-            arg_1_elem.Set("status", arg_1_elem_4);
-            auto arg_1_elem_5 = Napi::Value::From(env, result[arg_1_id].depth);
-            arg_1_elem.Set("depth", arg_1_elem_5);
+            auto arg_1_elem_4 = Napi::String::New(env, result[arg_1_id].recipient_addresses);
+            arg_1_elem.Set("recipient_addresses", arg_1_elem_4);
+            auto arg_1_elem_5 = Napi::Value::From(env, (int)result[arg_1_id].status);
+            arg_1_elem.Set("status", arg_1_elem_5);
+            auto arg_1_elem_6 = Napi::Value::From(env, result[arg_1_id].depth);
+            arg_1_elem.Set("depth", arg_1_elem_6);
 
             arg_1.Set((int)arg_1_id,arg_1_elem);
         }

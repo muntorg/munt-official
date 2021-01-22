@@ -27,13 +27,18 @@
     <div class="flex-1" />
 
     <gulden-button-section>
-      <button
-        v-if="current === 1"
-        @click="getRecoveryPhrase"
-        :disabled="isNextDisabled"
-      >
-        {{ $t("buttons.next") }}
-      </button>
+      <template v-slot:left>
+        <button
+          v-if="current === 1"
+          @click="getRecoveryPhrase"
+          :disabled="isNextDisabled"
+        >
+          {{ $t("buttons.next") }}
+        </button>
+        <button v-if="current === 2" @click="ready">
+          {{ $t("buttons.ready") }}
+        </button>
+      </template>
     </gulden-button-section>
   </div>
 </template>
@@ -82,6 +87,9 @@ export default {
       } else {
         this.isPasswordInvalid = true;
       }
+    },
+    ready() {
+      this.$router.push({ name: "settings" });
     }
   }
 };

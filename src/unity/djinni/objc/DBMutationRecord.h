@@ -8,11 +8,13 @@
 - (nonnull instancetype)initWithChange:(int64_t)change
                              timestamp:(int64_t)timestamp
                                 txHash:(nonnull NSString *)txHash
+                    recipientAddresses:(nonnull NSString *)recipientAddresses
                                 status:(DBTransactionStatus)status
                                  depth:(int32_t)depth;
 + (nonnull instancetype)mutationRecordWithChange:(int64_t)change
                                        timestamp:(int64_t)timestamp
                                           txHash:(nonnull NSString *)txHash
+                              recipientAddresses:(nonnull NSString *)recipientAddresses
                                           status:(DBTransactionStatus)status
                                            depth:(int32_t)depth;
 
@@ -21,6 +23,9 @@
 @property (nonatomic, readonly) int64_t timestamp;
 
 @property (nonatomic, readonly, nonnull) NSString * txHash;
+
+/** Address(es) of transaction recipient(s) (if transaction is sent by us then this excludes e.g. change and only has other wallets addresses) */
+@property (nonatomic, readonly, nonnull) NSString * recipientAddresses;
 
 @property (nonatomic, readonly) DBTransactionStatus status;
 
