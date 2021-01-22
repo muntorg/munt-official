@@ -12,6 +12,8 @@ public final class MutationRecord {
 
     /*package*/ final String mTxHash;
 
+    /*package*/ final String mRecipientAddresses;
+
     /*package*/ final TransactionStatus mStatus;
 
     /*package*/ final int mDepth;
@@ -20,11 +22,13 @@ public final class MutationRecord {
             long change,
             long timestamp,
             String txHash,
+            String recipientAddresses,
             TransactionStatus status,
             int depth) {
         this.mChange = change;
         this.mTimestamp = timestamp;
         this.mTxHash = txHash;
+        this.mRecipientAddresses = recipientAddresses;
         this.mStatus = status;
         this.mDepth = depth;
     }
@@ -41,6 +45,11 @@ public final class MutationRecord {
         return mTxHash;
     }
 
+    /** Address(es) of transaction recipient(s) (if transaction is sent by us then this excludes e.g. change and only has other wallets addresses) */
+    public String getRecipientAddresses() {
+        return mRecipientAddresses;
+    }
+
     public TransactionStatus getStatus() {
         return mStatus;
     }
@@ -55,6 +64,7 @@ public final class MutationRecord {
                 "mChange=" + mChange +
                 "," + "mTimestamp=" + mTimestamp +
                 "," + "mTxHash=" + mTxHash +
+                "," + "mRecipientAddresses=" + mRecipientAddresses +
                 "," + "mStatus=" + mStatus +
                 "," + "mDepth=" + mDepth +
         "}";

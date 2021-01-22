@@ -14,6 +14,7 @@ auto MutationRecord::toCpp(ObjcType obj) -> CppType
     return {::djinni::I64::toCpp(obj.change),
             ::djinni::I64::toCpp(obj.timestamp),
             ::djinni::String::toCpp(obj.txHash),
+            ::djinni::String::toCpp(obj.recipientAddresses),
             ::djinni::Enum<::TransactionStatus, DBTransactionStatus>::toCpp(obj.status),
             ::djinni::I32::toCpp(obj.depth)};
 }
@@ -23,6 +24,7 @@ auto MutationRecord::fromCpp(const CppType& cpp) -> ObjcType
     return [[DBMutationRecord alloc] initWithChange:(::djinni::I64::fromCpp(cpp.change))
                                           timestamp:(::djinni::I64::fromCpp(cpp.timestamp))
                                              txHash:(::djinni::String::fromCpp(cpp.txHash))
+                                 recipientAddresses:(::djinni::String::fromCpp(cpp.recipient_addresses))
                                              status:(::djinni::Enum<::TransactionStatus, DBTransactionStatus>::fromCpp(cpp.status))
                                               depth:(::djinni::I32::fromCpp(cpp.depth))];
 }

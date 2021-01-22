@@ -17,6 +17,7 @@ auto NativeMutationRecord::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::djinni
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.change)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.timestamp)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.txHash)),
+                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.recipient_addresses)),
                                                            ::djinni::get(::djinni_generated::NativeTransactionStatus::fromCpp(jniEnv, c.status)),
                                                            ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.depth)))};
     ::djinni::jniExceptionCheck(jniEnv);
@@ -24,12 +25,13 @@ auto NativeMutationRecord::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::djinni
 }
 
 auto NativeMutationRecord::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
-    ::djinni::JniLocalScope jscope(jniEnv, 6);
+    ::djinni::JniLocalScope jscope(jniEnv, 7);
     assert(j != nullptr);
     const auto& data = ::djinni::JniClass<NativeMutationRecord>::get();
     return {::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mChange)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mTimestamp)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mTxHash)),
+            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mRecipientAddresses)),
             ::djinni_generated::NativeTransactionStatus::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_mStatus)),
             ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mDepth))};
 }
