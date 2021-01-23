@@ -1,7 +1,10 @@
 <template>
   <div class="receive-view">
     <h4>{{ $t("receive_gulden.your_address") }}</h4>
-    <div class="qr" @click="copyAddress">
+    <div class="information">
+      {{ $t("receive_gulden.information") }}
+    </div>
+    <div class="qr">
       <vue-qrcode
         class="qrcode"
         :width="288"
@@ -10,15 +13,11 @@
       />
       <div class="address-row flex-row">
         <div class="flex-1" />
-        <div class="address">
-          <span v-if="confirmCopy">
-            {{ $t("receive_gulden.address_copied_to_clipboard") }}
-          </span>
-          <span v-else>
-            {{ receiveAddress }}
-            <fa-icon :icon="['fal', 'copy']" class="copy" />
-          </span>
-        </div>
+        <clipboard-field
+          class="address"
+          :value="receiveAddress"
+          confirmation="receive_gulden.address_copied_to_clipboard"
+        ></clipboard-field>
         <div class="flex-1" />
       </div>
     </div>
@@ -27,30 +26,15 @@
 
 <script>
 import { mapState } from "vuex";
-import { clipboard } from "electron";
 import VueQrcode from "vue-qrcode";
 
 export default {
   name: "Receive",
-  data() {
-    return {
-      confirmCopy: false
-    };
-  },
   components: {
     VueQrcode
   },
   computed: {
     ...mapState("wallet", ["receiveAddress"])
-  },
-  methods: {
-    copyAddress() {
-      clipboard.writeText(this.receiveAddress);
-      this.confirmCopy = true;
-      setTimeout(() => {
-        this.confirmCopy = false;
-      }, 1500);
-    }
   }
 };
 </script>
@@ -62,12 +46,11 @@ export default {
   & .qr {
     background-color: #fff;
     text-align: center;
-    cursor: pointer;
   }
 
   & .qrcode {
     width: 100%;
-    max-width: 248px;
+    max-width: 224px;
     padding: 16px;
   }
 
@@ -75,14 +58,6 @@ export default {
     flex: 0 0 300px;
     font-size: 0.85em;
     line-height: 32px;
-  }
-  & .address:hover {
-    color: #0039cc;
-    background-color: #eff3ff;
-  }
-
-  & .copy {
-    margin-left: 10px;
   }
 }
 </style>
