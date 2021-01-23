@@ -37,7 +37,7 @@ import {
   faRedoAlt
 } from "@fortawesome/pro-light-svg-icons";
 
-import { faListUl } from "@fortawesome/pro-regular-svg-icons";
+import { faListUl, faLongArrowDown } from "@fortawesome/pro-regular-svg-icons";
 
 import {
   faArrowCircleDown,
@@ -57,6 +57,7 @@ library.add([
   faHourglassStart,
   faListUl,
   faLock,
+  faLongArrowDown,
   faSearchMinus,
   faSearchPlus,
   faShield,
