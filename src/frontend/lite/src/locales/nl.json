@@ -1,6 +1,7 @@
 {
   "buttons": {
     "back": "Terug",
+    "buy_your_first_gulden": "Koop jouw eerste Gulden",
     "change_password": "Verander wachtwoord",
     "clear": "Wissen",
     "finish": "Klaar",
@@ -15,6 +16,9 @@
     "transactions": "Transacties",
     "unlock": "Ontgrendelen"
   },
+  "clipboard_field": {
+    "copied_to_clipboard": "Gekopieerd naar klembord"
+  },
   "common": {
     "amount": "Bedrag",
     "enter_your_password": "Voer jouw wachtwoord in",
@@ -22,6 +26,10 @@
     "important": "Belangrijk",
     "password": "Wachtwoord",
     "receiving_address": "Ontvangstadres"
+  },
+  "new_wallet": {
+    "title": "Welkom bij jouw Gulden portemonnee",
+    "information": "Deze portemonnee staat alleen op jouw apparaat.<br/>Geef nooit iemand anders toegang tot jouw portemonnee.<br/>Bewaar de herstelzin die je te zien krijgt tijdens installatie op een veilige plek.<br/>Herstelzin kwijt of iemand toegang tot je herstelzin = Gulden weg."
   },
   "loader": {
     "shutdown": "Bezig met afsluiten...",
@@ -52,12 +60,16 @@
     "this_is_your_recovery_phrase": "Dit is jouw herstelzin. Bewaar de herstelzin op een veilige plek. Zin kwijt of iemand toegang tot je zin = Gulden weg."
   },
   "transaction_details": {
-    "title": "Transactie details",
+    "title": {
+      "incoming_transaction": "Inkomende transactie",
+      "outgoing_transaction": "Uitgaande transactie"
+    },
     "hash": "Hash"
   },
   "receive_gulden": {
     "address_copied_to_clipboard": "Adres gekopieerd naar klembord",
     "buy_or_receive_gulden": "Koop of ontvang Gulden",
+    "information": "Dit is jouw Gulden ontvangstadres. Na iedere transactie krijg je een nieuw adres, maar het vorige adres blijft werken.",
     "your_address": "Jouw adres"
   },
   "send_gulden": {
