@@ -111,7 +111,8 @@ export default {
   }
 
   & .icon {
-    height: 15px;
+    font-size: 1.2rem;
+    font-weight: 300;
     padding: 6px 12px;
     cursor: pointer;
   }
