@@ -1,36 +1,59 @@
 <template>
   <div class="transactions-view">
-    <div
-      class="mutation-group"
-      v-for="group in groupedMutations"
-      :key="group.idx"
-    >
-      <h4>{{ formatDate(group.date) }}</h4>
+    <div v-if="hasMutations">
       <div
-        class="mutation-row flex-row"
-        v-for="mutation in group.mutations"
-        :key="mutation.txHash"
-        @click="selectTxHash(mutation.txHash)"
-        :class="mutationRowClass(mutation.txHash)"
+        class="mutation-group"
+        v-for="group in groupedMutations"
+        :key="group.idx"
       >
-        <div class="icon">
-          <fa-icon :icon="['fal', mutationIcon(mutation)]" />
+        <h4>{{ formatDate(group.date) }}</h4>
+        <div
+          class="mutation-row flex-row"
+          v-for="mutation in group.mutations"
+          :key="mutation.txHash"
+          @click="showTransactionDetails(mutation)"
+          :class="mutationRowClass(mutation.txHash)"
+        >
+          <div class="icon">
+            <fa-icon :icon="['fal', mutationIcon(mutation)]" />
+          </div>
+          <div class="time">{{ formatTime(mutation.timestamp) }}</div>
+          <div>
+            {{ mutation.recipient_addresses || mutation.txHash }}
+          </div>
+          <div class="amount">{{ formatAmount(mutation.change) }}</div>
         </div>
-        <div class="time">{{ formatTime(mutation.timestamp) }}</div>
-        <div class="txhash">{{ mutation.txHash }}</div>
-        <div class="amount">{{ formatAmount(mutation.change) }}</div>
       </div>
+    </div>
+    <div v-else class="new-wallet flex-col">
+      <h4 class="title">{{ $t("new_wallet.title") }}</h4>
+      <div v-html="$t('new_wallet.information')" class="information"></div>
+
+      <div class="flex-1" />
+
+      <gulden-button-section>
+        <template v-slot:left>
+          <button @click="buyGulden">
+            {{ $t("buttons.buy_your_first_gulden") }}
+          </button>
+        </template>
+      </gulden-button-section>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import TransactionDetailsDialog from "../../../components/TransactionDetailsDialog";
+import EventBus from "../../../EventBus";
 
 export default {
   name: "Transactions",
   computed: {
     ...mapState("wallet", ["mutations"]),
+    hasMutations() {
+      return this.mutations ? this.mutations.length > 0 : false;
+    },
     groupedMutations() {
       if (this.mutations === null) return [];
       let groupedMutations = [];
@@ -109,17 +132,37 @@ export default {
     formatAmount(amount) {
       return `${(amount / 100000000).toFixed(2)}`;
     },
-    selectTxHash(txHash) {
-      this.$emit("tx-hash", txHash);
-    },
     mutationRowClass(txHash) {
       return txHash === this.txHash ? "selected" : "";
+    },
+    showTransactionDetails(mutation) {
+      EventBus.$emit("show-dialog", {
+        title: this.$t(
+          `transaction_details.title.${
+            mutation.change > 0
+              ? "incoming_transaction"
+              : "outgoing_transaction"
+          }`
+        ),
+        component: TransactionDetailsDialog,
+        componentProps: {
+          mutation: mutation
+        },
+        showButtons: false
+      });
+    },
+    buyGulden() {
+      window.open("https://gulden.com/#buy", "buy-gulden");
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
+.transactions-view {
+  height: 100%;
+}
+
 .mutation-group {
   margin-bottom: 30px;
 }
@@ -155,6 +198,20 @@ h4 {
   &.selected {
     color: #fff;
     background: var(--primary-color);
+  }
+}
+
+.new-wallet {
+  height: 100%;
+
+  & > .title {
+    margin: 0 0 20px 0;
+  }
+
+  & > .information {
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 }
 </style>

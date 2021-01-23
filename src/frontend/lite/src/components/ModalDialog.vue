@@ -102,22 +102,23 @@ export default {
   line-height: 64px;
   padding: 0 24px;
   border-bottom: 1px solid #e1e1e1;
-  font-size: 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
 
   & .close {
     float: right;
   }
 
   & .icon {
-    color: #606060;
     height: 15px;
     padding: 6px 12px;
+    cursor: pointer;
   }
 
   & .icon:hover {
-    color: #1d1c1d;
-    background-color: #f6f6f6;
-    cursor: pointer;
+    color: var(--primary-color);
+    background: #eff3ff;
   }
 }
 
