@@ -19,12 +19,6 @@
       @keydown="isAddressInvalid = false"
     />
     <input
-      v-model="label"
-      type="text"
-      :placeholder="$t('send_gulden.enter_label')"
-    />
-
-    <input
       v-model="password"
       type="password"
       v-show="walletPassword === null"
@@ -58,7 +52,6 @@ export default {
       amount: null,
       maxAmount: null,
       address: null,
-      label: null,
       password: null,
       isAmountInvalid: false,
       isAddressInvalid: false,
@@ -87,7 +80,6 @@ export default {
     disableClearButton() {
       if (this.amount !== null && !isNaN(parseFloat(this.amount))) return false;
       if (this.address !== null && this.address.length > 0) return false;
-      if (this.label !== null && this.label.length > 0) return false;
       if (this.password !== null && this.password.length > 0) return false;
       return true;
     },
@@ -116,7 +108,6 @@ export default {
     clearInput() {
       this.amount = null;
       this.address = null;
-      this.label = null;
       this.password = null;
       this.$refs.amount.focus();
     },
@@ -149,7 +140,7 @@ export default {
       var request = {
         valid: true,
         address: this.address,
-        label: this.label || "",
+        label: "",
         desc: "",
         amount: this.amount * 100000000
       };
@@ -160,7 +151,6 @@ export default {
         // payment succeeded
         this.amount = null;
         this.address = null;
-        this.label = null;
         this.password = null;
       } else {
         // payment failed
