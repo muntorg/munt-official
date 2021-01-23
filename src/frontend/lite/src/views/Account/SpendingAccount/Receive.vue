@@ -50,7 +50,7 @@ export default {
 
   & .qrcode {
     width: 100%;
-    max-width: 224px;
+    max-width: 248px;
     padding: 16px;
   }
 
