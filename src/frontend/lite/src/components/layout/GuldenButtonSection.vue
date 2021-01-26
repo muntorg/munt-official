@@ -3,7 +3,9 @@
     <div class="left">
       <slot name="left" />
     </div>
-    <div class="middle"></div>
+    <div class="middle">
+      <slot name="middle" />
+    </div>
     <div class="right">
       <slot />
       <slot name="right" />
