@@ -32,8 +32,8 @@
       <div class="flex-1" />
 
       <gulden-button-section>
-        <template v-slot:left>
-          <button @click="buyGulden">
+        <template v-slot:middle>
+          <button @click="buyGulden" class="buy-gulden">
             {{ $t("buttons.buy_your_first_gulden") }}
           </button>
         </template>
@@ -213,5 +213,9 @@ h4 {
     font-size: 1rem;
     line-height: 1.5rem;
   }
+}
+
+.buy-gulden {
+  width: 100%;
 }
 </style>
