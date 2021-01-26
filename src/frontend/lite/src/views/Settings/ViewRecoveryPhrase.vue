@@ -27,7 +27,7 @@
     <div class="flex-1" />
 
     <gulden-button-section>
-      <template v-slot:left>
+      <template v-slot:right>
         <button
           v-if="current === 1"
           @click="getRecoveryPhrase"
