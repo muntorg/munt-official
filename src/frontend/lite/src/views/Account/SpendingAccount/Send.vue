@@ -168,6 +168,10 @@ export default {
   height: 100%;
 }
 
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
 .buttons {
   & > .clear {
     width: 170px;
