@@ -6,8 +6,8 @@
       <fa-icon :icon="['far', 'long-arrow-down']" />
     </div>
     <clipboard-field :value="mutation.recipient_addresses" />
-    <div class="tx-id">TX ID</div>
-    <clipboard-field :value="mutation.txHash" />
+    <h4>TX ID</h4>
+    <div class="tx-id"><clipboard-field :value="mutation.txHash" /></div>
   </div>
 </template>
 
@@ -73,24 +73,28 @@ export default {
 
 <style lang="less" scoped>
 .transaction-details-dialog {
-  height: 240px;
   text-align: center;
+
+  & > h4 {
+    margin: 20px 0 0 0;
+  }
 }
 .tx-date {
   margin: 0 0 10px 0;
+  font-size: .9em;
 }
 .tx-amount {
-  font-size: 1.6rem;
+  font-size: 1.6em;
   font-weight: 600;
 }
 .tx-to {
   margin: 15px 0 15px 0;
-  font-size: 1.6rem;
+  font-size: 1.6em;
 }
 .tx-id {
-  padding: 40px 0 5px 0;
+  padding: 10px;
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: .8em;
   text-transform: uppercase;
 }
 </style>

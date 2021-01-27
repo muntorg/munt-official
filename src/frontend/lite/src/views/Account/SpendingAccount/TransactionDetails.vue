@@ -10,7 +10,7 @@
       <div class="tx-address">address here</div>
       -->
       <h5>{{ $t("transaction_details.hash") }}</h5>
-      <div class="tx-hash">{{ txHash }}</div>
+      <p class="tx-hash">{{ txHash }}</p>
     </div>
   </div>
 </template>
@@ -43,8 +43,9 @@ export default {
   }
 
   .tx-hash {
+    margin: 0;
     padding: 10px;
-    font-size: 0.9em;
+    font-size: .8em;
     line-height: 1.2em;
     user-select: text;
     word-wrap: break-word;
