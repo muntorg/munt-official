@@ -24,8 +24,10 @@
 }
 
 .settings-row:hover {
-  color: var(--primary-color);
-  background-color: #eff3ff;
+  & > a {
+    color: var(--primary-color);
+  }
+  background-color: #EFF3FF;
 }
 
 .settings-row a {
