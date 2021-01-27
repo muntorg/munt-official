@@ -18,7 +18,7 @@
             <fa-icon :icon="['fal', mutationIcon(mutation)]" />
           </div>
           <div class="time">{{ formatTime(mutation.timestamp) }}</div>
-          <div>
+          <div class="tx-details">
             {{ mutation.recipient_addresses || mutation.txHash }}
           </div>
           <div class="amount">{{ formatAmount(mutation.change) }}</div>
@@ -172,9 +172,11 @@ h4 {
 }
 
 .mutation-row {
-  width: calc(100% + 40px);
-  margin: 0 0 0 -20px;
-  padding: 5px 20px 5px 20px;
+  width: calc(100% + 20px);
+  margin: 0 0 0 -10px;
+  padding: 5px 10px 5px 10px;
+  font-size: 0.95em;
+  line-height: 18px;
   cursor: pointer;
 
   & > .icon {
@@ -183,6 +185,10 @@ h4 {
 
   & > .time {
     flex: 0 0 70px;
+  }
+
+  & > .tx-details {
+    font-size: 0.85em;
   }
 
   & .amount {
@@ -203,10 +209,6 @@ h4 {
 
 .new-wallet {
   height: 100%;
-}
-
-.buy-gulden {
-  width: 100%;
 }
 
 .buy-gulden {
