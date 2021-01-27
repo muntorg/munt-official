@@ -208,8 +208,4 @@ h4 {
 .buy-gulden {
   width: 100%;
 }
-
-.buy-gulden {
-  width: 100%;
-}
 </style>

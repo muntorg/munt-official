@@ -46,6 +46,7 @@ export default {
   }
 
   & .qr {
+    margin: 10px 0 0 0;
     background-color: #fff;
     text-align: center;
   }
