@@ -26,8 +26,8 @@
       </div>
     </div>
     <div v-else class="new-wallet flex-col">
-      <h4 class="title">{{ $t("new_wallet.title") }}</h4>
-      <div v-html="$t('new_wallet.information')" class="information"></div>
+      <h2>{{ $t("new_wallet.title") }}</h2>
+      <p v-html="$t('new_wallet.information')" class="information"></p>
 
       <div class="flex-1" />
 
@@ -203,16 +203,10 @@ h4 {
 
 .new-wallet {
   height: 100%;
+}
 
-  & > .title {
-    margin: 0 0 20px 0;
-  }
-
-  & > .information {
-    font-weight: 400;
-    font-size: 1rem;
-    line-height: 1.5rem;
-  }
+.buy-gulden {
+  width: 100%;
 }
 
 .buy-gulden {

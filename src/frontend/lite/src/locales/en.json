@@ -28,8 +28,8 @@
     "receiving_address": "Receiving address"
   },
   "new_wallet": {
-    "title": "Welkom bij jouw Gulden portemonnee",
-    "information": "Deze portemonnee staat alleen op jouw apparaat.<br/>"
+    "title": "Welcome to your Gulden wallet",
+    "information": "This wallet is only stored on your device.<br />Never give anyone else access to your wallet.<br />Keep the backup phrase you see at installation in a safe place.<br />Lose phrase or someone else with access to the phrase = lose Gulden."
   },
   "loader": {
     "shutdown": "Shutting down...",
@@ -51,12 +51,12 @@
     "enter_recovery_phrase": "Enter recovery phrase",
     "invalid_recovery_phrase": {
       "title": "Invalid recovery phrase",
-      "message": "This combinatie is not a valid recovery phrase. Correct the error(s) and try again."
+      "message": "This combination is not a valid recovery phrase. Correct the error(s) and try again."
     },
     "recover_existing": "I already have a Gulden wallet",
     "repeat_password": "Repeat password",
     "repeat_your_recovery_phrase": "To make sure you have correctly written down your recovery phrase, enter your phrase in the boxes below.",
-    "setup_gulden_wallet": "Choose your option",
+    "setup_gulden_wallet": "Make a choice",
     "this_is_your_recovery_phrase": "This is your recovery phrase. Keep your backup phrase in a safe place. Lose phrase or someone else with access to the phrase = lose Gulden."
   },
   "transaction_details": {

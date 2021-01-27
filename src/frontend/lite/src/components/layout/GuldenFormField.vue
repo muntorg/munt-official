@@ -1,6 +1,6 @@
 <template>
   <gulden-section class="gulden-form-field">
-    <h4 v-if="hasTitle">{{ title }}</h4>
+    <h3 v-if="hasTitle">{{ title }}</h3>
     <div class="input">
       <slot />
     </div>
@@ -28,9 +28,3 @@ export default {
   }
 };
 </script>
-
-<style lang="less" scoped>
-h4 {
-  margin-bottom: 10px;
-}
-</style>

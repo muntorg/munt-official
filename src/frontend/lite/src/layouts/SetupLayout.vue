@@ -1,12 +1,12 @@
 <template>
-  <div class="setup-layout">
-    <div class="header">
+  <section class="wallet-layout">
+    <section class="header flex-row">
       <div class="logo" />
-    </div>
-    <div class="main">
+    </section>
+    <section class="content scrollable">
       <router-view />
-    </div>
-  </div>
+    </section>
+  </section>
 </template>
 
 <script>
@@ -16,28 +16,32 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.setup-layout {
-  width: 100%;
+.wallet-layout {
   height: 100vh;
   overflow: hidden;
 
-  & .header {
+  & > .header {
     height: var(--header-height);
-    border-bottom: 1px solid #ddd;
-    padding: 20px;
+    padding: 10px 20px 10px 20px;
+    border-bottom: 1px solid var(--main-border-color);
+    font-size: 1.1em;
+    line-height: 42px;
 
-    & .logo {
+    & > .logo {
+      margin: 10px;
       width: 22px;
+      min-width: 22px;
       height: 22px;
+      min-height: 22px;
       background: url("../img/logo-start.svg"),
         linear-gradient(transparent, transparent);
       background-size: cover;
     }
   }
 
-  & .main {
-    height: calc(100vh - var(--header-height));
-    padding: 40px;
+  & > .content {
+    height: calc(100% - var(--header-height));
+    padding: 40px 30px 40px 30px;
   }
 }
 </style>

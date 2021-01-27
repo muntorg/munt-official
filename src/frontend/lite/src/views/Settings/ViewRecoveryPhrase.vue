@@ -6,7 +6,7 @@
     </h2>
 
     <!-- step 1: Enter password -->
-    <gulden-form-field :title="$t('common.password')" v-if="current === 1">
+    <gulden-form-field v-if="current === 1">
       <input
         ref="password"
         type="password"
@@ -101,7 +101,7 @@ export default {
 }
 
 .phrase {
-  padding: 10px;
+  padding: 15px;
   font-size: 1.05em;
   font-weight: 500;
   text-align: center;

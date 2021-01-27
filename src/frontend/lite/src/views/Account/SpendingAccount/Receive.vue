@@ -1,6 +1,6 @@
 <template>
   <div class="receive-view">
-    <h4>{{ $t("receive_gulden.your_address") }}</h4>
+    <h2>{{ $t("receive_gulden.your_address") }}</h2>
     <div class="information">
       {{ $t("receive_gulden.information") }}
     </div>
@@ -44,6 +44,7 @@ export default {
   text-align: center;
 
   & .qr {
+    margin: 10px 0 0 0;
     background-color: #fff;
     text-align: center;
   }
@@ -54,8 +55,14 @@ export default {
     padding: 16px;
   }
 
+  & .address-row {
+    width: 100%;
+    margin: -10px 0 0 0;
+    text-align: center;
+  }
+
   & .address {
-    flex: 0 0 300px;
+    font-weight: 500;
     font-size: 0.85em;
     line-height: 32px;
   }
