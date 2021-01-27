@@ -175,7 +175,7 @@ h4 {
   width: calc(100% + 20px);
   margin: 0 0 0 -10px;
   padding: 5px 10px 5px 10px;
-  font-size: .95em;
+  font-size: 0.95em;
   line-height: 18px;
   cursor: pointer;
 
@@ -188,7 +188,7 @@ h4 {
   }
 
   & > .tx-details {
-    font-size: .85em;
+    font-size: 0.85em;
   }
 
   & .amount {
@@ -209,10 +209,6 @@ h4 {
 
 .new-wallet {
   height: 100%;
-}
-
-.buy-gulden {
-  width: 100%;
 }
 
 .buy-gulden {
