@@ -1,9 +1,7 @@
 <template>
   <div class="receive-view">
     <h2>{{ $t("receive_gulden.your_address") }}</h2>
-    <div class="information">
-      {{ $t("receive_gulden.information") }}
-    </div>
+    <p class="information">{{ $t("receive_gulden.information") }}</p>
     <div class="qr">
       <vue-qrcode
         class="qrcode"
@@ -43,8 +41,11 @@ export default {
 .receive-view {
   text-align: center;
 
+  & .information {
+    margin: 0 0 10px 0;
+  }
+
   & .qr {
-    margin: 10px 0 0 0;
     background-color: #fff;
     text-align: center;
   }
