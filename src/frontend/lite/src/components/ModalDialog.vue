@@ -93,28 +93,29 @@ export default {
   height: auto;
   margin: 0px auto;
   background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
 }
 
 .header {
-  height: 64px;
-  line-height: 64px;
-  padding: 0 24px;
-  border-bottom: 1px solid #e1e1e1;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-transform: uppercase;
+  height: 56px;
+  line-height: 56px;
+  padding: 0 30px;
+  border-bottom: 1px solid var(--main-border-color);
+	font-weight: 600;
+	font-size: 1.05em;
 
   & .close {
     float: right;
+    margin: 0 -10px 0 0;
   }
 
   & .icon {
-    font-size: 1.2rem;
-    font-weight: 300;
-    padding: 6px 12px;
-    cursor: pointer;
+      line-height: 42px;
+      font-size: 1.2em;
+      font-weight: 300;
+      padding: 0 10px;
+      cursor: pointer;
   }
 
   & .icon:hover {
@@ -124,8 +125,8 @@ export default {
 }
 
 .content {
-  margin: 24px 0;
-  padding: 0 24px;
+  margin: 30px 0;
+  padding: 0 30px;
   overflow-y: auto;
 }
 

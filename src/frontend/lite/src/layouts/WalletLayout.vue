@@ -143,7 +143,7 @@ export default {
   & > .footer {
     height: var(--footer-height);
     border-top: 1px solid var(--main-border-color);
-    line-height: 32px;
+    line-height: 36px;
     padding: 10px 20px;
 
     font-size: 1em;

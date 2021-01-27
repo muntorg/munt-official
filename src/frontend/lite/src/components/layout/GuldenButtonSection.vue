@@ -28,6 +28,12 @@ export default {
     & > button:not(:last-child) {
       margin: 0 20px 0 0;
     }
+
+    & > button:not([disabled]) {
+      background-color: #fff;
+      border: 1px solid var(--primary-color);
+      color: var(--primary-color);
+    }
   }
 
   & .middle {
