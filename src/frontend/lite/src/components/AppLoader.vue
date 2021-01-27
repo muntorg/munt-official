@@ -3,21 +3,23 @@
     <div class="logo-outer flex-col">
       <div class="logo-inner"></div>
     </div>
-    <div class="version-container">
-      <span>Unity: {{ unityVersion }}</span>
-      <span class="divider">|</span>
-      <span>Wallet: {{ walletVersion }}</span>
-      <span class="divider">|</span>
-      <span>Electron: {{ electronVersion }}</span>
-    </div>
     <div class="info">
       <p v-show="isShuttingDown">
         {{ $t("loader.shutdown") }}
       </p>
       <div v-show="isSynchronizing">
-        <div>{{ $t("loader.synchronizing") }}</div>
+        <div class="sync-desc">{{ $t("loader.synchronizing") }}</div>
         <progress ref="progress" max="100" value="0"></progress>
       </div>
+    </div>
+    <div class="version-container">
+      <span>Gulden LITE</span>
+      <span class="divider">|</span>
+      <span>Unity: {{ unityVersion }}</span>
+      <span class="divider">|</span>
+      <span>Wallet: {{ walletVersion }}</span>
+      <span class="divider">|</span>
+      <span>Electron: {{ electronVersion }}</span>
     </div>
   </div>
 </template>
@@ -111,7 +113,7 @@ export default {
 }
 
 .logo-outer {
-  margin: 24px;
+  margin: 0 0 50px 0;
   background: var(--secondary-color);
   width: 128px;
   height: 128px;
@@ -129,7 +131,9 @@ export default {
 }
 
 .version-container {
-  margin: 16px 0;
+  font-size: .8em;
+  text-transform: uppercase;
+  color: #999;
 
   & .divider {
     margin: 0 8px;
@@ -137,17 +141,21 @@ export default {
 }
 
 .info {
-  min-height: 100px;
+  margin: 0 0 50px 0;
+}
+
+.sync-desc {
+  margin: 0 0 10px 0;
 }
 
 progress[value] {
   appearance: none;
   width: 100%;
-  height: 4px;
+  height: 5px;
 }
 
 progress[value]::-webkit-progress-bar {
-  background-color: #eee;
+  background-color: #efefef;
 }
 
 progress[value]::-webkit-progress-value {
