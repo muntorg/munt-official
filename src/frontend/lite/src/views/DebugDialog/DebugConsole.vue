@@ -235,14 +235,10 @@ export default {
 
 .output {
   flex: 1;
-  margin-bottom: 8px;
-  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  border: 1px solid var(--main-border-color);
   user-select: text;
-  padding: 4px;
-
-  & > .info {
-    padding: 8px 0;
-  }
+  padding: 10px;
 
   & .help {
     color: var(--primary-color);
