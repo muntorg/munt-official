@@ -69,8 +69,8 @@
   "receive_gulden": {
     "address_copied_to_clipboard": "Adres gekopieerd naar klembord",
     "buy_or_receive_gulden": "Koop of ontvang Gulden",
-    "information": "Dit is jouw Gulden ontvangstadres. Na iedere transactie krijg je een nieuw adres, maar het vorige adres blijft werken.",
-    "your_address": "Jouw adres"
+    "information": "Na iedere transactie krijg je een nieuw adres, maar het vorige adres blijft werken.",
+    "your_address": "Jouw Gulden adres"
   },
   "send_gulden": {
     "enter_label": "Voer label in",
