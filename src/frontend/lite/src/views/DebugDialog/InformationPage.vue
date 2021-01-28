@@ -29,11 +29,11 @@
       <h4>Network</h4>
       <div class="flex-row">
         <div>Status</div>
-        <div>{{ clientInfo.network_status }}</div>
+        <div class="ellipsis">{{ clientInfo.network_status }}</div>
       </div>
       <div class="flex-row">
         <div>Connection count</div>
-        <div>{{ numberOfConnections }}</div>
+        <div class="ellipsis">{{ numberOfConnections }}</div>
       </div>
     </gulden-section>
 
@@ -41,15 +41,15 @@
       <h4>Block chain</h4>
       <div class="flex-row">
         <div>Number of blocks</div>
-        <div>{{ clientInfo.chain_tip_height }}</div>
+        <div class="ellipsis">{{ clientInfo.chain_tip_height }}</div>
       </div>
       <div class="flex-row">
         <div>Last block time</div>
-        <div>{{ lastBlockTime }}</div>
+        <div class="ellipsis">{{ lastBlockTime }}</div>
       </div>
       <div class="flex-row">
         <div>Last block hash</div>
-        <div>{{ clientInfo.chain_tip_hash }}</div>
+        <div class="ellipsis">{{ clientInfo.chain_tip_hash }}</div>
       </div>
     </gulden-section>
 
@@ -57,11 +57,11 @@
       <h4>Memory pool</h4>
       <div class="flex-row">
         <div>Number of transactions</div>
-        <div>{{ clientInfo.mempool_transaction_count }}</div>
+        <div class="ellipsis">{{ clientInfo.mempool_transaction_count }}</div>
       </div>
       <div class="flex-row">
         <div>Memory usage</div>
-        <div>{{ clientInfo.mempool_memory_size }}</div>
+        <div class="ellipsis">{{ clientInfo.mempool_memory_size }}</div>
       </div>
     </gulden-section>
   </div>
@@ -131,8 +131,13 @@ export default {
   width: 100%;
   height: 100%;
 
+  & h4 {
+    margin: 0 0 10px 0;
+  }
+
   & .flex-row > div {
-    line-height: 18px;
+    font-size: .95em;
+    line-height: 20px;
   }
   & .flex-row :first-child {
     min-width: 180px;
