@@ -146,11 +146,12 @@ export default {
     line-height: 36px;
     padding: 10px 20px;
 
-    font-size: 1em;
-    font-weight: 500;
-
     & > .button {
       padding: 0 30px;
+      font-weight: 600;
+      font-size: .85em;
+      text-transform: uppercase;
+      letter-spacing: .03em;
       cursor: pointer;
     }
 
