@@ -1,5 +1,5 @@
 <template>
-  <div class="receive-view">
+  <div class="receive-view flex-col">
     <h2>{{ $t("receive_gulden.your_address") }}</h2>
     <p class="information">{{ $t("receive_gulden.information") }}</p>
     <div class="qr">
@@ -18,7 +18,15 @@
         ></clipboard-field>
         <div class="flex-1" />
       </div>
-    </div>
+  </div>
+  <div class="flex-1" />
+    <gulden-button-section>
+      <template v-slot:middle>
+        <button @click="buyGulden" class="buy-gulden">
+          {{ $t("buttons.buy_gulden") }}
+        </button>
+      </template>
+    </gulden-button-section>
   </div>
 </template>
 
@@ -33,40 +41,42 @@ export default {
   },
   computed: {
     ...mapState("wallet", ["receiveAddress"])
+  },
+  methods: {
+    buyGulden() {
+      window.open("https://gulden.com/#buy", "buy-gulden");
+    }
   }
 };
 </script>
 
 <style lang="less" scoped>
 .receive-view {
+  height: 100%;
   text-align: center;
-
   & .information {
-    margin: 0 0 10px 0;
+    margin: 0 0 20px 0;
   }
-
   & .qr {
-    margin: 10px 0 0 0;
     background-color: #fff;
     text-align: center;
   }
-
   & .qrcode {
     width: 100%;
-    max-width: 200px;
-    padding: 15px;
+    max-width: 160px;
   }
-
   & .address-row {
     width: 100%;
-    margin: -10px 0 0 0;
     text-align: center;
   }
-
   & .address {
     font-weight: 500;
-    font-size: 0.85em;
+    font-size: 0.9em;
     line-height: 32px;
+  }
+
+  & .buy-gulden {
+    width: 100%;
   }
 }
 </style>
