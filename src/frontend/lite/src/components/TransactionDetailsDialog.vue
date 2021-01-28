@@ -62,7 +62,7 @@ export default {
   text-align: center;
 
   & > h4 {
-    margin: 20px 0 0 0;
+    margin: 25px 0 0 0;
   }
 }
 .tx-date {
@@ -74,10 +74,11 @@ export default {
   font-weight: 600;
 }
 .tx-to {
-  margin: 15px 0 15px 0;
+  margin: 15px 0 10px 0;
   font-size: 1.6em;
 }
 .tx-id {
+  margin: -5px 0 0 0;
   padding: 10px;
   font-weight: 500;
   font-size: 0.8em;
