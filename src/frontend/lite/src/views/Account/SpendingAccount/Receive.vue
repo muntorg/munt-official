@@ -1,9 +1,7 @@
 <template>
   <div class="receive-view">
     <h2>{{ $t("receive_gulden.your_address") }}</h2>
-    <div class="information">
-      {{ $t("receive_gulden.information") }}
-    </div>
+    <p class="information">{{ $t("receive_gulden.information") }}</p>
     <div class="qr">
       <vue-qrcode
         class="qrcode"
@@ -55,8 +53,8 @@ export default {
 
   & .qrcode {
     width: 100%;
-    max-width: 248px;
-    padding: 16px;
+    max-width: 200px;
+    padding: 15px;
   }
 
   & .address-row {
