@@ -69,8 +69,8 @@
   "receive_gulden": {
     "address_copied_to_clipboard": "Address copied to clipboard",
     "buy_or_receive_gulden": "Buy or receive Gulden",
-    "information": "This is your Gulden receiving address. After each transaction you will receive a new address, but the previous address will stil work.",
-    "your_address": "Your address"
+    "information": "After each transaction you will receive a new address, but the previous address will stil work.",
+    "your_address": "Your Gulden address"
   },
   "send_gulden": {
     "enter_label": "Enter label",
