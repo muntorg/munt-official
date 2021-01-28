@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import AppWallet from "./AppWallet";
 
 export default {
@@ -13,7 +14,16 @@ export default {
   components: {
     AppWallet
   },
+  created() {
+    this.changeLanguage(this.language);
+  },
+  watch: {
+    language() {
+      this.changeLanguage(this.language);
+    }
+  },
   computed: {
+    ...mapState("app", ["language"]),
     isWallet() {
       switch (window.location.hash.toLowerCase()) {
         case "#/debug":
@@ -21,6 +31,13 @@ export default {
         default:
           return true;
       }
+    }
+  },
+  methods: {
+    changeLanguage(language) {
+      if (this.$i18n.locale === language) return;
+      this.$i18n.locale = language;
+      this.$forceUpdate();
     }
   }
 };
