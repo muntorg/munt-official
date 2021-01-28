@@ -244,6 +244,9 @@ app.on("ready", async () => {
     // }
   }
 
+  // on app.ready the app.getLocale method can be called to determine the (display) language
+  store.dispatch("app/SET_LANGUAGE", app.getLocale().slice(0, 2));
+
   updateRate(60);
 
   store.dispatch("app/SET_WALLET_VERSION", app.getVersion());

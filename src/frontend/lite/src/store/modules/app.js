@@ -17,6 +17,7 @@ const app = {
   namespaced: true,
   state: {
     coreReady: false,
+    language: null,
     rate: null,
     splashReady: false,
     status: AppStatus.start,
@@ -27,6 +28,9 @@ const app = {
   mutations: {
     SET_CORE_READY(state) {
       state.coreReady = true;
+    },
+    SET_LANGUAGE(state, language) {
+      state.language = language;
     },
     SET_RATE(state, rate) {
       state.rate = rate;
@@ -56,6 +60,9 @@ const app = {
       );
       commit("SET_CORE_READY");
       EnableDebugWindowOnCoreReady();
+    },
+    SET_LANGUAGE({ commit }, language) {
+      commit("SET_LANGUAGE", language);
     },
     SET_RATE({ commit }, rate) {
       commit("SET_RATE", rate);
