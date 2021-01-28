@@ -113,7 +113,11 @@ std::string getRecipientAddressesForWalletTransaction(CAccount* forAccount, CWal
     for (const CTxOut& txout: wtx->tx->vout)
     {
         bool isMine = false;
-        if (IsMine(*forAccount, txout))
+        if (forAccount && IsMine(*forAccount, txout))
+        {
+            isMine = true;
+        }
+        if (!forAccount && pWallet && IsMine(*pWallet, txout))
         {
             isMine = true;
         }
@@ -480,7 +484,7 @@ void handlePostInitMain()
         // Fire events for transaction depth changes (up to depth 10 only)
         pactiveWallet->NotifyTransactionDepthChanged.connect( [&](CWallet* pwallet, const uint256& hash)
         {
-            DS_LOCK2(cs_main, pwallet->cs_wallet);
+            LOCK2(cs_main, pwallet->cs_wallet);
             if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
             {
                 const CWalletTx& wtx = pwallet->mapWallet[hash];
@@ -499,7 +503,7 @@ void handlePostInitMain()
         } );
         // Fire events for transaction status changes, or new transactions (this won't fire for simple depth changes)
         pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status, bool fSelfComitted) {
-            DS_LOCK2(cs_main, pwallet->cs_wallet);
+            LOCK2(cs_main, pwallet->cs_wallet);
             if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
             {
                 if (status == CT_NEW) {
@@ -1196,7 +1200,7 @@ UriRecipient ILibraryController::IsValidRecipient(const UriRecord & request)
 
     if (pactiveWallet)
     {
-        DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
         if (pactiveWallet->mapAddressBook.find(address) != pactiveWallet->mapAddressBook.end())
         {
             const auto& data = pactiveWallet->mapAddressBook[address];
@@ -1225,7 +1229,7 @@ int64_t ILibraryController::feeForRecipient(const UriRecipient & request)
     if (!pactiveWallet)
         throw std::runtime_error(_("No active internal wallet."));
 
-    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
 
     CNativeAddress address(request.address);
     if (!address.IsValid())
@@ -1266,7 +1270,7 @@ PaymentResultStatus ILibraryController::performPaymentToRecipient(const UriRecip
     if (!pactiveWallet)
         throw std::runtime_error(_("No active internal wallet."));
 
-    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
 
     CNativeAddress address(request.address);
     if (!address.IsValid())
@@ -1322,7 +1326,7 @@ PaymentResultStatus ILibraryController::performPaymentToRecipient(const UriRecip
 std::vector<TransactionRecord> getTransactionHistoryForAccount(CAccount* forAccount)
 {
     std::vector<TransactionRecord> ret;    
-    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
 
     std::vector<CAccount*> forAccounts = GetAccountsForAccount(forAccount);    
     for (const auto& [hash, wtx] : pactiveWallet->mapWallet)
@@ -1353,7 +1357,7 @@ TransactionRecord ILibraryController::getTransaction(const std::string& txHash)
 
     uint256 hash = uint256S(txHash);
 
-    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
 
     if (pactiveWallet->mapWallet.find(hash) == pactiveWallet->mapWallet.end())
         throw std::runtime_error(strprintf("No transaction found for hash [%s]", txHash));
@@ -1372,7 +1376,7 @@ std::string ILibraryController::resendTransaction(const std::string& txHash)
 
     uint256 hash = uint256S(txHash);
 
-    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
 
     if (pactiveWallet->mapWallet.find(hash) == pactiveWallet->mapWallet.end())
         return "";
@@ -1399,7 +1403,7 @@ std::vector<MutationRecord> getMutationHistoryForAccount(CAccount* forAccount)
 {
     std::vector<MutationRecord> ret;
 
-    DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+    LOCK2(cs_main, pactiveWallet->cs_wallet);
 
     // wallet transactions in reverse chronological ordering
     std::vector<const CWalletTx*> vWtx;
@@ -1430,7 +1434,7 @@ std::vector<AddressRecord> ILibraryController::getAddressBookRecords()
     std::vector<AddressRecord> ret;
     if (pactiveWallet)
     {
-        DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
         for(const auto& [address, addressData] : pactiveWallet->mapAddressBook)
         {
             ret.emplace_back(AddressRecord(address, addressData.name, addressData.description, addressData.purpose));
