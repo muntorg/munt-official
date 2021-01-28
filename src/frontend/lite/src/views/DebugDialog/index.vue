@@ -73,30 +73,34 @@ export default {
 
 .topbar {
   width: 100%;
-  height: 48px;
-  background-color: #000;
-  color: #fff;
+  height: 56px;
+  color: #000;
+  border-bottom: 1px solid var(--main-border-color);
 
   & div {
-    cursor: pointer;
-    padding: 0px 20px;
-    height: 100%;
-    line-height: 48px;
+      padding: 0 20px;
+      font-weight: 600;
+      font-size: .85em;
+      line-height: 56px;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      cursor: pointer;
 
     &:hover {
-      background: #333;
+      color: var(--primary-color);
+      background: #eff3ff;
     }
 
     &.active,
     .active:hover {
-      background: var(--primary-color);
+      color: var(--primary-color);
     }
   }
 }
 
 .main {
   height: calc(100% - 48px);
-  padding: 12px;
+  padding: 20px;
   overflow-x: hidden;
   overflow-y: auto;
 }
