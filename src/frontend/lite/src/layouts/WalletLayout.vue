@@ -149,9 +149,9 @@ export default {
     & > .button {
       padding: 0 30px;
       font-weight: 600;
-      font-size: .85em;
+      font-size: 0.85em;
       text-transform: uppercase;
-      letter-spacing: .03em;
+      letter-spacing: 0.03em;
       cursor: pointer;
     }
 

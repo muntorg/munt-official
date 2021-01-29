@@ -131,7 +131,7 @@ export default {
 }
 
 .version-container {
-  font-size: .8em;
+  font-size: 0.8em;
   text-transform: uppercase;
   color: #999;
 

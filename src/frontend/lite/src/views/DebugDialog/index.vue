@@ -78,13 +78,13 @@ export default {
   border-bottom: 1px solid var(--main-border-color);
 
   & div {
-      padding: 0 20px;
-      font-weight: 600;
-      font-size: .85em;
-      line-height: 56px;
-      text-transform: uppercase;
-      letter-spacing: .03em;
-      cursor: pointer;
+    padding: 0 20px;
+    font-weight: 600;
+    font-size: 0.85em;
+    line-height: 56px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    cursor: pointer;
 
     &:hover {
       color: var(--primary-color);
