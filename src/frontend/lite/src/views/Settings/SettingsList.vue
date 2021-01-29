@@ -27,7 +27,7 @@
   & > a {
     color: var(--primary-color);
   }
-  background-color: #EFF3FF;
+  background-color: #eff3ff;
 }
 
 .settings-row a {

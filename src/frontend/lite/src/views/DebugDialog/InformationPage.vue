@@ -136,7 +136,7 @@ export default {
   }
 
   & .flex-row > div {
-    font-size: .95em;
+    font-size: 0.95em;
     line-height: 20px;
   }
   & .flex-row :first-child {

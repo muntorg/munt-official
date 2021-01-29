@@ -18,8 +18,8 @@
         ></clipboard-field>
         <div class="flex-1" />
       </div>
-  </div>
-  <div class="flex-1" />
+    </div>
+    <div class="flex-1" />
     <gulden-button-section>
       <template v-slot:middle>
         <button @click="buyGulden" class="buy-gulden">

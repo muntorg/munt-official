@@ -45,7 +45,7 @@ export default {
   .tx-hash {
     margin: 0;
     padding: 10px;
-    font-size: .8em;
+    font-size: 0.8em;
     line-height: 1.2em;
     user-select: text;
     word-wrap: break-word;

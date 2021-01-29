@@ -102,8 +102,8 @@ export default {
   line-height: 56px;
   padding: 0 30px;
   border-bottom: 1px solid var(--main-border-color);
-	font-weight: 600;
-	font-size: 1.05em;
+  font-weight: 600;
+  font-size: 1.05em;
 
   & .close {
     float: right;
@@ -111,11 +111,11 @@ export default {
   }
 
   & .icon {
-      line-height: 42px;
-      font-size: 1.2em;
-      font-weight: 300;
-      padding: 0 10px;
-      cursor: pointer;
+    line-height: 42px;
+    font-size: 1.2em;
+    font-weight: 300;
+    padding: 0 10px;
+    cursor: pointer;
   }
 
   & .icon:hover {
