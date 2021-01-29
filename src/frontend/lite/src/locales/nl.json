@@ -5,6 +5,7 @@
     "buy_your_first_gulden": "Koop jouw eerste Gulden",
     "change_password": "Verander wachtwoord",
     "clear": "Wissen",
+    "confirm": "Bevestig",
     "finish": "Klaar",
     "next": "Volgende",
     "ok": "OK",
@@ -74,7 +75,7 @@
     "your_address": "Jouw Gulden adres"
   },
   "send_gulden": {
-    "enter_label": "Voer label in",
+    "confirm_transaction": "Bevestig transactie",
     "enter_gulden_address": "Voer Gulden adres in",
     "target_account": "Verstuur naar account"
   }
