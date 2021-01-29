@@ -10,12 +10,6 @@
         :margin="0"
         :value="receiveAddress"
       />
-      <div class="copy-qr-text">
-        <span v-if="qrCopyTimeout">{{
-          $t("receive_gulden.qr_copied_to_clipboard")
-        }}</span>
-        <span v-else><fa-icon :icon="['fal', 'copy']" class="copy"/></span>
-      </div>
     </div>
     <div class="address-row flex-row">
       <div class="flex-1" />
@@ -44,11 +38,6 @@ import { clipboard, nativeImage } from "electron";
 
 export default {
   name: "Receive",
-  data() {
-    return {
-      qrCopyTimeout: false
-    };
-  },
   components: {
     VueQrcode
   },
@@ -62,11 +51,6 @@ export default {
     copyQr() {
       let img = nativeImage.createFromDataURL(this.$refs.qrcode.$el.src);
       clipboard.writeImage(img);
-
-      this.qrCopyTimeout = true;
-      setTimeout(() => {
-        this.qrCopyTimeout = false;
-      }, 1500);
     }
   }
 };
@@ -88,10 +72,6 @@ export default {
   & .qrcode {
     width: 100%;
     max-width: 160px;
-  }
-
-  & .copy-qr-text {
-    margin: 10px 0 10px 0;
   }
 
   & .address-row {
