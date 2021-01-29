@@ -1,6 +1,7 @@
 <template>
   <div class="confirm-transaction-dialog">
     <div class="tx-amount">{{ computedAmount }}</div>
+    <div class="tx-fee">{{ computedFee }}</div>
     <div class="tx-to">
       <fa-icon :icon="['far', 'long-arrow-down']" />
     </div>
@@ -23,25 +24,34 @@ export default {
     password: null
   },
   computed: {
-    computedAmount() {
-      return `${this.amount} NLG`;
-    }
-  },
-  methods: {
-    confirm() {
-      LibraryController.UnlockWallet(this.password);
-
-      // create payment request
-      var request = {
+    computedRequest() {
+      return {
         valid: true,
         address: this.address,
         label: "",
         desc: "",
         amount: this.amount * 100000000
       };
+    },
+    computedAmount() {
+      return `${this.amount} NLG`;
+    },
+    computedFee() {
+      let fee =
+        LibraryController.FeeForRecipient(this.computedRequest) / 100000000;
+      return `+ ${fee} NLG FEE`;
+    }
+  },
+  methods: {
+    confirm() {
+      LibraryController.UnlockWallet(this.password);
 
       // try to make the payment
-      let result = LibraryController.PerformPaymentToRecipient(request, false);
+      let result = LibraryController.PerformPaymentToRecipient(
+        this.computedRequest,
+        false
+      );
+
       if (result !== 0) {
         // payment failed, log an error. have to make this more robust
         console.error(result);
@@ -68,6 +78,7 @@ export default {
 .tx-amount {
   font-size: 1.6em;
   font-weight: 600;
+  margin: 0 0 10px 0;
 }
 .tx-to {
   margin: 15px 0 15px 0;
