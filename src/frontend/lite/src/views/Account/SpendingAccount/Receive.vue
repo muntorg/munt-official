@@ -14,7 +14,7 @@
         <span v-if="qrCopyTimeout">{{
           $t("receive_gulden.qr_copied_to_clipboard")
         }}</span>
-        <span v-else>{{ $t("receive_gulden.click_to_copy_qr") }}</span>
+        <span v-else><fa-icon :icon="['fal', 'copy']" class="copy"/></span>
       </div>
     </div>
     <div class="address-row flex-row">
