@@ -64,9 +64,10 @@ export default {
     margin: 0 0 20px 0;
   }
   & .qr {
-    background-color: #fff;
     text-align: center;
     cursor: pointer;
+
+    margin: 0 auto;
   }
 
   & .qrcode {
