@@ -6,7 +6,7 @@
       <vue-qrcode
         ref="qrcode"
         class="qrcode"
-        :width="288"
+        :width="160"
         :margin="0"
         :value="receiveAddress"
       />
