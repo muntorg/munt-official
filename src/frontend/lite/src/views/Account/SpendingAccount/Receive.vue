@@ -2,22 +2,29 @@
   <div class="receive-view flex-col">
     <h2>{{ $t("receive_gulden.your_address") }}</h2>
     <p class="information">{{ $t("receive_gulden.information") }}</p>
-    <div class="qr">
+    <div class="qr" @click="copyQr">
       <vue-qrcode
+        ref="qrcode"
         class="qrcode"
         :width="288"
         :margin="0"
         :value="receiveAddress"
       />
-      <div class="address-row flex-row">
-        <div class="flex-1" />
-        <clipboard-field
-          class="address"
-          :value="receiveAddress"
-          confirmation="receive_gulden.address_copied_to_clipboard"
-        ></clipboard-field>
-        <div class="flex-1" />
+      <div class="copy-qr-text">
+        <span v-if="qrCopyTimeout">{{
+          $t("receive_gulden.qr_copied_to_clipboard")
+        }}</span>
+        <span v-else>{{ $t("receive_gulden.click_to_copy_qr") }}</span>
       </div>
+    </div>
+    <div class="address-row flex-row">
+      <div class="flex-1" />
+      <clipboard-field
+        class="address"
+        :value="receiveAddress"
+        confirmation="receive_gulden.address_copied_to_clipboard"
+      ></clipboard-field>
+      <div class="flex-1" />
     </div>
     <div class="flex-1" />
     <gulden-button-section>
@@ -33,9 +40,15 @@
 <script>
 import { mapState } from "vuex";
 import VueQrcode from "vue-qrcode";
+import { clipboard, nativeImage } from "electron";
 
 export default {
   name: "Receive",
+  data() {
+    return {
+      qrCopyTimeout: false
+    };
+  },
   components: {
     VueQrcode
   },
@@ -45,6 +58,15 @@ export default {
   methods: {
     buyGulden() {
       window.open("https://gulden.com/#buy", "buy-gulden");
+    },
+    copyQr() {
+      let img = nativeImage.createFromDataURL(this.$refs.qrcode.$el.src);
+      clipboard.writeImage(img);
+
+      this.qrCopyTimeout = true;
+      setTimeout(() => {
+        this.qrCopyTimeout = false;
+      }, 1500);
     }
   }
 };
@@ -60,11 +82,18 @@ export default {
   & .qr {
     background-color: #fff;
     text-align: center;
+    cursor: pointer;
   }
+
   & .qrcode {
     width: 100%;
     max-width: 160px;
   }
+
+  & .copy-qr-text {
+    margin: 10px 0 10px 0;
+  }
+
   & .address-row {
     width: 100%;
     text-align: center;

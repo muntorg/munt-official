@@ -71,8 +71,10 @@
   "receive_gulden": {
     "address_copied_to_clipboard": "Address copied to clipboard",
     "buy_or_receive_gulden": "Buy or receive Gulden",
+    "click_to_copy_qr": "Click to copy QR",
     "information": "After each transaction you will receive a new address, but the previous address will stil work.",
-    "your_address": "Your Gulden address"
+    "your_address": "Your Gulden address",
+    "qr_copied_to_clipboard": "QR copied to clipboard"
   },
   "send_gulden": {
     "confirm_transaction": "Confirm transaction",
