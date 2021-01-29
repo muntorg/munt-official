@@ -5,6 +5,7 @@
     "buy_your_first_gulden": "Buy your first Gulden",
     "change_password": "Change password",
     "clear": "Clear",
+    "confirm": "Confirm",
     "finish": "Finish",
     "next": "Next",
     "ok": "OK",
@@ -74,7 +75,7 @@
     "your_address": "Your Gulden address"
   },
   "send_gulden": {
-    "enter_label": "Enter label",
+    "confirm_transaction": "Confirm transaction",
     "enter_gulden_address": "Enter Gulden address",
     "target_account": "Send to account"
   }

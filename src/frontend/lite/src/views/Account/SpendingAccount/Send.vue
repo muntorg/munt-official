@@ -31,7 +31,11 @@
       <button @click="clearInput" class="clear" :disabled="disableClearButton">
         {{ $t("buttons.clear") }}
       </button>
-      <button @click="trySend" class="send" :disabled="disableSendButton">
+      <button
+        @click="showConfirmation"
+        class="send"
+        :disabled="disableSendButton"
+      >
         {{ $t("buttons.send") }}
       </button>
     </div>
@@ -40,10 +44,9 @@
 
 <script>
 import { mapState } from "vuex";
-import {
-  LibraryController,
-  AccountsController
-} from "../../../unity/Controllers";
+import { LibraryController, AccountsController } from "@/unity/Controllers";
+import ConfirmTransactionDialog from "./ConfirmTransactionDialog";
+import EventBus from "@/EventBus";
 
 export default {
   name: "Send",
@@ -100,6 +103,10 @@ export default {
   },
   mounted() {
     this.$refs.amount.focus();
+    EventBus.$on("transaction-succeeded", this.onTransactionSucceeded);
+  },
+  beforeDestroy() {
+    EventBus.$off("transaction-succeeded", this.onTransactionSucceeded);
   },
   methods: {
     onPasswordKeydown() {
@@ -111,13 +118,7 @@ export default {
       this.password = null;
       this.$refs.amount.focus();
     },
-    trySend() {
-      /*
-       todo:
-        - replace amount input by custom amount input (this one is too basic)
-        - improve notifications / messages on success and error
-       */
-
+    showConfirmation() {
       // validate amount
       let accountBalance = AccountsController.GetActiveAccountBalance();
       if (accountBalance.availableExcludingLocked / 100000000 < this.amount) {
@@ -136,28 +137,19 @@ export default {
 
       if (this.hasErrors) return;
 
-      // create payment request
-      var request = {
-        valid: true,
-        address: this.address,
-        label: "",
-        desc: "",
-        amount: this.amount * 100000000
-      };
-
-      // try to make the payment
-      let result = LibraryController.PerformPaymentToRecipient(request, false);
-      if (result === 0) {
-        // payment succeeded
-        this.amount = null;
-        this.address = null;
-        this.password = null;
-      } else {
-        // payment failed
-        console.log("someting went wrong, but don't exactly know what.");
-      }
-      // lock the wallet again
-      LibraryController.LockWallet();
+      EventBus.$emit("show-dialog", {
+        title: this.$t("send_gulden.confirm_transaction"),
+        component: ConfirmTransactionDialog,
+        componentProps: {
+          amount: this.amount,
+          address: this.address,
+          password: this.password
+        },
+        showButtons: false
+      });
+    },
+    onTransactionSucceeded() {
+      this.$router.push({ name: "transactions" });
     }
   }
 };
@@ -168,7 +160,7 @@ export default {
   height: 100%;
 }
 
-input[type=number]::-webkit-inner-spin-button {
+input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
