@@ -85,7 +85,7 @@ function createMainWindow() {
       submenu: [
         {
           label: "Debug window",
-          enabled: false,
+          enabled: store.state.app.coreReady,
           click() {
             createDebugWindow();
           }
