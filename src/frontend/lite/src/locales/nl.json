@@ -49,7 +49,7 @@
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
     "choose_password_information": "Een wachtwoord is vereist voor het ontgrendelen van jouw portemonnee. Kies een sterk wachtwoord, zodat niemand anders toegang kan krijgen tot jouw Gulden.",
     "create_new": "Ik heb nog geen Gulden portemonnee",
-    "enter_existing_recovery_phrase": "Voer jouw herstelzin in om jouw portemonnee te herstellen.",
+    "enter_existing_recovery_phrase": "Gulden LITE is niet geschikt voor een herstelzin van een volledige desktop portemonnee (met witness en mining functionaliteit).",
     "enter_recovery_phrase": "Voer herstelzin in",
     "invalid_recovery_phrase": {
       "title": "Ongeldige herstelzin",
