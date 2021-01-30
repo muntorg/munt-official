@@ -5,9 +5,8 @@
     <div class="tx-to">
       <fa-icon :icon="['far', 'long-arrow-down']" />
     </div>
-    <clipboard-field :value="mutation.recipient_addresses" />
-    <h4>TX ID</h4>
-    <div class="tx-id"><clipboard-field :value="mutation.txHash" /></div>
+    <div class="tx-address"><clipboard-field :value="mutation.recipient_addresses" /></div>
+    <div class="tx-id">TX ID:<clipboard-field :value="mutation.txHash" /></div>
   </div>
 </template>
 
@@ -73,15 +72,22 @@ export default {
   font-size: 1.6em;
   font-weight: 600;
 }
+.tx-address {
+  font-weight: 500;
+}
 .tx-to {
-  margin: 15px 0 10px 0;
+  margin: 20px 0 10px 0;
   font-size: 1.6em;
 }
 .tx-id {
-  margin: -5px 0 0 0;
+  margin: 20px 0 0 0;
   padding: 10px;
-  font-weight: 500;
-  font-size: 0.8em;
+  font-size: 0.75em;
+  line-height: 1em;
   text-transform: uppercase;
+  & .clipboard-field {
+    display: inline-block;
+    margin: 0 0 0 5px;
+  }
 }
 </style>
