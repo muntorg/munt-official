@@ -49,7 +49,7 @@
     "choose_password": "Choose a password of at least 6 characters",
     "choose_password_information": "You will need your password to unlock your wallet. Make sure it is not easy to guess because anyone who knows your password can access your funds.",
     "create_new": "I do not have a Gulden wallet yet",
-    "enter_existing_recovery_phrase": "Enter your recovery phrase in the boxes below to restore your wallet.",
+    "enter_existing_recovery_phrase": "Gulden LITE is not suitable for a full desktop wallet recovery phrase (with witness and mining functionality).",
     "enter_recovery_phrase": "Enter recovery phrase",
     "invalid_recovery_phrase": {
       "title": "Invalid recovery phrase",
