@@ -80,14 +80,17 @@ export default {
   font-weight: 600;
   margin: 0 0 10px 0;
 }
+.tx-fee {
+  font-size: .9em;
+}
 .tx-to {
-  margin: 15px 0 15px 0;
+  margin: 20px 0 10px 0;
   font-size: 1.6em;
 }
 .tx-address {
   padding: 10px 0 40px 0;
+  font-weight: 500;
 }
-
 .button {
   width: 100%;
 }
