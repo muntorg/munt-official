@@ -41,7 +41,7 @@ export default {
 
   & > .content {
     height: calc(100% - var(--header-height));
-    padding: 40px 30px 40px 30px;
+    padding: 40px 30px 30px 30px;
   }
 }
 </style>
