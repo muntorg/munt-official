@@ -6,7 +6,7 @@
       <vue-qrcode
         ref="qrcode"
         class="qrcode"
-        :width="140"
+        :width="280"
         :margin="0"
         :value="receiveAddress"
         :color="{ dark: '#000000', light: '#ffffff' }"
