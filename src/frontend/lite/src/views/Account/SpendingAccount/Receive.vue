@@ -6,9 +6,10 @@
       <vue-qrcode
         ref="qrcode"
         class="qrcode"
-        :width="160"
+        :width="140"
         :margin="0"
         :value="receiveAddress"
+        :color="{ dark: '#000000', light: '#ffffff' }"
       />
     </div>
     <div class="address-row flex-row">
@@ -61,30 +62,27 @@ export default {
   height: 100%;
   text-align: center;
   & .information {
-    margin: 0 0 20px 0;
+    margin: 0 0 30px 0;
   }
   & .qr {
     text-align: center;
     cursor: pointer;
-
     margin: 0 auto;
-  }
-
+  }å
   & .qrcode {
     width: 100%;
-    max-width: 160px;
+    max-width: 140px;
   }
-
   & .address-row {
     width: 100%;
     text-align: center;
   }
   & .address {
+    margin: 5px 0 0 0;
     font-weight: 500;
-    font-size: 0.9em;
-    line-height: 32px;
+    font-size: 1em;
+    line-height: 1.4em;
   }
-
   & .buy-gulden {
     width: 100%;
   }
