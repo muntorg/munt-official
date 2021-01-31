@@ -1,9 +1,19 @@
+2.3.0.5
+
+Initial release of new "lite" wallet; an SPV based desktop wallet with trimmed down feature set for those who want something fast but with less features than the core wallet
+RPC     - Fix '*' behaviour in listaccounts command
+RPC     - Give 'decodescript' the ability to decode old phase3 transactions
+
+
+
+
+
 2.3.0.4
 
 CORE    - Fix a crash in SIGMA verification code that could be triggered in some (relatively rare) instances
 RPC     - Hide various "hidden" developer RPC commands from the autocomplete
 RPC     - Introduce a new command "repairwitnessaddress" that can be used to repair a wallet if the witness key for a witness address is not available while wallet is locked (which is required for witnessing)
-RPC      - Extend "validateaddress" command to give more information for witness addresses
+RPC     - Extend "validateaddress" command to give more information for witness addresses
 CORE    - Minor improvement when renewing witness accounts; check for and repair any instances of missing witness key when doing a renewal
 
 
