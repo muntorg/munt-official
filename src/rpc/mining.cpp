@@ -940,19 +940,24 @@ static UniValue estimaterawfee(const JSONRPCRequest& request)
     return result;
 }
 
-static const CRPCCommand commands[] =
+static const CRPCCommand commandsFull[] =
 { //  category              name                      actor (function)         okSafeMode
   //  --------------------- ------------------------  -----------------------  ----------
     { "block_generation",   "getnetworkhashps",       &getnetworkhashps,       true,  {"num_blocks","height"} },
     { "block_generation",   "getmininginfo",          &getmininginfo,          true,  {} },
     { "block_generation",   "prioritisetransaction",  &prioritisetransaction,  true,  {"txid","dummy_value","fee_delta"} },
-    { "block_generation",   "submitblock",            &submitblock,            true,  {"hexdata","parameters"} },
-    { "block_generation",   "submitheader",           &submitheader,           true,  {"hexdata"} },
 
     { "generating",         "generate",               &generate,               true,  {"num_blocks","max_tries"} },
     { "generating",         "generatetoaddress",      &generatetoaddress,      true,  {"num_blocks","address","max_tries"} },
     { "generating",         "getgenerate",            &getgenerate,            true,  {}  },
     { "generating",         "setgenerate",            &setgenerate,            true,  {"generate", "gen_proc_limit", "gen_memory_limit"}  },
+};
+
+static const CRPCCommand commandsSPV[] =
+{ //  category              name                      actor (function)         okSafeMode
+  //  --------------------- ------------------------  -----------------------  ----------
+    { "block_generation",   "submitblock",            &submitblock,            true,  {"hexdata","parameters"} },
+    { "block_generation",   "submitheader",           &submitheader,           true,  {"hexdata"} },
 
     { "util",               "estimatefee",            &estimatefee,            true,  {"num_blocks"} },
     { "util",               "estimatesmartfee",       &estimatesmartfee,       true,  {"num_blocks", "conservative"} },
@@ -962,6 +967,11 @@ static const CRPCCommand commands[] =
 
 void RegisterMiningRPCCommands(CRPCTable &t)
 {
-    for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commands); vcidx++)
-        t.appendCommand(commands[vcidx].name, &commands[vcidx]);
+    if (!GetBoolArg("-spv", DEFAULT_SPV))
+    {
+        for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commandsFull); vcidx++)
+            t.appendCommand(commandsFull[vcidx].name, &commandsFull[vcidx]);
+    }
+    for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commandsSPV); vcidx++)
+        t.appendCommand(commandsSPV[vcidx].name, &commandsSPV[vcidx]);
 }
