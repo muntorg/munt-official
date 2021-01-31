@@ -3620,14 +3620,14 @@ static UniValue importwitnesskeys(const JSONRPCRequest& request)
 }
 
 
-static const CRPCCommand commands[] =
+static const CRPCCommand commandsFull[] =
 { //  category                   name                               actor (function)                 okSafeMode
   //  ---------------------      ------------------------           -----------------------          ----------
-    { "mining",                  "gethashps",                       &gethashps,                      true,    {} },
-    { "mining",                  "sethashlimit",                    &sethashlimit,                   true,    {"limit"} },
-    { "mining",                  "createminingaccount",             &createminingaccount,            true,    {"name"} },
-    { "mining",                  "setminingrewardaddress",          &setminingrewardaddress,         true,    {"reward_address"} },
-    { "mining",                  "getminingrewardaddress",          &getminingrewardaddress,         true,    {""} },
+    { "generating",              "gethashps",                       &gethashps,                      true,    {} },
+    { "generating",              "sethashlimit",                    &sethashlimit,                   true,    {"limit"} },
+    { "generating",              "createminingaccount",             &createminingaccount,            true,    {"name"} },
+    { "generating",              "setminingrewardaddress",          &setminingrewardaddress,         true,    {"reward_address"} },
+    { "generating",              "getminingrewardaddress",          &getminingrewardaddress,         true,    {""} },
 
     //fixme: (PHASE5) Many of these belong in accounts category as well.
     //We should consider allowing multiple categories for commands, so its easier for people to discover commands under specific topics they are interested in.
@@ -3660,6 +3660,24 @@ static const CRPCCommand commands[] =
     { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"start_height", "count"} },
     { "developer",               "dumpdiffarray",                   &dumpdiffarray,                  true,    {"height"} },
     { "developer",               "verifywitnessaddress",            &verifywitnessaddress,           true,    {"witness_address" } },
+    
+    { "accounts",                "createaccount",                   &createaccount,                  true,    {"name", "type"} },
+    { "accounts",                "deleteaccount",                   &deleteaccount,                  true,    {"account", "force"} },
+    { "accounts",                "getreadonlyaccount",              &getreadonlyaccount,             true,    {"account"} },
+    { "accounts",                "importreadonlyaccount",           &importreadonlyaccount,          true,    {"name", "encoded_key"} },
+    { "accounts",                "importlinkedaccount",             &importlinkedaccount,            true,    {"name", "encoded_key_uri"} },
+    { "accounts",                "setactiveaccount",                &setactiveaccount,               true,    {"account"} },
+
+    { "mnemonics",               "createseed",                      &createseed,                     true,    {"type"} },
+    { "mnemonics",               "deleteseed",                      &deleteseed,                     true,    {"seed", "should_purge_accounts"} },
+    { "mnemonics",               "getreadonlyseed",                 &getreadonlyseed,                true,    {"seed"} },
+    { "mnemonics",               "setactiveseed",                   &setactiveseed,                  true,    {"seed"} },
+    { "mnemonics",               "importseed",                      &importseed,                     true,    {"mnemonic_or_pubkey", "type", "is_read_only"} },
+};
+
+static const CRPCCommand commandsSPV[] =
+{ //  category                   name                               actor (function)                 okSafeMode
+  //  ---------------------      ------------------------           -----------------------          ----------
     { "developer",               "checkpointinvalidate",            &checkpointinvalidate,           true,    {"block_hash" } },
     
     { "support",                 "resetdatadirpartial",             &resetdatadirpartial,            true,    {""} },
@@ -3671,30 +3689,24 @@ static const CRPCCommand commands[] =
     { "support",                 "getlastblocks",                   &getlastblocks,                  true,    {"num_blocks"} },
 
     { "accounts",                "changeaccountname",               &changeaccountname,              true,    {"account", "name"} },
-    { "accounts",                "createaccount",                   &createaccount,                  true,    {"name", "type"} },
-    { "accounts",                "deleteaccount",                   &deleteaccount,                  true,    {"account", "force"} },
     { "accounts",                "getactiveaccount",                &getactiveaccount,               true,    {} },
-    { "accounts",                "getreadonlyaccount",              &getreadonlyaccount,             true,    {"account"} },
-    { "accounts",                "importreadonlyaccount",           &importreadonlyaccount,          true,    {"name", "encoded_key"} },
-    { "accounts",                "importlinkedaccount",             &importlinkedaccount,            true,    {"name", "encoded_key_uri"} },
     { "accounts",                "listaccounts",                    &listallaccounts,                true,    {"seed", "state"} },
-    { "accounts",                "setactiveaccount",                &setactiveaccount,               true,    {"account"} },
     { "accounts",                "getaccountbalances",              &getaccountbalances,             false,   {"min_conf", "include_watchonly"} },
 
-    { "mnemonics",               "createseed",                      &createseed,                     true,    {"type"} },
-    { "mnemonics",               "deleteseed",                      &deleteseed,                     true,    {"seed", "should_purge_accounts"} },
     { "mnemonics",               "getactiveseed",                   &getactiveseed,                  true,    {} },
     { "mnemonics",               "getmnemonicfromseed",             &getmnemonicfromseed,            true,    {"seed"} },
-    { "mnemonics",               "getreadonlyseed",                 &getreadonlyseed,                true,    {"seed"} },
-    { "mnemonics",               "setactiveseed",                   &setactiveseed,                  true,    {"seed"} },
-    { "mnemonics",               "importseed",                      &importseed,                     true,    {"mnemonic_or_pubkey", "type", "is_read_only"} },
     { "mnemonics",               "listseeds",                       &listseeds,                      true,    {} },
 };
 
 void RegisterGuldenRPCCommands(CRPCTable &t)
 {
-    for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commands); vcidx++)
-        t.appendCommand(commands[vcidx].name, &commands[vcidx]);
+    if (!GetBoolArg("-spv", DEFAULT_SPV))
+    {
+        for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commandsFull); vcidx++)
+            t.appendCommand(commandsFull[vcidx].name, &commandsFull[vcidx]);
+    }
+    for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commandsSPV); vcidx++)
+        t.appendCommand(commandsSPV[vcidx].name, &commandsSPV[vcidx]);
 }
 
 #endif
