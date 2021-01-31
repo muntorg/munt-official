@@ -1571,7 +1571,20 @@ std::unordered_map<std::string, std::string> ILibraryController::getClientInfo()
         ret.insert(std::pair("num_connections_out", connectionsOut));
     }
     
-    if (chainActive.Tip())
+    if (fSPV)
+    {
+        if (partialChain.Tip())
+        {
+            ret.insert(std::pair("chain_tip_height", i64tostr(partialChain.Height())));
+            ret.insert(std::pair("chain_tip_time", i64tostr(partialChain.Tip()->GetBlockTime())));
+            ret.insert(std::pair("chain_tip_hash", partialChain.Tip()->GetBlockHashPoW2().ToString()));
+            ret.insert(std::pair("chain_offset", i64tostr(partialChain.HeightOffset())));
+            ret.insert(std::pair("chain_pruned_height", nPartialPruneHeightDone));
+            ret.insert(std::pair("chain_processed_height", CSPVScanner::getProcessedHeight()));
+            ret.insert(std::pair("chain_probable_height", GetProbableHeight()));
+        }
+    }
+    else if (chainActive.Tip())
     {
         ret.insert(std::pair("chain_tip_height", i64tostr(chainActive.Tip()->nHeight)));
         ret.insert(std::pair("chain_tip_time", i64tostr(chainActive.Tip()->GetBlockTime())));
