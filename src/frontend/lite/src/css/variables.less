@@ -1,31 +1,48 @@
+// blue theme
 @primary-color: #0039cc;
-@secondary-color: #111444;
-
+@hover-color: #0039cc10;
 @success-color: @primary-color;
-@error-color: #dd3333;
-@disabled-color: #eee;
-
 @success-color--hover: lighten(@success-color, 4%); 
-@error-color--hover: lighten(@error-color, 8%);
 
 :root {
   --primary-color: @primary-color;
-  --secondary-color: @secondary-color;
-  
-  --error-color: @error-color;
-
-  --success-color: @success-color;
-  --error-color: @error-color;
-  --disabled-color: @disabled-color;
-
+  --hover-color: @hover-color;
+  --success-color: @primary-color;
   --success-color--hover: @success-color--hover;
-  --error-color--hover: @error-color--hover;
+}
 
+// orange theme
+@primary-color--orange: #ee6622;
+@hover-color--orange: #ee662210;
+@success-color--orange: @primary-color--orange;
+@success-color--hover--orange: lighten(@success-color--orange, 4%); 
+
+:root[data-theme="orange"] {
+  --primary-color: @primary-color--orange;
+  --hover-color: @hover-color--orange;
+  --success-color: @primary-color--orange;
+  --success-color--hover: @success-color--hover--orange;
+}
+
+// common colors
+@secondary-color: #111444;
+@error-color: #dd3333;
+@disabled-color: #eee;
+@error-color--hover: lighten(@error-color, 8%);
+
+// common variables
+:root {
   --header-height: 62px;
   --footer-height: 56px;
   
+  --secondary-color: @secondary-color;
+  
+  --error-color: @error-color;
+  --error-color--hover: @error-color--hover;
+  
+  --disabled-color: @disabled-color;
+  
   --main-border-color: #ddd;
-
   --scrollbar-background-color: #fff;
   --thumb-background-color: var(--main-border-color);
 }

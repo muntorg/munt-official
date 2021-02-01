@@ -43,7 +43,8 @@
   "settings": {
     "header": "Instellingen",
     "change_password": "Verander wachtwoord",
-    "view_recovery_phrase": "Bekijk herstelzin"
+    "view_recovery_phrase": "Bekijk herstelzin",
+    "choose_theme": "Kies thema"
   },
   "setup": {
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",

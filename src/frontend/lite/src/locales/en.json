@@ -43,7 +43,8 @@
   "settings": {
     "header": "Settings",
     "change_password": "Change password",
-    "view_recovery_phrase": "View recovery phrase"
+    "view_recovery_phrase": "View recovery phrase",
+    "choose_theme": "Choose theme"
   },
   "setup": {
     "choose_password": "Choose a password of at least 6 characters",

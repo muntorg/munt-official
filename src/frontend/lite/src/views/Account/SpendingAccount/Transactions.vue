@@ -185,7 +185,7 @@ h4 {
 
   &:hover {
     color: var(--primary-color);
-    background: #eff3ff;
+    background: var(--hover-color);
   }
 
   &.selected {

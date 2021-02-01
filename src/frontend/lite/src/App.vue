@@ -16,14 +16,18 @@ export default {
   },
   created() {
     this.changeLanguage(this.language);
+    document.querySelector("html").dataset.theme = this.theme;
   },
   watch: {
     language() {
       this.changeLanguage(this.language);
+    },
+    theme() {
+      document.querySelector("html").dataset.theme = this.theme;
     }
   },
   computed: {
-    ...mapState("app", ["language"]),
+    ...mapState("app", ["language", "theme"]),
     isWallet() {
       switch (window.location.hash.toLowerCase()) {
         case "#/debug":

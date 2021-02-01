@@ -130,7 +130,7 @@ export default {
 
       &:hover {
         color: var(--primary-color);
-        background-color: #eff3ff;
+        background-color: var(--hover-color);
       }
     }
   }
@@ -161,7 +161,7 @@ export default {
 
     & > .button:not(.active):hover {
       color: var(--primary-color);
-      background-color: #eff3ff;
+      background-color: var(--hover-color);
     }
   }
 }

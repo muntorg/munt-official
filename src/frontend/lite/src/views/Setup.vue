@@ -279,7 +279,7 @@ export default {
 
 .settings-row:hover {
   color: var(--primary-color);
-  background-color: #eff3ff;
+  background-color: var(--hover-color);
 }
 
 .arrow {
