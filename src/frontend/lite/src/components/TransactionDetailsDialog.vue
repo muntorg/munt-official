@@ -5,7 +5,9 @@
     <div class="tx-to">
       <fa-icon :icon="['far', 'long-arrow-down']" />
     </div>
-    <div class="tx-address"><clipboard-field :value="mutation.recipient_addresses" /></div>
+    <div class="tx-address">
+      <clipboard-field :value="mutation.recipient_addresses" />
+    </div>
     <div class="tx-id">TX ID:<clipboard-field :value="mutation.txHash" /></div>
   </div>
 </template>

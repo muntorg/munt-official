@@ -81,7 +81,7 @@ export default {
   margin: 0 0 10px 0;
 }
 .tx-fee {
-  font-size: .9em;
+  font-size: 0.9em;
 }
 .tx-to {
   margin: 20px 0 10px 0;
