@@ -36,4 +36,7 @@ public:
 
     /** Abandon a transaction */
     static bool AbandonTransaction(const std::string & txHash);
+
+    /** Get a unique UUID that identifies this wallet */
+    static std::string GetUUID();
 };

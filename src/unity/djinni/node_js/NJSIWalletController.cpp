@@ -182,6 +182,38 @@ Napi::Value NJSIWalletController::AbandonTransaction(const Napi::CallbackInfo& i
         return Napi::Value();
     }
 }
+Napi::Value NJSIWalletController::GetUUID(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 0)
+    {
+        Napi::Error::New(env, "NJSIWalletController::GetUUID needs 0 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+
+    try
+    {
+        auto result = IWalletController::GetUUID();
+
+        //Wrap result in node object
+        auto arg_0 = Napi::String::New(env, result);
+
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+}
 
 Napi::FunctionReference NJSIWalletController::constructor;
 
@@ -194,6 +226,7 @@ Napi::Object NJSIWalletController::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("GetBalanceSimple", &NJSIWalletController::GetBalanceSimple),
     InstanceMethod("GetBalance", &NJSIWalletController::GetBalance),
     InstanceMethod("AbandonTransaction", &NJSIWalletController::AbandonTransaction),
+    InstanceMethod("GetUUID", &NJSIWalletController::GetUUID),
     });
     // Create a peristent reference to the class constructor. This will allow a function called on a class prototype and a function called on instance of a class to be distinguished from each other.
     constructor = Napi::Persistent(func);

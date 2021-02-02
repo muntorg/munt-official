@@ -301,6 +301,9 @@ i_wallet_controller = interface +c {
     
     # Abandon a transaction
     static AbandonTransaction(txHash : string): bool;
+    
+    # Get a unique UUID that identifies this wallet
+    static GetUUID(): string;
 }
 
 # Interface to receive wallet level events
