@@ -167,8 +167,11 @@ input[type="number"]::-webkit-inner-spin-button {
 .buttons {
   & > .clear {
     width: 170px;
+    height: 40px;
   }
   & > .clear:not([disabled]) {
+    height: 40px;
+    line-height: 39px;
     background-color: #fff;
     border: 1px solid var(--primary-color);
     color: var(--primary-color);
