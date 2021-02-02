@@ -40,6 +40,12 @@ public abstract class IWalletController {
         return CppProxy.AbandonTransaction(txHash);
     }
 
+    /** Get a unique UUID that identifies this wallet */
+    public static String GetUUID()
+    {
+        return CppProxy.GetUUID();
+    }
+
     private static final class CppProxy extends IWalletController
     {
         private final long nativeRef;
@@ -72,5 +78,7 @@ public abstract class IWalletController {
         public static native BalanceRecord GetBalance();
 
         public static native boolean AbandonTransaction(String txHash);
+
+        public static native String GetUUID();
     }
 }
