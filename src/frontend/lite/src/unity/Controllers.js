@@ -404,8 +404,8 @@ export {
 /* inject:generated-code */
 
 class BackendUtilities {
-  static PerformHTTPPost(url, postData) {
-    return handleError(ipc.sendSync("BackendUtilities.PerformHTTPPost", url, postData));
+  static GetBuySessionUrl() {
+    return handleError(ipc.sendSync("BackendUtilities.GetBuySessionUrl"));
   }
 }
 

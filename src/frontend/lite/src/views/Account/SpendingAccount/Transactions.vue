@@ -33,7 +33,7 @@
 
       <gulden-button-section>
         <template v-slot:middle>
-          <button @click="buyGulden" class="buy-gulden">
+          <button @click="buyGulden" class="buy-gulden" :disabled="buyDisabled">
             {{ $t("buttons.buy_your_first_gulden") }}
           </button>
         </template>
@@ -46,9 +46,15 @@
 import { mapState } from "vuex";
 import TransactionDetailsDialog from "../../../components/TransactionDetailsDialog";
 import EventBus from "../../../EventBus";
+import { BackendUtilities } from "@/unity/Controllers";
 
 export default {
   name: "Transactions",
+  data() {
+    return {
+      buyDisabled: false
+    };
+  },
   computed: {
     ...mapState("wallet", ["mutations"]),
     hasMutations() {
@@ -138,8 +144,16 @@ export default {
         showButtons: false
       });
     },
-    buyGulden() {
-      window.open("https://gulden.com/#buy", "buy-gulden");
+    async buyGulden() {
+      try {
+        this.buyDisabled = true;
+        let url = await BackendUtilities.GetBuySessionUrl();
+        if (!url) {
+          url = "https://gulden.com/buy";
+        }
+      } finally {
+        this.buyDisabled = false;
+      }
     }
   }
 };

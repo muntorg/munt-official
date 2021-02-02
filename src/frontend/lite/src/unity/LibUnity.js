@@ -1,6 +1,7 @@
-import { net, app, ipcMain as ipc } from "electron";
+import { app, ipcMain as ipc } from "electron";
 import fs from "fs";
-
+import axios from "axios";
+import FormData from "form-data";
 import store from "../store";
 
 import libUnity from "native-ext-loader!./lib_unity.node";
@@ -1260,37 +1261,26 @@ class LibUnity {
     });
     /* inject:generated-code */
 
-    ipc.on("BackendUtilities.PerformHTTPPost", (event, url, postData) => {
-      console.log(`IPC: BackendUtilities.PerformHTTPPost(${url}, ${postData})`);
+    ipc.on("BackendUtilities.GetBuySessionUrl", async event => {
+      console.log(`IPC: BackendUtilities.GetBuySessionUrl()`);
       try {
-        const request = net.request({
-          method: "POST",
-          'url': url
-        });
-        console.log("<<<")
-        request.on("response", response => {
-          let data = '';
-          response.on('error', (error) => {
-              console.log(`ERROR: ${JSON.stringify(error)}`)
-              event.returnValue = {
-                success: false,
-                result: error
-              };
-          })
-          response.on('end', () => {
-              console.log(response.statusCode);
-              console.log(data);
-              event.returnValue = {
-                success: true,
-                result: JSON.parse(data)
-              };
-          });
-          response.on("data", chunk => {
-             data += chunk;
-          });
-        });
-        request.write(postData);
-        request.end();
+        var formData = new FormData();
+        formData.append("address", store.state.wallet.receiveAddress);
+        formData.append("currency", "gulden");
+        formData.append("uuid", this.walletController.GetUUID());
+
+        let response = await axios.post(
+          "https://www.blockhut.com/eurobeta/buysession.php",
+          formData,
+          {
+            headers: formData.getHeaders()
+          }
+        );
+
+        event.returnValue = {
+          success: response.data.status_message === "OK",
+          result: `https://blockhut.com/eurobeta/buy.php?sessionid=${response.data.sessionid}`
+        };
       } catch (e) {
         event.returnValue = handleError(e);
       }
