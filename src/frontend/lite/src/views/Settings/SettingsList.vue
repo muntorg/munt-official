@@ -83,6 +83,6 @@ a > .settings-row:hover {
 }
 
 .selected {
-  box-shadow: 0 0 2px #000;
+  box-shadow: 0 0 0 1px #000;
 }
 </style>
