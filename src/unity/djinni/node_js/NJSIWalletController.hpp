@@ -40,5 +40,8 @@ private:
     /** Abandon a transaction */
     Napi::Value AbandonTransaction(const Napi::CallbackInfo& info);
 
+    /** Get a unique UUID that identifies this wallet */
+    Napi::Value GetUUID(const Napi::CallbackInfo& info);
+
 };
 #endif //DJINNI_GENERATED_NJSIWALLETCONTROLLER_HPP

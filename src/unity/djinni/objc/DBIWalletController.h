@@ -27,4 +27,7 @@
 /** Abandon a transaction */
 + (BOOL)AbandonTransaction:(nonnull NSString *)txHash;
 
+/** Get a unique UUID that identifies this wallet */
++ (nonnull NSString *)GetUUID;
+
 @end

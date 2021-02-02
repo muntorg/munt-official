@@ -154,6 +154,8 @@ declare class NJSIWalletController
     static declare function GetBalance(): BalanceRecord;
     /** Abandon a transaction */
     static declare function AbandonTransaction(txHash: string): boolean;
+    /** Get a unique UUID that identifies this wallet */
+    static declare function GetUUID(): string;
 }
 /** Interface to receive wallet level events */
 declare class NJSIWalletListener
