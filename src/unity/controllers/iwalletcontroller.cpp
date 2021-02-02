@@ -174,9 +174,9 @@ bool IWalletController::AbandonTransaction(const std::string& txHash)
 
 std::string IWalletController::GetUUID()
 {
-    if (!pactiveWallet)
+    if (!pactiveWallet || !pactiveWallet->getActiveAccount())
         return "";
     
-    return getUUIDAsString(pactiveWallet->getActiveSeed()->getUUID());
+    return getUUIDAsString(pactiveWallet->getActiveAccount()->getUUID());
 }
 
