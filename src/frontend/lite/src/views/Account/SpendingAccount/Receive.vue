@@ -36,6 +36,8 @@
 import { mapState } from "vuex";
 import VueQrcode from "vue-qrcode";
 import { clipboard, nativeImage } from "electron";
+const queryString = require("query-string");
+import { BackendUtilities, WalletController } from "@/unity/Controllers";
 
 export default {
   name: "Receive",
@@ -47,7 +49,25 @@ export default {
   },
   methods: {
     buyGulden() {
-      window.open("https://gulden.com/#buy", "buy-gulden");
+      let postData = queryString.stringify({
+        address: this.receiveAddress,
+        currency: "gulden",
+        uuid: WalletController.GetUUID()
+      });
+      alert(postData)
+      let postResult = BackendUtilities.PerformHTTPPost(
+        "https://www.blockhut.com/eurobeta/buysession.php",
+        postData
+      );
+      if (postResult.status_code == 200)
+      {
+           alert('success')
+      }
+      else
+      {
+          alert(postResult.status_message)
+      }
+       
     },
     copyQr() {
       let img = nativeImage.createFromDataURL(this.$refs.qrcode.$el.src);
