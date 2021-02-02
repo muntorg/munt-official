@@ -90,8 +90,7 @@ export default {
       let connections_in = parseInt(this.clientInfo.num_connections_in);
       let connections_out = parseInt(this.clientInfo.num_connections_out);
 
-      return `${connections_in +
-        connections_out}`;
+      return `${connections_in + connections_out}`;
     }
   },
   created() {
