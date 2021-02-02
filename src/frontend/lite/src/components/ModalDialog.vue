@@ -120,7 +120,7 @@ export default {
 
   & .icon:hover {
     color: var(--primary-color);
-    background: #eff3ff;
+    background: var(--hover-color);
   }
 }
 

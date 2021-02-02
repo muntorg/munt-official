@@ -57,8 +57,8 @@ export default {
 }
 
 .field:hover {
-  color: #0039cc;
-  background-color: #eff3ff;
+  color: var(--primary-color);
+  background-color: var(--hover-color);
 }
 
 .copy {

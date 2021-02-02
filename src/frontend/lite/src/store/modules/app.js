@@ -21,6 +21,7 @@ const app = {
     rate: null,
     splashReady: false,
     status: AppStatus.start,
+    theme: null,
     unityVersion: null,
     walletExists: null,
     walletVersion: null
@@ -41,6 +42,9 @@ const app = {
     SET_STATUS(state, status) {
       if (state.status === AppStatus.shutdown) return; // shutdown in progress, do not switch to other status
       state.status = status;
+    },
+    SET_THEME(state, theme) {
+      state.theme = theme;
     },
     SET_UNITY_VERSION(state, version) {
       state.unityVersion = version;
@@ -72,6 +76,9 @@ const app = {
     },
     SET_STATUS({ commit }, status) {
       commit("SET_STATUS", status);
+    },
+    SET_THEME({ commit }, theme) {
+      commit("SET_THEME", theme);
     },
     SET_UNITY_VERSION({ commit }, version) {
       commit("SET_UNITY_VERSION", version);
