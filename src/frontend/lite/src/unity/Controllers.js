@@ -253,6 +253,10 @@ class WalletController {
       ipc.sendSync("NJSIWalletController.AbandonTransaction", txHash)
     );
   }
+
+  static GetUUID() {
+    return handleError(ipc.sendSync("NJSIWalletController.GetUUID"));
+  }
 }
 
 class RpcController {
@@ -398,6 +402,14 @@ export {
   AccountsController
 };
 /* inject:generated-code */
+
+class BackendUtilities {
+  static PerformHTTPPost(url, postData) {
+    return handleError(ipc.sendSync("BackendUtilities.PerformHTTPPost", url, postData));
+  }
+}
+
+export { BackendUtilities };
 
 function handleError(response) {
   if (response.error) {

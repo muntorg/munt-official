@@ -1,4 +1,4 @@
-import { app, ipcMain as ipc } from "electron";
+import { net, app, ipcMain as ipc } from "electron";
 import fs from "fs";
 
 import store from "../store";
@@ -934,6 +934,19 @@ class LibUnity {
       }
     });
 
+    ipc.on("NJSIWalletController.GetUUID", event => {
+      console.log(`IPC: walletController.GetUUID()`);
+      try {
+        let result = this.walletController.GetUUID();
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
     // Register NJSIRpcController ipc handlers
     ipc.on("NJSIRpcController.getAutocompleteList", event => {
       console.log(`IPC: rpcController.getAutocompleteList()`);
@@ -1246,6 +1259,42 @@ class LibUnity {
       }
     });
     /* inject:generated-code */
+
+    ipc.on("BackendUtilities.PerformHTTPPost", (event, url, postData) => {
+      console.log(`IPC: BackendUtilities.PerformHTTPPost(${url}, ${postData})`);
+      try {
+        const request = net.request({
+          method: "POST",
+          'url': url
+        });
+        console.log("<<<")
+        request.on("response", response => {
+          let data = '';
+          response.on('error', (error) => {
+              console.log(`ERROR: ${JSON.stringify(error)}`)
+              event.returnValue = {
+                success: false,
+                result: error
+              };
+          })
+          response.on('end', () => {
+              console.log(response.statusCode);
+              console.log(data);
+              event.returnValue = {
+                success: true,
+                result: JSON.parse(data)
+              };
+          });
+          response.on("data", chunk => {
+             data += chunk;
+          });
+        });
+        request.write(postData);
+        request.end();
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
   }
 }
 
