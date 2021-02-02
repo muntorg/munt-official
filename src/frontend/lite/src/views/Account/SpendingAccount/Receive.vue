@@ -24,7 +24,7 @@
     <div class="flex-1" />
     <gulden-button-section>
       <template v-slot:middle>
-        <button @click="buyGulden" class="buy-gulden">
+        <button @click="buyGulden" class="buy-gulden" :disabled="buyDisabled">
           {{ $t("buttons.buy_gulden") }}
         </button>
       </template>
@@ -36,38 +36,33 @@
 import { mapState } from "vuex";
 import VueQrcode from "vue-qrcode";
 import { clipboard, nativeImage } from "electron";
-const queryString = require("query-string");
-import { BackendUtilities, WalletController } from "@/unity/Controllers";
+import { BackendUtilities } from "@/unity/Controllers";
 
 export default {
   name: "Receive",
   components: {
     VueQrcode
   },
+  data() {
+    return {
+      buyDisabled: false
+    };
+  },
   computed: {
     ...mapState("wallet", ["receiveAddress"])
   },
   methods: {
-    buyGulden() {
-      let postData = queryString.stringify({
-        address: this.receiveAddress,
-        currency: "gulden",
-        uuid: WalletController.GetUUID()
-      });
-      alert(postData)
-      let postResult = BackendUtilities.PerformHTTPPost(
-        "https://www.blockhut.com/eurobeta/buysession.php",
-        postData
-      );
-      if (postResult.status_code == 200)
-      {
-           alert('success')
+    async buyGulden() {
+      try {
+        this.buyDisabled = true;
+        let url = await BackendUtilities.GetBuySessionUrl();
+        if (!url) {
+          url = "https://gulden.com/buy";
+        }
+        window.open(url, "buy-gulden");
+      } finally {
+        this.buyDisabled = false;
       }
-      else
-      {
-          alert(postResult.status_message)
-      }
-       
     },
     copyQr() {
       let img = nativeImage.createFromDataURL(this.$refs.qrcode.$el.src);
