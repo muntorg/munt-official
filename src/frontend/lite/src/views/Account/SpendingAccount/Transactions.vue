@@ -151,6 +151,7 @@ export default {
         if (!url) {
           url = "https://gulden.com/buy";
         }
+        window.open(url, "buy-gulden");
       } finally {
         this.buyDisabled = false;
       }
