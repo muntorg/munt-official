@@ -104,11 +104,13 @@ CAccount* CreateAccountHelper(CWallet* pwallet, std::string accountName, std::st
 
 CHDSeed::CHDSeed()
 : m_type(BIP44)
+, m_UUID(boost::uuids::nil_generator()())
 {
 }
 
 CHDSeed::CHDSeed(SecureString mnemonic, SeedType type)
 : m_type(type)
+, m_UUID(boost::uuids::nil_generator()())
 {
     //fixme: (FUT) (ACCOUNTS) Encrypt the seeds immediately upon creation so that they are never written to disk unencrypted.
     unencryptedMnemonic = mnemonic;
@@ -118,6 +120,7 @@ CHDSeed::CHDSeed(SecureString mnemonic, SeedType type)
 CHDSeed::CHDSeed(CExtPubKey& pubkey, SeedType type)
 : m_type(type)
 , m_readOnly(true)
+, m_UUID(boost::uuids::nil_generator()())
 {
     unencryptedMnemonic = "";
     masterKeyPub = pubkey;
