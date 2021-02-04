@@ -837,6 +837,7 @@ lib_unity_jni_la_SOURCES = \
   unity/android/init_android.cpp \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
+  unity/controllers/iwalletcontroller.cpp \
   unity/controllers/ip2pnetworkcontroller.cpp \
   unity/djinni/jni/NativeBlockInfoRecord.hpp \
   unity/djinni/jni/NativeBlockInfoRecord.cpp \
@@ -844,6 +845,10 @@ lib_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeMonitorListener.hpp \
   unity/djinni/jni/NativeILibraryController.hpp \
   unity/djinni/jni/NativeILibraryController.cpp \
+  unity/djinni/jni/NativeIWalletController.hpp \
+  unity/djinni/jni/NativeIWalletController.cpp \
+  unity/djinni/jni/NativeIWalletListener.hpp \
+  unity/djinni/jni/NativeIWalletListener.cpp \
   unity/djinni/jni/NativeILibraryListener.hpp \
   unity/djinni/jni/NativeILibraryListener.cpp \
   unity/djinni/jni/NativeIP2pNetworkController.hpp \
@@ -879,6 +884,8 @@ lib_unity_jni_la_SOURCES = \
   unity/djinni/cpp/i_library_controller.hpp \
   unity/djinni/cpp/i_library_controller.cpp \
   unity/djinni/cpp/i_library_listener.hpp \
+  unity/djinni/cpp/balance_record.hpp \
+  unity/djinni/cpp/mutation_record.hpp \
   $(CORE_H)
 
 nodist_lib_unity_jni_la_SOURCES = \
