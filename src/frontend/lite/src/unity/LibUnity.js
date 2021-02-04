@@ -1270,7 +1270,7 @@ class LibUnity {
         formData.append("uuid", this.walletController.GetUUID());
 
         let response = await axios.post(
-          "https://www.blockhut.com/eurobeta/buysession.php",
+          "https://www.blockhut.com/buysession.php",
           formData,
           {
             headers: formData.getHeaders()
@@ -1279,7 +1279,7 @@ class LibUnity {
 
         event.returnValue = {
           success: response.data.status_message === "OK",
-          result: `https://blockhut.com/eurobeta/buy.php?sessionid=${response.data.sessionid}`
+          result: `https://blockhut.com/buy.php?sessionid=${response.data.sessionid}`
         };
       } catch (e) {
         event.returnValue = handleError(e);
