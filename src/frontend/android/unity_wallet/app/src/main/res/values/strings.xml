@@ -172,4 +172,5 @@ file COPYING
     <string name="core_not_ready_yet">Unity core not ready yet, please try again in a few seconds</string>
     <string name="send_insufficient_balance">Insufficient balance</string>
     <string name="not_gulden_qr">Not a valid Gulden QR:\n\n%1$s</string>
+    <string name="error_check_internet_connection">Please check your internet connection</string>
 </resources>

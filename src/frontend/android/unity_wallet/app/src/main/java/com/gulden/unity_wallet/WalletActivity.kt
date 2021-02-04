@@ -16,10 +16,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.*
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -35,7 +32,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.alert
 import org.jetbrains.anko.contentView
 import org.jetbrains.anko.design.snackbar
 import org.json.JSONObject
@@ -267,6 +263,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
     {
         // Send a post request to blockhut with our wallet/address info; and then launch the site if we get a positive response.
         val MyRequestQueue = Volley.newRequestQueue(this)
+        val failURL = "https://gulden.com/buy"
         val request = object : StringRequest(Request.Method.POST,"https://blockhut.com/eurobeta/buysession.php",
             Response.Listener { response ->
                 try
@@ -283,20 +280,42 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
                     }
                     else
                     {
+                        // Redirect user to the default fallback site
+                        //fixme: Do something with the status message here
                         //var statusMessage = jsonResponse.getString("status_message")
-                        //request failed
+                        val intent = Intent(failURL)
+                        if (intent.resolveActivity(packageManager) != null)
+                        {
+                            startActivity(intent)
+                        }
                     }
                 }
                 catch (e:Exception)
                 {
-                    //alert("Exception: $e");
-                    //request failed
+                    // Redirect user to the default fallback site
+                    //fixme: Do something with the error message here
+                    val intent = Intent(failURL)
+                    if (intent.resolveActivity(packageManager) != null)
+                    {
+                        startActivity(intent)
+                    }
                 }
             },
             Response.ErrorListener
             {
-                //alert("Volley error: $it");
-                //request failed
+               // If we are sure its a local connectivity issue, alert the user, otherwise send them to the default fallback site
+               if (it is NetworkError || it is AuthFailureError || it is NoConnectionError)
+               {
+                   Toast.makeText(this, getString(R.string.error_check_internet_connection), Toast.LENGTH_SHORT).show()
+               }
+               else
+               {
+                   val intent = Intent(failURL)
+                   if (intent.resolveActivity(packageManager) != null)
+                   {
+                       startActivity(intent)
+                   }
+               }
             }
         )
         // Force values to be send at x-www-form-urlencoded
@@ -318,8 +337,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         // Volley request policy, only one time request to avoid duplicate transaction
         request.retryPolicy = DefaultRetryPolicy(
                 DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
-                // 0 means no retry
-                0, // DefaultRetryPolicy.DEFAULT_MAX_RETRIES = 2
+                1, // DefaultRetryPolicy.DEFAULT_MAX_RETRIES = 2
                 1f // DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         )
 
