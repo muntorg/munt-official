@@ -11,24 +11,36 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import androidx.preference.PreferenceManager
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.gulden.jniunifiedbackend.ILibraryController
-import com.gulden.unity_wallet.main_activity_fragments.*
-import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.gulden.jniunifiedbackend.ILibraryController
+import com.gulden.jniunifiedbackend.IWalletController
+import com.gulden.unity_wallet.main_activity_fragments.*
 import com.gulden.unity_wallet.ui.getDisplayDimensions
-import com.gulden.unity_wallet.util.*
+import com.gulden.unity_wallet.ui.monitor.NetworkMonitorActivity
+import com.gulden.unity_wallet.util.AppBaseActivity
+import com.gulden.unity_wallet.util.getAndroidVersion
+import com.gulden.unity_wallet.util.getDeviceName
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.contentView
 import org.jetbrains.anko.design.snackbar
+import org.json.JSONObject
 import kotlin.concurrent.thread
+
 
 class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         SharedPreferences.OnSharedPreferenceChangeListener
@@ -253,10 +265,65 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
     @Suppress("UNUSED_PARAMETER")
     fun gotoBuyActivity(view : View? = null)
     {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Config.PURCHASE_TEMPLATE.format(ILibraryController.GetReceiveAddress().toString())))
-        if (intent.resolveActivity(packageManager) != null)
+        // Send a post request to blockhut with our wallet/address info; and then launch the site if we get a positive response.
+        val MyRequestQueue = Volley.newRequestQueue(this)
+        val request = object : StringRequest(Request.Method.POST,"https://blockhut.com/eurobeta/buysession.php",
+            Response.Listener { response ->
+                try
+                {
+                    var jsonResponse = JSONObject(response);
+                    if (jsonResponse.getInt("status_code") == 200)
+                    {
+                        var sessionID = jsonResponse.getString("sessionid")
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://blockhut.com/eurobeta/buy.php?sessionid=%s".format(sessionID)))
+                        if (intent.resolveActivity(packageManager) != null)
+                        {
+                            startActivity(intent)
+                        }
+                    }
+                    else
+                    {
+                        //var statusMessage = jsonResponse.getString("status_message")
+                        //request failed
+                    }
+                }
+                catch (e:Exception)
+                {
+                    //alert("Exception: $e");
+                    //request failed
+                }
+            },
+            Response.ErrorListener
+            {
+                //alert("Volley error: $it");
+                //request failed
+            }
+        )
+        // Force values to be send at x-www-form-urlencoded
         {
-            startActivity(intent)
-        }
+            override fun getParams(): MutableMap<String, String> {
+                val params = HashMap<String,String>()
+                params["address"] = ILibraryController.GetReceiveAddress().toString();
+                params["uuid"] = IWalletController.GetUUID();
+                params["currency"] = "gulden";
+                return params;
+            }
+            override fun getHeaders(): MutableMap<String, String> {
+                val params = HashMap<String, String>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+        // Volley request policy, only one time request to avoid duplicate transaction
+        request.retryPolicy = DefaultRetryPolicy(
+                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
+                // 0 means no retry
+                0, // DefaultRetryPolicy.DEFAULT_MAX_RETRIES = 2
+                1f // DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+
+        // Add the volley post request to the request queue
+        MyRequestQueue.add(request)
     }
 }
