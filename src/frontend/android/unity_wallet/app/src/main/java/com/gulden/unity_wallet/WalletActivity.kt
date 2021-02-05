@@ -264,7 +264,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         // Send a post request to blockhut with our wallet/address info; and then launch the site if we get a positive response.
         val MyRequestQueue = Volley.newRequestQueue(this)
         val failURL = "https://gulden.com/buy"
-        val request = object : StringRequest(Request.Method.POST,"https://blockhut.com/eurobeta/buysession.php",
+        val request = object : StringRequest(Request.Method.POST,"https://blockhut.com/buysession.php",
             Response.Listener { response ->
                 try
                 {
@@ -272,7 +272,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
                     if (jsonResponse.getInt("status_code") == 200)
                     {
                         var sessionID = jsonResponse.getString("sessionid")
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://blockhut.com/eurobeta/buy.php?sessionid=%s".format(sessionID)))
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://blockhut.com/buy.php?sessionid=%s".format(sessionID)))
                         if (intent.resolveActivity(packageManager) != null)
                         {
                             startActivity(intent)
