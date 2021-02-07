@@ -34,6 +34,7 @@
 #include <boost/accumulators/statistics/min.hpp>
 #include <boost/accumulators/statistics/max.hpp>
 #include <boost/algorithm/string/predicate.hpp> // for starts_with() and ends_with()
+#include <boost/algorithm/string/split.hpp>
 
 #include "txdb.h"
 #include "coins.h"
@@ -97,6 +98,51 @@ static UniValue sethashlimit(const JSONRPCRequest& request)
     return strprintf("Throttling hash: %d", nHashThrottle);
 }
 
+CBlockIndex* GetIndexFromSpecifier(std::string sTipHash)
+{
+    CBlockIndex* pIndex = nullptr;
+    int32_t nTipHeight;
+    if (ParseInt32(sTipHash, &nTipHeight))
+    {
+        pIndex = chainActive[nTipHeight];
+        if (!pIndex)
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found.");
+    }
+    else
+    {
+        if (sTipHash == "tip" || sTipHash.empty())
+        {
+            pIndex = chainActive.Tip();
+            if (!pIndex)
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Chain has no tip.");
+        }
+        else if(boost::starts_with(sTipHash, "tip~"))
+        {
+            int nReverseHeight;
+            if (!ParseInt32(sTipHash.substr(4,std::string::npos), &nReverseHeight))
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid block specifier.");
+            pIndex = chainActive.Tip();
+            if (!pIndex)
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Chain has no tip.");
+            while(pIndex && nReverseHeight>0)
+            {
+                pIndex = pIndex->pprev;
+                --nReverseHeight;
+            }
+            if (!pIndex)
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid block specifier, chain does not go back that far.");
+        }
+        else
+        {
+            uint256 hash(uint256S(sTipHash));
+            if (mapBlockIndex.count(hash) == 0)
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found.");
+            pIndex = mapBlockIndex[hash];
+        }
+    }
+    return pIndex;
+}
+
 static UniValue getwitnessinfo(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() > 3)
@@ -104,9 +150,13 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
             "getwitnessinfo \"block_specifier\" verbose mine_only\n"
             "\nReturns witness related network info for a given block."
             "\nWhen verbose is enabled returns additional statistics.\n"
+            "\nNB! Note that this command effectively winds back a copy of the chain to a specified point in time in order to obtain detailed information\n"
+            "\nTherefore the further back in time you go the slower it becomes, trying to get information on the entire chain via this command by repeatedly calling it for every block is therefore incredibly inefficient\n"
+            "\nIf you need to do this it is recommended that you make use of the range specifier '-' in a single call; which will be exponentially faster than making multiple calls.\n"
             "\nArguments:\n"
             "1. \"block_specifier\"       (string, optional, default=tip) The block_specifier for which to display witness information, if empty or 'tip' the tip of the current chain is used.\n"
             "\nSpecifier can be the hash of the block; an absolute height in the blockchain or a tip~# specifier to iterate backwards from tip; for which to return witness details\n"
+            "\nSpecifier can also be a range comprising of two instances of any of the above seperated by a dash '-' which will return an array of witness info for the entire range.\n"
             "2. verbose                  (boolean, optional, default=false) Display additional verbose information.\n"
             "3. mine_only                (boolean, optional, default=false) In verbose display only show account info for accounts belonging to this wallet.\n"
             "\nResult:\n"
@@ -199,59 +249,46 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
     boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > lockPeriodWeightStats;
     boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > ageStats;
 
-    CBlockIndex* pTipIndex = nullptr;
+    CBlockIndex* pTipIndexStart = nullptr;
+    CBlockIndex* pTipIndexEnd = nullptr;
     bool fVerbose = false;
     bool showMineOnly = false;
     if (request.params.size() > 0)
     {
-        std::string sTipHash = request.params[0].get_str();
-        int32_t nTipHeight;
-        if (ParseInt32(sTipHash, &nTipHeight))
+        std::string sTipSpecifier = request.params[0].get_str();
+        int nRangeCount = std::count(sTipSpecifier.begin(), sTipSpecifier.end(), '-');
+        if (nRangeCount > 1)
         {
-            pTipIndex = chainActive[nTipHeight];
-            if (!pTipIndex)
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found.");
+            throw std::runtime_error("Cannot have more than one range (-) in block specifier");
+        }
+        else if (nRangeCount == 1)
+        {
+            std::vector<std::string> rangeSpecifiers;
+            boost::algorithm::split(rangeSpecifiers, sTipSpecifier, boost::is_any_of("-"));
+            pTipIndexStart = GetIndexFromSpecifier(rangeSpecifiers[0]);
+            pTipIndexEnd = GetIndexFromSpecifier(rangeSpecifiers[1]);
+            if (pTipIndexStart == pTipIndexEnd)
+            {
+                throw std::runtime_error("End and start of range are identical");
+            }
         }
         else
         {
-            if (sTipHash == "tip" || sTipHash.empty())
-            {
-                pTipIndex = chainActive.Tip();
-                if (!pTipIndex)
-                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Chain has no tip.");
-            }
-            else if(boost::starts_with(sTipHash, "tip~"))
-            {
-                int nReverseHeight;
-                if (!ParseInt32(sTipHash.substr(4,std::string::npos), &nReverseHeight))
-                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid block specifier.");
-                pTipIndex = chainActive.Tip();
-                if (!pTipIndex)
-                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Chain has no tip.");
-                while(pTipIndex && nReverseHeight>0)
-                {
-                    pTipIndex = pTipIndex->pprev;
-                    --nReverseHeight;
-                }
-                if (!pTipIndex)
-                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid block specifier, chain does not go back that far.");
-            }
-            else
-            {
-                uint256 hash(uint256S(sTipHash));
-                if (mapBlockIndex.count(hash) == 0)
-                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found.");
-                pTipIndex = mapBlockIndex[hash];
-            }
+            pTipIndexEnd = pTipIndexStart = GetIndexFromSpecifier(sTipSpecifier);
         }
     }
     else
     {
-        pTipIndex = chainActive.Tip();
+        pTipIndexEnd = pTipIndexStart = chainActive.Tip();
     }
 
-    if (!pTipIndex || (uint64_t)pTipIndex->nHeight < Params().GetConsensus().pow2Phase2FirstBlockHeight || pTipIndex->nHeight == 0)
+    if (!pTipIndexStart || (uint64_t)pTipIndexStart->nHeight < Params().GetConsensus().pow2Phase2FirstBlockHeight || pTipIndexStart->nHeight == 0)
         return NullUniValue;
+    
+    if (pTipIndexStart->nHeight < pTipIndexEnd->nHeight)
+    {
+        std::swap(pTipIndexStart, pTipIndexEnd);
+    }
 
     if (request.params.size() >= 2)
         fVerbose = request.params[1].get_bool();
@@ -259,232 +296,243 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
     if (request.params.size() > 2)
         showMineOnly = request.params[2].get_bool();
 
+    UniValue witnessInfoForBlocks(UniValue::VOBJ);
+    
     CBlockIndex* pTipIndex_ = nullptr;
     //fixme: (PHASE5) - Fix this to only do a shallow clone of whats needed (need to fix recursive cloning mess first)
-    CCloneChain tempChain(chainActive, GetPow2ValidationCloneHeight(chainActive, pTipIndex, 10), pTipIndex, pTipIndex_);
-
+    CCloneChain tempChain(chainActive, GetPow2ValidationCloneHeight(chainActive, pTipIndexEnd, 10), pTipIndexStart, pTipIndex_);
     if (!pTipIndex_)
-        throw std::runtime_error("Could not locate a valid PoW² chain that contains this block as tip.");
+            throw std::runtime_error("Could not locate a valid PoW² chain that contains this block as tip.");
     CCoinsViewCache viewNew(pcoinsTip);
-    CValidationState state;
-    if (!ForceActivateChain(pTipIndex_, nullptr, state, Params(), tempChain, viewNew))
-        throw std::runtime_error("Could not locate a valid PoW² chain that contains this block as tip.");
-    if (!state.IsValid())
-        throw JSONRPCError(RPC_DATABASE_ERROR, state.GetRejectReason());
+        
+    while (pTipIndex_ && (pTipIndex_->nHeight >= pTipIndexEnd->nHeight))
+    {   
+        CValidationState state;
+        if (!ForceActivateChain(pTipIndex_, nullptr, state, Params(), tempChain, viewNew))
+            throw std::runtime_error("Could not locate a valid PoW² chain that contains this block as tip.");
+        if (!state.IsValid())
+            throw JSONRPCError(RPC_DATABASE_ERROR, state.GetRejectReason());
 
-    if (IsPow2Phase5Active(pTipIndex_, Params(), tempChain, &viewNew))
-        nPow2Phase = 5;
-    else if (IsPow2Phase4Active(pTipIndex_))
-        nPow2Phase = 4;
-    else if (IsPow2Phase3Active(pTipIndex_?pTipIndex_->nHeight:0))
-        nPow2Phase = 3;
-    else if (IsPow2Phase2Active(pTipIndex_))
-        nPow2Phase = 2;
+        if (IsPow2Phase5Active(pTipIndex_, Params(), tempChain, &viewNew))
+            nPow2Phase = 5;
+        else if (IsPow2Phase4Active(pTipIndex_))
+            nPow2Phase = 4;
+        else if (IsPow2Phase3Active(pTipIndex_?pTipIndex_->nHeight:0))
+            nPow2Phase = 3;
+        else if (IsPow2Phase2Active(pTipIndex_))
+            nPow2Phase = 2;
 
-    CGetWitnessInfo witInfo;
+        CGetWitnessInfo witInfo;
 
-    if (nPow2Phase >= 2)
-    {
-        CBlock block;
+        if (nPow2Phase >= 2)
         {
-            LOCK(cs_main);// cs_main lock required for ReadBlockFromDisk
-            if (!ReadBlockFromDisk(block, pTipIndex_, Params()))
-                throw std::runtime_error("Could not load block to obtain PoW² information.");
-        }
-
-        if (!GetWitnessInfo(tempChain, Params(), &viewNew, pTipIndex_->pprev, block, witInfo, pTipIndex_->nHeight))
-            throw std::runtime_error("Could not enumerate all PoW² witness information for block.");
-
-        if (!GetPow2NetworkWeight(pTipIndex_, Params(), nNumWitnessAddressesAll, nTotalWeightAll, tempChain, &viewNew))
-            throw std::runtime_error("Block does not form part of a valid PoW² chain.");
-
-        if (nPow2Phase >= 3)
-        {
-            if (!GetWitnessHelper(block.GetHashLegacy(), witInfo, pTipIndex_->nHeight))
-                throw std::runtime_error("Could not select a valid PoW² witness for block.");
-
-            CTxDestination selectedWitnessAddress;
-            if (!ExtractDestination(witInfo.selectedWitnessTransaction, selectedWitnessAddress))
-                throw std::runtime_error("Could not extract PoW² witness for block.");
-
-            sWitnessAddress = CNativeAddress(selectedWitnessAddress).ToString();
-        }
-    }
-
-    if (fVerbose)
-    {
-        for (auto& iter : witInfo.allWitnessCoins)
-        {
-            bool fEligible = false;
-            uint64_t nAdjustedWeight = 0;
+            CBlock block;
             {
-                auto poolIter = witInfo.witnessSelectionPoolFiltered.begin();
-                while (poolIter != witInfo.witnessSelectionPoolFiltered.end())
-                {
-                    if (poolIter->outpoint == iter.first)
-                    {
-                        if (poolIter->coin.out == iter.second.out)
-                        {
-                            nAdjustedWeight = poolIter->nWeight;
-                            fEligible = true;
-                            break;
-                        }
-                    }
-                    ++poolIter;
-                }
+                LOCK(cs_main);// cs_main lock required for ReadBlockFromDisk
+                if (!ReadBlockFromDisk(block, pTipIndex_, Params()))
+                    throw std::runtime_error("Could not load block to obtain PoW² information.");
             }
-            bool fExpired = false;
+
+            if (!GetWitnessInfo(tempChain, Params(), &viewNew, pTipIndex_->pprev, block, witInfo, pTipIndex_->nHeight))
+                throw std::runtime_error("Could not enumerate all PoW² witness information for block.");
+
+            if (!GetPow2NetworkWeight(pTipIndex_, Params(), nNumWitnessAddressesAll, nTotalWeightAll, tempChain, &viewNew))
+                throw std::runtime_error("Block does not form part of a valid PoW² chain.");
+
+            if (nPow2Phase >= 3)
             {
-                auto poolIter = witInfo.witnessSelectionPoolUnfiltered.begin();
-                while (poolIter != witInfo.witnessSelectionPoolUnfiltered.end())
+                if (!GetWitnessHelper(block.GetHashLegacy(), witInfo, pTipIndex_->nHeight))
+                    throw std::runtime_error("Could not select a valid PoW² witness for block.");
+
+                CTxDestination selectedWitnessAddress;
+                if (!ExtractDestination(witInfo.selectedWitnessTransaction, selectedWitnessAddress))
+                    throw std::runtime_error("Could not extract PoW² witness for block.");
+
+                sWitnessAddress = CNativeAddress(selectedWitnessAddress).ToString();
+            }
+        }
+
+        if (fVerbose)
+        {
+            for (auto& iter : witInfo.allWitnessCoins)
+            {
+                bool fEligible = false;
+                uint64_t nAdjustedWeight = 0;
                 {
-                    if (poolIter->outpoint == iter.first)
+                    auto poolIter = witInfo.witnessSelectionPoolFiltered.begin();
+                    while (poolIter != witInfo.witnessSelectionPoolFiltered.end())
                     {
-                        if (poolIter->coin.out == iter.second.out)
+                        if (poolIter->outpoint == iter.first)
                         {
-                            if (witnessHasExpired(poolIter->nAge, poolIter->nWeight, witInfo.nTotalWeightRaw))
+                            if (poolIter->coin.out == iter.second.out)
                             {
-                                fExpired = true;
+                                nAdjustedWeight = poolIter->nWeight;
+                                fEligible = true;
+                                break;
                             }
-                            break;
                         }
+                        ++poolIter;
                     }
-                    ++poolIter;
+                }
+                bool fExpired = false;
+                {
+                    auto poolIter = witInfo.witnessSelectionPoolUnfiltered.begin();
+                    while (poolIter != witInfo.witnessSelectionPoolUnfiltered.end())
+                    {
+                        if (poolIter->outpoint == iter.first)
+                        {
+                            if (poolIter->coin.out == iter.second.out)
+                            {
+                                if (witnessHasExpired(poolIter->nAge, poolIter->nWeight, witInfo.nTotalWeightRaw))
+                                {
+                                    fExpired = true;
+                                }
+                                break;
+                            }
+                        }
+                        ++poolIter;
+                    }
+                }
+        
+                CTxDestination address;
+                if (!ExtractDestination(iter.second.out, address))
+                    throw std::runtime_error("Could not extract PoW² witness for block.");
+                
+                uint64_t nFailCount=0;
+                uint64_t nActionNonce=0;
+                if (iter.second.out.GetType() == PoW2WitnessOutput)
+                {
+                    CTxOutPoW2Witness witnessDetails;
+                    if (!GetPow2WitnessOutput(iter.second.out, witnessDetails))
+                        throw std::runtime_error("Could not extract PoW² witness details for block.");
+                    nFailCount = witnessDetails.failCount;
+                    nActionNonce = witnessDetails.actionNonce;
+                }
+
+                uint64_t nLastActiveBlock = iter.second.nHeight;
+                uint64_t nLockFromBlock = 0;
+                uint64_t nLockUntilBlock = 0;
+                uint64_t nLockPeriodInBlocks = GetPoW2LockLengthInBlocksFromOutput(iter.second.out, iter.second.nHeight, nLockFromBlock, nLockUntilBlock);
+                uint64_t nRawWeight = GetPoW2RawWeightForAmount(iter.second.out.nValue, nLockPeriodInBlocks);
+                uint64_t nAge = pTipIndex_->nHeight - nLastActiveBlock;
+                CAmount nValue = iter.second.out.nValue;
+
+                bool fLockPeriodExpired = (GetPoW2RemainingLockLengthInBlocks(nLockUntilBlock, pTipIndex_->nHeight) == 0);
+
+                std::string strAddress = CNativeAddress(address).ToString();
+                #ifdef ENABLE_WALLET
+                std::string accountName = accountNameForAddress(*pwallet, address);
+                #endif
+
+                UniValue rec(UniValue::VOBJ);
+                rec.push_back(Pair("type", iter.second.out.GetTypeAsString()));
+                rec.push_back(Pair("address", strAddress));
+                rec.push_back(Pair("age", nAge));
+                rec.push_back(Pair("amount", ValueFromAmount(nValue)));
+                rec.push_back(Pair("raw_weight", nRawWeight));
+                rec.push_back(Pair("adjusted_weight", std::min(nRawWeight, witInfo.nMaxIndividualWeight)));
+                rec.push_back(Pair("adjusted_weight_final", nAdjustedWeight));
+                rec.push_back(Pair("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeightRaw)));
+                rec.push_back(Pair("estimated_witness_period", estimatedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeightRaw)));
+                rec.push_back(Pair("last_active_block", nLastActiveBlock));
+                rec.push_back(Pair("lock_from_block", nLockFromBlock));
+                rec.push_back(Pair("lock_until_block", nLockUntilBlock));
+                rec.push_back(Pair("lock_period", nLockPeriodInBlocks));
+                rec.push_back(Pair("lock_period_expired", fLockPeriodExpired));
+                rec.push_back(Pair("eligible_to_witness", fEligible));
+                rec.push_back(Pair("expired_from_inactivity", fExpired));
+                rec.push_back(Pair("fail_count", nFailCount));
+                rec.push_back(Pair("action_nonce", nActionNonce));
+                #ifdef ENABLE_WALLET
+                rec.push_back(Pair("ismine_accountname", accountName));
+                #else
+                rec.push_back(Pair("ismine_accountname", ""));
+                #endif
+
+                witnessWeightStats(nRawWeight);
+                lockPeriodWeightStats(nLockPeriodInBlocks);
+                witnessAmountStats(nValue);
+                ageStats(nAge);
+
+                #ifdef ENABLE_WALLET
+                if (showMineOnly && accountName.empty())
+                    continue;
+                #endif
+
+                jsonAllWitnessAddresses.push_back(rec);
+            }
+        }
+
+        UniValue witnessInfoForBlock(UniValue::VARR);
+        UniValue rec(UniValue::VOBJ);
+        rec.push_back(Pair("pow2_phase", nPow2Phase));
+        rec.push_back(Pair("number_of_witnesses_raw", (uint64_t)nNumWitnessAddressesAll));
+        rec.push_back(Pair("number_of_witnesses_total", (uint64_t)witInfo.witnessSelectionPoolUnfiltered.size()));
+        rec.push_back(Pair("number_of_witnesses_eligible", (uint64_t)witInfo.witnessSelectionPoolFiltered.size()));
+        rec.push_back(Pair("total_witness_weight_raw", (uint64_t)witInfo.nTotalWeightRaw));
+        rec.push_back(Pair("total_witness_weight_eligible_raw", (uint64_t)witInfo.nTotalWeightEligibleRaw));
+        rec.push_back(Pair("total_witness_weight_eligible_adjusted", (uint64_t)witInfo.nTotalWeightEligibleAdjusted));
+        rec.push_back(Pair("selected_witness_address", sWitnessAddress));
+        rec.push_back(Pair("selected_witness_index", (uint64_t)witInfo.selectedWitnessIndex));
+        if (fVerbose)
+        {
+            UniValue averages(UniValue::VOBJ);
+            {
+                if (boost::accumulators::count(witnessWeightStats) > 0)
+                {
+                    UniValue weight(UniValue::VOBJ);
+                    weight.push_back(Pair("largest", boost::accumulators::max(witnessWeightStats)));
+                    weight.push_back(Pair("smallest", boost::accumulators::min(witnessWeightStats)));
+                    weight.push_back(Pair("mean", boost::accumulators::mean(witnessWeightStats)));
+                    weight.push_back(Pair("median", boost::accumulators::median(witnessWeightStats)));
+                    averages.push_back(Pair("weight", weight));
                 }
             }
-    
-            CTxDestination address;
-            if (!ExtractDestination(iter.second.out, address))
-                throw std::runtime_error("Could not extract PoW² witness for block.");
-            
-            uint64_t nFailCount=0;
-            uint64_t nActionNonce=0;
-            if (iter.second.out.GetType() == PoW2WitnessOutput)
             {
-                CTxOutPoW2Witness witnessDetails;
-                if (!GetPow2WitnessOutput(iter.second.out, witnessDetails))
-                    throw std::runtime_error("Could not extract PoW² witness details for block.");
-                nFailCount = witnessDetails.failCount;
-                nActionNonce = witnessDetails.actionNonce;
+                if (boost::accumulators::count(witnessAmountStats) > 0)
+                {
+                    UniValue amount(UniValue::VOBJ);
+                    amount.push_back(Pair("largest", ValueFromAmount(boost::accumulators::max(witnessAmountStats))));
+                    amount.push_back(Pair("smallest", ValueFromAmount(boost::accumulators::min(witnessAmountStats))));
+                    amount.push_back(Pair("mean", ValueFromAmount(boost::accumulators::mean(witnessAmountStats))));
+                    amount.push_back(Pair("median", ValueFromAmount(boost::accumulators::median(witnessAmountStats))));
+                    averages.push_back(Pair("amount", amount));
+                }
             }
-
-            uint64_t nLastActiveBlock = iter.second.nHeight;
-            uint64_t nLockFromBlock = 0;
-            uint64_t nLockUntilBlock = 0;
-            uint64_t nLockPeriodInBlocks = GetPoW2LockLengthInBlocksFromOutput(iter.second.out, iter.second.nHeight, nLockFromBlock, nLockUntilBlock);
-            uint64_t nRawWeight = GetPoW2RawWeightForAmount(iter.second.out.nValue, nLockPeriodInBlocks);
-            uint64_t nAge = pTipIndex_->nHeight - nLastActiveBlock;
-            CAmount nValue = iter.second.out.nValue;
-
-            bool fLockPeriodExpired = (GetPoW2RemainingLockLengthInBlocks(nLockUntilBlock, pTipIndex_->nHeight) == 0);
-
-            std::string strAddress = CNativeAddress(address).ToString();
-            #ifdef ENABLE_WALLET
-            std::string accountName = accountNameForAddress(*pwallet, address);
-            #endif
-
-            UniValue rec(UniValue::VOBJ);
-            rec.push_back(Pair("type", iter.second.out.GetTypeAsString()));
-            rec.push_back(Pair("address", strAddress));
-            rec.push_back(Pair("age", nAge));
-            rec.push_back(Pair("amount", ValueFromAmount(nValue)));
-            rec.push_back(Pair("raw_weight", nRawWeight));
-            rec.push_back(Pair("adjusted_weight", std::min(nRawWeight, witInfo.nMaxIndividualWeight)));
-            rec.push_back(Pair("adjusted_weight_final", nAdjustedWeight));
-            rec.push_back(Pair("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeightRaw)));
-            rec.push_back(Pair("estimated_witness_period", estimatedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeightRaw)));
-            rec.push_back(Pair("last_active_block", nLastActiveBlock));
-            rec.push_back(Pair("lock_from_block", nLockFromBlock));
-            rec.push_back(Pair("lock_until_block", nLockUntilBlock));
-            rec.push_back(Pair("lock_period", nLockPeriodInBlocks));
-            rec.push_back(Pair("lock_period_expired", fLockPeriodExpired));
-            rec.push_back(Pair("eligible_to_witness", fEligible));
-            rec.push_back(Pair("expired_from_inactivity", fExpired));
-            rec.push_back(Pair("fail_count", nFailCount));
-            rec.push_back(Pair("action_nonce", nActionNonce));
-            #ifdef ENABLE_WALLET
-            rec.push_back(Pair("ismine_accountname", accountName));
-            #else
-            rec.push_back(Pair("ismine_accountname", ""));
-            #endif
-
-            witnessWeightStats(nRawWeight);
-            lockPeriodWeightStats(nLockPeriodInBlocks);
-            witnessAmountStats(nValue);
-            ageStats(nAge);
-
-            #ifdef ENABLE_WALLET
-            if (showMineOnly && accountName.empty())
-                continue;
-            #endif
-
-            jsonAllWitnessAddresses.push_back(rec);
+            {
+                if (boost::accumulators::count(lockPeriodWeightStats) > 0)
+                {
+                    UniValue lockPeriod(UniValue::VOBJ);
+                    lockPeriod.push_back(Pair("largest", boost::accumulators::max(lockPeriodWeightStats)));
+                    lockPeriod.push_back(Pair("smallest", boost::accumulators::min(lockPeriodWeightStats)));
+                    lockPeriod.push_back(Pair("mean", boost::accumulators::mean(lockPeriodWeightStats)));
+                    lockPeriod.push_back(Pair("median", boost::accumulators::median(lockPeriodWeightStats)));
+                    averages.push_back(Pair("lock_period", lockPeriod));
+                }
+            }
+            {
+                if (boost::accumulators::count(ageStats) > 0)
+                {
+                    UniValue age(UniValue::VOBJ);
+                    age.push_back(Pair("largest", boost::accumulators::max(ageStats)));
+                    age.push_back(Pair("smallest", boost::accumulators::min(ageStats)));
+                    age.push_back(Pair("mean", boost::accumulators::mean(ageStats)));
+                    age.push_back(Pair("median", boost::accumulators::median(ageStats)));
+                    averages.push_back(Pair("age", age));
+                }
+            }
+            rec.push_back(Pair("witness_statistics", averages));
+            rec.push_back(Pair("witness_address_list", jsonAllWitnessAddresses));
         }
+        witnessInfoForBlock.push_back(rec);
+        if (pTipIndexStart == pTipIndexEnd)
+        {
+            return witnessInfoForBlock;
+        }
+        witnessInfoForBlocks.push_back(Pair(pTipIndex_->GetBlockHashPoW2().ToString(), witnessInfoForBlock));
+        pTipIndex_ = pTipIndex_->pprev;
     }
-
-    UniValue witnessInfoForBlock(UniValue::VARR);
-    UniValue rec(UniValue::VOBJ);
-    rec.push_back(Pair("pow2_phase", nPow2Phase));
-    rec.push_back(Pair("number_of_witnesses_raw", (uint64_t)nNumWitnessAddressesAll));
-    rec.push_back(Pair("number_of_witnesses_total", (uint64_t)witInfo.witnessSelectionPoolUnfiltered.size()));
-    rec.push_back(Pair("number_of_witnesses_eligible", (uint64_t)witInfo.witnessSelectionPoolFiltered.size()));
-    rec.push_back(Pair("total_witness_weight_raw", (uint64_t)witInfo.nTotalWeightRaw));
-    rec.push_back(Pair("total_witness_weight_eligible_raw", (uint64_t)witInfo.nTotalWeightEligibleRaw));
-    rec.push_back(Pair("total_witness_weight_eligible_adjusted", (uint64_t)witInfo.nTotalWeightEligibleAdjusted));
-    rec.push_back(Pair("selected_witness_address", sWitnessAddress));
-    if (fVerbose)
-    {
-        UniValue averages(UniValue::VOBJ);
-        {
-            if (boost::accumulators::count(witnessWeightStats) > 0)
-            {
-                UniValue weight(UniValue::VOBJ);
-                weight.push_back(Pair("largest", boost::accumulators::max(witnessWeightStats)));
-                weight.push_back(Pair("smallest", boost::accumulators::min(witnessWeightStats)));
-                weight.push_back(Pair("mean", boost::accumulators::mean(witnessWeightStats)));
-                weight.push_back(Pair("median", boost::accumulators::median(witnessWeightStats)));
-                averages.push_back(Pair("weight", weight));
-            }
-        }
-        {
-            if (boost::accumulators::count(witnessAmountStats) > 0)
-            {
-                UniValue amount(UniValue::VOBJ);
-                amount.push_back(Pair("largest", ValueFromAmount(boost::accumulators::max(witnessAmountStats))));
-                amount.push_back(Pair("smallest", ValueFromAmount(boost::accumulators::min(witnessAmountStats))));
-                amount.push_back(Pair("mean", ValueFromAmount(boost::accumulators::mean(witnessAmountStats))));
-                amount.push_back(Pair("median", ValueFromAmount(boost::accumulators::median(witnessAmountStats))));
-                averages.push_back(Pair("amount", amount));
-            }
-        }
-        {
-            if (boost::accumulators::count(lockPeriodWeightStats) > 0)
-            {
-                UniValue lockPeriod(UniValue::VOBJ);
-                lockPeriod.push_back(Pair("largest", boost::accumulators::max(lockPeriodWeightStats)));
-                lockPeriod.push_back(Pair("smallest", boost::accumulators::min(lockPeriodWeightStats)));
-                lockPeriod.push_back(Pair("mean", boost::accumulators::mean(lockPeriodWeightStats)));
-                lockPeriod.push_back(Pair("median", boost::accumulators::median(lockPeriodWeightStats)));
-                averages.push_back(Pair("lock_period", lockPeriod));
-            }
-        }
-        {
-            if (boost::accumulators::count(ageStats) > 0)
-            {
-                UniValue age(UniValue::VOBJ);
-                age.push_back(Pair("largest", boost::accumulators::max(ageStats)));
-                age.push_back(Pair("smallest", boost::accumulators::min(ageStats)));
-                age.push_back(Pair("mean", boost::accumulators::mean(ageStats)));
-                age.push_back(Pair("median", boost::accumulators::median(ageStats)));
-                averages.push_back(Pair("age", age));
-            }
-        }
-        rec.push_back(Pair("witness_statistics", averages));
-        rec.push_back(Pair("witness_address_list", jsonAllWitnessAddresses));
-    }
-    witnessInfoForBlock.push_back(rec);
-
-    return witnessInfoForBlock;
+    return witnessInfoForBlocks;
 }
 
 static UniValue disablewitnessing(const JSONRPCRequest& request)
