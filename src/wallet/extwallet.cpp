@@ -420,7 +420,7 @@ void CExtWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                                     name += " mining";
                                     break;
                                 case AccountType::PoW2Witness:
-                                    name += " mining";
+                                    name += " witness";
                                     break;
                                 case AccountType::Mobi:
                                     name += " mobile";
