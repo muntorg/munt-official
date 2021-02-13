@@ -531,7 +531,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         {
             return witnessInfoForBlock;
         }
-        witnessInfoForBlocks.push_back(Pair(pTipIndexStart->GetBlockHashPoW2().ToString(), witnessInfoForBlock));
+        witnessInfoForBlocks.push_back(Pair(pTipIndex_->GetBlockHashPoW2().ToString(), witnessInfoForBlock));
         pTipIndex_ = pTipIndex_->pprev;
     }
     return witnessInfoForBlocks;
