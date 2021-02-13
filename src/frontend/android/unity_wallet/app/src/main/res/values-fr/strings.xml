@@ -145,6 +145,6 @@ file COPYING
     <string name="notification_service_channel_name">Service</string>
     <string name="notification_service_channel_description">Service pour garder les données synchronisées et surveiller les transactions lorsque l\'application est fermée, peut être activé/désactivé depuis les paramètres de l\'application.</string>
     <string name="dialog_title_add_address">Ajouter une adresse</string>
-    <string name="hint_iban_or_gulden_address">Gulden ou IBAN adresse</string>
+    <string name="hint_iban_or_gulden_address">Gulden adresse</string>
     <string name="label_sync_progress_syncing">Concordance %.1f%%</string>
 </resources>

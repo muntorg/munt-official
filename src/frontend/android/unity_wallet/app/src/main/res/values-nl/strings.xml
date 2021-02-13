@@ -145,7 +145,7 @@ file COPYING
     <string name="notification_service_channel_name">Service</string>
     <string name="notification_service_channel_description">Service om data te synchroniseren en transacties te signaleren terwijl de app afgesloten is, kan aan/uit gezet worden in de instellingen van de app.</string>
     <string name="dialog_title_add_address">Adres toevoegen</string>
-    <string name="hint_iban_or_gulden_address">Gulden of IBAN-adres</string>
+    <string name="hint_iban_or_gulden_address">Gulden adres</string>
     <string name="toast_warn_uri_attempt_before_wallet_creation">Je moet een Gulden-portemonnee instellen voordat je deze URI kunt gebruiken</string>
     <string name="preference_fragment_link_summary">Koppel je mobiele portemonnee aan je desktop portemonnee</string>
     <string name="preference_fragment_remove_summary">Verwijder deze portemonnee om een nieuwe te starten of te herstellen</string>

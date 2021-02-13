@@ -150,7 +150,7 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeich
     <string name="notification_service_channel_name">Service</string>
     <string name="notification_service_channel_description">Dienst, der die Daten synchron hält und Transaktionen überwacht, wenn die App geschlossen wird, kann in den App-Einstellungen aktiviert / deaktiviert werden.</string>
     <string name="dialog_title_add_address">Adresse hinzufügen</string>
-    <string name="hint_iban_or_gulden_address">Gulden-Adresse oder IBAN-Kontonummer</string>
+    <string name="hint_iban_or_gulden_address">Gulden-Adresse</string>
     <string name="toast_warn_uri_attempt_before_wallet_creation">Du musst eine Gulden-Wallet einrichten, bevor du diese URI verwenden kannst</string>
     <string name="preference_fragment_link_summary">Verbinde dein mobiles Wallet mit deinem Desktop-Wallet</string>
     <string name="preference_fragment_remove_summary">Entferne dieses Wallet, um eine anderes Wallet zu starten oder wiederherzustellen</string>
