@@ -30,6 +30,8 @@
 #include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QToolTip>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
 #include "GuldenGUI.h"
 
@@ -219,11 +221,59 @@ void ReceiveCoinsDialog::showBuyGuldenDialog()
         guldenAddress = QString::fromStdString(CNativeAddress(keyID).ToString());
     }
 
-    QUrl purchasePage("https://gulden.com/purchase");
-    QUrlQuery purchasePageQueryItems;
-    purchasePageQueryItems.addQueryItem("receive_address", guldenAddress);
-    purchasePage.setQuery(purchasePageQueryItems);
-    QDesktopServices::openUrl(purchasePage);
+    
+    QUrl url = QUrl("https://www.blockhut.com/buysession.php");
+    QNetworkAccessManager* mgr = new QNetworkAccessManager(this);
+
+    QUrlQuery query;
+    query.addQueryItem("address", guldenAddress);
+    query.addQueryItem("currency", "gulden");
+    query.addQueryItem("uuid", getUUIDAsString(pactiveWallet->getActiveAccount()->getUUID()).c_str());
+    QByteArray postData = query.toString(QUrl::FullyEncoded).toUtf8();
+    connect(mgr,&QNetworkAccessManager::finished,[this](QNetworkReply* reply) {
+        if ( reply->error() != QNetworkReply::NetworkError::NoError )
+        {
+            // Redirect user to the default fallback site
+            QUrl purchasePage("https://gulden.com/buy");
+            QDesktopServices::openUrl(purchasePage);
+        }
+        else
+        {
+            int statusCode = reply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt();
+            if ( statusCode < 200 || statusCode > 202 )
+            {
+                // Redirect user to the default fallback site
+                QUrl purchasePage("https://gulden.com/buy");
+                QDesktopServices::openUrl(purchasePage);
+            }
+            else
+            {
+                QByteArray jsonReply = reply->readAll();
+                QJsonDocument jsonDoc = QJsonDocument::fromJson( jsonReply );
+                QJsonValue statusCode = jsonDoc.object().value( "status_code" );
+                if (statusCode == 200)
+                {
+                    QJsonValue sessionID  = jsonDoc.object().value( "sessionid" );
+                    
+                    QUrl purchasePage("https://blockhut.com/buy.php");
+                    QUrlQuery purchasePageQueryItems;
+                    purchasePageQueryItems.addQueryItem("sessionid", sessionID.toString());
+                    purchasePage.setQuery(purchasePageQueryItems);
+                    QDesktopServices::openUrl(purchasePage);
+                }
+                else
+                {
+                    // Redirect user to the default fallback site
+                    //QJsonValue statusMessage = jsonDoc.object().value( "status_message" );
+                    QUrl purchasePage("https://gulden.com/buy");
+                    QDesktopServices::openUrl(purchasePage);
+                }
+            }
+        }
+    });
+    connect(mgr,SIGNAL(finished(QNetworkReply*)),mgr,SLOT(deleteLater()));
+    mgr->post(QNetworkRequest(url), postData);
+    
     return;
 }
 
