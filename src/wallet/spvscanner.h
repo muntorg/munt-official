@@ -8,6 +8,7 @@
 
 #include "../validation/validationinterface.h"
 #include <atomic>
+#include <blockfilter.h>
 
 class CWallet;
 
@@ -33,6 +34,9 @@ public:
     static std::atomic<float> lastProgressReported;
 
     static int getProcessedHeight();
+    
+    GCSFilter::ElementSet elementSet;
+    std::map<uint256, BlockFilter> pendingBlockFilters;
 
 private:
     CWallet& wallet;

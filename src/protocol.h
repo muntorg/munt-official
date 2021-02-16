@@ -242,6 +242,11 @@ extern const char *REJECT;
  */
 extern const char *SENDHEADERS;
 /**
+ * Indicates that a node wants to receive golomb filters with all headers we send to it
+ * @since protocol version ???.
+ */
+extern const char *SENDGOLOMBFILTERS;
+/**
  * The feefilter message tells the receiving peer not to inv us any txs
  * which do not meet the specified min fee rate.
  * @since protocol version 70013 as described by BIP133

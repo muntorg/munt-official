@@ -475,8 +475,6 @@ private:
     //! the maximum wallet format version: memory-only variable that specifies to what version this wallet may be upgraded
     int nWalletMaxVersion;
 
-    std::unique_ptr<CSPVScanner> pSPVScanner;
-
     int64_t nNextResend;
     int64_t nLastResend;
     bool fBroadcastTransactions;
@@ -518,6 +516,7 @@ private:
     //std::unique_ptr<CWalletDBWrapper> dbw;
 
 public:
+    std::unique_ptr<CSPVScanner> pSPVScanner;
     /*
      * Main wallet lock.
      * This lock protects all the fields added by CWallet.

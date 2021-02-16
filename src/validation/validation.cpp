@@ -58,6 +58,7 @@
 #include "blockfilter.h"
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
+#include "wallet/spvscanner.h"
 #endif
 
 #include <atomic>
@@ -4406,17 +4407,16 @@ void ComputeNewFilterRanges(uint64_t nWalletBirthBlockHard, uint64_t& nWalletBir
     {
         LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:NULL);
 
-        GCSFilter::ElementSet elementSet;
         for (const auto& [accountUUID, forAccount] : pactiveWallet->mapAccounts)
         {
             (unused) accountUUID;
             std::set<CKeyID> setAddresses;
             forAccount->GetKeys(setAddresses);
             for (const auto& key : setAddresses)
-                elementSet.insert(std::vector<unsigned char>(key.begin(), key.end()));
+                pactiveWallet->pSPVScanner->elementSet.insert(std::vector<unsigned char>(key.begin(), key.end()));
         }
         std::vector<std::tuple<uint64_t, uint64_t>> blockFilterRanges;
-        getBlockFilterBirthAndRanges(nWalletBirthBlockHard, nWalletBirthBlockSoft, elementSet, blockFilterRanges);
+        getBlockFilterBirthAndRanges(nWalletBirthBlockHard, nWalletBirthBlockSoft, pactiveWallet->pSPVScanner->elementSet, blockFilterRanges);
         {
             LOCK(partialChain.cs_blockFilterRanges);
             std::swap(blockFilterRanges, partialChain.blockFilterRanges);

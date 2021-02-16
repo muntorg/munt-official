@@ -903,7 +903,7 @@ int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::
         SoftSetArg("-listen", "0");
 
         // Minimise logging for performance reasons
-        SoftSetArg("-debug", "0");
+        SoftSetArg("-debug", "NET");
 
         // Turn SPV mode on
         SoftSetArg("-fullsync", "0");
@@ -962,6 +962,7 @@ int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::
     {
         SoftSetArg("-addnode", "178.62.195.19");
         SoftSetArg("-addnode", "149.210.165.218");
+        SoftSetArg("-addnode", "127.0.0.1");
     }
 
     signalHandler = signalHandler_;
