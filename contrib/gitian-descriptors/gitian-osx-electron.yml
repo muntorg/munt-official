@@ -177,15 +177,15 @@ script: |
     cp -f src/.libs/lib_unity_node_js.0.so release/lib/
     
     # Strip
-    find release/bin -type f -executable -print0 | xargs -0 -n1 -I{} ../../contrib/devtools/split-debug.sh {} {} {}.dbg
-    if [ -d release/lib ]; then
-        find release/lib -type f -print0 | xargs -0 -n1 -I{} ../../contrib/devtools/split-debug.sh {} {} {}.dbg
-    fi
+    #find release/bin -type f -executable -print0 | xargs -0 -n1 -I{} ../../contrib/devtools/split-debug.sh {} {} {}.dbg
+    #if [ -d release/lib ]; then
+    #    find release/lib -type f -print0 | xargs -0 -n1 -I{} ../../contrib/devtools/split-debug.sh {} {} {}.dbg
+    #fi
 
     #Move lib results to outdir
     mkdir $OUTDIR/libs || true
     mv -f release/lib/lib_unity_node_js.0.so $OUTDIR/libs/libgulden_macos_${i}.node
-    mv -f release/lib/lib_unity_node_js.0.so.dbg $OUTDIR/libs/libgulden_macos_${i}.node.dbg
+    #mv -f release/lib/lib_unity_node_js.0.so.dbg $OUTDIR/libs/libgulden_macos_${i}.node.dbg
     rm -rf release/lib
     
     cd ../../
