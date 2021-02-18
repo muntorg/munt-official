@@ -1,9 +1,23 @@
+2.3.0.7
+
+Minor maintenence release, introduce new buy behaviour into desktop wallets
+
+
+
+
+2.3.0.6
+
+LITE/UI - New/Improved buy functionality
+RPC     - Introduce range based 'getwitnessinfo' ability for explorers and similar
+
+
+
+
 2.3.0.5
 
 Initial release of new "lite" wallet; an SPV based desktop wallet with trimmed down feature set for those who want something fast but with less features than the core wallet
 RPC     - Fix '*' behaviour in listaccounts command
 RPC     - Give 'decodescript' the ability to decode old phase3 transactions
-
 
 
 
