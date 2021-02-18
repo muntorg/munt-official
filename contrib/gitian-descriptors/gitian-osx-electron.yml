@@ -169,37 +169,23 @@ script: |
     cp ../../src/obj/build.h src/obj/
     
     make ${MAKEOPTS}
-    make install-strip DESTDIR=${INSTALLPATH}
+    make install DESTDIR=${INSTALLPATH}
     
     # Move library into release folder
+    rm -rf release/lib/* || true
+    cp -f src/.libs/lib_unity_node_js.0.so release/lib/
+    
+    # Strip
+    find release/bin -type f -executable -print0 | xargs -0 -n1 -I{} ../../contrib/devtools/split-debug.sh {} {} {}.dbg
+    if [ -d release/lib ]; then
+        find release/lib -type f -print0 | xargs -0 -n1 -I{} ../../contrib/devtools/split-debug.sh {} {} {}.dbg
+    fi
+
+    #Move lib results to outdir
     mkdir $OUTDIR/libs || true
-    cp -f src/.libs/lib_unity_node_js.0.so $OUTDIR/libs/libgulden_macos_${i}.node
-
-    #make osx_volname
-    #make deploydir
-    #OSX_VOLNAME="$(cat osx_volname)"
-    #mkdir -p unsigned-app-${i}
-    #cp osx_volname unsigned-app-${i}/
-    #cp contrib/macdeploy/detached-sig-apply.sh unsigned-app-${i}
-    #cp contrib/macdeploy/detached-sig-create.sh unsigned-app-${i}
-    #cp ${BASEPREFIX}/${i}/native/bin/dmg ${BASEPREFIX}/${i}/native/bin/genisoimage unsigned-app-${i}
-    #cp ${BASEPREFIX}/${i}/native/bin/${i}-codesign_allocate unsigned-app-${i}/codesign_allocate
-    #cp ${BASEPREFIX}/${i}/native/bin/${i}-pagestuff unsigned-app-${i}/pagestuff
-    #mv dist unsigned-app-${i}
-    #pushd unsigned-app-${i}
-    #find . | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ${OUTDIR}/${DISTNAME}-osx-unsigned.tar.gz
-    #popd
-
-    #make deploy
-    #${WRAP_DIR}/dmg dmg "${OSX_VOLNAME}.dmg" ${OUTDIR}/${DISTNAME}-osx-unsigned.dmg
-
-    #cd installed
-    #find . -name "lib*.la" -delete
-    #find . -name "lib*.a" -delete
-    #rm -rf ${DISTNAME}/lib/pkgconfig
-    #find ${DISTNAME} | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ${OUTDIR}/${DISTNAME}-${i}.tar.gz
+    mv -f release/lib/lib_unity_node_js.0.so $OUTDIR/libs/libgulden_macos_${i}.node
+    mv -f release/lib/lib_unity_node_js.0.so.dbg $OUTDIR/libs/libgulden_macos_${i}.node.dbg
+    rm -rf release/lib
+    
     cd ../../
   done
-  #mkdir -p $OUTDIR/src
-  #mv $SOURCEDIST $OUTDIR/src
-  #mv ${OUTDIR}/${DISTNAME}-x86_64-*.tar.gz ${OUTDIR}/${DISTNAME}-osx64.tar.gz
