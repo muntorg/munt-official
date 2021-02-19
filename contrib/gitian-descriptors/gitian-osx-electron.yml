@@ -173,6 +173,7 @@ script: |
     
     # Move library into release folder
     rm -rf release/lib/* || true
+    mkdir release || true
     mkdir release/lib || true
     cp -f src/.libs/lib_unity_node_js.0.so release/lib/
     
