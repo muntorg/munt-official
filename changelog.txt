@@ -1,3 +1,10 @@
+2.3.0.8
+
+Fix a regression in SPV wallets causing sync issues on some devices
+
+
+
+
 2.3.0.7
 
 Minor maintenence release, introduce new buy behaviour into desktop wallets
