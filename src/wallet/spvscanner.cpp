@@ -141,51 +141,31 @@ void CSPVScanner::onKeyPoolToppedUp()
 }
 
 // If we are before the first range or not in one of the ranges then we can skip fetching the data.
-// If we are in one of the ranges then we must fetch the data.
+// If we are in one of the ranges or if we are after the last checkpoint then we must fetch the data.
 // If we have no filter ranges then we must fetch the data.
-// If we are after the last checkpoint then we must fetch the data, unless a peer sent us a block specific filter that we have no matches against in which case we may skip fetching the data
 bool CSPVScanner::CanSkipBlockFetch(const CBlockIndex* pIndex, uint64_t lastCheckPointHeight)
 {
     AssertLockHeld(partialChain.cs_blockFilterRanges);
     if ((uint64_t)pIndex->nHeight > lastCheckPointHeight)
-    {
-        // Check against block filter to see whether the block is interesting to use or not
-        if (pendingBlockFilters.find(pIndex->GetBlockHashPoW2()) != pendingBlockFilters.end())
-        {
-            if (pendingBlockFilters[pIndex->GetBlockHashPoW2()].GetFilter().MatchAny(elementSet))
-            {
-                LogPrintf(">>>Could not skip block fetch [%d], golomb headers\n", pIndex->nHeight);
-                return false;
-            }
-            else
-            {
-                LogPrintf(">>>Skipped block fetch [%d], golomb headers\n", pIndex->nHeight);
-                return true;
-            }
-            LogPrintf(">>>2Could not skip block fetch [%d], golomb headers\n", pIndex->nHeight);
-        }
-    }
-    else
-    {
-        if (partialChain.blockFilterRanges.empty())
-            return false;
+        return false;
 
-        for (const auto& [rangeStart, rangeEnd] : partialChain.blockFilterRanges)
+    if (partialChain.blockFilterRanges.empty())
+        return false;
+
+    for (const auto& [rangeStart, rangeEnd] : partialChain.blockFilterRanges)
+    {
+        if ((uint64_t)pIndex->nHeight >= rangeStart)
         {
-            if ((uint64_t)pIndex->nHeight >= rangeStart)
-            {
-                if ((uint64_t)pIndex->nHeight < rangeEnd)
-                    return false;
-            }
-            else
-            {
-                // Short circuit optimisation: Ranges are ordered so if we aren't > this first one then we won't be > than any of the subsequent ones.
-                break;
-            }
+            if ((uint64_t)pIndex->nHeight < rangeEnd)
+                return false;
         }
-        return true;
+        else
+        {
+            // Short circuit optimisation: Ranges are ordered so if we aren't > this first one then we won't be > than any of the subsequent ones.
+            break;
+        }
     }
-    return false;
+    return true;
 }
 
 void CSPVScanner::RequestBlocks()

@@ -21,11 +21,9 @@
 #include <serialize.h>
 #include <uint256.h>
 #include <undo.h>
+#include "chain.h"
 #include <crypto/bytevectorhash.h>
-#include "chainparams.h"
-#include "validation/validation.h"
 
-class CBlockIndex;
 /**
  * This implements a Golomb-coded set as defined in BIP 158. It is a
  * compact, probabilistic data structure for testing set membership.
@@ -112,6 +110,10 @@ const std::vector<BlockFilterType>& AllBlockFilterTypes();
 /** Get a comma-separated list of known filter type names. */
 std::string ListBlockFilterTypes();
 
+/**
+ * Complete block filter struct as defined in BIP 157. Serialization matches
+ * payload of "cfilter" messages.
+ */
 class BlockFilter
 {
 protected:
@@ -148,28 +150,21 @@ public:
     uint256 ComputeHeader(const uint256& prev_header) const;
 
     template <typename Stream>
-    void Serialize(Stream& s) const
-    {
-        CSerActionSerialize ser_action;
-        uint8_t filter_type = m_filter_type;
-        READWRITE(filter_type);
-        std::vector<unsigned char> encoded_filter = m_filter.GetEncoded();
-        READWRITECOMPACTSIZEVECTOR(encoded_filter);
-        //LogPrintf(">>> GOLOMBSER: [%d] [%s]\n", filter_type, HexStr(encoded_filter));
+    void Serialize(Stream& s) const {
+        s << m_block_hash
+          << static_cast<uint8_t>(m_filter_type)
+          << m_filter.GetEncoded();
     }
 
     template <typename Stream>
-    void Unserialize(Stream& s)
-    {
-        CSerActionUnserialize ser_action;
-
+    void Unserialize(Stream& s) {
         std::vector<unsigned char> encoded_filter;
         uint8_t filter_type;
-        READWRITE(filter_type);
-        READWRITECOMPACTSIZEVECTOR(encoded_filter);
-        
-        //LogPrintf(">>> GOLOMBUNSER: [%d] [%s]\n", filter_type, HexStr(encoded_filter));
-        
+
+        s >> m_block_hash
+          >> filter_type
+          >> encoded_filter;
+
         m_filter_type = static_cast<BlockFilterType>(filter_type);
 
         GCSFilter::Params params;
@@ -193,50 +188,6 @@ public:
     RangedCPBlockFilter(std::vector<unsigned char> filter);
 private:
     virtual bool BuildParams(GCSFilter::Params& params) const;
-};
-
-class CBlockHeaderWithGolombFilter
-{
-public:
-    CBlockHeaderWithGolombFilter(CBlockHeader header_, BlockFilter filter_)
-    : header(header_), filter(filter_), hashPrevBlock(header.hashPrevBlock)
-    {
-    }
-    CBlockHeaderWithGolombFilter(const CBlockIndex* pIndex);
-    CBlockHeaderWithGolombFilter()
-    : hashPrevBlock(header.hashPrevBlock)
-    {
-        SetNull();
-    }
-    
-    operator CBlockHeader() const { return header; }
-    CBlock header;
-    BlockFilter filter;
-        
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action)
-    {
-        READWRITE(header);
-        READWRITE(filter);
-    }
-    
-    void SetNull()
-    {
-        header.SetNull();
-    }
-    
-    //Compatibility functions to allow us to be a "drop in" replacement for CBlockHeader in various templated code.
-    uint256& hashPrevBlock;
-    const uint256 GetHashPoW2()
-    {
-        return header.GetHashPoW2();
-    }
-    const uint256 GetHashLegacy()
-    {
-        return header.GetHashLegacy();
-    }
 };
 
 void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthDate, const GCSFilter::ElementSet& walletAddresses, std::vector<std::tuple<uint64_t, uint64_t>>& blockFilterRanges);

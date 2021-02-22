@@ -840,17 +840,8 @@ void CWallet::StartSPV()
 {
     LOCK(cs_wallet);
     auto scanner = std::make_unique<CSPVScanner>(*this);
-    if (!pSPVScanner)
-    {
+    if (scanner->StartScan())
         pSPVScanner.swap(scanner);
-        if (!pSPVScanner->StartScan())
-            pSPVScanner = nullptr;
-    }
-    else
-    {
-        if (scanner->StartScan())
-            pSPVScanner.swap(scanner);
-    }
 }
 
 void CWallet::ResetSPV()

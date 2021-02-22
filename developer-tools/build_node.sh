@@ -44,7 +44,7 @@ tar -xvf iojs-v${ELECTRON_VERSION}.tar.gz -C electron-${ELECTRON_VERSION}
 mkdir node-addon-api-${NODE_ADDON_API_VERSION} | true
 tar -xvf node-addon-api-${NODE_ADDON_API_VERSION}.tgz -C node-addon-api-${NODE_ADDON_API_VERSION}
 
-export CXXFLAGS="${CXXFLAGS} -I${DIR}/../build_node/electron-${ELECTRON_VERSION}/node_headers/include/node/ -I${DIR}/../build_node/node-addon-api-${NODE_ADDON_API_VERSION}/package/ ${EXTRA_CXX_FLAGS} -O2 -O0 -g3"
+export CXXFLAGS="${CXXFLAGS} -I${DIR}/../build_node/electron-${ELECTRON_VERSION}/node_headers/include/node/ -I${DIR}/../build_node/node-addon-api-${NODE_ADDON_API_VERSION}/package/ ${EXTRA_CXX_FLAGS} -O2"
 export CFLAGS=${CXXFLAGS}
 
 if [ ${PLATFORM_OS} = "mingw32" ] || [ ${PLATFORM_OS} = "mingw64" ]; then

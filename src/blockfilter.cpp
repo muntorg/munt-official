@@ -366,25 +366,6 @@ uint256 BlockFilter::ComputeHeader(const uint256& prev_header) const
     return result;
 }
 
-CBlockHeaderWithGolombFilter::CBlockHeaderWithGolombFilter(const CBlockIndex* pIndex)
-: hashPrevBlock(header.hashPrevBlock)
-{
-    CBlock block;
-    if (ReadBlockFromDisk(block, pIndex, Params()))
-    {
-        CBlockUndo blockUndo;
-        CDiskBlockPos pos = pIndex->GetUndoPos();
-        if (!pos.IsNull())
-        {
-            if (blockStore.UndoReadFromDisk(blockUndo, pos, pIndex->pprev->GetBlockHashPoW2()))
-            {
-                header = block.GetBlockHeader();
-                filter = BlockFilter(BlockFilterType::BASIC, block, blockUndo);
-            }
-        }
-    }
-}
-    
 RangedCPBlockFilter::RangedCPBlockFilter(const CBlockIndex* startRange, const CBlockIndex* endRange)
 : BlockFilter()
 {
