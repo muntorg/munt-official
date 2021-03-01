@@ -1285,6 +1285,31 @@ class LibUnity {
         event.returnValue = handleError(e);
       }
     });
+    
+    ipc.on("BackendUtilities.GetSellSessionUrl", async event => {
+      console.log(`IPC: BackendUtilities.GetSellSessionUrl()`);
+      try {
+        var formData = new FormData();
+        formData.append("address", store.state.wallet.receiveAddress);
+        formData.append("currency", "gulden");
+        formData.append("uuid", this.walletController.GetUUID());
+
+        let response = await axios.post(
+          "https://www.blockhut.com/buysession.php",
+          formData,
+          {
+            headers: formData.getHeaders()
+          }
+        );
+
+        event.returnValue = {
+          success: response.data.status_message === "OK",
+          result: `https://blockhut.com/sell.php?sessionid=${response.data.sessionid}`
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
   }
 }
 
