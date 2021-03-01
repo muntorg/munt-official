@@ -8,6 +8,7 @@ package com.gulden.unity_wallet.main_activity_fragments
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
@@ -18,24 +19,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.*
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.AddressRecord
 import com.gulden.jniunifiedbackend.ILibraryController
+import com.gulden.jniunifiedbackend.IWalletController
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.ui.AddressBookAdapter
 import com.gulden.unity_wallet.util.AppBaseFragment
+import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.util.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.add_address_entry.view.*
 import kotlinx.android.synthetic.main.fragment_send.*
 import org.jetbrains.anko.support.v4.runOnUiThread
+import org.json.JSONObject
 
 
 class SendFragment : AppBaseFragment(), UnityCore.Observer {
@@ -47,9 +55,9 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
 
     private fun handleAddToAddressBookButtonClick(view : View)
     {
-        val builder = AlertDialog.Builder(this.context!!)
+        val builder = AlertDialog.Builder(this.requireContext())
         builder.setTitle(getString(R.string.dialog_title_add_address))
-        val layoutInflater : LayoutInflater = this.context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val layoutInflater : LayoutInflater = this.requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val viewInflated : View = layoutInflater.inflate(R.layout.add_address_entry, view.rootView as ViewGroup, false)
         val inputAddress = viewInflated.findViewById(R.id.address) as EditText
         val inputLabel = viewInflated.findViewById(R.id.addressName) as EditText
@@ -96,7 +104,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
 
             viewInflated.address.requestFocus()
             viewInflated.address.post {
-                val imm = this.context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm = this.requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.showSoftInput(viewInflated.address, InputMethodManager.SHOW_IMPLICIT)
             }
         }
@@ -107,7 +115,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
         clipboardButton.setOnClickListener {
             val text = clipboardText()
             try {
-                SendCoinsFragment.newInstance(createRecipient(text), false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+                SendCoinsFragment.newInstance(createRecipient(text), false).show(requireActivity().supportFragmentManager, SendCoinsFragment::class.java.simpleName)
             }
             catch (e: InvalidRecipientException) {
                 errorMessage(getString(R.string.clipboard_no_valid_address))
@@ -115,7 +123,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
         }
 
         imageViewAddToAddressBook.setOnClickListener {
-            handleAddToAddressBookButtonClick(view!!)
+            handleAddToAddressBookButtonClick(requireView())
         }
 
         qrButton.setOnClickListener {
@@ -124,18 +132,91 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
             startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
         }
 
+        sellButton.setOnClickListener {
+            // Send a post request to blockhut with our wallet/address info; and then launch the site if we get a positive response.
+            val MyRequestQueue = Volley.newRequestQueue(context)
+            val failURL = "https://gulden.com/sell"
+            val request = object : StringRequest(Request.Method.POST,"https://blockhut.com/buysession.php",
+                Response.Listener { response ->
+                    try
+                    {
+                        var jsonResponse = JSONObject(response);
+                        if (jsonResponse.getInt("status_code") == 200)
+                        {
+                            var sessionID = jsonResponse.getString("sessionid")
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://blockhut.com/sell.php?sessionid=%s".format(sessionID)))
+                            startActivity(intent)
+                        }
+                        else
+                        {
+                            // Redirect user to the default fallback site
+                            //fixme: Do something with the status message here
+                            //var statusMessage = jsonResponse.getString("status_message")
+                            val intent = Intent(failURL)
+                            startActivity(intent)
+                        }
+                    }
+                    catch (e:Exception)
+                    {
+                        // Redirect user to the default fallback site
+                        //fixme: Do something with the error message here
+                        val intent = Intent(failURL)
+                        startActivity(intent)
+                    }
+                },
+                Response.ErrorListener
+                {
+                   // If we are sure its a local connectivity issue, alert the user, otherwise send them to the default fallback site
+                   if (it is NetworkError || it is AuthFailureError || it is NoConnectionError)
+                   {
+                       Toast.makeText(context, getString(R.string.error_check_internet_connection), Toast.LENGTH_SHORT).show()
+                   }
+                   else
+                   {
+                       val intent = Intent(failURL)
+                       startActivity(intent)
+                   }
+                }
+            )
+            // Force values to be send at x-www-form-urlencoded
+            {
+                override fun getParams(): MutableMap<String, String> {
+                    val params = HashMap<String,String>()
+                    params["address"] = ILibraryController.GetReceiveAddress().toString();
+                    params["uuid"] = IWalletController.GetUUID();
+                    params["currency"] = "gulden";
+                    return params;
+                }
+                override fun getHeaders(): MutableMap<String, String> {
+                    val params = HashMap<String, String>();
+                    params.put("Content-Type","application/x-www-form-urlencoded");
+                    return params;
+                }
+            };
+
+            // Volley request policy, only one time request to avoid duplicate transaction
+            request.retryPolicy = DefaultRetryPolicy(
+                    DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
+                    1, // DefaultRetryPolicy.DEFAULT_MAX_RETRIES = 2
+                    1f // DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+            )
+
+            // Add the volley post request to the request queue
+            MyRequestQueue.add(request)
+        }
+
         ClipboardManager.OnPrimaryClipChangedListener { checkClipboardEnable() }
 
         val addresses = ILibraryController.getAddressBookRecords()
         val adapter = AddressBookAdapter(addresses) { position, address ->
             val recipient = UriRecipient(true, address.address, address.name, address.desc, 0)
-            SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+            SendCoinsFragment.newInstance(recipient, false).show(requireActivity().supportFragmentManager, SendCoinsFragment::class.java.simpleName)
         }
 
         addressBookList.adapter = adapter
         addressBookList.layoutManager = LinearLayoutManager(context)
 
-        val swipeHandler = object : SwipeToDeleteCallback(context!!) {
+        val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 adapter.removeAt(viewHolder.adapterPosition)
             }
