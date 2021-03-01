@@ -14,6 +14,7 @@
 #include <cryptopp/aes.h>
 #include <cryptopp/modes.h>
 #include <random.h>
+#include "key.h"
 
 int LogPrintStr(const std::string &str)
 {
@@ -588,6 +589,51 @@ int main(int argc, char** argv)
     
     if (!mineOnly)
     {
+        printf("ECC compact recovery============================================================\n\n");
+        {
+            ECC_Start();
+            ECCVerifyHandle globalVerifyHandle;
+            CKey key1;
+            key1.MakeNewKey(true);
+
+            std::vector<std::vector<unsigned char>> signatures;
+            std::vector<uint256> hashes;
+            {
+                uint64_t numHashes = 10000;
+                for (int i=0; i<numHashes; ++i)
+                {
+                    uint256 hash = GetRandHash();
+                    std::vector<unsigned char> signature;
+                    key1.SignCompact(hash, signature);
+                    hashes.push_back(hash);
+                    signatures.push_back(signature);
+                }
+                CPubKey rkey1;
+            
+                uint64_t nStart = GetTimeMicros(); 
+                for (int i=0; i< numHashes; ++i)
+                {
+                    rkey1.RecoverCompact(hashes[i], signatures[i]);
+                }
+                printf("total [%lu micros] per hash: [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numHashes);
+            }
+        }
+        
+        printf("SHA-D============================================================\n\n");
+        {
+            uint64_t nStart = GetTimeMicros(); 
+            uint64_t numHashes = 1000;
+            arith_uint256 thash;
+            arith_uint256 fhash;
+            for (int i=0;i<numHashes;++i)
+            {
+                header.nNonce=i;
+                hash_sha256(BEGIN(header.nVersion), 80, thash);
+                hash_sha256(BEGIN(thash), 32, fhash);
+            }
+            printf("total [%lu micros] per hash: [%.2f micros]\n\n", (GetTimeMicros() - nStart), ((GetTimeMicros() - nStart)) / (double)numHashes);
+        }
+            
         printf("Scrypt============================================================\n\n");
         uint256 hash;    
         {
