@@ -39,8 +39,8 @@
         {{ $t("buttons.send") }}
       </button>
       <button @click="sellGulden" class="sell-gulden" :disabled="sellDisabled">
-          {{ $t("buttons.sell_gulden") }}
-        </button>
+        {{ $t("buttons.sell_gulden") }}
+      </button>
     </div>
   </div>
 </template>
@@ -195,8 +195,12 @@ input[type="number"]::-webkit-inner-spin-button {
   }
 
   & > .send {
-    margin: 0 0 0 30px;
-    width: calc(100% - 200px);
+    margin: 0 30px 0 30px;
+    width: calc(100% - 170px - 30px - 30px - 170px);
+  }
+
+  & > .sell-gulden {
+    width: 170px;
   }
 }
 </style>
