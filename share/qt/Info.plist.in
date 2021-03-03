@@ -49,9 +49,11 @@
       <string>com.Gulden.GuldenPayment</string>
       <key>CFBundleURLSchemes</key>
       <array>
-        <string>gulden</string>
         <string>guldencoin</string>
         <string>Gulden</string>
+        <string>gulden</string>
+        <string>Guldenpro</string>
+        <string>guldenpro</string>
       </array>
     </dict>
   </array>

@@ -176,7 +176,7 @@ void setupAmountWidget(QLineEdit *widget, QWidget *parent)
 bool parseGuldenURI(const QUrl &uri, SendCoinsRecipient *out)
 {
     // return if URI is not valid or is no Gulden: URI
-    if(!uri.isValid() || (uri.scheme().toLower() != QString("guldencoin") && uri.scheme().toLower() != QString("gulden")))
+    if(!uri.isValid() || (uri.scheme().toLower() != QString("guldencoin") && uri.scheme().toLower() != QString("gulden") && uri.scheme().toLower() != QString("guldenpro")))
         return false;
 
     SendCoinsRecipient rv;
@@ -247,6 +247,10 @@ bool parseGuldenURI(QString uri, SendCoinsRecipient *out)
     else if(uri.startsWith("Gulden://", Qt::CaseInsensitive))
     {
         uri.replace(0, 9, "gulden:");
+    }
+    else if(uri.startsWith("Guldenpro://", Qt::CaseInsensitive))
+    {
+        uri.replace(0, 12, "guldenpro:");
     }
 
     QUrl uriInstance(uri);
@@ -849,6 +853,8 @@ bool SetStartOnSystemStartup(bool fAutoStart)
         optionFile << "MimeType=x-scheme-handler/guldencoin:\n";
         optionFile << "MimeType=x-scheme-handler/gulden:\n";
         optionFile << "MimeType=x-scheme-handler/Gulden:\n";
+        optionFile << "MimeType=x-scheme-handler/guldenpro:\n";
+        optionFile << "MimeType=x-scheme-handler/Guldenpro:\n";
 
         optionFile.close();
     }
