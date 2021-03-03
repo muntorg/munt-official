@@ -448,6 +448,7 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
     /** Perform selection **/
     auto selectedWitness = std::lower_bound(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), rouletteSelectionSeed.GetLow64());
     witnessInfo.selectedWitnessTransaction = selectedWitness->coin.out;
+    witnessInfo.selectedWitnessIndex = selectedWitness-(witnessInfo.witnessSelectionPoolFiltered.begin());
     witnessInfo.selectedWitnessBlockHeight = selectedWitness->coin.nHeight;
     witnessInfo.selectedWitnessOutpoint = selectedWitness->outpoint;
 

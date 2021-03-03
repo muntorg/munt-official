@@ -476,6 +476,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
         rec.push_back(Pair("total_witness_weight_eligible_raw", (uint64_t)witInfo.nTotalWeightEligibleRaw));
         rec.push_back(Pair("total_witness_weight_eligible_adjusted", (uint64_t)witInfo.nTotalWeightEligibleAdjusted));
         rec.push_back(Pair("selected_witness_address", sWitnessAddress));
+        rec.push_back(Pair("selected_witness_index", (uint64_t)witInfo.selectedWitnessIndex));
         if (fVerbose)
         {
             UniValue averages(UniValue::VOBJ);
