@@ -407,9 +407,6 @@ class BackendUtilities {
   static GetBuySessionUrl() {
     return handleError(ipc.sendSync("BackendUtilities.GetBuySessionUrl"));
   }
-  static GetSellSessionUrl() {
-    return handleError(ipc.sendSync("BackendUtilities.GetSellSessionUrl"));
-  }
 }
 
 export { BackendUtilities };
