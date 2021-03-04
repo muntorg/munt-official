@@ -77,7 +77,6 @@ private:
     bool fNewRecipientAllowed;
     bool fFeeMinimized;
     const QStyle *platformStyle;
-    CReserveKeyOrScript* sellChangeAddress;
 
     //fixme: (FUT) Make private again
 public:
@@ -92,7 +91,6 @@ private:
     void updateFeeMinimizedLabel();
 
 private Q_SLOTS:
-    void showSellGuldenDialog();
     void on_buttonChooseFee_clicked();
     void on_buttonMinimizeFee_clicked();
     void removeEntry(GuldenSendCoinsEntry* entry);

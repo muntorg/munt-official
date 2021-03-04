@@ -37,9 +37,6 @@
 #include <QSettings>
 #include <QTextDocument>
 #include <QTimer>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QDesktopServices>
 
 SendCoinsDialog::SendCoinsDialog(const QStyle *_platformStyle, QWidget *parent) :
     QDialog(parent),
@@ -48,8 +45,7 @@ SendCoinsDialog::SendCoinsDialog(const QStyle *_platformStyle, QWidget *parent) 
     model(0),
     fNewRecipientAllowed(true),
     fFeeMinimized(true),
-    platformStyle(_platformStyle),
-    sellChangeAddress(nullptr)
+    platformStyle(_platformStyle)
 {
     ui->setupUi(this);
 
@@ -58,7 +54,6 @@ SendCoinsDialog::SendCoinsDialog(const QStyle *_platformStyle, QWidget *parent) 
 
     connect(ui->addButton, SIGNAL(clicked()), this, SLOT(addEntry()));
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
-    connect(ui->sellButton, SIGNAL(clicked()), this, SLOT(showSellGuldenDialog()));
 
     // Coin Control
     connect(ui->pushButtonCoinControl, SIGNAL(clicked()), this, SLOT(coinControlButtonClicked()));
@@ -139,15 +134,11 @@ SendCoinsDialog::SendCoinsDialog(const QStyle *_platformStyle, QWidget *parent) 
 
     ui->sendButton->setIcon(QIcon());
     ui->sendButton->setText(tr("&Send"));
-    
-    ui->sellButton->setIcon(QIcon());
-    ui->sellButton->setText(tr("Sell"));
 
     ui->clearButton->setIcon(QIcon());
     ui->clearButton->setText(tr("&Clear"));
     ui->clearButton->setMinimumSize(QSize(0, 0));
     ui->sendButton->setMinimumSize(QSize(0, 0));
-    ui->sellButton->setMinimumSize(QSize(0, 0));
 
 
     ui->verticalLayout->setContentsMargins(QMargins(0, 0, 0, 0));
@@ -166,7 +157,6 @@ SendCoinsDialog::SendCoinsDialog(const QStyle *_platformStyle, QWidget *parent) 
 
     ui->clearButton->setCursor(Qt::PointingHandCursor);
     ui->sendButton->setCursor(Qt::PointingHandCursor);
-    ui->sellButton->setCursor(Qt::PointingHandCursor);
     editButton->setCursor(Qt::PointingHandCursor);
     deleteButton->setCursor(Qt::PointingHandCursor);
 
@@ -529,86 +519,6 @@ void SendCoinsDialog::on_sendButton_clicked()
         coinControlUpdateLabels();
     }
     fNewRecipientAllowed = true;
-}
-
-void SendCoinsDialog::showSellGuldenDialog()
-{
-    QString guldenAddress;
-
-    if (sellChangeAddress)
-    {
-        delete sellChangeAddress;
-        sellChangeAddress = NULL;
-    }
-    CAccount* forAccount = model->getActiveAccount();
-
-    sellChangeAddress = new CReserveKeyOrScript(pactiveWallet, forAccount, KEYCHAIN_EXTERNAL);
-    CPubKey pubKey;
-    if (!sellChangeAddress || !sellChangeAddress->GetReservedKey(pubKey))
-    {
-        //fixme: (FUT) better error handling
-        return;
-    }
-    else
-    {
-        CKeyID keyID = pubKey.GetID();
-        guldenAddress = QString::fromStdString(CNativeAddress(keyID).ToString());
-    }
-
-    
-    QUrl url = QUrl("https://www.blockhut.com/buysession.php");
-    QNetworkAccessManager* mgr = new QNetworkAccessManager(this);
-
-    QUrlQuery query;
-    query.addQueryItem("address", guldenAddress);
-    query.addQueryItem("currency", "gulden");
-    query.addQueryItem("uuid", getUUIDAsString(pactiveWallet->getActiveAccount()->getUUID()).c_str());
-    QByteArray postData = query.toString(QUrl::FullyEncoded).toUtf8();
-    connect(mgr,&QNetworkAccessManager::finished,[this](QNetworkReply* reply) {
-        if ( reply->error() != QNetworkReply::NetworkError::NoError )
-        {
-            // Redirect user to the default fallback site
-            QUrl purchasePage("https://gulden.com/sell");
-            QDesktopServices::openUrl(purchasePage);
-        }
-        else
-        {
-            int statusCode = reply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt();
-            if ( statusCode < 200 || statusCode > 202 )
-            {
-                // Redirect user to the default fallback site
-                QUrl purchasePage("https://gulden.com/sell");
-                QDesktopServices::openUrl(purchasePage);
-            }
-            else
-            {
-                QByteArray jsonReply = reply->readAll();
-                QJsonDocument jsonDoc = QJsonDocument::fromJson( jsonReply );
-                QJsonValue statusCode = jsonDoc.object().value( "status_code" );
-                if (statusCode == 200)
-                {
-                    QJsonValue sessionID  = jsonDoc.object().value( "sessionid" );
-                    
-                    QUrl purchasePage("https://blockhut.com/sell.php");
-                    QUrlQuery purchasePageQueryItems;
-                    purchasePageQueryItems.addQueryItem("sessionid", sessionID.toString());
-                    purchasePage.setQuery(purchasePageQueryItems);
-                    QDesktopServices::openUrl(purchasePage);
-                }
-                else
-                {
-                    // Redirect user to the default fallback site
-                    //QJsonValue statusMessage = jsonDoc.object().value( "status_message" );
-                    QUrl purchasePage("https://gulden.com/sell");
-                    QDesktopServices::openUrl(purchasePage);
-                }
-            }
-        }
-    });
-    connect(mgr,SIGNAL(finished(QNetworkReply*)),mgr,SLOT(deleteLater()));
-    mgr->post(QNetworkRequest(url), postData);
-    
-    return;
 }
 
 void SendCoinsDialog::clear()
