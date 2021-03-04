@@ -1,3 +1,10 @@
+2.3.9
+
+RPC     - Add 'selected_witness_index' info to 'getwitnessoutput' command
+Debug   - Introduce split debug uploads for all linux/windows builds and add documentation on how to utilise it
+
+
+
 2.3.0.8
 
 Fix a regression in SPV wallets causing sync issues on some devices
