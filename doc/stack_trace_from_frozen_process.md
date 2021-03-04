@@ -23,8 +23,8 @@ If you are reading this it is likely because a developer has asked you for a sta
 Local exec file:
         `/tmp/.mount_GuldenFboNYk/usr/bin/Gulden', file type elf64-x86-64.
         Entry point: 0x55ca5940bb30
-`
-In this example the entry point is 0x55ca5940bb30
+```
+* In this example the entry point is 0x55ca5940bb30
 9. Use the path from step 3 and the `entry point` from step 8 and enter it via the `add-symbol-file` command
 * `add-symbol-file /home/developer/dbg/Gulden.dbg 0x55ca5940bb30`
 11. Enter `y` to accept
