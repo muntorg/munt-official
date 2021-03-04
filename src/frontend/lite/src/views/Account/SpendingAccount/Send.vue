@@ -38,6 +38,9 @@
       >
         {{ $t("buttons.send") }}
       </button>
+      <button @click="sellGulden" class="sell-gulden" :disabled="sellDisabled">
+          {{ $t("buttons.sell_gulden") }}
+        </button>
     </div>
   </div>
 </template>
@@ -47,6 +50,7 @@ import { mapState } from "vuex";
 import { LibraryController, AccountsController } from "@/unity/Controllers";
 import ConfirmTransactionDialog from "./ConfirmTransactionDialog";
 import EventBus from "@/EventBus";
+import { BackendUtilities } from "@/unity/Controllers";
 
 export default {
   name: "Send",
@@ -58,7 +62,8 @@ export default {
       password: null,
       isAmountInvalid: false,
       isAddressInvalid: false,
-      isPasswordInvalid: false
+      isPasswordInvalid: false,
+      sellDisabled: false
     };
   },
   computed: {
@@ -109,6 +114,18 @@ export default {
     EventBus.$off("transaction-succeeded", this.onTransactionSucceeded);
   },
   methods: {
+    async sellGulden() {
+      try {
+        this.sellDisabled = true;
+        let url = await BackendUtilities.GetSellSessionUrl();
+        if (!url) {
+          url = "https://gulden.com/sell";
+        }
+        window.open(url, "sell-gulden");
+      } finally {
+        this.sellDisabled = false;
+      }
+    },
     onPasswordKeydown() {
       this.isPasswordInvalid = false;
     },
