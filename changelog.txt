@@ -2,6 +2,7 @@
 
 RPC     - Add 'selected_witness_index' info to 'getwitnessoutput' command
 Debug   - Introduce split debug uploads for all linux/windows builds and add documentation on how to utilise it
+Bench   - Add some additional benchmark info to "bench_sigma" tool
 
 
 
