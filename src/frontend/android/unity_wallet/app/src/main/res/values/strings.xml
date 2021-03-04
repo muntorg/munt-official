@@ -173,5 +173,4 @@ file COPYING
     <string name="send_insufficient_balance">Insufficient balance</string>
     <string name="not_gulden_qr">Not a valid Gulden QR:\n\n%1$s</string>
     <string name="error_check_internet_connection">Please check your internet connection</string>
-    <string name="send_fragment_sell_label">Sell</string>
 </resources>

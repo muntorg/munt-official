@@ -55,11 +55,11 @@ class ReceiveFragment : AppBaseFragment() {
 
     private fun copyToClipboard() {
         val clip: ClipData = ClipData.newPlainText(getString(R.string.gulden_address_clipboard_label), currentAddressLabel.text)
-        val clipboard = getSystemService<ClipboardManager>(requireActivity(), ClipboardManager::class.java) as ClipboardManager
+        val clipboard = getSystemService<ClipboardManager>(activity!!, ClipboardManager::class.java) as ClipboardManager
         clipboard.setPrimaryClip(clip)
 
         val toast = Toast.makeText(context, getString(R.string.copied_to_clipboard_toast), Toast.LENGTH_SHORT)
-        toast.setGravity(Gravity.TOP, 0, requireContext().dimen(R.dimen.top_toast_offset) )
+        toast.setGravity(Gravity.TOP, 0, context!!.dimen(R.dimen.top_toast_offset) )
         toast.show()
     }
 
