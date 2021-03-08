@@ -538,6 +538,68 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
     return witnessInfoForBlocks;
 }
 
+static UniValue getwitnessutxo(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() > 1)
+        throw std::runtime_error(
+            "getwitnessutxo \"block_specifier\"\n"
+            "\nReturns witness utxo for a given block."
+            "\nArguments:\n"
+            "1. \"block_specifier\"       (string, optional, default=tip) The block_specifier for which to display witness information, if empty or 'tip' the tip of the current chain is used.\n"
+            );
+
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+    #else
+    LOCK(cs_main);
+    #endif
+
+    CBlockIndex* pTipIndexStart = nullptr;
+    std::string sTipSpecifier = request.params[0].get_str();
+    pTipIndexStart = GetIndexFromSpecifier(sTipSpecifier);
+
+    if (!pTipIndexStart || (uint64_t)pTipIndexStart->nHeight < Params().GetConsensus().pow2Phase5FirstBlockHeight)
+        throw std::runtime_error("Requests block(s) from before phase 5 activation.");
+    
+    CBlockIndex* pTipIndex_ = nullptr;
+    //fixme: (PHASE5) - Fix this to only do a shallow clone of whats needed (need to fix recursive cloning mess first)
+    CCloneChain tempChain(chainActive, GetPow2ValidationCloneHeight(chainActive, pTipIndexStart, 10), pTipIndexStart, pTipIndex_);
+    if (!pTipIndex_)
+            throw std::runtime_error("Could not locate a valid PoW² chain that contains this block as tip.");
+    CCoinsViewCache viewNew(pcoinsTip);
+        
+    UniValue witnessUTXO(UniValue::VARR);
+    CBlock block;
+    {
+        LOCK(cs_main);// cs_main lock required for ReadBlockFromDisk
+        if (!ReadBlockFromDisk(block, pTipIndex_, Params()))
+            throw std::runtime_error("Could not load block to obtain PoW² information.");
+    }
+    
+    std::map<COutPoint, Coin> allWitnessCoinsIndexBased;
+    // Fetch all unspent witness outputs for the chain in which -block- acts as the tip.
+    if (!getAllUnspentWitnessCoins(tempChain, Params(), pTipIndex_->pprev, allWitnessCoinsIndexBased, &block, &viewNew, true))
+        throw std::runtime_error("Could not retrieve utxo for block.");
+
+    for (const auto& [outpoint, coin] : allWitnessCoinsIndexBased)
+    {
+        UniValue rec(UniValue::VARR);
+        rec.push_back(pTipIndex_->nHeight-(uint64_t)outpoint.getTransactionBlockNumber());
+        rec.push_back((uint64_t)outpoint.getTransactionIndex());
+        rec.push_back((uint64_t)outpoint.n);
+        uint64_t nUnused1;
+        uint64_t nUnused2;
+        int64_t nWeight = GetPoW2RawWeightForAmount(coin.out.nValue, GetPoW2LockLengthInBlocksFromOutput(coin.out, coin.nHeight, nUnused1, nUnused2));
+        rec.push_back((uint64_t)nWeight);
+        rec.push_back((uint64_t)coin.out.output.witnessDetails.witnessKeyID.ToString().c_str());
+        witnessUTXO.push_back(rec);
+    }
+    return witnessUTXO;
+}
+
 static UniValue disablewitnessing(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 0) {
@@ -3750,6 +3812,7 @@ static const CRPCCommand commandsFull[] =
     { "witness",                 "getwitnessaddresskeys",           &getwitnessaddresskeys,          true,    {"witness_address"} },
     { "witness",                 "getwitnesscompound",              &getwitnesscompound,             true,    {"witness_account"} },
     { "witness",                 "getwitnessinfo",                  &getwitnessinfo,                 true,    {"block_specifier", "verbose", "mine_only"} },
+    { "witness",                 "getwitnessutxo",                  &getwitnessutxo,                 true,    {"block_specifier"} },
     { "witness",                 "getwitnessrewardscript",          &getwitnessrewardscript,         true,    {"witness_account"} },
     { "witness",                 "importwitnesskeys",               &importwitnesskeys,              true,    {"account_name", "encoded_key_url", "create_account"} },
     { "witness",                 "mergewitnessaccount",             &mergewitnessaccount,            true,    {"funding_account", "witness_account"} },
