@@ -117,6 +117,7 @@ public:
     }*/
 
     void GetAllCoins(std::map<COutPoint, Coin>& allCoins) const override;
+    void GetAllCoinsIndexBased(std::map<COutPoint, Coin>& allCoins) const override;
 };
 
 /** CWitViewDB backed by the witness database (witstate/) */
