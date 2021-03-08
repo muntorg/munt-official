@@ -96,7 +96,7 @@ uint64_t expectedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeigh
 // The average frequency which we are expected to witness in.
 uint64_t estimatedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeight);
 
-bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, const CBlockIndex* pPreviousIndexChain, std::map<COutPoint, Coin>& allWitnessCoins, CBlock* newBlock=nullptr, CCoinsViewCache* viewOverride=nullptr);
+bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, const CBlockIndex* pPreviousIndexChain, std::map<COutPoint, Coin>& allWitnessCoins, CBlock* newBlock=nullptr, CCoinsViewCache* viewOverride=nullptr, bool forceIndexBased=false);
 
 bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight);
 

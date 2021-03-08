@@ -246,7 +246,7 @@ uint64_t estimatedWitnessBlockPeriod(uint64_t nWeight, uint64_t networkTotalWeig
 }
 
 
-bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, const CBlockIndex* pPreviousIndexChain_, std::map<COutPoint, Coin>& allWitnessCoins, CBlock* newBlock, CCoinsViewCache* viewOverride)
+bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, const CBlockIndex* pPreviousIndexChain_, std::map<COutPoint, Coin>& allWitnessCoins, CBlock* newBlock, CCoinsViewCache* viewOverride, bool forceIndexBased)
 {
     DO_BENCHMARK("WIT: getAllUnspentWitnessCoins", BCLog::BENCH|BCLog::WITNESS);
 
@@ -338,7 +338,14 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
         For each iteration we should remove items from allWitnessCoins if they have been deleted in the higher layer as the higher layer overrides the lower layer.
         GetAllCoins takes care of all of this automatically.
     **/
-    viewNew.pChainedWitView->GetAllCoins(allWitnessCoins);
+    if (forceIndexBased)
+    {
+        viewNew.pChainedWitView->GetAllCoinsIndexBased(allWitnessCoins);
+    }
+    else
+    {
+        viewNew.pChainedWitView->GetAllCoins(allWitnessCoins);
+    }
 
     return true;
 }
@@ -456,6 +463,9 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
     auto selectedWitness = std::lower_bound(witnessInfo.witnessSelectionPoolFiltered.begin(), witnessInfo.witnessSelectionPoolFiltered.end(), rouletteSelectionSeed.GetLow64());
     witnessInfo.selectedWitnessTransaction = selectedWitness->coin.out;
     witnessInfo.selectedWitnessIndex = selectedWitness-(witnessInfo.witnessSelectionPoolFiltered.begin());
+    #ifdef DEBUG
+    assert((witnessInfo.witnessSelectionPoolFiltered[witnessInfo.selectedWitnessIndex].coin.out == selectedWitness->coin.out));
+    #endif
     witnessInfo.selectedWitnessBlockHeight = selectedWitness->coin.nHeight;
     witnessInfo.selectedWitnessOutpoint = selectedWitness->outpoint;
 
