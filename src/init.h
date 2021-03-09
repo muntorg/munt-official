@@ -31,6 +31,9 @@ void CoreInterrupt(boost::thread_group& threadGroup);
 void CoreShutdown(boost::thread_group& threadGroup);
 //!Initialize the logging infrastructure
 void InitLogging();
+//!Initialize any app specific hardcoded paramaters here (e.g. the android wallet will set -spv)
+//!This is called after loading the config file
+void InitAppSpecificConfigParamaters();
 //!Parameter interaction: change current parameters depending on various rules
 void InitParameterInteraction();
 

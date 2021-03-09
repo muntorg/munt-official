@@ -173,6 +173,7 @@ int RaiseFileDescriptorLimit(int nMinFD);
 void AllocateFileRange(FILE *file, unsigned int offset, unsigned int length);
 bool RenameOver(fs::path src, fs::path dest);
 bool TryCreateDirectory(const fs::path& p);
+extern std::string defaultDataDirOverride;
 fs::path GetDefaultDataDir();
 const fs::path &GetDataDir(bool fNetSpecific = true);
 void ClearDatadirCache();

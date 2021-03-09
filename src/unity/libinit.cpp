@@ -104,6 +104,8 @@ int InitUnity()
             return EXIT_FAILURE;
         }
 
+        InitAppSpecificConfigParamaters();
+
         // Check for -testnet or -regtest parameter (Params() calls are only valid after this clause)
         try
         {
