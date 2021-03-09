@@ -858,6 +858,12 @@ bool ILibraryController::IsValidLinkURI(const std::string& linked_uri)
     return true;
 }
 
+bool testnet_;
+bool spvMode_;
+const std::string& extraArgs_;
+const std::string& staticFilterPath_;
+int64_t staticFilterOffset_;
+int64_t staticFilterLength_;
 
 int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, bool spvMode, const std::shared_ptr<ILibraryListener>& signalHandler_, const std::string& extraArgs)
 {
@@ -894,10 +900,23 @@ int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::
     }, std::chrono::milliseconds(NEW_MUTATIONS_NOTIFY_THRESHOLD_MS));
 
     // Force the datadir to specific place on e.g. android devices
-    if (!dataDir.empty())
-        SoftSetArg("-datadir", dataDir);
+    defaultDataDirOverride = dataDir;
 
-    if (spvMode)
+    signalHandler = signalHandler_;
+    
+    testnet_ = testnet;
+    spvMode_ = spvMode;
+    extraArgs_ = extraArgs;
+    staticFilterPath_ = staticFilterPath;
+    staticFilterOffset_ = staticFilterOffset;
+    staticFilterLength_ = staticFilterLength;
+
+    return InitUnity();
+}
+
+void InitAppSpecificConfigParamaters()
+{
+    if (spvMode_)
     {
         // SPV wallets definitely shouldn't be listening for incoming connections at all
         SoftSetArg("-listen", "0");
@@ -939,9 +958,9 @@ int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::
         #endif
     }
     
-    SoftSetArg("-spvstaticfilterfile", staticFilterPath);
-    SoftSetArg("-spvstaticfilterfileoffset", i64tostr(staticFilterOffset));
-    SoftSetArg("-spvstaticfilterfilelength", i64tostr(staticFilterLength));
+    SoftSetArg("-spvstaticfilterfile", staticFilterPath_);
+    SoftSetArg("-spvstaticfilterfileoffset", i64tostr(staticFilterOffset_));
+    SoftSetArg("-spvstaticfilterfilelength", i64tostr(staticFilterLength_));
 
     // Change client name
 #if defined(__APPLE__) && TARGET_OS_IPHONE == 1
@@ -953,7 +972,7 @@ int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::
 #endif
 
     // Testnet
-    if (testnet)
+    if (testnet_)
     {
         SoftSetArg("-testnet", "S1595347850:60");
         SoftSetArg("-addnode", "178.62.195.19");
@@ -963,18 +982,14 @@ int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::
         SoftSetArg("-addnode", "178.62.195.19");
         SoftSetArg("-addnode", "149.210.165.218");
     }
-
-    signalHandler = signalHandler_;
-
-    if (!extraArgs.empty()) {
+    
+    if (!extraArgs_.empty()) {
         std::vector<const char*> args;
-        auto splitted = boost::program_options::split_unix(extraArgs);
+        auto splitted = boost::program_options::split_unix(extraArgs_);
         for(const auto& part: splitted)
             args.push_back(part.c_str());
         gArgs.ParseExtraParameters(int(args.size()), args.data());
     }
-
-    return InitUnity();
 }
 
 void ILibraryController::InitUnityLibThreaded(const std::string& dataDir, const std::string& staticFilterPath, int64_t staticFilterOffset, int64_t staticFilterLength, bool testnet, bool spvMode, const std::shared_ptr<ILibraryListener>& signalHandler_, const std::string& extraArgs)
