@@ -549,7 +549,7 @@ void handleInitWithoutExistingWallet()
 
 std::string ILibraryController::BuildInfo()
 {
-    std::string info = FormatFullVersion();
+    std::string info = FormatThreeDigitVersion();
 
 #if defined(__aarch64__)
     info += " aarch64";
@@ -860,8 +860,8 @@ bool ILibraryController::IsValidLinkURI(const std::string& linked_uri)
 
 bool testnet_;
 bool spvMode_;
-const std::string& extraArgs_;
-const std::string& staticFilterPath_;
+std::string extraArgs_;
+std::string staticFilterPath_;
 int64_t staticFilterOffset_;
 int64_t staticFilterLength_;
 
