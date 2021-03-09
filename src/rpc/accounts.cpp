@@ -12,6 +12,7 @@
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
 #include <consensus/consensus.h>
+#include <consensus/validation.h>
 #include <boost/assign/list_of.hpp>
 
 #include "auto_checkpoints.h"
@@ -3097,8 +3098,8 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
             "\n    2) When set to a positive number \"n\", earnings up until \"n\" will be compounded, and the remainder will be sent to the non-compound output (as describe in 1).\n"
             "\n    3) When set to a negative number \"n\", \"n\" will be deducted and sent to a non-compound output (as described in 1) and the remainder will be compounded.\n"
             "\nIn all cases it is important to remember the following:\n"
-            "\n    4) Transaction fees and not just the witness reward can be compounded, so while the witness reward is 20 NLG compounding amount should be set considering possible transaction fees as well.\n"
-            "\n    5) A maximum of 40 " GLOBAL_COIN_CODE " can be compounded, regardless of whether a block contains more fees. In the event that there are additional fees to distribute after applying the compounding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
+            "\n    4) Transaction fees and not just the witness reward can be compounded, so compounding amount should be set considering possible transaction fees as well and not just the block reward.\n"
+            "\n    5) A maximum of " GLOBAL_MAXIMUM_WITNESS_COMPOUND " " GLOBAL_COIN_CODE " can be compounded, regardless of whether a block contains more fees. In the event that there are additional fees to distribute after applying the compounding settings, the settings will be ignored for the additional fees and paid to a non-compound output (as described in 1)\n"
             "\nArguments:\n"
             "1. \"witness_account\"            (string) The UUID or unique label of the account.\n"
             "2. amount                        (numeric or string, required) The amount in " + CURRENCY_UNIT + "\n"
@@ -3108,8 +3109,8 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
             "     \"amount\"                   (string) The amount that has been set.\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("setwitnesscompound \"My witness account\" 20", "")
-            + HelpExampleRpc("setwitnesscompound \"My witness account\" 20", ""));
+            + HelpExampleCli("setwitnesscompound \"My witness account\" 5", "")
+            + HelpExampleRpc("setwitnesscompound \"My witness account\" 10", ""));
 
     if (!pwallet)
         throw std::runtime_error("Cannot use command without an active wallet");

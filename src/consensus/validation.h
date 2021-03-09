@@ -27,10 +27,12 @@ static const int gMaximumParticipationAge = 365 * gRefactorDailyBlocksUsage; // 
                                                     // We try to balance this in such a way that it allows smaller witness accounts but not ones so absurdly small that they force witnesses to unnecessarily keep years of data around.
                                                     // Currently set at - 1 year (365 days * daily blocks).
 
-static const int gStartingWitnessNetworkWeightEstimate    = 260000000;
+static const int gStartingWitnessNetworkWeightEstimate  = 260000000;
 static const int gMinimumWitnessLockDays                = 30;
 static const int gMaximumWitnessLockDays                = 3 * 365;
-static const int gMaximumWitnessCompoundAmount = 40;
+#define GLOBAL_MAXIMUM_WITNESS_COMPOUND                  "40"
+static const int gMaximumWitnessCompoundAmount          = 40;
+
 
 /** "reject" message codes */
 static const unsigned char REJECT_MALFORMED = 0x01;
