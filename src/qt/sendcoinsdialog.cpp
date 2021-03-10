@@ -131,10 +131,12 @@ SendCoinsDialog::SendCoinsDialog(const QStyle *_platformStyle, QWidget *parent) 
     ui->frameFee->setVisible(false);
 
     ui->horizontalLayout->removeWidget(ui->sendButton);
+    ui->horizontalLayout->removeWidget(ui->sellButton);
     QPushButton* editButton = new QPushButton();
     editButton->setText(tr("&Edit"));
     editButton->setObjectName("editButton");
     ui->horizontalLayout->addWidget(editButton);
+    ui->horizontalLayout->addWidget(ui->sellButton);
     ui->horizontalLayout->addWidget(ui->sendButton);
 
     ui->sendButton->setIcon(QIcon());

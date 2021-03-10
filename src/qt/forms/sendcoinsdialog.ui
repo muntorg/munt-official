@@ -1221,7 +1221,7 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Confirm the send action</string>
+        <string/>
        </property>
        <property name="text">
         <string notr="true">Sell</string>
@@ -1233,7 +1233,7 @@
         <bool>false</bool>
        </property>
        <property name="class" stdset="0">
-        <string notr="true">focus</string>
+        <string notr="true">normal</string>
        </property>
       </widget>
      </item>
