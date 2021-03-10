@@ -1267,6 +1267,7 @@ class LibUnity {
         var formData = new FormData();
         formData.append("address", store.state.wallet.receiveAddress);
         formData.append("currency", "gulden");
+        formData.append("wallettype", "lite");
         formData.append("uuid", this.walletController.GetUUID());
 
         let response = await axios.post(
@@ -1292,6 +1293,7 @@ class LibUnity {
         var formData = new FormData();
         formData.append("address", store.state.wallet.receiveAddress);
         formData.append("currency", "gulden");
+        formData.append("wallettype", "lite");
         formData.append("uuid", this.walletController.GetUUID());
 
         let response = await axios.post(

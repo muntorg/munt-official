@@ -185,6 +185,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
                     params["address"] = ILibraryController.GetReceiveAddress().toString();
                     params["uuid"] = IWalletController.GetUUID();
                     params["currency"] = "gulden";
+                    params["wallettype"] = "android";
                     return params;
                 }
                 override fun getHeaders(): MutableMap<String, String> {

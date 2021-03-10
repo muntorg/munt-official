@@ -228,6 +228,7 @@ void ReceiveCoinsDialog::showBuyGuldenDialog()
     QUrlQuery query;
     query.addQueryItem("address", guldenAddress);
     query.addQueryItem("currency", "gulden");
+    query.addQueryItem("wallettype", "pro");
     query.addQueryItem("uuid", getUUIDAsString(pactiveWallet->getActiveAccount()->getUUID()).c_str());
     QByteArray postData = query.toString(QUrl::FullyEncoded).toUtf8();
     connect(mgr,&QNetworkAccessManager::finished,[this](QNetworkReply* reply) {
