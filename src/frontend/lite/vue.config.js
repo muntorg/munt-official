@@ -12,6 +12,13 @@ module.exports = {
         productName: "Gulden-lite",
         publish: null,
         afterSign: "./notarize.js",
+        protocols: [
+          {
+            name: 'guldenlite',
+            role: 'Viewer',
+            schemes: ['guldenlite', 'gulden']
+          }
+        ],
         mac: {
           category: "public.app-category.finance",
           asar: false,
