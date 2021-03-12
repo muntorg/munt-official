@@ -20,8 +20,6 @@ import store from "./store";
 import AppStatus from "./AppStatus";
 import axios from "axios";
 
-import "./protocol";
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let winMain;
@@ -293,4 +291,48 @@ if (isDevelopment) {
       app.quit();
     });
   }
+}
+
+function focusMainWindow() {
+  if (winMain.isMinimized()) winMain.restore();
+  winMain.focus();
+}
+
+// Handle URI links (gulden: guldenlite://)
+// If we are launching a second instance then terminate and let the first instance handle it instead
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on(
+    "second-instance",
+    (
+      [
+        ,
+        ,/*event*/
+      /*commandLine*/
+      /*workingDirectory*/
+      ]
+    ) => {
+      focusMainWindow();
+    }
+  );
+  // Protocol handler for osx
+  app.on("open-url", function([event /*url*/]) {
+    event.preventDefault();
+    focusMainWindow;
+  });
+}
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient("gulden", process.execPath, [
+      path.resolve(process.argv[1])
+    ]);
+    app.setAsDefaultProtocolClient("guldenlite", process.execPath, [
+      path.resolve(process.argv[1])
+    ]);
+  }
+} else {
+  app.setAsDefaultProtocolClient("gulden");
+  app.setAsDefaultProtocolClient("guldenlite");
 }

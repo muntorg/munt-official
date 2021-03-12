@@ -1286,7 +1286,7 @@ class LibUnity {
         event.returnValue = handleError(e);
       }
     });
-    
+
     ipc.on("BackendUtilities.GetSellSessionUrl", async event => {
       console.log(`IPC: BackendUtilities.GetSellSessionUrl()`);
       try {

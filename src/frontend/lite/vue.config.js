@@ -14,9 +14,9 @@ module.exports = {
         afterSign: "./notarize.js",
         protocols: [
           {
-            name: 'guldenlite',
-            role: 'Viewer',
-            schemes: ['guldenlite', 'gulden']
+            name: "guldenlite",
+            role: "Viewer",
+            schemes: ["guldenlite", "gulden"]
           }
         ],
         mac: {
