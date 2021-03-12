@@ -26,6 +26,38 @@ let winMain;
 let winDebug;
 let libUnity = new LibUnity({ walletPath });
 
+// Handle URI links (gulden: guldenlite://)
+// If we are launching a second instance then terminate and let the first instance handle it instead
+//NB! This must happen before all other app related code (especially libulden init) as otherwise second process can crash
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+      focusMainWindow();
+    }
+  );
+  // Protocol handler for osx
+  app.on("open-url", function([event,]) {
+    event.preventDefault();
+    focusMainWindow();
+  });
+}
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient("gulden", process.execPath, [
+      path.resolve(process.argv[1])
+    ]);
+    app.setAsDefaultProtocolClient("guldenlite", process.execPath, [
+      path.resolve(process.argv[1])
+    ]);
+  }
+} else {
+  app.setAsDefaultProtocolClient("gulden");
+  app.setAsDefaultProtocolClient("guldenlite");
+}
+// End of URI handling
+
 /* TODO: refactor into function and add option to libgulden to remove existing wallet folder */
 if (isDevelopment) {
   let args = process.argv.slice(2);
@@ -295,35 +327,6 @@ if (isDevelopment) {
 
 function focusMainWindow() {
   if (winMain.isMinimized()) winMain.restore();
+  else winMain.show();
   winMain.focus();
-}
-
-// Handle URI links (gulden: guldenlite://)
-// If we are launching a second instance then terminate and let the first instance handle it instead
-const gotTheLock = app.requestSingleInstanceLock();
-if (!gotTheLock) {
-  app.quit();
-} else {
-  app.on('second-instance', (event, commandLine, workingDirectory) => {
-      focusMainWindow();
-    }
-  );
-  // Protocol handler for osx
-  app.on("open-url", function([event,]) {
-    event.preventDefault();
-    focusMainWindow();
-  });
-}
-if (process.defaultApp) {
-  if (process.argv.length >= 2) {
-    app.setAsDefaultProtocolClient("gulden", process.execPath, [
-      path.resolve(process.argv[1])
-    ]);
-    app.setAsDefaultProtocolClient("guldenlite", process.execPath, [
-      path.resolve(process.argv[1])
-    ]);
-  }
-} else {
-  app.setAsDefaultProtocolClient("gulden");
-  app.setAsDefaultProtocolClient("guldenlite");
 }
