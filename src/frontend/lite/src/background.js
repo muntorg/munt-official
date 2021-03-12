@@ -304,23 +304,14 @@ const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
 } else {
-  app.on(
-    "second-instance",
-    (
-      [
-        ,
-        ,/*event*/
-      /*commandLine*/
-      /*workingDirectory*/
-      ]
-    ) => {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
       focusMainWindow();
     }
   );
   // Protocol handler for osx
-  app.on("open-url", function([event /*url*/]) {
+  app.on("open-url", function([event,]) {
     event.preventDefault();
-    focusMainWindow;
+    focusMainWindow();
   });
 }
 if (process.defaultApp) {
