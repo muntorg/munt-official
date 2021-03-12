@@ -322,7 +322,10 @@ if (isDevelopment) {
 }
 
 function focusMainWindow() {
-  if (winMain.isMinimized()) winMain.restore();
-  else winMain.show();
-  winMain.focus();
+  if (winMain)
+  {
+    if (winMain.isMinimized()) winMain.restore();
+    else winMain.show();
+    winMain.focus();
+  }
 }
