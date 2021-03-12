@@ -38,7 +38,7 @@ if (!gotTheLock) {
     }
   );
   // Protocol handler for osx
-  app.on("open-url", function([event,]) {
+  app.on("open-url", (event, url) => {
     event.preventDefault();
     focusMainWindow();
   });
