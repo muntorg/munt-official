@@ -1,8 +1,17 @@
+2.3.10
+
+MISC    - New URI handlers "guldenlite:" and "guldenpro:" for specific targeting of lite/pro apps; "gulden:" URI handler still remains and will be used to target whichever app is installed
+UI      - Add in-app sell functionality (as companion to recent buy functionality); In collaboration with Blockhut
+
+
+
+
 2.3.9
 
 RPC     - Add 'selected_witness_index' info to 'getwitnessoutput' command
 Debug   - Introduce split debug uploads for all linux/windows builds and add documentation on how to utilise it
 Bench   - Add some additional benchmark info to "bench_sigma" tool
+
 
 
 
