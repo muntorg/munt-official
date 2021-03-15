@@ -531,6 +531,48 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
     return GetWitnessHelper(block.GetHashLegacy(), witnessInfo, nBlockHeight);
 }
 
+
+bool GetWitnessFromUTXO(std::vector<RouletteItem> witnessUtxo, CBlockIndex* pBlockIndex, CGetWitnessInfo& witnessInfo)
+{
+    DO_BENCHMARK("WIT: GetWitnessFromUTXO", BCLog::BENCH|BCLog::WITNESS);
+    
+    #ifdef ENABLE_WALLET
+    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    // Populate the witness info from the utxo
+    uint64_t nBlockHeight = pBlockIndex->nHeight;
+    
+    // Equivalent of GetWitnessInfo
+    {
+        // Gather all witnesses that exceed minimum weight and count the total witness weight.
+        for (auto rouletteItem : witnessUtxo)
+        {
+            //uint64_t nAge = nBlockHeight - coinIter.second.nHeight;
+            assert(!rouletteItem.outpoint.isHash);
+            //COutPoint outPoint = coinIter.first;
+            if (rouletteItem.coin.out.nValue >= (gMinimumWitnessAmount*COIN))
+            {
+                uint64_t nUnused1, nUnused2;
+                int64_t nWeight = GetPoW2RawWeightForAmount(rouletteItem.coin.out.nValue, GetPoW2LockLengthInBlocksFromOutput(rouletteItem.coin.out, rouletteItem.coin.nHeight, nUnused1, nUnused2));
+                if (nWeight < gMinimumWitnessWeight)
+                    continue;
+                witnessInfo.witnessSelectionPoolUnfiltered.push_back(rouletteItem);
+                witnessInfo.nTotalWeightRaw += nWeight;
+            }
+            else if (rouletteItem.coin.out.output.witnessDetails.lockFromBlock == 1)
+            {
+                rouletteItem.nWeight = 0;
+                witnessInfo.witnessSelectionPoolUnfiltered.push_back(rouletteItem);
+            }
+        }
+    }
+
+    return GetWitnessHelper(pBlockIndex->GetBlockHashLegacy(), witnessInfo, nBlockHeight);
+}
+
 // Ideally this should have been some hybrid of witInfo.nTotalWeight / witInfo.nReducedTotalWeight - as both independantly aren't perfect.
 // Total weight is prone to be too high if there are lots of large >1% witnesses, nReducedTotalWeight is prone to be too low if there is one large witness who has recently witnessed.
 // However on a large network with lots of participants this should not matter - and technical constraints make the total the best compromise
