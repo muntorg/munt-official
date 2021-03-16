@@ -113,6 +113,8 @@ public:
         consensus.devBlockSubsidyActivationHeight=1030001;
         consensus.pow2Phase4FirstBlockHeight=1131652;
         consensus.pow2Phase5FirstBlockHeight=1140958;
+        //Don't allow activation yet
+        consensus.pow2WitnessSyncHeight=std::numeric_limits<uint64_t>::max();
 
         // Message start string to avoid accidental cross communication with other chains or software.
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
@@ -234,6 +236,15 @@ public:
             consensus.devBlockSubsidyActivationHeight=1;
             consensus.pow2Phase4FirstBlockHeight=0;
             consensus.pow2Phase5FirstBlockHeight=0;
+            if (fIsOfficialTestnetV1)
+            {
+                //Don't allow activation yet
+                consensus.pow2WitnessSyncHeight=std::numeric_limits<uint64_t>::max();
+            }
+            else
+            {
+                consensus.pow2WitnessSyncHeight=10;
+            }
 
             numGenesisWitnesses = 10;
             genesisWitnessWeightDivisor = 100;

@@ -338,7 +338,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
         For each iteration we should remove items from allWitnessCoins if they have been deleted in the higher layer as the higher layer overrides the lower layer.
         GetAllCoins takes care of all of this automatically.
     **/
-    if (forceIndexBased)
+    if (forceIndexBased || tempChain.Tip()->nHeight >= Params().GetConsensus().pow2WitnessSyncHeight)
     {
         viewNew.pChainedWitView->GetAllCoinsIndexBased(allWitnessCoins);
     }
@@ -486,13 +486,15 @@ bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCa
     if (!getAllUnspentWitnessCoins(chain, chainParams, pPreviousIndexChain, witnessInfo.allWitnessCoins, &block, viewOverride))
         return false;
 
+    bool outputsShouldBeHashes = (nBlockHeight < Params().GetConsensus().pow2WitnessSyncHeight);
+
     // Gather all witnesses that exceed minimum weight and count the total witness weight.
     for (auto coinIter : witnessInfo.allWitnessCoins)
     {
         //fixme: (PHASE5) Unit tests
         uint64_t nAge = nBlockHeight - coinIter.second.nHeight;
         COutPoint outPoint = coinIter.first;
-        assert(outPoint.isHash);
+        assert(outPoint.isHash == outputsShouldBeHashes);
         Coin coin = coinIter.second;
         if (coin.out.nValue >= (gMinimumWitnessAmount*COIN))
         {
