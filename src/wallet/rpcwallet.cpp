@@ -1128,7 +1128,7 @@ UniValue defrag(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Failed to sign transaction " + strError);
     }
 
-    return vecOutputs.size();
+    return (uint64_t)vecOutputs.size();
 }
 
 
