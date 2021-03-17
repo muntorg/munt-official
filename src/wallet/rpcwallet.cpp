@@ -1041,6 +1041,96 @@ UniValue movecmd(const JSONRPCRequest& request)
     return true;
 }
 
+UniValue defrag(const JSONRPCRequest& request)
+{
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
+        return NullUniValue;
+    }
+
+    if (request.fHelp || request.params.size() < 5 || request.params.size() > 6)
+    {
+        throw std::runtime_error(
+            "defrag \"from_account\" \"to_address\" min_input_amount max_input_amount max_input_quantity ( min_conf )\n"
+            "\nCombine all inputs larger than \"min_input_amount\" and smaller than \"max_input_amount\" into a single output belonging to \"to_address\"\n"
+            "\nStop when number of inputs exceeds \"max_input_quantity\"; for large wallet repeated calls may be necessary before all inputs are combined\n"
+            "\nArguments:\n"
+            "1. \"from_account\"     (string, required) The UUID or unique label of the account to move funds from. May be the currently active account using \"\".\n"
+            "2. \"to_address\"       (string, required) Address to combine funds into. May be the currently active account using \"\".\n"
+            "3. min_input_amount   (numeric string) Ignore inputs smaller than this size\n"
+            "4. max_input_amount   (numeric string) Ignore inputs larger than this size\n"
+            "5. max_input_quantity (numeric) Maximum number of inputs to combine in a single run\n"
+            "6. min_conf           (numeric, optional, default=100) Only use funds with at least this many confirmations.\n"
+            "\nResult:\n"
+            "Returns the number of inputs that were combined on this run.\n"
+        );
+    }
+
+    DS_LOCK2(cs_main, pwallet->cs_wallet);
+
+    CAccount* fromAccount = AccountFromValue(pwallet, request.params[0], true);
+    CNativeAddress receiveAddress(request.params[1].get_str());
+    if (!receiveAddress.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid " GLOBAL_APPNAME " address");
+
+    CAmount nMinimumAmount = AmountFromValue(request.params[2]);
+    CAmount nMaximumAmount = AmountFromValue(request.params[3]);
+    int nMaximumCount = request.params[4].get_int();
+    
+    int nMinDepth = 100;
+    if (request.params.size() > 5)
+        nMinDepth = request.params[5].get_int();
+
+    bool subtractFeeFromAmount = true;
+
+    EnsureWalletIsUnlocked(pwallet);
+    
+    // Grab as many outputs as possible that meet our constraints
+    std::vector<COutput> vecOutputs;
+    pwallet->AvailableCoins(fromAccount, vecOutputs, false, NULL, nMinimumAmount, nMaximumAmount, MAX_MONEY, nMaximumCount, nMinDepth);
+    if (vecOutputs.size()==0)
+        return 0;
+    
+    // Place them all in our transaction and sum the total value
+    CMutableTransaction rawTx(CURRENT_TX_VERSION_POW2);
+    CAmount nTotalSent=0;
+    for (const auto& input : vecOutputs)
+    {        
+        CTxIn in(COutPoint(input.tx->GetHash(), input.i), CScript(), 0, 0);
+        rawTx.vin.push_back(in);
+        nTotalSent += input.tx->tx->vout[input.i].nValue;
+    }
+    
+    // Add a single output to which the entire amount goes
+    CScript scriptPubKey = GetScriptForDestination(receiveAddress.Get());
+    {
+        CTxOut out(nTotalSent, scriptPubKey);
+        rawTx.vout.push_back(out);
+    }
+    
+    // Calculate transaction fee
+    int64_t txSize = GetVirtualTransactionSize(rawTx);
+    const int64_t maxNewTxSize = CalculateMaximumSignedTxSize(rawTx, pwallet);
+    CAmount nFeeNeeded = pwallet->GetMinimumFee(maxNewTxSize, 1, ::mempool, ::feeEstimator);
+    
+    // re-add the output, this time subtracting the transaction fee
+    rawTx.vout.clear();
+    {
+        CTxOut out(nTotalSent-nFeeNeeded, scriptPubKey);
+        rawTx.vout.push_back(out);
+    }
+    
+    // Sign and send transaction
+    std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptPubKey);
+    std::string strError;
+    if (!pwallet->SignAndSubmitTransaction(*reservedScript, rawTx, strError))
+    {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Failed to sign transaction " + strError);
+    }
+
+    return vecOutputs.size();
+}
+
 
 UniValue sendfrom(const JSONRPCRequest& request)
 {
@@ -3290,6 +3380,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "listunspentforaccount",    &listunspentforaccount,    false,  {"account","min_conf","max_conf","addresses","include_unsafe","query_options"} },
     { "wallet",             "lockunspent",              &lockunspent,              true,   {"unlock","transactions"} },
     { "wallet",             "move",                     &movecmd,                  false,  {"from_account","to_account","amount","min_conf","comment"} },
+    { "wallet",             "defrag",                   &defrag,                   false,  {"from_account","to_address","min_input_amount","max_input_amount","max_input_quantity", "min_conf"} },
     { "wallet",             "rescan",                   &rescan,                   false,  {} },
     { "wallet",             "sendfrom",                 &sendfrom,                 false,  {"from_account","to_address","amount","min_conf","comment","comment_to"} },
     { "wallet",             "sendmany",                 &sendmany,                 false,  {"from_account","amounts","min_conf","comment","subtract_fee_from"} },
