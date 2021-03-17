@@ -21,6 +21,8 @@ enum class BumpFeeResult
     MISC_ERROR,
 };
 
+extern int64_t CalculateMaximumSignedTxSize(const CTransaction &tx, const CWallet *pWallet);
+
 class CFeeBumper
 {
 public:
