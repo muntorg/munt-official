@@ -1094,11 +1094,14 @@ UniValue defrag(const JSONRPCRequest& request)
     // Place them all in our transaction and sum the total value
     CMutableTransaction rawTx(CURRENT_TX_VERSION_POW2);
     CAmount nTotalSent=0;
+    unint64_t inputCount = 0;
     for (const auto& input : vecOutputs)
     {        
         CTxIn in(COutPoint(input.tx->GetHash(), input.i), CScript(), 0, 0);
         rawTx.vin.push_back(in);
         nTotalSent += input.tx->tx->vout[input.i].nValue;
+        if (++inputCount > nMaximumCount)
+            break;
     }
     
     // Add a single output to which the entire amount goes
@@ -1128,7 +1131,7 @@ UniValue defrag(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Failed to sign transaction " + strError);
     }
 
-    return (uint64_t)vecOutputs.size();
+    return inputCount;
 }
 
 
