@@ -88,8 +88,8 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const CChainPar
     return false;
 }
 
-//dev subsidy (over 10 years):
-//(994'744'000+(900'000'000*10)) == 9'994'744'000
+//dev subsidy
+//(994'744'000) - Majority to soon be burned
 //mining subsidy:
 //10'000'000'000-9'994'744'000 = 5256000
 //5'256'000/(0.10*2) == 26'280'000 (blocks)
@@ -105,9 +105,6 @@ CAmount GetBlockSubsidy(uint64_t nHeight)
     
     if (nHeight == 0)
         return 994'744'000*COIN+GetBlockSubsidyWitness(nHeight);
-        
-    if (nHeight == 105120 || nHeight == 105120*2 || nHeight == 105120*3 || nHeight == 105120*4 || nHeight == 105120*5 || nHeight == 105120*6 || nHeight == 105120*7 || nHeight == 105120*8 || nHeight == 105120*9  || nHeight == 105120*10)
-        return (10*CENT)+(900'000'000*COIN)+GetBlockSubsidyWitness(nHeight);
 
     if (nHeight > 26280000)
         return 0;
@@ -130,8 +127,6 @@ CAmount GetBlockSubsidyWitness(uint64_t nHeight)
 
 CAmount GetBlockSubsidyDev(uint64_t nHeight)
 {
-    if (nHeight == 105120 || nHeight == 105120*2 || nHeight == 105120*3 || nHeight == 105120*4 || nHeight == 105120*5 || nHeight == 105120*6 || nHeight == 105120*7 || nHeight == 105120*8 || nHeight == 105120*9 || nHeight == 105120*10)
-        return (900'000'000*COIN);
     return 0;
 }
 
