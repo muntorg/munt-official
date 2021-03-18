@@ -1068,6 +1068,8 @@ UniValue defrag(const JSONRPCRequest& request)
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
+    LogPrintf("DEFRAG: Start account defrag\n");
+    
     CAccount* fromAccount = AccountFromValue(pwallet, request.params[0], true);
     CNativeAddress receiveAddress(request.params[1].get_str());
     if (!receiveAddress.IsValid())
@@ -1086,14 +1088,19 @@ UniValue defrag(const JSONRPCRequest& request)
     EnsureWalletIsUnlocked(pwallet);
     
     // Grab as many outputs as possible that meet our constraints
+    LogPrintf("DEFRAG: Retrieving a list of viable inputs matching our paramaters\n");
     std::vector<COutput> vecOutputs;
     pwallet->AvailableCoins(fromAccount, vecOutputs, false, NULL, nMinimumAmount, nMaximumAmount, MAX_MONEY, nMaximumCount, nMinDepth);
     if (vecOutputs.size()==0)
         return 0;
-    
+
+    LogPrintf("DEFRAG: Retrieved [%d] inputs matching our paramaters\n", vecOutputs.size());
     uint64_t totalInputCount = 0;
+    uint64_t assembledTransactionCount=0;
     do
     {
+        LogPrintf("DEFRAG: Assembling transaction [%d] of [%d]\n", ++assembledTransactionCount, vecOutputs.size()/800);
+
         // Place them all in our transaction and sum the total value
         CMutableTransaction rawTx(CURRENT_TX_VERSION_POW2);
         CAmount nTotalSent=0;
@@ -1134,15 +1141,17 @@ UniValue defrag(const JSONRPCRequest& request)
         }
         
         // Sign and send transaction
+        LogPrintf("DEFRAG: Sign and send transaction\n");
         std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptPubKey);
         std::string strError;
         if (!pwallet->SignAndSubmitTransaction(*reservedScript, rawTx, strError))
         {
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Failed to sign transaction " + strError);
+            LogPrintf("DEFRAG: Failed to sign transaction [%s]\n", strError.c_str());
         }
     }
     while (totalInputCount < nMaximumCount);
 
+    LogPrintf("DEFRAG: Done, processed [%d] inputs\n", totalInputCount);
     return totalInputCount;
 }
 
