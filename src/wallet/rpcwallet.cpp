@@ -1125,47 +1125,58 @@ UniValue defrag(const JSONRPCRequest& request)
     if (vecOutputs.size()==0)
         return 0;
     
-    // Place them all in our transaction and sum the total value
-    CMutableTransaction rawTx(CURRENT_TX_VERSION_POW2);
-    CAmount nTotalSent=0;
-    unint64_t inputCount = 0;
-    for (const auto& input : vecOutputs)
-    {        
-        CTxIn in(COutPoint(input.tx->GetHash(), input.i), CScript(), 0, 0);
-        rawTx.vin.push_back(in);
-        nTotalSent += input.tx->tx->vout[input.i].nValue;
-        if (++inputCount > nMaximumCount)
+    uint64_t totalInputCount = 0;
+    do
+    {
+        // Place them all in our transaction and sum the total value
+        CMutableTransaction rawTx(CURRENT_TX_VERSION_POW2);
+        CAmount nTotalSent=0;
+        uint64_t inputCount = 0;
+        for (uint64_t idx = totalInputCount; idx < vecOutputs.size(); ++idx )
+        {
+            const auto& input = vecOutputs[idx];
+            CTxIn in(COutPoint(input.tx->GetHash(), input.i), CScript(), 0, 0);
+            rawTx.vin.push_back(in);
+            nTotalSent += input.tx->tx->vout[input.i].nValue;
+            if (++totalInputCount > nMaximumCount)
+                break;
+            if (++inputCount > 800)
+                break;
+        }
+        
+        if (rawTx.vin.size() == 0)
             break;
+        
+        // Add a single output to which the entire amount goes
+        CScript scriptPubKey = GetScriptForDestination(receiveAddress.Get());
+        {
+            CTxOut out(nTotalSent, scriptPubKey);
+            rawTx.vout.push_back(out);
+        }
+        
+        // Calculate transaction fee
+        int64_t txSize = GetVirtualTransactionSize(rawTx);
+        const int64_t maxNewTxSize = CalculateMaximumSignedTxSize(rawTx, pwallet);
+        CAmount nFeeNeeded = pwallet->GetMinimumFee(maxNewTxSize, 1, ::mempool, ::feeEstimator);
+        
+        // re-add the output, this time subtracting the transaction fee
+        rawTx.vout.clear();
+        {
+            CTxOut out(nTotalSent-nFeeNeeded, scriptPubKey);
+            rawTx.vout.push_back(out);
+        }
+        
+        // Sign and send transaction
+        std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptPubKey);
+        std::string strError;
+        if (!pwallet->SignAndSubmitTransaction(*reservedScript, rawTx, strError))
+        {
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Failed to sign transaction " + strError);
+        }
     }
-    
-    // Add a single output to which the entire amount goes
-    CScript scriptPubKey = GetScriptForDestination(receiveAddress.Get());
-    {
-        CTxOut out(nTotalSent, scriptPubKey);
-        rawTx.vout.push_back(out);
-    }
-    
-    // Calculate transaction fee
-    int64_t txSize = GetVirtualTransactionSize(rawTx);
-    const int64_t maxNewTxSize = CalculateMaximumSignedTxSize(rawTx, pwallet);
-    CAmount nFeeNeeded = pwallet->GetMinimumFee(maxNewTxSize, 1, ::mempool, ::feeEstimator);
-    
-    // re-add the output, this time subtracting the transaction fee
-    rawTx.vout.clear();
-    {
-        CTxOut out(nTotalSent-nFeeNeeded, scriptPubKey);
-        rawTx.vout.push_back(out);
-    }
-    
-    // Sign and send transaction
-    std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptPubKey);
-    std::string strError;
-    if (!pwallet->SignAndSubmitTransaction(*reservedScript, rawTx, strError))
-    {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Failed to sign transaction " + strError);
-    }
+    while (totalInputCount < nMaximumCount);
 
-    return inputCount;
+    return totalInputCount;
 }
 
 
