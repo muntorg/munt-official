@@ -1131,9 +1131,10 @@ UniValue defrag(const JSONRPCRequest& request)
     LogPrintf("DEFRAG: Retrieved [%d] inputs matching our paramaters\n", vecOutputs.size());
     uint64_t totalInputCount = 0;
     uint64_t assembledTransactionCount=0;
+    const int batchSize=1500;
     do
     {
-        LogPrintf("DEFRAG: Assembling transaction [%d] of [%d]\n", ++assembledTransactionCount, vecOutputs.size()/800);
+        LogPrintf("DEFRAG: Assembling transaction [%d] of [%d]\n", ++assembledTransactionCount, vecOutputs.size()/batchSize);
 
         // Place them all in our transaction and sum the total value
         CMutableTransaction rawTx(CURRENT_TX_VERSION_POW2);
@@ -1147,7 +1148,7 @@ UniValue defrag(const JSONRPCRequest& request)
             nTotalSent += input.tx->tx->vout[input.i].nValue;
             if (++totalInputCount > nMaximumCount)
                 break;
-            if (++inputCount > 800)
+            if (++inputCount > batchSize)
                 break;
         }
         
