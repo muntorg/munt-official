@@ -2655,15 +2655,6 @@ void CWallet::CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, 
                     }
                     else if(!outputSpentInWallet && !outputIsInUTXO)
                     {
-                        bool repair=true;
-                        if (repair)
-                        {
-                            std::vector<uint256> hashesToErase;
-                            std::vector<uint256> hashesErased;
-                            CWalletDB walletdb(*dbw);
-                            hashesToErase.push_back(walletCoinOutpoint.getTransactionHash());
-                            pactiveWallet->ZapSelectTx(walletdb, hashesToErase, hashesErased);
-                        }
                         printf("CompareWalletAgainstUTXO: Found wallet-unspent coins that aren't in the chain utxo and therefore should be spent %s %s[%ld]\n", FormatMoney(walletCoin->tx->vout[n].nValue).c_str(), hash.ToString().c_str(), n);
                         nMismatchFound++;
                         nBalanceInQuestion += walletCoin->tx->vout[n].nValue;
