@@ -111,25 +111,34 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
 UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool txDetails)
 {
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair("hash", blockindex->GetBlockHashPoW2().GetHex()));
-    int confirmations = -1;
-    // Only report confirmations if the block is on the main chain
-    if (chainActive.Contains(blockindex))
-        confirmations = chainActive.Height() - blockindex->nHeight + 1;
-    result.push_back(Pair("confirmations", confirmations));
+    result.push_back(Pair("hash", block.GetHashPoW2().GetHex()));
+    if (blockindex)
+    {
+        int confirmations = -1;
+        // Only report confirmations if the block is on the main chain
+        if (chainActive.Contains(blockindex))
+            confirmations = chainActive.Height() - blockindex->nHeight + 1;
+        result.push_back(Pair("confirmations", confirmations));
+    }
     result.push_back(Pair("strippedsize", (int)::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_SEGREGATED_SIGNATURES)));
-    result.pushKV("validated", (blockindex->nStatus & BLOCK_VALID_MASK) >= BLOCK_VALID_SCRIPTS);
+    if (blockindex)
+    {
+        result.pushKV("validated", (blockindex->nStatus & BLOCK_VALID_MASK) >= BLOCK_VALID_SCRIPTS);
+    }
     result.push_back(Pair("size", (int)::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION)));
     result.push_back(Pair("weight", (int)::GetBlockWeight(block)));
-    result.push_back(Pair("height", blockindex->nHeight));
+    if (blockindex)
+    {
+        result.push_back(Pair("height", blockindex->nHeight));
+    }
     result.push_back(Pair("version", block.nVersion));
     result.push_back(Pair("versionHex", strprintf("%08x", block.nVersion)));
     result.push_back(Pair("merkleroot", block.hashMerkleRoot.GetHex()));
-    result.push_back(Pair("witness_version", blockindex->nVersionPoW2Witness));
-    result.push_back(Pair("witness_versionHex", strprintf("%08x", blockindex->nVersionPoW2Witness)));
-    result.push_back(Pair("witness_time", (int64_t)blockindex->nTimePoW2Witness));
-    result.push_back(Pair("pow_time", (int64_t)blockindex->nTime));
-    result.push_back(Pair("witness_merkleroot", blockindex->hashMerkleRootPoW2Witness.GetHex()));
+    result.push_back(Pair("witness_version", block.nVersionPoW2Witness));
+    result.push_back(Pair("witness_versionHex", strprintf("%08x", block.nVersionPoW2Witness)));
+    result.push_back(Pair("witness_time", (int64_t)block.nTimePoW2Witness));
+    result.push_back(Pair("pow_time", (int64_t)block.nTime));
+    result.push_back(Pair("witness_merkleroot", block.hashMerkleRootPoW2Witness.GetHex()));
     UniValue txs(UniValue::VARR);
     for(const auto& tx : block.vtx)
     {
@@ -143,20 +152,29 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
             txs.push_back(tx->GetHash().GetHex());
     }
     result.push_back(Pair("tx", txs));
-    result.push_back(Pair("time", (int64_t)blockindex->GetBlockTimePoW2Witness()));
-    result.push_back(Pair("mediantime", (int64_t)blockindex->GetMedianTimePast()));
+    if (blockindex)
+    {
+        result.push_back(Pair("time", (int64_t)blockindex->GetBlockTimePoW2Witness()));
+        result.push_back(Pair("mediantime", (int64_t)blockindex->GetMedianTimePast()));
+    }
     result.push_back(Pair("nonce", (uint64_t)block.nNonce));
     result.push_back(Pair("pre_nonce", (uint64_t)block.nPreNonce));
     result.push_back(Pair("post_nonce", (uint64_t)block.nPostNonce));
     result.push_back(Pair("bits", strprintf("%08x", block.nBits)));
-    result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
-    result.push_back(Pair("chainwork", blockindex->nChainWork.GetHex()));
+    if (blockindex)
+    {
+        result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
+        result.push_back(Pair("chainwork", blockindex->nChainWork.GetHex()));
+    }
 
-    if (blockindex->pprev)
-        result.push_back(Pair("previousblockhash", blockindex->pprev->GetBlockHashPoW2().GetHex()));
-    CBlockIndex *pnext = chainActive.Next(blockindex);
-    if (pnext)
-        result.push_back(Pair("nextblockhash", pnext->GetBlockHashPoW2().GetHex()));
+    if (blockindex)
+    {
+        if (blockindex->pprev)
+            result.push_back(Pair("previousblockhash", blockindex->pprev->GetBlockHashPoW2().GetHex()));
+        CBlockIndex *pnext = chainActive.Next(blockindex);
+        if (pnext)
+            result.push_back(Pair("nextblockhash", pnext->GetBlockHashPoW2().GetHex()));
+    }
     return result;
 }
 
@@ -790,6 +808,53 @@ static UniValue getblock(const JSONRPCRequest& request)
     }
 
     return blockToJSON(block, pblockindex, verbosity >= 2);
+}
+
+
+static UniValue decodeblock(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
+        throw std::runtime_error(
+            "decodeblock \"blockhex\"\n"
+            "\nDecode a block from hex and print the result.\n"
+            "\nArguments:\n"
+            "1. \"blockhex\"          (string, required) The block hash\n"
+            "{\n"
+            "  \"hash\" : \"hash\",     (string) the block hash (same as provided)\n"
+            "  \"confirmations\" : n,   (numeric) The number of confirmations, or -1 if the block is not on the main chain\n"
+            "  \"size\" : n,            (numeric) The block size\n"
+            "  \"strippedsize\" : n,    (numeric) The block size excluding segregated signature data\n"
+            "  \"weight\" : n           (numeric) The block weight as defined in BIP 141\n"
+            "  \"height\" : n,          (numeric) The block height or index\n"
+            "  \"version\" : n,         (numeric) The block version\n"
+            "  \"versionHex\" : \"00000000\", (string) The block version formatted in hexadecimal\n"
+            "  \"merkleroot\" : \"xxxx\", (string) The merkle root\n"
+            "  \"tx\" : [               (array of string) The transaction ids\n"
+            "     \"transactionid\"     (string) The transaction id\n"
+            "     ,...\n"
+            "  ],\n"
+            "  \"time\" : ttt,          (numeric) The block time in seconds since epoch (Jan 1 1970 GMT)\n"
+            "  \"mediantime\" : ttt,    (numeric) The median block time in seconds since epoch (Jan 1 1970 GMT)\n"
+            "  \"nonce\" : n,           (numeric) The nonce\n"
+            "  \"bits\" : \"1d00ffff\", (string) The bits\n"
+            "  \"difficulty\" : x.xxx,  (numeric) The difficulty\n"
+            "  \"chainwork\" : \"xxxx\",  (string) Expected number of hashes required to produce the chain up to this block (in hex)\n"
+            "  \"previousblockhash\" : \"hash\",  (string) The hash of the previous block\n"
+            "  \"nextblockhash\" : \"hash\"       (string) The hash of the next block\n"
+            "}\n"
+        );
+
+    LOCK(cs_main); // Required for ReadBlockFromDisk.
+
+    std::string strHex = request.params[0].get_str();
+
+    std::shared_ptr<CBlock> blockptr = std::make_shared<CBlock>();
+    CBlock& block = *blockptr;
+    if (!DecodeHexBlk(block, request.params[0].get_str())) {
+        throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Block decode failed");
+    }
+
+    return blockToJSON(block, nullptr, true);
 }
 
 struct CCoinsStats
@@ -2049,6 +2114,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         "getbestblockhash",       &getbestblockhash,       true,  {} },
     { "blockchain",         "getblockcount",          &getblockcount,          true,  {} },
     { "blockchain",         "getblock",               &getblock,               true,  {"blockhash","verbosity|verbose"} },
+    { "blockchain",         "decodeblock",            &decodeblock,            true,  {"blockhex"} },
     { "blockchain",         "getblockhash",           &getblockhash,           true,  {"height"} },
     { "blockchain",         "getblockheader",         &getblockheader,         true,  {"blockhash","verbose"} },
     { "blockchain",         "getchaintips",           &getchaintips,           true,  {} },
