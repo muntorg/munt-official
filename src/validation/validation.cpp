@@ -702,25 +702,6 @@ int ApplyTxInUndo(CoinUndo&& undo, CCoinsViewCache& view, COutPoint out)
         fClean = false; // overwriting transaction output
     }
 
-    if (undo.nHeight == 0)
-    {
-        // Missing undo metadata (height and coinbase). Older versions included this
-        // information only in undo records for the last spend of a transactions'
-        // outputs. This implies that it must be present for some other output of the same tx.
-        uint256 txHash;
-        if (!GetTxHash(out, txHash))
-            return DISCONNECT_FAILED; // adding output for transaction without known metadata
-        const Coin& alternate = AccessByTxid(view, txHash);
-        if (!alternate.IsSpent()) 
-        {
-            undo.nHeight = alternate.nHeight;
-            undo.fCoinBase = alternate.fCoinBase;
-        }
-        else
-        {
-            return DISCONNECT_FAILED; // adding output for transaction without known metadata
-        }
-    }
     view.AddCoin(out, std::move(undo), undo.fCoinBase);
 
     return fClean ? DISCONNECT_OK : DISCONNECT_UNCLEAN;
@@ -3679,11 +3660,20 @@ bool CVerifyDB::VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview,
                     return error("VerifyDB(): *** found bad undo data at %d, hash=%s\n", pindex->nHeight, pindex->GetBlockHashPoW2().ToString());
             }
         }
+        if (pindex->nHeight == 74259)
+        {
+            MilliSleep(30*1000);
+            int nWTF=0;
+        }
+        
         // check level 3: check for inconsistencies during memory-only disconnect of tip blocks
         if (nCheckLevel >= 3 && pindex == pindexState && (coins.DynamicMemoryUsage() + pcoinsTip->DynamicMemoryUsage()) <= nCoinCacheUsage) {
             DisconnectResult res = DisconnectBlock(block, pindex, coins);
             if (res == DISCONNECT_FAILED) {
-                return error("VerifyDB(): *** irrecoverable inconsistency in block data at %d, hash=%s", pindex->nHeight, pindex->GetBlockHashPoW2().ToString());
+                CDataStream ssBlock(SER_NETWORK, PROTOCOL_VERSION);
+                ssBlock << block;
+                std::string strHex = HexStr(ssBlock.begin(), ssBlock.end());
+                return error("VerifyDB(): *** irrecoverable inconsistency in block data at %d, hash=%s, data=%s", pindex->nHeight, pindex->GetBlockHashPoW2().ToString(), strHex.c_str());
             }
             pindexState = pindex->pprev;
             if (res == DISCONNECT_UNCLEAN) {
@@ -3973,6 +3963,10 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskB
                     //Note: an attacker would still have to meet/break/forge the sha ppev hash checks for an entire chain from the checkpoints
                     // This is enough to ensure that an attacker would have to go to great lengths for what would amount to a minor nuisance (having to refetch some data after detecting wrong chain)
                     // So this is not really a major weakening of security in any way and still more than sufficient.
+                    if (mapBlockIndex.find(block.hashPrevBlock) == mapBlockIndex.end())
+                    {
+                        break;
+                    }
                     if (mapBlockIndex.find(block.hashPrevBlock)->second->nHeight < Checkpoints::LastCheckPointHeight())
                     {
                         fAssumePOWGood = true;
