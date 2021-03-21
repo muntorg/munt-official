@@ -3660,20 +3660,11 @@ bool CVerifyDB::VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview,
                     return error("VerifyDB(): *** found bad undo data at %d, hash=%s\n", pindex->nHeight, pindex->GetBlockHashPoW2().ToString());
             }
         }
-        if (pindex->nHeight == 74259)
-        {
-            MilliSleep(30*1000);
-            int nWTF=0;
-        }
-        
         // check level 3: check for inconsistencies during memory-only disconnect of tip blocks
         if (nCheckLevel >= 3 && pindex == pindexState && (coins.DynamicMemoryUsage() + pcoinsTip->DynamicMemoryUsage()) <= nCoinCacheUsage) {
             DisconnectResult res = DisconnectBlock(block, pindex, coins);
             if (res == DISCONNECT_FAILED) {
-                CDataStream ssBlock(SER_NETWORK, PROTOCOL_VERSION);
-                ssBlock << block;
-                std::string strHex = HexStr(ssBlock.begin(), ssBlock.end());
-                return error("VerifyDB(): *** irrecoverable inconsistency in block data at %d, hash=%s, data=%s", pindex->nHeight, pindex->GetBlockHashPoW2().ToString(), strHex.c_str());
+                return error("VerifyDB(): *** irrecoverable inconsistency in block data at %d, hash=%s", pindex->nHeight, pindex->GetBlockHashPoW2().ToString());
             }
             pindexState = pindex->pprev;
             if (res == DISCONNECT_UNCLEAN) {
@@ -3963,10 +3954,6 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskB
                     //Note: an attacker would still have to meet/break/forge the sha ppev hash checks for an entire chain from the checkpoints
                     // This is enough to ensure that an attacker would have to go to great lengths for what would amount to a minor nuisance (having to refetch some data after detecting wrong chain)
                     // So this is not really a major weakening of security in any way and still more than sufficient.
-                    if (mapBlockIndex.find(block.hashPrevBlock) == mapBlockIndex.end())
-                    {
-                        break;
-                    }
                     if (mapBlockIndex.find(block.hashPrevBlock)->second->nHeight < Checkpoints::LastCheckPointHeight())
                     {
                         fAssumePOWGood = true;
