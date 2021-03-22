@@ -1163,7 +1163,6 @@ UniValue defrag(const JSONRPCRequest& request)
         }
         
         // Calculate transaction fee
-        int64_t txSize = GetVirtualTransactionSize(rawTx);
         const int64_t maxNewTxSize = CalculateMaximumSignedTxSize(rawTx, pwallet);
         CAmount nFeeNeeded = std::max(pwallet->GetMinimumFee(maxNewTxSize, 1, ::mempool, ::feeEstimator), COIN/100);
         nFeeNeeded = std::min(nFeeNeeded, COIN/30);
