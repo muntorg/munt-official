@@ -648,6 +648,7 @@ UniValue checkwalletagainstutxo(const JSONRPCRequest& request)
         throw std::runtime_error(
             "checkwalletagainstutxo\n"
             "Check wallet transactions against UTXO and look for any inconsistencies\n"
+            "Use 'repairwalletfromutxo' (after making a backup) to attempt to repair any issues that are found\n"
         );
     
     CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
@@ -677,6 +678,27 @@ UniValue checkwalletagainstutxo(const JSONRPCRequest& request)
         }
     }
     return result;
+}
+
+UniValue repairwalletfromutxo(const JSONRPCRequest& request)
+{    
+    if (request.fHelp || request.params.size() > 0)
+        throw std::runtime_error(
+            "repairwalletfromutxo\n"
+            "Attempt to repair any issues found by checkwalletagainstutxo\n"
+            "Always make a backup before running this command.\n"
+        );
+    
+    CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
+        return NullUniValue;
+    }
+
+    int nMismatchSpent;
+    int nOrphansFound;
+    int64_t nBalanceInQuestion;
+    pwallet->CompareWalletAgainstUTXO(nMismatchSpent, nOrphansFound, nBalanceInQuestion, true);
+    return NullUniValue;
 }
 
 UniValue dumpwallet(const JSONRPCRequest& request)

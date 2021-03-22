@@ -642,7 +642,7 @@ public:
     void ListLockedCoins(std::vector<COutPoint>& vOutpts) const;
     
     // Checks for wallet vs. UTXO inconsistency; reports any spent state inconsistency found
-    void CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, int64_t& nBalanceInQuestion);
+    void CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, int64_t& nBalanceInQuestio, bool attemptRepair=false);
 
     /*
      * Rescan abort properties
