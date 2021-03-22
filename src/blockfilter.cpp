@@ -457,7 +457,7 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
         std::ifstream dataFile(dataFilePath, std::ios::in|std::ios::binary);
         if (!dataFile.good() || dataFile.peek() == EOF)
         {
-            LogPrintf("Failed to read static filtercp file\n");
+            LogPrintf("Failed to read staticfiltercp file [%s]\n", dataFilePath.c_str());
             nSoftBirthDate = nHardBirthDate;
             return;
         }
@@ -472,7 +472,7 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
 
             //Seek to end of file to ascertain size and then rewind to start again.
             dataFile.ignore( std::numeric_limits<std::streamsize>::max() );
-            nStaticFilterLength = file.gcount();
+            nStaticFilterLength = dataFile.gcount();
             dataFile.clear();
             dataFile.seekg( 0, std::ios_base::beg );
         }
