@@ -393,7 +393,7 @@ std::string LicenseInfo()
     //fixme: (FUT) Mention additional libraries, boost etc.
     //fixme: (FUT) Translate
     //fixme: (FUT) Add code to ensure translations never strip copyrights
-    return helptr("Copyright (C) 2020 The Novo developers")+ "\n"
+    return helptr("Copyright (C) 2021 The Novo developers")+ "\n"
            + helptr("Licensed under the Novo license")+ "\n"
            + "\n"
            + helptr("This is experimental software.")+ "\n"
