@@ -23,6 +23,8 @@
 #include "versionbits.h"
 #include <net_processing.h>
 
+#include <algorithm>
+
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state)
 {
@@ -88,11 +90,17 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const CChainPar
     return false;
 }
 
-//dev subsidy
-//(994'744'000) - Majority to soon be burned
-//mining subsidy:
-//10'000'000'000-9'994'744'000 = 5256000
-//5'256'000/(0.10*2) == 26'280'000 (blocks)
+// 994'843'999.828 total supply
+// 994'744'000 ICO
+// 99'999.827999949 mining/holding
+// 69'999.96 of that is via holding, ~13999.992 of it will never actually enter the market because of genesis accounts (20%)
+//
+// BURN1: 994'583'167.54 (txid: e0ad92f42f35ec91d6edef31714555b3d4d856647b89cde55c548da9661171d7)
+// BURN2: 49'999.998 (txid: 5e7b8913a71c9e20c29bdbc18364337d79fa03fcdbbce1a5f1d6d383f3aad730)
+// 110'832.46200004 - remaining circulated ICO after majority burnt
+// 210'832.28999999 - final total supply (circulated ICO + mining/holding rewards)
+// 196'832.29799999 - final total supply factoring in genesis accounts
+
 CAmount GetBlockSubsidy(uint64_t nHeight)
 {
     static bool fRegTest = GetBoolArg("-regtest", false);
@@ -102,14 +110,22 @@ CAmount GetBlockSubsidy(uint64_t nHeight)
 
     if (fRegTest)
         return 50*COIN;
-    
+
+    CAmount subsidy = 10*CENT;
     if (nHeight == 0)
-        return 994'744'000*COIN+GetBlockSubsidyWitness(nHeight);
+        subsidy = 994'744'000*COIN;
+    else if (nHeight >= 100000)
+        subsidy = 25*CENT/10;
+    
+    // Subsidy is cut in half every 400000 blocks (count starts from 100'000); Which will occur approximately every 4 years.
+    // Don't ever shift by more than the bit width (64)
+    uint64_t halvings = std::max((int64_t)((nHeight + 300000) / 400000)-1, (int64_t)0);
+    if (halvings >= 22)
+        subsidy = 0;
+    else
+        subsidy >>= halvings;
 
-    if (nHeight > 26280000)
-        return 0;
-
-    return 10*CENT+GetBlockSubsidyWitness(nHeight);
+    return subsidy+GetBlockSubsidyWitness(nHeight);
 }
 
 CAmount GetBlockSubsidyWitness(uint64_t nHeight)
@@ -119,10 +135,19 @@ CAmount GetBlockSubsidyWitness(uint64_t nHeight)
     if (fTestNet)
         return 10*COIN;
 
-    if (nHeight > 26280000)
-        return 0;
+    CAmount subsidy = 10*CENT;
+    if (nHeight >= 100000)
+        subsidy = 75*CENT/10;
 
-    return 10*CENT;
+    // Subsidy is cut in half every 400000 blocks (count starts from 100'000); Which will occur approximately every 4 years.
+    // Don't ever shift by more than the bit width (64)
+    uint64_t halvings = std::max((int64_t)((nHeight + 300000) / 400000)-1, (int64_t)0);
+    if (halvings >= 23)
+        subsidy = 0;
+    else
+        subsidy >>= halvings;
+
+    return subsidy;
 }
 
 CAmount GetBlockSubsidyDev(uint64_t nHeight)

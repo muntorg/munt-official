@@ -889,7 +889,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
     // Special case for the genesis block, skipping connection of its transactions
     // (its coinbase is unspendable)
-    if (block.GetHashLegacy() == chainparams.GetConsensus().hashGenesisBlock)
+    if (block.GetHashPoW2() == chainparams.GetConsensus().hashGenesisBlock)
     {
         if (!fJustCheck)
         {
@@ -4084,7 +4084,7 @@ void static CheckBlockIndex(const Consensus::Params& consensusParams)
         // Begin: actual consistency checks.
         if (pindex->pprev == NULL) {
             // Genesis block checks.
-            assert(pindex->GetBlockHashLegacy() == consensusParams.hashGenesisBlock); // Genesis block's hash must match.
+            assert(pindex->GetBlockHashPoW2() == consensusParams.hashGenesisBlock); // Genesis block's hash must match.
             assert(pindex == chainActive.Genesis()); // The current active chain's genesis block must be this block.
         }
         if (pindex->nChainTx == 0) assert(pindex->nSequenceId <= 0);  // nSequenceId can't be set positive for blocks that aren't linked (negative is used for preciousblock)
