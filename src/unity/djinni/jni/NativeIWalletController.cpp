@@ -65,7 +65,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IWalletController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_IWalletController_00024CppProxy_GetUUID(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_IWalletController_00024CppProxy_GetUUID(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
