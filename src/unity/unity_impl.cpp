@@ -315,10 +315,6 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
 // rate limited balance change notifier
 static CRateLimit<int>* balanceChangeNotifier=nullptr;
 
-// rate limited new mutations notifier
-static CRateLimit<std::pair<uint256, bool>>* newMutationsNotifier=nullptr;
-
-
 void terminateUnityFrontend()
 {
     if (signalHandler)
@@ -506,8 +502,18 @@ void handlePostInitMain()
             LOCK2(cs_main, pwallet->cs_wallet);
             if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
             {
-                if (status == CT_NEW) {
-                    newMutationsNotifier->trigger(std::make_pair(hash, fSelfComitted));
+                if (status == CT_NEW && signalHandler) {
+                    if (pactiveWallet->mapWallet.find(hash) != pactiveWallet->mapWallet.end())
+                    {
+                        const CWalletTx& wtx = pactiveWallet->mapWallet[hash];
+                        std::vector<MutationRecord> mutations;
+                        addMutationsForTransaction(&wtx, mutations, pactiveWallet->activeAccount);
+                        for (auto& m: mutations)
+                        {
+                            LogPrintf("unity: notify new mutation for tx %s", hash.ToString().c_str());
+                            signalHandler->notifyNewMutation(m, fSelfComitted);
+                        }
+                    }                    
                 }
                 else if (status == CT_UPDATED && signalHandler)
                 {
@@ -863,28 +869,6 @@ int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::
             signalHandler->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
         }
     }, std::chrono::milliseconds(BALANCE_NOTIFY_THRESHOLD_MS));
-
-    newMutationsNotifier = new CRateLimit<std::pair<uint256, bool>>([](const std::pair<uint256, bool>& txInfo)
-    {
-        if (pactiveWallet && signalHandler)
-        {
-            const uint256& txHash = txInfo.first;
-            const bool fSelfComitted = txInfo.second;
-
-            LOCK2(cs_main, pactiveWallet->cs_wallet);
-            if (pactiveWallet->mapWallet.find(txHash) != pactiveWallet->mapWallet.end())
-            {
-                const CWalletTx& wtx = pactiveWallet->mapWallet[txHash];
-                std::vector<MutationRecord> mutations;
-                addMutationsForTransaction(&wtx, mutations, pactiveWallet->activeAccount);
-                for (auto& m: mutations)
-                {
-                    LogPrintf("unity: notify new mutation for tx %s", txHash.ToString().c_str());
-                    signalHandler->notifyNewMutation(m, fSelfComitted);
-                }
-            }
-        }
-    }, std::chrono::milliseconds(NEW_MUTATIONS_NOTIFY_THRESHOLD_MS));
 
     // Force the datadir to specific place on e.g. android devices
     if (!dataDir.empty())
