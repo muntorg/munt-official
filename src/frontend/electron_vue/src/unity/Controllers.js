@@ -531,6 +531,17 @@ export {
 };
 /* inject:generated-code */
 
+class BackendUtilities {
+  static GetBuySessionUrl() {
+    return handleError(ipc.sendSync("BackendUtilities.GetBuySessionUrl"));
+  }
+  static GetSellSessionUrl() {
+    return handleError(ipc.sendSync("BackendUtilities.GetSellSessionUrl"));
+  }
+}
+
+export { BackendUtilities };
+
 function handleError(response) {
   if (response.error) {
     // todo: maybe keep a list of notifications which can be shown
