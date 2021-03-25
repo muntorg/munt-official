@@ -951,6 +951,19 @@ class LibUnity {
       }
     });
 
+    ipc.on("NJSIWalletController.GetUUID", event => {
+      console.log(`IPC: walletController.GetUUID()`);
+      try {
+        let result = this.walletController.GetUUID();
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
     // Register NJSIRpcController ipc handlers
     ipc.on("NJSIRpcController.getAutocompleteList", event => {
       console.log(`IPC: rpcController.getAutocompleteList()`);

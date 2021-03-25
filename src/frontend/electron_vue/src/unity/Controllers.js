@@ -253,6 +253,10 @@ class WalletController {
       ipc.sendSync("NJSIWalletController.AbandonTransaction", txHash)
     );
   }
+
+  static GetUUID() {
+    return handleError(ipc.sendSync("NJSIWalletController.GetUUID"));
+  }
 }
 
 class RpcController {
