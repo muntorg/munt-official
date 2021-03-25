@@ -1,5 +1,5 @@
 <template>
-  <div class="send-novo flex-col">
+  <div class="send-view flex-col">
     <portal to="sidebar-right-title">
       {{ $t("buttons.send") }}
     </portal>
@@ -41,6 +41,9 @@
     <button @click="trySend" :disabled="disableSendButton">
       {{ $t("buttons.send") }}
     </button>
+      <button @click="sellNovo" class="sell-novo" :disabled="sellDisabled">
+        {{ $t("buttons.sell_novo") }}
+      </button>
   </div>
 </template>
 
@@ -50,6 +53,7 @@ import {
   LibraryController,
   AccountsController
 } from "../../../unity/Controllers";
+import { BackendUtilities } from "@/unity/Controllers";
 
 export default {
   name: "Send",
@@ -62,7 +66,8 @@ export default {
       password: null,
       isAmountInvalid: false,
       isAddressInvalid: false,
-      isPasswordInvalid: false
+      isPasswordInvalid: false,
+      sellDisabled: false
     };
   },
   computed: {
@@ -103,6 +108,18 @@ export default {
     this.$refs.amount.focus();
   },
   methods: {
+    async sellNovo() {
+      try {
+        this.sellDisabled = true;
+        let url = await BackendUtilities.GetSellSessionUrl();
+        if (!url) {
+          url = "https://novocurrency.com/sell";
+        }
+        window.open(url, "sell-gulden");
+      } finally {
+        this.sellDisabled = false;
+      }
+    },
     onPasswordKeydown() {
       this.isPasswordInvalid = false;
     },
@@ -160,7 +177,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.send-novo {
+.send-view {
   height: 100%;
 
   .main {

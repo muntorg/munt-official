@@ -135,7 +135,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
         sellButton.setOnClickListener {
             // Send a post request to blockhut with our wallet/address info; and then launch the site if we get a positive response.
             val MyRequestQueue = Volley.newRequestQueue(context)
-            val failURL = "https://novo.com/sell"
+            val failURL = "https://novocurrency.com/sell"
             val request = object : StringRequest(Request.Method.POST,"https://blockhut.com/buysession.php",
                     Response.Listener { response ->
                         try

@@ -1,5 +1,5 @@
 <template>
-  <div class="receive-novo flex-col">
+  <div class="receive-view flex-col">
     <portal to="sidebar-right-title">
       {{ $t("buttons.receive") }}
     </portal>
@@ -16,9 +16,10 @@
         <div class="address">{{ receiveAddress }}</div>
       </div>
     </div>
-    <button @click="buyOrReceiveNovo">
-      {{ $t("receive_novo.buy_or_receive_novo") }}
-    </button>
+        <button @click="buyNovo" class="buy-novo" :disabled="buyDisabled">
+          {{ $t("buttons.buy_novo") }}
+        </button>
+
   </div>
 </template>
 
@@ -26,21 +27,33 @@
 import { mapState } from "vuex";
 import { clipboard } from "electron";
 import VueQrcode from "vue-qrcode";
+import { BackendUtilities } from "@/unity/Controllers";
 
 export default {
   name: "Receive",
   components: {
     VueQrcode
   },
+  data() {
+    return {
+      buyDisabled: false
+    };
+  },
   computed: {
     ...mapState("wallet", ["receiveAddress"])
   },
   methods: {
-    buyOrReceiveNovo() {
-      window.open(
-        `https://novocurrency.com/transfer?receive_address=${this.receiveAddress}`,
-        "_blank"
-      );
+    async buyNovo() {
+      try {
+        this.buyDisabled = true;
+        let url = await BackendUtilities.GetBuySessionUrl();
+        if (!url) {
+          url = "https://novocurrency.com/buy";
+        }
+        window.open(url, "buy-novo");
+      } finally {
+        this.buyDisabled = false;
+      }
     },
     copyAddress() {
       clipboard.writeText(this.receiveAddress);
@@ -50,7 +63,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.receive-novo {
+.receive-view {
   height: 100%;
 
   & .main {

@@ -260,7 +260,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
     {
         // Send a post request to blockhut with our wallet/address info; and then launch the site if we get a positive response.
         val MyRequestQueue = Volley.newRequestQueue(this)
-        val failURL = "https://novo.com/buy"
+        val failURL = "https://novocurrency.com/buy"
         val request = object : StringRequest(Request.Method.POST,"https://blockhut.com/buysession.php",
                 Response.Listener { response ->
                     try

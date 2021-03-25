@@ -16,6 +16,9 @@
   },
   "buttons": {
     "back": "Terug",
+    "buy_novo": "Koop Novo",
+    "sell_novo": "Verkoop Novo",
+    "buy_your_first_novo": "Koop jouw eerste Novo",
     "change_password": "Verander wachtwoord",
     "create_mining_account": "Mining rekening aanmaken",
     "finish": "Klaar",
