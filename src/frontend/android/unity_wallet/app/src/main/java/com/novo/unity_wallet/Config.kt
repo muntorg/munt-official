@@ -9,7 +9,6 @@ class Config {
         const val USER_AGENT = "/Novo android:${BuildConfig.VERSION_NAME}/"
         const val BLOCK_EXPLORER_TX_TEMPLATE = "https://www.dactual.com/transaction.php?tx=%s"
         const val BLOCK_EXPLORER_BLOCK_TEMPLATE = "https://blockchain.novocurrency.com/block/%s"
-        const val PURCHASE_TEMPLATE = "https://novocurrency.com/transfer?receive_address=%s"
         const val AUDIBLE_NOTIFICATIONS_INTERVAL = 30 * 1000
         const val USE_RATE_PRECISION = true
         const val RATE_FETCH_INTERVAL = 60 * 1000 // minimum interval for fetching new exchange rates

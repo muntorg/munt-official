@@ -174,4 +174,6 @@ file COPYING
     <string name="core_not_ready_yet">Unity core not ready yet, please try again in a few seconds</string>
     <string name="send_insufficient_balance">Insufficient balance</string>
     <string name="not_novo_qr">Not a valid Novo QR:\n\n%1$s</string>
+    <string name="error_check_internet_connection">Please check your internet connection</string>
+    <string name="send_fragment_sell_label">Sell</string>
 </resources>
