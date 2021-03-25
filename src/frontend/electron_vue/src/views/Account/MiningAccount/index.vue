@@ -106,7 +106,7 @@ import { mapState } from "vuex";
 import { GenerationController } from "../../../unity/Controllers";
 import EventBus from "../../../EventBus";
 
-import SendNovo from "./SendNovo";
+import Send from "./Send";
 
 export default {
   name: "MiningAccount",
@@ -204,7 +204,7 @@ export default {
       this.txHash = null;
     },
     emptyAccount() {
-      this.rightSidebar = SendNovo;
+      this.rightSidebar = Send;
     }
   }
 };

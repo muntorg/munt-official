@@ -118,7 +118,7 @@
 <script>
 import { WitnessController } from "../../../unity/Controllers";
 import EventBus from "../../../EventBus";
-import SendNovo from "../MiningAccount/SendNovo";
+import Send from "../MiningAccount/Send";
 import RenewAccount from "./RenewAccount";
 import AccountSettings from "../AccountSettings";
 
@@ -188,7 +188,7 @@ export default {
       return this.account.spendable > 0;
     },
     sendButtonVisible() {
-      return this.sendButtonDisabled && this.rightSidebar !== SendNovo;
+      return this.sendButtonDisabled && this.rightSidebar !== Send;
     },
     renewButtonVisible() {
       return (
@@ -251,7 +251,7 @@ export default {
       this.txHash = null;
     },
     emptyAccount() {
-      this.rightSidebar = SendNovo;
+      this.rightSidebar = Send;
     },
     renewAccount() {
       this.rightSidebar = RenewAccount;

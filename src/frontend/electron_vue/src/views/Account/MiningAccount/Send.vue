@@ -44,7 +44,7 @@ import {
 import EventBus from "../../../EventBus";
 
 export default {
-  name: "SendNovo",
+  name: "Send",
   data() {
     return {
       amount: null,

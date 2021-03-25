@@ -52,7 +52,7 @@ import {
 } from "../../../unity/Controllers";
 
 export default {
-  name: "SendNovo",
+  name: "Send",
   data() {
     return {
       amount: null,

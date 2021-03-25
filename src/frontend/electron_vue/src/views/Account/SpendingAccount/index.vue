@@ -57,8 +57,8 @@ import { mapState } from "vuex";
 import EventBus from "../../../EventBus";
 
 import MutationList from "./MutationList";
-import SendNovo from "./SendNovo";
-import ReceiveNovo from "./ReceiveNovo";
+import Send from "./Send";
+import Receive from "./Receive";
 import TransactionDetails from "./TransactionDetails";
 import AccountSettings from "../AccountSettings";
 
@@ -85,10 +85,10 @@ export default {
   computed: {
     ...mapState("wallet", ["mutations"]),
     showSendButton() {
-      return !this.rightSidebar || this.rightSidebar !== SendNovo;
+      return !this.rightSidebar || this.rightSidebar !== Send;
     },
     showReceiveButton() {
-      return !this.rightSidebar || this.rightSidebar !== ReceiveNovo;
+      return !this.rightSidebar || this.rightSidebar !== Receive;
     },
     rightSidebarProps() {
       if (this.rightSidebar === TransactionDetails) {
@@ -104,11 +104,11 @@ export default {
     setRightSidebar(name) {
       switch (name) {
         case "Send":
-          this.rightSidebar = SendNovo;
+          this.rightSidebar = Send;
           this.txHash = null;
           break;
         case "Receive":
-          this.rightSidebar = ReceiveNovo;
+          this.rightSidebar = Receive;
           this.txHash = null;
           break;
         case "TransactionDetails":

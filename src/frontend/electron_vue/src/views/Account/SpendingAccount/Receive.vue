@@ -28,7 +28,7 @@ import { clipboard } from "electron";
 import VueQrcode from "vue-qrcode";
 
 export default {
-  name: "ReceiveNovo",
+  name: "Receive",
   components: {
     VueQrcode
   },
