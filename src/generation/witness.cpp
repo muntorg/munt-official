@@ -141,7 +141,7 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     {
         std::string strErrorMessage = strprintf("Failed to obtain key to sign as witness: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
         CAlert::Notify(strErrorMessage, true, true);
-        LogPrintf("%s", strErrorMessage.c_str());
+        LogPrintf("%s\n", strErrorMessage.c_str());
         return false;
     }
 
@@ -150,7 +150,7 @@ static bool SignBlockAsWitness(std::shared_ptr<CBlock> pBlock, CTxOut fittestWit
     {
         std::string strErrorMessage = strprintf("Invalid witness key - uncompressed keys not allowed: chain-tip-height[%d]", chainActive.Tip()? chainActive.Tip()->nHeight : 0);
         CAlert::Notify(strErrorMessage, true, true);
-        LogPrintf("%s", strErrorMessage.c_str());
+        LogPrintf("%s\n", strErrorMessage.c_str());
         return false;
     }
 
@@ -352,7 +352,7 @@ static std::pair<bool, CMutableTransaction> CreateWitnessCoinbase(int nWitnessHe
         {
             std::string strErrorMessage = strprintf("Failed to sign witness coinbase: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
             CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf("%s", strErrorMessage.c_str());
+            LogPrintf("%s\n", strErrorMessage.c_str());
             return std::pair(false, coinbaseTx);
         }
     }
@@ -432,6 +432,7 @@ void static GuldenWitness()
 
     static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
     static bool regTest = GetBoolArg("-regtest", false);
+    static bool testNet = GetBoolArg("-testnet", false);
 
     CChainParams chainparams = Params();
     try
@@ -439,7 +440,7 @@ void static GuldenWitness()
         std::map<boost::uuids::uuid, std::shared_ptr<CReserveKeyOrScript>> reserveKeys;
         while (true)
         {
-            if (!regTest)
+            if (!regTest && !testNet)
             {
                 // Busy-wait for the network to come online so we don't waste time mining
                 // on an obsolete chain. In regtest mode we expect to fly solo.
@@ -584,7 +585,7 @@ void static GuldenWitness()
                             nLastErrorHeight = candidateIter->nHeight;
                             std::string strErrorMessage = strprintf("Failed to calculate witness info for candidate block.\n If this occurs frequently please contact a developer for assistance.\n height [%d] chain-tip-height [%d]", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
                             CAlert::Notify(strErrorMessage, true, true);
-                            LogPrintf("%s", strErrorMessage.c_str());
+                            LogPrintf("%s\n", strErrorMessage.c_str());
                             continue;
                         }
 
