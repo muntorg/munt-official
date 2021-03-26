@@ -94,7 +94,7 @@ For those who really need too or are technically inclined it is of course possib
 |Block interval target:|300 seconds (5 minutes)|Configurable|
 |Difficulty adjustment period:|Every block|Every block|
 |Difficulty adjustment algorithm:|Delta|Delta|
-|Total coins to be minted over time:|10'000'000'000 Novo|10'000'000'000 Novo|
+|Total coins to be minted over time:|210'000 Novo|210'000 Novo|
 |P2P Port|9233|9235|
 |RPC Port|9234|9236|
 |P2P Network Header|fcfdfcfd|Configurable|
