@@ -38,12 +38,15 @@
         @keydown="onPasswordKeydown"
       />
     </div>
-    <button @click="trySend" :disabled="disableSendButton">
-      {{ $t("buttons.send") }}
-    </button>
+
+    <div class="buttons">
+      <button @click="trySend" class="send-novo" :disabled="disableSendButton">
+        {{ $t("buttons.send") }}
+      </button>
       <button @click="sellNovo" class="sell-novo" :disabled="sellDisabled">
         {{ $t("buttons.sell_novo") }}
       </button>
+    </div>
   </div>
 </template>
 
@@ -192,7 +195,16 @@ input {
   font-size: 14px;
 }
 
-button {
-  width: 100%;
+.buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.send-novo {
+  flex: 1;
+  margin-right: 10px;
+}
+.sell-novo {
+  flex: 0 0 150px;
 }
 </style>
