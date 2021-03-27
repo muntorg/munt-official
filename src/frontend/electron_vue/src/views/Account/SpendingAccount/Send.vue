@@ -40,11 +40,11 @@
     </div>
 
     <div class="buttons">
-      <button @click="trySend" class="send-novo" :disabled="disableSendButton">
-        {{ $t("buttons.send") }}
-      </button>
       <button @click="sellNovo" class="sell-novo" :disabled="sellDisabled">
         {{ $t("buttons.sell_novo") }}
+      </button>
+      <button @click="trySend" class="send-novo" :disabled="disableSendButton">
+        {{ $t("buttons.send") }}
       </button>
     </div>
   </div>
@@ -202,7 +202,7 @@ input {
 
 .send-novo {
   flex: 1;
-  margin-right: 10px;
+  margin-left: 10px;
 }
 .sell-novo {
   flex: 0 0 150px;
