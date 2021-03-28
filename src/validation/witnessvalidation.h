@@ -49,6 +49,9 @@ struct CGetWitnessInfo
 
     //! Transaction output of the selected witness
     CTxOut selectedWitnessTransaction;
+    
+    //! The index of the selected witness transaction in the filtered pool
+    uint64_t selectedWitnessIndex = 0;
 
     //! Coin object containing the output of the selected witness
     COutPoint selectedWitnessOutpoint;

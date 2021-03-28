@@ -1069,7 +1069,7 @@ UniValue defrag(const JSONRPCRequest& request)
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
     LogPrintf("DEFRAG: Start account defrag\n");
-    
+
     CAccount* fromAccount = AccountFromValue(pwallet, request.params[0], true);
     CNativeAddress receiveAddress(request.params[1].get_str());
     if (!receiveAddress.IsValid())
@@ -1077,16 +1077,14 @@ UniValue defrag(const JSONRPCRequest& request)
 
     CAmount nMinimumAmount = AmountFromValue(request.params[2]);
     CAmount nMaximumAmount = AmountFromValue(request.params[3]);
-    int nMaximumCount = request.params[4].get_int();
-    
+    uint64_t nMaximumCount = request.params[4].get_int();
+
     int nMinDepth = 100;
     if (request.params.size() > 5)
         nMinDepth = request.params[5].get_int();
 
-    bool subtractFeeFromAmount = true;
-
     EnsureWalletIsUnlocked(pwallet);
-    
+
     // Grab as many outputs as possible that meet our constraints
     LogPrintf("DEFRAG: Retrieving a list of viable inputs matching our paramaters\n");
     std::vector<COutput> vecOutputs;
@@ -1117,30 +1115,29 @@ UniValue defrag(const JSONRPCRequest& request)
             if (++inputCount > batchSize)
                 break;
         }
-        
+
         if (rawTx.vin.size() == 0)
             break;
-        
+
         // Add a single output to which the entire amount goes
         CScript scriptPubKey = GetScriptForDestination(receiveAddress.Get());
         {
             CTxOut out(nTotalSent, scriptPubKey);
             rawTx.vout.push_back(out);
         }
-        
+
         // Calculate transaction fee
-        int64_t txSize = GetVirtualTransactionSize(rawTx);
         const int64_t maxNewTxSize = CalculateMaximumSignedTxSize(rawTx, pwallet);
         CAmount nFeeNeeded = std::max(pwallet->GetMinimumFee(maxNewTxSize, 1, ::mempool, ::feeEstimator), COIN/100);
         nFeeNeeded = std::min(nFeeNeeded, COIN/30);
-        
+
         // re-add the output, this time subtracting the transaction fee
         rawTx.vout.clear();
         {
             CTxOut out(nTotalSent-nFeeNeeded, scriptPubKey);
             rawTx.vout.push_back(out);
         }
-        
+
         // Sign and send transaction
         LogPrintf("DEFRAG: Sign and send transaction\n");
         std::shared_ptr<CReserveKeyOrScript> reservedScript = std::make_shared<CReserveKeyOrScript>(scriptPubKey);
@@ -3376,7 +3373,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "dumpprivkey",              &dumpprivkey,              true,   {"address"}  },
     { "wallet",             "dumpwallet",               &dumpwallet,               true,   {"filename", "HDConsent"} },
     { "wallet",             "checkwalletagainstutxo",   &checkwalletagainstutxo,   true,   {} },
-    { "wallet",             "repairwalletfromutxo",     &repairwalletfromutxo,   true,   {} },
+    { "wallet",             "repairwalletfromutxo",     &repairwalletfromutxo,     true,   {} },
     { "wallet",             "removeallorphans",         &removeallorphans,         true,   {} },
     { "wallet",             "encryptwallet",            &encryptwallet,            true,   {"passphrase"} },
     { "wallet",             "getaccount",               &getaccount,               true,   {"address"} },

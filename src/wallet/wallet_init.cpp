@@ -218,9 +218,9 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
                 LOCK(walletInstance->cs_wallet);
                 CWalletDB db(*walletInstance->dbw);
                 db.ZapAllTx();
-                walletInstance->mapWallet.empty();
-                walletInstance->mapWalletHash.empty();
-                walletInstance->mapTxSpends.empty();
+                walletInstance->mapWallet.clear();
+                walletInstance->mapWalletHash.clear();
+                walletInstance->mapTxSpends.clear();
             }
             InitWarning(strprintf(warningtr("Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect."), walletFile));
         }
