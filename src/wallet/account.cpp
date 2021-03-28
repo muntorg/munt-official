@@ -119,8 +119,8 @@ CHDSeed::CHDSeed(SecureString mnemonic, SeedType type)
 
 CHDSeed::CHDSeed(CExtPubKey& pubkey, SeedType type)
 : m_type(type)
-, m_readOnly(true)
 , m_UUID(boost::uuids::nil_generator()())
+, m_readOnly(true)
 {
     unencryptedMnemonic = "";
     masterKeyPub = pubkey;
