@@ -3603,7 +3603,7 @@ static UniValue importwitnesskeys(const JSONRPCRequest& request)
         if (!account)
             throw std::runtime_error("Invalid account name or UUID");
         if (account->m_Type != WitnessOnlyWitnessAccount)
-            throw std::runtime_error("Account is not a witness-only account");
+            throw std::runtime_error("Account is not a holding-only account");
 
         if (!pwallet->ImportKeysIntoWitnessOnlyWitnessAccount(account, keysAndBirthDates, shouldRescan))
             throw std::runtime_error("Failed to import keys into account");
@@ -3613,7 +3613,7 @@ static UniValue importwitnesskeys(const JSONRPCRequest& request)
         std::string requestedAccountName = request.params[0].get_str();
         account = pwallet->CreateWitnessOnlyWitnessAccount(requestedAccountName, keysAndBirthDates, shouldRescan);
         if (!account)
-            throw std::runtime_error("Failed to create witness-only witness account");
+            throw std::runtime_error("Failed to create holding-only holding account");
     }
 
     //NB! No need to trigger a rescan CreateWitnessOnlyWitnessAccount already did this.

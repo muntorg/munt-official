@@ -221,7 +221,7 @@ export default {
 
       let accountId = AccountsController.CreateAccount(
         this.accountName,
-        "Witness"
+        "Holding"
       );
 
       // Always lock for slightly longer than the minimum to allow a bit of time for transaction to enter the chain

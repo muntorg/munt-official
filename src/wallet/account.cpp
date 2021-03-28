@@ -59,9 +59,9 @@ std::string GetAccountTypeString(AccountType type)
         case Mobi:
             return "Mobile";
         case PoW2Witness:
-            return "Witness";
+            return "Holding";
         case WitnessOnlyWitnessAccount:
-            return "Witness-only witness";
+            return "Holding-only holding";
         case ImportedPrivateKeyAccount:
             return "Imported private key";
         case MiningAccount:
@@ -85,7 +85,7 @@ CAccount* CreateAccountHelper(CWallet* pwallet, std::string accountName, std::st
     {
         account = pwallet->GenerateNewAccount(accountName.c_str(), AccountState::Normal, AccountType::Mobi, bMakeActive);
     }
-    else if (accountType == "Witness")
+    else if (accountType == "Witness" || accountType == "Holding")
     {
         account = pwallet->GenerateNewAccount(accountName.c_str(), AccountState::Normal, AccountType::PoW2Witness, bMakeActive);
     }
