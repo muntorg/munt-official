@@ -527,6 +527,15 @@ UniValue signmessagewithprivkey(const JSONRPCRequest& request)
     return EncodeBase64(&vchSig[0], vchSig.size());
 }
 
+UniValue forcesigseg(const JSONRPCRequest& request)
+{
+ if (request.fHelp)
+        throw std::runtime_error("force program to perform an illegal operation and trigger a sigseg, useful to test debugging features");
+  ++*(int*)0;
+  return NullUniValue;
+}
+
+
 UniValue setmocktime(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
@@ -727,6 +736,7 @@ static const CRPCCommand commands[] =
 
     /* Not shown in help */
     { "hidden",             "setmocktime",            &setmocktime,            true,  {"timestamp"}},
+    { "hidden",             "forcesigseg",            &forcesigseg,      true,  {}},
     { "hidden",             "echo",                   &echo,                   true,  {"arg0","arg1","arg2","arg3","arg4","arg5","arg6","arg7","arg8","arg9"}},
     { "hidden",             "echojson",               &echo,                   true,  {"arg0","arg1","arg2","arg3","arg4","arg5","arg6","arg7","arg8","arg9"}},
     { "hidden",             "logging",                &logging,                true,  {"include", "exclude"}},
