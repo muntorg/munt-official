@@ -224,7 +224,6 @@ public:
         fDefaultConsistencyChecks = false;
         fRequireStandard = true;
         fMineBlocksOnDemand = false;
-        fUseSyncCheckpoints = true;
 
         checkpointData = (CCheckpointData)
         {
@@ -421,8 +420,6 @@ public:
         fDefaultConsistencyChecks = false;
         fRequireStandard = true;
         fMineBlocksOnDemand = false;
-        fUseSyncCheckpoints = false;
-
 
         checkpointData = {
             { 0, { genesis.GetHashPoW2(), genesis.nTime } }
@@ -519,7 +516,6 @@ public:
         fDefaultConsistencyChecks = true;
         fRequireStandard = false;
         fMineBlocksOnDemand = true;
-        fUseSyncCheckpoints = false;
 
         checkpointData = {
             { 0, { genesis.GetHashPoW2(), genesis.nTime } }
