@@ -39,18 +39,27 @@ bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, 
         }
     }
     if (!gotKey)
+    {
+        LogPrintf("Error: TransactionSignatureCreator::CreateSig failed-no-key\n");
         return false;
+    }
 
     // Signing with uncompressed keys is disabled for segsig transactions
     if (sigversion == SIGVERSION_SEGSIG && !key.IsCompressed())
+    {
+        LogPrintf("Error: TransactionSignatureCreator::CreateSig failed-key-not-compressed\n");
         return false;
+    }
 
     uint256 hash = SignatureHash(scriptCode, *txTo, nIn, nHashType, amount, sigversion);
     if (sigversion == SIGVERSION_SEGSIG)
     {
         //fixme: (PHASE5) (SEGSIG) Lots of unit tests for this. (test also old style transactions)
         if (!key.SignCompact(hash, vchSig))
+        {
+            LogPrintf("Error: TransactionSignatureCreator::CreateSig: failed-sign-compact\n");
             return false;
+        }
     }
     else
     {

@@ -235,15 +235,8 @@ bool CScript::IsPayToScriptHash() const
 //OP_0 [1 byte] 72 [1 byte] hash [20 byte] hash [20 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] uint64_t [8 byte] (74 bytes)
 bool CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
 {
-    //fixme: (PHASE5) - Enable UI alert for failiure here, can't use CAlert directly because its undefined in test_gulden builds
     if (this->size() != 74)
     {
-        std::string strErrorMessage = strprintf("Can't extract witness from a script of invalid size[%d]", this->size());
-        //CAlert::Notify(strErrorMessage, true, true);
-        LogPrintf("%s", strErrorMessage.c_str());
-        #ifdef DEBUG
-        assert(0);
-        #endif
         return false;
     }
 
@@ -253,17 +246,11 @@ bool CScript::ExtractPoW2WitnessFromScript(CTxOutPoW2Witness& witness) const
     std::vector<unsigned char> item;
     if (!GetOp(it, opcode, item) || opcode != OP_0)
     {
-        std::string strErrorMessage = strprintf("Can't extract witness; incorrectly encoded script");
-        //CAlert::Notify(strErrorMessage, true, true);
-        LogPrintf("%s", strErrorMessage.c_str());
         return false;
     }
 
     if (!GetOp(it, opcode, item) || opcode != (unsigned char)72)
     {
-        std::string strErrorMessage = strprintf("Can't extract witness; incorrectly encoded script");
-        //CAlert::Notify(strErrorMessage, true, true);
-        LogPrintf("%s", strErrorMessage.c_str());
         return false;
     }
 

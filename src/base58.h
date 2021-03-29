@@ -128,7 +128,7 @@ public:
     bool IsValidWitness() const;
     bool IsValidWitness(const CChainParams& params) const;
 
-    //! Returns whether the address represents a valid Bitcoin address, which is used by some of the nocks integration.
+    //! Returns whether the address represents a valid Bitcoin address, which can be used by third party payment integrations
     bool IsValidBitcoin() const;
 
     CNativeAddress() {}
@@ -251,7 +251,7 @@ public:
 
     bool fromURIString(std::string uri)
     {
-        if (!boost::starts_with(uri, GLOBAL_APPNAME"sync:"))
+        if (!boost::starts_with(uri, GLOBAL_APP_URIPREFIX"sync:"))
             return false;
 
         uri = std::string(uri.begin()+11,uri.end());
