@@ -224,7 +224,6 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-rpcport=<port>", strprintf(helptr("Listen for JSON-RPC connections on <port> (default: %u or testnet: %u)"), defaultBaseParams->RPCPort(), testnetBaseParams->RPCPort()));
     strUsage += HelpMessageOpt("-rpcallowip=<ip>", helptr("Allow JSON-RPC connections from specified source. Valid for <ip> are a single IP (e.g. 1.2.3.4), a network/netmask (e.g. 1.2.3.4/255.255.255.0) or a network/CIDR (e.g. 1.2.3.4/24). This option can be specified multiple times"));
     strUsage += HelpMessageOpt("-rpcthreads=<n>", strprintf(helptr("Set the number of threads to service RPC calls (default: %d)"), DEFAULT_HTTP_THREADS));
-    strUsage += HelpMessageOpt("-rpconlylistsecuredtransactions=<bool>", strprintf(helptr("When enabled RPC listtransactions command only returns transactions that have been secured by a checkpoint and therefore are safe from double spend (default: %u)"), true));
 
     strUsage += HelpMessageGroup(helptr("Developer options:"));
     strUsage += HelpMessageOpt("-genkeypair", helptr("Generate a random public/private keypair for use with alert system and other similar functionality."));

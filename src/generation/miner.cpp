@@ -25,7 +25,6 @@
 #include "consensus/tx_verify.h"
 #include "consensus/merkle.h"
 #include "consensus/validation.h"
-#include "auto_checkpoints.h"
 #include "hash.h"
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
@@ -306,7 +305,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     #else
     LOCK(cs_main);
     #endif
-    LOCK(Checkpoints::cs_hashSyncCheckpoint); // prevents potential deadlock being reported from tests
 
     nHeight = pParent->nHeight + 1;
 

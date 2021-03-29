@@ -36,7 +36,6 @@
 #include "wallet/walletdb.h"
 #include "wallet/witness_operations.h"
 #include "script/ismine.h"
-#include "auto_checkpoints.h"
 
 #include <stdint.h>
 
@@ -1685,19 +1684,12 @@ static void MaybePushAddress(UniValue & entry, const CTxDestination &dest)
         entry.push_back(Pair("address", addr.ToString()));
 }
 
-void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::string& strAccount, int nMinDepth, bool fLong, UniValue& ret, const isminefilter& filter, bool ignorerpconlylistsecuredtransactions=false)
+void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::string& strAccount, int nMinDepth, bool fLong, UniValue& ret, const isminefilter& filter)
 {
     CAmount nFee;
     std::string strSentAccount;
     std::list<COutputEntry> listReceived;
     std::list<COutputEntry> listSent;
-
-    // If rpconlylistsecuredtransactions is present then only include if tx is secured by a checkpoint
-    bool securedTransaction = (Checkpoints::IsSecuredBySyncCheckpoint(wtx.hashBlock));
-    //fixme:(PHASE5) Remove after checkpointing is gone (once phase4 is active)
-    
-    if (!ignorerpconlylistsecuredtransactions && GetBoolArg("-rpconlylistsecuredtransactions", true) && !securedTransaction && Params().UseSyncCheckpoints() )
-        return;
 
     std::vector<CAccount*> doForAccounts;
     if (strAccount == std::string("*"))
@@ -1742,7 +1734,6 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
                 }
                 entry.push_back(Pair("vout", s.vout));
                 entry.push_back(Pair("fee", ValueFromAmount(-nFee)));
-                entry.push_back(Pair("secured_by_checkpoint",securedTransaction?"yes":"no"));
                 if (fLong)
                     WalletTxToJSON(wtx, entry);
                 entry.push_back(Pair("abandoned", wtx.isAbandoned()));
@@ -1780,7 +1771,6 @@ void ListTransactions(CWallet * const pwallet, const CWalletTx& wtx, const std::
                     entry.push_back(Pair("label", account));
                 }
                 entry.push_back(Pair("vout", r.vout));
-                entry.push_back(Pair("secured_by_checkpoint",securedTransaction?"yes":"no"));
                 if (fLong)
                     WalletTxToJSON(wtx, entry);
                 ret.push_back(entry);
@@ -2123,7 +2113,7 @@ UniValue gettransaction(const JSONRPCRequest& request)
     WalletTxToJSON(wtx, entry);
 
     UniValue details(UniValue::VARR);
-    ListTransactions(pwallet, wtx, "*", 0, false, details, filter, true);
+    ListTransactions(pwallet, wtx, "*", 0, false, details, filter);
     entry.push_back(Pair("details", details));
 
     std::string strHex = EncodeHexTx(static_cast<CTransaction>(wtx), RPCSerializationFlags());

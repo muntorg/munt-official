@@ -3,8 +3,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_RPC_H
-#define GULDEN_RPC_H
+#ifndef RPC_ACCOUNTS_H
+#define RPC_ACCOUNTS_H
 
 #include <univalue.h>
 

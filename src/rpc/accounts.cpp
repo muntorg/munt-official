@@ -15,7 +15,6 @@
 #include <consensus/validation.h>
 #include <boost/assign/list_of.hpp>
 
-#include "auto_checkpoints.h"
 #include "init.h"
 #include "unity/appmanager.h"
 #include "witnessutil.h"
@@ -2523,31 +2522,6 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
 }
 
 
-static UniValue checkpointinvalidate(const JSONRPCRequest& request)
-{
-    if (request.fHelp || request.params.size() != 1)
-        throw std::runtime_error(
-            "checkpointinvalidate \"block_hash\"\n"
-            "\nPermanently marks a block as invalid, as if it violated a consensus rule.\n"
-            "\nArguments:\n"
-            "1. \"block_hash\"   (string, required) the hash of the block to mark as invalid\n"
-            "\nResult:\n"
-            "\nExamples:\n"
-            + HelpExampleCli("invalidateblock", "\"block_hash\"")
-            + HelpExampleRpc("invalidateblock", "\"block_hash\"")
-        );
-
-    std::string strHash = request.params[0].get_str();
-    uint256 hash(uint256S(strHash));
-
-    if (!Checkpoints::SendCheckpointInvalidate(hash, Params()))
-    {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Failed to send invalidate-checkpoint");
-    }
-
-    return NullUniValue;
-}
-
 static UniValue resetdatadirfull(const JSONRPCRequest& request)
 {
     // NB! Delibritely return no help, we don't want this command to be listed in the help.
@@ -2724,20 +2698,6 @@ static UniValue resetconfig_pi_medmem(const JSONRPCRequest& request)
     streamConfig << "reverseheaders=false\n";
 
     return NullUniValue;
-}
-
-static UniValue getcheckpoint(const JSONRPCRequest& request)
-{
-    // NB! Delibritely return no help, we don't want this command to be listed in the help.
-    if (request.fHelp) throw std::runtime_error("");
-    if (request.params.size() != 0)
-    {
-        throw std::runtime_error("getcheckpoint does not take arguments\n");
-    }
-
-    LogPrintf("getcheckpoint requested.\n");
-    
-    return Checkpoints::hashSyncCheckpoint.ToString();
 }
 
 static UniValue getlastblocks(const JSONRPCRequest& request)
@@ -3729,14 +3689,12 @@ static const CRPCCommand commandsFull[] =
 static const CRPCCommand commandsSPV[] =
 { //  category                   name                               actor (function)                 okSafeMode
   //  ---------------------      ------------------------           -----------------------          ----------
-    { "developer",               "checkpointinvalidate",            &checkpointinvalidate,           true,    {"block_hash" } },
     
     { "support",                 "resetdatadirpartial",             &resetdatadirpartial,            true,    {""} },
     { "support",                 "resetdatadirfull",                &resetdatadirfull,               true,    {""} },
     { "support",                 "resetconfig",                     &resetconfig,                    true,    {""} },
     { "support",                 "resetconfig_pi_lowmem",           &resetconfig_pi_lowmem,          true,    {""} },
     { "support",                 "resetconfig_pi_medmem",           &resetconfig_pi_medmem,          true,    {""} },
-    { "support",                 "getcheckpoint",                   &getcheckpoint,                  true,    {""} },
     { "support",                 "getlastblocks",                   &getlastblocks,                  true,    {"num_blocks"} },
 
     { "accounts",                "changeaccountname",               &changeaccountname,              true,    {"account", "name"} },

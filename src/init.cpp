@@ -24,7 +24,6 @@
 #include "chain.h"
 #include "chainparams.h"
 #include "checkpoints.h"
-#include "auto_checkpoints.h"
 #include "compat/sanity.h"
 #include "consensus/validation.h"
 #include "validation/validation.h"
@@ -1156,16 +1155,6 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         {
             threadGroup.create_thread(&ThreadScriptCheck);
         }
-    }
-
-    //Gulden - private key for checkpoint system.
-    if (IsArgSet("-checkpointkey"))
-    {
-        std::string sKey=GetArg("-checkpointkey", "");
-        if (!Checkpoints::SetCheckpointPrivKey(sKey))
-            return InitError(errortr("Unable to sign checkpoint, wrong checkpointkey?\n"));
-        else
-            LogPrintf("Checkpoint server enabled\n");
     }
 
 #ifdef ENABLE_WALLET
