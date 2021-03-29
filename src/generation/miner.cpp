@@ -1418,10 +1418,12 @@ void PoWStopGeneration(bool notify)
         delete minerThread;
         minerThread = nullptr;
     }
+    #ifdef ENABLE_WALLET
     if (notify)
     {
         static_cast<CExtWallet*>(pactiveWallet)->NotifyGenerationStopped();
     }
+    #endif
 }
 
 void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount, std::string generateAddress)
@@ -1437,7 +1439,9 @@ void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nMemory, const 
 
     fixedGenerateAddress = generateAddress;
     minerThread = new boost::thread(boost::bind(&PoWGenerate, boost::cref(chainparams), forAccount, nThreads, nMemory));
+    #ifdef ENABLE_WALLET
     static_cast<CExtWallet*>(pactiveWallet)->NotifyGenerationStarted();
+    #endif
 }
 
 bool PoWGenerationIsActive()
