@@ -41,7 +41,9 @@
 #include "utilmoneystr.h"
 #include "validation/validationinterface.h"
 
+#ifdef ENABLE_WALLET
 #include <wallet/extwallet.h>
+#endif
 
 #include <algorithm>
 #include <queue>
