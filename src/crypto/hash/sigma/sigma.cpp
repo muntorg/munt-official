@@ -548,8 +548,8 @@ sigma_settings::sigma_settings()
 void sigma_settings::verify()
 {
     assert(arenaSizeKb%argonMemoryCostKb==0);
-    assert(numHashesPre <= std::numeric_limits<uint16_t>::max()+1);
-    assert(numHashesPost <= std::numeric_limits<uint16_t>::max()+1);
+    assert(numHashesPre <= (uint64_t)std::numeric_limits<uint16_t>::max()+1);
+    assert(numHashesPost <= (uint64_t)std::numeric_limits<uint16_t>::max()+1);
     arenaChunkSizeBytes = (arenaSizeKb*1024)/numHashesPost;
     assert(fastHashSizeBytes<=arenaChunkSizeBytes);
 }
