@@ -563,7 +563,7 @@ void static GuldenWitness()
                     boost::this_thread::interruption_point();
 
                     cacheAlreadySeenWitnessCandidates.insert(candidateIter);
-                    
+
                     //Create new block
                     std::shared_ptr<CBlock> pWitnessBlock(new CBlock);
                     if (ReadBlockFromDisk(*pWitnessBlock, candidateIter, chainparams))

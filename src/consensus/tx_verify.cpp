@@ -896,7 +896,6 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
             {
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for less than minimum of 1 month.");
             }
-            
             if ((int64_t)nLockLengthInBlocks - (int64_t)nSpendHeight > int64_t(MaximumWitnessLockLength()))
             {
                 if (witnessDetails.lockFromBlock != 1)
