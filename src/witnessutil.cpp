@@ -207,7 +207,7 @@ int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks)
 }
 
 
-int64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockNumber, uint64_t& nFromBlockOut, uint64_t& nUntilBlockOut)
+uint64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockNumber, uint64_t& nFromBlockOut, uint64_t& nUntilBlockOut)
 {
     if (out.GetType() == CTxOutType::PoW2WitnessOutput)
     {
@@ -225,7 +225,7 @@ int64_t GetPoW2LockLengthInBlocksFromOutput(const CTxOut& out, uint64_t txBlockN
     {
         assert(0);
     }
-    return (nUntilBlockOut + 1) - nFromBlockOut;
+    return (nUntilBlockOut - nFromBlockOut)+1;
 }
 
 uint64_t GetPoW2RemainingLockLengthInBlocks(uint64_t lockUntilBlock, uint64_t tipHeight)
