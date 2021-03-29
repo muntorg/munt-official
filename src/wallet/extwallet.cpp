@@ -23,7 +23,7 @@ bool fShowChildAccountsSeperately = false;
 // TODO: consider moving shadow thread functionality into wallet class to reduce usage of global pactiveWallet
 // and possibly make some members private.
 
-static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAccountPoolTargetSizeWitness, int nAccountPoolTargetSizeMobi, int& nNumNewAccountsAllocated, bool& tryLockWallet)
+static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAccountPoolTargetSizeWitness, int nAccountPoolTargetSizeMobi, int nAccountPoolTargetSizeMining, int& nNumNewAccountsAllocated, bool& tryLockWallet)
 {
     // Special SPV optimisation
     // Prevent extra accounts from generating until after we have found the first transaction
@@ -46,7 +46,7 @@ static void AllocateShadowAccountsIfNeeded(int nAccountPoolTargetSize, int nAcco
             switch (shadowSubType)
             {
                 case AccountType::MiningAccount:
-                    nFinalAccountPoolTargetSize = 1;
+                    nFinalAccountPoolTargetSize = nAccountPoolTargetSizeMining;
                     break;
                 case AccountType::PoW2Witness:
                     nFinalAccountPoolTargetSize = nAccountPoolTargetSizeWitness;
@@ -124,6 +124,11 @@ static void ThreadShadowPoolManager()
     {
         nAccountPoolTargetSizeMobi = GetArg("-accountpoolmobi", nAccountPoolTargetSizeMobi);
     }
+    int nAccountPoolTargetSizeMining = 1;
+    if (IsArgSet("-accountpoolmining"))
+    {
+        nAccountPoolTargetSizeMining = GetArg("-accountpoolmining", nAccountPoolTargetSizeMining);
+    }
     
     int nKeyPoolTargetDepth = GetArg("-keypool", DEFAULT_ACCOUNT_KEYPOOL_SIZE);
     while (true)
@@ -138,7 +143,7 @@ static void ThreadShadowPoolManager()
             int nNumNewAccountsAllocated = 0;
 
             // First we expand the amount of shadow accounts until we have the desired amount.
-            AllocateShadowAccountsIfNeeded(nAccountPoolTargetSize, nAccountPoolTargetSizeWitness, nAccountPoolTargetSizeMobi, nNumNewAccountsAllocated, tryLockWallet);
+            AllocateShadowAccountsIfNeeded(nAccountPoolTargetSize, nAccountPoolTargetSizeWitness, nAccountPoolTargetSizeMobi, nAccountPoolTargetSizeMining, nNumNewAccountsAllocated, tryLockWallet);
             if (nNumNewAccountsAllocated > 0)
             {
                 // Reset the depth to 1, so that our new accounts get their first keys as a priority instead of expanding deeper the other accounts.
@@ -409,6 +414,22 @@ void CExtWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                         else
                         {
                             name = _("Restored");
+                            switch(forAccount->m_Type)
+                            {
+                                case AccountType::MiningAccount:
+                                    name += " mining";
+                                    break;
+                                case AccountType::PoW2Witness:
+                                    name += " holding";
+                                    break;
+                                case AccountType::Mobi:
+                                    name += " mobile";
+                                    break;
+                                case AccountType::Desktop:
+                                case AccountType::WitnessOnlyWitnessAccount:
+                                case AccountType::ImportedPrivateKeyAccount:
+                                    break;
+                            }
                         }
                         // Add the account, don't let it steal focus (this can create issues on e.g. mobile wallets where the UI/Unity lib expects a single account to always be the active one)
                         addAccount(forAccount, name, false);
