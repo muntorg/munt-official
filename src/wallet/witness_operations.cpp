@@ -41,7 +41,6 @@ witnessOutputsInfoVector getCurrentOutputsForWitnessAccount(CAccount* forAccount
     return matchedOutputs;
 }
 
-
 void extendwitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVector unspentWitnessOutputs, CWallet* pwallet, CAmount requestedAmount, uint64_t requestedLockPeriodInBlocks, std::string* pTxid, CAmount* pFee)
 {
     AssertLockHeld(cs_main);

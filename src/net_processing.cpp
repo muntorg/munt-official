@@ -1702,7 +1702,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             vRecv >> LIMITED_STRING(strSubVer, MAX_SUBVERSION_LENGTH);
             cleanSubVer = SanitizeString(strSubVer);
         }
-        
         if (!vRecv.empty())
         {
             vRecv >> nStartingHeight;
