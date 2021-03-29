@@ -602,7 +602,7 @@ int main(int argc, char** argv)
             std::vector<uint256> hashes;
             {
                 uint64_t numHashes = 10000;
-                for (int i=0; i<numHashes; ++i)
+                for (uint64_t i=0; i<numHashes; ++i)
                 {
                     uint256 hash = GetRandHash();
                     std::vector<unsigned char> signature;
@@ -613,7 +613,7 @@ int main(int argc, char** argv)
                 CPubKey rkey1;
             
                 uint64_t nStart = GetTimeMicros(); 
-                for (int i=0; i< numHashes; ++i)
+                for (uint64_t i=0; i< numHashes; ++i)
                 {
                     rkey1.RecoverCompact(hashes[i], signatures[i]);
                 }
@@ -627,7 +627,7 @@ int main(int argc, char** argv)
             uint64_t numHashes = 1000;
             arith_uint256 thash;
             arith_uint256 fhash;
-            for (int i=0;i<numHashes;++i)
+            for (uint64_t i=0;i<numHashes;++i)
             {
                 header.nNonce=i;
                 hash_sha256(BEGIN(header.nVersion), 80, thash);
