@@ -409,6 +409,11 @@ void rotatewitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
         CTxOut rotatedWitnessTxOutput;
         rotatedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
         rotatedWitnessTxOutput.output.witnessDetails.lockFromBlock = currentWitnessDetails.lockFromBlock;
+        // Ensure consistent lock from
+        if (rotatedWitnessTxOutput.output.witnessDetails.lockFromBlock == 0)
+        {
+            rotatedWitnessTxOutput.output.witnessDetails.lockFromBlock = currentWitnessHeight;
+        }
         rotatedWitnessTxOutput.output.witnessDetails.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
         rotatedWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
         rotatedWitnessTxOutput.output.witnessDetails.witnessKeyID = pubWitnessKey.GetID();
@@ -825,6 +830,7 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
 
         uint64_t highestActionNonce = 0;
         uint64_t highestFailCount = 0;
+        uint64_t highestLockFrom = 0;
 
         // Add all original outputs as inputs
         for (const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessTxIndex, currentWitnessOutpoint]: unspentWitnessOutputs)
@@ -836,10 +842,13 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
             {
                 throw witness_error(witness::RPC_MISC_ERROR, "Failure extracting witness details.");
             }
-            if (details.actionNonce > highestActionNonce)
-                highestActionNonce = details.actionNonce;
-            if (details.failCount > highestFailCount)
-                highestFailCount = details.failCount;
+            highestActionNonce = std::max(highestActionNonce, details.actionNonce);
+            highestFailCount = std::max(highestFailCount, details.failCount);
+            highestLockFrom = std::max(highestLockFrom, details.lockFromBlock);
+            if (details.lockFromBlock == 0)
+            {
+                highestLockFrom = std::max(highestLockFrom, currentWitnessHeight);
+            }
         }
 
         // Add new witness outputs
@@ -849,15 +858,15 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
             distTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
              if (requestedLockPeriodInBlocks != 0)
              {
-                 // extend
-                 distTxOutput.output.witnessDetails.lockFromBlock = 0;
-                 distTxOutput.output.witnessDetails.lockUntilBlock = chainActive.Tip()->nHeight + requestedLockPeriodInBlocks;
+                // extend
+                distTxOutput.output.witnessDetails.lockFromBlock = 0;
+                distTxOutput.output.witnessDetails.lockUntilBlock = chainActive.Tip()->nHeight + requestedLockPeriodInBlocks;
              }
              else
              {
-                 // rearrange
-                 distTxOutput.output.witnessDetails.lockFromBlock = currentWitnessDetails.lockFromBlock;
-                 distTxOutput.output.witnessDetails.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
+                // rearrange
+                distTxOutput.output.witnessDetails.lockFromBlock = highestLockFrom;
+                distTxOutput.output.witnessDetails.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
              }
             distTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
             distTxOutput.output.witnessDetails.witnessKeyID = currentWitnessDetails.witnessKeyID;
