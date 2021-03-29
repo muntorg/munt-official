@@ -17,7 +17,6 @@
 #include "warnings.h"
 #include "alert.h"
 #include "validation/validation.h"
-#include <auto_checkpoints.h>
 
 CCriticalSection cs_warnings;
 std::string strMiscWarning;
@@ -61,7 +60,6 @@ std::string GetWarnings(const std::string& strFor)
     std::string strGUI;
     const std::string uiAlertSeperator = "<hr />";
 
-    LOCK(Checkpoints::cs_hashSyncCheckpoint); // prevents potential deadlock being reported from tests
     LOCK(cs_warnings);
 
     if (!CLIENT_VERSION_IS_RELEASE) {
@@ -90,25 +88,6 @@ std::string GetWarnings(const std::string& strFor)
         strGUI += (strGUI.empty() ? "" : uiAlertSeperator) + _("Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.");
     }
 
-
-    // Gulden: Warn if sync-checkpoint is too old (Don't enter safe mode)
-    if (Params().UseSyncCheckpoints())
-    {
-        if (Checkpoints::IsSyncCheckpointTooOld(2 * 60 * 60))
-        {
-            if (!IsInitialBlockDownload())
-            {
-                strStatusBar = strGUI = strRPC = "WARNING: Checkpoint is too old, please wait for a new checkpoint to arrive before engaging in any transactions.";
-            }
-        }
-    }
-
-
-    // Gulden: if detected invalid checkpoint enter safe mode
-    if (Checkpoints::hashInvalidCheckpoint != uint256())
-    {
-        strStatusBar = strGUI = strRPC = "WARNING: Invalid checkpoint found! Displayed transactions may not be correct! You may need to upgrade, or notify developers of the issue.";
-    }
 
     // Alerts
     {

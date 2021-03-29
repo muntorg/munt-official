@@ -41,7 +41,6 @@
 
 #include "alert.h"
 #include "checkpoints.h"
-#include "auto_checkpoints.h"
 
 #include <boost/foreach.hpp>
 
@@ -720,9 +719,6 @@ bool FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
                         auto resetIndex = mapBlockIndex.find(pindex->GetBlockHashPoW2());
                         if (resetIndex != mapBlockIndex.end())
                         {
-                            // Reset sync checkpoints just in case.
-                            Checkpoints::hashSyncCheckpoint = uint256();
-                            Checkpoints::hashInvalidCheckpoint = uint256();
                             // Reset block failiure flags and give it another chance
                             ResetBlockFailureFlags(resetIndex->second);
                             // Only do this once though
@@ -1556,7 +1552,7 @@ static void ProcessPriorityRequests()
         }
         else
         {
-            throw std::runtime_error(std::string(__func__) + " No data for downloaded block, block index inconsistency.");
+            throw std::runtime_error(std::string(__func__) + strprintf(" No data for downloaded block [%s], block index inconsistency.", r.pindex->GetBlockHashPoW2().ToString()));
         }
     }
 }
@@ -1706,7 +1702,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             vRecv >> LIMITED_STRING(strSubVer, MAX_SUBVERSION_LENGTH);
             cleanSubVer = SanitizeString(strSubVer);
         }
-        
         if (!vRecv.empty())
         {
             vRecv >> nStartingHeight;
@@ -1876,57 +1871,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             }
         }
     }
-
-    else if (strCommand == NetMsgType::CHECKPOINT)
-    {
-        if (Params().UseSyncCheckpoints())
-        {
-            if (!IsInitialBlockDownload())
-            {
-                CSyncCheckpoint checkpoint;
-                vRecv >> checkpoint;
-
-                if (checkpoint.ProcessSyncCheckpoint(pfrom, chainparams))
-                {
-                    // Relay
-                    pfrom->hashCheckpointKnown = checkpoint.hashCheckpoint;
-                    g_connman->ForEachNode([checkpoint](CNode* pnode)
-                    {
-                        checkpoint.RelayTo(pnode);
-                    }); 
-                }
-            }
-        }
-        else
-        {
-            Misbehaving(pfrom->GetId(), 10);
-        }
-    }
     
-    else if (strCommand == NetMsgType::CHECKPOINT_INVALIDATE)
-    {
-        if (Params().UseSyncCheckpoints())
-        {
-            CSyncCheckpointInvalidate invalidate;
-            vRecv >> invalidate;
-
-            if (invalidate.Process(pfrom, chainparams))
-            {
-                // Relay
-                pfrom->hashInvalidateKnown = invalidate.hashInvalidate;
-                g_connman->ForEachNode([invalidate](CNode* pnode)
-                {
-                    invalidate.RelayTo(pnode);
-                }); 
-            }
-        }
-        else
-        {
-            Misbehaving(pfrom->GetId(), 10);
-        }
-    }
-
-
     else if (pfrom->nVersion == 0)
     {
         // Must have a version message before anything else

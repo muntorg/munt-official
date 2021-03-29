@@ -35,6 +35,7 @@
 #include "arith_uint256.h"
 #include "warnings.h"
 #include "witnessutil.h"
+#include "utilstrencodings.h"
 #include <compat/sys.h>
 
 #include <memory>
@@ -649,6 +650,45 @@ static UniValue submitblock(const JSONRPCRequest& request)
     return BIP22ValidationResult(sc.state);
 }
 
+static UniValue submitheader(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 1)
+    {
+        throw std::runtime_error(
+            "submitheader \"hexdata\"\n"
+            "\nAttempts to submit new header to network.\n"
+            "\nArguments\n"
+            "1. \"hexdata\"        (string, required) the hex-encoded block data to submit\n"
+            "\nResult:\n"
+            "\nExamples:\n"
+            + HelpExampleCli("submitblock", "\"mydata\"")
+            + HelpExampleRpc("submitblock", "\"mydata\"")
+        );
+    }
+
+    std::shared_ptr<CBlock> blockptr = std::make_shared<CBlock>();
+    CBlock& block = *blockptr;
+    if (!DecodeHexBlk(block, request.params[0].get_str()+"00"))
+    {
+        throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Header decode failed");
+    }
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair("hash", block.GetHashPoW2().ToString()));
+
+    const CBlockIndex *pindex = NULL;
+    CValidationState state;
+    if (!ProcessNewBlockHeaders( {block.GetBlockHeader()}, state, Params(), &pindex))
+    {
+        result.push_back(Pair("status", "failed"));        
+    }
+    else
+    {
+        result.push_back(Pair("status", "success"));
+    }
+    return result;
+}
+
 static UniValue estimatefee(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
@@ -872,6 +912,7 @@ static const CRPCCommand commandsSPV[] =
 { //  category              name                      actor (function)         okSafeMode
   //  --------------------- ------------------------  -----------------------  ----------
     { "block_generation",   "submitblock",            &submitblock,            true,  {"hexdata","parameters"} },
+    { "block_generation",   "submitheader",           &submitheader,           true,  {"hexdata"} },
 
     { "util",               "estimatefee",            &estimatefee,            true,  {"num_blocks"} },
     { "util",               "estimatesmartfee",       &estimatesmartfee,       true,  {"num_blocks", "conservative"} },

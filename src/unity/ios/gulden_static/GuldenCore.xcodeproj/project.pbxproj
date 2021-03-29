@@ -89,7 +89,7 @@
 		E698B374233E66D700458186 /* libcryptopp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcryptopp.a; sourceTree = "<group>"; };
 		E6CEA4232264AA2D00C87DC5 /* DBOutputRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBOutputRecord.h; path = ../../../djinni/objc/DBOutputRecord.h; sourceTree = "<group>"; };
 		E6CEA4242264AA2D00C87DC5 /* DBPaymentResultStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBPaymentResultStatus.h; path = ../../../djinni/objc/DBPaymentResultStatus.h; sourceTree = "<group>"; };
-		E6EBCA212254B2BA00B02F24 /* staticfiltercp */ = {isa = PBXFileReference; lastKnownFileType = file; name = staticfiltercp; path = ../../../../data/staticfiltercp; sourceTree = "<group>"; };
+		E6EBCA212254B2BA00B02F24 /* staticfiltercp */ = {isa = PBXFileReference; lastKnownFileType = file; path = staticfiltercp; sourceTree = "<group>"; };
 		E6EBCA232254B77A00B02F24 /* GuldenCoreUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GuldenCoreUtil.m; sourceTree = "<group>"; };
 		E6EBCA252254B7AF00B02F24 /* GuldenCoreUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GuldenCoreUtil.h; sourceTree = "<group>"; };
 		E6EC7CF521EF24A800320806 /* DBMonitorRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBMonitorRecord.h; path = ../../../djinni/objc/DBMonitorRecord.h; sourceTree = "<group>"; };
@@ -102,8 +102,8 @@
 		E6EC7D0021EF24A800320806 /* DBAddressRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBAddressRecord.h; path = ../../../djinni/objc/DBAddressRecord.h; sourceTree = "<group>"; };
 		E6EC7D0121EF24A800320806 /* DBTransactionRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBTransactionRecord.h; path = ../../../djinni/objc/DBTransactionRecord.h; sourceTree = "<group>"; };
 		E6ED7E97234216F3009C4DAB /* libgulden_crypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgulden_crypto.a; path = "../../../../build/aarch64-ios/src/crypto/libgulden_crypto.a"; sourceTree = "<group>"; };
-		E6ED8384228ED8F700DD0BC9 /* core-packages.licenses */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "core-packages.licenses"; path = "../../../../data/core-packages.licenses"; sourceTree = "<group>"; };
-		E6EFA49D227352BB002484C6 /* staticfiltercptestnet */ = {isa = PBXFileReference; lastKnownFileType = file; name = staticfiltercptestnet; path = ../../../../data/staticfiltercptestnet; sourceTree = "<group>"; };
+		E6ED8384228ED8F700DD0BC9 /* core-packages.licenses */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "core-packages.licenses"; sourceTree = "<group>"; };
+		E6EFA49D227352BB002484C6 /* staticfiltercptestnet */ = {isa = PBXFileReference; lastKnownFileType = file; path = staticfiltercptestnet; sourceTree = "<group>"; };
 		E6F2DCA32343609F002B3CEA /* lib_unity_crypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = lib_unity_crypto.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -228,7 +228,8 @@
 				E6EBCA212254B2BA00B02F24 /* staticfiltercp */,
 				E6EFA49D227352BB002484C6 /* staticfiltercptestnet */,
 			);
-			path = Resources;
+			name = Resources;
+			path = ../../../data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

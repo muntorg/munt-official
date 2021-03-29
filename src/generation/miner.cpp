@@ -25,7 +25,6 @@
 #include "consensus/tx_verify.h"
 #include "consensus/merkle.h"
 #include "consensus/validation.h"
-#include "auto_checkpoints.h"
 #include "hash.h"
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
@@ -41,6 +40,10 @@
 #include "utiltime.h"
 #include "utilmoneystr.h"
 #include "validation/validationinterface.h"
+
+#ifdef ENABLE_WALLET
+#include <wallet/extwallet.h>
+#endif
 
 #include <algorithm>
 #include <queue>
@@ -304,7 +307,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     #else
     LOCK(cs_main);
     #endif
-    LOCK(Checkpoints::cs_hashSyncCheckpoint); // prevents potential deadlock being reported from tests
 
     nHeight = pParent->nHeight + 1;
 
@@ -1030,10 +1032,11 @@ inline void updateHashesPerSec(uint64_t& nStart, uint64_t nStop, uint64_t nCount
         {
             dRollingHashesPerSec = ((dRollingHashesPerSec*19) + dHashesPerSec)/20;
         }
+        #ifdef ENABLE_WALLET
+        static_cast<CExtWallet*>(pactiveWallet)->NotifyGenerationStatisticsUpdate();
+        #endif
     }
 }
-
-static const unsigned int hashPSTimerInterval = 200;
 
 void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemoryKb)
 {
@@ -1405,7 +1408,7 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
 boost::thread* minerThread = nullptr;
 CCriticalSection miningCS;
 
-void PoWStopGeneration()
+void PoWStopGeneration(bool notify)
 {
     LOCK(miningCS);
     fixedGenerateAddress="";
@@ -1417,6 +1420,12 @@ void PoWStopGeneration()
         delete minerThread;
         minerThread = nullptr;
     }
+    #ifdef ENABLE_WALLET
+    if (notify)
+    {
+        static_cast<CExtWallet*>(pactiveWallet)->NotifyGenerationStopped();
+    }
+    #endif
 }
 
 void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount, std::string generateAddress)
@@ -1425,13 +1434,16 @@ void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nMemory, const 
     if (nThreads < 0)
         nThreads = GetNumCores();
 
-    PoWStopGeneration();
+    PoWStopGeneration(false);
 
     if (nThreads == 0 || !fGenerate)
         return;
 
     fixedGenerateAddress = generateAddress;
     minerThread = new boost::thread(boost::bind(&PoWGenerate, boost::cref(chainparams), forAccount, nThreads, nMemory));
+    #ifdef ENABLE_WALLET
+    static_cast<CExtWallet*>(pactiveWallet)->NotifyGenerationStarted();
+    #endif
 }
 
 bool PoWGenerationIsActive()

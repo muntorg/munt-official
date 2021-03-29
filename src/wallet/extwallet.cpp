@@ -431,7 +431,8 @@ void CExtWallet::MarkKeyUsed(CKeyID keyID, uint64_t usageTime)
                                     break;
                             }
                         }
-                        addAccount(forAccount, name);
+                        // Add the account, don't let it steal focus (this can create issues on e.g. mobile wallets where the UI/Unity lib expects a single account to always be the active one)
+                        addAccount(forAccount, name, false);
 
                         //fixme: (FUT) (ACCOUNTS) Shadow accounts during rescan...
                     }

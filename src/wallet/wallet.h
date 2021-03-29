@@ -450,7 +450,7 @@ struct WalletBalances
 
 //fixme: (HIGH) Merge Cwallet and CExtWallet back into a single class
 /*
-All Gulden specific functionality goes in base class CExtWallet
+All Novo specific functionality goes in base class CExtWallet
 A little bit clumsy 
 */
 class CWallet : public CExtWallet
@@ -642,7 +642,8 @@ public:
     void ListLockedCoins(std::vector<COutPoint>& vOutpts) const;
     
     // Checks for wallet vs. UTXO inconsistency; reports any spent state inconsistency found
-    void CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, int64_t& nBalanceInQuestion);
+    void CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, int64_t& nBalanceInQuestio, bool attemptRepair=false);
+
     // Clear all orphan transactions from wallet
     bool RemoveAllOrphans(uint64_t& numErased, uint64_t& numDetected, std::string& strError);
 

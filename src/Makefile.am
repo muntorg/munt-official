@@ -130,7 +130,6 @@ CORE_H = rpc/accounts.h \
   crypto/hash/cityconfig.h \
   wallet/mnemonic.h \
   witnessutil.h \
-  auto_checkpoints.h \
   wallet/extwallet.h \
   LRUCache/LRUCache11.hpp \
   alert.h \
@@ -295,7 +294,6 @@ lib_node_a_SOURCES = \
   addrdb.cpp \
   addrman.cpp \
   alert.cpp \
-  auto_checkpoints.cpp \
   bloom.cpp \
   blockencodings.cpp \
   blockstore.cpp \

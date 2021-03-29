@@ -2284,8 +2284,8 @@ bool CWallet::DelAddressBook(const std::string& address)
 
     // if address is a valid string encoding of a Gulden address use that for delete key,
     // else it is most likely an IBAN address and then use that directly as key
-    CNativeAddress guldenAddress;
-    std::string deleteKey = guldenAddress.SetString(address) ? guldenAddress.ToString() : address;
+    CNativeAddress nativeAddress;
+    std::string deleteKey = nativeAddress.SetString(address) ? nativeAddress.ToString() : address;
     CWalletDB(*dbw).EraseRecipientPurpose(deleteKey);
     return CWalletDB(*dbw).EraseRecipientName(deleteKey);
 }
@@ -2585,7 +2585,7 @@ void CWallet::ListLockedCoins(std::vector<COutPoint>& vOutpts) const
 }
 
 
-void CWallet::CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, int64_t& nBalanceInQuestion)
+void CWallet::CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, int64_t& nBalanceInQuestion, bool attemptRepair)
 {
     nMismatchFound = 0;
     nBalanceInQuestion = 0;
@@ -2653,6 +2653,14 @@ void CWallet::CompareWalletAgainstUTXO(int& nMismatchFound, int& nOrphansFound, 
                     }
                     else if(!outputSpentInWallet && !outputIsInUTXO)
                     {
+                        if (attemptRepair)
+                        {
+                            std::vector<uint256> hashesToErase;
+                            std::vector<uint256> hashesErased;
+                            CWalletDB walletdb(*dbw);
+                            hashesToErase.push_back(walletCoinOutpoint.getTransactionHash());
+                            pactiveWallet->ZapSelectTx(walletdb, hashesToErase, hashesErased);
+                        }
                         printf("CompareWalletAgainstUTXO: Found wallet-unspent coins that aren't in the chain utxo and therefore should be spent %s %s[%ld]\n", FormatMoney(walletCoin->tx->vout[n].nValue).c_str(), hash.ToString().c_str(), n);
                         nMismatchFound++;
                         nBalanceInQuestion += walletCoin->tx->vout[n].nValue;

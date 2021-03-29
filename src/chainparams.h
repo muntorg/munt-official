@@ -83,10 +83,6 @@ public:
     const std::vector<unsigned char>& Base58Prefix(Base58Type type) const { return base58Prefixes[type]; }
     const std::vector<SeedSpec6>& FixedSeeds() const { return vFixedSeeds; }
     const CCheckpointData& Checkpoints() const { return checkpointData; }
-    bool UseSyncCheckpoints() const
-    {
-        return fUseSyncCheckpoints;
-    }
     void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout);
 
     //fixme: (testnet) remove after official testnet restarted
@@ -117,7 +113,6 @@ protected:
     bool fDefaultConsistencyChecks;
     bool fRequireStandard;
     bool fMineBlocksOnDemand;
-    bool fUseSyncCheckpoints;
     CCheckpointData checkpointData;
     bool fIsOfficialTestnetV1;
 };
