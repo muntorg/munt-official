@@ -1030,7 +1030,9 @@ inline void updateHashesPerSec(uint64_t& nStart, uint64_t nStop, uint64_t nCount
         {
             dRollingHashesPerSec = ((dRollingHashesPerSec*19) + dHashesPerSec)/20;
         }
+        #ifdef ENABLE_WALLET
         static_cast<CExtWallet*>(pactiveWallet)->NotifyGenerationStatisticsUpdate();
+        #endif
     }
 }
 
