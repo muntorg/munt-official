@@ -646,6 +646,7 @@ public:
 
     // Clear all orphan transactions from wallet
     bool RemoveAllOrphans(uint64_t& numErased, uint64_t& numDetected, std::string& strError);
+
     /*
      * Rescan abort properties
      */

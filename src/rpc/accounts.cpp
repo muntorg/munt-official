@@ -1657,8 +1657,8 @@ static UniValue importlinkedaccount(const JSONRPCRequest& request)
             "\nResult:\n"
             "\nReturn the UUID of the new account.\n"
             "\nExamples:\n"
-            + HelpExampleCli("importlinkedaccount \"Linked account\" \"" GLOBAL_APPNAME "sync:2JQWMRUmrVym8Ak8TdeLhveAXkA1a5fb9fWzQUZkhd8G-3tS68yeav8TRJqhf5NEsa44tLRyjRouZQCcwcQ4Q5CSe:3mM4jYg7L4FhLC;TNhC2TDsD2L2PW7ri7ysn9YTfoQfpWT1K3\"", "")
-            + HelpExampleRpc("importlinkedaccount \"Linked account\" \"" GLOBAL_APPNAME "sync:2JQWMRUmrVym8Ak8TdeLhveAXkA1a5fb9fWzQUZkhd8G-3tS68yeav8TRJqhf5NEsa44tLRyjRouZQCcwcQ4Q5CSe:3mM4jYg7L4FhLC;TNhC2TDsD2L2PW7ri7ysn9YTfoQfpWT1K3\"", ""));
+            + HelpExampleCli("importlinkedaccount \"Linked account\" \"" GLOBAL_APP_URIPREFIX "sync:2JQWMRUmrVym8Ak8TdeLhveAXkA1a5fb9fWzQUZkhd8G-3tS68yeav8TRJqhf5NEsa44tLRyjRouZQCcwcQ4Q5CSe:3mM4jYg7L4FhLC;TNhC2TDsD2L2PW7ri7ysn9YTfoQfpWT1K3\"", "")
+            + HelpExampleRpc("importlinkedaccount \"Linked account\" \"" GLOBAL_APP_URIPREFIX "sync:2JQWMRUmrVym8Ak8TdeLhveAXkA1a5fb9fWzQUZkhd8G-3tS68yeav8TRJqhf5NEsa44tLRyjRouZQCcwcQ4Q5CSe:3mM4jYg7L4FhLC;TNhC2TDsD2L2PW7ri7ysn9YTfoQfpWT1K3\"", ""));
 
 
 

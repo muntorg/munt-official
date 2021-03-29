@@ -61,7 +61,7 @@ bool ILibraryController::InitWalletFromAndroidLegacyProtoWallet(const std::strin
         {
             if (wallet.walletSeedMnemonic.find("-") != std::string::npos && wallet.walletSeedMnemonic.find(":") != std::string::npos)
             {
-                return InitWalletLinkedFromURI(GLOBAL_APPNAME"sync:"+wallet.walletSeedMnemonic+";unused_payout_address", newPassword.c_str());
+                return InitWalletLinkedFromURI(GLOBAL_APP_URIPREFIX"sync:"+wallet.walletSeedMnemonic+";unused_payout_address", newPassword.c_str());
             }
             else
             {
