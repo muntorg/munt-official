@@ -16,11 +16,13 @@
 #include <random.h>
 #include "key.h"
 
+#ifndef WIN32
 int LogPrintStr(const std::string &str)
 {
     std::cout << str;
     return 1;
 }
+#endif
 
 // fixme: (BOOST) - Workaround for boost on macOS (when using newer clang) build issue (not detecting string_view properly)
 // Remove this when addressed by Boost's ASIO config.
@@ -30,14 +32,6 @@ int LogPrintStr(const std::string &str)
 #define BOOST_ASIO_DISABLE_STD_STRING_VIEW 1
 #include <boost/asio.hpp>
 #include <boost/asio/thread_pool.hpp>
-
-#ifndef WIN32
-int LogPrintStr(const std::string &str)
-{
-    std::cout << str;
-    return 1;
-}
-#endif
 
 // Are we running with all options at default or are any overriden by user.
 bool defaultSigma = true;
