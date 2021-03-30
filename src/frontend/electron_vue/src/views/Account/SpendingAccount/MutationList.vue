@@ -25,9 +25,6 @@
 </template>
 
 <script>
-const { remote } = require("electron");
-const { Menu, MenuItem } = remote;
-import { WalletController } from "../../../unity/Controllers";
 export default {
   name: "MutationList",
   props: {
@@ -117,21 +114,22 @@ export default {
       this.$emit("tx-hash", txHash);
     },
     showTxMenu(e, mutation) {
+      console.log("XXX");
       if (
         mutation.status !== 1 &&
         mutation.status !== 2 &&
         mutation.status !== 3
       ) {
-        const contextMenu = new Menu();
-        contextMenu.append(
-          new MenuItem({
-            label: "Abandon transaction",
-            click() {
-              WalletController.AbandonTransaction(mutation.txHash);
-            }
-          })
-        );
-        contextMenu.popup({ x: e.x, y: e.y });
+        // const contextMenu = new Menu();
+        // contextMenu.append(
+        //   new MenuItem({
+        //     label: "Abandon transaction",
+        //     click() {
+        //       WalletController.AbandonTransaction(mutation.txHash);
+        //     }
+        //   })
+        // );
+        // contextMenu.popup({ x: e.x, y: e.y });
       }
     },
     mutationRowClass(txHash) {
