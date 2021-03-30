@@ -16,10 +16,9 @@
         <div class="address">{{ receiveAddress }}</div>
       </div>
     </div>
-        <button @click="buyNovo" class="buy-novo" :disabled="buyDisabled">
-          {{ $t("buttons.buy_novo") }}
-        </button>
-
+    <button @click="buyNovo" class="buy-novo" :disabled="buyDisabled">
+      {{ $t("buttons.buy_novo") }}
+    </button>
   </div>
 </template>
 
