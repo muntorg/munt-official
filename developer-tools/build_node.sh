@@ -2,8 +2,8 @@
 set -e
 set -x
 
-ELECTRON_VERSION=9.1.0
-NODE_ADDON_API_VERSION=3.0.0
+ELECTRON_VERSION=12.0.2
+NODE_ADDON_API_VERSION=3.1.0
 
 NUM_PROCS=$(getconf _NPROCESSORS_ONLN)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
