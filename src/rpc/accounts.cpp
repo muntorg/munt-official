@@ -584,17 +584,56 @@ static UniValue getwitnessutxo(const JSONRPCRequest& request)
     if (!getAllUnspentWitnessCoins(tempChain, Params(), pTipIndex_->pprev, allWitnessCoinsIndexBased, &block, &viewNew, true))
         throw std::runtime_error("Could not retrieve utxo for block.");
 
+    
+    SimplifiedWitnessUTXOSet witnessUTXOset;
+    
     for (const auto& [outpoint, coin] : allWitnessCoinsIndexBased)
     {
-        UniValue rec(UniValue::VARR);
-        rec.push_back(pTipIndex_->nHeight-(uint64_t)outpoint.getTransactionBlockNumber());
-        rec.push_back((uint64_t)outpoint.getTransactionIndex());
-        rec.push_back((uint64_t)outpoint.n);
-        uint64_t nUnused1;
-        uint64_t nUnused2;
-        int64_t nWeight = GetPoW2RawWeightForAmount(coin.out.nValue, GetPoW2LockLengthInBlocksFromOutput(coin.out, coin.nHeight, nUnused1, nUnused2));
-        rec.push_back((uint64_t)nWeight);
-        rec.push_back((uint64_t)coin.out.output.witnessDetails.witnessKeyID.ToString().c_str());
+        SimplifiedWitnessRouletteItem item;
+        
+        item.blockNumber = outpoint.getTransactionBlockNumber();
+        item.transactionIndex = outpoint.getTransactionIndex();
+        item.transactionOutputIndex = outpoint.n;
+        item.lockUntilBlock = coin.out.output.witnessDetails.lockUntilBlock;
+        item.lockFromBlock = coin.out.output.witnessDetails.lockFromBlock;
+        if (item.lockFromBlock == 0)
+        {
+            item.lockFromBlock = item.blockNumber;
+        }
+        item.witnessPubKeyID = coin.out.output.witnessDetails.witnessKeyID;
+        item.nValue = coin.out.nValue;
+        witnessUTXOset.witnessCandidates.insert(item);
+    }
+    
+    CGetWitnessInfo witInfoSimplified;
+    if (!GetWitnessFromSimplifiedUTXO(witnessUTXOset, pTipIndex_, witInfoSimplified))
+        throw std::runtime_error("Could not enumerate all simplified PoW² witness information for block.");
+    
+    CGetWitnessInfo witnessInfo;
+    if (!GetWitness(tempChain, Params(), &viewNew, pTipIndex_->pprev, block, witnessInfo))
+        throw std::runtime_error("Could not enumerate all PoW² witness information for block.");
+    
+    assert(witInfoSimplified.selectedWitnessIndex == witnessInfo.selectedWitnessIndex);
+    if (pTipIndex_->nHeight >= Params().GetConsensus().pow2WitnessSyncHeight)
+    {
+        assert(witInfoSimplified.selectedWitnessOutpoint == witnessInfo.selectedWitnessOutpoint);
+    }
+    assert(witInfoSimplified.selectedWitnessBlockHeight == witnessInfo.selectedWitnessBlockHeight);
+    assert(witInfoSimplified.nTotalWeightRaw == witnessInfo.nTotalWeightRaw);
+    assert(witInfoSimplified.nTotalWeightEligibleRaw == witnessInfo.nTotalWeightEligibleRaw);
+    assert(witInfoSimplified.nTotalWeightEligibleAdjusted == witnessInfo.nTotalWeightEligibleAdjusted);
+    assert(witInfoSimplified.nMaxIndividualWeight == witnessInfo.nMaxIndividualWeight);    
+    
+    for (const auto& item : witnessUTXOset.witnessCandidates)
+    {
+        UniValue rec(UniValue::VOBJ);   
+        rec.push_back(Pair("block_number", (uint64_t)item.blockNumber));
+        rec.push_back(Pair("transaction_index", (uint64_t)item.transactionIndex));
+        rec.push_back(Pair("transaction_output_index", (uint64_t)item.transactionOutputIndex));
+        rec.push_back(Pair("transaction_lock_until_block", (uint64_t)item.lockUntilBlock));
+        rec.push_back(Pair("transaction_lock_from_block", (uint64_t)item.lockFromBlock));
+        rec.push_back(Pair("value", (uint64_t)item.nValue));
+        rec.push_back(Pair("witnessPubKeyID", item.witnessPubKeyID.ToString()));
         witnessUTXO.push_back(rec);
     }
     return witnessUTXO;
