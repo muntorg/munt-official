@@ -534,6 +534,56 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
 }
 
 
+bool GetWitnessFromSimplifiedUTXO(SimplifiedWitnessUTXOSet simplifiedWitnessUTXO, CBlockIndex* pBlockIndex, CGetWitnessInfo& witnessInfo)
+{
+    DO_BENCHMARK("WIT: GetWitnessFromSimplifiedUTXO", BCLog::BENCH|BCLog::WITNESS);
+    
+    #ifdef ENABLE_WALLET
+    LOCK2(cs_main, pactiveWallet?&pactiveWallet->cs_wallet:nullptr);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    // Populate the witness info from the utxo
+    uint64_t nBlockHeight = pBlockIndex->nHeight;
+    
+    // Equivalent of GetWitnessInfo
+    {
+        // Gather all witnesses that exceed minimum weight and count the total witness weight.
+        for (auto simplifiedRouletteItem : simplifiedWitnessUTXO.witnessCandidates)
+        {
+            // We delibritely leave failCount, actionNonce and spendingKeyId unset here, as they aren't used by the code that follows.
+            CTxOutPoW2Witness simplifiedWitnessInfo;
+            simplifiedWitnessInfo.witnessKeyID = simplifiedRouletteItem.witnessPubKeyID;
+            simplifiedWitnessInfo.lockFromBlock = simplifiedRouletteItem.lockFromBlock;
+            simplifiedWitnessInfo.lockUntilBlock = simplifiedRouletteItem.lockUntilBlock;
+            
+            // Set our partially filled in coin item (we have filled in all the parts that GetWitnessHelper touches)
+            Coin rouletteCoin = Coin(CTxOut(simplifiedRouletteItem.nValue, CTxOutPoW2Witness(simplifiedWitnessInfo)), simplifiedRouletteItem.blockNumber, 0, false, false);
+            COutPoint rouletteOutpoint = COutPoint(simplifiedRouletteItem.blockNumber, simplifiedRouletteItem.transactionIndex, simplifiedRouletteItem.transactionOutputIndex);
+            
+            RouletteItem item(rouletteOutpoint, rouletteCoin, 0, 0);
+            item.nAge = nBlockHeight - simplifiedRouletteItem.blockNumber;
+
+            if (simplifiedRouletteItem.nValue >= (gMinimumWitnessAmount*COIN))
+            {
+                item.nWeight = GetPoW2RawWeightForAmount(item.coin.out.nValue, simplifiedRouletteItem.GetLockLength());
+                if (item.nWeight < gMinimumWitnessWeight)
+                    continue;
+                witnessInfo.witnessSelectionPoolUnfiltered.push_back(item);
+                witnessInfo.nTotalWeightRaw += item.nWeight;
+            }
+            else if (simplifiedRouletteItem.lockFromBlock == 1)
+            {
+                item.nWeight = 0;
+                witnessInfo.witnessSelectionPoolUnfiltered.push_back(item);
+            }
+        }
+    }
+
+    return GetWitnessHelper(pBlockIndex->GetBlockHashLegacy(), witnessInfo, nBlockHeight);
+}
+
 bool GetWitnessFromUTXO(std::vector<RouletteItem> witnessUtxo, CBlockIndex* pBlockIndex, CGetWitnessInfo& witnessInfo)
 {
     DO_BENCHMARK("WIT: GetWitnessFromUTXO", BCLog::BENCH|BCLog::WITNESS);
