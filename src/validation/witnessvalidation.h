@@ -7,9 +7,53 @@
 #define WITNESS_VALIDATION_H
 
 #include "validation/validation.h"
+#include <boost/container/flat_set.hpp>
 
 //fixme: (PHASE5) - Properly document all of these; including pre/post conditions;
 //fixme: (PHASE5) implement unit tests.
+
+
+// Encapusulate the bare minimum information we need to know about every witness address in order to select/verify a valid witness for a block
+// Without any of the additional information thats necessary for other parts of the witness system (e.g. spending key) but not this specific function
+// And without information that can be derived from this core information (e.g. age)
+class SimplifiedWitnessRouletteItem
+{
+public:
+    uint64_t blockNumber;
+    uint64_t transactionIndex;
+    uint32_t transactionOutputIndex;
+    uint64_t lockUntilBlock;
+    uint64_t lockFromBlock;
+    CKeyID witnessPubKeyID;
+    CAmount nValue;
+    
+    uint64_t GetLockLength()
+    {
+        return (lockUntilBlock-lockFromBlock)+1;
+    }
+    
+    //NB! This ordering must precisely match the ordering of RouletteItem::operator< (assuming all items use index based outpoints)
+    friend inline bool operator<(const SimplifiedWitnessRouletteItem& a, const SimplifiedWitnessRouletteItem& b)
+    {
+        if (a.blockNumber == b.blockNumber)
+        {
+            if (a.transactionIndex == b.transactionIndex)
+            {
+                return a.transactionOutputIndex < b.transactionOutputIndex;
+            }
+            return a.transactionIndex < b.transactionIndex;
+        }
+        return a.blockNumber < b.blockNumber;
+    }
+};
+
+// Simplified view of the entire "witness UTXO" encapsulated as basic SimplifiedWitnessRouletteItem items instead of transactions
+class SimplifiedWitnessUTXOSet
+{
+public:
+    uint256 currentTipForSet;
+    boost::container::flat_set<SimplifiedWitnessRouletteItem> witnessCandidates;
+};
 
 /** Global variable that points to the witness coins database (protected by cs_main) */
 extern CWitViewDB* ppow2witdbview;
@@ -36,6 +80,7 @@ public:
         return a.nCumulativeWeight < b;
     }
 };
+
 struct CGetWitnessInfo
 {
     //! All unspent witness coins on the network
