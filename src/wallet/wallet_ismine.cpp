@@ -41,6 +41,11 @@ isminetype CWallet::IsMine(const CTxOut& txout) const
     return ::IsMine(*this, txout);
 }
 
+isminetype CWallet::IsMineWitness(const CTxOut& txout) const
+{
+    return ::IsMineWitness(*this, txout);
+}
+
 bool CWallet::IsMine(const CTransaction& tx) const
 {
     for(const CTxOut& txout : tx.vout)

@@ -858,6 +858,7 @@ public:
 
     isminetype IsMine(const CTxIn& txin) const;
     isminetype IsMine(const CTxOut& txout) const;
+    isminetype IsMineWitness(const CTxOut& txout) const;
     /**
      * Returns amount of debit if the input matches the
      * filter, otherwise returns 0

@@ -308,6 +308,29 @@ isminetype IsMine(const CWallet &wallet, const CTxOut& out)
     return ret;
 }
 
+isminetype IsMineWitness(const CWallet &wallet, const CTxOut& out)
+{
+    LOCK(wallet.cs_wallet);
+
+    isminetype ret = isminetype::ISMINE_NO;
+    for (const auto& [accountUUID, account] : wallet.mapAccounts)
+    {
+        if (account->IsPoW2Witness() && account->m_State == AccountState::Normal)
+        {
+            (unused)accountUUID;
+            isminetype temp = IsMine(*account, out);
+            if (temp > ret)
+            {
+                ret = temp;
+            }
+            // No need to keep going through the remaining accounts at this point.
+            if (ret >= ISMINE_SPENDABLE)
+                return ret;
+        }
+    }
+    return ret;
+}
+
 bool IsMine(const CKeyStore* forAccount, const CWalletTx& tx)
 {
     for (const auto& txout : tx.tx->vout)
