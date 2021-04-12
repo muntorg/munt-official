@@ -574,7 +574,7 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
 
     CGetWitnessInfo witnessInfo;
 
-    if (IsPow2Phase5Active(chainActive.Height())) {
+    if (chainActive.Height() > 0 && IsPow2Phase5Active(chainActive.Height())) {
         witnessInfo = GetWitnessInfoWrapper();
     }
 
