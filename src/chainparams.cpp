@@ -238,10 +238,9 @@ public:
             numGenesisWitnesses = 10;
             genesisWitnessWeightDivisor = 100;
                 
-            if (fIsOfficialTestnetV1)
-            {                
-                // Don't bother creating the genesis block if we haven't started ECC yet (e.g. we are being called from the help text)
-                // We can't initialise key anyway unless the app has first initialised ECC, and the help doesn't need the genesis block, creating it twice is a waste of cpu cycles
+            // Don't bother creating the genesis block if we haven't started ECC yet (e.g. we are being called from the help text)
+            // We can't initialise key anyway unless the app has first initialised ECC, and the help doesn't need the genesis block, creating it twice is a waste of cpu cycles
+            {
                 ECC_Start();
                 {
                     CMutableTransaction txNew(CTransaction::CURRENT_VERSION);
@@ -272,57 +271,18 @@ public:
                         }
                     }
 
-                    genesis.nTime    = 1596003003;
-                    genesis.nBits    = 524287999;
-                    genesis.nNonce   = 4131389449;
-                    genesis.nVersion = 536870912;
-                    genesis.vtx.push_back(MakeTransactionRef(std::move(txNew)));
-                    genesis.hashPrevBlock.SetNull();
-                    genesis.hashMerkleRoot = BlockMerkleRoot(genesis.vtx.begin(), genesis.vtx.end());
-                    genesis.hashMerkleRootPoW2Witness = BlockMerkleRoot(genesis.vtx.begin(), genesis.vtx.end());
-                    genesis.witnessHeaderPoW2Sig.resize(65);
-                    genesis.nTimePoW2Witness = 1596003004;
-                    genesis.nVersionPoW2Witness = 536870912;
-                }
-                ECC_Stop();
-            }
-            else
-            {               
-                // Don't bother creating the genesis block if we haven't started ECC yet (e.g. we are being called from the help text)
-                // We can't initialise key anyway unless the app has first initialised ECC, and the help doesn't need the genesis block, creating it twice is a waste of cpu cycles
-                ECC_Start();
-                {
-                    CMutableTransaction txNew(CTransaction::CURRENT_VERSION);
-                    txNew.vin.resize(1);
-                    txNew.vin[0].prevout.SetNull();
-                    txNew.vin[0].segregatedSignatureData.stack.clear();
-                    txNew.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>());
-                    CVectorWriter(0, 0, txNew.vin[0].segregatedSignatureData.stack[0], 0) << VARINT(0);
-                    txNew.vin[0].segregatedSignatureData.stack.push_back(ParseHex("4f6e206a616e756172692031737420746865204475746368206c6f73742074686572652062656c6f7665642047756c64656e"));
-                    
+                    if (fIsOfficialTestnetV1)
                     {
-                        std::string sKey = sTestnetParams;
-                        sKey.resize(32, 0);
-                        genesisWitnessPrivKey.Set((unsigned char*)&sKey[0],(unsigned char*)&sKey[0]+32, true);
-                        
-                        CTxOut renewedWitnessTxOutput;
-                        renewedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
-                        renewedWitnessTxOutput.output.witnessDetails.spendingKeyID = genesisWitnessPrivKey.GetPubKey().GetID();
-                        renewedWitnessTxOutput.output.witnessDetails.witnessKeyID = genesisWitnessPrivKey.GetPubKey().GetID();
-                        renewedWitnessTxOutput.output.witnessDetails.lockFromBlock = 1;
-                        renewedWitnessTxOutput.output.witnessDetails.lockUntilBlock = 900000;
-                        renewedWitnessTxOutput.output.witnessDetails.failCount = 0;
-                        renewedWitnessTxOutput.output.witnessDetails.actionNonce = 1;
-                        renewedWitnessTxOutput.nValue=0;
-                        for (uint32_t i=0; i<numGenesisWitnesses;++i)
-                        {
-                            txNew.vout.push_back(renewedWitnessTxOutput);
-                        }
+                        genesis.nTime    = 1596003003;
+                        genesis.nBits    = 524287999;
+                        genesis.nNonce   = 4131389449;
                     }
-
-                    genesis.nTime    = seedTimestamp;
-                    genesis.nBits    = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
-                    genesis.nNonce   = 0;
+                    else
+                    {
+                        genesis.nTime    = seedTimestamp;
+                        genesis.nBits    = arith_uint256((~arith_uint256(0) >> 10)).GetCompact();
+                        genesis.nNonce   = 0;
+                    }
                     genesis.nVersion = 536870912;
                     genesis.vtx.push_back(MakeTransactionRef(std::move(txNew)));
                     genesis.hashPrevBlock.SetNull();
@@ -330,14 +290,16 @@ public:
                     genesis.hashMerkleRootPoW2Witness = BlockMerkleRoot(genesis.vtx.begin(), genesis.vtx.end());
                     genesis.witnessHeaderPoW2Sig.resize(65);
 
-                    uint256 foundBlockHash;
-                    std::atomic<uint64_t> halfHashCounter=0;
-                    std::atomic<uint64_t> nThreadCounter=0;
-                    bool interrupt=false;
-                    sigma_context generateContext(defaultSigmaSettings, defaultSigmaSettings.arenaSizeKb, std::max(GetNumCores(), 1));
-                    generateContext.prepareArenas(genesis);
-                    generateContext.mineBlock(&genesis, halfHashCounter, foundBlockHash, interrupt);
-                    
+                    if (!fIsOfficialTestnetV1)
+                    {
+                        uint256 foundBlockHash;
+                        std::atomic<uint64_t> halfHashCounter=0;
+                        std::atomic<uint64_t> nThreadCounter=0;
+                        bool interrupt=false;
+                        sigma_context generateContext(defaultSigmaSettings, defaultSigmaSettings.arenaSizeKb, std::max(GetNumCores(), 1));
+                        generateContext.prepareArenas(genesis);
+                        generateContext.mineBlock(&genesis, halfHashCounter, foundBlockHash, interrupt);
+                    }
                     genesis.nTimePoW2Witness = genesis.nTime+1;
                     genesis.nVersionPoW2Witness = genesis.nVersion;
                 }
