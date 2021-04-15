@@ -1,3 +1,20 @@
+2.3.11
+
+CORE    - Reduce eventual supply to 750'000'000
+MISC    - Minor performance improvements to witnessing
+RPC     - New RPC command "submitheader"
+RPC     - Fix an issue where "rotatewitnessaddress" would fail if used on account that has never performed any witness actions
+RPC     - Introduce "forcesigseg" command (Only useful for development)
+RPC     - Add command "repairwalletfromutxo"
+RPC     - New command "decodeblock"
+RPC     - New "defrag" command, this can be used to recombine lots of small "dust" outputs into one single output again
+RPC     - New command "invalidateunwitnessedblocksatheight"
+
+This build contains quite a large variety of misc. bug fixes, code improvements and stability fixes, quite a few backported from Novo development.
+
+
+
+
 2.3.10
 
 MISC    - New URI handlers "guldenlite:" and "guldenpro:" for specific targeting of lite/pro apps; "gulden:" URI handler still remains and will be used to target whichever app is installed
