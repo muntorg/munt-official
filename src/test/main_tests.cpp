@@ -34,7 +34,8 @@ BOOST_AUTO_TEST_CASE(block_subsidy_test)
     BOOST_CHECK_EQUAL(GetBlockSubsidy(1228004)-GetBlockSubsidyDev(1228004)-GetBlockSubsidyWitness(1228004), COIN * 50);
     BOOST_CHECK_EQUAL(GetBlockSubsidyDev(1228004),                                                          COIN * 80);
     BOOST_CHECK_EQUAL(GetBlockSubsidyWitness(1228004),                                                      COIN * 30);
-    BOOST_CHECK_EQUAL(GetBlockSubsidy(7023743),                                                             COIN * 160);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(2660178),                                                             COIN * 160);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(2660179),                                                             0);
     BOOST_CHECK_EQUAL(GetBlockSubsidy(7023744),                                                             0);
     BOOST_CHECK_EQUAL(GetBlockSubsidy(10888472),                                                            0);
 }
@@ -50,7 +51,7 @@ BOOST_AUTO_TEST_CASE(subsidy_limit_test)
         nSum += nSubsidy;
         BOOST_CHECK(MoneyRange(nSum));
     }
-    BOOST_CHECK_EQUAL(nSum, 168000000000000000LL);
+    BOOST_CHECK_EQUAL(nSum, 75000000000000000LL);
 }
 
 bool ReturnFalse() { return false; }

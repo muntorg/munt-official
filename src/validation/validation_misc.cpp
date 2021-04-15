@@ -89,7 +89,7 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const CChainPar
 }
 
 
-const int finalSubsidyBlock = 8472678;
+const int finalSubsidyBlock = 2660178;
 CAmount GetBlockSubsidy(uint64_t nHeight)
 {
     static bool fRegTest = GetBoolArg("-regtest", false);
