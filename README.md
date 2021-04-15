@@ -101,7 +101,7 @@ For those who really need too or are technically inclined it is of course possib
 |Block interval target:|150 seconds (2.5 minutes)|Configurable|
 |Difficulty adjustment period:|Every block|Every block|
 |Difficulty adjustment algorithm:|Delta|Delta|
-|Total coins to be minted over time:|1680M|-|
+|Total coins to be minted over time:|750M|-|
 |P2P Port|9231|9923|
 |RPC Port|9232|9924|
 |P2P Network Header|fcfef7e0|Look in debug.log|
