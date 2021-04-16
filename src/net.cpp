@@ -1271,7 +1271,7 @@ static void ThreadMapPort()
             }
         }
 
-        std::string strDesc = GLOBAL_APPNAME + " " + FormatFullVersion();
+        std::string strDesc = GLOBAL_APPNAME " " + FormatFullVersion();
 
         try {
             while (true) {
