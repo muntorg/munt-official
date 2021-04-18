@@ -1,6 +1,7 @@
 2.3.11
 
-CORE    - Reduce eventual supply to 750'000'000
+Reduce eventual supply to a total of 750'000'000 coins as first step in implementing the supply reduction that has been requested by community/GAB; The intention is for the rewards to also change (as requested) however this will take place in a later release after a bit more time has been allowed for technical consideration of the implications.
+
 MISC    - Minor performance improvements to witnessing
 RPC     - New RPC command "submitheader"
 RPC     - Fix an issue where "rotatewitnessaddress" would fail if used on account that has never performed any witness actions
