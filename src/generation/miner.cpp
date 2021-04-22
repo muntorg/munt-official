@@ -353,6 +353,8 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     int nPackagesSelected = 0;
     int nDescendantsUpdated = 0;
 
+    bool miningBelowTip=false;
+
     // For phase 3 we need to do some gymnastics to ensure the right chain tip before calling TestBlockValidity.
     CValidationState state;
     CCoinsViewCache viewNew(pcoinsTip);
@@ -371,6 +373,17 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         // transaction (which in most cases can be a no-op).
         fIncludeSegSig = bSegSigIsEnabled && fMineSegSig;
 
+        // The transaction canibilisation code is complex, and seems to be causing some very rare but difficult to isolate issues
+        // For now we disable it to see if it fixes the stability issues we were seeing
+        // We can add it back later once we are more certain.
+        //
+        // For now we just mine an empty block instead.
+        #if 1
+        if (nHeight > chainActive.Tip()->nHeight)
+        {
+            miningBelowTip = true;
+        }
+        #else
         // If we are mining below the tip (orphaned tip due to absent witness) - it is desirable to include first all transactions that are in the tip.
         // If we do not do this we can end up creating invalid blocks, due to the fact that we don't rewind the mempool here
         // Which can lead to inclusion of transactions without their ancestors (ancestors are in tip) for instance.
@@ -398,8 +411,12 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
                 canabalizeTransactions.push_back(pBlockCannibal.get()->vtx[i]);
             }
         }
-
         addPackageTxs(nPackagesSelected, nDescendantsUpdated, &canabalizeTransactions, &viewNew);
+        #endif
+        if (!miningBelowTip)
+        {
+            addPackageTxs(nPackagesSelected, nDescendantsUpdated, nullptr, nullptr);
+        }
     }
 
     int64_t nTime1 = GetTimeMicros();
