@@ -379,7 +379,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         //
         // For now we just mine an empty block instead.
         #if 1
-        if (nHeight > chainActive.Tip()->nHeight)
+        if (nHeight <= chainActive.Tip()->nHeight)
         {
             miningBelowTip = true;
         }
