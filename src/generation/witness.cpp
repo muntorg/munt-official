@@ -654,9 +654,11 @@ void static GuldenWitness()
                             }
 
                             int nPoW2PhaseParent = GetPoW2Phase(candidateIter->pprev);
-
+                            
                             /** Now add any additional transactions if there is space left **/
-                            if (nPoW2PhaseParent >= 4)
+                            //fixme: (FUT): In an attempt to work around a potential rare issue that causes chain stalls we temporarily avoid adding transactions if witnessing a non tip node
+                            //In future we should add the transactions back again
+                            if (nPoW2PhaseParent >= 4 && candidateIter == chainActive.Tip())
                             {
                                 // Piggy back off existing block assembler code to grab the transactions we want to include.
                                 // Setup maximum size for assembler so that size of existing (PoW) block transactions are subtracted from overall maximum.
