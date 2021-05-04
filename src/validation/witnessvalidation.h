@@ -55,6 +55,8 @@ public:
     boost::container::flat_set<SimplifiedWitnessRouletteItem> witnessCandidates;
 };
 
+SimplifiedWitnessUTXOSet GenerateSimplifiedWitnessUTXOSetFromUTXOSet(std::map<COutPoint, Coin> allWitnessCoinsIndexBased);
+
 /** Global variable that points to the witness coins database (protected by cs_main) */
 extern CWitViewDB* ppow2witdbview;
 extern std::shared_ptr<CCoinsViewCache> ppow2witTip;

@@ -638,3 +638,28 @@ bool witnessHasExpired(uint64_t nWitnessAge, uint64_t nWitnessWeight, uint64_t n
     return ( nWitnessAge > gMaximumParticipationAge ) || ( nWitnessAge > nExpectedWitnessPeriod );
 }
 
+
+SimplifiedWitnessUTXOSet GenerateSimplifiedWitnessUTXOSetFromUTXOSet(std::map<COutPoint, Coin> allWitnessCoinsIndexBased)
+{
+    SimplifiedWitnessUTXOSet witnessUTXOset;
+    
+    for (const auto& [outpoint, coin] : allWitnessCoinsIndexBased) 
+    {
+        SimplifiedWitnessRouletteItem item;
+        
+        item.blockNumber = outpoint.getTransactionBlockNumber();
+        item.transactionIndex = outpoint.getTransactionIndex();
+        item.transactionOutputIndex = outpoint.n;
+        item.lockUntilBlock = coin.out.output.witnessDetails.lockUntilBlock;
+        item.lockFromBlock = coin.out.output.witnessDetails.lockFromBlock;
+        if (item.lockFromBlock == 0)
+        {
+            item.lockFromBlock = item.blockNumber;
+        }
+        item.witnessPubKeyID = coin.out.output.witnessDetails.witnessKeyID;
+        item.nValue = coin.out.nValue;
+        witnessUTXOset.witnessCandidates.insert(item);
+    }
+    
+    return witnessUTXOset;
+}

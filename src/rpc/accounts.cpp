@@ -584,26 +584,7 @@ static UniValue getwitnessutxo(const JSONRPCRequest& request)
     if (!getAllUnspentWitnessCoins(tempChain, Params(), pTipIndex_->pprev, allWitnessCoinsIndexBased, &block, &viewNew, true))
         throw std::runtime_error("Could not retrieve utxo for block.");
 
-    
-    SimplifiedWitnessUTXOSet witnessUTXOset;
-    
-    for (const auto& [outpoint, coin] : allWitnessCoinsIndexBased)
-    {
-        SimplifiedWitnessRouletteItem item;
-        
-        item.blockNumber = outpoint.getTransactionBlockNumber();
-        item.transactionIndex = outpoint.getTransactionIndex();
-        item.transactionOutputIndex = outpoint.n;
-        item.lockUntilBlock = coin.out.output.witnessDetails.lockUntilBlock;
-        item.lockFromBlock = coin.out.output.witnessDetails.lockFromBlock;
-        if (item.lockFromBlock == 0)
-        {
-            item.lockFromBlock = item.blockNumber;
-        }
-        item.witnessPubKeyID = coin.out.output.witnessDetails.witnessKeyID;
-        item.nValue = coin.out.nValue;
-        witnessUTXOset.witnessCandidates.insert(item);
-    }
+    SimplifiedWitnessUTXOSet witnessUTXOset = GenerateSimplifiedWitnessUTXOSetFromUTXOSet(allWitnessCoinsIndexBased);
     
     CGetWitnessInfo witInfoSimplified;
     if (!GetWitnessFromSimplifiedUTXO(witnessUTXOset, pTipIndex_, witInfoSimplified))
