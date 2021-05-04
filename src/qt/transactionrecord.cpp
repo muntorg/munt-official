@@ -83,9 +83,10 @@ bool witnessOutputsToReceiveRecord(const CWallet *wallet, const CWalletTx &wtx, 
 {
     // determine account and fill fields shared by all outputs
     CAccount* account = nullptr;
-    for (const auto& [txOut, witnessDetails] : witnessBundle.outputs)
+    for (const auto& [txOut, witnessDetails, witnessOutPoint] : witnessBundle.outputs)
     {
         (unused) witnessDetails;
+        (unused) witnessOutPoint;
         for( const auto& accountPair : wallet->mapAccounts )
         {
             if (!accountPair.second->IsPoW2Witness())
@@ -215,8 +216,8 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 nWalletTxBlockHeight = findIter->second->nHeight;
 
             CWitnessBundles bundles;
-            haveBundles = BuildWitnessBundles(*wtx.tx, state, nWalletTxBlockHeight,
-                [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) {
+            haveBundles = BuildWitnessBundles(*wtx.tx, state, nWalletTxBlockHeight, wtx.nIndex,
+                [&](const COutPoint& outpoint, CTxOut& txOut, uint64_t& txHeight, uint64_t& txIndex, uint64_t& txIndexOutput) {
                     CTransactionRef txRef;
                     int nInputHeight = -1;
                     LOCK(cs_main);
@@ -355,8 +356,9 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     if (subReceive.idx != -1)
                     {
                         CAccount* account = nullptr;
-                        for (auto const& [txOut, txOutWitness]: witnessBundle.inputs)
+                        for (auto const& [txOut, txOutWitness, txOutPoint]: witnessBundle.inputs)
                         {
+                            (unused) txOutPoint;
                             (unused) txOutWitness;
                             for(const auto& [current_uuid, current_account] : wallet->mapAccounts)
                             {

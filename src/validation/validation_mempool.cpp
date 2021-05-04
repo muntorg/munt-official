@@ -525,13 +525,15 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
 
 
         CWitnessBundles bundles;
-        if (!BuildWitnessBundles(tx, state, GetSpendHeight(view),
-                [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) -> bool {
+        if (!BuildWitnessBundles(tx, state, GetSpendHeight(view), 0,
+                [&](const COutPoint& outpoint, CTxOut& txOut, uint64_t& txHeight, uint64_t& txIndex, uint64_t& txOutputIndex) -> bool {
                     const Coin& coin = view.AccessCoin(outpoint);
                     if (coin.IsSpent())
                         return false;
                     txOut = coin.out;
                     txHeight = coin.nHeight;
+                    txIndex = coin.nTxIndex;
+                    txOutputIndex = outpoint.n;
                     return true;
                 }, bundles))
             return false;

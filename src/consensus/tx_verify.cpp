@@ -330,7 +330,7 @@ bool CWitnessTxBundle::IsLockFromConsistent()
         return false;
 
     return std::all_of(outputs.begin(), outputs.end(), [&](const auto& output) {
-        return output.second.lockFromBlock == inputsActualLockFromBlock;
+        return std::get<1>(output).lockFromBlock == inputsActualLockFromBlock;
     });
 }
 
@@ -437,7 +437,7 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight, const CT
         return false;
     if (inputs.size() != 1)
         return false;
-    if (inputs[0].second.lockUntilBlock >= nCheckHeight)
+    if (std::get<1>(inputs[0]).lockUntilBlock >= nCheckHeight)
         return false;
 
     return true;
@@ -494,10 +494,10 @@ bool CWitnessTxBundle::IsValidIncreaseBundle()
         return false;
 
     const auto& input0 = inputs[0];
-    const auto& input0Details = input0.second;
+    const auto& input0Details = std::get<1>(input0);
 
     const auto& output0 = outputs[0];
-    const auto& output0Details = output0.second;
+    const auto& output0Details = std::get<1>(output0);
 
     CAmount nInputValue = 0;
     CAmount nOutputValue = 0;
@@ -509,7 +509,7 @@ bool CWitnessTxBundle::IsValidIncreaseBundle()
     // in addition determine highestActionNonce and highestFailCount
     for (const auto& input : inputs)
     {
-        const auto& inputDetails = input.second;
+        const auto& inputDetails = std::get<1>(input);
         if (inputDetails.spendingKeyID != output0Details.spendingKeyID)
             return false;
         if (inputDetails.witnessKeyID != output0Details.witnessKeyID)
@@ -518,14 +518,14 @@ bool CWitnessTxBundle::IsValidIncreaseBundle()
             highestActionNonce = inputDetails.actionNonce;
         if (inputDetails.failCount > highestFailCount)
             highestFailCount = inputDetails.failCount;
-        nInputValue += input.first.nValue;
+        nInputValue += std::get<0>(input).nValue;
     }
 
     // B: verify outputs all have witness properties equal to input0 except lockUntilBlock
     // verify values for actionNonce and failCount using highest input values and from block reset
     for (const auto& output : outputs)
     {
-        const auto& outputDetails = output.second;
+        const auto& outputDetails = std::get<1>(output);
         if (highestActionNonce + 1 != outputDetails.actionNonce)
             return false;
         if (highestFailCount != outputDetails.failCount)
@@ -536,17 +536,17 @@ bool CWitnessTxBundle::IsValidIncreaseBundle()
             return false;
         if (0 != outputDetails.lockFromBlock)
             return false;
-        nOutputValue += output.first.nValue;
+        nOutputValue += std::get<0>(output).nValue;
     }
 
     // A and B imply that all inputs and outputs have identical witness properties here (except
 
     // C: verify that all inputs have the same lockUntilBlock
-    if (std::any_of(++inputs.begin(), inputs.end(), [&](const auto& input){ return input.second.lockUntilBlock != input0Details.lockUntilBlock; }))
+    if (std::any_of(++inputs.begin(), inputs.end(), [&](const auto& input){ return std::get<1>(input).lockUntilBlock != input0Details.lockUntilBlock; }))
         return false;
 
     // D: verify that all outputs have the same lockUntilBlock
-    if (std::any_of(++outputs.begin(), outputs.end(), [&](const auto& output){ return output.second.lockUntilBlock != output0Details.lockUntilBlock; }))
+    if (std::any_of(++outputs.begin(), outputs.end(), [&](const auto& output){ return std::get<1>(output).lockUntilBlock != output0Details.lockUntilBlock; }))
         return false;
 
     // E: verify that input lockUntilBlock <= output lockUntilBlock
@@ -574,10 +574,10 @@ bool CWitnessTxBundle::IsValidRearrangeBundle()
         return false;
 
     const auto& input0 = inputs[0];
-    const auto& input0Details = input0.second;
+    const auto& input0Details = std::get<1>(input0);
 
     const auto& output0 = outputs[0];
-    const auto& output0Details = output0.second;
+    const auto& output0Details = std::get<1>(output0);
 
     CAmount nInputValue = 0;
     CAmount nOutputValue = 0;
@@ -588,7 +588,7 @@ bool CWitnessTxBundle::IsValidRearrangeBundle()
     // A: verify inputs all have witness properties equal to output0 (except lockFromBlock)
     for (const auto& input : inputs)
     {
-        const auto& inputDetails = input.second;
+        const auto& inputDetails = std::get<1>(input);
         if (inputDetails.spendingKeyID != output0Details.spendingKeyID)
             return false;
         if (inputDetails.witnessKeyID != output0Details.witnessKeyID)
@@ -599,13 +599,13 @@ bool CWitnessTxBundle::IsValidRearrangeBundle()
             highestActionNonce = inputDetails.actionNonce;
         if (inputDetails.failCount > highestFailCount)
             highestFailCount = inputDetails.failCount;
-        nInputValue += input.first.nValue;
+        nInputValue += std::get<0>(input).nValue;
     }
 
     // B: verify outputs all have witness properties equal to input0
     for (const auto& output : outputs)
     {
-        const auto& outputDetails = output.second;
+        const auto& outputDetails = std::get<1>(output);
         // Action nonce always increment
         if (highestActionNonce + 1 != outputDetails.actionNonce)
             return false;
@@ -617,7 +617,7 @@ bool CWitnessTxBundle::IsValidRearrangeBundle()
             return false;
         if (input0Details.lockUntilBlock != outputDetails.lockUntilBlock)
             return false;
-        nOutputValue += output.first.nValue;
+        nOutputValue += std::get<0>(output).nValue;
     }
 
     // A and B imply that all inputs and outputs have identical witness properties here
@@ -646,17 +646,17 @@ inline bool CWitnessTxBundle::IsValidChangeWitnessKeyBundle()
         return false;
 
     const auto& output0 = outputs[0];
-    const auto& output0Details = output0.second;
+    const auto& output0Details = std::get<1>(output0);
 
     // for every input there is at least one output that matches
     for (const auto& input : inputs)
     {
-        const auto& inputDetails = input.second;
+        const auto& inputDetails = std::get<1>(input);
 
         if (1 > std::count_if(outputs.begin(), outputs.end(), [&](const auto& output)
         {
-                const auto& outputDetails = output.second;
-                if (input.first.nValue != output.first.nValue)
+                const auto& outputDetails = std::get<1>(output);
+                if (std::get<0>(input).nValue != std::get<0>(output).nValue)
                     return false;
 
                 if (inputDetails.spendingKeyID != outputDetails.spendingKeyID)
@@ -682,7 +682,7 @@ inline bool CWitnessTxBundle::IsValidChangeWitnessKeyBundle()
 
     // all outputs have the same (new) witness key and all outputs have the same spend key
     if (std::any_of(++outputs.begin(), outputs.end(), [&](const auto& output) {
-            const auto& outputDetails = output.second;
+            const auto& outputDetails = std::get<1>(output);
             return (outputDetails.spendingKeyID != output0Details.spendingKeyID) || (outputDetails.witnessKeyID != output0Details.witnessKeyID); }))
     {
         return false;
@@ -696,7 +696,7 @@ inline bool CWitnessTxBundle::IsValidChangeWitnessKeyBundle()
 }
 
 //fixme: (PHASE5) (HIGH) Implement unit test code for this function.
-bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight, bool isOldTransactionVersion)
+bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t inputTxHeight, uint64_t inputTxIndex, uint64_t inputTxOutputIndex, uint64_t nSpendHeight, bool isOldTransactionVersion)
 {
     if (pWitnessBundles)
     {
@@ -710,26 +710,26 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
             {
                 if (bundle.outputs.size() == 1)
                 {
-                    const auto& outputDetails = bundle.outputs[0].second;
+                    const auto& outputDetails = std::get<1>(bundle.outputs[0]);
 
                     // Witnessing: amount should stay the same or increase, fail count can reduced by 1 or 0, if lockfrom was previously 0 it must be set to the current block height. Can only appear as a "witnesscoinbase" transaction.
-                    if ( IsWitnessBundle(input, inputDetails, outputDetails, prevOut.nValue, bundle.outputs[0].first.nValue, nInputHeight, isOldTransactionVersion) )
+                    if ( IsWitnessBundle(input, inputDetails, outputDetails, prevOut.nValue, std::get<0>(bundle.outputs[0]).nValue, inputTxHeight, isOldTransactionVersion) )
                     {
-                        if (bundle.outputs[0].first.nValue - prevOut.nValue > gMaximumWitnessCompoundAmount * COIN)
+                        if (std::get<0>(bundle.outputs[0]).nValue - prevOut.nValue > gMaximumWitnessCompoundAmount * COIN)
                         {
                             return state.DoS(50, false, REJECT_INVALID, "witness-coinbase-compounding-too-much");
                         }
 
                         matchedExistingBundle = true;
-                        bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
+                        bundle.inputs.push_back(std::tuple(prevOut, std::move(inputDetails), COutPoint(inputTxHeight, inputTxIndex, inputTxOutputIndex)));
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::WitnessType;
                         break;
                     }
                     //fixme: (PHASE5) - Should be able to renew multiple in one transaction
-                    else if ( IsRenewalBundle(input, inputDetails, outputDetails, prevOut, bundle.outputs[0].first, nInputHeight, nSpendHeight) )
+                    else if ( IsRenewalBundle(input, inputDetails, outputDetails, prevOut, std::get<0>(bundle.outputs[0]), inputTxHeight, nSpendHeight) )
                     {
                         matchedExistingBundle = true;
-                        bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
+                        bundle.inputs.push_back(std::tuple(prevOut, std::move(inputDetails), COutPoint(inputTxHeight, inputTxIndex, inputTxOutputIndex)));
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::RenewType;
                         break;
                     }
@@ -747,29 +747,29 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                 }
 
                 bool matchedExistingBundle = false;
-                uint64_t actualLockFromBlock = inputDetails.lockFromBlock == 0 ? nInputHeight : inputDetails.lockFromBlock;
+                uint64_t actualLockFromBlock = inputDetails.lockFromBlock == 0 ? inputTxHeight : inputDetails.lockFromBlock;
                 for (auto& bundle : *pWitnessBundles)
                 {
                     if (bundle.outputs.size() == 0)
                         continue;
-                    if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType  || bundle.bundleType == CWitnessTxBundle::WitnessTxType::IncreaseType) && (bundle.outputs[0].second.witnessKeyID == inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
+                    if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType  || bundle.bundleType == CWitnessTxBundle::WitnessTxType::IncreaseType) && (std::get<1>(bundle.outputs[0]).witnessKeyID == inputDetails.witnessKeyID) && (std::get<1>(bundle.outputs[0]).spendingKeyID == inputDetails.spendingKeyID) )
                     {
-                        bundle.bundleType = bundle.outputs[0].second.lockFromBlock == 0 ? CWitnessTxBundle::WitnessTxType::IncreaseType : CWitnessTxBundle::WitnessTxType::RearrangeType;
+                        bundle.bundleType = std::get<1>(bundle.outputs[0]).lockFromBlock == 0 ? CWitnessTxBundle::WitnessTxType::IncreaseType : CWitnessTxBundle::WitnessTxType::RearrangeType;
                         if (bundle.inputsActualLockFromBlock == 0)
                             bundle.inputsActualLockFromBlock = actualLockFromBlock;
                         else if (bundle.inputsActualLockFromBlock != actualLockFromBlock)
                             return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-bundle-mismatching-lockfrom");
-                        bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
+                        bundle.inputs.push_back(std::tuple(prevOut, std::move(inputDetails), COutPoint(inputTxHeight, inputTxIndex, inputTxOutputIndex)));
                         matchedExistingBundle = true;
                     }
-                    else if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType) && (bundle.outputs[0].second.witnessKeyID != inputDetails.witnessKeyID) && (bundle.outputs[0].second.spendingKeyID == inputDetails.spendingKeyID) )
+                    else if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType) && (std::get<1>(bundle.outputs[0]).witnessKeyID != inputDetails.witnessKeyID) && (std::get<1>(bundle.outputs[0]).spendingKeyID == inputDetails.spendingKeyID) )
                     {
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::ChangeWitnessKeyType;
                         if (bundle.inputsActualLockFromBlock == 0)
                             bundle.inputsActualLockFromBlock = actualLockFromBlock;
                         else if (bundle.inputsActualLockFromBlock != actualLockFromBlock)
                             return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-bundle-mismatching-lockfrom");
-                        bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
+                        bundle.inputs.push_back(std::tuple(prevOut, std::move(inputDetails), COutPoint(inputTxHeight, inputTxIndex, inputTxOutputIndex)));
                         matchedExistingBundle = true;
                     }
                 }
@@ -777,7 +777,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                 {
                     CWitnessTxBundle spendBundle = CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::SpendType);
                     spendBundle.inputsActualLockFromBlock = actualLockFromBlock;
-                    spendBundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
+                    spendBundle.inputs.push_back(std::tuple(prevOut, std::move(inputDetails), COutPoint(inputTxHeight, inputTxIndex, inputTxOutputIndex)));
                     pWitnessBundles->push_back(spendBundle);
                 }
             }
@@ -850,7 +850,7 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
             for (auto& bundle : *pWitnessBundles)
             {
                 if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::RenewType)
-                    witnessPenaltyFee += CalculateWitnessPenaltyFee(bundle.outputs[0].first);
+                    witnessPenaltyFee += CalculateWitnessPenaltyFee(std::get<0>(bundle.outputs[0]));
             }
         }
 
@@ -870,12 +870,13 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
     return true;
 }
 
-bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nSpendHeight, std::function<bool(const COutPoint&, CTxOut&, int&)> getTxOut, std::vector<CWitnessTxBundle>& bundles)
+bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, uint64_t nSpendHeight, uint64_t transactionIndex, std::function<bool(const COutPoint&, CTxOut&, uint64_t&, uint64_t&, uint64_t&)> getTxOut, std::vector<CWitnessTxBundle>& bundles)
 {
     bundles.clear();
 
     std::vector<CWitnessTxBundle> resultBundles;
 
+    uint64_t transactionOutputIndex=0;
     for (const CTxOut& txout : tx.vout)
     {
         if (IsPow2WitnessOutput(txout))
@@ -914,22 +915,22 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
 
             if (tx.IsPoW2WitnessCoinBase())
             {
-                resultBundles.push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::WitnessType, std::pair(txout, std::move(witnessDetails))));
+                resultBundles.push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::WitnessType, std::tuple(txout, std::move(witnessDetails), COutPoint(nSpendHeight, transactionIndex, transactionOutputIndex))));
             }
             else
             {
                 bool matchedExistingBundle = false;
                 for (auto& bundle: resultBundles)
                 {
-                    if (bundle.bundleType == CWitnessTxBundle::WitnessTxType::CreationType && witnessDetails.lockFromBlock == 0 && witnessDetails.actionNonce == 0 && bundle.outputs[0].second.witnessKeyID == witnessDetails.witnessKeyID && bundle.outputs[0].second.spendingKeyID == witnessDetails.spendingKeyID)
+                    if (bundle.bundleType == CWitnessTxBundle::WitnessTxType::CreationType && witnessDetails.lockFromBlock == 0 && witnessDetails.actionNonce == 0 && std::get<1>(bundle.outputs[0]).witnessKeyID == witnessDetails.witnessKeyID && std::get<1>(bundle.outputs[0]).spendingKeyID == witnessDetails.spendingKeyID)
                     {
-                        bundle.outputs.push_back(std::pair(txout, std::move(witnessDetails)));
+                        bundle.outputs.push_back(std::tuple(txout, std::move(witnessDetails), COutPoint(nSpendHeight, transactionIndex, transactionOutputIndex)));
                         matchedExistingBundle = true;
                     }
-                    else if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType) && (bundle.outputs[0].second.witnessKeyID == witnessDetails.witnessKeyID) && bundle.outputs[0].second.spendingKeyID == witnessDetails.spendingKeyID )
+                    else if ( (bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType || bundle.bundleType == CWitnessTxBundle::WitnessTxType::RearrangeType) && (std::get<1>(bundle.outputs[0]).witnessKeyID == witnessDetails.witnessKeyID) && std::get<1>(bundle.outputs[0]).spendingKeyID == witnessDetails.spendingKeyID )
                     {
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::RearrangeType;
-                        bundle.outputs.push_back(std::pair(txout, std::move(witnessDetails)));
+                        bundle.outputs.push_back(std::tuple(txout, std::move(witnessDetails), COutPoint(nSpendHeight, transactionIndex, transactionOutputIndex)));
                         matchedExistingBundle = true;
                         break;
                     }
@@ -938,18 +939,19 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
                 {
                     if (witnessDetails.lockFromBlock == 0 && witnessDetails.actionNonce == 0)
                     {
-                        resultBundles.push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::CreationType, std::pair(txout,std::move(witnessDetails))));
+                        resultBundles.push_back(CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::CreationType, std::tuple(txout, std::move(witnessDetails), COutPoint(nSpendHeight, transactionIndex, transactionOutputIndex))));
                     }
                     else
                     {
                         // if not matched to an existing bundle and the output is a witness output, how can it ever be a spend bundle?? it has to be followed by input checking to correct this.
                         // perhaps better to introduce new bundle type indicating "undetermined" or something similar.
-                        CWitnessTxBundle spendBundle = CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::SpendType, std::pair(txout, std::move(witnessDetails)));
+                        CWitnessTxBundle spendBundle = CWitnessTxBundle(CWitnessTxBundle::WitnessTxType::SpendType, std::tuple(txout, std::move(witnessDetails), COutPoint(nSpendHeight, transactionIndex, transactionOutputIndex)));
                         resultBundles.push_back(spendBundle);
                     }
                 }
             }
         }
+        ++transactionOutputIndex;
     }
 
     // match tx inputs to existing bundles or create new
@@ -962,13 +964,15 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
         }
 
         CTxOut inputTxOut;
-        int inputTxHeight;
-        if (!getTxOut(prevout, inputTxOut, inputTxHeight))
+        uint64_t inputTxHeight;
+        uint64_t inputTxIndex;
+        uint64_t inputTxOutputIndex;
+        if (!getTxOut(prevout, inputTxOut, inputTxHeight, inputTxIndex, inputTxOutputIndex))
         {
             return false;
         }
 
-        if (!CheckTxInputAgainstWitnessBundles(state, &resultBundles, inputTxOut, tx.vin[i], inputTxHeight, nSpendHeight, IsOldTransactionVersion(tx.nVersion)))
+        if (!CheckTxInputAgainstWitnessBundles(state, &resultBundles, inputTxOut, tx.vin[i], inputTxHeight, inputTxIndex, inputTxOutputIndex, nSpendHeight, IsOldTransactionVersion(tx.nVersion)))
         {
             return false;
         }
