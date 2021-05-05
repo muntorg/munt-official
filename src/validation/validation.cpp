@@ -1243,6 +1243,20 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     int64_t nTime3 = GetTimeMicros(); nTimeConnect += nTime3 - nTime2;
     LogPrint(BCLog::BENCH, "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs]\n", (unsigned)block.vtx.size(), 0.001 * (nTime3 - nTime2), 0.001 * (nTime3 - nTime2) / block.vtx.size(), nInputs <= 1 ? 0 : 0.001 * (nTime3 - nTime2) / (nInputs-1), nTimeConnect * 0.000001);
 
+
+    //Forbid any transactions that would affect the witness set from occuring after the witness coinbase index
+    //As this would present complications for the "simplified witness set" accounting
+    if (pindex->nHeight > chainparams.GetConsensus().pow2WitnessSyncHeight && nWitnessCoinbaseIndex != 0)
+    {
+        for (unsigned int i = nWitnessCoinbaseIndex+1; i < block.vtx.size(); i++)
+        {
+            if (!block.vtx[i]->witnessBundles || block.vtx[i]->witnessBundles->size()>0)
+            {
+                return state.DoS(100, error("ConnectBlock(): Witness related transaction after witness coinbase)"), REJECT_INVALID, "bad-witness-transactions");
+            }
+        }
+    }
+
     //fixme: (PHASE5) (CLEANUP) - We can remove this after phase4 becomes active.
 
     //Until PoW2 activates mining subsidy remains full.

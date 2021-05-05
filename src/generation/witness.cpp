@@ -689,6 +689,18 @@ void static GuldenWitness()
                                             break;
                                         }
                                     }
+                                    
+                                    //Forbid any transactions that would affect the witness set, as these would throw simplified witness utxo tracking off
+                                    //fixme: (WITNESS_SYNC); Ensure witnesses are still adding transactions here
+                                    //fixme: (WITNESS_SYNC); We should rather do this inside the block assembler
+                                    if (!bSkip)
+                                    {
+                                        const auto& tx = pblocktemplate->block.vtx[i];
+                                        if (!tx->witnessBundles || tx->witnessBundles->size()>0)
+                                        {
+                                            bSkip = true;
+                                        }
+                                    }
                                     if (!bSkip)
                                     {
                                         //fixme: (FUT) emplace_back for better performace?
