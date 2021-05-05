@@ -19,6 +19,22 @@
 class SimplifiedWitnessRouletteItem
 {
 public:
+    SimplifiedWitnessRouletteItem(){};
+    SimplifiedWitnessRouletteItem(const std::tuple<const CTxOut, CTxOutPoW2Witness, COutPoint>& witnessInput)
+    {    
+        blockNumber = std::get<2>(witnessInput).getTransactionBlockNumber();
+        transactionIndex = std::get<2>(witnessInput).getTransactionIndex();
+        transactionOutputIndex = std::get<2>(witnessInput).n;
+
+        lockUntilBlock = std::get<1>(witnessInput).lockUntilBlock;
+        lockFromBlock = std::get<1>(witnessInput).lockFromBlock;
+        if (lockFromBlock == 0)
+        {
+            lockFromBlock = blockNumber;
+        }
+        witnessPubKeyID = std::get<1>(witnessInput).witnessKeyID;
+        nValue = std::get<0>(witnessInput).nValue;
+    }
     uint64_t blockNumber;
     uint64_t transactionIndex;
     uint32_t transactionOutputIndex;
@@ -30,6 +46,26 @@ public:
     uint64_t GetLockLength()
     {
         return (lockUntilBlock-lockFromBlock)+1;
+    }
+    
+    friend inline bool operator!=(const SimplifiedWitnessRouletteItem& a, const SimplifiedWitnessRouletteItem& b)
+    {
+        return !(a == b);
+    }
+
+    friend inline bool operator==(const SimplifiedWitnessRouletteItem& a, const SimplifiedWitnessRouletteItem& b)
+    {
+        if (a.blockNumber != b.blockNumber ||
+            a.transactionIndex != b.transactionIndex ||
+            a.transactionOutputIndex != b.transactionOutputIndex ||
+            a.lockUntilBlock != b.lockUntilBlock ||
+            a.nValue != b.nValue ||
+            a.witnessPubKeyID != b.witnessPubKeyID
+        )
+        {
+            return false;
+        }
+        return true;
     }
     
     //NB! This ordering must precisely match the ordering of RouletteItem::operator< (assuming all items use index based outpoints)
@@ -53,6 +89,31 @@ class SimplifiedWitnessUTXOSet
 public:
     uint256 currentTipForSet;
     boost::container::flat_set<SimplifiedWitnessRouletteItem> witnessCandidates;
+    
+    friend inline bool operator!=(const SimplifiedWitnessUTXOSet& a, const SimplifiedWitnessUTXOSet& b)
+    {
+        return !(a == b);
+    }
+    
+    friend inline bool operator==(const SimplifiedWitnessUTXOSet& a, const SimplifiedWitnessUTXOSet& b)
+    {
+        if (a.currentTipForSet != b.currentTipForSet)
+            return false;
+
+        if (a.witnessCandidates.size() != b.witnessCandidates.size())
+            return false;
+
+        for (uint64_t i=0; i<a.witnessCandidates.size(); ++i)
+        {
+            auto aComp = *a.witnessCandidates.nth(i);
+            auto bComp = *b.witnessCandidates.nth(i);
+            if (aComp != bComp)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 };
 
 SimplifiedWitnessUTXOSet GenerateSimplifiedWitnessUTXOSetFromUTXOSet(std::map<COutPoint, Coin> allWitnessCoinsIndexBased);
@@ -150,7 +211,7 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
 bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, CBlock block, CGetWitnessInfo& witnessInfo, uint64_t nBlockHeight);
 
 bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache* viewOverride, CBlockIndex* pPreviousIndexChain, CBlock block, CGetWitnessInfo& witnessInfo);
-bool GetWitnessFromSimplifiedUTXO(SimplifiedWitnessUTXOSet simplifiedWitnessUTXO, CBlockIndex* pBlockIndex, CGetWitnessInfo& witnessInfo);
+bool GetWitnessFromSimplifiedUTXO(SimplifiedWitnessUTXOSet simplifiedWitnessUTXO, const CBlockIndex* pBlockIndex, CGetWitnessInfo& witnessInfo);
 
 bool witnessHasExpired(uint64_t nWitnessAge, uint64_t nWitnessWeight, uint64_t nNetworkTotalWitnessWeight);
 

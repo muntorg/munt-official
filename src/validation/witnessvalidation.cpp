@@ -534,7 +534,7 @@ bool GetWitness(CChain& chain, const CChainParams& chainParams, CCoinsViewCache*
 }
 
 
-bool GetWitnessFromSimplifiedUTXO(SimplifiedWitnessUTXOSet simplifiedWitnessUTXO, CBlockIndex* pBlockIndex, CGetWitnessInfo& witnessInfo)
+bool GetWitnessFromSimplifiedUTXO(SimplifiedWitnessUTXOSet simplifiedWitnessUTXO, const CBlockIndex* pBlockIndex, CGetWitnessInfo& witnessInfo)
 {
     DO_BENCHMARK("WIT: GetWitnessFromSimplifiedUTXO", BCLog::BENCH|BCLog::WITNESS);
     
