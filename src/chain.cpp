@@ -280,6 +280,28 @@ arith_uint256 GetBlockProof(const CBlockIndex& block)
     return (~bnTarget / (bnTarget + 1)) + 1;
 }
 
+const CBlockIndex* LastCommonAncestor(const CBlockIndex* pa, const CBlockIndex* pb)
+{
+    if (pa->nHeight > pb->nHeight)
+    {
+        pa = pa->GetAncestor(pb->nHeight);
+    }
+    else if (pb->nHeight > pa->nHeight)
+    {
+        pb = pb->GetAncestor(pa->nHeight);
+    }
+
+    while (pa != pb && pa && pb)
+    {
+        pa = pa->pprev;
+        pb = pb->pprev;
+    }
+
+    // Eventually all chain branches meet at the genesis block.
+    assert(pa == pb);
+    return pa;
+}
+
 int64_t GetBlockProofEquivalentTime(const CBlockIndex& to, const CBlockIndex& from, const CBlockIndex& tip, const Consensus::Params& params)
 {
     arith_uint256 r;
