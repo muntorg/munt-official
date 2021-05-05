@@ -26,7 +26,7 @@ Hash Function:
 # Official testnet
 
 Of course for those who just want to test something on an existing testnet with lots of other users we have that as well, complete with nocks testbed integation.
-Just start with `-testnet=S1596003003:60 -addnode=devbak.net` to connect then head to our Slack to interact with other testnet users!
+Just start with `-testnet=S1596003003:60 -addnode=gulden.devbak.net` to connect then head to our Slack to interact with other testnet users!
 
 # Start your own testnet
 
