@@ -1,3 +1,10 @@
+2.3.12
+
+CORE    - Mining/Witness stability fix; Fix an issue that was causing periodic freezing of some mining/witnessing nodes
+
+
+
+
 2.3.11
 
 Reduce eventual supply to a total of 750'000'000 coins as first step in implementing the supply reduction that has been requested by community/GAB; The intention is for the rewards to also change (as requested) however this will take place in a later release after a bit more time has been allowed for technical consideration of the implications.

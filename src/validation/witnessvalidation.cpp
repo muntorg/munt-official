@@ -63,8 +63,15 @@ std::vector<CBlockIndex*> GetTopLevelPoWOrphans(const int64_t nHeight, const uin
 
 std::vector<CBlockIndex*> GetTopLevelWitnessOrphans(const int64_t nHeight)
 {
-    LOCK(cs_main);
     std::vector<CBlockIndex*> vRet;
+
+    // Don't hold up the witness loop if we can't get the lock, it can just check this again next time
+    TRY_LOCK(cs_main, lockGetOrphans);
+    if(!lockGetOrphans)
+    {
+        return vRet;
+    }
+    
     for (const auto candidateIter : setBlockIndexCandidates)
     {
         if (candidateIter->nVersionPoW2Witness != 0)
