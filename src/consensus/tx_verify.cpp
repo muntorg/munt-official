@@ -26,6 +26,8 @@
 //Gulden dependencies
 #include "witnessutil.h"
 
+const uint64_t extraLockLengthAllowance=721;
+
 bool IsFinalTx(const CTransaction &tx, int nBlockHeight, int64_t nBlockTime)
 {
     if (tx.nLockTime == 0)
@@ -289,7 +291,7 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
             int64_t nLockLengthInBlocks = GetPoW2LockLengthInBlocksFromOutput(txout, checkHeight, nUnused1, nUnused2);
             if (nLockLengthInBlocks < int64_t(MinimumWitnessLockLength()))
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for less than minimum of 1 month.");
-            if (nLockLengthInBlocks - checkHeight > int64_t(MaximumWitnessLockLength()))
+            if (nLockLengthInBlocks > int64_t(MaximumWitnessLockLength()+extraLockLengthAllowance))
             {
                 if (txout.output.witnessDetails.lockFromBlock != 1)
                 {
@@ -896,7 +898,7 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, uint64
             {
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for less than minimum of 1 month.");
             }
-            if (nLockLengthInBlocks - nSpendHeight > int64_t(MaximumWitnessLockLength()))
+            if (nLockLengthInBlocks > int64_t(MaximumWitnessLockLength()+extraLockLengthAllowance))
             {
                 if (witnessDetails.lockFromBlock != 1)
                 {
