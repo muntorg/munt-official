@@ -1041,7 +1041,6 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
 {
     std::shared_ptr<const CBlockHeaderAndShortTxIDs> pcmpctblock = std::make_shared<const CBlockHeaderAndShortTxIDs> (*pblock, true);
     const CNetMsgMaker msgMaker(PROTOCOL_VERSION);
-    const CNetMsgMaker msgMakerHeadersCompat(PROTOCOL_VERSION, SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
 
     LOCK(cs_main);
 
@@ -1276,7 +1275,6 @@ void static ProcessGetData(CNode* pfrom, const CChainParams& params, CConnman& c
     std::deque<CInv>::iterator it = pfrom->vRecvGetData.begin();
     std::vector<CInv> vNotFound;
     const CNetMsgMaker msgMaker(pfrom->GetSendVersion());
-    const CNetMsgMaker msgMakerHeadersCompat(pfrom->GetSendVersion(), SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
     const Consensus::Params& consensusParams = params.GetConsensus();
     LOCK(cs_main); // Required for ReadBlockFromDisk.
 
@@ -1868,7 +1866,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
     // At this point, the outgoing message serialization version can't change.
     const CNetMsgMaker msgMaker(pfrom->GetSendVersion());
-    const CNetMsgMaker msgMakerHeadersCompat(pfrom->GetSendVersion(), SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
 
     if (strCommand == NetMsgType::VERACK)
     {
@@ -3663,7 +3660,6 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
 
         // If we get here, the outgoing message serialization version is set and can't change.
         const CNetMsgMaker msgMaker(pto->GetSendVersion());
-        const CNetMsgMaker msgMakerHeadersCompat(pto->GetSendVersion(), SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS);
 
         //
         // Message: ping
