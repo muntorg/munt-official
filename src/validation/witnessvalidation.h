@@ -88,6 +88,12 @@ class SimplifiedWitnessUTXOSet
 {
 public:
     uint256 currentTipForSet;
+    //fixme: (OPTIMISE) - We make an educated guess that for our specific case 'flat_set' will perform well
+    //We base this on a few things:
+    // 1) Set size is not very large (around 600-1200 elements in size)
+    // 2) We have to iterate the entire set a lot for witness selection (for which contiguous memory is good)
+    // 3) We only perform at most a few inserts/deletions per block, so slightly slower insertion/deletion isn't necessarily that bad
+    //However we don't know this for a fact; therefore this should actually be tested against other alternatives and the most performant container for the job chosen.
     boost::container::flat_set<SimplifiedWitnessRouletteItem> witnessCandidates;
     
     friend inline bool operator!=(const SimplifiedWitnessUTXOSet& a, const SimplifiedWitnessUTXOSet& b)
