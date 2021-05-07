@@ -62,6 +62,9 @@ public:
     uint256 hashMerkleRootPoW2Witness;
     //fixme: (POST-PHASE5) Optimisation - this is always 65 bits, we should use a fixed size data structure.
     std::vector<unsigned char> witnessHeaderPoW2Sig;
+    
+    // Changes in the witness UTXO that this block causes
+    std::vector<unsigned char> witnessUTXODelta;
 
 
     // PoW header
@@ -118,6 +121,16 @@ public:
                     else
                         assert(witnessHeaderPoW2Sig.size() == 65);
                     READWRITENOSIZEVECTOR(witnessHeaderPoW2Sig);
+                }
+            }
+            
+            if (s.GetVersion() % 80000 >= WITNESS_SYNC_VERSION)
+            {
+                if (nVersionPoW2Witness != 0)
+                {
+                    //fixme: (WITNESS_SYNC) - If size is frequently above 200 then switch to varint instead
+                    //NEXTNEXTNEXT
+                    READWRITECOMPACTSIZEVECTOR(witnessUTXODelta);
                 }
             }
         }
