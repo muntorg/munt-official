@@ -228,6 +228,9 @@ public:
     uint256 hashMerkleRootPoW2Witness;
     std::vector<unsigned char> witnessHeaderPoW2Sig; // 65 bytes
 
+    // Changes in the witness UTXO that this block causes
+    std::vector<unsigned char> witnessUTXODelta;
+
 
     //! block header
     int32_t nVersion;
@@ -271,6 +274,7 @@ public:
         nTimePoW2Witness = 0;
         hashMerkleRootPoW2Witness = uint256();
         witnessHeaderPoW2Sig.clear();
+        witnessUTXODelta.clear();
 
         nVersion       = 0;
         hashMerkleRoot = uint256();
@@ -292,6 +296,7 @@ public:
         nTimePoW2Witness = block.nTimePoW2Witness;
         hashMerkleRootPoW2Witness = block.hashMerkleRootPoW2Witness;
         witnessHeaderPoW2Sig = block.witnessHeaderPoW2Sig;
+        witnessUTXODelta = block.witnessUTXODelta;
         nVersion       = block.nVersion;
         hashMerkleRoot = block.hashMerkleRoot;
         nTime          = block.nTime;
@@ -324,6 +329,7 @@ public:
         block.nTimePoW2Witness = nTimePoW2Witness;
         block.hashMerkleRootPoW2Witness = hashMerkleRootPoW2Witness;
         block.witnessHeaderPoW2Sig = witnessHeaderPoW2Sig;
+        block.witnessUTXODelta = witnessUTXODelta;
         block.nVersion       = nVersion;
         if (pprev)
             block.hashPrevBlock = pprev->GetBlockHashPoW2();
@@ -564,6 +570,11 @@ public:
                     witnessHeaderPoW2Sig.resize(65);
                 READWRITENOSIZEVECTOR(witnessHeaderPoW2Sig);
             }
+            
+            if (_nVersion >= 2030013)
+            {
+                READWRITECOMPACTSIZEVECTOR(witnessUTXODelta);
+            }
         }
         catch (...)
         {
@@ -577,6 +588,7 @@ public:
         block.nTimePoW2Witness = nTimePoW2Witness;
         block.hashMerkleRootPoW2Witness = hashMerkleRootPoW2Witness;
         block.witnessHeaderPoW2Sig = witnessHeaderPoW2Sig;
+        block.witnessUTXODelta = witnessUTXODelta;
         block.nVersion        = nVersion;
         block.hashPrevBlock   = hashPrev;
         block.hashMerkleRoot  = hashMerkleRoot;
@@ -593,6 +605,7 @@ public:
         block.nTimePoW2Witness = nTimePoW2Witness;
         block.hashMerkleRootPoW2Witness = hashMerkleRootPoW2Witness;
         block.witnessHeaderPoW2Sig = witnessHeaderPoW2Sig;
+        block.witnessUTXODelta = witnessUTXODelta;
         block.nVersion        = nVersion;
         block.hashPrevBlock   = hashPrev;
         block.hashMerkleRoot  = hashMerkleRoot;
