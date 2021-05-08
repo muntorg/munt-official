@@ -595,7 +595,7 @@ static UniValue getwitnessutxo(const JSONRPCRequest& request)
         throw std::runtime_error("Could not enumerate all PoW² witness information for block.");
     
     assert(witInfoSimplified.selectedWitnessIndex == witnessInfo.selectedWitnessIndex);
-    if (pTipIndex_->nHeight >= Params().GetConsensus().pow2WitnessSyncHeight)
+    if ((uint64_t)pTipIndex_->nHeight >= Params().GetConsensus().pow2WitnessSyncHeight)
     {
         assert(witInfoSimplified.selectedWitnessOutpoint == witnessInfo.selectedWitnessOutpoint);
     }
