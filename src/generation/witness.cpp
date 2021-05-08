@@ -469,7 +469,7 @@ void static GuldenWitness()
                 LOCK(cs_main);
                 pindexTip = chainActive.Tip();
             }
-            Consensus::Params pParams = chainparams.GetConsensus();
+            Consensus::Params consensusParams = chainparams.GetConsensus();
 
             //We can only start witnessing from phase 3 onward.
             if (!pindexTip || !pindexTip->pprev || !IsPow2WitnessingActive(pindexTip->nHeight))
@@ -641,7 +641,9 @@ void static GuldenWitness()
                                     // ScriptForWitnessing will have alerted the user.
                                     if (coinbaseScript == nullptr)
                                     {
-                                        LogPrintf("GuldenWitness: [Error] Failed to create payout for witness [%s]\n", candidateIter->GetBlockHashPoW2().ToString());
+                                        std::string strErrorMessage = strprintf("Failed to create payout for witness block [%d] current chain tip [%d].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+                                        CAlert::Notify(strErrorMessage, true, true);
+                                        LogPrintf("GuldenWitness: [Error] %s\n", strErrorMessage.c_str());
                                         continue;
                                     }
                                     reserveKeys[selectedWitnessAccount->getUUID()] = coinbaseScript;
@@ -669,7 +671,9 @@ void static GuldenWitness()
                                 std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params(), assemblerOptions).CreateNewBlock(candidateIter, coinbaseScript, true, nullptr, true));
                                 if (!pblocktemplate.get())
                                 {
-                                    LogPrintf("GuldenWitness: [Error] Failed to get block template.\n");
+                                    std::string strErrorMessage = strprintf("Failed to get block template [%d] current chain tip [%d].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+                                    CAlert::Notify(strErrorMessage, true, true);
+                                    LogPrintf("GuldenWitness: [Error] %s\n", strErrorMessage.c_str());
                                     continue;
                                 }
 
@@ -721,7 +725,7 @@ void static GuldenWitness()
                                 /** Set witness specific block header information **/
                                 {
                                     // ComputeBlockVersion returns the right version flag to signal for phase 4 activation here, assuming we are already in phase 3 and 95 percent of peers are upgraded.
-                                    pWitnessBlock->nVersionPoW2Witness = ComputeBlockVersion(candidateIter->pprev, pParams);
+                                    pWitnessBlock->nVersionPoW2Witness = ComputeBlockVersion(candidateIter->pprev, consensusParams);
 
                                     // Second witness timestamp gets added to the block as an additional time source to the miner timestamp.
                                     // Witness timestamp must exceed median of previous mined timestamps.
@@ -742,12 +746,16 @@ void static GuldenWitness()
                                 }
                                 else
                                 {
-                                    LogPrintf("GuldenWitness: [Error] Signature error, failed to witness block.\n");
+                                    std::string strErrorMessage = strprintf("Signature error, failed to witness block [%d] current chain tip [%d].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+                                    CAlert::Notify(strErrorMessage, true, true);
+                                    LogPrintf("GuldenWitness: [Error] %s\n", strErrorMessage.c_str());
                                 }
                             }
                             else
                             {
-                                LogPrintf("GuldenWitness: [Error] Coinbase error, failed to create coinbase for witness block.\n");
+                                std::string strErrorMessage = strprintf("Coinbase error, failed to create coinbase for witness block [%d].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+                                CAlert::Notify(strErrorMessage, true, true);
+                                LogPrintf("GuldenWitness: [Error] %s\n", strErrorMessage.c_str());
                             }
                         }
                     }
