@@ -322,14 +322,15 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
         }
 
         // Place the block in question at the tip of the chain.
-        CBlockIndex indexDummy(*newBlock);
-        indexDummy.pprev = pPreviousIndexChain;
-        indexDummy.nHeight = pPreviousIndexChain->nHeight + 1;
+        CBlockIndex* indexDummy = new CBlockIndex(*newBlock);
+        indexDummy->pprev = pPreviousIndexChain;
+        indexDummy->nHeight = pPreviousIndexChain->nHeight + 1;
         if (!ConnectBlock(tempChain, *newBlock, state, indexDummy, viewNew, chainParams, true, false, false, false))
         {
             //fixme: (PHASE5) If we are inside a GetWitness call ban the peer that sent us this?
             return false;
         }
+        tempChain.SetTip(indexDummy);
     }
 
     /** Gather a list of all unspent witness outputs.
