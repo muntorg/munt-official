@@ -338,7 +338,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
         For each iteration we should remove items from allWitnessCoins if they have been deleted in the higher layer as the higher layer overrides the lower layer.
         GetAllCoins takes care of all of this automatically.
     **/
-    if (forceIndexBased || tempChain.Tip()->nHeight >= Params().GetConsensus().pow2WitnessSyncHeight)
+    if (forceIndexBased || (uint64_t)tempChain.Tip()->nHeight >= Params().GetConsensus().pow2WitnessSyncHeight)
     {
         viewNew.pChainedWitView->GetAllCoinsIndexBased(allWitnessCoins);
     }
