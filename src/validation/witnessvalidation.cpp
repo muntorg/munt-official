@@ -164,7 +164,7 @@ static bool ForceActivateChainStep(CValidationState& state, CChain& currentChain
                 if (!ReadBlockFromDisk(block, pindexConnect, chainparams))
                     return false;
             }
-            bool rv = ConnectBlock(currentChain, pblockConnect?*pblockConnect:*pblock, state, pindexConnect, coinView, chainparams);
+            bool rv = ConnectBlock(currentChain, pblockConnect?*pblockConnect:*pblock, state, pindexConnect, coinView, chainparams, false, false, false, false);
             if (!rv)
                 return false;
             currentChain.SetTip(pindexConnect);
@@ -325,7 +325,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
         CBlockIndex indexDummy(*newBlock);
         indexDummy.pprev = pPreviousIndexChain;
         indexDummy.nHeight = pPreviousIndexChain->nHeight + 1;
-        if (!ConnectBlock(tempChain, *newBlock, state, &indexDummy, viewNew, chainParams, true, false))
+        if (!ConnectBlock(tempChain, *newBlock, state, indexDummy, viewNew, chainParams, true, false, false, false))
         {
             //fixme: (PHASE5) If we are inside a GetWitness call ban the peer that sent us this?
             return false;

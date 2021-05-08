@@ -616,7 +616,7 @@ DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* pindex,
 /** Apply the effects of this block (with given index) on the UTXO set represented by coins.
  *  Validity checks that depend on the UTXO set are also done; ConnectBlock()
  *  can fail if those validity checks fail (among other reasons). */
-bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, CBlockIndex* pindex, CCoinsViewCache& view, const CChainParams& chainparams, bool fJustCheck = false, bool fVerifyWitness=true);
+bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, CBlockIndex* pindex, CCoinsViewCache& view, const CChainParams& chainparams, bool fJustCheck = false, bool fVerifyWitness=true, bool fVerifyWitnessDelta=true, bool fDoScriptChecks=true);
 
 /** Context-dependent validity checks.
  *  By "context", we mean only the previous block headers, but not the UTXO

@@ -886,7 +886,7 @@ static int64_t nTimeTotal = 0;
  *  Validity checks that depend on the UTXO set are also done; ConnectBlock()
  *  can fail if those validity checks fail (among other reasons). */
 bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, CBlockIndex* pindex,
-                  CCoinsViewCache& view, const CChainParams& chainparams, bool fJustCheck, bool fVerifyWitness)
+                  CCoinsViewCache& view, const CChainParams& chainparams, bool fJustCheck, bool fVerifyWitness, bool fVerifyWitnessDelta, bool fDoScriptChecks)
 {
     if (!ContextualCheckBlock(block, state, chainparams, pindex->pprev, chain, &view, true))
         return error("%s: Consensus::CheckBlock, failed ContextualCheckBlock with utxo check: %s", __func__, FormatStateMessage(state));
@@ -1068,10 +1068,10 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         }
     }
 
+    //NB! This must occur before CCheckQueueControl to prevent CCheckQueueControl re-entrancy.
     //fixme: (PHASE5) After phase4 activates the below re-entrancy from WitnessCoinbaseInfoIsValid is no longer a thing.
     //So we can move this down and combine it with the scope where we check:
     //unsigned int nWitnessCoinbasePayoutIndex = nWitnessCoinbaseIndex + 1;
-    //NB! This must occur before CCheckQueueControl to prevent CCheckQueueControl re-entrancy.
     unsigned int nWitnessCoinbaseIndex = 0;
     if (block.nVersionPoW2Witness == 0)
     {
@@ -1108,7 +1108,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         }
     }
 
-    CCheckQueueControl<CScriptCheck> control(fScriptChecks && nScriptCheckThreads ? &scriptcheckqueue : NULL);
+    CCheckQueueControl<CScriptCheck> control(fDoScriptChecks && fScriptChecks && nScriptCheckThreads ? &scriptcheckqueue : NULL);
 
     CAmount nFees = 0;
     CAmount nFeesPoW2Witness = 0;
