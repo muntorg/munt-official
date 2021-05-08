@@ -1088,6 +1088,13 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                 if (block.vtx[i]->IsCoinBase() && block.vtx[i]->IsPoW2WitnessCoinBase())
                 {
                     nWitnessCoinbaseIndex = i;
+                    if ((uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2Phase5FirstBlockHeight)
+                    {
+                        if (block.vtx[i]->vout.size() == 0 || block.vtx[i]->vout[0].GetType() != CTxOutType::PoW2WitnessOutput)
+                        {
+                            return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid output position)"), REJECT_INVALID, "bad-witness-cb");
+                        }
+                    }
                     break;
                 }
             }
@@ -1246,7 +1253,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
     //Forbid any transactions that would affect the witness set from occuring after the witness coinbase index
     //As this would present complications for the "simplified witness set" accounting
-    if (pindex->nHeight > chainparams.GetConsensus().pow2WitnessSyncHeight && nWitnessCoinbaseIndex != 0)
+    if ((uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2WitnessSyncHeight && nWitnessCoinbaseIndex != 0)
     {
         for (unsigned int i = nWitnessCoinbaseIndex+1; i < block.vtx.size(); i++)
         {
