@@ -16,10 +16,10 @@
  * network protocol versioning
  */
 
-static const int PROTOCOL_VERSION = 70019;
+static const int PROTOCOL_VERSION = 70020;
 
 //! In this version, 'witness sync' was introduced.
-static const int WITNESS_SYNC_VERSION = 70019;
+static const int WITNESS_SYNC_VERSION = 70020;
 
 //! initial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
@@ -31,7 +31,7 @@ static const int GETHEADERS_VERSION = 31800;
 static const int MIN_PEER_PROTO_VERSION = 70018;
 
 //! disconnect from peers older than this proto version if they are an outbound connection
-static const int MIN_PEER_PROTO_VERSION_OUTBOUND = 70019;
+static const int MIN_PEER_PROTO_VERSION_OUTBOUND = 70020;
 
 //! nTime field added to CAddress, starting with this version;
 //! if possible, avoid requesting addresses nodes older than this
