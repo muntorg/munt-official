@@ -1107,6 +1107,24 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
             }
         }
     }
+    
+    //NB! This must occur before CCheckQueueControl variable "control", to prevent CCheckQueueControl re-entrancy as GetSimplifiedWitnessUTXOSetForIndex calls into connectblock which lands us back here
+    //Having two CCheckQueueControl instances simultaneously deadlocks the entire software
+    //
+    //Ideally this would be called just before or as part of GetSimplifiedWitnessUTXODeltaForBlock instead
+    //
+    //fixme: (WITNESS_SYNC) - See if we can solve this re-entrancy issue
+    //Note the block above this one has a similar problem so look into that at same time.
+    //
+    std::shared_ptr<SimplifiedWitnessUTXOSet> pow2SimplifiedWitnessUTXOForPrevBlock = nullptr;
+    if (fVerifyWitnessDelta && block.nVersionPoW2Witness != 0 && (uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2Phase5FirstBlockHeight)
+    {
+        pow2SimplifiedWitnessUTXOForPrevBlock = std::make_shared<SimplifiedWitnessUTXOSet>();
+        if (!GetSimplifiedWitnessUTXOSetForIndex(pindex->pprev, *pow2SimplifiedWitnessUTXOForPrevBlock))
+        {
+            return state.DoS(100, error("ConnectBlock(): Unable to compute simplified witness utxo for block"), REJECT_INVALID, "bad-witness-utxo");
+        }
+    }
 
     CCheckQueueControl<CScriptCheck> control(fDoScriptChecks && fScriptChecks && nScriptCheckThreads ? &scriptcheckqueue : NULL);
 
@@ -1260,6 +1278,34 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
             if (!block.vtx[i]->witnessBundles || block.vtx[i]->witnessBundles->size()>0)
             {
                 return state.DoS(100, error("ConnectBlock(): Witness related transaction after witness coinbase)"), REJECT_INVALID, "bad-witness-transactions");
+            }
+        }
+    }
+
+    //Check that the actual witness changes contained in the block match those described in the header as populated by the witness
+    //
+    //fixme: (FUT): We could consider some kind of active penalty for a witness caught doing this
+    //Though whether there is really a need or reason to go that far is not clear, that it won't succeed is likely a large enough deterrent.
+    //fixme: (WITNESS_SYNC) - Change this check to pow2WitnessSyncHeight after we have more testing in place
+    if (fVerifyWitnessDelta && block.nVersionPoW2Witness != 0 && (uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2Phase5FirstBlockHeight)
+    {        
+        std::vector<unsigned char> compWitnessUTXODelta;
+        if (!GetSimplifiedWitnessUTXODeltaForBlock(pindex, block, pow2SimplifiedWitnessUTXOForPrevBlock, compWitnessUTXODelta))
+        {
+            return state.DoS(100, error("ConnectBlock(): Unable to compute witness delta for block"), REJECT_INVALID, "bad-witness-utxo-delta");
+        }
+        if ((uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2WitnessSyncHeight)
+        {
+            if (!std::equal(compWitnessUTXODelta.begin(), compWitnessUTXODelta.end(), block.witnessUTXODelta.begin()))
+            {
+                return state.DoS(100, error("ConnectBlock(): PoW2 simplified witness delta incorrect"), REJECT_INVALID, "bad-witness-utxo-delta");
+            }
+        }
+        else
+        {
+            if (block.witnessUTXODelta.size() > 0)
+            {
+                return state.DoS(100, error("ConnectBlock(): PoW2 simplified witness delta before activation"), REJECT_INVALID, "premature-witness-utxo-delta");
             }
         }
     }
@@ -2758,6 +2804,9 @@ bool IsSegSigEnabled(const CBlockIndex* pindexPrev)
 bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& state, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev, int64_t nAdjustedTime)
 {
     assert(pindexPrev != NULL);
+    
+    bool fTestNet = IsArgSet("-testnet");
+
     //const int nHeight = pindexPrev->nHeight + 1;
     // Check proof of work
     if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
@@ -2768,7 +2817,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
         return state.Invalid(false, REJECT_INVALID, "time-too-old", "blocks PoW timestamp is too early");
 
     // Check timestamp
-    if (pindexPrev->nHeight > (IsArgSet("-testnet") ? 446500 : 437500) )
+    if (pindexPrev->nHeight > (fTestNet ? 446500 : 437500) )
     {
         if (block.GetBlockTime() > nAdjustedTime + MAX_FUTURE_BLOCK_TIME)
             return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
