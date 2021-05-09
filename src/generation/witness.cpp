@@ -755,7 +755,7 @@ void static GuldenWitness()
                                             CAlert::Notify(strErrorMessage, true, true);
                                             LogPrintf("GuldenWitness: [Error] %s\n", strErrorMessage.c_str());
                                         }
-                                        if (!GetSimplifiedWitnessUTXODeltaForBlock(candidateIter, *pWitnessBlock, pow2SimplifiedWitnessUTXOForPrevBlock, pWitnessBlock->witnessUTXODelta))
+                                        if (!GetSimplifiedWitnessUTXODeltaForBlock(candidateIter, *pWitnessBlock, pow2SimplifiedWitnessUTXOForPrevBlock, pWitnessBlock->witnessUTXODelta, nullptr))
                                         {
                                             std::string strErrorMessage = strprintf("Failed to compute UTXO delta for block [%d] current chain tip [%d].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
                                             CAlert::Notify(strErrorMessage, true, true);

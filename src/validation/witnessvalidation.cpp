@@ -1635,7 +1635,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
     return true;
 }
 
-bool GetSimplifiedWitnessUTXODeltaForBlock(const CBlockIndex* pBlockIndex, const CBlock& block, std::shared_ptr<SimplifiedWitnessUTXOSet> pow2SimplifiedWitnessUTXOForPrevBlock, std::vector<unsigned char>& compWitnessUTXODelta)
+bool GetSimplifiedWitnessUTXODeltaForBlock(const CBlockIndex* pBlockIndex, const CBlock& block, std::shared_ptr<SimplifiedWitnessUTXOSet> pow2SimplifiedWitnessUTXOForPrevBlock, std::vector<unsigned char>& compWitnessUTXODelta, CPubKey* pubkey)
 {
     SimplifiedWitnessUTXOSet pow2SimplifiedWitnessUTXOModified = *pow2SimplifiedWitnessUTXOForPrevBlock;
     
@@ -1653,7 +1653,28 @@ bool GetSimplifiedWitnessUTXODeltaForBlock(const CBlockIndex* pBlockIndex, const
     #ifdef EXTRA_DELTA_TESTS
     assert(pow2SimplifiedWitnessUTXOModified != pow2SimplifiedWitnessUTXOOrig);
     #endif
-   
+    
+    if (pubkey)
+    {
+        DO_BENCHMARKT("CheckBlockHeaderIsPoWValid - VERIFYWITNESS_SIMPLIFIED_INTERNAL", BCLog::BENCH, 0);
+
+        CGetWitnessInfo witInfo;
+        GetWitnessFromSimplifiedUTXO(pow2SimplifiedWitnessUTXOOrig, pBlockIndex, witInfo);
+        if(witInfo.selectedWitnessTransaction.GetType() == CTxOutType::PoW2WitnessOutput)
+        {
+            if (witInfo.selectedWitnessTransaction.output.witnessDetails.witnessKeyID != pubkey->GetID())
+            {
+                assert(0);
+                return false;
+            }
+        }
+        else
+        {
+            assert(0);
+            return false;
+        }
+    }
+    
     // Generate the undo info, when done pow2SimplifiedWitnessUTXOUndo should match our original item again
     SimplifiedWitnessUTXOSet pow2SimplifiedWitnessUTXOUndo = pow2SimplifiedWitnessUTXOModified;
     std::vector<unsigned char> undoWitnessUTXODelta;
