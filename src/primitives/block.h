@@ -124,12 +124,13 @@ public:
                 }
             }
             
-            if (s.GetVersion() % 80000 >= WITNESS_SYNC_VERSION)
+            if( ((s.GetType() == SER_DISK) && (s.GetVersion() >= 2030013)) || 
+                ((s.GetType() == SER_NETWORK) && (s.GetVersion() % 80000 >= WITNESS_SYNC_VERSION)) ||
+                ((s.GetType() == SER_GETHASH) && (witnessUTXODelta.size() > 0)) )
             {
                 if (nVersionPoW2Witness != 0)
                 {
                     //fixme: (WITNESS_SYNC) - If size is frequently above 200 then switch to varint instead
-                    //NEXTNEXTNEXT
                     READWRITECOMPACTSIZEVECTOR(witnessUTXODelta);
                 }
             }
