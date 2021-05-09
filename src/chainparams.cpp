@@ -238,8 +238,7 @@ public:
             consensus.pow2Phase5FirstBlockHeight=0;
             if (fIsOfficialTestnetV1)
             {
-                //Don't allow activation yet
-                consensus.pow2WitnessSyncHeight=std::numeric_limits<uint64_t>::max();
+                consensus.pow2WitnessSyncHeight=347700;
             }
             else
             {
