@@ -198,10 +198,10 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
             {
                 in.pushKV("pow2_coinbase", "");
             }
-            if (txin.prevout.isHash)
+            if (txin.GetPrevOut().isHash)
             {
                 in.pushKV("prevout_type", "hash");
-                in.pushKV("txid", txin.prevout.getTransactionHash().GetHex());
+                in.pushKV("txid", txin.GetPrevOut().getTransactionHash().GetHex());
                 in.pushKV("tx_height", "");
                 in.pushKV("tx_index", "");
             }
@@ -209,11 +209,11 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry)
             {
                 in.pushKV("prevout_type", "index");
                 in.pushKV("txid", "");
-                in.pushKV("tx_height", txin.prevout.getTransactionBlockNumber());
-                in.pushKV("tx_index", txin.prevout.getTransactionIndex());
+                in.pushKV("tx_height", txin.GetPrevOut().getTransactionBlockNumber());
+                in.pushKV("tx_index", txin.GetPrevOut().getTransactionIndex());
             }
             
-            in.pushKV("vout", (int64_t)txin.prevout.n);
+            in.pushKV("vout", (int64_t)txin.GetPrevOut().n);
             UniValue o(UniValue::VOBJ);
             o.pushKV("asm", ScriptToAsmStr(txin.scriptSig, true));
             o.pushKV("hex", HexStr(txin.scriptSig.begin(), txin.scriptSig.end()));

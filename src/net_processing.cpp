@@ -866,7 +866,7 @@ bool AddOrphanTx(const CTransactionRef& tx, NodeId peer) EXCLUSIVE_LOCKS_REQUIRE
     assert(ret.second);
     for(const CTxIn& txin : tx->vin)
     {
-        mapOrphanTransactionsByPrev[txin.prevout].insert(ret.first);
+        mapOrphanTransactionsByPrev[txin.GetPrevOut()].insert(ret.first);
     }
 
     AddToCompactExtraTransactions(tx);
@@ -883,7 +883,7 @@ int static EraseOrphanTx(uint256 hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
         return 0;
     for(const CTxIn& txin : it->second.tx->vin)
     {
-        auto itPrev = mapOrphanTransactionsByPrev.find(txin.prevout);
+        auto itPrev = mapOrphanTransactionsByPrev.find(txin.GetPrevOut());
         if (itPrev == mapOrphanTransactionsByPrev.end())
             continue;
         itPrev->second.erase(it);
@@ -1001,7 +1001,7 @@ void PeerLogicValidation::BlockConnected(const std::shared_ptr<const CBlock>& pb
         // Which orphan pool entries must we evict?
         for (const auto& txin : tx.vin)
         {
-            auto itByPrev = mapOrphanTransactionsByPrev.find(txin.prevout);
+            auto itByPrev = mapOrphanTransactionsByPrev.find(txin.GetPrevOut());
             if (itByPrev == mapOrphanTransactionsByPrev.end()) continue;
             for (auto mi = itByPrev->second.begin(); mi != itByPrev->second.end(); ++mi)
             {
@@ -2421,7 +2421,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             for(const CTxIn& txin : tx.vin)
             {
                 uint256 txHash;
-                if (GetTxHash(txin.prevout, txHash) && recentRejects->contains(txHash))
+                if (GetTxHash(txin.GetPrevOut(), txHash) && recentRejects->contains(txHash))
                 {
                     fRejectedParents = true;
                     break;
@@ -2433,7 +2433,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 for(const CTxIn& txin : tx.vin)
                 {
                     uint256 txHash;
-                    if (GetTxHash(txin.prevout, txHash))
+                    if (GetTxHash(txin.GetPrevOut(), txHash))
                     {
                         CInv _inv(MSG_TX | nFetchFlags, txHash);
                         pfrom->AddInventoryKnown(_inv);

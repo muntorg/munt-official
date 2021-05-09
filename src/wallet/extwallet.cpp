@@ -350,13 +350,13 @@ isminetype CExtWallet::IsMine(const CKeyStore &keystore, const CTxIn& txin) cons
     {
         LOCK(cs_wallet);
         uint256 txHash;
-        if (GetTxHash(txin.prevout, txHash))
+        if (GetTxHash(txin.GetPrevOut(), txHash))
         {
             const CWalletTx* prev = pactiveWallet->GetWalletTx(txHash);
             if (prev && prev->tx->vout.size() != 0)
             {
-                if (txin.prevout.n < prev->tx->vout.size())
-                    return ::IsMine(keystore, prev->tx->vout[txin.prevout.n]);
+                if (txin.GetPrevOut().n < prev->tx->vout.size())
+                    return ::IsMine(keystore, prev->tx->vout[txin.GetPrevOut().n]);
             }
         }
     }
@@ -931,11 +931,11 @@ void CExtWallet::RemoveAddressFromKeypoolIfIsMine(const CTransaction& tx, uint64
 void CExtWallet::RemoveAddressFromKeypoolIfIsMine(const CTxIn& txin, uint64_t time)
 {
     LOCK(cs_wallet);
-    const CWalletTx* prev = static_cast<CWallet*>(this)->GetWalletTx(txin.prevout);
+    const CWalletTx* prev = static_cast<CWallet*>(this)->GetWalletTx(txin.GetPrevOut());
     if (prev)
     {
-        if (txin.prevout.n < prev->tx->vout.size())
-            RemoveAddressFromKeypoolIfIsMine(prev->tx->vout[txin.prevout.n], time);
+        if (txin.GetPrevOut().n < prev->tx->vout.size())
+            RemoveAddressFromKeypoolIfIsMine(prev->tx->vout[txin.GetPrevOut().n], time);
     }
 }
 

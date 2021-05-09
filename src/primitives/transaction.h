@@ -334,9 +334,20 @@ public:
             }
         }
     }
-    COutPoint prevout;
+    const COutPoint& GetPrevOut() const { return prevout; };
+    void SetPrevOut(const COutPoint& prevout_)
+    {
+        prevout = prevout_;
+        if (!prevout.isHash)
+            SetFlag(CTxInFlags::IndexBasedOutpoint);
+    }
+    void SetPrevOutNull()
+    {
+        prevout.SetNull();
+    }
     CScript scriptSig;
 private:
+    COutPoint prevout;
     mutable uint32_t nSequence;
 public:
     CSegregatedSignatureData segregatedSignatureData; //! Only serialized through CTransaction
@@ -1232,13 +1243,13 @@ public:
 
     bool IsCoinBase() const
     {
-        return (vin.size() == 1 && vin[0].prevout.IsNull()) || IsPoW2WitnessCoinBase();
+        return (vin.size() == 1 && vin[0].GetPrevOut().IsNull()) || IsPoW2WitnessCoinBase();
     }
 
     //fixme: (PHASE5) Not sure if necessary or overkill, check second vin is a witness transaction, doing so will be expensive, I suspect we don't need to do it.
     bool IsPoW2WitnessCoinBase() const
     {
-        return (vin.size() == 2 && vin[0].prevout.IsNull());
+        return (vin.size() == 2 && vin[0].GetPrevOut().IsNull());
     }
 
     friend bool operator==(const CTransaction& a, const CTransaction& b)

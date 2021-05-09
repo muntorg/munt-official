@@ -306,7 +306,7 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
 
         for(const CTxIn& txin : wtx.tx->vin)
         {
-            COutPoint prevout = txin.prevout;
+            COutPoint prevout = txin.GetPrevOut();
 
             Coin prev;
             if(pcoinsTip->GetCoin(prevout, prev))

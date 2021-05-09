@@ -26,11 +26,11 @@ isminetype CWallet::IsMine(const CTxIn &txin) const
 {
     {
         LOCK(cs_wallet);
-        const CWalletTx* prev = GetWalletTx(txin.prevout);
+        const CWalletTx* prev = GetWalletTx(txin.GetPrevOut());
         if (prev)
         {
-            if (txin.prevout.n < prev->tx->vout.size())
-                return IsMine(prev->tx->vout[txin.prevout.n]);
+            if (txin.GetPrevOut().n < prev->tx->vout.size())
+                return IsMine(prev->tx->vout[txin.GetPrevOut().n]);
         }
     }
     return ISMINE_NO;
@@ -65,14 +65,14 @@ bool CWallet::IsAllFromMe(const CTransaction& tx, const isminefilter& filter) co
 
     for(const CTxIn& txin : tx.vin)
     {
-        const CWalletTx* prev = GetWalletTx(txin.prevout);
+        const CWalletTx* prev = GetWalletTx(txin.GetPrevOut());
         if (!prev)
             return false; // any unknown inputs can't be from us
 
-        if (txin.prevout.n >= prev->tx->vout.size())
+        if (txin.GetPrevOut().n >= prev->tx->vout.size())
             return false; // invalid input!
 
-        if (!(IsMine(prev->tx->vout[txin.prevout.n]) & filter))
+        if (!(IsMine(prev->tx->vout[txin.GetPrevOut().n]) & filter))
             return false;
     }
     return true;

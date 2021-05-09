@@ -526,7 +526,7 @@ CAmount CCoinsViewCache::GetValueIn(const CTransaction& tx) const
     CAmount nResult = 0;
     for (unsigned int i = 0; i < tx.vin.size(); i++)
     {
-        CAmount coinAmount = AccessCoin(tx.vin[i].prevout).out.nValue;
+        CAmount coinAmount = AccessCoin(tx.vin[i].GetPrevOut()).out.nValue;
         if (coinAmount != -1)
         {
             nResult += coinAmount;
@@ -542,9 +542,9 @@ bool CCoinsViewCache::HaveInputs(const CTransaction& tx) const
     {
         for (unsigned int i = 0; i < tx.vin.size(); i++)
         {
-            if (!HaveCoin(tx.vin[i].prevout))
+            if (!HaveCoin(tx.vin[i].GetPrevOut()))
             {
-                if (!tx.IsPoW2WitnessCoinBase() || !tx.vin[i].prevout.IsNull())
+                if (!tx.IsPoW2WitnessCoinBase() || !tx.vin[i].GetPrevOut().IsNull())
                 {
                     return false;
                 }

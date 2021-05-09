@@ -327,9 +327,9 @@ static std::tuple<bool, CMutableTransaction, CWitnessBundles> CreateWitnessCoinb
 
     CMutableTransaction coinbaseTx(bSegSigIsEnabled ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION);
     coinbaseTx.vin.resize(2);
-    coinbaseTx.vin[0].prevout.SetNull();
+    coinbaseTx.vin[0].SetPrevOutNull();
     coinbaseTx.vin[0].SetSequence(0, coinbaseTx.nVersion, CTxInFlags::None);
-    coinbaseTx.vin[1].prevout = selectedWitnessOutPoint;
+    coinbaseTx.vin[1].SetPrevOut(selectedWitnessOutPoint);
     coinbaseTx.vin[1].SetSequence(0, coinbaseTx.nVersion, CTxInFlags::None);
 
     if (bSegSigIsEnabled)

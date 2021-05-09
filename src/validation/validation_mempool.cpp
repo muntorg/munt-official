@@ -186,7 +186,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         LOCK(pool.cs); // protect pool.mapNextTx
         for(const CTxIn &txin : tx.vin)
         {
-            auto itConflicting = pool.mapNextTx.find(txin.prevout);
+            auto itConflicting = pool.mapNextTx.find(txin.GetPrevOut());
             if (itConflicting != pool.mapNextTx.end())
             {
                 const CTransaction *ptxConflicting = itConflicting->second;
@@ -273,10 +273,10 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
 
             // do all inputs exist?
             for(const CTxIn txin : tx.vin) {
-                if (!pcoinsTip->HaveCoinInCache(txin.prevout)) {
-                    coins_to_uncache.push_back(txin.prevout);
+                if (!pcoinsTip->HaveCoinInCache(txin.GetPrevOut())) {
+                    coins_to_uncache.push_back(txin.GetPrevOut());
                 }
-                if (!view.HaveCoin(txin.prevout)) {
+                if (!view.HaveCoin(txin.GetPrevOut())) {
                     if (pfMissingInputs) {
                         *pfMissingInputs = true;
                     }
@@ -324,7 +324,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         // during reorgs to ensure COINBASE_MATURITY is still met.
         bool fSpendsCoinbase = false;
         for(const CTxIn &txin : tx.vin) {
-            const Coin &coin = view.AccessCoin(txin.prevout);
+            const Coin &coin = view.AccessCoin(txin.GetPrevOut());
             if (coin.IsCoinBase()) {
                 fSpendsCoinbase = true;
                 break;
@@ -444,7 +444,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                 for(const CTxIn &txin : mi->GetTx().vin)
                 {
                     uint256 txHash;
-                    if (GetTxHash(txin.prevout, txHash))
+                    if (GetTxHash(txin.GetPrevOut(), txHash))
                         setConflictsParents.insert(txHash);
                 }
 
@@ -479,7 +479,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                 // the ancestor feerates and make the decision based on that,
                 // but for now requiring all new inputs to be confirmed works.
                 uint256 txHash;
-                bool haveHash = GetTxHash(tx.vin[j].prevout, txHash);
+                bool haveHash = GetTxHash(tx.vin[j].GetPrevOut(), txHash);
                 if (haveHash && !setConflictsParents.count(txHash))
                 {
                     // Rather than check the UTXO set - potentially expensive -

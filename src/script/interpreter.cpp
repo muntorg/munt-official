@@ -1131,7 +1131,7 @@ public:
         if (fAnyoneCanPay)
             nInput = nIn;
         // Serialize the prevout
-        txTo.vin[nInput].prevout.WriteToStream(s, txTo.vin[nInput].GetType(), txTo.vin[nInput].GetFlags(), txTo.nVersion);
+        txTo.vin[nInput].GetPrevOut().WriteToStream(s, txTo.vin[nInput].GetType(), txTo.vin[nInput].GetFlags(), txTo.nVersion);
         // Serialize the script
         if (nInput != nIn)
             // Blank out other inputs' signatures
@@ -1197,7 +1197,7 @@ uint256 GetPrevoutHash(const CTransaction& txTo)
     CHashWriter ss(SER_GETHASH, 0);
     for (const auto& txin : txTo.vin)
     {
-        txin.prevout.WriteToStream(ss, txin.GetType(), txin.GetFlags(), txTo.nVersion);
+        txin.GetPrevOut().WriteToStream(ss, txin.GetType(), txin.GetFlags(), txTo.nVersion);
     }
     return ss.GetHash();
 }
@@ -1263,7 +1263,7 @@ uint256 SignatureHash(const CScript& scriptCode, const CTransaction& txTo, unsig
         // The input being signed (replacing the scriptSig with scriptCode + amount)
         // The prevout may already be contained in hashPrevout, and the nSequence
         // may already be contain in hashSequence.
-        txTo.vin[nIn].prevout.WriteToStream(ss, txTo.vin[nIn].GetType(), txTo.vin[nIn].GetFlags(), txTo.nVersion);
+        txTo.vin[nIn].GetPrevOut().WriteToStream(ss, txTo.vin[nIn].GetType(), txTo.vin[nIn].GetFlags(), txTo.nVersion);
         ss << static_cast<const CScriptBase&>(scriptCode);
         ss << amount;
 

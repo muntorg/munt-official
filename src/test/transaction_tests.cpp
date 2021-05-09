@@ -163,19 +163,19 @@ BOOST_AUTO_TEST_CASE(tx_valid)
             PrecomputedTransactionData txdata(tx);
             for (unsigned int i = 0; i < tx.vin.size(); i++)
             {
-                if (!mapprevOutScriptPubKeys.count(tx.vin[i].prevout))
+                if (!mapprevOutScriptPubKeys.count(tx.vin[i].GetPrevOut()))
                 {
                     BOOST_ERROR("Bad test: " << strTest);
                     break;
                 }
 
                 CAmount amount = 0;
-                if (mapprevOutValues.count(tx.vin[i].prevout)) {
-                    amount = mapprevOutValues[tx.vin[i].prevout];
+                if (mapprevOutValues.count(tx.vin[i].GetPrevOut())) {
+                    amount = mapprevOutValues[tx.vin[i].GetPrevOut()];
                 }
                 unsigned int verify_flags = ParseScriptFlags(test[2].get_str());
                 const CSegregatedSignatureData *segregatedSignatureData = &tx.vin[i].segregatedSignatureData;
-                BOOST_CHECK_MESSAGE(VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],segregatedSignatureData, verify_flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &tx, i, amount, txdata), SCRIPT_V1, &err), strTest);
+                BOOST_CHECK_MESSAGE(VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].GetPrevOut()],segregatedSignatureData, verify_flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &tx, i, amount, txdata), SCRIPT_V1, &err), strTest);
                 BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
             }
         }
@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE(tx_invalid)
             PrecomputedTransactionData txdata(tx);
             for (unsigned int i = 0; i < tx.vin.size() && fValid; i++)
             {
-                if (!mapprevOutScriptPubKeys.count(tx.vin[i].prevout))
+                if (!mapprevOutScriptPubKeys.count(tx.vin[i].GetPrevOut()))
                 {
                     BOOST_ERROR("Bad test: " << strTest);
                     break;
@@ -256,11 +256,11 @@ BOOST_AUTO_TEST_CASE(tx_invalid)
 
                 unsigned int verify_flags = ParseScriptFlags(test[2].get_str());
                 CAmount amount = 0;
-                if (mapprevOutValues.count(tx.vin[i].prevout)) {
-                    amount = mapprevOutValues[tx.vin[i].prevout];
+                if (mapprevOutValues.count(tx.vin[i].GetPrevOut())) {
+                    amount = mapprevOutValues[tx.vin[i].GetPrevOut()];
                 }
                 const CSegregatedSignatureData *segregatedSignatureData = &tx.vin[i].segregatedSignatureData;
-                fValid = VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].prevout],segregatedSignatureData, verify_flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &tx, i, amount, txdata), SCRIPT_V1, &err);
+                fValid = VerifyScript(tx.vin[i].scriptSig, mapprevOutScriptPubKeys[tx.vin[i].GetPrevOut()],segregatedSignatureData, verify_flags, TransactionSignatureChecker(CKeyID(), CKeyID(), &tx, i, amount, txdata), SCRIPT_V1, &err);
             }
             BOOST_CHECK_MESSAGE(!fValid, strTest);
             BOOST_CHECK_MESSAGE(err != SCRIPT_ERR_OK, ScriptErrorString(err));
@@ -333,14 +333,20 @@ BOOST_AUTO_TEST_CASE(test_Get)
 
     CMutableTransaction t1(TEST_DEFAULT_TX_VERSION);
     t1.vin.resize(3);
-    t1.vin[0].prevout.setHash(dummyTransactions[0].GetHash());
-    t1.vin[0].prevout.n = 1;
+    COutPoint changePrevOut = t1.vin[0].GetPrevOut();
+    changePrevOut.setHash(dummyTransactions[0].GetHash());
+    changePrevOut.n = 1;
+    t1.vin[0].SetPrevOut(changePrevOut);
     t1.vin[0].scriptSig << std::vector<unsigned char>(65, 0);
-    t1.vin[1].prevout.setHash(dummyTransactions[1].GetHash());
-    t1.vin[1].prevout.n = 0;
+    changePrevOut = t1.vin[1].GetPrevOut();
+    changePrevOut.setHash(dummyTransactions[1].GetHash());
+    changePrevOut.n = 0;
+    t1.vin[1].SetPrevOut(changePrevOut);
     t1.vin[1].scriptSig << std::vector<unsigned char>(65, 0) << std::vector<unsigned char>(33, 4);
-    t1.vin[2].prevout.setHash(dummyTransactions[1].GetHash());
-    t1.vin[2].prevout.n = 1;
+    changePrevOut = t1.vin[2].GetPrevOut();
+    changePrevOut.setHash(dummyTransactions[1].GetHash());
+    changePrevOut.n = 1;
+    t1.vin[2].SetPrevOut(changePrevOut);
     t1.vin[2].scriptSig << std::vector<unsigned char>(65, 0) << std::vector<unsigned char>(33, 4);
     t1.vout.resize(2);
     t1.vout[0].nValue = 90*CENT;
@@ -363,8 +369,10 @@ BOOST_AUTO_TEST_CASE(test_IsStandard)
 
     CMutableTransaction t(TEST_DEFAULT_TX_VERSION);
     t.vin.resize(1);
-    t.vin[0].prevout.setHash(dummyTransactions[0].GetHash());
-    t.vin[0].prevout.n = 1;
+    COutPoint changePrevOut = t.vin[0].GetPrevOut();
+    changePrevOut.setHash(dummyTransactions[0].GetHash());
+    changePrevOut.n = 1;
+    t.vin[0].SetPrevOut(changePrevOut);
     t.vin[0].scriptSig << std::vector<unsigned char>(65, 0);
     t.vout.resize(1);
     t.vout[0].nValue = 90*CENT;

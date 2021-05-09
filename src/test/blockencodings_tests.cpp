@@ -40,14 +40,18 @@ static CBlock BuildBlockTestCase() {
     block.hashPrevBlock = InsecureRand256();
     block.nBits = 0x207fffff;
 
-    tx.vin[0].prevout.setHash(InsecureRand256());
-    tx.vin[0].prevout.n = 0;
+    COutPoint changePrevOut = tx.vin[0].GetPrevOut();
+    changePrevOut.setHash(InsecureRand256());
+    changePrevOut.n = 0;
+    tx.vin[0].SetPrevOut(changePrevOut);
     block.vtx[1] = MakeTransactionRef(tx);
 
     tx.vin.resize(10);
     for (size_t i = 0; i < tx.vin.size(); i++) {
-        tx.vin[i].prevout.setHash(InsecureRand256());
-        tx.vin[i].prevout.n = 0;
+        changePrevOut = tx.vin[i].GetPrevOut();
+        changePrevOut.setHash(InsecureRand256());
+        changePrevOut.n = 0;
+        tx.vin[i].SetPrevOut(changePrevOut);
     }
     block.vtx[2] = MakeTransactionRef(tx);
 
