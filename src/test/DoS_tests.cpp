@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE(DoS_mapOrphans)
         COutPoint changePrevOut = tx.vin[0].GetPrevOut();
         changePrevOut.n = 0;
         changePrevOut.setHash(InsecureRand256());
-        tx.vin[0].SetPrevOut(tempPrevOut);
+        tx.vin[0].SetPrevOut(changePrevOut);
         tx.vin[0].scriptSig << OP_1;
         tx.vout.resize(1);
         tx.vout[0].nValue = 1*CENT;
@@ -175,7 +175,7 @@ BOOST_AUTO_TEST_CASE(DoS_mapOrphans)
         COutPoint changePrevOut = tx.vin[0].GetPrevOut();
         changePrevOut.n = 0;
         changePrevOut.setHash(txPrev->GetHash());
-        tx.vin[0].SetPrevOut(tempPrevOut);
+        tx.vin[0].SetPrevOut(changePrevOut);
         tx.vout.resize(1);
         tx.vout[0].nValue = 1*CENT;
         tx.vout[0].output.scriptPubKey = GetScriptForDestination(key.GetPubKey().GetID());
@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(DoS_mapOrphans)
             COutPoint changePrevOut = tx.vin[j].GetPrevOut();
             changePrevOut.n = j;
             changePrevOut.setHash(txPrev->GetHash());
-            tx.vin[j].SetPrevOut(tempPrevOut);
+            tx.vin[j].SetPrevOut(changePrevOut);
         }
         SignSignature(accountsToTry, *txPrev, tx, 0, SIGHASH_ALL, SignType::Spend);
         // Re-use same signature for other inputs
