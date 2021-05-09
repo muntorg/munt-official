@@ -379,7 +379,7 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
                 {
                     auto utxod = FindRandomFrom(disconnected_coins);
                     tx = std::get<0>(utxod->second);
-                    prevout = tx.vin[0].prevout;
+                    prevout = tx.vin[0].GetPrevOut();
                     if (!CTransaction(tx).IsCoinBase() && !utxoset.count(prevout))
                     {
                         disconnected_coins.erase(utxod->first);
@@ -402,7 +402,7 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
                     prevout = utxod->first;
 
                     // Construct the tx to spend the coins of prevouthash
-                    tx.vin[0].prevout = prevout;
+                    tx.vin[0].SetPrevOut(prevout);
                     assert(!CTransaction(tx).IsCoinBase());
                 }
                 // In this simple test coins only have two states, spent or unspent, save the unspent state to restore
@@ -466,7 +466,7 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
             // If not coinbase restore prevout
             if (!tx.IsCoinBase())
             {
-                result[tx.vin[0].prevout] = orig_coin;
+                result[tx.vin[0].GetPrevOut()] = orig_coin;
             }
 
             // Disconnect the tx from the current UTXO
@@ -476,7 +476,7 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
             // restore inputs
             if (!tx.IsCoinBase())
             {
-                const COutPoint &out = tx.vin[0].prevout;
+                const COutPoint &out = tx.vin[0].GetPrevOut();
                 CoinUndo coin = undo.vprevout[0];
                 ApplyTxInUndo(std::move(coin), *(stack.back()), out);
             }
@@ -486,7 +486,7 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
             // Update the utxoset
             utxoset.erase(utxod->first);
             if (!tx.IsCoinBase())
-                utxoset.insert(tx.vin[0].prevout);
+                utxoset.insert(tx.vin[0].GetPrevOut());
         }
 
         // Once every 1000 iterations and at the end, verify the full cache.

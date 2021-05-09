@@ -398,8 +398,8 @@ static void entryToJSON(UniValue &info, const CTxMemPoolEntry &e)
     std::set<std::string> setDepends;
     for(const CTxIn& txin : tx.vin)
     {
-        if (txin.prevout.isHash && mempool.exists(txin.prevout.getTransactionHash()))
-            setDepends.insert(txin.prevout.getTransactionHash().ToString());
+        if (txin.GetPrevOut().isHash && mempool.exists(txin.GetPrevOut().getTransactionHash()))
+            setDepends.insert(txin.GetPrevOut().getTransactionHash().ToString());
     }
 
     UniValue depends(UniValue::VARR);

@@ -42,12 +42,12 @@ void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
     {
         const CTxIn& txin = tx->vin[i];
 
-        const CWalletTx* prev = pwallet->GetWalletTx(txin.prevout);
+        const CWalletTx* prev = pwallet->GetWalletTx(txin.GetPrevOut());
         if (prev)
         {
-            if (txin.prevout.n < prev->tx->vout.size())
+            if (txin.GetPrevOut().n < prev->tx->vout.size())
             {
-                const auto& prevOut =  prev->tx->vout[txin.prevout.n];
+                const auto& prevOut =  prev->tx->vout[txin.GetPrevOut().n];
 
                 isminetype fIsMine = IsMine(*from, prevOut);
                 if (includeChildren && !(fIsMine & filter))

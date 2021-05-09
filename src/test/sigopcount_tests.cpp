@@ -93,7 +93,7 @@ static void BuildTxs(CMutableTransaction& spendingTx, CCoinsViewCache& coins, CM
 {
     creationTx.nVersion = 1;
     creationTx.vin.resize(1);
-    creationTx.vin[0].prevout.SetNull();
+    creationTx.vin[0].SetPrevOutNull();
     creationTx.vin[0].scriptSig = CScript();
     creationTx.vout.resize(1);
     creationTx.vout[0].nValue = 1;
@@ -101,8 +101,10 @@ static void BuildTxs(CMutableTransaction& spendingTx, CCoinsViewCache& coins, CM
 
     spendingTx.nVersion = 1;
     spendingTx.vin.resize(1);
-    spendingTx.vin[0].prevout.setHash(creationTx.GetHash());
-    spendingTx.vin[0].prevout.n = 0;
+    COutPoint changePrevOut = spendingTx.vin[0].GetPrevOut();
+    changePrevOut.setHash(creationTx.GetHash());
+    changePrevOut.n = 0;
+    spendingTx.vin[0].SetPrevOut(changePrevOut);
     spendingTx.vin[0].scriptSig = scriptSig;
     spendingTx.vin[0].segregatedSignatureData = segregatedSignatureData;
     spendingTx.vout.resize(1);

@@ -603,9 +603,9 @@ static void TxInErrorToJSON(const uint64_t nTransactionVersion, const CTxIn& txi
 {
     UniValue entry(UniValue::VOBJ);
     uint256 txHash;
-    if (GetTxHash(txin.prevout, txHash))
+    if (GetTxHash(txin.GetPrevOut(), txHash))
         entry.push_back(Pair("txid", txHash.ToString()));
-    entry.push_back(Pair("vout", (uint64_t)txin.prevout.n));
+    entry.push_back(Pair("vout", (uint64_t)txin.GetPrevOut().n));
     UniValue sigData(UniValue::VARR);
     for (unsigned int i = 0; i < txin.segregatedSignatureData.stack.size(); i++) {
         sigData.push_back(HexStr(txin.segregatedSignatureData.stack[i].begin(), txin.segregatedSignatureData.stack[i].end()));
@@ -723,7 +723,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
         view.SetBackend(viewMempool); // temporarily switch cache backend to db+mempool view
 
         for(const CTxIn& txin : mergedTx.vin) {
-            view.AccessCoin(txin.prevout); // Load entries from viewChain into view; can fail.
+            view.AccessCoin(txin.GetPrevOut()); // Load entries from viewChain into view; can fail.
         }
 
         view.SetBackend(viewDummy); // switch back to avoid locking mempool for too long
@@ -877,7 +877,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
     for (unsigned int i = 0; i < mergedTx.vin.size(); i++)
     {
         CTxIn& txin = mergedTx.vin[i];
-        const Coin& coin = view.AccessCoin(txin.prevout);
+        const Coin& coin = view.AccessCoin(txin.GetPrevOut());
         if (coin.IsSpent()) {
             TxInErrorToJSON(mergedTx.nVersion, txin, vErrors, "Input not found or already spent");
             continue;

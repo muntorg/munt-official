@@ -53,8 +53,10 @@ BOOST_FIXTURE_TEST_CASE(tx_mempool_block_doublespend, TestChain100Setup)
     {
         spends[i].nVersion = 1;
         spends[i].vin.resize(1);
-        spends[i].vin[0].prevout.setHash(coinbaseTxns[0].GetHash());
-        spends[i].vin[0].prevout.n = 0;
+        COutPoint changePrevOut = spends[i].vin[0].GetPrevOut();
+        changePrevOut.setHash(coinbaseTxns[0].GetHash());
+        changePrevOut.n = 0;
+        spends[i].vin[0].SetPrevOut(changePrevOut);
         spends[i].vout.resize(1);
         spends[i].vout[0].nValue = 11*CENT;
         spends[i].vout[0].output.scriptPubKey = scriptPubKey;

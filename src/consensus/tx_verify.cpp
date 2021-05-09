@@ -176,7 +176,7 @@ unsigned int GetP2SHSigOpCount(const CTransaction& tx, const CCoinsViewCache& in
     unsigned int nSigOps = 0;
     for (unsigned int i = 0; i < tx.vin.size(); i++)
     {
-        const CTxOut &prevout = inputs.AccessCoin(tx.vin[i].prevout).out;
+        const CTxOut &prevout = inputs.AccessCoin(tx.vin[i].GetPrevOut()).out;
         if (prevout.GetType() <= CTxOutType::ScriptLegacyOutput && prevout.output.scriptPubKey.IsPayToScriptHash())
             nSigOps += prevout.output.scriptPubKey.GetSigOpCount(tx.vin[i].scriptSig);
     }
@@ -197,7 +197,7 @@ int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& i
     for (unsigned int i = 0; i < tx.vin.size(); i++)
     {
         //fixme: (PHASE5) (SEGSIG) - Is this right? - make sure we are counting sigops in segsig scripts correctly
-        const CTxOut &prevout = inputs.AccessCoin(tx.vin[i].prevout).out;
+        const CTxOut &prevout = inputs.AccessCoin(tx.vin[i].GetPrevOut()).out;
         switch (prevout.GetType())
         {
             case CTxOutType::StandardKeyHashOutput: nSigOps += 1; break;
@@ -237,7 +237,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
         std::set<COutPoint> vInOutPoints;
         for (const auto& txin : tx.vin)
         {
-            if (!vInOutPoints.insert(txin.prevout).second)
+            if (!vInOutPoints.insert(txin.GetPrevOut()).second)
                 return state.DoS(100, false, REJECT_INVALID, "bad-txns-inputs-duplicate");
         }
     }
@@ -261,7 +261,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
     {
         for (const auto& txin : tx.vin)
         {
-            if (txin.prevout.IsNull())
+            if (txin.GetPrevOut().IsNull())
                 return state.DoS(10, false, REJECT_INVALID, "bad-txns-prevout-null");
         }
     }
@@ -795,9 +795,9 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
         {
             for (unsigned int i = 0; i < tx.vin.size(); i++)
             {
-                if (!tx.vin[i].prevout.IsNull())
+                if (!tx.vin[i].GetPrevOut().IsNull())
                 {
-                    if (!inputs.HaveCoin(tx.vin[i].prevout))
+                    if (!inputs.HaveCoin(tx.vin[i].GetPrevOut()))
                     {
                         return state.Invalid(false, 0, "", "Inputs unavailable");
                     }
@@ -814,7 +814,7 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
         CAmount nFees = 0;
         for (unsigned int i = 0; i < tx.vin.size(); i++)
         {
-            const COutPoint &prevout = tx.vin[i].prevout;
+            const COutPoint &prevout = tx.vin[i].GetPrevOut();
             if (prevout.IsNull() && tx.IsPoW2WitnessCoinBase())
                 continue;
             const Coin& coin = inputs.AccessCoin(prevout);
@@ -956,7 +956,7 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nC
     // match tx inputs to existing bundles or create new
     for (unsigned int i = 0; i < tx.vin.size(); i++)
     {
-        const COutPoint &prevout = tx.vin[i].prevout;
+        const COutPoint &prevout = tx.vin[i].GetPrevOut();
         if (prevout.IsNull() && tx.IsCoinBase())
         {
             continue;

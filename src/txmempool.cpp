@@ -175,8 +175,8 @@ bool CTxMemPool::CalculateMemPoolAncestors(const CTxMemPoolEntry &entry, setEntr
         // GetMemPoolParents() is only valid for entries in the mempool, so we
         // iterate mapTx to find parents.
         for (unsigned int i = 0; i < tx.vin.size(); i++) {
-            if (tx.vin[i].prevout.isHash) {
-                txiter piter = mapTx.find(tx.vin[i].prevout.getTransactionHash());
+            if (tx.vin[i].GetPrevOut().isHash) {
+                txiter piter = mapTx.find(tx.vin[i].GetPrevOut().getTransactionHash());
                 if (piter != mapTx.end()) {
                     parentHashes.insert(piter);
                     if (parentHashes.size() + 1 > limitAncestorCount) {
@@ -402,9 +402,9 @@ bool CTxMemPool::addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry,
     const CTransaction& tx = newit->GetTx();
     std::set<uint256> setParentTransactions;
     for (unsigned int i = 0; i < tx.vin.size(); i++) {
-        mapNextTx.insert(std::pair(&tx.vin[i].prevout, &tx));
+        mapNextTx.insert(std::pair(&tx.vin[i].GetPrevOut(), &tx));
         uint256 txHash;
-        if (GetTxHash(tx.vin[i].prevout, txHash))
+        if (GetTxHash(tx.vin[i].GetPrevOut(), txHash))
             setParentTransactions.insert(txHash);
     }
     // Don't bother worrying about child transactions of this one.
@@ -439,7 +439,7 @@ void CTxMemPool::removeUnchecked(txiter it, MemPoolRemovalReason reason)
     NotifyEntryRemoved(it->GetSharedTx(), reason);
     const uint256 hash = it->GetTx().GetHash();
     for(const CTxIn& txin : it->GetTx().vin)
-        mapNextTx.erase(txin.prevout);
+        mapNextTx.erase(txin.GetPrevOut());
 
     if (vTxHashes.size() > 1) {
         vTxHashes[it->vTxHashesIdx] = std::move(vTxHashes.back());
@@ -537,12 +537,12 @@ void CTxMemPool::removeForReorg(const CCoinsViewCache *pcoins, unsigned int nMem
         } else if (it->GetSpendsCoinbase()) {
             for(const CTxIn& txin : tx.vin) {
                 uint256 txHash;
-                if (!GetTxHash(txin.prevout, txHash))
+                if (!GetTxHash(txin.GetPrevOut(), txHash))
                     continue;
                 indexed_transaction_set::const_iterator it2 = mapTx.find(txHash);
                 if (it2 != mapTx.end())
                     continue;
-                const Coin &coin = pcoins->AccessCoin(txin.prevout);
+                const Coin &coin = pcoins->AccessCoin(txin.GetPrevOut());
                 if (nCheckFrequency != 0) assert(!coin.IsSpent());
                 if (coin.IsSpent() || (coin.IsCoinBase() && ((signed long)nMemPoolHeight) - coin.nHeight < COINBASE_MATURITY)) {
                     txToRemove.insert(it);
@@ -566,7 +566,7 @@ void CTxMemPool::removeConflicts(const CTransaction &tx)
     // Remove transactions which depend on inputs of tx, recursively
     LOCK(cs);
     for(const CTxIn &txin : tx.vin) {
-        auto it = mapNextTx.find(txin.prevout);
+        auto it = mapNextTx.find(txin.GetPrevOut());
         if (it != mapNextTx.end()) {
             const CTransaction &txConflict = *it->second;
             if (txConflict != tx)
@@ -663,24 +663,24 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const
         for(const CTxIn &txin : tx.vin) {
             // Check that every mempool transaction's inputs refer to available coins, or other mempool tx's.
             uint256 txHash;
-            indexed_transaction_set::const_iterator it2 = GetTxHash(txin.prevout, txHash)
+            indexed_transaction_set::const_iterator it2 = GetTxHash(txin.GetPrevOut(), txHash)
                                                               ? mapTx.find(txHash)
                                                               : mapTx.end();
             if (it2 != mapTx.end()) {
                 const CTransaction& tx2 = it2->GetTx();
-                assert(tx2.vout.size() > txin.prevout.n && !tx2.vout[txin.prevout.n].IsNull());
+                assert(tx2.vout.size() > txin.GetPrevOut().n && !tx2.vout[txin.GetPrevOut().n].IsNull());
                 fDependsWait = true;
                 if (setParentCheck.insert(it2).second) {
                     parentSizes += it2->GetTxSize();
                     parentSigOpCost += it2->GetSigOpCost();
                 }
             } else {
-                assert(pcoins->HaveCoin(txin.prevout));
+                assert(pcoins->HaveCoin(txin.GetPrevOut()));
             }
             // Check whether its inputs are marked in mapNextTx.
-            auto it3 = mapNextTx.find(txin.prevout);
+            auto it3 = mapNextTx.find(txin.GetPrevOut());
             assert(it3 != mapNextTx.end());
-            assert(it3->first == &txin.prevout);
+            assert(it3->first == &txin.GetPrevOut());
             assert(it3->second == &tx);
             i++;
         }
@@ -908,7 +908,7 @@ void CTxMemPool::ClearPrioritisation(const uint256 hash)
 bool CTxMemPool::HasNoInputsOf(const CTransaction &tx) const
 {
     for (unsigned int i = 0; i < tx.vin.size(); i++)
-        if (tx.vin[i].prevout.isHash && exists(tx.vin[i].prevout.getTransactionHash()))
+        if (tx.vin[i].GetPrevOut().isHash && exists(tx.vin[i].GetPrevOut().getTransactionHash()))
             return false;
     return true;
 }
@@ -1086,9 +1086,9 @@ void CTxMemPool::TrimToSize(size_t sizelimit, std::vector<COutPoint>* pvNoSpends
         if (pvNoSpendsRemaining) {
             for(const CTransaction& tx : txn) {
                 for(const CTxIn& txin : tx.vin) {
-                    if (txin.prevout.isHash && exists(txin.prevout.getTransactionHash())) continue;
-                    if (!mapNextTx.count(txin.prevout)) {
-                        pvNoSpendsRemaining->push_back(txin.prevout);
+                    if (txin.GetPrevOut().isHash && exists(txin.GetPrevOut().getTransactionHash())) continue;
+                    if (!mapNextTx.count(txin.GetPrevOut())) {
+                        pvNoSpendsRemaining->push_back(txin.GetPrevOut());
                     }
                 }
             }

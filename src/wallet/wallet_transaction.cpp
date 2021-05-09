@@ -72,15 +72,15 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
     int nIn = 0;
     for (const auto& input : tx.vin)
     {
-        if (input.prevout.IsNull() && txNewConst.IsPoW2WitnessCoinBase())
+        if (input.GetPrevOut().IsNull() && txNewConst.IsPoW2WitnessCoinBase())
         {
             nIn++;
             continue;
         }
 
-        const CWalletTx* prev = GetWalletTx(input.prevout);
+        const CWalletTx* prev = GetWalletTx(input.GetPrevOut());
         const CTxOut* prevout = nullptr;
-        if(!prev || input.prevout.n >= prev->tx->vout.size())
+        if(!prev || input.GetPrevOut().n >= prev->tx->vout.size())
         {
             if (prevOutOverride)
             {
@@ -93,7 +93,7 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
         }
         else
         {
-            prevout = &prev->tx->vout[input.prevout.n];
+            prevout = &prev->tx->vout[input.GetPrevOut().n];
         }
         
         const CAmount& amount = prevout->nValue;
@@ -141,7 +141,7 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
     coinControl.fAllowOtherInputs = true;
 
     for(const CTxIn& txin : tx.vin)
-        coinControl.Select(txin.prevout);
+        coinControl.Select(txin.GetPrevOut());
 
     CWalletTx wtx;
     if (!CreateTransaction(fromAccount, vecSend, wtx, reservekey, nFeeRet, nChangePosInOut, strFailReason, &coinControl, false))
@@ -162,19 +162,19 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
         //CreateTransaction ends up selecting the index based outpoint and the two txin no longer match
         //We work around this by looking up the hash (if its in the wallet) and using that instead
         //However callers to this function should also rather just pass in index based inputs where possible
-        if (!coinControl.IsSelected(txin.prevout))
+        if (!coinControl.IsSelected(txin.GetPrevOut()))
         {
             bool add = false;
-            if (txin.prevout.isHash)
+            if (txin.GetPrevOut().isHash)
             {
                 add = true;
             }
             else
             {
                 uint256 convertedHash;
-                if (CWallet::GetTxHash(txin.prevout, convertedHash))
+                if (CWallet::GetTxHash(txin.GetPrevOut(), convertedHash))
                 {
-                    if(!coinControl.IsSelected(COutPoint(convertedHash, txin.prevout.n)))
+                    if(!coinControl.IsSelected(COutPoint(convertedHash, txin.GetPrevOut().n)))
                     {
                         add = true;
                     }
@@ -186,7 +186,7 @@ bool CWallet::FundTransaction(CAccount* fromAccount, CMutableTransaction& tx, CA
                 if (lockUnspents)
                 {
                     LOCK2(cs_main, cs_wallet);
-                    LockCoin(txin.prevout);
+                    LockCoin(txin.GetPrevOut());
                 }
             }
         }
@@ -832,7 +832,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                         txin.segregatedSignatureData.SetNull();
                         
                         // Prevent input being spent twice
-                        LockCoin(txin.prevout);
+                        LockCoin(txin.GetPrevOut());
                     }
                 }
 
@@ -1162,7 +1162,7 @@ bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKeyOrScript& reservek
             // Notify that old coins are spent
             for(const CTxIn& txin : wtxNew.tx->vin)
             {
-                CWalletTx* prev = GetWalletTx(txin.prevout);
+                CWalletTx* prev = GetWalletTx(txin.GetPrevOut());
                 if (prev)
                 {
                     prev->BindWallet(this);
