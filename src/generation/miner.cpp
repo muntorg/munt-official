@@ -430,7 +430,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     // Create coinbase transaction.
     CMutableTransaction coinbaseTx( bSegSigIsEnabled ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION );
     coinbaseTx.vin.resize(1);
-    coinbaseTx.vin[0].prevout.SetNull();
+    coinbaseTx.vin[0].SetPrevOutNull();
     coinbaseTx.vout.resize((nSubsidyDev>0)?2:1);
     #ifdef ENABLE_WALLET
     CKeyID pubKeyID;
@@ -696,9 +696,9 @@ void BlockAssembler::addPackageTxs(int &nPackagesSelected, int &nDescendantsUpda
                 for (const auto& thisTransactionInputs : cannabalisedTransaction->vin)
                 {
                     uint256 txHash;
-                    if (GetTxHash(thisTransactionInputs.prevout, txHash) && txHash == cannabalisedInputTransaction->GetHash())
+                    if (GetTxHash(thisTransactionInputs.GetPrevOut(), txHash) && txHash == cannabalisedInputTransaction->GetHash())
                     {
-                        nFee += cannabalisedInputTransaction->vout[thisTransactionInputs.prevout.n].nValue;
+                        nFee += cannabalisedInputTransaction->vout[thisTransactionInputs.GetPrevOut().n].nValue;
                     }
                 }
             }

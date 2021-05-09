@@ -44,8 +44,10 @@ static bool Verify(const CScript& scriptSig, const CScript& scriptPubKey, bool f
     CMutableTransaction txTo(TEST_DEFAULT_TX_VERSION);
     txTo.vin.resize(1);
     txTo.vout.resize(1);
-    txTo.vin[0].prevout.n = 0;
-    txTo.vin[0].prevout.setHash(txFrom.GetHash());
+    COutPoint changePrevOut = txTo.vin[0].GetPrevOut();
+    changePrevOut.n = 0;
+    changePrevOut.setHash(txFrom.GetHash());
+    txTo.vin[0].SetPrevOut(changePrevOut);
     txTo.vin[0].scriptSig = scriptSig;
     txTo.vout[0].nValue = 1;
 
@@ -105,8 +107,10 @@ BOOST_AUTO_TEST_CASE(sign_segsig)
     {
         txTo[i].vin.resize(1);
         txTo[i].vout.resize(1);
-        txTo[i].vin[0].prevout.n = i;
-        txTo[i].vin[0].prevout.setHash(txFrom.GetHash());
+        COutPoint changePrevOut = txTo[i].vin[0].GetPrevOut();
+        changePrevOut.n = i;
+        changePrevOut.setHash(txFrom.GetHash());
+        txTo[i].vin[0].SetPrevOut(changePrevOut);
         txTo[i].vout[0].nValue = 1;
         BOOST_CHECK_MESSAGE(IsMine(keystore, txFrom.vout[i].output.scriptPubKey), strprintf("IsMine %d", i));
     }
@@ -127,7 +131,7 @@ BOOST_AUTO_TEST_CASE(sign_segsig)
             CSegregatedSignatureData segregatedDataSave = txTo[i].vin[0].segregatedSignatureData;
             txTo[i].vin[0].scriptSig = txTo[j].vin[0].scriptSig;
             txTo[i].vin[0].segregatedSignatureData = txTo[j].vin[0].segregatedSignatureData;
-            const CTxOut& output = txFrom.vout[txTo[i].vin[0].prevout.n];
+            const CTxOut& output = txFrom.vout[txTo[i].vin[0].GetPrevOut().n];
             bool sigOK = CScriptCheck(CKeyID(), output.output.scriptPubKey, output.nValue, txTo[i], 0, SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_STRICTENC, false, &txdata, SCRIPT_V2)();
             if (i == j)
                 BOOST_CHECK_MESSAGE(sigOK, strprintf("VerifySignature %d %d", i, j));
@@ -190,8 +194,10 @@ BOOST_AUTO_TEST_CASE(sign)
     {
         txTo[i].vin.resize(1);
         txTo[i].vout.resize(1);
-        txTo[i].vin[0].prevout.n = i;
-        txTo[i].vin[0].prevout.setHash(txFrom.GetHash());
+        COutPoint changePrevOut = txTo[i].vin[0].GetPrevOut();
+        changePrevOut.n = i;
+        changePrevOut.setHash(txFrom.GetHash());
+        txTo[i].vin[0].SetPrevOut(changePrevOut);
         txTo[i].vout[0].nValue = 1;
         BOOST_CHECK_MESSAGE(IsMine(keystore, txFrom.vout[i].output.scriptPubKey), strprintf("IsMine %d", i));
     }
@@ -209,7 +215,7 @@ BOOST_AUTO_TEST_CASE(sign)
         {
             CScript sigSave = txTo[i].vin[0].scriptSig;
             txTo[i].vin[0].scriptSig = txTo[j].vin[0].scriptSig;
-            const CTxOut& output = txFrom.vout[txTo[i].vin[0].prevout.n];
+            const CTxOut& output = txFrom.vout[txTo[i].vin[0].GetPrevOut().n];
             bool sigOK = CScriptCheck(CKeyID(), output.output.scriptPubKey, output.nValue, txTo[i], 0, SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_STRICTENC, false, &txdata, SCRIPT_V1)();
             if (i == j)
                 BOOST_CHECK_MESSAGE(sigOK, strprintf("VerifySignature %d %d", i, j));
@@ -295,8 +301,10 @@ BOOST_AUTO_TEST_CASE(set)
     {
         txTo[i].vin.resize(1);
         txTo[i].vout.resize(1);
-        txTo[i].vin[0].prevout.n = i;
-        txTo[i].vin[0].prevout.setHash(txFrom.GetHash());
+        COutPoint changePrevOut = txTo[i].vin[0].GetPrevOut();
+        changePrevOut.n = i;
+        changePrevOut.setHash(txFrom.GetHash());
+        txTo[i].vin[0].SetPrevOut(changePrevOut);
         txTo[i].vout[0].nValue = 1*CENT;
         txTo[i].vout[0].output.scriptPubKey = inner[i];
         BOOST_CHECK_MESSAGE(IsMine(keystore, txFrom.vout[i].output.scriptPubKey), strprintf("IsMine %d", i));
@@ -432,8 +440,10 @@ BOOST_AUTO_TEST_CASE(AreInputsStandard)
     txTo.vin.resize(5);
     for (int i = 0; i < 5; i++)
     {
-        txTo.vin[i].prevout.n = i;
-        txTo.vin[i].prevout.setHash(txFrom.GetHash());
+        COutPoint changePrevOut = txTo.vin[i].GetPrevOut();
+        changePrevOut.n = i;
+        changePrevOut.setHash(txFrom.GetHash());
+        txTo.vin[i].SetPrevOut(changePrevOut);
     }
     BOOST_CHECK(SignSignature(accountsToTry, txFrom, txTo, 0, SIGHASH_ALL, SignType::Spend));
     BOOST_CHECK(SignSignature(accountsToTry, txFrom, txTo, 1, SIGHASH_ALL, SignType::Spend));
@@ -453,8 +463,10 @@ BOOST_AUTO_TEST_CASE(AreInputsStandard)
     txToNonStd1.vout[0].output.scriptPubKey = GetScriptForDestination(key[1].GetPubKey().GetID());
     txToNonStd1.vout[0].nValue = 1000;
     txToNonStd1.vin.resize(1);
-    txToNonStd1.vin[0].prevout.n = 5;
-    txToNonStd1.vin[0].prevout.setHash(txFrom.GetHash());
+    COutPoint changePrevOut = txToNonStd1.vin[0].GetPrevOut();
+    changePrevOut.n = 5;
+    changePrevOut.setHash(txFrom.GetHash());
+    txToNonStd1.vin[0].SetPrevOut(changePrevOut);
     txToNonStd1.vin[0].scriptSig << std::vector<unsigned char>(sixteenSigops.begin(), sixteenSigops.end());
 
     BOOST_CHECK(!::AreInputsStandard(txToNonStd1, coins));
@@ -465,8 +477,10 @@ BOOST_AUTO_TEST_CASE(AreInputsStandard)
     txToNonStd2.vout[0].output.scriptPubKey = GetScriptForDestination(key[1].GetPubKey().GetID());
     txToNonStd2.vout[0].nValue = 1000;
     txToNonStd2.vin.resize(1);
-    txToNonStd2.vin[0].prevout.n = 6;
-    txToNonStd2.vin[0].prevout.setHash(txFrom.GetHash());
+    changePrevOut = txToNonStd2.vin[0].GetPrevOut();
+    changePrevOut.n = 6;
+    changePrevOut.setHash(txFrom.GetHash());
+    txToNonStd2.vin[0].SetPrevOut(changePrevOut);
     txToNonStd2.vin[0].scriptSig << std::vector<unsigned char>(twentySigops.begin(), twentySigops.end());
 
     BOOST_CHECK(!::AreInputsStandard(txToNonStd2, coins));

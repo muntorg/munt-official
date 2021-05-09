@@ -287,7 +287,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             isminetype mine = static_cast<const CExtWallet*>(wallet)->IsMine(*account, inputs[0]);
                             if (mine)
                             {
-                                AddAddressForOutPoint(wallet, inputs[0].prevout, subSend.address);
+                                AddAddressForOutPoint(wallet, inputs[0].GetPrevOut(), subSend.address);
                                 subSend.type = TransactionRecord::WitnessFundSend;
                                 subSend.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
                                 subSend.actionAccountUUID = subSend.fromAccountUUID = account->getUUID();
@@ -434,7 +434,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             }
                             if (myInput)
                             {
-                                AddAddressForOutPoint(wallet, myInput->prevout, subSend.address);
+                                AddAddressForOutPoint(wallet, myInput->GetPrevOut(), subSend.address);
                                 subSend.type = TransactionRecord::WitnessIncreaseSend;
                                 subSend.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
                                 subSend.actionAccountUUID = subSend.fromAccountUUID = account->getUUID();
@@ -516,7 +516,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                             sub.credit -= wallet->GetDebit(txin, ISMINE_SPENDABLE);
                             //fixme: (FUT) Add a 'payment to self' sub here as well.
                         }
-                        AddAddressForOutPoint(wallet, txin.prevout, sub.address);
+                        AddAddressForOutPoint(wallet, txin.GetPrevOut(), sub.address);
                     }
                     sub.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
                     std:: string addressOut;

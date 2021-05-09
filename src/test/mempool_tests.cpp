@@ -45,8 +45,10 @@ BOOST_AUTO_TEST_CASE(MempoolRemoveTest)
     {
         txChild[i].vin.resize(1);
         txChild[i].vin[0].scriptSig = CScript() << OP_11;
-        txChild[i].vin[0].prevout.setHash(txParent.GetHash());
-        txChild[i].vin[0].prevout.n = i;
+        COutPoint changePrevOut = txChild[i].vin[0].GetPrevOut();
+        changePrevOut.setHash(txParent.GetHash());
+        changePrevOut.n = i;
+        txChild[i].vin[0].SetPrevOut(changePrevOut);
         txChild[i].vout.resize(1);
         txChild[i].vout[0].output.scriptPubKey = CScript() << OP_11 << OP_EQUAL;
         txChild[i].vout[0].nValue = 11000LL;
@@ -59,8 +61,10 @@ BOOST_AUTO_TEST_CASE(MempoolRemoveTest)
     {
         txGrandChild[i].vin.resize(1);
         txGrandChild[i].vin[0].scriptSig = CScript() << OP_11;
-        txGrandChild[i].vin[0].prevout.setHash(txChild[i].GetHash());
-        txGrandChild[i].vin[0].prevout.n = 0;
+        COutPoint changePrevOut = txChild[i].vin[0].GetPrevOut();
+        changePrevOut.setHash(txChild[i].GetHash());
+        changePrevOut.n = 0;
+        txGrandChild[i].vin[0].SetPrevOut(changePrevOut);
         txGrandChild[i].vout.resize(1);
         txGrandChild[i].vout[0].output.scriptPubKey = CScript() << OP_11 << OP_EQUAL;
         txGrandChild[i].vout[0].nValue = 11000LL;
@@ -196,7 +200,7 @@ BOOST_AUTO_TEST_CASE(MempoolIndexingTest)
     setAncestors.insert(pool.mapTx.find(tx6.GetHash()));
     CMutableTransaction tx7 = CMutableTransaction(TEST_DEFAULT_TX_VERSION);
     tx7.vin.resize(1);
-    tx7.vin[0].prevout = COutPoint(tx6.GetHash(), 0);
+    tx7.vin[0].SetPrevOut(COutPoint(tx6.GetHash(), 0));
     tx7.vin[0].scriptSig = CScript() << OP_11;
     tx7.vout.resize(2);
     tx7.vout[0].output.scriptPubKey = CScript() << OP_11 << OP_EQUAL;
@@ -221,7 +225,7 @@ BOOST_AUTO_TEST_CASE(MempoolIndexingTest)
     /* low fee child of tx7 */
     CMutableTransaction tx8 = CMutableTransaction(TEST_DEFAULT_TX_VERSION);
     tx8.vin.resize(1);
-    tx8.vin[0].prevout = COutPoint(tx7.GetHash(), 0);
+    tx8.vin[0].SetPrevOut(COutPoint(tx7.GetHash(), 0));
     tx8.vin[0].scriptSig = CScript() << OP_11;
     tx8.vout.resize(1);
     tx8.vout[0].output.scriptPubKey = CScript() << OP_11 << OP_EQUAL;
@@ -236,7 +240,7 @@ BOOST_AUTO_TEST_CASE(MempoolIndexingTest)
     /* low fee child of tx7 */
     CMutableTransaction tx9 = CMutableTransaction(TEST_DEFAULT_TX_VERSION);
     tx9.vin.resize(1);
-    tx9.vin[0].prevout = COutPoint(tx7.GetHash(), 1);
+    tx9.vin[0].SetPrevOut(COutPoint(tx7.GetHash(), 1));
     tx9.vin[0].scriptSig = CScript() << OP_11;
     tx9.vout.resize(1);
     tx9.vout[0].output.scriptPubKey = CScript() << OP_11 << OP_EQUAL;
@@ -255,9 +259,9 @@ BOOST_AUTO_TEST_CASE(MempoolIndexingTest)
     /* tx10 depends on tx8 and tx9 and has a high fee*/
     CMutableTransaction tx10 = CMutableTransaction(TEST_DEFAULT_TX_VERSION);
     tx10.vin.resize(2);
-    tx10.vin[0].prevout = COutPoint(tx8.GetHash(), 0);
+    tx10.vin[0].SetPrevOut(COutPoint(tx8.GetHash(), 0));
     tx10.vin[0].scriptSig = CScript() << OP_11;
-    tx10.vin[1].prevout = COutPoint(tx9.GetHash(), 0);
+    tx10.vin[1].SetPrevOut(COutPoint(tx9.GetHash(), 0));
     tx10.vin[1].scriptSig = CScript() << OP_11;
     tx10.vout.resize(1);
     tx10.vout[0].output.scriptPubKey = CScript() << OP_11 << OP_EQUAL;
@@ -408,7 +412,7 @@ BOOST_AUTO_TEST_CASE(MempoolAncestorIndexingTest)
 
     CMutableTransaction tx7 = CMutableTransaction(TEST_DEFAULT_TX_VERSION);
     tx7.vin.resize(1);
-    tx7.vin[0].prevout = COutPoint(tx6.GetHash(), 0);
+    tx7.vin[0].SetPrevOut(COutPoint(tx6.GetHash(), 0));
     tx7.vin[0].scriptSig = CScript() << OP_11;
     tx7.vout.resize(1);
     tx7.vout[0].output.scriptPubKey = CScript() << OP_11 << OP_EQUAL;
@@ -470,7 +474,7 @@ BOOST_AUTO_TEST_CASE(MempoolSizeLimitTest)
     pool.addUnchecked(tx2.GetHash(), entry.FromTx(tx2));
     CMutableTransaction tx3 = CMutableTransaction(TEST_DEFAULT_TX_VERSION);
     tx3.vin.resize(1);
-    tx3.vin[0].prevout = COutPoint(tx2.GetHash(), 0);
+    tx3.vin[0].SetPrevOut(COutPoint(tx2.GetHash(), 0));
     tx3.vin[0].scriptSig = CScript() << OP_2;
     tx3.vout.resize(1);
     tx3.vout[0].output.scriptPubKey = CScript() << OP_3 << OP_EQUAL;

@@ -256,7 +256,7 @@ public:
                 {
                     CMutableTransaction txNew(CTransaction::CURRENT_VERSION);
                     txNew.vin.resize(1);
-                    txNew.vin[0].prevout.SetNull();
+                    txNew.vin[0].SetPrevOutNull();
                     txNew.vin[0].segregatedSignatureData.stack.clear();
                     txNew.vin[0].segregatedSignatureData.stack.push_back(std::vector<unsigned char>());
                     CVectorWriter(0, 0, txNew.vin[0].segregatedSignatureData.stack[0], 0) << VARINT(0);

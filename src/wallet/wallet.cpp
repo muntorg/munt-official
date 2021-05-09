@@ -487,9 +487,9 @@ std::set<uint256> CWallet::GetConflicts(const uint256& txid) const
 
     for(const CTxIn& txin : wtx.tx->vin)
     {
-        if (mapTxSpends.count(txin.prevout) <= 1)
+        if (mapTxSpends.count(txin.GetPrevOut()) <= 1)
             continue;  // No conflict if zero or one spends
-        range = mapTxSpends.equal_range(txin.prevout);
+        range = mapTxSpends.equal_range(txin.GetPrevOut());
         for (TxSpends::const_iterator _it = range.first; _it != range.second; ++_it)
             result.insert(_it->second);
     }
@@ -634,13 +634,13 @@ bool CWallet::IsSpent(const COutPoint& outpoint) const
                 if (mit->second.tx->vin.size() > 0)
                 {
                     // Unconfirmed witness transactions never spend, otherwise we get strange display/balance issues with orphaned witness transactions.
-                    const CWalletTx* prevtx = GetWalletTx(mit->second.tx->vin[0].prevout);
+                    const CWalletTx* prevtx = GetWalletTx(mit->second.tx->vin[0].GetPrevOut());
                     if (prevtx)
                     {
                         if (prevtx->tx->vout.size() == 0)
                             return true;
 
-                        const auto& prevOut = prevtx->tx->vout[mit->second.tx->vin[0].prevout.n].output;
+                        const auto& prevOut = prevtx->tx->vout[mit->second.tx->vin[0].GetPrevOut().n].output;
                         if ( prevOut.nType == ScriptLegacyOutput )
                         {
                             return true; // Spent
@@ -680,9 +680,9 @@ void CWallet::AddToSpends(const uint256& wtxid)
 
     for(const CTxIn& txin : thisTx.tx->vin)
     {
-        if (!txin.prevout.IsNull() || !thisTx.IsPoW2WitnessCoinBase())
+        if (!txin.GetPrevOut().IsNull() || !thisTx.IsPoW2WitnessCoinBase())
         {
-            AddToSpends(txin.prevout, wtxid);
+            AddToSpends(txin.GetPrevOut(), wtxid);
         }
     }
 }
@@ -1091,7 +1091,7 @@ bool CWallet::LoadToWallet(const CWalletTx& wtxIn)
     wtxOrdered.insert(std::pair(wtx.nOrderPos, TxPair(&wtx, nullptr)));
     AddToSpends(hash);
     for (const CTxIn& txin : wtx.tx->vin) {
-        const CWalletTx* prevtx = GetWalletTx(txin.prevout);
+        const CWalletTx* prevtx = GetWalletTx(txin.GetPrevOut());
         if (prevtx) {
             if (prevtx->nIndex == -1 && !prevtx->hashUnset()) {
                 MarkConflicted(prevtx->hashBlock, wtx.GetHash());
@@ -1134,7 +1134,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
         {
             for(const CTxIn& txin : tx.vin)
             {
-                std::pair<TxSpends::const_iterator, TxSpends::const_iterator> range = mapTxSpends.equal_range(txin.prevout);
+                std::pair<TxSpends::const_iterator, TxSpends::const_iterator> range = mapTxSpends.equal_range(txin.GetPrevOut());
                 while (range.first != range.second)
                 {
                     if (range.first->second != tx.GetHash())
@@ -1155,7 +1155,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             ClearCacheForTransaction(tx.GetHash());
         for(const auto& txin : tx.vin)
         {
-            const CWalletTx* wtx = GetWalletTx(txin.prevout);
+            const CWalletTx* wtx = GetWalletTx(txin.GetPrevOut());
             if (wtx)
                 ClearCacheForTransaction(wtx->GetHash());
         }
@@ -1218,7 +1218,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             for(const auto& txin : tx.vin)
             {
                 uint256 txHash;
-                if (CWallet::GetTxHash(txin.prevout, txHash))
+                if (CWallet::GetTxHash(txin.GetPrevOut(), txHash))
                 {
                     bool fExistedIncoming = mapWallet.count(txHash) != 0;
                     if (!fExistedIncoming)
@@ -1295,7 +1295,7 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
             // available of the outputs it spends. So force those to be recomputed
             for(const CTxIn& txin : wtx.tx->vin)
             {
-                CWalletTx* prev = GetWalletTx(txin.prevout);
+                CWalletTx* prev = GetWalletTx(txin.GetPrevOut());
                 if (prev)
                     prev->MarkDirty();
             }
@@ -1386,7 +1386,7 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
             // available of the outputs it spends. So force those to be recomputed
             for (const CTxIn& txin : wtx.tx->vin)
             {
-                CWalletTx* prev = GetWalletTx(txin.prevout);
+                CWalletTx* prev = GetWalletTx(txin.GetPrevOut());
                 if (prev)
                     prev->MarkDirty();
             }
@@ -1405,7 +1405,7 @@ void CWallet::SyncTransaction(const CTransactionRef& ptx, const CBlockIndex *pin
     // recomputed, also:
     for(const CTxIn& txin : tx.vin)
     {
-        CWalletTx* prev = GetWalletTx(txin.prevout);
+        CWalletTx* prev = GetWalletTx(txin.GetPrevOut());
         if (prev)
             prev->MarkDirty();
     }
@@ -1607,10 +1607,10 @@ bool CWalletTx::IsTrusted() const
     for(const CTxIn& txin : tx->vin)
     {
         // Transactions not sent by us: not trusted
-        const CWalletTx* parent = pwallet->GetWalletTx(txin.prevout);
+        const CWalletTx* parent = pwallet->GetWalletTx(txin.GetPrevOut());
         if (parent == NULL || parent->tx->vout.size() == 0)
             return false;
-        const CTxOut& parentOut = parent->tx->vout[txin.prevout.n];
+        const CTxOut& parentOut = parent->tx->vout[txin.GetPrevOut().n];
         if (pwallet->IsMine(parentOut) != ISMINE_SPENDABLE)
             return false;
     }
@@ -1883,7 +1883,7 @@ const CTxOut& CWallet::FindNonChangeParentOutput(const CTransaction& tx, int out
     int n = output;
     while (IsChange(ptx->vout[n]) && ptx->vin.size() > 0)
     {
-        const COutPoint& prevout = ptx->vin[0].prevout;
+        const COutPoint& prevout = ptx->vin[0].GetPrevOut();
         CWalletTx* prev = GetWalletTx(prevout);
         if (!prev || prev->tx->vout.size() <= prevout.n || !IsMine(prev->tx->vout[prevout.n]))
         {
@@ -2309,8 +2309,8 @@ std::set< std::set<CTxDestination> > CWallet::GetAddressGroupings()
                 CTxDestination address;
                 if(!IsMine(txin)) /* If this input isn't mine, ignore it */
                     continue;
-                const CWalletTx* prev = GetWalletTx(txin.prevout);
-                if(!prev || !ExtractDestination(prev->tx->vout[txin.prevout.n], address))
+                const CWalletTx* prev = GetWalletTx(txin.GetPrevOut());
+                if(!prev || !ExtractDestination(prev->tx->vout[txin.GetPrevOut().n], address))
                     continue;
                 grouping.insert(address);
                 any_mine = true;

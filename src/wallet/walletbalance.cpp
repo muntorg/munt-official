@@ -24,14 +24,14 @@ CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter& filter, CAccoun
     CAmount ret = 0;
     {
         LOCK(cs_wallet);
-        const CWalletTx* prev = GetWalletTx(txin.prevout);
+        const CWalletTx* prev = GetWalletTx(txin.GetPrevOut());
         if (prev)
         {
-            if (txin.prevout.n < prev->tx->vout.size())
+            if (txin.GetPrevOut().n < prev->tx->vout.size())
             {
-                if ( (forAccount && (::IsMine(*forAccount, prev->tx->vout[txin.prevout.n]) & filter)) || (!forAccount && (IsMine(prev->tx->vout[txin.prevout.n]) & filter)) )
+                if ( (forAccount && (::IsMine(*forAccount, prev->tx->vout[txin.GetPrevOut().n]) & filter)) || (!forAccount && (IsMine(prev->tx->vout[txin.GetPrevOut().n]) & filter)) )
                 {
-                    ret = prev->tx->vout[txin.prevout.n].nValue;
+                    ret = prev->tx->vout[txin.GetPrevOut().n].nValue;
                 }
             }
         }

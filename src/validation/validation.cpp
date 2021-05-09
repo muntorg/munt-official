@@ -289,7 +289,7 @@ bool CheckSequenceLocks(const CTransaction &tx, int flags, LockPoints* lp, bool 
         {
             const CTxIn& txin = tx.vin[txinIndex];
             Coin coin;
-            if (!viewMemPool.GetCoin(txin.prevout, coin))
+            if (!viewMemPool.GetCoin(txin.GetPrevOut(), coin))
             {
                 return error("%s: Missing input", __func__);
             }
@@ -461,10 +461,10 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, CTxUndo &txund
         //fixme: (FUT) (MED) See if we can bring back the reserve efficiency here.
         //txundo.vprevout.reserve(tx.vin.size());
         for(const CTxIn &txin : tx.vin) {
-            if (!txin.prevout.IsNull())
+            if (!txin.GetPrevOut().IsNull())
             {
                 txundo.vprevout.emplace_back();
-                inputs.SpendCoin(txin.prevout, &txundo.vprevout.back());
+                inputs.SpendCoin(txin.GetPrevOut(), &txundo.vprevout.back());
             }
         }
     }
@@ -536,7 +536,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
         {
             for (unsigned int i = 0; i < tx.vin.size(); i++)
             {
-                const COutPoint &prevout = tx.vin[i].prevout;
+                const COutPoint &prevout = tx.vin[i].GetPrevOut();
                 if (prevout.IsNull() && tx.IsPoW2WitnessCoinBase())
                     continue;
                 const Coin& coin = inputs.AccessCoin(prevout);
@@ -781,9 +781,9 @@ DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* pindex,
                 }
                 for (unsigned int j = tx.vin.size(); j-- > 0;)
                 {
-                    if (!tx.vin[j].prevout.IsNull())
+                    if (!tx.vin[j].GetPrevOut().IsNull())
                     {
-                        const COutPoint &out = tx.vin[j].prevout;
+                        const COutPoint &out = tx.vin[j].GetPrevOut();
                         int res = ApplyTxInUndo(std::move(txundo.vprevout[0]), view, out);
                         if (res == DISCONNECT_FAILED)
                             return DISCONNECT_FAILED;
@@ -800,7 +800,7 @@ DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* pindex,
                 }
                 for (unsigned int j = tx.vin.size(); j-- > 0;)
                 {
-                    const COutPoint &out = tx.vin[j].prevout;
+                    const COutPoint &out = tx.vin[j].GetPrevOut();
                     int res = ApplyTxInUndo(std::move(txundo.vprevout[j]), view, out);
                     if (res == DISCONNECT_FAILED)
                         return DISCONNECT_FAILED;
@@ -1150,17 +1150,17 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
             prevheights.resize(tx.vin.size());
             for (unsigned int inputIndex = 0; inputIndex < tx.vin.size(); inputIndex++)
             {
-                if (tx.vin[inputIndex].prevout.IsNull())
+                if (tx.vin[inputIndex].GetPrevOut().IsNull())
                 {
                     prevheights[inputIndex] = 0;
                 }
                 else
                 {
-                    if (!view.HaveCoin(tx.vin[inputIndex].prevout))
+                    if (!view.HaveCoin(tx.vin[inputIndex].GetPrevOut()))
                     {
                         return state.DoS(100, error("ConnectBlock(): witness coinbase inputs missing/spent"), REJECT_INVALID, "bad-txns-inputs-missingorspent");
                     }
-                    prevheights[inputIndex] = view.AccessCoin(tx.vin[inputIndex].prevout).nHeight;
+                    prevheights[inputIndex] = view.AccessCoin(tx.vin[inputIndex].GetPrevOut()).nHeight;
                 }
             }
             // Check that transaction is BIP68 final
@@ -1191,7 +1191,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                 std::vector<int> prevheights;
                 prevheights.resize(tx.vin.size());
                 for (size_t j = 0; j < tx.vin.size(); j++) {
-                    prevheights[j] = view.AccessCoin(tx.vin[j].prevout).nHeight;
+                    prevheights[j] = view.AccessCoin(tx.vin[j].GetPrevOut()).nHeight;
                 }
 
                 if (!SequenceLocks(tx, nLockTimeFlags, &prevheights, *pindex))
@@ -1350,7 +1350,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         if (block.vtx[nWitnessCoinbaseIndex]->vin.size() != 2)
             return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid vin size)"), REJECT_INVALID, "bad-witness-cb");
 
-        if (!block.vtx[nWitnessCoinbaseIndex]->vin[0].prevout.IsNull())
+        if (!block.vtx[nWitnessCoinbaseIndex]->vin[0].GetPrevOut().IsNull())
             return state.DoS(100, error("ConnectBlock(): PoW2 witness coinbase invalid prevout)"), REJECT_INVALID, "bad-witness-cb");
 
         if (block.vtx[nWitnessCoinbaseIndex]->vin[0].GetSequence(block.vtx[nWitnessCoinbaseIndex]->nVersion) != 0)

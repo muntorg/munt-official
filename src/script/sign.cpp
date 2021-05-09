@@ -378,8 +378,8 @@ bool SignSignature(const std::vector<CKeyStore*>& accountsToTry, const CTransact
 {
     assert(nIn < txTo.vin.size());
     CTxIn& txin = txTo.vin[nIn];
-    assert(txin.prevout.n < txFrom.vout.size());
-    const CTxOut& txout = txFrom.vout[txin.prevout.n];
+    assert(txin.GetPrevOut().n < txFrom.vout.size());
+    const CTxOut& txout = txFrom.vout[txin.GetPrevOut().n];
 
     return SignSignature(accountsToTry, txout, txTo, nIn, txout.nValue, nHashType, type);
 }
