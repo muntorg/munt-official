@@ -26,6 +26,7 @@
 
 CWitViewDB *ppow2witdbview = NULL;
 std::shared_ptr<CCoinsViewCache> ppow2witTip = NULL;
+SimplifiedWitnessUTXOSet pow2SimplifiedWitnessUTXO;
 
 //fixme: (PHASE5) Can remove this.
 int GetPoW2WitnessCoinbaseIndex(const CBlock& block)
@@ -639,6 +640,619 @@ bool witnessHasExpired(uint64_t nWitnessAge, uint64_t nWitnessWeight, uint64_t n
     return ( nWitnessAge > gMaximumParticipationAge ) || ( nWitnessAge > nExpectedWitnessPeriod );
 }
 
+const char changeTypeCreation = 0;
+const char changeTypeSpend = 1;
+const char changeTypeRenew = 2;
+const char changeTypeRearrange = 3;
+const char changeTypeIncrease = 4;
+const char changeTypeChangeKey = 5;
+const char changeTypeWitnessAction = 6;
+
+struct deltaItem
+{
+public:
+    int changeType;
+    std::vector<SimplifiedWitnessRouletteItem> removedItems;
+    std::vector<SimplifiedWitnessRouletteItem> addedItems;
+};
+
+bool GenerateSimplifiedWitnessUTXODeltaUndoForHeader(std::vector<unsigned char>& undoWitnessUTXODelta, SimplifiedWitnessUTXOSet& pow2SimplifiedWitnessUTXOUndo, std::vector<deltaItem>& deltaItems)
+{
+    CVectorWriter deltaUndoStream(SER_NETWORK, 0, undoWitnessUTXODelta, 0);
+
+    // Play back the changes to generate the undo info
+    // Note that we have to actually perform the changes as we go, and not just serialise them
+    // The reason for this is that each operation that does an insert/remove can change the index of all future insert/removes
+    // So if we just serialise the indexes will be wrong when we replay the changes later
+    
+    // First handle the witness that signed the block as a special case, as there is always only one of these at the start, then loop for everything else.
+    {
+        // Remove the updated witness item and put back the original one
+        const auto& deltaWitnessItem = deltaItems[0];
+
+        assert(deltaWitnessItem.addedItems.size() == 1);
+        assert(deltaWitnessItem.removedItems.size() == 1);
+        assert(deltaWitnessItem.changeType == changeTypeWitnessAction);
+
+        const auto& addedItemIter = pow2SimplifiedWitnessUTXOUndo.witnessCandidates.find(deltaWitnessItem.addedItems[0]);
+        
+        deltaUndoStream << pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addedItemIter);
+        deltaUndoStream << deltaWitnessItem.removedItems[0].nValue;
+        deltaUndoStream << deltaWitnessItem.removedItems[0].blockNumber;
+        deltaUndoStream << deltaWitnessItem.removedItems[0].transactionIndex;
+        deltaUndoStream << deltaWitnessItem.removedItems[0].transactionOutputIndex;
+        
+        pow2SimplifiedWitnessUTXOUndo.witnessCandidates.erase(addedItemIter);
+        pow2SimplifiedWitnessUTXOUndo.witnessCandidates.insert(deltaWitnessItem.removedItems[0]);
+        
+        deltaItems.erase(deltaItems.begin());
+    }
+    
+    // Loop for remaining changes, and serialise along with change type identifier
+    for (const auto& deltaItem : deltaItems)
+    {
+        switch(deltaItem.changeType)
+        {
+            case changeTypeWitnessAction:
+            {
+                continue;
+            }
+            case changeTypeCreation:
+            {
+                // We delete the created item
+                assert(deltaItem.addedItems.size() == 1);
+                assert(deltaItem.removedItems.size() == 0);
+
+                auto addedItemIter = pow2SimplifiedWitnessUTXOUndo.witnessCandidates.find(deltaItem.addedItems[0]);
+                               
+                deltaUndoStream << changeTypeCreation;
+                deltaUndoStream << pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addedItemIter);
+                pow2SimplifiedWitnessUTXOUndo.witnessCandidates.erase(addedItemIter);
+                
+                break;
+            }
+            case changeTypeSpend:
+            {
+                // We add the spent item back into the set
+                assert(deltaItem.addedItems.size() == 0);
+                assert(deltaItem.removedItems.size() == 1);
+
+                auto originalItem = deltaItem.removedItems[0];
+                pow2SimplifiedWitnessUTXOUndo.witnessCandidates.insert(originalItem);
+
+                deltaUndoStream << changeTypeSpend;
+                deltaUndoStream << originalItem.blockNumber;
+                deltaUndoStream << originalItem.transactionIndex;
+                deltaUndoStream << originalItem.transactionOutputIndex;
+                deltaUndoStream << originalItem.nValue;
+                deltaUndoStream << originalItem.lockFromBlock;
+                deltaUndoStream << originalItem.lockUntilBlock;
+                deltaUndoStream << originalItem.witnessPubKeyID;
+                
+                break;
+            }
+            case changeTypeRenew:
+            {
+                // Revert the renewed item to its original state/position
+                assert(deltaItem.addedItems.size() == 1);
+                assert(deltaItem.removedItems.size() == 1);
+                
+                auto& renewedItem = deltaItem.addedItems[0];
+                auto renewedItemIter = pow2SimplifiedWitnessUTXOUndo.witnessCandidates.find(renewedItem);
+                auto& originalItem = deltaItem.removedItems[0];
+                
+                pow2SimplifiedWitnessUTXOUndo.witnessCandidates.erase(renewedItemIter);
+                pow2SimplifiedWitnessUTXOUndo.witnessCandidates.insert(originalItem);
+
+                deltaUndoStream << changeTypeRenew;
+                deltaUndoStream << pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(renewedItemIter);
+                deltaUndoStream << originalItem.blockNumber;
+                deltaUndoStream << originalItem.transactionIndex;
+                deltaUndoStream << originalItem.transactionOutputIndex;
+                
+                break;
+            }
+            case changeTypeRearrange:
+            {
+                // Remove all the rearranged items and put back the originals
+                assert(deltaItem.addedItems.size() > 0);
+                assert(deltaItem.removedItems.size() > 0);
+                                
+                deltaUndoStream << changeTypeRearrange << deltaItem.addedItems.size() << deltaItem.removedItems.size();
+
+                for (const auto& addItem : deltaItem.addedItems)
+                {
+                    auto addIter = pow2SimplifiedWitnessUTXOUndo.witnessCandidates.find(addItem);
+                    deltaUndoStream << (uint64_t)pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addIter);
+                    pow2SimplifiedWitnessUTXOUndo.witnessCandidates.erase(addIter);
+                }
+                for (const auto& removeItem : deltaItem.removedItems)
+                {
+                    deltaUndoStream << removeItem.blockNumber;
+                    deltaUndoStream << removeItem.transactionIndex;
+                    deltaUndoStream << removeItem.transactionOutputIndex;
+                    deltaUndoStream << removeItem.nValue;
+                    pow2SimplifiedWitnessUTXOUndo.witnessCandidates.insert(removeItem);
+                }
+                break;
+            }
+            case changeTypeIncrease:
+            {
+                // Remove all the increased items and put back the originals
+                assert(deltaItem.addedItems.size() > 0);
+                assert(deltaItem.removedItems.size() > 0);
+                                
+                deltaUndoStream << changeTypeIncrease << deltaItem.addedItems.size() << deltaItem.removedItems.size() << deltaItem.removedItems[0].lockUntilBlock;
+
+                for (const auto& addItem : deltaItem.addedItems)
+                {
+                    auto addIter = pow2SimplifiedWitnessUTXOUndo.witnessCandidates.find(addItem);
+                    deltaUndoStream << (uint64_t)pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addIter);
+                    pow2SimplifiedWitnessUTXOUndo.witnessCandidates.erase(addIter);
+                }
+                for (const auto& removeItem : deltaItem.removedItems)
+                {
+                    deltaUndoStream << removeItem.blockNumber;
+                    deltaUndoStream << removeItem.transactionIndex;
+                    deltaUndoStream << removeItem.transactionOutputIndex;
+                    deltaUndoStream << removeItem.nValue;
+                    deltaUndoStream << removeItem.lockFromBlock;
+                    pow2SimplifiedWitnessUTXOUndo.witnessCandidates.insert(removeItem);
+                }
+                break;
+            }
+            case changeTypeChangeKey:
+            {
+                // Remove all the updated items and put back the items with their original key
+                assert(deltaItem.addedItems.size() > 0);
+                assert(deltaItem.removedItems.size() > 0);
+                assert(deltaItem.addedItems.size() == deltaItem.removedItems.size());
+                
+                deltaUndoStream << changeTypeChangeKey << deltaItem.removedItems.size() << deltaItem.removedItems[0].witnessPubKeyID;
+                for (uint64_t i=0; i < deltaItem.addedItems.size(); ++i)
+                {
+                    // Remove added item
+                    auto addIter = pow2SimplifiedWitnessUTXOUndo.witnessCandidates.find(deltaItem.addedItems[i]);                    
+                    deltaUndoStream << pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addIter);
+                    
+                    pow2SimplifiedWitnessUTXOUndo.witnessCandidates.erase(addIter);
+                    auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXOUndo.witnessCandidates.insert(deltaItem.removedItems[i]);
+                    if (!didInsert)
+                        return false;
+                    
+                    // Place back original item
+                    deltaUndoStream << deltaItem.removedItems[i].blockNumber;
+                    deltaUndoStream << deltaItem.removedItems[i].transactionIndex;
+                    deltaUndoStream << deltaItem.removedItems[i].transactionOutputIndex;
+                }
+                break;
+            }
+        }
+    }
+    return true;
+}
+
+bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2SimplifiedWitnessUTXO, std::vector<unsigned char>& undoWitnessUTXODelta)
+{
+    VectorReader deltaUndoStream(SER_NETWORK, 0, undoWitnessUTXODelta, 0);
+    
+    // First handle the witness that signed the block as a special case, as there is always only one of these at the start, then loop for everything else.
+    {
+        uint64_t selectedWitnessIndex;
+        deltaUndoStream >> selectedWitnessIndex;
+        
+        auto witnessIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(selectedWitnessIndex);
+        SimplifiedWitnessRouletteItem witnessItem = *witnessIter;
+        SimplifiedWitnessRouletteItem updatedWitnessItem = witnessItem;
+        deltaUndoStream >> updatedWitnessItem.nValue;
+        deltaUndoStream >> updatedWitnessItem.blockNumber;
+        deltaUndoStream >> updatedWitnessItem.transactionIndex;
+        deltaUndoStream >> updatedWitnessItem.transactionOutputIndex;        
+        
+        pow2SimplifiedWitnessUTXO.witnessCandidates.erase(witnessIter);
+        auto [iter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(updatedWitnessItem);
+        if (!didInsert)
+            return false;
+    }
+    
+    // Rest of the changes are encoded with a type
+    char changeType;
+    while (!deltaUndoStream.empty())
+    {
+        deltaUndoStream >> changeType;
+        switch(changeType)
+        {
+            // Delete the created item
+            case changeTypeCreation:
+            {
+                uint64_t createdItemIndex;
+                deltaUndoStream >> createdItemIndex;
+                pow2SimplifiedWitnessUTXO.witnessCandidates.erase(pow2SimplifiedWitnessUTXO.witnessCandidates.nth(createdItemIndex));
+                break;
+            }
+            // Recreate the deleted/spent item
+            case changeTypeSpend:
+            {
+                SimplifiedWitnessRouletteItem item;
+                deltaUndoStream >> item.blockNumber;
+                deltaUndoStream >> item.transactionIndex;
+                deltaUndoStream >> item.transactionOutputIndex;
+                deltaUndoStream >> item.nValue;
+                deltaUndoStream >> item.lockFromBlock;
+                deltaUndoStream >> item.lockUntilBlock;
+                deltaUndoStream >> item.witnessPubKeyID;
+                
+                auto [iter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
+                if (!didInsert)
+                    return false;
+
+                break;
+            }
+            // Remove the renewed item and place back the original item
+            case changeTypeRenew:
+            {
+                uint64_t renewedItemIndex;
+                deltaUndoStream >> renewedItemIndex;
+                
+                auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(renewedItemIndex);
+                SimplifiedWitnessRouletteItem item = *itemIter;
+                SimplifiedWitnessRouletteItem modifiedItem = item;
+                deltaUndoStream >> modifiedItem.blockNumber;
+                deltaUndoStream >> modifiedItem.transactionIndex;
+                deltaUndoStream >> modifiedItem.transactionOutputIndex;
+                
+                pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
+                auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                if (!didInsert)
+                    return false;
+                
+                break;
+            }
+            // Perform the re-arrangement but in reverse
+            case changeTypeRearrange:
+            {
+                uint64_t numItemsToRemove;
+                uint64_t numItemsToAdd;
+                deltaUndoStream >> numItemsToRemove >> numItemsToAdd;
+                
+                SimplifiedWitnessRouletteItem item;
+                for (uint64_t i=0; i<numItemsToRemove; ++i)
+                {
+                    uint64_t outputIndex;
+                    deltaUndoStream >> outputIndex;
+                    auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(outputIndex);
+                    if (i == 0)
+                    {
+                        item = *itemIter;
+                    }
+                    pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
+                }
+                for (uint64_t i=0; i<numItemsToAdd; ++i)
+                {
+                    deltaUndoStream >> item.blockNumber;
+                    deltaUndoStream >> item.transactionIndex;
+                    deltaUndoStream >> item.transactionOutputIndex;
+                    deltaUndoStream >> item.nValue;
+                    
+                    auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
+                    if (!didInsert)
+                        return false;
+                }
+                break;
+            }
+            // Reverse the increase/re-arrangement
+            case changeTypeIncrease:
+            {
+                uint64_t numItemsToRemove;
+                uint64_t numItemsToAdd;
+                uint64_t originalLockUntilBlock;
+                deltaUndoStream >> numItemsToRemove >> numItemsToAdd >> originalLockUntilBlock;
+                
+                SimplifiedWitnessRouletteItem item;
+                for (uint64_t i=0; i<numItemsToRemove; ++i)
+                {
+                    uint64_t outputIndex;
+                    deltaUndoStream >> outputIndex;
+                    auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(outputIndex);
+                    if (i == 0)
+                    {
+                        item = *itemIter;
+                        item.lockUntilBlock = originalLockUntilBlock;
+                    }
+                    pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
+                }
+                for (uint64_t i=0; i<numItemsToAdd; ++i)
+                {
+                    deltaUndoStream >> item.blockNumber;
+                    deltaUndoStream >> item.transactionIndex;
+                    deltaUndoStream >> item.transactionOutputIndex;
+                    deltaUndoStream >> item.nValue;
+                    deltaUndoStream >> item.lockFromBlock;
+                    
+                    auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
+                    if (!didInsert)
+                        return false;
+                }
+                break;
+            }
+            // Change the key back
+            case changeTypeChangeKey:
+            {
+                uint64_t numItems;
+                deltaUndoStream >> numItems;
+                CKeyID witnessKeyID;
+                deltaUndoStream >> witnessKeyID;
+                
+                for (uint64_t i=0; i < numItems; ++i )
+                {
+                    uint64_t itemIndex;
+                    deltaUndoStream >> itemIndex;
+                    auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(itemIndex);
+                    SimplifiedWitnessRouletteItem item = *itemIter;
+                    
+                    item.witnessPubKeyID = witnessKeyID;
+                    deltaUndoStream >> item.blockNumber;
+                    deltaUndoStream >> item.transactionIndex;
+                    deltaUndoStream >> item.transactionOutputIndex;
+                    
+                    pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
+                    auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
+                    if (!didInsert)
+                        return false;
+                }
+                break;
+            }
+        }
+    }
+    return true;
+}
+
+//fixme: (WITNESS_SYNC) - REMOVE AFTER TESTING
+#define EXTRA_DELTA_TESTS 1
+
+bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, SimplifiedWitnessUTXOSet& pow2SimplifiedWitnessUTXO, std::vector<unsigned char>& undoWitnessUTXODelta)
+{
+    #ifdef EXTRA_DELTA_TESTS
+    SimplifiedWitnessUTXOSet& pow2SimplifiedWitnessUTXOOrig = pow2SimplifiedWitnessUTXO;
+    #endif
+    
+    if (pIndex->witnessUTXODelta.size() == 0)
+        return false;
+
+    VectorReader deltaStream(SER_NETWORK, 0, pIndex->witnessUTXODelta, 0);
+    
+    std::vector<deltaItem> deltaItems;
+
+    // First handle the witness that signed the block as a special case, as there is always only one of these at the start, then loop for everything else.
+    {
+        uint64_t selectedWitnessIndex;
+        deltaStream >> selectedWitnessIndex;
+        
+        auto removedItemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(selectedWitnessIndex);
+        SimplifiedWitnessRouletteItem witnessItem = *removedItemIter;
+        SimplifiedWitnessRouletteItem updatedWitnessItem = witnessItem;
+        deltaStream >> updatedWitnessItem.nValue;
+        updatedWitnessItem.blockNumber = pIndex->nHeight;
+        deltaStream >> updatedWitnessItem.transactionIndex;
+        //We don't encode the transactionOutputIndex it always becomes 0
+        updatedWitnessItem.transactionOutputIndex=0;
+        
+        pow2SimplifiedWitnessUTXO.witnessCandidates.erase(removedItemIter);
+        auto [updatedItemIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(updatedWitnessItem);
+        if (!didInsert)
+            return false;
+        
+        deltaItem undo;
+        undo.changeType=changeTypeWitnessAction;
+        undo.removedItems.push_back(witnessItem);
+        undo.addedItems.push_back(updatedWitnessItem);
+        deltaItems.push_back(undo);
+    }
+
+    // Rest of the changes are encoded with a type
+    // We store the changes as we go so that we can generate undo information
+    // NB! Its not possible/enough to generate undo data on the fly, as each action can affect the index(es) of other actions, we must actually replay the actions as we generate the items (just like how we generate the actual changes)
+    char changeType;
+    while (!deltaStream.empty())
+    {
+        deltaStream >> changeType;
+        switch(changeType)
+        {
+            case changeTypeCreation:
+            {
+                SimplifiedWitnessRouletteItem modifiedItem;
+                modifiedItem.blockNumber = pIndex->nHeight;
+                deltaStream >> modifiedItem.transactionIndex;
+                deltaStream >> modifiedItem.transactionOutputIndex;
+                deltaStream >> modifiedItem.nValue;
+                modifiedItem.lockFromBlock = pIndex->nHeight;
+                deltaStream >> modifiedItem.lockUntilBlock;
+                deltaStream >> modifiedItem.witnessPubKeyID;
+                
+                auto [iter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                if (!didInsert)
+                    return false;
+                
+                deltaItem undo;
+                undo.changeType=changeTypeCreation;
+                undo.addedItems.push_back(modifiedItem);
+                deltaItems.push_back(undo);                
+                break;
+            }
+            case changeTypeSpend:
+            {
+                uint64_t spentWitnessSetIndex;
+                deltaStream >> spentWitnessSetIndex;
+                
+                auto iter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(spentWitnessSetIndex);
+                SimplifiedWitnessRouletteItem originalItem = *iter;
+                //only one input allowed, must be completely consumed, so we just cancel its existence in the set
+                pow2SimplifiedWitnessUTXO.witnessCandidates.erase(iter);
+                
+                deltaItem undo;
+                undo.changeType=changeTypeSpend;
+                undo.removedItems.push_back(originalItem);
+                deltaItems.push_back(undo);
+                
+                break;
+            }
+            case changeTypeRenew:
+            {
+                uint64_t renewWitnessSetIndex;
+                deltaStream >> renewWitnessSetIndex;
+                
+                auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(renewWitnessSetIndex);
+                SimplifiedWitnessRouletteItem originalItem = *itemIter;
+                SimplifiedWitnessRouletteItem modifiedItem = originalItem;
+                modifiedItem.blockNumber = pIndex->nHeight;
+                deltaStream >> modifiedItem.transactionIndex;
+                deltaStream >> modifiedItem.transactionOutputIndex;
+                
+                pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
+                auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                if (!didInsert)
+                    return false;
+                
+                deltaItem undo;
+                undo.changeType=changeTypeRenew;
+                undo.removedItems.push_back(originalItem);
+                undo.addedItems.push_back(modifiedItem);
+                deltaItems.push_back(undo);
+                
+                break;
+            }
+            case changeTypeRearrange:
+            {
+                uint64_t numInputs;
+                uint64_t numOutputs;
+                deltaStream >> numInputs >> numOutputs;
+                
+                deltaItem undo;
+                undo.changeType=changeTypeRearrange;
+
+                SimplifiedWitnessRouletteItem item;
+                for (uint64_t i=0; i<numInputs; ++i)
+                {
+                    uint64_t inputIndex;
+                    deltaStream >> inputIndex;
+                    auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(inputIndex);
+                    item=*itemIter;
+                    pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
+                    
+                    undo.removedItems.push_back(item);
+                }
+                for (uint64_t i=0; i<numOutputs; ++i)
+                {
+                    item.blockNumber = pIndex->nHeight;
+                    deltaStream >> item.transactionIndex;
+                    deltaStream >> item.transactionOutputIndex;
+                    deltaStream >> item.nValue;
+                    auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
+                    if (!didInsert)
+                        return false;
+                    
+                    undo.addedItems.push_back(item);
+                }
+                deltaItems.push_back(undo);
+                break;
+            }
+            case changeTypeIncrease:
+            {
+                uint64_t numInputs;
+                uint64_t numOutputs;
+                uint64_t lockUntilBlock;
+                deltaStream >> numInputs >> numOutputs >> lockUntilBlock;
+                
+                deltaItem undo;
+                undo.changeType=changeTypeIncrease;
+
+                SimplifiedWitnessRouletteItem item;
+                for (uint64_t i=0; i<numInputs; ++i)
+                {
+                    uint64_t inputIndex;
+                    deltaStream >> inputIndex;
+                    auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(inputIndex);
+                    item = *itemIter;
+                    pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
+                    
+                    undo.removedItems.push_back(item);
+                }                
+                item.lockFromBlock = pIndex->nHeight;
+                item.lockUntilBlock = lockUntilBlock;
+                for (uint64_t i=0; i<numOutputs; ++i)
+                {
+                    item.blockNumber = pIndex->nHeight;
+                    deltaStream >> item.transactionIndex;
+                    deltaStream >> item.transactionOutputIndex;
+                    deltaStream >> item.nValue;
+                    auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
+                    if (!didInsert)
+                        return false;
+                    
+                    undo.addedItems.push_back(item);
+                }
+                deltaItems.push_back(undo);
+                break;
+            }
+            case changeTypeChangeKey:
+            {
+                uint64_t numItems;
+                deltaStream >> numItems;
+                CKeyID witnessKeyID;
+                deltaStream >> witnessKeyID;
+                
+                deltaItem undo;
+                undo.changeType=changeTypeChangeKey;
+                
+                for (uint64_t i=0; i < numItems; ++i )
+                {
+                    uint64_t itemIndex;
+                    deltaStream >> itemIndex;
+                    auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(itemIndex);
+                    SimplifiedWitnessRouletteItem originalItem = *itemIter;
+                    SimplifiedWitnessRouletteItem changedItem = originalItem;
+                    
+                    changedItem.witnessPubKeyID = witnessKeyID;
+                    changedItem.blockNumber = pIndex->nHeight;
+                    deltaStream >> changedItem.transactionIndex;
+                    deltaStream >> changedItem.transactionOutputIndex;
+                    
+                    pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
+                    auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(changedItem);
+                    if (!didInsert)
+                        return false;
+                    
+                    undo.removedItems.push_back(originalItem);
+                    undo.addedItems.push_back(changedItem);
+                }
+                deltaItems.push_back(undo);
+                break;
+            }
+        }
+    }
+    
+    
+    #ifdef EXTRA_DELTA_TESTS
+    // After applying the undo information the two should be identical again
+    assert(pow2SimplifiedWitnessUTXOOrig != pow2SimplifiedWitnessUTXO);
+    #endif
+    
+    SimplifiedWitnessUTXOSet pow2SimplifiedWitnessUTXOUndo = pow2SimplifiedWitnessUTXO;
+    if (!GenerateSimplifiedWitnessUTXODeltaUndoForHeader(undoWitnessUTXODelta, pow2SimplifiedWitnessUTXOUndo, deltaItems))
+        return false;
+    
+    #ifdef EXTRA_DELTA_TESTS
+    // After applying the undo information the two should be identical again
+    assert(pow2SimplifiedWitnessUTXOOrig == pow2SimplifiedWitnessUTXOUndo);
+    
+    pow2SimplifiedWitnessUTXOUndo = pow2SimplifiedWitnessUTXO;
+    UndoSimplifiedWitnessUTXODeltaForHeader(pow2SimplifiedWitnessUTXOUndo, undoWitnessUTXODelta);
+    // After applying the undo information the two should be identical again
+    assert(pow2SimplifiedWitnessUTXOOrig == pow2SimplifiedWitnessUTXOUndo);
+    #endif
+    
+    return true;
+}
 
 SimplifiedWitnessUTXOSet GenerateSimplifiedWitnessUTXOSetFromUTXOSet(std::map<COutPoint, Coin> allWitnessCoinsIndexBased)
 {
@@ -663,4 +1277,407 @@ SimplifiedWitnessUTXOSet GenerateSimplifiedWitnessUTXOSetFromUTXOSet(std::map<CO
     }
     
     return witnessUTXOset;
+}
+
+bool GetSimplifiedWitnessUTXOSetForIndex(const CBlockIndex* pBlockIndex, SimplifiedWitnessUTXOSet& pow2SimplifiedWitnessUTXOForBlock)
+{
+    SimplifiedWitnessUTXOSet pow2SimplifiedWitnessUTXOCopy = pow2SimplifiedWitnessUTXO;
+    if (pow2SimplifiedWitnessUTXOCopy.currentTipForSet.IsNull() || pow2SimplifiedWitnessUTXO.currentTipForSet != pBlockIndex->GetBlockHashPoW2())
+    {
+        std::map<COutPoint, Coin> allWitnessCoinsIndexBased;
+        if (!getAllUnspentWitnessCoins(chainActive, Params(), pBlockIndex, allWitnessCoinsIndexBased, nullptr, nullptr, true))
+            return false;
+    
+        pow2SimplifiedWitnessUTXOCopy = GenerateSimplifiedWitnessUTXOSetFromUTXOSet(allWitnessCoinsIndexBased);
+        pow2SimplifiedWitnessUTXOCopy.currentTipForSet = pBlockIndex->GetBlockHashPoW2();
+        pow2SimplifiedWitnessUTXOForBlock = pow2SimplifiedWitnessUTXO = pow2SimplifiedWitnessUTXOCopy;
+        return true;
+    }
+    else
+    {
+        // We are already the tip so no further action required
+        pow2SimplifiedWitnessUTXOForBlock = pow2SimplifiedWitnessUTXOCopy;
+        return true;
+    }
+}
+
+
+bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CBlock& block, CVectorWriter& deltaStream, std::vector<deltaItem>& deltaItems, SimplifiedWitnessUTXOSet& simplifiedWitnessUTXO)
+{
+    bool anyChanges=false;
+    // Calculate changes this block would make
+    for (const auto& tx : block.vtx)
+    {
+        if (!tx->witnessBundles)
+            return false;
+
+        for (const auto& bundle : *tx->witnessBundles)
+        {
+            anyChanges = true;
+            if (bundle.bundleType == CWitnessTxBundle::WitnessType)
+            {
+                // Basic sanity checks
+                assert(bundle.inputs.size() == 1);
+                assert(bundle.outputs.size() == 1);
+                assert(!std::get<2>(bundle.inputs[0]).IsNull());
+                
+                // Find existing item
+                SimplifiedWitnessRouletteItem originalItem(bundle.inputs[0]);
+                auto iter = simplifiedWitnessUTXO.witnessCandidates.find(originalItem);
+                if (iter == simplifiedWitnessUTXO.witnessCandidates.end())
+                    return false;
+
+                // Generate changeset
+                {
+                    deltaStream << simplifiedWitnessUTXO.witnessCandidates.index_of(iter);
+                    deltaStream << std::get<0>(bundle.outputs[0]).nValue;
+                    //No need to encode block number, we can obtain it from the block index
+                    deltaStream << std::get<2>(bundle.outputs[0]).getTransactionIndex();
+                    //No need to encode vout position, its always 0
+                    assert(std::get<2>(bundle.outputs[0]).n == 0);
+                }
+                
+                // Perform the change so that subsequent changes can use the right indexing 
+                // from here we can reset the blocknumber and value and identify that signature matches
+                // Only ever one witness action.
+                {
+                    SimplifiedWitnessRouletteItem modifiedItem=originalItem;
+                    modifiedItem.nValue = std::get<0>(bundle.outputs[0]).nValue;
+                    modifiedItem.blockNumber = nBlockHeight;
+                    if (modifiedItem.lockFromBlock == 0)
+                        modifiedItem.lockFromBlock = modifiedItem.blockNumber;
+                    modifiedItem.transactionIndex = std::get<2>(bundle.outputs[0]).getTransactionIndex();
+                    modifiedItem.transactionOutputIndex = 0;
+                    
+                    simplifiedWitnessUTXO.witnessCandidates.erase(iter);
+                    auto [insertIter, didInsert] = simplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                    if (!didInsert)
+                        return false;
+                    
+                    deltaItem undo;
+                    undo.changeType=changeTypeWitnessAction;
+                    undo.removedItems.push_back(originalItem);
+                    undo.addedItems.push_back(modifiedItem);
+                    deltaItems.push_back(undo);
+                }
+
+                break;
+            }
+        }
+    }
+    for (const auto& tx : block.vtx)
+    {   
+        for (const auto& bundle : *tx->witnessBundles)
+        {
+            switch (bundle.bundleType)
+            {
+                case CWitnessTxBundle::WitnessType:
+                {
+                    // Already done in previous loop
+                    continue;
+                }
+                case CWitnessTxBundle::CreationType:
+                {
+                    // Basic sanity checks
+                    assert(bundle.inputs.size() == 0);
+                    assert(bundle.outputs.size() > 0);
+
+                    // Treat each item in the bundle as its own seperate creation, instead of trying to cram them all into one
+                    for (const auto& output: bundle.outputs)
+                    {
+                        SimplifiedWitnessRouletteItem modifiedItem;
+                        modifiedItem.blockNumber = nBlockHeight;
+                        modifiedItem.transactionIndex = std::get<2>(output).getTransactionIndex();
+                        modifiedItem.transactionOutputIndex = std::get<2>(output).n;
+                        modifiedItem.nValue = std::get<0>(output).nValue;
+                        modifiedItem.lockFromBlock = modifiedItem.blockNumber;
+                        modifiedItem.lockUntilBlock = std::get<1>(output).lockUntilBlock;
+                        modifiedItem.witnessPubKeyID = std::get<1>(output).witnessKeyID;
+                        
+                        deltaStream << changeTypeCreation;
+                        //no need to encode blockNumber because it can be determined from the header
+                        deltaStream << modifiedItem.transactionIndex;
+                        deltaStream << modifiedItem.transactionOutputIndex;
+                        deltaStream << modifiedItem.nValue;
+                        deltaStream << modifiedItem.lockUntilBlock;
+                        //lockFrom can in turn be figured out from the blockNumber
+                        deltaStream << modifiedItem.witnessPubKeyID;                        
+                        
+                        // Insert new item into set
+                        simplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                        
+                        deltaItem undo;
+                        undo.changeType=changeTypeCreation;
+                        undo.addedItems.push_back(modifiedItem);
+                        deltaItems.push_back(undo);                
+                    }
+                    break;
+                }
+                //only one input allowed, must be completely consumed (removed from set)
+                case CWitnessTxBundle::SpendType:
+                {
+                    // Basic sanity checks
+                    assert(bundle.inputs.size() == 1);
+                    assert(bundle.outputs.size() == 0);
+                    assert(!std::get<2>(bundle.inputs[0]).IsNull());
+
+                    // Find existing item
+                    SimplifiedWitnessRouletteItem originalItem(bundle.inputs[0]);
+                    auto iter = simplifiedWitnessUTXO.witnessCandidates.find(originalItem);
+                    if (iter == simplifiedWitnessUTXO.witnessCandidates.end())
+                        return false;
+                
+                    deltaStream << changeTypeSpend;                    
+                    deltaStream << simplifiedWitnessUTXO.witnessCandidates.index_of(iter);
+                    
+                    // Remove spent item from set
+                    simplifiedWitnessUTXO.witnessCandidates.erase(iter);
+                    
+                    deltaItem undo;
+                    undo.changeType=changeTypeSpend;
+                    undo.removedItems.push_back(originalItem);
+                    deltaItems.push_back(undo);
+
+                    break;
+                }
+                case CWitnessTxBundle::RenewType:
+                {
+                    // Basic sanity checks
+                    assert(bundle.inputs.size() == 1);
+                    assert(bundle.outputs.size() == 1);
+                    assert(!std::get<2>(bundle.inputs[0]).IsNull());
+                    
+                    // Find existing item
+                    SimplifiedWitnessRouletteItem originalItem(bundle.inputs[0]);
+                    auto iter = simplifiedWitnessUTXO.witnessCandidates.find(originalItem);
+                    if (iter == simplifiedWitnessUTXO.witnessCandidates.end())
+                        return false;
+                    
+                    SimplifiedWitnessRouletteItem modifiedItem = originalItem;
+                    modifiedItem.blockNumber = nBlockHeight;
+                    modifiedItem.transactionIndex = std::get<2>(bundle.outputs[0]).getTransactionIndex();
+                    modifiedItem.transactionOutputIndex = std::get<2>(bundle.outputs[0]).n;
+                    if (modifiedItem.lockFromBlock == 0)
+                        modifiedItem.lockFromBlock = modifiedItem.blockNumber;
+                    
+                    deltaStream << changeTypeRenew;
+                    deltaStream << simplifiedWitnessUTXO.witnessCandidates.index_of(iter);
+                    //no need to encode blockNumber because it can be determined from the header
+                    deltaStream << modifiedItem.transactionIndex;
+                    deltaStream << modifiedItem.transactionOutputIndex;
+                    
+                    // Update renewed item in set
+                    simplifiedWitnessUTXO.witnessCandidates.erase(iter);
+                    auto [insertIter, didInsert] = simplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                    if (!didInsert)
+                        assert(0);                    
+                    
+                    deltaItem undo;
+                    undo.changeType=changeTypeRenew;
+                    undo.removedItems.push_back(originalItem);
+                    undo.addedItems.push_back(modifiedItem);
+                    deltaItems.push_back(undo);
+                    
+                    break;
+                }
+                case CWitnessTxBundle::RearrangeType:
+                {
+                    // Basic sanity checks
+                    assert(bundle.inputs.size() > 0);
+                    assert(bundle.outputs.size() > 0);
+                    
+                    // Encode common information
+                    deltaStream << changeTypeRearrange << bundle.inputs.size() << bundle.outputs.size();
+                    
+                    deltaItem undo;
+                    undo.changeType=changeTypeRearrange;
+                    
+                    // Encode removal of items; don't perform removal yet as they will then invalidate one anothers indexes
+                    SimplifiedWitnessRouletteItem item;
+                    for (const auto& input : bundle.inputs)
+                    {
+                        item = SimplifiedWitnessRouletteItem(input);
+                        auto iter = simplifiedWitnessUTXO.witnessCandidates.find(item);
+                        if (iter == simplifiedWitnessUTXO.witnessCandidates.end())
+                            return false;
+
+                        deltaStream << simplifiedWitnessUTXO.witnessCandidates.index_of(iter);
+                        
+                        undo.removedItems.push_back(item);
+                        simplifiedWitnessUTXO.witnessCandidates.erase(iter);
+                    }
+
+                    // Encode and perform reinsertion of modified items
+                    for (const auto& output : bundle.outputs)
+                    {
+                        item.blockNumber = nBlockHeight;
+                        item.transactionIndex = std::get<2>(output).getTransactionIndex();
+                        item.transactionOutputIndex = std::get<2>(output).n;
+                        item.nValue = std::get<0>(output).nValue;
+                        if (item.lockFromBlock == 0)
+                            item.lockFromBlock = nBlockHeight;
+                        
+                        //no need to encode blockNumber because it can be determined from the header
+                        deltaStream << item.transactionIndex;
+                        deltaStream << item.transactionOutputIndex;
+                        deltaStream << item.nValue;
+                        
+                        simplifiedWitnessUTXO.witnessCandidates.insert(item);
+                        undo.addedItems.push_back(item);
+                    }
+                    deltaItems.push_back(undo);
+                    break;
+                }
+                case CWitnessTxBundle::IncreaseType:
+                {
+                    // Basic sanity checks
+                    assert(bundle.inputs.size() > 0);
+                    assert(bundle.outputs.size() > 0);
+                    
+                    // Encode common information, all new items must share the same lockUntilBlock so we encode that here instead of repeating it for each item
+                    uint64_t newLockUntilBlock = std::get<1>(bundle.outputs[0]).lockUntilBlock;
+                    deltaStream << changeTypeIncrease << bundle.inputs.size() << bundle.outputs.size() << newLockUntilBlock;
+                    
+                    deltaItem undo;
+                    undo.changeType=changeTypeIncrease;
+
+                    // Encode removal of items; don't perform removal yet as they will then invalidate one anothers indexes
+                    SimplifiedWitnessRouletteItem item;
+                    for (const auto& input : bundle.inputs)
+                    {
+                        item = SimplifiedWitnessRouletteItem(input);
+                        auto iter = simplifiedWitnessUTXO.witnessCandidates.find(item);
+                        if (iter == simplifiedWitnessUTXO.witnessCandidates.end())
+                            return false;
+                    
+                        deltaStream << simplifiedWitnessUTXO.witnessCandidates.index_of(iter);
+
+                        undo.removedItems.push_back(item);
+                        simplifiedWitnessUTXO.witnessCandidates.erase(iter);
+                    }
+
+                    // Encode and perform reinsertion of modified items
+                    for (const auto& output : bundle.outputs)
+                    {
+                        item.blockNumber = nBlockHeight;
+                        item.transactionIndex = std::get<2>(output).getTransactionIndex();
+                        item.transactionOutputIndex = std::get<2>(output).n;
+                        item.nValue = std::get<0>(output).nValue;
+                        item.lockFromBlock = nBlockHeight;
+                        item.lockUntilBlock = std::get<1>(output).lockUntilBlock;
+                        
+                        //no need to encode blockNumber because it can be determined from the header
+                        deltaStream << item.transactionIndex;
+                        deltaStream << item.transactionOutputIndex;
+                        deltaStream << item.nValue;
+                        //no need to encode lockfrom  because it can be determined from the header (note lockfrom changes with an increase type bundle)
+                        //lockUntilBlock encoded once for all bundles, before this loop
+                        
+                        simplifiedWitnessUTXO.witnessCandidates.insert(item);
+                        undo.addedItems.push_back(item);
+                    }
+                    deltaItems.push_back(undo);
+                    break;
+                }
+                case CWitnessTxBundle::ChangeWitnessKeyType:
+                {
+                    // Basic sanity checks
+                    assert(bundle.inputs.size() > 0);
+                    assert(bundle.inputs.size() == bundle.outputs.size());
+                    
+                    // Encode common information
+                    // Can have multiple inputs/outputs, always matching in number so only encode output size
+                    // All new items must share a new witness key, so encode the key once here instead of individually for each item
+                    CKeyID newWitnessKeyID = std::get<1>(bundle.outputs[0]).witnessKeyID;
+                    deltaStream << changeTypeChangeKey << bundle.outputs.size() << newWitnessKeyID;
+                    
+                    deltaItem undo;
+                    undo.changeType=changeTypeChangeKey;
+                    
+                    for (uint64_t index=0; index < bundle.inputs.size();++index)
+                    {
+                        auto& input = bundle.inputs[index];
+                        auto& output = bundle.outputs[index];
+
+                        SimplifiedWitnessRouletteItem originalItem(input);
+                        auto iter = simplifiedWitnessUTXO.witnessCandidates.find(originalItem);
+                        if (iter == simplifiedWitnessUTXO.witnessCandidates.end())
+                            return false;
+                    
+                        deltaStream << simplifiedWitnessUTXO.witnessCandidates.index_of(iter);
+                        
+                        SimplifiedWitnessRouletteItem modifiedItem = originalItem;
+                        modifiedItem.blockNumber = nBlockHeight;
+                        modifiedItem.transactionIndex = std::get<2>(output).getTransactionIndex();
+                        modifiedItem.transactionOutputIndex = std::get<2>(output).n;
+                        modifiedItem.witnessPubKeyID = newWitnessKeyID;
+                        
+                        //no need to encode blockNumber because it can be determined from the header
+                        deltaStream << modifiedItem.transactionIndex;
+                        deltaStream << modifiedItem.transactionOutputIndex;              
+                        //no need to encode lockfrom  because it can be determined from the header (note lockfrom changes with an increase type bundle)
+                        
+                        simplifiedWitnessUTXO.witnessCandidates.erase(iter);
+                        simplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                        
+                        undo.removedItems.push_back(originalItem);
+                        undo.addedItems.push_back(modifiedItem);
+                    }
+                    deltaItems.push_back(undo);
+                    break;
+                }
+            }
+        }
+    }
+    if (!anyChanges)
+        return false;
+
+    return true;
+}
+
+bool GetSimplifiedWitnessUTXODeltaForBlock(const CBlockIndex* pBlockIndex, const CBlock& block, std::shared_ptr<SimplifiedWitnessUTXOSet> pow2SimplifiedWitnessUTXOForPrevBlock, std::vector<unsigned char>& compWitnessUTXODelta)
+{
+    SimplifiedWitnessUTXOSet pow2SimplifiedWitnessUTXOModified = *pow2SimplifiedWitnessUTXOForPrevBlock;
+    
+    #ifdef EXTRA_DELTA_TESTS
+    SimplifiedWitnessUTXOSet pow2SimplifiedWitnessUTXOOrig = pow2SimplifiedWitnessUTXOModified;
+    #endif
+    
+    // Calculate what changes the block makes to the simplified witness utxo set
+    std::vector<deltaItem> deltaItems;
+    CVectorWriter deltaStream(SER_NETWORK, 0, compWitnessUTXODelta, 0);
+    if (!GetSimplifiedWitnessUTXODeltaForBlockHelper(pBlockIndex->nHeight, block, deltaStream, deltaItems, pow2SimplifiedWitnessUTXOModified))
+        return false;
+
+    // Our copy must have changes so should not match the original
+    #ifdef EXTRA_DELTA_TESTS
+    assert(pow2SimplifiedWitnessUTXOModified != pow2SimplifiedWitnessUTXOOrig);
+    #endif
+   
+    // Generate the undo info, when done pow2SimplifiedWitnessUTXOUndo should match our original item again
+    SimplifiedWitnessUTXOSet pow2SimplifiedWitnessUTXOUndo = pow2SimplifiedWitnessUTXOModified;
+    std::vector<unsigned char> undoWitnessUTXODelta;
+    if (!GenerateSimplifiedWitnessUTXODeltaUndoForHeader(undoWitnessUTXODelta, pow2SimplifiedWitnessUTXOUndo, deltaItems))
+        return false;
+    
+    // As we have now undone the changes while generating the undo info, we should match the original again
+    #ifdef EXTRA_DELTA_TESTS
+    assert(pow2SimplifiedWitnessUTXOUndo == pow2SimplifiedWitnessUTXOOrig);
+    #endif
+    
+    // Revert to the modified set (with changes), apply the generated undo info, and ensure the final result matches the original set (this tests full roundtrip)
+    #ifdef EXTRA_DELTA_TESTS
+    pow2SimplifiedWitnessUTXOUndo = pow2SimplifiedWitnessUTXOModified;
+    UndoSimplifiedWitnessUTXODeltaForHeader(pow2SimplifiedWitnessUTXOUndo, undoWitnessUTXODelta);
+    assert(pow2SimplifiedWitnessUTXOUndo == pow2SimplifiedWitnessUTXOOrig);
+    #endif
+
+    // Set our modified set as the latest we have
+    if (pBlockIndex->nVersionPoW2Witness != 0)
+    {
+        pow2SimplifiedWitnessUTXOModified.currentTipForSet = pBlockIndex->GetBlockHashPoW2();    
+        pow2SimplifiedWitnessUTXO = pow2SimplifiedWitnessUTXOModified;
+    }
+    
+    return true;
 }

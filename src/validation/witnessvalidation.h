@@ -123,10 +123,13 @@ public:
 };
 
 SimplifiedWitnessUTXOSet GenerateSimplifiedWitnessUTXOSetFromUTXOSet(std::map<COutPoint, Coin> allWitnessCoinsIndexBased);
+bool GetSimplifiedWitnessUTXOSetForIndex(const CBlockIndex* pBlockIndex, SimplifiedWitnessUTXOSet& pow2SimplifiedWitnessUTXOForBlock);
+bool GetSimplifiedWitnessUTXODeltaForBlock(const CBlockIndex* pBlockIndexPrev, const CBlock& block, std::shared_ptr<SimplifiedWitnessUTXOSet> pow2SimplifiedWitnessUTXOForPrevBlock, std::vector<unsigned char>& compWitnessUTXODelta);
 
 /** Global variable that points to the witness coins database (protected by cs_main) */
 extern CWitViewDB* ppow2witdbview;
 extern std::shared_ptr<CCoinsViewCache> ppow2witTip;
+extern SimplifiedWitnessUTXOSet pow2SimplifiedWitnessUTXO;
 
 struct RouletteItem
 {
