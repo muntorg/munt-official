@@ -168,12 +168,9 @@ static bool alert(const std::string& msg)
     return false;
 }
 
-static bool CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, const CWitnessRewardTemplate& rewardTemplate, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, const CAmount witnessBlockSubsidy, const CAmount witnessFeeSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, bool bSegSigIsEnabled, unsigned int nSelectedWitnessBlockHeight)
+static bool CreateWitnessSubsidyOutputs(CTxOutPoW2Witness& witnessInput, CMutableTransaction& coinbaseTx, const CWitnessRewardTemplate& rewardTemplate, std::shared_ptr<CReserveKeyOrScript> coinbaseReservedKey, const CAmount witnessBlockSubsidy, const CAmount witnessFeeSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, bool bSegSigIsEnabled, unsigned int nSelectedWitnessBlockHeight)
 {
-    // First obtain the details of the signing witness transaction which must be consumed as an input and recreated as an output.
-    CTxOutPoW2Witness witnessInput; GetPow2WitnessOutput(selectedWitnessOutput, witnessInput);
-
-    // Now ammend some details of the input that must change in the new output.
+    // Ammend some details of the input that must change in the new output.
     CPoW2WitnessDestination witnessDestination;
     witnessDestination.spendingKey = witnessInput.spendingKeyID;
     witnessDestination.witnessKey = witnessInput.witnessKeyID;
@@ -318,8 +315,14 @@ static bool CreateWitnessSubsidyOutputs(CMutableTransaction& coinbaseTx, const C
     return true;
 }
 
-static std::pair<bool, CMutableTransaction> CreateWitnessCoinbase(int nWitnessHeight, CBlockIndex* pIndexPrev, int nPoW2PhaseParent, std::shared_ptr<CReserveKeyOrScript> coinbaseScript, const CAmount witnessBlockSubsidy, const CAmount witnessFeeSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, unsigned int nSelectedWitnessBlockHeight, CAccount* selectedWitnessAccount)
+static std::tuple<bool, CMutableTransaction, CWitnessBundles> CreateWitnessCoinbase(int nWitnessHeight, CBlockIndex* pIndexPrev, int nPoW2PhaseParent, std::shared_ptr<CReserveKeyOrScript> coinbaseScript, const CAmount witnessBlockSubsidy, const CAmount witnessFeeSubsidy, CTxOut& selectedWitnessOutput, COutPoint& selectedWitnessOutPoint, unsigned int nSelectedWitnessBlockHeight, CAccount* selectedWitnessAccount, uint64_t nTransactionIndex)
 {
+    // We will calculate and return a witness bundle for this transaction so the caller can append it to the non mutable transaction
+    CWitnessBundles coinbaseWitnessBundles;
+    
+    // Obtain the details of the signing witness transaction which must be consumed as an input and recreated as an output.
+    CTxOutPoW2Witness witnessInput; GetPow2WitnessOutput(selectedWitnessOutput, witnessInput);
+
     bool bSegSigIsEnabled = IsSegSigEnabled(pIndexPrev);
 
     CMutableTransaction coinbaseTx(bSegSigIsEnabled ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION);
@@ -352,7 +355,7 @@ static std::pair<bool, CMutableTransaction> CreateWitnessCoinbase(int nWitnessHe
             std::string strErrorMessage = strprintf("Failed to sign witness coinbase: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
             CAlert::Notify(strErrorMessage, true, true);
             LogPrintf("%s\n", strErrorMessage.c_str());
-            return std::pair(false, coinbaseTx);
+            return std::tuple(false, coinbaseTx, coinbaseWitnessBundles);
         }
     }
 
@@ -393,13 +396,21 @@ static std::pair<bool, CMutableTransaction> CreateWitnessCoinbase(int nWitnessHe
     }
 
     // Output for subsidy and refresh witness address.
-    if (!CreateWitnessSubsidyOutputs(coinbaseTx, rewardTemplate, coinbaseScript, witnessBlockSubsidy, witnessFeeSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, bSegSigIsEnabled, nSelectedWitnessBlockHeight))
+    if (!CreateWitnessSubsidyOutputs(witnessInput, coinbaseTx, rewardTemplate, coinbaseScript, witnessBlockSubsidy, witnessFeeSubsidy, selectedWitnessOutput, selectedWitnessOutPoint, bSegSigIsEnabled, nSelectedWitnessBlockHeight))
     {
         // Error message already handled inside function
-        return std::pair(false, coinbaseTx);
+        return std::tuple(false, coinbaseTx, coinbaseWitnessBundles);
     }
-
-    return std::pair(true, coinbaseTx);
+    
+    CWitnessTxBundle bundle;
+    if (!selectedWitnessOutPoint.isHash)
+    {
+        bundle.bundleType = CWitnessTxBundle::WitnessTxType::WitnessType;
+        bundle.outputs.push_back(std::tuple(coinbaseTx.vout[0], coinbaseTx.vout[0].output.witnessDetails, COutPoint(nWitnessHeight, nTransactionIndex, 0)));
+        bundle.inputs.push_back(std::tuple(selectedWitnessOutput, std::move(witnessInput), COutPoint(nSelectedWitnessBlockHeight, selectedWitnessOutPoint.getTransactionIndex(), selectedWitnessOutPoint.n)));
+        coinbaseWitnessBundles.push_back(bundle);
+    }
+    return std::tuple(true, coinbaseTx, coinbaseWitnessBundles);
 }
 
 struct CBlockIndexCacheComparator
@@ -716,11 +727,11 @@ void static GuldenWitness()
 
 
                             /** Populate witness coinbase placeholder with real information now that we have it **/
-                            const auto& [result, coinbaseTx] = CreateWitnessCoinbase(candidateIter->nHeight, candidateIter->pprev, nPoW2PhaseParent, coinbaseScript, witnessBlockSubsidy, witnessFeesSubsidy, witnessInfo.selectedWitnessTransaction, witnessInfo.selectedWitnessOutpoint, witnessInfo.selectedWitnessBlockHeight, selectedWitnessAccount);
+                            const auto& [result, coinbaseTx, witnessBundles] = CreateWitnessCoinbase(candidateIter->nHeight, candidateIter->pprev, nPoW2PhaseParent, coinbaseScript, witnessBlockSubsidy, witnessFeesSubsidy, witnessInfo.selectedWitnessTransaction, witnessInfo.selectedWitnessOutpoint, witnessInfo.selectedWitnessBlockHeight, selectedWitnessAccount, nWitnessCoinbaseIndex);
                             if (result)
                             {
                                 pWitnessBlock->vtx[nWitnessCoinbaseIndex] = MakeTransactionRef(std::move(coinbaseTx));
-
+                                pWitnessBlock->vtx[nWitnessCoinbaseIndex]->witnessBundles = std::make_shared<CWitnessBundles>(witnessBundles);
 
                                 /** Set witness specific block header information **/
                                 {
@@ -733,8 +744,26 @@ void static GuldenWitness()
 
                                     // Set witness merkle hash.
                                     pWitnessBlock->hashMerkleRootPoW2Witness = BlockMerkleRoot(pWitnessBlock->vtx.begin()+nWitnessCoinbaseIndex, pWitnessBlock->vtx.end());
+                                    
+                                    // Set the simplified witness UTXO change delta
+                                    if ((uint64_t)candidateIter->nHeight  > consensusParams.pow2WitnessSyncHeight)
+                                    {
+                                        std::shared_ptr<SimplifiedWitnessUTXOSet> pow2SimplifiedWitnessUTXOForPrevBlock = std::make_shared<SimplifiedWitnessUTXOSet>();
+                                        if (!GetSimplifiedWitnessUTXOSetForIndex(candidateIter->pprev, *pow2SimplifiedWitnessUTXOForPrevBlock))
+                                        {
+                                            std::string strErrorMessage = strprintf("Failed to compute UTXO for prev block [%d] current chain tip [%d].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+                                            CAlert::Notify(strErrorMessage, true, true);
+                                            LogPrintf("GuldenWitness: [Error] %s\n", strErrorMessage.c_str());
+                                        }
+                                        if (!GetSimplifiedWitnessUTXODeltaForBlock(candidateIter, *pWitnessBlock, pow2SimplifiedWitnessUTXOForPrevBlock, pWitnessBlock->witnessUTXODelta))
+                                        {
+                                            std::string strErrorMessage = strprintf("Failed to compute UTXO delta for block [%d] current chain tip [%d].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+                                            CAlert::Notify(strErrorMessage, true, true);
+                                            LogPrintf("GuldenWitness: [Error] %s\n", strErrorMessage.c_str());
+                                            continue;
+                                        }
+                                    }
                                 }
-
 
                                 /** Do the witness operation (Sign the block using our witness key) and broadcast the final product to the network. **/
                                 if (SignBlockAsWitness(pWitnessBlock, witnessInfo.selectedWitnessTransaction, selectedWitnessAccount))
