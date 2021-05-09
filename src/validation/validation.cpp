@@ -1288,9 +1288,15 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     //Though whether there is really a need or reason to go that far is not clear, that it won't succeed is likely a large enough deterrent.
     //fixme: (WITNESS_SYNC) - Change this check to pow2WitnessSyncHeight after we have more testing in place
     if (fVerifyWitnessDelta && block.nVersionPoW2Witness != 0 && (uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2Phase5FirstBlockHeight)
-    {        
+    {
+
+        CPubKey pubkey;
+        uint256 hash = block.GetHashPoW2();
+        if (!pubkey.RecoverCompact(hash, block.witnessHeaderPoW2Sig))
+            return state.DoS(50, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature validation failed");
+
         std::vector<unsigned char> compWitnessUTXODelta;
-        if (!GetSimplifiedWitnessUTXODeltaForBlock(pindex, block, pow2SimplifiedWitnessUTXOForPrevBlock, compWitnessUTXODelta))
+        if (!GetSimplifiedWitnessUTXODeltaForBlock(pindex, block, pow2SimplifiedWitnessUTXOForPrevBlock, compWitnessUTXODelta, &pubkey))
         {
             return state.DoS(100, error("ConnectBlock(): Unable to compute witness delta for block"), REJECT_INVALID, "bad-witness-utxo-delta");
         }
