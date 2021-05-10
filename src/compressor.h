@@ -93,15 +93,15 @@ public:
 // This class basically becomes a no-op as our txouts are already compressed.
 #define CTxOutCompressor(x) x
 
+extern uint64_t CompressAmount(uint64_t nAmount);
+extern uint64_t DecompressAmount(uint64_t nAmount);
+
 class CTxOutCompressorLegacy
 {
 private:
     CTxOut &txout;
 
 public:
-    static uint64_t CompressAmount(uint64_t nAmount);
-    static uint64_t DecompressAmount(uint64_t nAmount);
-
     CTxOutCompressorLegacy(CTxOut &txoutIn) : txout(txoutIn) { }
 
     ADD_SERIALIZE_METHODS;
@@ -118,6 +118,30 @@ public:
         }
         CScriptCompressor cscript(REF(txout.output.scriptPubKey));
         READWRITE(cscript);
+    }
+};
+
+#define COMPRESSEDAMOUNT(obj) REF(CAmountCompressor(REF(obj)))
+class CAmountCompressor
+{
+private:
+    CAmount &amount;
+
+public:
+    CAmountCompressor(CAmount &amountIn) : amount(amountIn) { }
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        if (!ser_action.ForRead()) {
+            uint64_t nValCompressed = CompressAmount(amount);
+            READWRITE(VARINT(nValCompressed));
+        } else {
+            uint64_t nValCompressed = 0;
+            READWRITE(VARINT(nValCompressed));
+            amount = DecompressAmount(nValCompressed);
+        }
     }
 };
 #endif
