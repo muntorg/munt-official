@@ -676,11 +676,11 @@ bool GenerateSimplifiedWitnessUTXODeltaUndoForHeader(std::vector<unsigned char>&
 
         const auto& addedItemIter = pow2SimplifiedWitnessUTXOUndo.witnessCandidates.find(deltaWitnessItem.addedItems[0]);
         
-        deltaUndoStream << pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addedItemIter);
-        deltaUndoStream << deltaWitnessItem.removedItems[0].nValue;
-        deltaUndoStream << deltaWitnessItem.removedItems[0].blockNumber;
-        deltaUndoStream << deltaWitnessItem.removedItems[0].transactionIndex;
-        deltaUndoStream << deltaWitnessItem.removedItems[0].transactionOutputIndex;
+        deltaUndoStream << VARINT(pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addedItemIter));
+        deltaUndoStream << COMPRESSEDAMOUNT(deltaWitnessItem.removedItems[0].nValue);
+        deltaUndoStream << VARINT(deltaWitnessItem.removedItems[0].blockNumber);
+        deltaUndoStream << VARINT(deltaWitnessItem.removedItems[0].transactionIndex);
+        deltaUndoStream << COMPACTSIZE(deltaWitnessItem.removedItems[0].transactionOutputIndex);
         
         pow2SimplifiedWitnessUTXOUndo.witnessCandidates.erase(addedItemIter);
         pow2SimplifiedWitnessUTXOUndo.witnessCandidates.insert(deltaWitnessItem.removedItems[0]);
@@ -706,7 +706,7 @@ bool GenerateSimplifiedWitnessUTXODeltaUndoForHeader(std::vector<unsigned char>&
                 auto addedItemIter = pow2SimplifiedWitnessUTXOUndo.witnessCandidates.find(deltaItem.addedItems[0]);
                                
                 deltaUndoStream << changeTypeCreation;
-                deltaUndoStream << pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addedItemIter);
+                deltaUndoStream << VARINT(pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addedItemIter));
                 pow2SimplifiedWitnessUTXOUndo.witnessCandidates.erase(addedItemIter);
                 
                 break;
@@ -721,12 +721,12 @@ bool GenerateSimplifiedWitnessUTXODeltaUndoForHeader(std::vector<unsigned char>&
                 pow2SimplifiedWitnessUTXOUndo.witnessCandidates.insert(originalItem);
 
                 deltaUndoStream << changeTypeSpend;
-                deltaUndoStream << originalItem.blockNumber;
-                deltaUndoStream << originalItem.transactionIndex;
-                deltaUndoStream << originalItem.transactionOutputIndex;
-                deltaUndoStream << originalItem.nValue;
-                deltaUndoStream << originalItem.lockFromBlock;
-                deltaUndoStream << originalItem.lockUntilBlock;
+                deltaUndoStream << VARINT(originalItem.blockNumber);
+                deltaUndoStream << VARINT(originalItem.transactionIndex);
+                deltaUndoStream << COMPACTSIZE(originalItem.transactionOutputIndex);
+                deltaUndoStream << COMPRESSEDAMOUNT(originalItem.nValue);
+                deltaUndoStream << VARINT(originalItem.lockFromBlock);
+                deltaUndoStream << VARINT(originalItem.lockUntilBlock);
                 deltaUndoStream << originalItem.witnessPubKeyID;
                 
                 break;
@@ -745,10 +745,10 @@ bool GenerateSimplifiedWitnessUTXODeltaUndoForHeader(std::vector<unsigned char>&
                 pow2SimplifiedWitnessUTXOUndo.witnessCandidates.insert(originalItem);
 
                 deltaUndoStream << changeTypeRenew;
-                deltaUndoStream << pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(renewedItemIter);
-                deltaUndoStream << originalItem.blockNumber;
-                deltaUndoStream << originalItem.transactionIndex;
-                deltaUndoStream << originalItem.transactionOutputIndex;
+                deltaUndoStream << VARINT(pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(renewedItemIter));
+                deltaUndoStream << VARINT(originalItem.blockNumber);
+                deltaUndoStream << VARINT(originalItem.transactionIndex);
+                deltaUndoStream << COMPACTSIZE(originalItem.transactionOutputIndex);
                 
                 break;
             }
@@ -758,7 +758,7 @@ bool GenerateSimplifiedWitnessUTXODeltaUndoForHeader(std::vector<unsigned char>&
                 assert(deltaItem.addedItems.size() > 0);
                 assert(deltaItem.removedItems.size() > 0);
                                 
-                deltaUndoStream << changeTypeRearrange << deltaItem.addedItems.size() << deltaItem.removedItems.size();
+                deltaUndoStream << changeTypeRearrange << COMPACTSIZE(deltaItem.addedItems.size()) << COMPACTSIZE(deltaItem.removedItems.size());
 
                 for (const auto& addItem : deltaItem.addedItems)
                 {
@@ -768,10 +768,10 @@ bool GenerateSimplifiedWitnessUTXODeltaUndoForHeader(std::vector<unsigned char>&
                 }
                 for (const auto& removeItem : deltaItem.removedItems)
                 {
-                    deltaUndoStream << removeItem.blockNumber;
-                    deltaUndoStream << removeItem.transactionIndex;
-                    deltaUndoStream << removeItem.transactionOutputIndex;
-                    deltaUndoStream << removeItem.nValue;
+                    deltaUndoStream << VARINT(removeItem.blockNumber);
+                    deltaUndoStream << VARINT(removeItem.transactionIndex);
+                    deltaUndoStream << COMPACTSIZE(removeItem.transactionOutputIndex);
+                    deltaUndoStream << COMPRESSEDAMOUNT(removeItem.nValue);
                     pow2SimplifiedWitnessUTXOUndo.witnessCandidates.insert(removeItem);
                 }
                 break;
@@ -782,21 +782,21 @@ bool GenerateSimplifiedWitnessUTXODeltaUndoForHeader(std::vector<unsigned char>&
                 assert(deltaItem.addedItems.size() > 0);
                 assert(deltaItem.removedItems.size() > 0);
                                 
-                deltaUndoStream << changeTypeIncrease << deltaItem.addedItems.size() << deltaItem.removedItems.size() << deltaItem.removedItems[0].lockUntilBlock;
+                deltaUndoStream << changeTypeIncrease << COMPACTSIZE(deltaItem.addedItems.size()) << COMPACTSIZE(deltaItem.removedItems.size()) << VARINT(deltaItem.removedItems[0].lockUntilBlock);
 
                 for (const auto& addItem : deltaItem.addedItems)
                 {
                     auto addIter = pow2SimplifiedWitnessUTXOUndo.witnessCandidates.find(addItem);
-                    deltaUndoStream << (uint64_t)pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addIter);
+                    deltaUndoStream << VARINT(pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addIter));
                     pow2SimplifiedWitnessUTXOUndo.witnessCandidates.erase(addIter);
                 }
                 for (const auto& removeItem : deltaItem.removedItems)
                 {
-                    deltaUndoStream << removeItem.blockNumber;
-                    deltaUndoStream << removeItem.transactionIndex;
-                    deltaUndoStream << removeItem.transactionOutputIndex;
-                    deltaUndoStream << removeItem.nValue;
-                    deltaUndoStream << removeItem.lockFromBlock;
+                    deltaUndoStream << VARINT(removeItem.blockNumber);
+                    deltaUndoStream << VARINT(removeItem.transactionIndex);
+                    deltaUndoStream << COMPACTSIZE(removeItem.transactionOutputIndex);
+                    deltaUndoStream << COMPRESSEDAMOUNT(removeItem.nValue);
+                    deltaUndoStream << VARINT(removeItem.lockFromBlock);
                     pow2SimplifiedWitnessUTXOUndo.witnessCandidates.insert(removeItem);
                 }
                 break;
@@ -808,12 +808,12 @@ bool GenerateSimplifiedWitnessUTXODeltaUndoForHeader(std::vector<unsigned char>&
                 assert(deltaItem.removedItems.size() > 0);
                 assert(deltaItem.addedItems.size() == deltaItem.removedItems.size());
                 
-                deltaUndoStream << changeTypeChangeKey << deltaItem.removedItems.size() << deltaItem.removedItems[0].witnessPubKeyID;
+                deltaUndoStream << changeTypeChangeKey << COMPACTSIZE(deltaItem.removedItems.size()) << deltaItem.removedItems[0].witnessPubKeyID;
                 for (uint64_t i=0; i < deltaItem.addedItems.size(); ++i)
                 {
                     // Remove added item
                     auto addIter = pow2SimplifiedWitnessUTXOUndo.witnessCandidates.find(deltaItem.addedItems[i]);                    
-                    deltaUndoStream << pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addIter);
+                    deltaUndoStream << VARINT(pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addIter));
                     
                     pow2SimplifiedWitnessUTXOUndo.witnessCandidates.erase(addIter);
                     auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXOUndo.witnessCandidates.insert(deltaItem.removedItems[i]);
@@ -821,9 +821,9 @@ bool GenerateSimplifiedWitnessUTXODeltaUndoForHeader(std::vector<unsigned char>&
                         return false;
                     
                     // Place back original item
-                    deltaUndoStream << deltaItem.removedItems[i].blockNumber;
-                    deltaUndoStream << deltaItem.removedItems[i].transactionIndex;
-                    deltaUndoStream << deltaItem.removedItems[i].transactionOutputIndex;
+                    deltaUndoStream << VARINT(deltaItem.removedItems[i].blockNumber);
+                    deltaUndoStream << VARINT(deltaItem.removedItems[i].transactionIndex);
+                    deltaUndoStream << COMPACTSIZE(deltaItem.removedItems[i].transactionOutputIndex);
                 }
                 break;
             }
@@ -839,15 +839,15 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
     // First handle the witness that signed the block as a special case, as there is always only one of these at the start, then loop for everything else.
     {
         uint64_t selectedWitnessIndex;
-        deltaUndoStream >> selectedWitnessIndex;
+        deltaUndoStream >> VARINT(selectedWitnessIndex);
         
         auto witnessIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(selectedWitnessIndex);
         SimplifiedWitnessRouletteItem witnessItem = *witnessIter;
         SimplifiedWitnessRouletteItem updatedWitnessItem = witnessItem;
-        deltaUndoStream >> updatedWitnessItem.nValue;
-        deltaUndoStream >> updatedWitnessItem.blockNumber;
-        deltaUndoStream >> updatedWitnessItem.transactionIndex;
-        deltaUndoStream >> updatedWitnessItem.transactionOutputIndex;        
+        deltaUndoStream >> COMPRESSEDAMOUNT(updatedWitnessItem.nValue);
+        deltaUndoStream >> VARINT(updatedWitnessItem.blockNumber);
+        deltaUndoStream >> VARINT(updatedWitnessItem.transactionIndex);
+        deltaUndoStream >> COMPACTSIZE(updatedWitnessItem.transactionOutputIndex);
         
         pow2SimplifiedWitnessUTXO.witnessCandidates.erase(witnessIter);
         auto [iter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(updatedWitnessItem);
@@ -866,7 +866,7 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
             case changeTypeCreation:
             {
                 uint64_t createdItemIndex;
-                deltaUndoStream >> createdItemIndex;
+                deltaUndoStream >> VARINT(createdItemIndex);
                 pow2SimplifiedWitnessUTXO.witnessCandidates.erase(pow2SimplifiedWitnessUTXO.witnessCandidates.nth(createdItemIndex));
                 break;
             }
@@ -874,12 +874,12 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
             case changeTypeSpend:
             {
                 SimplifiedWitnessRouletteItem item;
-                deltaUndoStream >> item.blockNumber;
-                deltaUndoStream >> item.transactionIndex;
-                deltaUndoStream >> item.transactionOutputIndex;
-                deltaUndoStream >> item.nValue;
-                deltaUndoStream >> item.lockFromBlock;
-                deltaUndoStream >> item.lockUntilBlock;
+                deltaUndoStream >> VARINT(item.blockNumber);
+                deltaUndoStream >> VARINT(item.transactionIndex);
+                deltaUndoStream >> COMPACTSIZE(item.transactionOutputIndex);
+                deltaUndoStream >> COMPRESSEDAMOUNT(item.nValue);
+                deltaUndoStream >> VARINT(item.lockFromBlock);
+                deltaUndoStream >> VARINT(item.lockUntilBlock);
                 deltaUndoStream >> item.witnessPubKeyID;
                 
                 auto [iter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
@@ -892,14 +892,14 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
             case changeTypeRenew:
             {
                 uint64_t renewedItemIndex;
-                deltaUndoStream >> renewedItemIndex;
+                deltaUndoStream >> VARINT(renewedItemIndex);
                 
                 auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(renewedItemIndex);
                 SimplifiedWitnessRouletteItem item = *itemIter;
                 SimplifiedWitnessRouletteItem modifiedItem = item;
-                deltaUndoStream >> modifiedItem.blockNumber;
-                deltaUndoStream >> modifiedItem.transactionIndex;
-                deltaUndoStream >> modifiedItem.transactionOutputIndex;
+                deltaUndoStream >> VARINT(modifiedItem.blockNumber);
+                deltaUndoStream >> VARINT(modifiedItem.transactionIndex);
+                deltaUndoStream >> COMPACTSIZE(modifiedItem.transactionOutputIndex);
                 
                 pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
                 auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
@@ -913,13 +913,13 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
             {
                 uint64_t numItemsToRemove;
                 uint64_t numItemsToAdd;
-                deltaUndoStream >> numItemsToRemove >> numItemsToAdd;
+                deltaUndoStream >> COMPACTSIZE(numItemsToRemove) >> COMPACTSIZE(numItemsToAdd);
                 
                 SimplifiedWitnessRouletteItem item;
                 for (uint64_t i=0; i<numItemsToRemove; ++i)
                 {
                     uint64_t outputIndex;
-                    deltaUndoStream >> outputIndex;
+                    deltaUndoStream >> VARINT(outputIndex);
                     auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(outputIndex);
                     if (i == 0)
                     {
@@ -929,10 +929,10 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
                 }
                 for (uint64_t i=0; i<numItemsToAdd; ++i)
                 {
-                    deltaUndoStream >> item.blockNumber;
-                    deltaUndoStream >> item.transactionIndex;
-                    deltaUndoStream >> item.transactionOutputIndex;
-                    deltaUndoStream >> item.nValue;
+                    deltaUndoStream >> VARINT(item.blockNumber);
+                    deltaUndoStream >> VARINT(item.transactionIndex);
+                    deltaUndoStream >> COMPACTSIZE(item.transactionOutputIndex);
+                    deltaUndoStream >> COMPRESSEDAMOUNT(item.nValue);
                     
                     auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
                     if (!didInsert)
@@ -946,13 +946,13 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
                 uint64_t numItemsToRemove;
                 uint64_t numItemsToAdd;
                 uint64_t originalLockUntilBlock;
-                deltaUndoStream >> numItemsToRemove >> numItemsToAdd >> originalLockUntilBlock;
+                deltaUndoStream >> COMPACTSIZE(numItemsToRemove) >> COMPACTSIZE(numItemsToAdd) >> VARINT(originalLockUntilBlock);
                 
                 SimplifiedWitnessRouletteItem item;
                 for (uint64_t i=0; i<numItemsToRemove; ++i)
                 {
                     uint64_t outputIndex;
-                    deltaUndoStream >> outputIndex;
+                    deltaUndoStream >> VARINT(outputIndex);
                     auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(outputIndex);
                     if (i == 0)
                     {
@@ -963,11 +963,11 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
                 }
                 for (uint64_t i=0; i<numItemsToAdd; ++i)
                 {
-                    deltaUndoStream >> item.blockNumber;
-                    deltaUndoStream >> item.transactionIndex;
-                    deltaUndoStream >> item.transactionOutputIndex;
-                    deltaUndoStream >> item.nValue;
-                    deltaUndoStream >> item.lockFromBlock;
+                    deltaUndoStream >> VARINT(item.blockNumber);
+                    deltaUndoStream >> VARINT(item.transactionIndex);
+                    deltaUndoStream >> COMPACTSIZE(item.transactionOutputIndex);
+                    deltaUndoStream >> COMPRESSEDAMOUNT(item.nValue);
+                    deltaUndoStream >> VARINT(item.lockFromBlock);
                     
                     auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
                     if (!didInsert)
@@ -979,21 +979,21 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
             case changeTypeChangeKey:
             {
                 uint64_t numItems;
-                deltaUndoStream >> numItems;
+                deltaUndoStream >> COMPACTSIZE(numItems);
                 CKeyID witnessKeyID;
                 deltaUndoStream >> witnessKeyID;
                 
                 for (uint64_t i=0; i < numItems; ++i )
                 {
                     uint64_t itemIndex;
-                    deltaUndoStream >> itemIndex;
+                    deltaUndoStream >> VARINT(itemIndex);
                     auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(itemIndex);
                     SimplifiedWitnessRouletteItem item = *itemIter;
                     
                     item.witnessPubKeyID = witnessKeyID;
-                    deltaUndoStream >> item.blockNumber;
-                    deltaUndoStream >> item.transactionIndex;
-                    deltaUndoStream >> item.transactionOutputIndex;
+                    deltaUndoStream >> VARINT(item.blockNumber);
+                    deltaUndoStream >> VARINT(item.transactionIndex);
+                    deltaUndoStream >> COMPACTSIZE(item.transactionOutputIndex);
                     
                     pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
                     auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
@@ -1026,14 +1026,14 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
     // First handle the witness that signed the block as a special case, as there is always only one of these at the start, then loop for everything else.
     {
         uint64_t selectedWitnessIndex;
-        deltaStream >> selectedWitnessIndex;
+        deltaStream >> VARINT(selectedWitnessIndex);
         
         auto removedItemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(selectedWitnessIndex);
         SimplifiedWitnessRouletteItem witnessItem = *removedItemIter;
         SimplifiedWitnessRouletteItem updatedWitnessItem = witnessItem;
-        deltaStream >> updatedWitnessItem.nValue;
+        deltaStream >> COMPRESSEDAMOUNT(updatedWitnessItem.nValue);
         updatedWitnessItem.blockNumber = pIndex->nHeight;
-        deltaStream >> updatedWitnessItem.transactionIndex;
+        deltaStream >> VARINT(updatedWitnessItem.transactionIndex);
         //We don't encode the transactionOutputIndex it always becomes 0
         updatedWitnessItem.transactionOutputIndex=0;
         
@@ -1062,11 +1062,11 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
             {
                 SimplifiedWitnessRouletteItem modifiedItem;
                 modifiedItem.blockNumber = pIndex->nHeight;
-                deltaStream >> modifiedItem.transactionIndex;
-                deltaStream >> modifiedItem.transactionOutputIndex;
-                deltaStream >> modifiedItem.nValue;
+                deltaStream >> VARINT(modifiedItem.transactionIndex);
+                deltaStream >> COMPACTSIZE(modifiedItem.transactionOutputIndex);
+                deltaStream >> COMPRESSEDAMOUNT(modifiedItem.nValue);
                 modifiedItem.lockFromBlock = pIndex->nHeight;
-                deltaStream >> modifiedItem.lockUntilBlock;
+                deltaStream >> VARINT(modifiedItem.lockUntilBlock);
                 deltaStream >> modifiedItem.witnessPubKeyID;
                 
                 auto [iter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
@@ -1082,7 +1082,7 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
             case changeTypeSpend:
             {
                 uint64_t spentWitnessSetIndex;
-                deltaStream >> spentWitnessSetIndex;
+                deltaStream >> VARINT(spentWitnessSetIndex);
                 
                 auto iter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(spentWitnessSetIndex);
                 SimplifiedWitnessRouletteItem originalItem = *iter;
@@ -1099,14 +1099,14 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
             case changeTypeRenew:
             {
                 uint64_t renewWitnessSetIndex;
-                deltaStream >> renewWitnessSetIndex;
+                deltaStream >> VARINT(renewWitnessSetIndex);
                 
                 auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(renewWitnessSetIndex);
                 SimplifiedWitnessRouletteItem originalItem = *itemIter;
                 SimplifiedWitnessRouletteItem modifiedItem = originalItem;
                 modifiedItem.blockNumber = pIndex->nHeight;
-                deltaStream >> modifiedItem.transactionIndex;
-                deltaStream >> modifiedItem.transactionOutputIndex;
+                deltaStream >> VARINT(modifiedItem.transactionIndex);
+                deltaStream >> COMPACTSIZE(modifiedItem.transactionOutputIndex);
                 
                 pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
                 auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
@@ -1125,7 +1125,7 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
             {
                 uint64_t numInputs;
                 uint64_t numOutputs;
-                deltaStream >> numInputs >> numOutputs;
+                deltaStream >> COMPACTSIZE(numInputs) >> COMPACTSIZE(numOutputs);
                 
                 deltaItem undo;
                 undo.changeType=changeTypeRearrange;
@@ -1134,7 +1134,7 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
                 for (uint64_t i=0; i<numInputs; ++i)
                 {
                     uint64_t inputIndex;
-                    deltaStream >> inputIndex;
+                    deltaStream >> VARINT(inputIndex);
                     auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(inputIndex);
                     item=*itemIter;
                     pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
@@ -1144,9 +1144,9 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
                 for (uint64_t i=0; i<numOutputs; ++i)
                 {
                     item.blockNumber = pIndex->nHeight;
-                    deltaStream >> item.transactionIndex;
-                    deltaStream >> item.transactionOutputIndex;
-                    deltaStream >> item.nValue;
+                    deltaStream >> VARINT(item.transactionIndex);
+                    deltaStream >> COMPACTSIZE(item.transactionOutputIndex);
+                    deltaStream >> COMPRESSEDAMOUNT(item.nValue);
                     auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
                     if (!didInsert)
                         return false;
@@ -1161,7 +1161,7 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
                 uint64_t numInputs;
                 uint64_t numOutputs;
                 uint64_t lockUntilBlock;
-                deltaStream >> numInputs >> numOutputs >> lockUntilBlock;
+                deltaStream >> COMPACTSIZE(numInputs) >> COMPACTSIZE(numOutputs) >> VARINT(lockUntilBlock);
                 
                 deltaItem undo;
                 undo.changeType=changeTypeIncrease;
@@ -1170,7 +1170,7 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
                 for (uint64_t i=0; i<numInputs; ++i)
                 {
                     uint64_t inputIndex;
-                    deltaStream >> inputIndex;
+                    deltaStream >> VARINT(inputIndex);
                     auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(inputIndex);
                     item = *itemIter;
                     pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
@@ -1182,9 +1182,9 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
                 for (uint64_t i=0; i<numOutputs; ++i)
                 {
                     item.blockNumber = pIndex->nHeight;
-                    deltaStream >> item.transactionIndex;
-                    deltaStream >> item.transactionOutputIndex;
-                    deltaStream >> item.nValue;
+                    deltaStream >> VARINT(item.transactionIndex);
+                    deltaStream >> COMPACTSIZE(item.transactionOutputIndex);
+                    deltaStream >> COMPRESSEDAMOUNT(item.nValue);
                     auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
                     if (!didInsert)
                         return false;
@@ -1197,7 +1197,7 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
             case changeTypeChangeKey:
             {
                 uint64_t numItems;
-                deltaStream >> numItems;
+                deltaStream >> COMPACTSIZE(numItems);
                 CKeyID witnessKeyID;
                 deltaStream >> witnessKeyID;
                 
@@ -1207,15 +1207,15 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
                 for (uint64_t i=0; i < numItems; ++i )
                 {
                     uint64_t itemIndex;
-                    deltaStream >> itemIndex;
+                    deltaStream >> VARINT(itemIndex);
                     auto itemIter = pow2SimplifiedWitnessUTXO.witnessCandidates.nth(itemIndex);
                     SimplifiedWitnessRouletteItem originalItem = *itemIter;
                     SimplifiedWitnessRouletteItem changedItem = originalItem;
                     
                     changedItem.witnessPubKeyID = witnessKeyID;
                     changedItem.blockNumber = pIndex->nHeight;
-                    deltaStream >> changedItem.transactionIndex;
-                    deltaStream >> changedItem.transactionOutputIndex;
+                    deltaStream >> VARINT(changedItem.transactionIndex);
+                    deltaStream >> COMPACTSIZE(changedItem.transactionOutputIndex);
                     
                     pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
                     auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(changedItem);
@@ -1329,10 +1329,10 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
 
                 // Generate changeset
                 {
-                    deltaStream << simplifiedWitnessUTXO.witnessCandidates.index_of(iter);
-                    deltaStream << std::get<0>(bundle.outputs[0]).nValue;
+                    deltaStream << VARINT(simplifiedWitnessUTXO.witnessCandidates.index_of(iter));
+                    deltaStream << COMPRESSEDAMOUNT(std::get<0>(bundle.outputs[0]).nValue);
                     //No need to encode block number, we can obtain it from the block index
-                    deltaStream << std::get<2>(bundle.outputs[0]).getTransactionIndex();
+                    deltaStream << VARINT(std::get<2>(bundle.outputs[0]).getTransactionIndex());
                     //No need to encode vout position, its always 0
                     assert(std::get<2>(bundle.outputs[0]).n == 0);
                 }
@@ -1396,12 +1396,12 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         
                         deltaStream << changeTypeCreation;
                         //no need to encode blockNumber because it can be determined from the header
-                        deltaStream << modifiedItem.transactionIndex;
-                        deltaStream << modifiedItem.transactionOutputIndex;
-                        deltaStream << modifiedItem.nValue;
-                        deltaStream << modifiedItem.lockUntilBlock;
+                        deltaStream << VARINT(modifiedItem.transactionIndex);
+                        deltaStream << COMPACTSIZE(modifiedItem.transactionOutputIndex);
+                        deltaStream << VARINT(modifiedItem.nValue);
+                        deltaStream << VARINT(modifiedItem.lockUntilBlock);
                         //lockFrom can in turn be figured out from the blockNumber
-                        deltaStream << modifiedItem.witnessPubKeyID;                        
+                        deltaStream << modifiedItem.witnessPubKeyID;
                         
                         // Insert new item into set
                         simplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
@@ -1409,7 +1409,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         deltaItem undo;
                         undo.changeType=changeTypeCreation;
                         undo.addedItems.push_back(modifiedItem);
-                        deltaItems.push_back(undo);                
+                        deltaItems.push_back(undo);
                     }
                     break;
                 }
@@ -1427,8 +1427,8 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                     if (iter == simplifiedWitnessUTXO.witnessCandidates.end())
                         return false;
                 
-                    deltaStream << changeTypeSpend;                    
-                    deltaStream << simplifiedWitnessUTXO.witnessCandidates.index_of(iter);
+                    deltaStream << changeTypeSpend;
+                    deltaStream << VARINT(simplifiedWitnessUTXO.witnessCandidates.index_of(iter));
                     
                     // Remove spent item from set
                     simplifiedWitnessUTXO.witnessCandidates.erase(iter);
@@ -1461,16 +1461,16 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         modifiedItem.lockFromBlock = modifiedItem.blockNumber;
                     
                     deltaStream << changeTypeRenew;
-                    deltaStream << simplifiedWitnessUTXO.witnessCandidates.index_of(iter);
+                    deltaStream << VARINT(simplifiedWitnessUTXO.witnessCandidates.index_of(iter));
                     //no need to encode blockNumber because it can be determined from the header
-                    deltaStream << modifiedItem.transactionIndex;
-                    deltaStream << modifiedItem.transactionOutputIndex;
+                    deltaStream << VARINT(modifiedItem.transactionIndex);
+                    deltaStream << COMPACTSIZE(modifiedItem.transactionOutputIndex);
                     
                     // Update renewed item in set
                     simplifiedWitnessUTXO.witnessCandidates.erase(iter);
                     auto [insertIter, didInsert] = simplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
                     if (!didInsert)
-                        assert(0);                    
+                        assert(0);
                     
                     deltaItem undo;
                     undo.changeType=changeTypeRenew;
@@ -1487,7 +1487,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                     assert(bundle.outputs.size() > 0);
                     
                     // Encode common information
-                    deltaStream << changeTypeRearrange << bundle.inputs.size() << bundle.outputs.size();
+                    deltaStream << changeTypeRearrange << COMPACTSIZE(bundle.inputs.size()) << COMPACTSIZE(bundle.outputs.size());
                     
                     deltaItem undo;
                     undo.changeType=changeTypeRearrange;
@@ -1501,7 +1501,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         if (iter == simplifiedWitnessUTXO.witnessCandidates.end())
                             return false;
 
-                        deltaStream << simplifiedWitnessUTXO.witnessCandidates.index_of(iter);
+                        deltaStream << VARINT(simplifiedWitnessUTXO.witnessCandidates.index_of(iter));
                         
                         undo.removedItems.push_back(item);
                         simplifiedWitnessUTXO.witnessCandidates.erase(iter);
@@ -1518,9 +1518,9 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                             item.lockFromBlock = nBlockHeight;
                         
                         //no need to encode blockNumber because it can be determined from the header
-                        deltaStream << item.transactionIndex;
-                        deltaStream << item.transactionOutputIndex;
-                        deltaStream << item.nValue;
+                        deltaStream << VARINT(item.transactionIndex);
+                        deltaStream << COMPACTSIZE(item.transactionOutputIndex);
+                        deltaStream << COMPRESSEDAMOUNT(item.nValue);
                         
                         simplifiedWitnessUTXO.witnessCandidates.insert(item);
                         undo.addedItems.push_back(item);
@@ -1536,7 +1536,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                     
                     // Encode common information, all new items must share the same lockUntilBlock so we encode that here instead of repeating it for each item
                     uint64_t newLockUntilBlock = std::get<1>(bundle.outputs[0]).lockUntilBlock;
-                    deltaStream << changeTypeIncrease << bundle.inputs.size() << bundle.outputs.size() << newLockUntilBlock;
+                    deltaStream << changeTypeIncrease << COMPACTSIZE(bundle.inputs.size()) << COMPACTSIZE(bundle.outputs.size()) << VARINT(newLockUntilBlock);
                     
                     deltaItem undo;
                     undo.changeType=changeTypeIncrease;
@@ -1550,7 +1550,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         if (iter == simplifiedWitnessUTXO.witnessCandidates.end())
                             return false;
                     
-                        deltaStream << simplifiedWitnessUTXO.witnessCandidates.index_of(iter);
+                        deltaStream << VARINT(simplifiedWitnessUTXO.witnessCandidates.index_of(iter));
 
                         undo.removedItems.push_back(item);
                         simplifiedWitnessUTXO.witnessCandidates.erase(iter);
@@ -1567,9 +1567,9 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         item.lockUntilBlock = std::get<1>(output).lockUntilBlock;
                         
                         //no need to encode blockNumber because it can be determined from the header
-                        deltaStream << item.transactionIndex;
-                        deltaStream << item.transactionOutputIndex;
-                        deltaStream << item.nValue;
+                        deltaStream << VARINT(item.transactionIndex);
+                        deltaStream << COMPACTSIZE(item.transactionOutputIndex);
+                        deltaStream << COMPRESSEDAMOUNT(item.nValue);
                         //no need to encode lockfrom  because it can be determined from the header (note lockfrom changes with an increase type bundle)
                         //lockUntilBlock encoded once for all bundles, before this loop
                         
@@ -1589,7 +1589,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                     // Can have multiple inputs/outputs, always matching in number so only encode output size
                     // All new items must share a new witness key, so encode the key once here instead of individually for each item
                     CKeyID newWitnessKeyID = std::get<1>(bundle.outputs[0]).witnessKeyID;
-                    deltaStream << changeTypeChangeKey << bundle.outputs.size() << newWitnessKeyID;
+                    deltaStream << changeTypeChangeKey << COMPACTSIZE(bundle.outputs.size()) << newWitnessKeyID;
                     
                     deltaItem undo;
                     undo.changeType=changeTypeChangeKey;
@@ -1604,7 +1604,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         if (iter == simplifiedWitnessUTXO.witnessCandidates.end())
                             return false;
                     
-                        deltaStream << simplifiedWitnessUTXO.witnessCandidates.index_of(iter);
+                        deltaStream << VARINT(simplifiedWitnessUTXO.witnessCandidates.index_of(iter));
                         
                         SimplifiedWitnessRouletteItem modifiedItem = originalItem;
                         modifiedItem.blockNumber = nBlockHeight;
@@ -1613,8 +1613,8 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         modifiedItem.witnessPubKeyID = newWitnessKeyID;
                         
                         //no need to encode blockNumber because it can be determined from the header
-                        deltaStream << modifiedItem.transactionIndex;
-                        deltaStream << modifiedItem.transactionOutputIndex;              
+                        deltaStream << VARINT(modifiedItem.transactionIndex);
+                        deltaStream << COMPACTSIZE(modifiedItem.transactionOutputIndex);
                         //no need to encode lockfrom  because it can be determined from the header (note lockfrom changes with an increase type bundle)
                         
                         simplifiedWitnessUTXO.witnessCandidates.erase(iter);
