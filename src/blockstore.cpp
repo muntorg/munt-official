@@ -115,7 +115,12 @@ bool CBlockStore::ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, con
     block.SetNull();
 
     // Open history file to read
-    CFile filein(GetBlockFile(pos, true), SER_DISK, CLIENT_VERSION);
+    int clientVersion = CLIENT_VERSION;
+    if (index->witnessUTXODelta.size() == 0)
+    {
+        clientVersion = clientVersion | SERIALIZE_BLOCK_HEADER_NO_WITNESS_DELTA;
+    }
+    CFile filein(GetBlockFile(pos, true), SER_DISK, clientVersion);
     if (filein.IsNull())
         return error("ReadBlockFromDisk: OpenBlockFile failed for %s", pos.ToString());
 
