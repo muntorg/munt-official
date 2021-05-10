@@ -3747,8 +3747,95 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
 bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, int nCurrentVersion)
 {
     // Any future upgrade code goes here.
-    // See source control history for previous implementations that might be reusable.
+    // Refresh all blocks on disk - change in serialisation format.
+    if (nPreviousVersion == 3 && nCurrentVersion >= 4)
+    {
+         LOCK(cs_main);
 
+        // Gulden 2.0 onwards
+        // Refresh all blocks on disk - change in serialisation format.
+        if (nPreviousVersion == 0 && nCurrentVersion >= 1)
+        {
+            blockStore.CloseBlockFiles();
+
+            CBlockStore oldStore;
+
+            oldStore.Rename("prewitsync_");
+
+            {
+                LOCK(cs_LastBlockFile);
+                vinfoBlockFile.clear();
+                nLastBlockFile = 0;
+            }
+
+            // (Optimisation) Sort by height so that the files end up "in order" in the new block files.
+            std::vector<std::pair<int, CBlockIndex*> > vSortedByHeight;
+            vSortedByHeight.reserve(mapBlockIndex.size());
+            for(const PAIRTYPE(uint256, CBlockIndex*)& item : mapBlockIndex)
+            {
+                CBlockIndex* pindex = item.second;
+                vSortedByHeight.push_back(std::pair(pindex->nHeight, pindex));
+            }
+            sort(vSortedByHeight.begin(), vSortedByHeight.end(), [](const std::pair<int, CBlockIndex*>& a, const std::pair<int, CBlockIndex*>& b) -> bool { return a.first < b.first; });
+
+            // Now read the block files in one at a time from the old files and write them into the new files.
+            CBlock* pblock = new CBlock();
+            std::vector<std::pair<int, const CBlockFileInfo*> > vDirtyFiles;
+            std::vector<const CBlockIndex*> vDirtyBlocks;
+            for(const auto& item: vSortedByHeight)
+            {
+                CBlockIndex* pindex = item.second;
+                pblock->SetNull();
+
+                CDiskBlockPos blockpos = pindex->GetBlockPos();
+
+                if (blockpos.nFile >= 0)
+                {
+                    vDirtyFiles.push_back(std::pair(pindex->nFile, &vinfoBlockFile[pindex->nFile]));
+                    // Read block in, using old transaction format.
+                    {
+                        if (!oldStore.ReadBlockFromDisk(*pblock, blockpos, chainparams, nullptr, SERIALIZE_BLOCK_HEADER_NO_WITNESS_DELTA))
+                            return error("UpgradeBlockIndex: ReadBlockFromDisk: Errors in block at %s", blockpos.ToString());
+                    }
+
+                    // Write block out using new transaction format.
+                    {
+                        unsigned int nSize = ::GetSerializeSize(*pblock, SER_DISK, CLIENT_VERSION);
+                        CValidationState state;
+                        FindBlockPos(state, blockpos, nSize+8, pindex->nHeight, pblock->GetBlockTime());
+                        if (!blockStore.WriteBlockToDisk(*pblock, blockpos, chainparams.MessageStart()))
+                            return error("UpgradeBlockIndex: WriteBlockToDisk: failed");
+                        pindex->nFile = blockpos.nFile;
+                        pindex->nDataPos = blockpos.nPos;
+                    }
+
+                    // Update the block index as the position of the block on disk has changed.
+                    vDirtyBlocks.push_back(pindex);
+                    vDirtyFiles.push_back(std::pair(pindex->nFile, &vinfoBlockFile[pindex->nFile]));
+
+                    if (pindex->nHeight == chainActive.Tip()->nHeight)
+                    {
+                        assert(pindex->nDataPos == chainActive.Tip()->nDataPos);
+                        assert(pindex->nUndoPos == chainActive.Tip()->nUndoPos);
+                    }
+                }
+            }
+            delete pblock;
+
+            FlushBlockFile();
+            if (!pblocktree->UpdateBatchSync(vDirtyFiles, nLastBlockFile, vDirtyBlocks, std::vector<uint256>()))
+            {
+                return error("UpgradeBlockIndex: Failed to write to block index database");
+            }
+
+            oldStore.Delete();
+        }
+        return true;
+    }
+    else if (nPreviousVersion != nCurrentVersion)
+    {
+        return false;
+    }
     return true;
 }
 
@@ -4053,7 +4140,7 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, CDiskB
     int nLoaded = 0;
     try {
         // This takes over fileIn and calls fclose() on it in the CBufferedFile destructor
-        CBufferedFile blkdat(fileIn, 2*MAX_BLOCK_SERIALIZED_SIZE, MAX_BLOCK_SERIALIZED_SIZE+8, SER_DISK, CLIENT_VERSION);
+        CBufferedFile blkdat(fileIn, 2*MAX_BLOCK_SERIALIZED_SIZE, MAX_BLOCK_SERIALIZED_SIZE+8, SER_DISK, CLIENT_VERSION-1);
         uint64_t nRewind = blkdat.GetPos();
         while (!blkdat.eof()) {
             boost::this_thread::interruption_point();

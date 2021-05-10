@@ -108,7 +108,7 @@ public:
     
     size_t EstimateSize() const override;
     // For handling of upgrades.
-    uint32_t nCurrentVersion=3;
+    uint32_t nCurrentVersion=4;
     uint32_t nPreviousVersion=1;
 
     /*int GetDepth() const override

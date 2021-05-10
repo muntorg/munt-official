@@ -21,9 +21,10 @@
 #include "util.h"
 #include <crypto/hash/hash.h>
 
+#define SERIALIZE_BLOCK_HEADER_NO_WITNESS_DELTA    0x10000000
 #define SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS     0x20000000
 #define SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS_SIG 0x40000000
-#define SERIALIZE_BLOCK_HEADER_NO_WITNESS_DELTA    0x80000000
+
 
 inline double GetHumanDifficultyFromBits(uint64_t nBits)
 {
@@ -111,11 +112,11 @@ public:
         READWRITE(nNonce);
 
         //fixme: (PHASE5) Remove support for legacy nodes - no longer need this once phase4 is locked in.
-        if (!(s.GetVersion() & SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS))
+        if (nVersionPoW2Witness != 0)
         {
-            if (!(s.GetVersion() & SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS_SIG))
+            if (!(s.GetVersion() & SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS))
             {
-                if (nVersionPoW2Witness != 0)
+                if (!(s.GetVersion() & SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS_SIG))
                 {
                     if (ser_action.ForRead())
                         witnessHeaderPoW2Sig.resize(65);
@@ -123,15 +124,12 @@ public:
                         assert(witnessHeaderPoW2Sig.size() == 65);
                     READWRITENOSIZEVECTOR(witnessHeaderPoW2Sig);
                 }
-            }
-            
-            if (!(s.GetVersion() & SERIALIZE_BLOCK_HEADER_NO_WITNESS_DELTA))
-            {
-                if( ((s.GetType() == SER_DISK) && (s.GetVersion() >= 2030013)) || 
-                    ((s.GetType() == SER_NETWORK) && (s.GetVersion() % 80000 >= WITNESS_SYNC_VERSION)) ||
-                    ((s.GetType() == SER_GETHASH) && (witnessUTXODelta.size() > 0)) )
+                
+                if (!(s.GetVersion() & SERIALIZE_BLOCK_HEADER_NO_WITNESS_DELTA))
                 {
-                    if (nVersionPoW2Witness != 0)
+                    if( (s.GetType() == SER_DISK) || 
+                        ((s.GetType() == SER_NETWORK) && (s.GetVersion() % 80000 >= WITNESS_SYNC_VERSION)) ||
+                        ((s.GetType() == SER_GETHASH) && (witnessUTXODelta.size() > 0)) )
                     {
                         //fixme: (WITNESS_SYNC) - If size is frequently above 200 then switch to varint instead
                         READWRITECOMPACTSIZEVECTOR(witnessUTXODelta);
