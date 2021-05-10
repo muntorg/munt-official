@@ -93,6 +93,8 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
     result.push_back(Pair("pow_time", (int64_t)blockindex->nTime));
     result.push_back(Pair("witness_time", (int64_t)blockindex->nTimePoW2Witness));
     result.push_back(Pair("witness_merkleroot", blockindex->hashMerkleRootPoW2Witness.GetHex()));
+    result.push_back(Pair("witness_signature", HexStr(blockindex->witnessHeaderPoW2Sig.begin(), blockindex->witnessHeaderPoW2Sig.end())));
+    result.push_back(Pair("witness_utxo_delta", HexStr(blockindex->witnessUTXODelta.begin(), blockindex->witnessUTXODelta.end())));
     result.push_back(Pair("nonce", (uint64_t)blockindex->nNonce));
     result.push_back(Pair("pre_nonce", (uint64_t)blockindex->nPreNonce));
     result.push_back(Pair("post_nonce", (uint64_t)blockindex->nPostNonce));
@@ -139,6 +141,8 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
     result.push_back(Pair("witness_time", (int64_t)block.nTimePoW2Witness));
     result.push_back(Pair("pow_time", (int64_t)block.nTime));
     result.push_back(Pair("witness_merkleroot", block.hashMerkleRootPoW2Witness.GetHex()));
+    result.push_back(Pair("witness_signature", HexStr(block.witnessHeaderPoW2Sig.begin(), block.witnessHeaderPoW2Sig.end())));
+    result.push_back(Pair("witness_utxo_delta", HexStr(block.witnessUTXODelta.begin(), block.witnessUTXODelta.end())));
     UniValue txs(UniValue::VARR);
     for(const auto& tx : block.vtx)
     {
