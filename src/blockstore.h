@@ -51,7 +51,7 @@ public:
         For all other cases the PoW will be actually computed and verified (note that this is a local
         validation so not necessarily a stronger one as the above).
     */
-    bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const CChainParams& params, const CBlockIndex* index = nullptr);
+    bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const CChainParams& params, const CBlockIndex* index = nullptr, int extraSerialisationArgs=0);
 
     bool UndoWriteToDisk(const CBlockUndo& blockundo, CDiskBlockPos& pos, const uint256& hashBlock, const CMessageHeader::MessageStartChars& messageStart);
     bool UndoReadFromDisk(CBlockUndo& blockundo, const CDiskBlockPos& pos, const uint256& hashBlock);

@@ -1515,7 +1515,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                         uiInterface.InitMessage(_("Upgrading block index..."));
                         if (!UpgradeBlockIndex(chainparams, pcoinsdbview->nPreviousVersion, pcoinsdbview->nCurrentVersion))
                         {
-                            LogPrintf("Error upgrading block database to 2.0 (segsig) format, attempting to wipe index and resync instead.");
+                            LogPrintf("Error upgrading block database, attempting to wipe index and resync instead.");
                             fullResyncForUpgrade = true;
                         }
                         else
