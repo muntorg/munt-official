@@ -569,13 +569,10 @@ public:
                 if (ser_action.ForRead())
                     witnessHeaderPoW2Sig.resize(65);
                 READWRITENOSIZEVECTOR(witnessHeaderPoW2Sig);
-            }
-            
-            if( ((s.GetType() == SER_DISK) && (_nVersion>= 2030013)) || 
+                
+                if( ((s.GetType() == SER_DISK) && (_nVersion>= 2030013)) || 
                 ((s.GetType() == SER_NETWORK) && (_nVersion % 80000 >= WITNESS_SYNC_VERSION)) ||
                 ((s.GetType() == SER_GETHASH) && (witnessUTXODelta.size() > 0)) )
-            {
-                if (nVersionPoW2Witness != 0)
                 {
                     //fixme: (WITNESS_SYNC) - If size is frequently above 200 then switch to varint instead
                     READWRITECOMPACTSIZEVECTOR(witnessUTXODelta);

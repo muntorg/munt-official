@@ -1486,7 +1486,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                 
 
                 //GULDEN - version 2.0 upgrade
-                if (upgradeOnceOnly && pcoinsdbview->nPreviousVersion < 1)
+                if (upgradeOnceOnly && pcoinsdbview->nPreviousVersion < pcoinsdbview->nCurrentVersion)
                 {
                     if (fullResyncForUpgrade)
                     {
@@ -1506,8 +1506,8 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
                     break;
                 }
 
-                //GULDEN - version 2.0 upgrade
-                if (upgradeOnceOnly && pcoinsdbview->nPreviousVersion < 1)
+                // Upgrade
+                if (upgradeOnceOnly && pcoinsdbview->nPreviousVersion < pcoinsdbview->nCurrentVersion)
                 {
                     upgradeOnceOnly = false;
                     if (!fullResyncForUpgrade)

@@ -692,6 +692,10 @@ bool CCoinsViewDB::Upgrade()
         db.WriteBatch(batch);
         db.Write(DB_VERSION, (uint32_t)nCurrentVersion);
     }
+    else if(nPreviousVersion == 3)
+    {
+        db.Write(DB_VERSION, (uint32_t)nCurrentVersion);
+    }
     return true;
 }
 
