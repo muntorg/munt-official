@@ -1289,19 +1289,18 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     //fixme: (WITNESS_SYNC) - Change this check to pow2WitnessSyncHeight after we have more testing in place
     if (fVerifyWitnessDelta && block.nVersionPoW2Witness != 0 && (uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2Phase5FirstBlockHeight)
     {
-
-        CPubKey pubkey;
-        uint256 hash = block.GetHashPoW2();
-        if (!pubkey.RecoverCompact(hash, block.witnessHeaderPoW2Sig))
-            return state.DoS(50, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature validation failed");
-
-        std::vector<unsigned char> compWitnessUTXODelta;
-        if (!GetSimplifiedWitnessUTXODeltaForBlock(pindex, block, pow2SimplifiedWitnessUTXOForPrevBlock, compWitnessUTXODelta, &pubkey))
-        {
-            return state.DoS(100, error("ConnectBlock(): Unable to compute witness delta for block"), REJECT_INVALID, "bad-witness-utxo-delta");
-        }
         if ((uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2WitnessSyncHeight)
         {
+            CPubKey pubkey;
+            uint256 hash = block.GetHashPoW2();
+            if (!pubkey.RecoverCompact(hash, block.witnessHeaderPoW2Sig))
+                return state.DoS(50, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature validation failed");
+
+            std::vector<unsigned char> compWitnessUTXODelta;
+            if (!GetSimplifiedWitnessUTXODeltaForBlock(pindex, block, pow2SimplifiedWitnessUTXOForPrevBlock, compWitnessUTXODelta, &pubkey))
+            {
+                return state.DoS(100, error("ConnectBlock(): Unable to compute witness delta for block"), REJECT_INVALID, "bad-witness-utxo-delta");
+            }
             if (!std::equal(compWitnessUTXODelta.begin(), compWitnessUTXODelta.end(), block.witnessUTXODelta.begin()))
             {
                 return state.DoS(100, error("ConnectBlock(): PoW2 simplified witness delta incorrect"), REJECT_INVALID, "bad-witness-utxo-delta");
@@ -1309,6 +1308,11 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         }
         else
         {
+            std::vector<unsigned char> compWitnessUTXODelta;
+            if (!GetSimplifiedWitnessUTXODeltaForBlock(pindex, block, pow2SimplifiedWitnessUTXOForPrevBlock, compWitnessUTXODelta, nullptr))
+            {
+                return state.DoS(100, error("ConnectBlock(): Unable to compute witness delta for block"), REJECT_INVALID, "bad-witness-utxo-delta");
+            }
             if (block.witnessUTXODelta.size() > 0)
             {
                 return state.DoS(100, error("ConnectBlock(): PoW2 simplified witness delta before activation"), REJECT_INVALID, "premature-witness-utxo-delta");
