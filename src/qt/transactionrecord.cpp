@@ -237,7 +237,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                     {
                         nInputHeight = outpoint.getTransactionBlockNumber();
                         CBlock block;
-                        if (ReadBlockFromDisk(block, chainActive[nInputHeight], Params())) {
+                        if (chainActive.Height() >= nInputHeight && ReadBlockFromDisk(block, chainActive[nInputHeight], Params())) {
                             txRef = block.vtx[outpoint.getTransactionIndex()];
                         }
                         else
