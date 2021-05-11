@@ -118,6 +118,19 @@ struct CDiskBlockPos
     friend bool operator!=(const CDiskBlockPos &a, const CDiskBlockPos &b) {
         return !(a == b);
     }
+    
+    friend bool operator< (const CDiskBlockPos a, const CDiskBlockPos b)
+    {
+        if (a.nFile > b.nFile)
+            return false;
+        else if (a.nFile < b.nFile)
+            return true;
+        if (a.nPos > b.nPos)
+            return false;
+        else if (a.nPos < b.nPos)
+            return true;
+        return false;
+    }
 
     void SetNull() { nFile = -1; nPos = 0; }
     bool IsNull() const { return (nFile == -1); }

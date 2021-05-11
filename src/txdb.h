@@ -69,6 +69,17 @@ struct CDiskTxPos : public CDiskBlockPos
         CDiskBlockPos::SetNull();
         nTxOffset = 0;
     }
+    
+    friend bool operator< (const CDiskTxPos a, const CDiskTxPos b)
+    {
+        if ((CDiskBlockPos)a < (CDiskBlockPos)b)
+            return true;
+        if ((CDiskBlockPos)b < (CDiskBlockPos)a)
+            return false;
+        if (a.nTxOffset < b.nTxOffset)
+            return true;
+        return false;
+    }
 };
 
 /** CCoinsView backed by the coin database (chainstate/) */
@@ -160,8 +171,15 @@ private:
 public:
     bool UpdateBatchSync(const std::vector<std::pair<int, const CBlockFileInfo*> >& fileInfo, int nLastFile,
                          const std::vector<const CBlockIndex*>& vWriteIndices,
-                         const std::vector<uint256>& vEraseHashes);
+                         const std::vector<uint256>& vEraseHashes,
+                         const std::set<std::pair<uint256, CDiskTxPos>>& vEraseTxIndexes,
+                         const std::set<std::pair<uint256, CDiskTxPos>>& vWriteTxIndexes
+                        );
     bool EraseBatchSync(const std::vector<uint256>& vEraseHashes);
+    // Populate vEraseTxIndexes/vWriteTxIndexes with proposed changes (if any) for a moved CDiskBlockPos
+    // Note this doesn't actually perform the changes, to do that pass the returned results into 'UpdateBatchSync'
+    // NB! This must iterate the entire set for each call so is relatively slow
+    bool MoveTxIndexDiskPos(std::map<CDiskBlockPos, CDiskBlockPos> vUpdateTxIndexes, std::set<std::pair<uint256, CDiskTxPos>>& vEraseTxIndexes, std::set<std::pair<uint256, CDiskTxPos>>& vWriteTxIndexes);
     bool ReadBlockFileInfo(int nFile, CBlockFileInfo &fileinfo);
     bool ReadLastBlockFile(int &nFile);
     bool WriteReindexing(bool fReindex);

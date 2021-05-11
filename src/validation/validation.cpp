@@ -1612,7 +1612,8 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
                 setDirtyBlockIndex.erase(it++);
             }
             LogPrintf("%s: updating %d and deleting %d block indexes, prune height = %d\n", __func__, vBlocks.size(), removals.size(), nManualPruneHeight);
-            if (!pblocktree->UpdateBatchSync(vFiles, nLastBlockFile, vBlocks, removals)) {
+            std::set<std::pair<uint256, CDiskTxPos>> unusedEmptySet;
+            if (!pblocktree->UpdateBatchSync(vFiles, nLastBlockFile, vBlocks, removals, unusedEmptySet, unusedEmptySet )) {
                 return AbortNode(state, "Failed to write to block index database");
             }
             uiInterface.NotifySPVPrune(nPartialPruneHeightDone);
@@ -3778,51 +3779,57 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
         CBlock* pblock = new CBlock();
         std::vector<std::pair<int, const CBlockFileInfo*> > vDirtyFiles;
         std::vector<const CBlockIndex*> vDirtyBlocks;
+        std::map<CDiskBlockPos, CDiskBlockPos> vUpdateTxIndexes;
         for(const auto& item: vSortedByHeight)
         {
             CBlockIndex* pindex = item.second;
             pblock->SetNull();
 
-            CDiskBlockPos blockpos = pindex->GetBlockPos();
-            CDiskBlockPos undoPos = pindex->GetUndoPos();
-
-            if (blockpos.nFile >= 0)
+            CDiskBlockPos oldBlockPos = pindex->GetBlockPos();
+            CDiskBlockPos oldUndoPos = pindex->GetUndoPos();
+            if (oldBlockPos.nFile >= 0)
             {
                 vDirtyFiles.push_back(std::pair(pindex->nFile, &vinfoBlockFile[pindex->nFile]));
                 // Read block in, using old transaction format.
                 {
-                    if (!oldStore.ReadBlockFromDisk(*pblock, blockpos, chainparams, nullptr, SERIALIZE_BLOCK_HEADER_NO_WITNESS_DELTA))
-                        return error("UpgradeBlockIndex: ReadBlockFromDisk: Errors in block at %s", blockpos.ToString());
+                    if (!oldStore.ReadBlockFromDisk(*pblock, oldBlockPos, chainparams, nullptr, SERIALIZE_BLOCK_HEADER_NO_WITNESS_DELTA))
+                        return error("UpgradeBlockIndex: ReadBlockFromDisk: Errors in block at %s", oldBlockPos.ToString());
                 }
 
                 // Write block out using new transaction format.
                 {
                     unsigned int nSize = ::GetSerializeSize(*pblock, SER_DISK, CLIENT_VERSION);
                     CValidationState state;
+                    CDiskBlockPos blockpos;
                     FindBlockPos(state, blockpos, nSize+8, pindex->nHeight, pblock->GetBlockTime());
                     if (!blockStore.WriteBlockToDisk(*pblock, blockpos, chainparams.MessageStart()))
                         return error("UpgradeBlockIndex: WriteBlockToDisk: failed");
                     pindex->nFile = blockpos.nFile;
                     pindex->nDataPos = blockpos.nPos;
+                    
+                    // Update the tx index as well as those reference the block disk positions...
+                    vUpdateTxIndexes[oldBlockPos] = blockpos;
                 }
                 
+                CDiskBlockPos newUndoPos;
                 if (pindex->nStatus & BLOCK_HAVE_UNDO)
                 {
                     CBlockUndo undo;
-                    if (!undoPos.IsNull()) {
-                        if (!oldStore.UndoReadFromDisk(undo, undoPos, pindex->pprev->GetBlockHashPoW2()))
+                    if (!oldUndoPos.IsNull())
+                    {
+                        if (!oldStore.UndoReadFromDisk(undo, oldUndoPos, pindex->pprev->GetBlockHashPoW2()))
                             return error("UpgradeBlockIndex(): *** found bad undo data at %d, hash=%s\n", pindex->nHeight, pindex->GetBlockHashPoW2().ToString());
-                    }
-            
-                    pindex->nUndoPos = 0;
-                    CValidationState state;
-                    if (!FindUndoPos(state, pindex->nFile, undoPos, ::GetSerializeSize(undo, SER_DISK, CLIENT_VERSION) + 40))
-                        return error("ConnectBlock(): FindUndoPos failed");
-                    if (!blockStore.UndoWriteToDisk(undo, undoPos, pindex->pprev->GetBlockHashPoW2(), chainparams.MessageStart()))
-                        return AbortNode(state, "Failed to write undo data");
 
-                    // update nUndoPos in block index
-                    pindex->nUndoPos = undoPos.nPos;
+                        pindex->nUndoPos = 0;
+                        CValidationState state;
+                        if (!FindUndoPos(state, pindex->nFile, newUndoPos, ::GetSerializeSize(undo, SER_DISK, CLIENT_VERSION) + 40))
+                            return error("ConnectBlock(): FindUndoPos failed");
+                        if (!blockStore.UndoWriteToDisk(undo, newUndoPos, pindex->pprev->GetBlockHashPoW2(), chainparams.MessageStart()))
+                            return AbortNode(state, "Failed to write undo data");
+
+                        // update nUndoPos in block index
+                        pindex->nUndoPos = newUndoPos.nPos;
+                    }
                 }
                 
                 // Update the block index as the position of the block on disk has changed.
@@ -3835,7 +3842,14 @@ bool UpgradeBlockIndex(const CChainParams& chainparams, int nPreviousVersion, in
         delete pblock;
 
         FlushBlockFile();
-        if (!pblocktree->UpdateBatchSync(vDirtyFiles, nLastBlockFile, vDirtyBlocks, std::vector<uint256>()))
+        
+        std::set<std::pair<uint256, CDiskTxPos> > vWriteTxIndexes;
+        std::set<std::pair<uint256, CDiskTxPos> > vEraseTxIndexes;
+        
+        if (!pblocktree->MoveTxIndexDiskPos(vUpdateTxIndexes, vEraseTxIndexes, vWriteTxIndexes))
+            return error("UpgradeBlockIndex: Failed to calculate update to block transaction index database");
+        
+        if (!pblocktree->UpdateBatchSync(vDirtyFiles, nLastBlockFile, vDirtyBlocks, std::vector<uint256>(), vEraseTxIndexes, vWriteTxIndexes))
         {
             return error("UpgradeBlockIndex: Failed to write to block index database");
         }

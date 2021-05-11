@@ -393,9 +393,12 @@ void CCoinsViewDBCursor::Next()
     }
 }
 
-bool CBlockTreeDB::UpdateBatchSync(const std::vector<std::pair<int, const CBlockFileInfo*> >& fileInfo, int nLastFile,
+bool CBlockTreeDB::UpdateBatchSync(const std::vector<std::pair<int, const CBlockFileInfo*>>& fileInfo, int nLastFile,
                                    const std::vector<const CBlockIndex*>& vWriteIndices,
-                                   const std::vector<uint256>& vEraseHashes)
+                                   const std::vector<uint256>& vEraseHashes,
+                                   const std::set<std::pair<uint256, CDiskTxPos>>& vEraseTxIndexes,
+                                   const std::set<std::pair<uint256, CDiskTxPos>>& vWriteTxIndexes
+                                  )
 {
     CDBBatch batch(*this);
     for (std::vector<std::pair<int, const CBlockFileInfo*> >::const_iterator it=fileInfo.begin(); it != fileInfo.end(); it++)
@@ -411,8 +414,15 @@ bool CBlockTreeDB::UpdateBatchSync(const std::vector<std::pair<int, const CBlock
     {
         batch.Erase(std::pair(DB_BLOCK_INDEX, hash));
     }
+    for (const auto& [hash, diskPos]: vEraseTxIndexes)
+    {
+        batch.Erase(std::pair(DB_TXINDEX, hash));
+    }
+    for (const auto& [hash, diskPos]: vWriteTxIndexes)
+    {
+        batch.Write(std::pair(DB_TXINDEX, hash), diskPos);
+    }
     return WriteBatch(batch, true);
-
 }
 
 bool CBlockTreeDB::EraseBatchSync(const std::vector<uint256>& vEraseHashes)
@@ -423,6 +433,37 @@ bool CBlockTreeDB::EraseBatchSync(const std::vector<uint256>& vEraseHashes)
         batch.Erase(std::pair(DB_BLOCK_INDEX, hash));
     }
     return WriteBatch(batch, true);
+}
+
+bool CBlockTreeDB::MoveTxIndexDiskPos(std::map<CDiskBlockPos, CDiskBlockPos> vUpdateTxIndexes, std::set<std::pair<uint256, CDiskTxPos>>& vEraseTxIndexes, std::set<std::pair<uint256, CDiskTxPos>>& vWriteTxIndexes)
+{
+    std::unique_ptr<CDBIterator> pcursor(NewIterator());
+    pcursor->Seek(std::pair(DB_TXINDEX, uint256()));
+    while (pcursor->Valid())
+    {
+        std::pair<char, uint256> key;
+        if (pcursor->GetKey(key) && key.first == DB_TXINDEX)
+        {
+            CDiskTxPos diskTxPos;
+            if (pcursor->GetValue(diskTxPos))
+            {
+                vEraseTxIndexes.insert(std::pair(key.second, diskTxPos));
+                const auto& iter = vUpdateTxIndexes.find(diskTxPos);
+                if (iter != vUpdateTxIndexes.end())
+                {
+                    diskTxPos.nFile = iter->second.nFile;
+                    diskTxPos.nPos = iter->second.nPos;
+                    vWriteTxIndexes.insert(std::pair(key.second, diskTxPos));
+                }
+            }
+            pcursor->Next();
+        }
+        else
+        {
+            break;
+        }
+    }
+    return true;
 }
 
 bool CBlockTreeDB::ReadTxIndex(const uint256 &txid, CDiskTxPos &pos)

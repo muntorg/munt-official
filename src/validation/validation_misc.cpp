@@ -62,7 +62,7 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const CChainPar
             }
             hashBlock = header.GetHashPoW2();
             if (txOut->GetHash() != hash)
-                return error("%s: txid mismatch", __func__);
+                return error("%s: txid mismatch, block hash [%s]", __func__, hashBlock.ToString());
             return true;
         }
     }

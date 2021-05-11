@@ -238,7 +238,7 @@ public:
             consensus.pow2Phase5FirstBlockHeight=0;
             if (fIsOfficialTestnetV1)
             {
-                consensus.pow2WitnessSyncHeight=350200;
+                consensus.pow2WitnessSyncHeight=352200;
             }
             else
             {
