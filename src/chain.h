@@ -410,6 +410,9 @@ public:
             }
 
             std::sort(pbegin, pend);
+            if (pbegin-pend < nMedianTimeSpan)
+                return pbegin[0];
+
             return ( pbegin[nMid-1] + pbegin[nMid] ) / 2;
         }
         else
@@ -423,6 +426,9 @@ public:
                 *(--pbegin) = pindex->GetBlockTime();
 
             std::sort(pbegin, pend);
+            if (pbegin-pend < nMedianTimeSpan)
+                return pbegin[0];
+
             return pbegin[(pend - pbegin)/2];
         }
     }
@@ -442,6 +448,10 @@ public:
             *(--pbegin) = pindex->GetBlockTime();
 
         std::sort(pbegin, pend);
+
+        if (pbegin-pend < nMedianTimeSpan)
+            return pbegin[0];
+            
         return pbegin[(pend - pbegin)/2];
     }
 
@@ -460,6 +470,10 @@ public:
             *(--pbegin) = pindex->nTimePoW2Witness == 0 ? pindex->GetBlockTime() : pindex->nTimePoW2Witness;
 
         std::sort(pbegin, pend);
+        
+        if (pbegin-pend < nMedianTimeSpan)
+            return pbegin[0];
+
         return pbegin[(pend - pbegin)/2];
     }
 
