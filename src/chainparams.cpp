@@ -209,8 +209,8 @@ public:
         assert(genesis.hashMerkleRoot == uint256S("0x2cb5137e16879fbe4f1180a0805f58d0acb75e55c1b2097f6d86fb2320b7f012"));
         assert(genesis.hashMerkleRootPoW2Witness == uint256S("0x2cb5137e16879fbe4f1180a0805f58d0acb75e55c1b2097f6d86fb2320b7f012"));
 
-        vSeeds.push_back(CDNSSeedData("seed 0",  "seed1.novocurrency.com", false));
-        vSeeds.push_back(CDNSSeedData("seed 1",  "seed2.novocurrency.com", false));       
+        vSeeds.push_back(CDNSSeedData("seed 0",  "seed1.florin.org", false));
+        vSeeds.push_back(CDNSSeedData("seed 1",  "seed2.florin.org", false));       
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,53);// 'N'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,113);// 'n'

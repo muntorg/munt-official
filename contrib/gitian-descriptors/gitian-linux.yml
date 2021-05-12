@@ -1,5 +1,5 @@
 ---
-name: "Novo-linux-1.0.11"
+name: "Florin-linux-1.0.11"
 enable_cache: true
 distro: "ubuntu"
 suites:
@@ -36,7 +36,7 @@ packages:
 - "flex"
 remotes:
 - "url": https://github.com/novocurrency/novocurrency-core.git
-  "dir": "Novo"
+  "dir": "Florin"
 files:
 - "iojs-v8.2.3.tar.gz"
 - "node-addon-api-2.0.0.tgz"
@@ -154,13 +154,13 @@ script: |
   ./autogen.sh
   CONFIG_SITE=${BASEPREFIX}/`echo "${HOSTS}" | awk '{print $1;}'`/share/config.site ./configure --prefix=/
   make dist
-  SOURCEDIST=`echo Novo-*.tar.gz`
+  SOURCEDIST=`echo Florin-*.tar.gz`
   DISTNAME=`echo ${SOURCEDIST} | sed 's/.tar.*//'`
   # Correct tar file order
   mkdir -p temp
   pushd temp
   tar xf ../$SOURCEDIST
-  find Novo-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
+  find Florin-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
   popd
 
   # Workaround for tarball not building with the bare tag version (prep)
@@ -209,8 +209,8 @@ script: |
 
     #Move lib results to outdir
     mkdir $OUTDIR/libs || true
-    mv -f release/lib/lib_unity_node_js.so.0.0.0 $OUTDIR/libs/libnovo_linux_${i}.node
-    mv -f release/lib/lib_unity_node_js.so.0.0.0.dbg $OUTDIR/libs/libnovo_linux_${i}.node.dbg
+    mv -f release/lib/lib_unity_node_js.so.0.0.0 $OUTDIR/libs/libflorin_linux_${i}.node
+    mv -f release/lib/lib_unity_node_js.so.0.0.0.dbg $OUTDIR/libs/libflorin_linux_${i}.node.dbg
     rm -rf release/lib
 
     # Make tarballs

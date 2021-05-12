@@ -1190,7 +1190,7 @@ UriRecipient ILibraryController::IsValidRecipient(const UriRecord & request)
 {
      // return if URI is not valid or is no Gulden: URI
     std::string lowerCaseScheme = boost::algorithm::to_lower_copy(request.scheme);
-    if (lowerCaseScheme != "novo")
+    if (lowerCaseScheme != "florin")
         return UriRecipient(false, "", "", "", 0);
 
     if (!CNativeAddress(request.path).IsValid())

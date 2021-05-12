@@ -19,7 +19,7 @@
  * for all apps, to make it harder for attackers to
  * target servers or GUI users specifically.
  */
-const std::string CLIENT_NAME("Novo");
+const std::string CLIENT_NAME("Florin");
 
 /**
  * Client version number

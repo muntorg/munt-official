@@ -7,17 +7,17 @@ define(_CLIENT_VERSION_BUILD,       11)
 define(_CLIENT_VERSION_IS_RELEASE, false)
 define(_COPYRIGHT_YEAR, 2020)
 define(_COPYRIGHT_HOLDERS,[The %s developers])
-define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[Novo]])
-AC_INIT([Novo],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[info@novocurrency.com],[Novo])
+define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[Florin]])
+AC_INIT([Florin],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[info@florin.org],[Florin])
 AC_CONFIG_SRCDIR([src/init.cpp])
 AC_CONFIG_HEADERS([src/config/build-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
-m4_define([_DAEMON_NAME], [Novo-daemon])
-m4_define([_CLI_NAME], [Novo-cli])
-m4_define([_GUI_NAME], [Novo-ui])
-m4_define([_TX_NAME], [Novo-tx])
+m4_define([_DAEMON_NAME], [Florin-daemon])
+m4_define([_CLI_NAME], [Florin-cli])
+m4_define([_GUI_NAME], [Florin-ui])
+m4_define([_TX_NAME], [Florin-tx])
 [_DAEMON_NAME]=_DAEMON_NAME
 [_CLI_NAME]=_CLI_NAME
 [_GUI_NAME]=_GUI_NAME

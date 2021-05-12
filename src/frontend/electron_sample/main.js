@@ -63,9 +63,9 @@ function createWindow () {
 function guldenUnitySetup() {
     var basepath = app.getAppPath();
 
-    global.libgulden = libgulden = require('./libnovo_unity_node_js')
-    global.guldenbackend = guldenbackend = new libgulden.NJSUnifiedBackend
-    signalhandler = global.signalhandler = new libgulden.NJSUnifiedFrontend();
+    global.libgulden = libgulden = require('./libflorin_unity_node_js')
+    global.backend = backend = new libflorin.NJSUnifiedBackend
+    signalhandler = global.signalhandler = new libflorin.NJSUnifiedFrontend();
 
     // Receive signals from the core and marshall them as needed to the main window
     signalhandler.notifyCoreReady = function() {
@@ -76,7 +76,7 @@ function guldenUnitySetup() {
         {
             console.log("terminate core immediately after init")
             terminateCore=false
-            guldenbackend.TerminateUnityLib()
+            backend.TerminateUnityLib()
         }
     }
     signalhandler.logPrint  = function(message) {

@@ -97,8 +97,8 @@
 #include <openssl/conf.h>
 
 
-const char * const DEFAULT_CONF_FILENAME = "novo.conf";
-const char * const DEFAULT_PID_FILENAME = "novo.pid";
+const char * const DEFAULT_CONF_FILENAME = "florin.conf";
+const char * const DEFAULT_PID_FILENAME = "florin.pid";
 
 ArgsManager gArgs;
 bool fPrintToConsole = false;
@@ -415,7 +415,7 @@ static std::string FormatException(const std::exception* pex, const char* pszThr
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(NULL, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "Novo";
+    const char* pszModule = "Florin";
 #endif
     if (pex)
         return strprintf(
@@ -434,13 +434,13 @@ void PrintExceptionContinue(const std::exception* pex, const char* pszThread)
 
 fs::path GetDefaultDataDir()
 {
-    // Windows < Vista: C:\Documents and Settings\Username\Application Data\novo
-    // Windows >= Vista: C:\Users\Username\AppData\Roaming\novo
-    // Mac: ~/Library/Application Support/novo
-    // Unix: ~/.novo
+    // Windows < Vista: C:\Documents and Settings\Username\Application Data\florin
+    // Windows >= Vista: C:\Users\Username\AppData\Roaming\florin
+    // Mac: ~/Library/Application Support/florin
+    // Unix: ~/.florin
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "novo";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "florin";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -450,10 +450,10 @@ fs::path GetDefaultDataDir()
         pathRet = fs::path(pszHome);
 #ifdef MAC_OSX
     // Mac
-    return pathRet / "Library/Application Support/novo";
+    return pathRet / "Library/Application Support/florin";
 #else
     // Unix
-    return pathRet / ".novo";
+    return pathRet / ".florin";
 #endif
 #endif
 }

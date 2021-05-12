@@ -1,10 +1,10 @@
 <table cellspacing="0" cellpadding="0" color="grey" border="1px">
   <tr border=0>
     <td border="0px" width="80%" rowspan="7">
-      <a href="https://www.novocurrency.com">
-        <img align="left" src="./src/frontend/electron/img/icon_128.png" alt="Novo"/>
+      <a href="https://www.florin.org">
+        <img align="left" src="./src/frontend/electron/img/icon_128.png" alt="Florin"/>
       </a>
-      <p>Novocurrency; The climate friendly blockchain based currency with an even distribution<br/>
+      <p>Florin; The climate friendly blockchain based currency with an even distribution<br/>
     </td>
     <td width="20%" border=0>
       <a href="#">
@@ -51,7 +51,7 @@
 
 
 ### License
-All code, binaries and other assets in this repository are subject to [The Novo license](https://github.com/novocurrency/novocurrency-core/blob/master/COPYING_novo) except where explicitely stated otherwise.
+All code, binaries and other assets in this repository are subject to [The Florin license](https://github.com/novocurrency/novocurrency-core/blob/master/COPYING_florin) except where explicitely stated otherwise.
 
 ### Branches
 `master` branch tracks the current public release; is generally updated only for each release (with accompanying tag) and very occasionally for minor documentation or other commits. If all you want is to build/track the current version of the software than use the `master` branch.
@@ -62,7 +62,7 @@ Major features are worked on in temporary feature branches until they can be mer
 The currently most active branch, where most development that will go into the next major release is taking place is linked in the table at the top of this README as the `dev branch` and may be updated as development mandates seperate branches, for development changes you will generally want to work on this branch.
 
 ### Contributing
-If you are thinking about contributing toward the development of Novo in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
+If you are thinking about contributing toward the development of Florin in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
 
 ### Technical documentation
 * [Transaction format](./technical_documentation/transaction_format.md)
@@ -89,12 +89,12 @@ For those who really need too or are technically inclined it is of course possib
 |:-----------|:---------|:---------|
 |Consensus algorithm:|PoW² SIGMA/Holding|PoW² SIGMA/Holding|
 |Recommended transaction confirmations:|2|2|
-|Block reward SIGMA:|0.10 Novo|0.10 Novo|
-|Block reward holder:|0.10 Novo|0.10 Novo|
+|Block reward SIGMA:|0.10 XFL|0.10 XFL|
+|Block reward holder:|0.10 XFL|0.10 XFL|
 |Block interval target:|300 seconds (5 minutes)|Configurable|
 |Difficulty adjustment period:|Every block|Every block|
 |Difficulty adjustment algorithm:|Delta|Delta|
-|Total coins to be minted over time:|210'000 Novo||
+|Total coins to be minted over time:|210'000 XFL||
 |P2P Port|9233|9235|
 |RPC Port|9234|9236|
 |P2P Network Header|fcfdfcfd|Configurable|
@@ -102,7 +102,7 @@ For those who really need too or are technically inclined it is of course possib
 |P2SH version byte|113 (n)|127 (t)|
 |BIP44 coin type|530 0x80000212|530 0x80000212|
 |**Infrastructure**|**Main network**|**[Testnet](./technical_documentation/accelerated_testnet.md#official-testnet)**|
-|Official block explorer|blockchain.novocurrency.com|-|
+|Official block explorer|blockchain.florin.org|-|
 |Community block explorer||-|
-|DNS Seed 1|seed1.novocurrency.com|-|
-|DNS Seed 2|seed2.novocurrency.com|-|
+|DNS Seed 1|seed1.florin.org|-|
+|DNS Seed 2|seed2.florin.org|-|

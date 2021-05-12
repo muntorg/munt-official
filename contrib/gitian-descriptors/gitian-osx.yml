@@ -1,5 +1,5 @@
 ---
-name: "Novo-osx-1.0.11"
+name: "Florin-osx-1.0.11"
 enable_cache: true
 distro: "ubuntu"
 suites:
@@ -36,7 +36,7 @@ packages:
 - "genisoimage"
 remotes:
 - "url": https://github.com/novocurrency/novocurrency-core.git
-  "dir": "Novo"
+  "dir": "Florin"
 files:
 - "MacOSX10.11.sdk.tar.gz"
 - "iojs-v8.2.3.tar.gz"
@@ -104,7 +104,7 @@ script: |
   export CFLAGS=${CXXFLAGS}
   export LDFLAGS="-fPIC -Bsymbolic -Wl,-undefined -Wl,dynamic_lookup"
 
-  cd Novo
+  cd Florin
   BASEPREFIX=`pwd`/depends
 
   mkdir -p ${BASEPREFIX}/SDKs
@@ -129,14 +129,14 @@ script: |
   ./autogen.sh
   CONFIG_SITE=${BASEPREFIX}/`echo "${HOSTS}" | awk '{print $1;}'`/share/config.site ./configure --prefix=/
   make dist
-  SOURCEDIST=`echo Novo-*.tar.gz`
+  SOURCEDIST=`echo Florin-*.tar.gz`
   DISTNAME=`echo ${SOURCEDIST} | sed 's/.tar.*//'`
 
   # Correct tar file order
   mkdir -p temp
   pushd temp
   tar xf ../$SOURCEDIST
-  find Novo-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
+  find Florin-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
   popd
 
   # Workaround for tarball not building with the bare tag version (prep)
@@ -173,7 +173,7 @@ script: |
     
     # Move library into release folder
     mkdir $OUTDIR/libs || true
-    cp -f src/.libs/lib_unity_node_js.0.so $OUTDIR/libs/libnovo_macos_${i}.node
+    cp -f src/.libs/lib_unity_node_js.0.so $OUTDIR/libs/libflorin_macos_${i}.node
 
     #make osx_volname
     #make deploydir

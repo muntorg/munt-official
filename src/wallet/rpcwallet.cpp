@@ -538,12 +538,12 @@ UniValue sendtoaddressfromaccount(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 3 || request.params.size() > 6)
         throw std::runtime_error(
-            "sendtoaddressfromaccount \"from_account\" \"novoaddress\" amount ( \"comment\" \"comment-to\" subtract_fee_from_amount )\n"
-            "\nSend an amount to \"novoaddress\" using \"account\"\n"
+            "sendtoaddressfromaccount \"from_account\" \"florinaddress\" amount ( \"comment\" \"comment-to\" subtract_fee_from_amount )\n"
+            "\nSend an amount to \"florinaddress\" using \"account\"\n"
             + HelpRequiringPassphrase(pwallet) +
             "\nArguments:\n"
             "1. \"from_account\"           (string, required) The UUID or unique label of the account to move funds from. May be the currently active account using \"\".\n"
-            "2. \"novoaddress\"            (string, required) The " GLOBAL_APPNAME " address to send to.\n"
+            "2. \"florinaddress\"            (string, required) The " GLOBAL_APPNAME " address to send to.\n"
             "3. \"amount\"                 (numeric or string, required) The amount in " + CURRENCY_UNIT + " to send. eg 0.1\n"
             "4. \"comment\"                (string, optional) A comment used to store what the transaction is for. \n"
             "                            This is not part of the transaction, just kept in your wallet.\n"

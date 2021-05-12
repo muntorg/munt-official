@@ -1,4 +1,4 @@
-// Copyright (c) 2020 The Novo developers
+// Copyright (c) 2020 The Florin developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -10,8 +10,8 @@
 #include "config/build-config.h"
 #endif
 
-#define GLOBAL_APPNAME "Novo"
-#define GLOBAL_APP_URIPREFIX "novo"
-#define GLOBAL_COIN_CODE "NOV"
+#define GLOBAL_APPNAME "Florin"
+#define GLOBAL_APP_URIPREFIX "florin"
+#define GLOBAL_COIN_CODE "XFL"
 
 #endif

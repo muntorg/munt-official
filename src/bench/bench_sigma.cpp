@@ -16,13 +16,11 @@
 #include <random.h>
 #include "key.h"
 
-#ifndef WIN32
 int LogPrintStr(const std::string &str)
 {
     std::cout << str;
     return 1;
 }
-#endif
 
 // fixme: (BOOST) - Workaround for boost on macOS (when using newer clang) build issue (not detecting string_view properly)
 // Remove this when addressed by Boost's ASIO config.

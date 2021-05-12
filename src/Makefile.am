@@ -109,11 +109,11 @@ TESTS =
 BENCHMARKS =
 
 if BUILD_DAEMON
-  bin_PROGRAMS += Novo-daemon
+  bin_PROGRAMS += Florin-daemon
 endif
 
 if BUILD_UTILS
-  bin_PROGRAMS += Novo-cli Novo-tx
+  bin_PROGRAMS += Florin-cli Florin-tx
 endif
 
 .PHONY: FORCE check-symbols check-security
@@ -1020,16 +1020,16 @@ endif
 
 # Daemon binary #
 if BUILD_DAEMON
-Novo_daemon_SOURCES = daemon-main.cpp
-Novo_daemon_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
-Novo_daemon_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-Novo_daemon_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+Florin_daemon_SOURCES = daemon-main.cpp
+Florin_daemon_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+Florin_daemon_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+Florin_daemon_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-Novo_daemon_SOURCES += daemon-res.rc
+Florin_daemon_SOURCES += daemon-res.rc
 endif
 
-Novo_daemon_LDADD = \
+Florin_daemon_LDADD = \
   $(LIB_SERVER) \
   $(LIB_RPC) \
   $(LIB_NODE) \
@@ -1048,44 +1048,44 @@ Novo_daemon_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-Novo_daemon_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(SSL_LIBS)
+Florin_daemon_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(SSL_LIBS)
 endif
 #
 
 # cli binary #
 if BUILD_UTILS
-Novo_cli_SOURCES = cli-main.cpp
-Novo_cli_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(EVENT_CFLAGS)
-Novo_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-Novo_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+Florin_cli_SOURCES = cli-main.cpp
+Florin_cli_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(EVENT_CFLAGS)
+Florin_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+Florin_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-Novo_cli_SOURCES += cli-res.rc
+Florin_cli_SOURCES += cli-res.rc
 endif
 
-Novo_cli_LDADD = \
+Florin_cli_LDADD = \
   $(LIB_CLI) \
   $(LIBUNIVALUE) \
   $(LIB_UTIL) \
   $(LIB_GENERIC) \
   $(LIB_CRYPTO_ALL)
 
-Novo_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+Florin_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 endif
 #
 
 # tx binary #
 if BUILD_UTILS
-Novo_tx_SOURCES = tx-main.cpp
-Novo_tx_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
-Novo_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-Novo_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+Florin_tx_SOURCES = tx-main.cpp
+Florin_tx_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+Florin_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+Florin_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-Novo_tx_SOURCES += tx-res.rc
+Florin_tx_SOURCES += tx-res.rc
 endif
 
-Novo_tx_LDADD = \
+Florin_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIB_COMMON) \
   $(LIB_UTIL) \
@@ -1100,7 +1100,7 @@ Novo_tx_LDADD = \
   $(LIB_COMMON) \
   $(LIBSECP256K1)
 
-Novo_tx_LDADD += $(BOOST_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS)
+Florin_tx_LDADD += $(BOOST_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS)
 endif
 #
 

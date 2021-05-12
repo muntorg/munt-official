@@ -26,7 +26,7 @@ WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win$(WINDOWS_BITS)-setup$(EXEEXT)
 empty :=
 space := $(empty) $(empty)
 
-OSX_APP=Novo.app
+OSX_APP=Florin.app
 OSX_VOLNAME = $(subst $(space),-,$(PACKAGE_NAME))
 OSX_DMG = $(OSX_VOLNAME).dmg
 OSX_BACKGROUND_SVG=background.svg
@@ -37,9 +37,9 @@ OSX_FANCY_PLIST=$(top_srcdir)/contrib/macdeploy/fancy.plist
 OSX_INSTALLER_ICONS=$(top_srcdir)/src/frontend/electron/build/icon.icns
 
 DIST_DOCS = $(wildcard doc/*.md) $(wildcard doc/release-notes/*.md)
-DIST_CONTRIB = $(top_srcdir)/contrib/Novo-cli.bash-completion \
-	       $(top_srcdir)/contrib/Novo-tx.bash-completion \
-	       $(top_srcdir)/contrib/Novo-daemon.bash-completion \
+DIST_CONTRIB = $(top_srcdir)/contrib/Florin-cli.bash-completion \
+	       $(top_srcdir)/contrib/Florin-tx.bash-completion \
+	       $(top_srcdir)/contrib/Florin-daemon.bash-completion \
 	       $(top_srcdir)/contrib/init 
 
 BIN_CHECKS=$(top_srcdir)/contrib/devtools/symbol-check.py \
@@ -86,7 +86,7 @@ $(OSX_APP)/Contents/Info.plist: $(OSX_PLIST)
 	$(MKDIR_P) $(@D)
 	$(INSTALL_DATA) $< $@
 
-$(OSX_APP)/Contents/Resources/Novo.icns: $(OSX_INSTALLER_ICONS)
+$(OSX_APP)/Contents/Resources/Florin.icns: $(OSX_INSTALLER_ICONS)
 	$(MKDIR_P) $(@D)
 	$(INSTALL_DATA) $< $@
 
@@ -95,8 +95,8 @@ $(OSX_APP)/Contents/Resources/Base.lproj/InfoPlist.strings:
 	echo '{	CFBundleDisplayName = "$(PACKAGE_NAME)"; CFBundleName = "$(PACKAGE_NAME)"; }' > $@
 
 OSX_APP_BUILT=$(OSX_APP)/Contents/PkgInfo $(OSX_APP)/Contents/Resources/empty.lproj \
-  $(OSX_APP)/Contents/Resources/Novo.icns $(OSX_APP)/Contents/Info.plist \
-  $(OSX_APP)/Contents/MacOS/Novo $(OSX_APP)/Contents/Resources/Base.lproj/InfoPlist.strings
+  $(OSX_APP)/Contents/Resources/Florin.icns $(OSX_APP)/Contents/Info.plist \
+  $(OSX_APP)/Contents/MacOS/Florin $(OSX_APP)/Contents/Resources/Base.lproj/InfoPlist.strings
 
 osx_volname:
 	echo $(OSX_VOLNAME) >$@
@@ -121,7 +121,7 @@ $(APP_DIST_DIR)/Applications:
 	@rm -f $@
 	@cd $(@D); $(LN_S) /Applications $(@F)
 
-$(APP_DIST_EXTRAS): $(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Novo-ui
+$(APP_DIST_EXTRAS): $(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Florin-ui
 
 $(OSX_DMG): $(APP_DIST_EXTRAS)
 	$(GENISOIMAGE) -no-cache-inodes -D -l -probe -V "$(OSX_VOLNAME)" -no-pad -r -dir-mode 0755 -apple -o $@ dist
@@ -211,7 +211,7 @@ endif
 
 dist_noinst_SCRIPTS = autogen.sh
 
-EXTRA_DIST = $(top_srcdir)/share/genbuild.sh test/functional/test_runner.py test/functional $(DIST_CONTRIB) $(DIST_DOCS) $(WINDOWS_PACKAGING) $(OSX_PACKAGING) $(BIN_CHECKS) COPYING COPYING_novo COPYING_gulden COPYING_upstream
+EXTRA_DIST = $(top_srcdir)/share/genbuild.sh test/functional/test_runner.py test/functional $(DIST_CONTRIB) $(DIST_DOCS) $(WINDOWS_PACKAGING) $(OSX_PACKAGING) $(BIN_CHECKS) COPYING COPYING_florin COPYING_gulden COPYING_upstream
 
 EXTRA_DIST += \
     test/util/util-test.py \

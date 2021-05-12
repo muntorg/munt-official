@@ -1,5 +1,5 @@
 ---
-name: "Novo-win-1.0.11"
+name: "Florin-win-1.0.11"
 enable_cache: true
 distro: "ubuntu"
 sudo: true
@@ -32,7 +32,7 @@ packages:
 - "libssl-dev"
 remotes:
 - "url": https://github.com/novocurrency/novocurrency-core.git
-  "dir": "Novo"
+  "dir": "Florin"
 files:
 - "osslsigncode-2.0.tar.gz" #Optional; Only needed for official builds.
 - "codesign.tar.gz" #Optional; only needed for official builds.
@@ -146,10 +146,10 @@ script: |
 
   export CXXFLAGS="-fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer"
   export CFLAGS=${CXXFLAGS}
-  export LDFLAGS="-fPIC -Bsymbolic -L`pwd`/Novo/build_node -lnode -Wl,--gc-sections"
+  export LDFLAGS="-fPIC -Bsymbolic -L`pwd`/Florin/build_node -lnode -Wl,--gc-sections"
   export EXTRA_CXX_FLAGS="-DNODE_HOST_BINARY=node.exe -DUSING_UV_SHARED=1 -DUSING_V8_SHARED=1 -DV8_DEPRECATION_WARNINGS=1 -DV8_DEPRECATION_WARNINGS -DV8_IMMINENT_DEPRECATION_WARNINGS -DWIN32 -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -D_HAS_EXCEPTIONS=0 -DBUILDING_NODE_EXTENSION -D_WINDLL -DNAPI_VERSION=5 -DDJINNI_NODEJS"
 
-  cd Novo
+  cd Florin
 
   mkdir build_node
 
@@ -174,14 +174,14 @@ script: |
   ./autogen.sh
   CONFIG_SITE=${BASEPREFIX}/`echo "${HOSTS}" | awk '{print $1;}'`/share/config.site ./configure --prefix=/
   make dist
-  SOURCEDIST=`echo Novo-*.tar.gz`
+  SOURCEDIST=`echo Florin-*.tar.gz`
   DISTNAME=`echo ${SOURCEDIST} | sed 's/.tar.*//'`
 
   # Correct tar file order
   mkdir -p temp
   pushd temp
   tar xf ../$SOURCEDIST
-  find Novo-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
+  find Florin-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
   mkdir -p $OUTDIR/src
   cp ../$SOURCEDIST $OUTDIR/src
   popd
@@ -230,7 +230,7 @@ script: |
     find . -name "*.exe" | xargs --max-procs 32 -i cp {} release/
 
     # Rename libraries to final names before splitting the debug info, otherwise gdb doesn't auto load the info properly
-    mv -f release/lib_unity_node_js-0.dll release/libnovo_win_${i}.node
+    mv -f release/lib_unity_node_js-0.dll release/libflorin_win_${i}.node
 
     # TODO - change all the --max-procs to pull args from gitian input somehow; instead of hardcoded
     # Strip in place
@@ -243,8 +243,8 @@ script: |
 
     #Move lib results to outdir
     mkdir $OUTDIR/libs || true
-    mv -f release/libnovo_win_${i}.node $OUTDIR/libs/libnovo_win_${i}.node
-    mv -f release/libnovo_win_${i}.node.dbg $OUTDIR/libs/libnovo_win_${i}.node.dbg
+    mv -f release/libflorin_win_${i}.node $OUTDIR/libs/libflorin_win_${i}.node
+    mv -f release/libflorin_win_${i}.node.dbg $OUTDIR/libs/libflorin_win_${i}.node.dbg
 
     # Tarball of signed executables and debug info - direct to build host
     cd release

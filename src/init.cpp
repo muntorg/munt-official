@@ -388,13 +388,13 @@ extern std::string HelpMessage(HelpMessageMode mode);
 
 std::string LicenseInfo()
 {
-    const std::string URL_WEBSITE = "<https://novocurrency.com>";
+    const std::string URL_WEBSITE = "<https://florin.org>";
 
     //fixme: (FUT) Mention additional libraries, boost etc.
     //fixme: (FUT) Translate
     //fixme: (FUT) Add code to ensure translations never strip copyrights
-    return helptr("Copyright (C) 2021 The Novo developers")+ "\n"
-           + helptr("Licensed under the Novo license")+ "\n"
+    return helptr("Copyright (C) 2021 The Florin developers")+ "\n"
+           + helptr("Licensed under the Florin license")+ "\n"
            + "\n"
            + helptr("This is experimental software.")+ "\n"
            + strprintf(helptr("Please contribute if you find %s useful. Visit %s for further information about the software."), PACKAGE_NAME, URL_WEBSITE)

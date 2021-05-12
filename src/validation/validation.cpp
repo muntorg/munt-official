@@ -139,7 +139,7 @@ CScript COINBASE_FLAGS;
 
 int64_t nMinimumInputValue = DUST_HARD_LIMIT;
 
-const std::string strMessageMagic = "Novo Signed Message:\n";
+const std::string strMessageMagic = "Florin Signed Message:\n";
 
 std::set<CBlockIndex*, CBlockIndexWorkComparator> setBlockIndexCandidates;
 

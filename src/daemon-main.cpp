@@ -46,11 +46,11 @@ using namespace boost::placeholders;
  *
  * \section intro_sec Introduction
  *
- * This is the developer documentation of the reference client for an experimental new digital currency called Novo (https://www.novocurrency.com),
- * which enables instant payments to anyone, anywhere in the world. Novo uses peer-to-peer technology to operate
+ * This is the developer documentation of the reference client for an experimental new digital currency called Florin (https://www.florin.org),
+ * which enables instant payments to anyone, anywhere in the world. Florin uses peer-to-peer technology to operate
  * with no central authority: managing transactions and issuing money are carried out collectively by the network.
  *
- * The software is a community-driven open source project, released under the Novo license.
+ * The software is a community-driven open source project, released under the Florin license.
  *
  * \section Navigation
  * Use the buttons <code>Namespaces</code>, <code>Classes</code> or <code>Files</code> at the top of the page to start navigating the code.
