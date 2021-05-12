@@ -216,6 +216,12 @@ std::string CRPCTable::help(const std::string& strCommand, const JSONRPCRequest&
                 if (strHelp.find('\n') != std::string::npos)
                     strHelp = strHelp.substr(0, strHelp.find('\n'));
 
+                int commandEnd = strHelp.find(" ");
+                if (commandEnd == std::string::npos)
+                    strHelp = command.second->name;
+                else
+                    strHelp = command.second->name + " " + strHelp.substr(commandEnd, std::string::npos);
+                
                 if (category != pcmd->category)
                 {
                     if (!category.empty())
