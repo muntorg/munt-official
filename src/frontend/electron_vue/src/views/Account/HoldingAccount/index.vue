@@ -15,7 +15,7 @@
       </section>
     </portal>
 
-    <novo-section class="align-right">
+    <app-section class="align-right">
       {{ $t("holding_account.compound_earnings") }}
       <toggle-button
         :value="isCompounding"
@@ -30,9 +30,9 @@
         :width="44"
         @change="toggleCompounding"
       />
-    </novo-section>
+    </app-section>
 
-    <novo-section class="holding-information">
+    <app-section class="holding-information">
       <h4>{{ $t("common.information") }}</h4>
 
       <div class="flex-row">
@@ -45,11 +45,11 @@
       </div>
 
       <div class="flex-row">
-        <div>{{ $t("holding_account.novo_locked") }}</div>
+        <div>{{ $t("holding_account.coins_locked") }}</div>
         <div>{{ accountAmountLocked }}</div>
       </div>
       <div class="flex-row">
-        <div>{{ $t("holding_account.novo_earned") }}</div>
+        <div>{{ $t("holding_account.coins_earned") }}</div>
         <div>{{ accountAmountEarned }}</div>
       </div>
       <div class="flex-row">
@@ -90,7 +90,7 @@
         <div>{{ $t("holding_account.network_weight") }}</div>
         <div>{{ networkWeight }}</div>
       </div>
-    </novo-section>
+    </app-section>
 
     <portal to="footer-slot">
       <section class="footer">

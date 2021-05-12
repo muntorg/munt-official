@@ -17,11 +17,11 @@
           v-bind="componentProps"
         ></component>
       </div>
-      <novo-button-section class="buttons" v-if="showButtons">
+      <app-button-section class="buttons" v-if="showButtons">
         <template v-slot:right>
           <button @click="closeModal">{{ $t("buttons.ok") }}</button>
         </template>
-      </novo-button-section>
+      </app-button-section>
     </div>
   </div>
 </template>

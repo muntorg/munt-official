@@ -1,5 +1,5 @@
 <template>
-  <div class="novo-button-section flex-row">
+  <div class="app-button-section flex-row">
     <div class="left">
       <slot name="left" />
     </div>
@@ -13,12 +13,12 @@
 
 <script>
 export default {
-  name: "NovoButtonSection"
+  name: "AppButtonSection"
 };
 </script>
 
 <style lang="less" scoped>
-.novo-button-section {
+.app-button-section {
   width: 100%;
 
   & .left {

@@ -10,7 +10,7 @@ if (process.type !== "renderer") {
   if (os.platform() === "linux") {
     walletPath = path.join(
       app.getPath("home"),
-      isDevelopment ? ".novo_dev" : ".novo"
+      isDevelopment ? ".florin_dev" : ".florin"
     );
   } else {
     walletPath = app.getPath("userData");

@@ -5,11 +5,11 @@ let repo =
 
 let file = "";
 if (os.platform() === "win32") {
-  file = "libnovo_win_" + os.arch() + ".node";
+  file = "libflorin_win_" + os.arch() + ".node";
 } else if (os.platform() === "linux") {
-  file = "libnovo_linux_" + os.arch() + ".node";
+  file = "libflorin_linux_" + os.arch() + ".node";
 } else if (os.platform() === "darwin") {
-  file = "libnovo_macos_" + os.arch() + ".node";
+  file = "libflorin_macos_" + os.arch() + ".node";
 } else {
   throw "Unable to determine platform";
 }

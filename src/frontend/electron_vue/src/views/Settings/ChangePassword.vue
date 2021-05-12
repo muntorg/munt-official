@@ -6,7 +6,7 @@
     </h2>
 
     <!-- step 1: Enter old password -->
-    <novo-form-field v-if="current === 1" :title="$t('common.password')">
+    <app-form-field v-if="current === 1" :title="$t('common.password')">
       <input
         ref="passwordold"
         type="password"
@@ -14,25 +14,25 @@
         @keydown="validatePasswordOnEnter"
         :class="passwordOldStatus"
       />
-    </novo-form-field>
+    </app-form-field>
 
     <!-- step 2: enter new password -->
     <div v-else>
-      <novo-form-field :title="$t('common.password')">
+      <app-form-field :title="$t('common.password')">
         <input ref="password1" type="password" v-model="password1" />
-      </novo-form-field>
-      <novo-form-field :title="$t('setup.repeat_password')">
+      </app-form-field>
+      <app-form-field :title="$t('setup.repeat_password')">
         <input
           type="password"
           v-model="password2"
           :class="password2Status"
           @keydown="validatePasswordRepeatOnEnter"
         />
-      </novo-form-field>
+      </app-form-field>
     </div>
 
     <portal to="footer-slot">
-      <novo-button-section>
+      <app-button-section>
         <button
           v-if="current === 1"
           @click="nextStep"
@@ -47,7 +47,7 @@
         >
           {{ $t("buttons.change_password") }}
         </button>
-      </novo-button-section>
+      </app-button-section>
     </portal>
   </div>
 </template>

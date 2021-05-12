@@ -19,14 +19,14 @@
       <input
         v-model="address"
         type="text"
-        :placeholder="$t('send_novo.enter_novo_address')"
+        :placeholder="$t('send_coins.enter_coins_address')"
         :class="addressClass"
         @keydown="isAddressInvalid = false"
       />
       <input
         v-model="label"
         type="text"
-        :placeholder="$t('send_novo.enter_label')"
+        :placeholder="$t('send_coins.enter_label')"
       />
 
       <input
@@ -40,10 +40,10 @@
     </div>
 
     <div class="buttons">
-      <button @click="sellNovo" class="sell-novo" :disabled="sellDisabled">
-        {{ $t("buttons.sell_novo") }}
+      <button @click="sellCoins" class="sell-coins" :disabled="sellDisabled">
+        {{ $t("buttons.sell_coins") }}
       </button>
-      <button @click="trySend" class="send-novo" :disabled="disableSendButton">
+      <button @click="trySend" class="send-coins" :disabled="disableSendButton">
         {{ $t("buttons.send") }}
       </button>
     </div>
@@ -111,14 +111,14 @@ export default {
     this.$refs.amount.focus();
   },
   methods: {
-    async sellNovo() {
+    async sellCoins() {
       try {
         this.sellDisabled = true;
         let url = await BackendUtilities.GetSellSessionUrl();
         if (!url) {
-          url = "https://novocurrency.com/sell";
+          url = "https://florin.org/sell";
         }
-        window.open(url, "sell-gulden");
+        window.open(url, "sell-florin");
       } finally {
         this.sellDisabled = false;
       }
@@ -200,11 +200,11 @@ input {
   flex-direction: row;
 }
 
-.send-novo {
+.send-coins {
   flex: 1;
   margin-left: 10px;
 }
-.sell-novo {
+.sell-coins {
   flex: 0 0 150px;
 }
 </style>

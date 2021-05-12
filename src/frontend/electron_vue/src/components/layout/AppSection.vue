@@ -12,6 +12,6 @@
 
 <script>
 export default {
-  name: "NovoSection"
+  name: "AppSection"
 };
 </script>

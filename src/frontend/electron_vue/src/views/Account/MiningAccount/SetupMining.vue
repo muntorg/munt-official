@@ -4,29 +4,29 @@
       <main-header :title="$t('setup_mining.title')"></main-header>
     </portal>
 
-    <novo-section>
+    <app-section>
       <div class="mining-info">
         {{ $t("setup_mining.information") }}
       </div>
-    </novo-section>
-    <novo-form-field :title="$t('common.password')">
+    </app-section>
+    <app-form-field :title="$t('common.password')">
       <input
         type="password"
         v-model="password"
         :class="computedStatus"
         @keydown="createMiningAccountOnEnter"
       />
-    </novo-form-field>
+    </app-form-field>
 
     <portal to="footer-slot">
-      <novo-button-section>
+      <app-button-section>
         <button
           @click="createMiningAccount(password)"
           :disabled="!isEnableMiningButtonEnabled"
         >
           {{ $t("buttons.create_mining_account") }}
         </button>
-      </novo-button-section>
+      </app-button-section>
     </portal>
   </div>
 </template>
@@ -76,7 +76,7 @@ export default {
         this.isPasswordInvalid = true;
         return;
       }
-      let uuid = AccountsController.CreateAccount("Novo Mining", "Mining");
+      let uuid = AccountsController.CreateAccount("Florin Mining", "Mining");
       LibraryController.LockWallet();
       this.$router.push({ name: "account", params: { id: uuid } });
     }

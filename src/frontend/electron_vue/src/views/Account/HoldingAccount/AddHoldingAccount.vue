@@ -6,14 +6,14 @@
 
     <section class="content">
       <section class="step-1" v-if="current === 1">
-        <novo-form-field :title="$t('add_holding_account.funding_account')">
+        <app-form-field :title="$t('add_holding_account.funding_account')">
           <select-list
             :options="fundingAccounts"
             :default="fundingAccount"
             v-model="fundingAccount"
           />
-        </novo-form-field>
-        <novo-form-field :title="$t('common.amount')">
+        </app-form-field>
+        <app-form-field :title="$t('common.amount')">
           <input
             type="number"
             min="50"
@@ -21,8 +21,8 @@
             :max="maxAmountForAccount"
             :class="amountClass"
           />
-        </novo-form-field>
-        <novo-form-field :title="$t('add_holding_account.lock_for')">
+        </app-form-field>
+        <app-form-field :title="$t('add_holding_account.lock_for')">
           <div class="flex-row">
             <vue-slider
               :min="2"
@@ -36,9 +36,9 @@
               {{ lockTimeInMonths }} {{ $t("common.months") }}
             </div>
           </div>
-        </novo-form-field>
+        </app-form-field>
 
-        <novo-form-field
+        <app-form-field
           :title="$t('add_holding_account.estimated_earnings')"
           v-if="isWeightSufficient"
         >
@@ -62,18 +62,18 @@
               }}
             </div>
           </div>
-        </novo-form-field>
+        </app-form-field>
       </section>
       <section class="step-2" v-else>
-        <novo-form-field :title="$t('common.account_name')">
+        <app-form-field :title="$t('common.account_name')">
           <input
             type="text"
             v-model="accountName"
             maxlength="30"
             ref="accountName"
           />
-        </novo-form-field>
-        <novo-form-field
+        </app-form-field>
+        <app-form-field
           :title="$t('common.password')"
           v-if="walletPassword === null"
         >
@@ -83,12 +83,12 @@
             :class="passwordClass"
             @keydown="onPasswordKeydown"
           />
-        </novo-form-field>
+        </app-form-field>
       </section>
     </section>
 
     <portal to="footer-slot">
-      <novo-button-section>
+      <app-button-section>
         <template v-slot:left>
           <button @click="current--" v-if="current !== 1">
             {{ $t("buttons.previous") }}
@@ -108,7 +108,7 @@
         >
           {{ $t("buttons.lock") }}
         </button>
-      </novo-button-section>
+      </app-button-section>
     </portal>
   </div>
 </template>

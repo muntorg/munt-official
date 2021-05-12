@@ -1,5 +1,5 @@
 <template>
-  <div class="send-novo flex-col">
+  <div class="send-coins flex-col">
     <portal to="sidebar-right-title">
       {{ $t("buttons.send") }}
     </portal>
@@ -12,13 +12,13 @@
         type="text"
         readonly
       />
-      <novo-form-field :title="$t('send_novo.target_account')">
+      <app-form-field :title="$t('send_coins.target_account')">
         <select-list
           :options="fundingAccounts"
           :default="fundingAccount"
           v-model="fundingAccount"
         />
-      </novo-form-field>
+      </app-form-field>
 
       <input
         v-model="password"
@@ -128,7 +128,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.send-novo {
+.send-coins {
   height: 100%;
 
   .main {

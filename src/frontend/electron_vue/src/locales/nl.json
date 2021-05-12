@@ -16,9 +16,9 @@
   },
   "buttons": {
     "back": "Terug",
-    "buy_novo": "Koop Novo",
-    "sell_novo": "Verkoop Novo",
-    "buy_your_first_novo": "Koop jouw eerste Novo",
+    "buy_coins": "Koop Florin",
+    "sell_coins": "Verkoop Florin",
+    "buy_your_first_coins": "Koop jouw eerste Florin",
     "change_password": "Verander wachtwoord",
     "create_mining_account": "Mining rekening aanmaken",
     "finish": "Klaar",
@@ -48,8 +48,8 @@
   "holding_account": {
     "compound_earnings": "cumulatieve inkomsten",
     "status": "Status",
-    "novo_locked": "Novo vastgezet",
-    "novo_earned": "Novo verdiend",
+    "coins_locked": "Florin vastgezet",
+    "coins_earned": "Florin verdiend",
     "locked_from_block": "Vastgezet vanaf blok",
     "locked_until_block": "Vastgezet tot blok",
     "lock_duration": "Looptijd",
@@ -62,7 +62,7 @@
   },
   "loader": {
     "shutdown": "Bezig met afsluiten...",
-    "synchronizing": "Jouw portemonnee is aan het synchroniseren met het Novo netwerk. Dit kan enige tijd duren."
+    "synchronizing": "Jouw portemonnee is aan het synchroniseren met het Florin netwerk. Dit kan enige tijd duren."
   },
   "mining": {
     "arena_setup_time": "Arena setup tijd",
@@ -84,7 +84,7 @@
   },
   "setup": {
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
-    "choose_password_information": "Een wachtwoord is vereist voor het ontgrendelen van jouw portemonnee. Kies een sterk wachtwoord, zodat niemand anders toegang kan krijgen tot jouw Novo.",
+    "choose_password_information": "Een wachtwoord is vereist voor het ontgrendelen van jouw portemonnee. Kies een sterk wachtwoord, zodat niemand anders toegang kan krijgen tot jouw Florin.",
     "create_new": "Ik wil een nieuwe portemonnee starten",
     "enter_existing_recovery_phrase": "Voer jouw herstelzin in om jouw portemonnee te herstellen.",
     "enter_recovery_phrase": "Voer herstelzin in",
@@ -95,24 +95,24 @@
     "recover_existing": "Ik wil mijn portemonnee herstellen met mijn herstelzin",
     "repeat_password": "Herhaal wachtwoord",
     "repeat_your_recovery_phrase": "Voer jouw herstelzin in om te controleren dat je deze goed hebt opgeschreven.",
-    "setup_novo_wallet": "Installeer jouw Novo portemonnee",
-    "this_is_your_recovery_phrase": "Dit is jouw herstelzin. Bewaar de herstelzin op een veilige plek. Zin kwijt of iemand toegang tot je zin = Novo weg."
+    "setup_your_wallet": "Installeer jouw Florin portemonnee",
+    "this_is_your_recovery_phrase": "Dit is jouw herstelzin. Bewaar de herstelzin op een veilige plek. Zin kwijt of iemand toegang tot je zin = Florin weg."
   },
   "setup_mining": {
     "title": "Mining instellen",
-    "information": "Voordat je kunt beginnen met minen van Novo moet een mining rekening worden aangemaakt. Voer je wachtwoord in om je portemonnee te ontgrendelen en een mining rekening aan te maken."
+    "information": "Voordat je kunt beginnen met minen van Florin moet een mining rekening worden aangemaakt. Voer je wachtwoord in om je portemonnee te ontgrendelen en een mining rekening aan te maken."
   },
   "transaction_details": {
     "title": "Transactie details",
     "hash": "Hash"
   },
-  "receive_novo": {
-    "buy_or_receive_novo": "Koop of ontvang Novo",
+  "receive_coins": {
+    "buy_or_receive_coins": "Koop of ontvang Florin",
     "your_address": "Jouw adres"
   },
-  "send_novo": {
+  "send_coins": {
     "enter_label": "Voer label in",
-    "enter_novo_address": "Voer Novo adres in",
+    "enter_coins_address": "Voer Florin adres in",
     "target_account": "Verstuur naar account"
   },
   "renew_holding_account": {

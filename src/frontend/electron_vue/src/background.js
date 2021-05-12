@@ -55,7 +55,7 @@ function createMainWindow() {
     height: 600,
     minHeight: 600,
     show: false,
-    title: "Novo",
+    title: "Florin",
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -151,7 +151,7 @@ function createDebugWindow() {
     minHeight: 400,
     show: false,
     parent: winMain,
-    title: "Novo Debug Window",
+    title: "Florin Debug Window",
     skipTaskBar: true,
     autoHideMenuBar: true,
     webPreferences: {

@@ -5,7 +5,7 @@
     </portal>
 
     <div class="main">
-      <h4>{{ $t("receive_novo.your_address") }}</h4>
+      <h4>{{ $t("receive_coins.your_address") }}</h4>
       <div class="qr" @click="copyAddress">
         <vue-qrcode
           class="qrcode"
@@ -16,8 +16,8 @@
         <div class="address">{{ receiveAddress }}</div>
       </div>
     </div>
-    <button @click="buyNovo" class="buy-novo" :disabled="buyDisabled">
-      {{ $t("buttons.buy_novo") }}
+    <button @click="buyCoins" class="buy-coins" :disabled="buyDisabled">
+      {{ $t("buttons.buy_coins") }}
     </button>
   </div>
 </template>
@@ -42,14 +42,14 @@ export default {
     ...mapState("wallet", ["receiveAddress"])
   },
   methods: {
-    async buyNovo() {
+    async buyCoins() {
       try {
         this.buyDisabled = true;
         let url = await BackendUtilities.GetBuySessionUrl();
         if (!url) {
-          url = "https://novocurrency.com/buy";
+          url = "https://florin.org/buy";
         }
-        window.open(url, "buy-novo");
+        window.open(url, "buy-florin");
       } finally {
         this.buyDisabled = false;
       }

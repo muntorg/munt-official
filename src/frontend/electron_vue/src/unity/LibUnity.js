@@ -2973,7 +2973,7 @@ class LibUnity {
       try {
         var formData = new FormData();
         formData.append("address", store.state.wallet.receiveAddress);
-        formData.append("currency", "novo");
+        formData.append("currency", "florin");
         formData.append("wallettype", "lite");
         formData.append("uuid", this.walletController.GetUUID());
 
@@ -2987,7 +2987,7 @@ class LibUnity {
 
         event.returnValue = {
           success: response.data.status_message === "OK",
-          result: `https://blockhut.com/buynovo.php?sessionid=${response.data.sessionid}`
+          result: `https://blockhut.com/buyflorin.php?sessionid=${response.data.sessionid}`
         };
       } catch (e) {
         event.returnValue = handleError(e);
@@ -2999,7 +2999,7 @@ class LibUnity {
       try {
         var formData = new FormData();
         formData.append("address", store.state.wallet.receiveAddress);
-        formData.append("currency", "novo");
+        formData.append("currency", "florin");
         formData.append("wallettype", "lite");
         formData.append("uuid", this.walletController.GetUUID());
 
@@ -3013,7 +3013,7 @@ class LibUnity {
 
         event.returnValue = {
           success: response.data.status_message === "OK",
-          result: `https://blockhut.com/sellnovo.php?sessionid=${response.data.sessionid}`
+          result: `https://blockhut.com/sellflorin.php?sessionid=${response.data.sessionid}`
         };
       } catch (e) {
         event.returnValue = handleError(e);

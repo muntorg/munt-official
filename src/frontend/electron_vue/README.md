@@ -1,4 +1,4 @@
-# Novo Electron Wallet
+# Florin Electron Wallet
 
 ## Project setup
 ```

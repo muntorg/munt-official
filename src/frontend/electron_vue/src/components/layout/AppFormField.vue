@@ -1,17 +1,17 @@
 <template>
-  <novo-section class="novo-form-field">
+  <app-section class="app-form-field">
     <h4 v-if="hasTitle">{{ title }}</h4>
     <div class="input">
       <slot />
     </div>
-  </novo-section>
+  </app-section>
 </template>
 
 <script>
-import NovoSection from "./NovoSection";
+import AppSection from "./AppSection";
 
 export default {
-  name: "NovoFormField",
+  name: "AppFormField",
   props: {
     title: {
       type: String,
@@ -19,7 +19,7 @@ export default {
     }
   },
   components: {
-    NovoSection
+    AppSection
   },
   computed: {
     hasTitle() {

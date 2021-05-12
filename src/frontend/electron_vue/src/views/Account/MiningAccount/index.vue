@@ -7,7 +7,7 @@
       />
     </portal>
 
-    <novo-form-field :title="$t('mining.number_of_threads')">
+    <app-form-field :title="$t('mining.number_of_threads')">
       <div class="flex-row">
         <vue-slider
           :min="1"
@@ -22,9 +22,9 @@
           {{ $tc("mining.thread", currentThreadCount) }}
         </div>
       </div>
-    </novo-form-field>
+    </app-form-field>
 
-    <novo-form-field :title="$t('mining.memory_to_use')">
+    <app-form-field :title="$t('mining.memory_to_use')">
       <div class="flex-row">
         <vue-slider
           :min="minimumMemory"
@@ -36,9 +36,9 @@
         />
         <div class="slider-info">{{ currentMemorySize }} Gb</div>
       </div>
-    </novo-form-field>
+    </app-form-field>
 
-    <novo-form-field>
+    <app-form-field>
       <div class="flex-row">
         <div class="flex-1 align-right">
           <button
@@ -49,9 +49,9 @@
           </button>
         </div>
       </div>
-    </novo-form-field>
+    </app-form-field>
 
-    <novo-form-field
+    <app-form-field
       class="mining-statistics"
       :title="$t('mining.statistics')"
       v-if="isActive"
@@ -80,7 +80,7 @@
           {{ arenaSetupTime }}
         </div>
       </div>
-    </novo-form-field>
+    </app-form-field>
 
     <portal to="footer-slot">
       <section class="footer">

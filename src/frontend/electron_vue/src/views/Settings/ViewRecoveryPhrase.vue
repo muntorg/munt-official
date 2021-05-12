@@ -6,7 +6,7 @@
     </h2>
 
     <!-- step 1: Enter password -->
-    <novo-form-field :title="$t('common.password')" v-if="current === 1">
+    <app-form-field :title="$t('common.password')" v-if="current === 1">
       <input
         ref="password"
         type="password"
@@ -14,18 +14,18 @@
         @keydown="getRecoveryPhraseOnEnter"
         :class="computedStatus"
       />
-    </novo-form-field>
+    </app-form-field>
 
     <!-- step 2: Show recovery phrase -->
     <div v-else>
       <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
-      <novo-section class="phrase">
+      <app-section class="phrase">
         {{ recoveryPhrase }}
-      </novo-section>
+      </app-section>
     </div>
 
     <portal to="footer-slot">
-      <novo-button-section>
+      <app-button-section>
         <button
           v-if="current === 1"
           @click="getRecoveryPhrase"
@@ -33,7 +33,7 @@
         >
           {{ $t("buttons.next") }}
         </button>
-      </novo-button-section>
+      </app-button-section>
     </portal>
   </div>
 </template>

@@ -20,9 +20,9 @@
   },
   "buttons": {
     "back": "Back",
-    "buy_novo": "Buy Novo",
-    "sell_novo": "Sell Novo",
-    "buy_your_first_novo": "Buy your first Novo",
+    "buy_coins": "Buy Florin",
+    "sell_coins": "Sell Florin",
+    "buy_your_first_coins": "Buy your first Florin",
     "change_password": "Change password",
     "create_mining_account": "Create mining account",
     "finish": "Finish",
@@ -52,8 +52,8 @@
   "holding_account": {
     "compound_earnings": "compound earnings",
     "status": "Status",
-    "novo_locked": "Novo locked",
-    "novo_earned": "Novo earned",
+    "coins_locked": "Florin locked",
+    "coins_earned": "Florin earned",
     "locked_from_block": "Locked from block",
     "locked_until_block": "Locked until block",
     "lock_duration": "Lock duration",
@@ -66,7 +66,7 @@
   },
   "loader": {
     "shutdown": "Shutting down...",
-    "synchronizing": "Your wallet is now synchronizing with the Novo network. This may take some time to complete."
+    "synchronizing": "Your wallet is now synchronizing with the Florin network. This may take some time to complete."
   },
   "mining": {
     "arena_setup_time": "Arena setup time",
@@ -99,24 +99,24 @@
     "recover_existing": "I want to recover my wallet using my recovery phrase",
     "repeat_password": "Repeat password",
     "repeat_your_recovery_phrase": "To make sure you have correctly written down your recovery phrase, enter your phrase in the boxes below.",
-    "setup_novo_wallet": "Setup your Novo wallet",
-    "this_is_your_recovery_phrase": "This is your recovery phrase. Keep your backup phrase in a safe place. Lose phrase or someone else with access to the phrase = lose Novo."
+    "setup_your_wallet": "Setup your Florin wallet",
+    "this_is_your_recovery_phrase": "This is your recovery phrase. Keep your backup phrase in a safe place. Lose phrase or someone else with access to the phrase = lose Florin."
   },
   "setup_mining": {
     "title": "Setup mining",
-    "information": "Before you can start mining Novo a mining account needs to be created. Enter your password to unlock your wallet and create a mining account."
+    "information": "Before you can start mining Florin a mining account needs to be created. Enter your password to unlock your wallet and create a mining account."
   },
   "transaction_details": {
     "title": "Transaction details",
     "hash": "Hash"
   },
-  "receive_novo": {
-    "buy_or_receive_novo": "Buy or receive Novo",
+  "receive_coins": {
+    "buy_or_receive_coins": "Buy or receive Florin",
     "your_address": "Your address"
   },
-  "send_novo": {
+  "send_coins": {
     "enter_label": "Enter label",
-    "enter_novo_address": "Enter Novo address",
+    "enter_coins_address": "Enter Florin address",
     "target_account": "Send to account"
   },
   "renew_holding_account": {
