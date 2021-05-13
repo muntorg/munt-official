@@ -1,13 +1,13 @@
-Novo© is written and maintained by "The Novo developers" under the employ of "Centure.com BV" and all code and products produced are licensed under "The Novo license".
+Florin© is written and maintained by "The Florin developers" under the employ of "Centure.com BV" and all code and products produced are licensed under "The Florin license".
 
-In addition to our own source code Novo makes use of source code, fonts and assets from a multitude of third party projects, and is compliant with the licensing for all of these projects, most of which are free and open source.
+In addition to our own source code Florin makes use of source code, fonts and assets from a multitude of third party projects, and is compliant with the licensing for all of these projects, most of which are free and open source.
 
-The license information for these projects can be found alongside the source code at "https://github.com/novocurrenct/novocurrency-core" as well as in text/json format distributed as part of the application bundle in the assets sub folder.
+The license information for these projects can be found alongside the source code at "https://github.com/novocurrency/novocurrency-core" as well as in text/json format distributed as part of the application bundle in the assets sub folder.
 
 
-The Novo License
+The Florin License
 
-Copyright (c) 2014-2019 Novo developers
+Copyright (c) 2014-2019 Florin developers
 
 TERMS AND CONDITIONS
 
@@ -39,8 +39,8 @@ so long as the modifications are limited to those necessary to make the program 
 and do not otherwise alter behaviour in a way that may negatively impact users in any form whatsoever.
 The copyright holders reserve the right to revoke licensing permission in any case where they feel the above is violated, at any
 time, with immediate effect, based on their own discretion.
-UNDER NO CIRCUMSTANCES MAY THE SOFTWARE BE ALTERED IN SUCH A WAY AS TO MAKE IT WORK ON A NETWORK OTHER THAN "The Novo network"
-OR TO USE A BLOCKCHAIN OTHER THAN "The Novo blockchain"
+UNDER NO CIRCUMSTANCES MAY THE SOFTWARE BE ALTERED IN SUCH A WAY AS TO MAKE IT WORK ON A NETWORK OTHER THAN "The Florin network"
+OR TO USE A BLOCKCHAIN OTHER THAN "The Florin blockchain"
 
 
 4. Non-compliance

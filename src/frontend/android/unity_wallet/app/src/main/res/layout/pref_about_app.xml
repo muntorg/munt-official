@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Copyright (c) 2019 The Novo developers
+Copyright (c) 2019 The Florin developers
 Authored by: Malcolm MacLeod (mmacleod@gmx.com), Willem de Jonge (willem@isnapp.nl)
-Distributed under the Novo software license, see the accompanying
+Distributed under the Florin software license, see the accompanying
 file COPYING
 !-->
 
@@ -25,7 +25,7 @@ file COPYING
         android:gravity="center_horizontal"
         android:text="@string/about_text_app_name" />
 
-    <com.novo.unity_wallet.ui.widgets.UnityBuildInfoView
+    <com.florin.unity_wallet.ui.widgets.UnityBuildInfoView
         android:id="@+id/textUnityCoreBuild"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

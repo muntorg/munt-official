@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Copyright (c) 2018-2019 The Novo developers
+Copyright (c) 2018-2019 The Florin developers
 Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-Distributed under the Novo software license, see the accompanying
+Distributed under the Florin software license, see the accompanying
 file COPYING
 !-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              tools:context="com.novo.unity_wallet.ui.EnterRecoveryPhraseActivity"
+              tools:context="com.florin.unity_wallet.ui.EnterRecoveryPhraseActivity"
               android:layout_width="match_parent"
               android:layout_height="fill_parent"
               android:orientation="vertical"
@@ -37,7 +37,7 @@ file COPYING
             android:paddingRight="20dp"
             />
 
-        <com.novo.unity_wallet.ui.widgets.ActionMultiAutoCompleteTextView
+        <com.florin.unity_wallet.ui.widgets.ActionMultiAutoCompleteTextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/recover_from_phrase_text_view"

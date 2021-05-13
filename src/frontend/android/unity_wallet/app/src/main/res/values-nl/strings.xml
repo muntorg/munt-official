@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
     <!--
-Copyright (c) 2018 The Novo developers
-Distributed under the Novo software license, see the accompanying
+Copyright (c) 2018 The Florin developers
+Distributed under the Florin software license, see the accompanying
 file COPYING
 !-->
     <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
@@ -22,19 +22,17 @@ file COPYING
     <string name="welcome_activity_recover_existing_wallet">Herstel portemonnee</string>
     <string name="welcome_activity_sync_with_desktop">Koppel met desktop</string>
     <string name="recover_from_phrase_intro">Vul je herstelzin in</string>
-    <string name="show_recovery_phrase_EULA">Wanneer je de Novo-app gebruikt ga je er uitdrukkelijk en onvoorwaardelijk mee akkoord dat alleen jij verantwoordelijk bent voor het beheren en bewaren van je Novo.</string>
+    <string name="show_recovery_phrase_EULA">Wanneer je de Florin-app gebruikt ga je er uitdrukkelijk en onvoorwaardelijk mee akkoord dat alleen jij verantwoordelijk bent voor het beheren en bewaren van je Florin.</string>
     <string name="recovery_phrase_continue">Verder</string>
     <string name="title_activity_enter_recovery_phrase">Voer herstelzin in</string>
-    <string name="show_recovery_phrase_introtext">Dit is je herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Novos weg. Iemand toegang tot je zin = Novos weg.</string>
+    <string name="show_recovery_phrase_introtext">Dit is je herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Florins weg. Iemand toegang tot je zin = Florins weg.</string>
     <string name="recovery_phrase_acknowledge_writing_down">Ik heb het opgeschreven</string>
     <string name="recovery_phrase_copy">Herstelzin gekopieerd naar klembord</string>
     <string name="address_book_empty_message">Om een adres toe te voegen, start een betaling en tap op \"Aan adresboek toevoegen\"</string>
     <string name="address_book_title">Adresboek</string>
     <string name="transaction_list_empty_title">Geen transacties ontvangen</string>
-    <string name="transaction_list_empty_message">Tik hier om je eerste Novos te kopen</string>
-    <string name="send_coins_confirm_template">%1$s NOV\n\nnaar %2$s</string>
-    <string name="send_coins_iban_confirm_template">%1$s EUR (%2$s NOV)\n\nnaar %3$s</string>
-    <string name="send_coins_nocks_estimate_template">Ongeveer G %1$s inclusief IBAN-kosten.</string>
+    <string name="transaction_list_empty_message">Tik hier om je eerste Florins te kopen</string>
+    <string name="send_coins_confirm_template">%1$s XFL\n\nnaar %2$s</string>
     <string name="peer_list_fragment_empty">Geen connecties</string>
     <string name="block_row_now">alleen nu</string>
     <string name="action_browse">Bladeren</string>
@@ -53,13 +51,13 @@ file COPYING
     <string name="tx_status_confirmed">Bevestigd in blok #%d om %s</string>
     <string name="tx_status_unknown">Onbekend (je hebt een bug gevonden)</string>
     <string name="no_tx_details">Geen transactiedetails voor [%s]</string>
-    <string name="no_novosync_warning_title">Onjuiste QR-code</string>
-    <string name="no_novosync_warning">Deze QR-code bevat geen geldige Novo sync code, probeer het opnieuw met een geldige code.</string>
-    <string name="failed_novosync_warning_title">Koppelen niet geslaagd</string>
-    <string name="failed_novosync_unconfirmed_funds_message">Een deel van je saldo wacht nog op bevestiging. Wacht tot deze volledig bevestigd zijn voordat je nogmaals probeert te koppelen.</string>
-    <string name="novosync_info_title">Koppelen met desktop portemonnee</string>
-    <string name="novosync_info_message_non_empty_wallet">"Je staat op het punt om te koppelen met je desktop portemonnee. De huidige adressen in deze portemonnee worden verwijderd en zijn niet meer beschikbaar na het koppelen. Het huidige saldo in deze portemonnee wordt naar de desktop portemonnee verplaatst voor het koppelen, en zal tijdelijk niet beschikbaar zijn in deze portemonnee totdat het koppelen afgerond is. Zorg ervoor dat je een een kopie van je oude herstelzin goed bewaard, voor het geval je in de toekomst toegang wilt hebben tot deze oude adressen. "</string>
-    <string name="novosync_info_message_empty_wallet">"Je staat op het punt om te koppelen met je desktop portemonnee. De huidige adressen in deze portemonnee worden verwijderd en zijn niet meer beschikbaar na het koppelen. Zorg ervoor dat je een een kopie van je oude herstelzin goed bewaard, voor het geval je in de toekomst toegang wilt hebben tot deze oude adressen. "</string>
+    <string name="no_qrsync_warning_title">Onjuiste QR-code</string>
+    <string name="no_qrsync_warning">Deze QR-code bevat geen geldige Florin sync code, probeer het opnieuw met een geldige code.</string>
+    <string name="failed_qrsync_warning_title">Koppelen niet geslaagd</string>
+    <string name="failed_qrsync_unconfirmed_funds_message">Een deel van je saldo wacht nog op bevestiging. Wacht tot deze volledig bevestigd zijn voordat je nogmaals probeert te koppelen.</string>
+    <string name="qrsync_info_title">Koppelen met desktop portemonnee</string>
+    <string name="qrsync_info_message_non_empty_wallet">"Je staat op het punt om te koppelen met je desktop portemonnee. De huidige adressen in deze portemonnee worden verwijderd en zijn niet meer beschikbaar na het koppelen. Het huidige saldo in deze portemonnee wordt naar de desktop portemonnee verplaatst voor het koppelen, en zal tijdelijk niet beschikbaar zijn in deze portemonnee totdat het koppelen afgerond is. Zorg ervoor dat je een een kopie van je oude herstelzin goed bewaard, voor het geval je in de toekomst toegang wilt hebben tot deze oude adressen. "</string>
+    <string name="qrsync_info_message_empty_wallet">"Je staat op het punt om te koppelen met je desktop portemonnee. De huidige adressen in deze portemonnee worden verwijderd en zijn niet meer beschikbaar na het koppelen. Zorg ervoor dat je een een kopie van je oude herstelzin goed bewaard, voor het geval je in de toekomst toegang wilt hebben tot deze oude adressen. "</string>
     <string name="preference_fragment_title">Voorkeuren</string>
     <string name="preference_fragment_recovery_label">Herstelzin</string>
     <string name="preference_fragment_link_label">Portemonnee koppelen</string>
@@ -88,7 +86,7 @@ file COPYING
     <string name="cancel_btn">Annuleren</string>
     <string name="rescan_started">Herscan gestart</string>
     <string name="upgrade_wrong_password">Onjuist wachtwoord?</string>
-    <string name="upgrade_explanation">Novo moet worden geüpdatet. Dit kan enkele minuten duren, maar Novo zal daar sneller, makkelijker en lichter door werken.</string>
+    <string name="upgrade_explanation">Florin moet worden geüpdatet. Dit kan enkele minuten duren, maar Florin zal daar sneller, makkelijker en lichter door werken.</string>
     <string name="upgrade_btn">Bijwerken</string>
     <string name="upgrade_enter_password">Voer je wachtwoord in</string>
     <string name="upgrade_enter_password_hint">PIN</string>
@@ -98,12 +96,12 @@ file COPYING
     <string name="notify_received">Bedrag ontvangen</string>
     <string name="notify_sent">Bedrag verstuurd</string>
     <string name="unlock">Openen</string>
-    <string name="access_code_entry_title">Toegangscode voor \"Novo\"</string>
-    <string name="access_code_choose_upgrade_title">Kies je nieuwe \"Novo\"-toegangscode</string>
-    <string name="access_code_choose_title">Kies je \"Novo\"-toegangscode</string>
+    <string name="access_code_entry_title">Toegangscode voor \"Florin\"</string>
+    <string name="access_code_choose_upgrade_title">Kies je nieuwe \"Florin\"-toegangscode</string>
+    <string name="access_code_choose_title">Kies je \"Florin\"-toegangscode</string>
     <string name="access_code_choose_verify">Verifiëer je toegangscode</string>
     <string name="access_code_choose_hint">6 cijferige PIN</string>
-    <string name="show_recovery_msg">Toon je herstelzin aan NIEMAND, of ze kunnen met je Novo aan de haal gaan!</string>
+    <string name="show_recovery_msg">Toon je herstelzin aan NIEMAND, of ze kunnen met je Florin aan de haal gaan!</string>
     <string name="send_coins_error_acknowledge">OK</string>
     <string name="authentication_blocked_title">Portemonnee uitgeschakeld</string>
     <string name="authentication_blocked_msg_recovery">Probeer nogmaals %s of kies een nieuwe toegangscode met behulp van je herstelzin.</string>
@@ -125,11 +123,11 @@ file COPYING
     <string name="numeric_keypad_send_button">Verstuur</string>
     <string name="preferences_support_button">Support</string>
     <string name="preferences_advanced_button">Geavanceerd</string>
-    <string name="clipboard_no_valid_address">Geen geldig Novo-adres op het klembord</string>
+    <string name="clipboard_no_valid_address">Geen geldig Florin-adres op het klembord</string>
     <string name="transaction_confirmation_text_conflicted">Conflicterend</string>
     <string name="transaction_confirmation_text_abandoned">Verlaten</string>
     <string name="transaction_confirmation_text_pending">In behandeling</string>
-    <string name="receive_fragment_share_title">Deel Novo-adres</string>
+    <string name="receive_fragment_share_title">Deel Florin-adres</string>
     <plurals name="transaction_confirmation_text">
         <item quantity="one">%d bevestiging</item>
         <item quantity="other">%d bevestigingen</item>
@@ -139,20 +137,18 @@ file COPYING
     <string name="tx_detail_wallet_address">Adres portemonnee</string>
     <string name="tx_detail_sending_address">Verzendadres</string>
     <string name="tx_detail_payment_address">Betaaladres</string>
-    <string name="tx_detail_network_fee">Novo-netwerkkosten</string>
+    <string name="tx_detail_network_fee">Florin-netwerkkosten</string>
     <string name="iban_account_holder_info_text">Voer de correcte naam in van de bankrekeninghouder om vertraging te voorkomen.</string>
     <string name="iban_account_holder_name">Naam</string>
     <string name="iban_account_holder_description">Omschrijving (optioneel)</string>
     <string name="tx_detail_address_unavailable">niet beschikbaar</string>
-    <string name="nocks_error_unable_to_fetch_quote">Kan geschat Novo-bedrag niet ophalen</string>
-    <string name="nocks_error_prefix">Fout:</string>
     <string name="notification_transaction_channel_name">Transacties</string>
     <string name="notification_transaction_channel_description">Transactie notificatie</string>
     <string name="notification_service_channel_name">Service</string>
     <string name="notification_service_channel_description">Service om data te synchroniseren en transacties te signaleren terwijl de app afgesloten is, kan aan/uit gezet worden in de instellingen van de app.</string>
     <string name="dialog_title_add_address">Adres toevoegen</string>
-    <string name="hint_iban_or_novo_address">Novo of IBAN-adres</string>
-    <string name="toast_warn_uri_attempt_before_wallet_creation">Je moet een Novo-portemonnee instellen voordat je deze URI kunt gebruiken</string>
+    <string name="hint_iban_or_coin_address">Florin of IBAN-adres</string>
+    <string name="toast_warn_uri_attempt_before_wallet_creation">Je moet een Florin-portemonnee instellen voordat je deze URI kunt gebruiken</string>
     <string name="preference_fragment_link_summary">Koppel je mobiele portemonnee aan je desktop portemonnee</string>
     <string name="preference_fragment_remove_summary">Verwijder deze portemonnee om een nieuwe te starten of te herstellen</string>
     <string name="preference_fragment_unlink_label">Ontkoppel portemonnee</string>

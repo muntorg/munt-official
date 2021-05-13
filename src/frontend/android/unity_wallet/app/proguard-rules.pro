@@ -12,8 +12,8 @@
 -keep class android.support.v7.** { *; }
 
 # unity backend
--keep class com.novo.jniunifiedbackend.** { *; }
--keep interface com.novogu.jniunifiedbackend.** { *; }
+-keep class com.florin.jniunifiedbackend.** { *; }
+-keep interface com.florin.jniunifiedbackend.** { *; }
 
 #### OkHttp, Retrofit and Moshi
 -dontwarn retrofit2.Platform$Java8

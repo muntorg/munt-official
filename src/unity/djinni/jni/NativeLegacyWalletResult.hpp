@@ -19,7 +19,7 @@ public:
     static ::djinni::LocalRef<JniType> fromCpp(JNIEnv* jniEnv, CppType c) { return ::djinni::JniClass<NativeLegacyWalletResult>::get().create(jniEnv, static_cast<jint>(c)); }
 
 private:
-    NativeLegacyWalletResult() : JniEnum("com/novo/jniunifiedbackend/LegacyWalletResult") {}
+    NativeLegacyWalletResult() : JniEnum("com/florin/jniunifiedbackend/LegacyWalletResult") {}
     friend ::djinni::JniClass<NativeLegacyWalletResult>;
 };
 

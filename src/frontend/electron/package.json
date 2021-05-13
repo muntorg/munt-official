@@ -1,11 +1,11 @@
 {
-  "name": "novo",
+  "name": "florin",
   "version": "1.0.11",
-  "description": "Novo currency",
+  "description": "Florin currency",
   "author": "Malcolm MacLeod",
   "license": "Gulden",
   "main": "main.js",
-  "homepage": "https://www.novocurrency.com",
+  "homepage": "https://www.florin.org",
   "repository": {
     "type": "git",
     "url": "https://github.com/novocurrency/novocurrency-core/"
@@ -30,9 +30,9 @@
       "css/*",
       "fonts/*",
       "main.js",
-      "libnovo_unity_node_js.node"
+      "libflorin_unity_node_js.node"
     ],
-    "appId": "com.novocurrency.novo",
+    "appId": "org.florin.wallet",
     "mac": {
       "category": "public.app-category.finance",
       "target": [

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Copyright (c) 2018-2019 The Novo developers
+Copyright (c) 2018-2019 The Florin developers
 Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-Distributed under the Novo software license, see the accompanying
+Distributed under the Florin software license, see the accompanying
 file COPYING
 !-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"

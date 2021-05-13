@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-Copyright (c) 2018-2019 The Novo developers
+Copyright (c) 2018-2019 The Florin developers
 Authored by: Malcolm MacLeod (mmacleod@gmx.com), Willem de Jonge (willem@isnapp.nl)
-Distributed under the Novo software license, see the accompanying
+Distributed under the Florin software license, see the accompanying
 file COPYING
 !-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,7 +12,7 @@ file COPYING
     android:layout_height="match_parent"
     tools:context=".main_activity_fragments.MutationFragment">
 
-    <com.novo.unity_wallet.ui.widgets.LockView
+    <com.florin.unity_wallet.ui.widgets.LockView
         android:id="@+id/viewAnimator"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -81,7 +81,7 @@ file COPYING
             </LinearLayout>
         </FrameLayout>
 
-    </com.novo.unity_wallet.ui.widgets.LockView>
+    </com.florin.unity_wallet.ui.widgets.LockView>
 
     <View
         android:id="@+id/divider"

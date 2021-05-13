@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
     <!--
-Copyright (c) 2018 The Novo developers
-Distributed under the Novo software license, see the accompanying
+Copyright (c) 2018 The Florin developers
+Distributed under the Florin software license, see the accompanying
 file COPYING
 !-->
     <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
@@ -15,9 +15,9 @@ file COPYING
     <string name="welcome_activity_recover_existing_wallet">ウォレットの復元</string>
     <string name="welcome_activity_sync_with_desktop">デスクトップとリンク</string>
     <string name="recover_from_phrase_intro">復元するには、復元フレーズを入力してください</string>
-    <string name="show_recovery_phrase_EULA">Novoアプリを使用すれば、Novoの管理と保管に関するすべての責任を携帯できることをおわかりいただけます。</string>
+    <string name="show_recovery_phrase_EULA">Florinアプリを使用すれば、Florinの管理と保管に関するすべての責任を携帯できることをおわかりいただけます。</string>
     <string name="recovery_phrase_continue">続ける</string>
-    <string name="show_recovery_phrase_introtext">以下は秘密の復元フレーズです。メモを取り、安全な場所に保管してください。フレーズをなくした場合、Novosが失われます。誰かがこのフレーズを使用してアクセスした場合、Novosが失われます。</string>
+    <string name="show_recovery_phrase_introtext">以下は秘密の復元フレーズです。メモを取り、安全な場所に保管してください。フレーズをなくした場合、Florinsが失われます。誰かがこのフレーズを使用してアクセスした場合、Florinsが失われます。</string>
     <string name="recovery_phrase_acknowledge_writing_down">メモを取りました</string>
     <string name="recovery_phrase_copy">復元フレーズがクリップボードにコピーされました</string>
     <string name="peer_list_fragment_empty">接続済みのピアはありません</string>

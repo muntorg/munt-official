@@ -1,15 +1,15 @@
 [Unit]
-Description=Novo distributed currency daemon
+Description=Florin distributed currency daemon
 After=network.target
 
 [Service]
-User=novo
-Group=novo
+User=florin
+Group=florin
 
 Type=forking
-PIDFile=/var/lib/Novo-daemon/Novo-daemon.pid
-ExecStart=/usr/bin/Novo-daemon -daemon -pid=/var/lib/Novo-daemon/Novo-daemon.pid \
--conf=/etc/novo/novo.conf -datadir=/var/lib/Novo-daemon -disablewallet
+PIDFile=/var/lib/Florin-daemon/Florin-daemon.pid
+ExecStart=/usr/bin/Florin-daemon -daemon -pid=/var/lib/Florin-daemon/Florin-daemon.pid \
+-conf=/etc/florin/florin.conf -datadir=/var/lib/Florin-daemon -disablewallet
 
 Restart=always
 PrivateTmp=true

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Copyright (c) 2018-2019 The Novo developers
+Copyright (c) 2018-2019 The Florin developers
 Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-Distributed under the Novo software license, see the accompanying
+Distributed under the Florin software license, see the accompanying
 file COPYING
 !-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -73,7 +73,7 @@ file COPYING
         android:layout_marginTop="16dp"
         android:contentDescription="@string/image_content_description_logo"
         android:src="@drawable/ic_logo_minimal"
-        android:tint="@android:color/white"
+        app:tint="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_logo_minimal" />

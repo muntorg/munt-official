@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
     <!--
-Copyright (c) 2018 The Novo developers
-Distributed under the Novo software license, see the accompanying
+Copyright (c) 2018 The Florin developers
+Distributed under the Florin software license, see the accompanying
 file COPYING
 !-->
     <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
@@ -15,9 +15,9 @@ file COPYING
     <string name="welcome_activity_recover_existing_wallet">Gjenopprett lommebok</string>
     <string name="welcome_activity_sync_with_desktop">Koble med datamaskinen</string>
     <string name="recover_from_phrase_intro">Skriv inn gjenopprettelsesetningen som skal brukes til gjenopprettelse</string>
-    <string name="show_recovery_phrase_EULA">Ved å bruke Novo-appen gir du ditt uforbeholdne samtykke til at du tar ditt fulle ansvar for å administrere og oppbevare dine Novo.</string>
+    <string name="show_recovery_phrase_EULA">Ved å bruke Florin-appen gir du ditt uforbeholdne samtykke til at du tar ditt fulle ansvar for å administrere og oppbevare dine Florin.</string>
     <string name="recovery_phrase_continue">Fortsett</string>
-    <string name="show_recovery_phrase_introtext">Nedenfor er din hemmelige gjenopprettelsesetning, skriv den ned og hold den sikker. Tapt setning = tapte Novos. Andre som har tilgang til setningen = tapte Novos.</string>
+    <string name="show_recovery_phrase_introtext">Nedenfor er din hemmelige gjenopprettelsesetning, skriv den ned og hold den sikker. Tapt setning = tapte Florins. Andre som har tilgang til setningen = tapte Florins.</string>
     <string name="recovery_phrase_acknowledge_writing_down">Jeg skrev den ned</string>
     <string name="recovery_phrase_copy">Gjenopprettelsesetning kopiert til utklippstavlen</string>
     <string name="peer_list_fragment_empty">Ingen peers tilkoblet</string>

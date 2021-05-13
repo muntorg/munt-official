@@ -2,26 +2,26 @@
 
 # backward compatibility for existing gentoo layout 
 #
-if [ -d "/var/lib/novo/.novo" ]; then
-	DAEMON_DEFAULT_DATADIR="/var/lib/novo/.novo"
+if [ -d "/var/lib/florin/.florin" ]; then
+	DAEMON_DEFAULT_DATADIR="/var/lib/florin/.florin"
 else
-	DAEMON_DEFAULT_DATADIR="/var/lib/Novo-daemon"
+	DAEMON_DEFAULT_DATADIR="/var/lib/Florin-daemon"
 fi
 
-DAEMON_CONFIGFILE=${DAEMON_CONFIGFILE:-/etc/novo/novo.conf}
-DAEMON_PIDDIR=${DAEMON_PIDDIR:-/var/run/Novo-daemon}
-DAEMON_PIDFILE=${DAEMON_PIDFILE:-${DAEMON_PIDDIR}/Novo-daemon.pid}
+DAEMON_CONFIGFILE=${DAEMON_CONFIGFILE:-/etc/florin/florin.conf}
+DAEMON_PIDDIR=${DAEMON_PIDDIR:-/var/run/FLorin-daemon}
+DAEMON_PIDFILE=${DAEMON_PIDFILE:-${DAEMON_PIDDIR}/Florin-daemon.pid}
 DAEMON_DATADIR=${DAEMON_DATADIR:-${DAEMON_DEFAULT_DATADIR}}
-DAEMON_USER=${DAEMON_USER:-${DAEMON_USER:-novo}}
-DAEMON_GROUP=${DAEMON_GROUP:-novo}
-DAEMON_BIN=${DAEMON_BIN:-/usr/bin/Novo-daemon}
+DAEMON_USER=${DAEMON_USER:-${DAEMON_USER:-florin}}
+DAEMON_GROUP=${DAEMON_GROUP:-florin}
+DAEMON_BIN=${DAEMON_BIN:-/usr/bin/Florin-daemon}
 DAEMON_NICE=${DAEMON_NICE:-${NICELEVEL:-0}}
 DAEMON_OPTS="${DAEMON_OPTS:-${DAEMON_OPTS}}"
 
-name="Novo Core Daemon"
-description="Novo cryptocurrency P2P network daemon"
+name="Florin Core Daemon"
+description="Florin cryptocurrency P2P network daemon"
 
-command="/usr/bin/Novo-daemon"
+command="/usr/bin/Florin-daemon"
 command_args="-pid=\"${DAEMON_PIDFILE}\" \
 		-conf=\"${DAEMON_CONFIGFILE}\" \
 		-datadir=\"${DAEMON_DATADIR}\" \
@@ -84,7 +84,7 @@ checkconfig()
 		eerror "It is also recommended that you also set alertnotify so you are "
 		eerror "notified of problems:"
 		eerror ""
-		eerror "ie: alertnotify=echo %%s | mail -s \"Novo Alert\"" \
+		eerror "ie: alertnotify=echo %%s | mail -s \"Florin Alert\"" \
 			"admin@foo.com"
 		eerror ""
 		return 1

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-Copyright (c) 2019 The Novo developers
+Copyright (c) 2019 The Florin developers
 Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-Distributed under the Novo software license, see the accompanying
+Distributed under the Florin software license, see the accompanying
 file COPYING
 !-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,7 +16,7 @@ file COPYING
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:hint="@string/hint_iban_or_novo_address"
+        android:hint="@string/hint_iban_or_coin_address"
         android:singleLine="true"
         android:inputType="text">
         <requestFocus/>

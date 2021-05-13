@@ -24,7 +24,7 @@ private:
     NativeMonitorRecord();
     friend ::djinni::JniClass<NativeMonitorRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/novo/jniunifiedbackend/MonitorRecord") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/florin/jniunifiedbackend/MonitorRecord") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(IIIII)V") };
     const jfieldID field_mPartialHeight { ::djinni::jniGetFieldID(clazz.get(), "mPartialHeight", "I") };
     const jfieldID field_mPartialOffset { ::djinni::jniGetFieldID(clazz.get(), "mPartialOffset", "I") };

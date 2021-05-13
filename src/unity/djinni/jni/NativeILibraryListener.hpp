@@ -47,11 +47,11 @@ private:
         friend ::djinni::JniInterface<::ILibraryListener, ::djinni_generated::NativeILibraryListener>;
     };
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/novo/jniunifiedbackend/ILibraryListener") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/florin/jniunifiedbackend/ILibraryListener") };
     const jmethodID method_notifyUnifiedProgress { ::djinni::jniGetMethodID(clazz.get(), "notifyUnifiedProgress", "(F)V") };
-    const jmethodID method_notifyBalanceChange { ::djinni::jniGetMethodID(clazz.get(), "notifyBalanceChange", "(Lcom/novo/jniunifiedbackend/BalanceRecord;)V") };
-    const jmethodID method_notifyNewMutation { ::djinni::jniGetMethodID(clazz.get(), "notifyNewMutation", "(Lcom/novo/jniunifiedbackend/MutationRecord;Z)V") };
-    const jmethodID method_notifyUpdatedTransaction { ::djinni::jniGetMethodID(clazz.get(), "notifyUpdatedTransaction", "(Lcom/novo/jniunifiedbackend/TransactionRecord;)V") };
+    const jmethodID method_notifyBalanceChange { ::djinni::jniGetMethodID(clazz.get(), "notifyBalanceChange", "(Lcom/florin/jniunifiedbackend/BalanceRecord;)V") };
+    const jmethodID method_notifyNewMutation { ::djinni::jniGetMethodID(clazz.get(), "notifyNewMutation", "(Lcom/florin/jniunifiedbackend/MutationRecord;Z)V") };
+    const jmethodID method_notifyUpdatedTransaction { ::djinni::jniGetMethodID(clazz.get(), "notifyUpdatedTransaction", "(Lcom/florin/jniunifiedbackend/TransactionRecord;)V") };
     const jmethodID method_notifyInitWithExistingWallet { ::djinni::jniGetMethodID(clazz.get(), "notifyInitWithExistingWallet", "()V") };
     const jmethodID method_notifyInitWithoutExistingWallet { ::djinni::jniGetMethodID(clazz.get(), "notifyInitWithoutExistingWallet", "()V") };
     const jmethodID method_notifyShutdown { ::djinni::jniGetMethodID(clazz.get(), "notifyShutdown", "()V") };

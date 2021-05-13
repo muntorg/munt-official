@@ -19,7 +19,7 @@ public:
     static ::djinni::LocalRef<JniType> fromCpp(JNIEnv* jniEnv, CppType c) { return ::djinni::JniClass<NativeTransactionStatus>::get().create(jniEnv, static_cast<jint>(c)); }
 
 private:
-    NativeTransactionStatus() : JniEnum("com/novo/jniunifiedbackend/TransactionStatus") {}
+    NativeTransactionStatus() : JniEnum("com/florin/jniunifiedbackend/TransactionStatus") {}
     friend ::djinni::JniClass<NativeTransactionStatus>;
 };
 

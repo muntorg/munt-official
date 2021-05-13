@@ -7,8 +7,8 @@ contextMenu({
 });
 
 // Keep global references of all these objects
-let libnovo
-let novobackend
+let libflorin
+let florinbackend
 let signalhandler
 let RPCController
 
@@ -80,10 +80,10 @@ function createWindow () {
         {
             label: 'Debug',
             submenu: [
-                { label:"Generate genesis keys", click() {console.log(novobackend.GenerateGenesisKeys()) }},
+                { label:"Generate genesis keys", click() {console.log(florinbackend.GenerateGenesisKeys()) }},
                 { label: "RPC test - getpeerinfo", click() {
                     eval('');
-                    let RPCListener = new libnovo.NJSIRpcListener;
+                    let RPCListener = new libflorin.NJSIRpcListener;
 
                     RPCListener.onSuccess = function(filteredCommand, result) {
                     console.log("RPC success: " + result);
@@ -119,7 +119,7 @@ function createWindow () {
           console.log("terminate core from mainWindow close")
           e.preventDefault();
           mainWindow.hide()
-          novobackend.TerminateUnityLib()
+          florinbackend.TerminateUnityLib()
       }
       else if (!allowExit)
       {
@@ -154,16 +154,16 @@ function guldenUnitySetup()
 {
     var basepath = app.getPath("userData");
 
-    libnovo = require('./libnovo_unity_node_js')
-    novobackend = new libnovo.NJSILibraryController
+    libflorin = require('./libflorin_unity_node_js')
+    florinbackend = new libflorin.NJSILibraryController
     
     //Set this to a larger number to allow time to attach gdb to the library
     let debugTimeout = 1
     
     setTimeout(function(){
-    signalhandler = new libnovo.NJSILibraryListener;
+    signalhandler = new libflorin.NJSILibraryListener;
     
-    RPCController = new libnovo.NJSIRpcController;
+    RPCController = new libflorin.NJSIRpcController;
 
     // Receive signals from the core and marshall them as needed to the main window
     signalhandler.notifyCoreReady = function() {
@@ -172,14 +172,14 @@ function guldenUnitySetup()
         {
             console.log("terminate core immediately after init")
             terminateCore=false
-            novobackend.TerminateUnityLib()
+            florinbackend.TerminateUnityLib()
         }
         else
         {
             mainWindow.loadFile('html/app_balance.html')
             mainWindow.webContents.on('did-finish-load', () => {
                 mainWindow.webContents.send('notifyBalanceChange', balance)
-                var address = novobackend.GetReceiveAddress()
+                var address = florinbackend.GetReceiveAddress()
                 mainWindow.webContents.send('notifyAddressChange', address)
             })
         }
@@ -211,7 +211,7 @@ function guldenUnitySetup()
     }
     signalhandler.notifyInitWithoutExistingWallet = function () {
         coreIsRunning = true
-        recoveryPhrase = novobackend.GenerateRecoveryMnemonic()
+        recoveryPhrase = florinbackend.GenerateRecoveryMnemonic()
         mainWindow.webContents.send('notifyInitWithoutExistingWallet')
         mainWindow.loadFile('html/app_start.html')
         mainWindow.webContents.on('did-finish-load', () => {
@@ -231,7 +231,7 @@ function guldenUnitySetup()
     if (!fs.existsSync(walletpath)) fs.mkdir(walletpath, function(err){});
 
     // Start the Gulden unified backend
-    novobackend.InitUnityLibThreaded(walletpath, "", -1, -1, false, false, signalhandler, "")
+    florinbackend.InitUnityLibThreaded(walletpath, "", -1, -1, false, false, signalhandler, "")
     }, debugTimeout);
 
 }
@@ -256,17 +256,17 @@ ipcMain.on('verifiedPhrase', (event, validatePhrase) => {
 })
 
 ipcMain.on('initWithPassword', (event, password) => {
-  novobackend.InitWalletFromRecoveryPhrase(recoveryPhrase, password)  
+  florinbackend.InitWalletFromRecoveryPhrase(recoveryPhrase, password)  
   recoveryPhrase=""
 })
 
 ipcMain.on('changePassword', (event, passwordOld, passwordNew) => {
-  if (novobackend.ChangePassword(passwordOld, passwordNew))
+  if (florinbackend.ChangePassword(passwordOld, passwordNew))
   {
      mainWindow.loadFile('html/app_balance.html')
      mainWindow.webContents.on('did-finish-load', () => {
          mainWindow.webContents.send('notifyBalanceChange', balance)
-         var address = novobackend.GetReceiveAddress()
+         var address = florinbackend.GetReceiveAddress()
          mainWindow.webContents.send('notifyAddressChange', address)
      })
   }
@@ -277,11 +277,11 @@ ipcMain.on('changePassword', (event, passwordOld, passwordNew) => {
 })
 
 ipcMain.on('viewRecoveryPhrase', (event, password) => {
-  if (novobackend.UnlockWallet(password))
+  if (florinbackend.UnlockWallet(password))
   {
      mainWindow.loadFile('html/app_view_phrase.html')
      mainWindow.webContents.on('did-finish-load', () => {
-         mainWindow.webContents.send('notifyPhrase', novobackend.GetRecoveryPhrase())
+         mainWindow.webContents.send('notifyPhrase', florinbackend.GetRecoveryPhrase())
      })
   }
   else
@@ -305,7 +305,7 @@ app.on('window-all-closed', function () {
     if (coreIsRunning)
     {
         console.log("terminate core from window-all-closed")
-        novobackend.TerminateUnityLib()
+        florinbackend.TerminateUnityLib()
     }
     else
     {

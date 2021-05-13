@@ -24,13 +24,13 @@ private:
     NativeTransactionRecord();
     friend ::djinni::JniClass<NativeTransactionRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/novo/jniunifiedbackend/TransactionRecord") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;JJJLcom/novo/jniunifiedbackend/TransactionStatus;IJILjava/util/ArrayList;Ljava/util/ArrayList;)V") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/florin/jniunifiedbackend/TransactionRecord") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;JJJLcom/florin/jniunifiedbackend/TransactionStatus;IJILjava/util/ArrayList;Ljava/util/ArrayList;)V") };
     const jfieldID field_mTxHash { ::djinni::jniGetFieldID(clazz.get(), "mTxHash", "Ljava/lang/String;") };
     const jfieldID field_mTimeStamp { ::djinni::jniGetFieldID(clazz.get(), "mTimeStamp", "J") };
     const jfieldID field_mAmount { ::djinni::jniGetFieldID(clazz.get(), "mAmount", "J") };
     const jfieldID field_mFee { ::djinni::jniGetFieldID(clazz.get(), "mFee", "J") };
-    const jfieldID field_mStatus { ::djinni::jniGetFieldID(clazz.get(), "mStatus", "Lcom/novo/jniunifiedbackend/TransactionStatus;") };
+    const jfieldID field_mStatus { ::djinni::jniGetFieldID(clazz.get(), "mStatus", "Lcom/florin/jniunifiedbackend/TransactionStatus;") };
     const jfieldID field_mHeight { ::djinni::jniGetFieldID(clazz.get(), "mHeight", "I") };
     const jfieldID field_mBlockTime { ::djinni::jniGetFieldID(clazz.get(), "mBlockTime", "J") };
     const jfieldID field_mDepth { ::djinni::jniGetFieldID(clazz.get(), "mDepth", "I") };

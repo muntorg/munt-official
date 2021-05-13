@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
     <!--
-Copyright (c) 2018 The Novo developers
-Distributed under the Novo software license, see the accompanying
+Copyright (c) 2018 The Florin developers
+Distributed under the Florin software license, see the accompanying
 file COPYING
 !-->
     <!-- All translatable items, that we want translators to actually translate directly, should go in this file !-->
@@ -15,9 +15,9 @@ file COPYING
     <string name="welcome_activity_recover_existing_wallet">Recover wallet</string>
     <string name="welcome_activity_sync_with_desktop">Link with desktop</string>
     <string name="recover_from_phrase_intro">Enter your recovery phrase from which to perform a recovery</string>
-    <string name="show_recovery_phrase_EULA">By using the Novo app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Novo.</string>
+    <string name="show_recovery_phrase_EULA">By using the Florin app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Florin.</string>
     <string name="recovery_phrase_continue">Continue</string>
-    <string name="show_recovery_phrase_introtext">Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Novos. Someone else with access to the phrase = lose Novos.</string>
+    <string name="show_recovery_phrase_introtext">Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Florins. Someone else with access to the phrase = lose Florins.</string>
     <string name="recovery_phrase_acknowledge_writing_down">I wrote it down</string>
     <string name="recovery_phrase_copy">Recovery phrase copied to clipboard</string>
     <string name="peer_list_fragment_empty">No peers connected</string>

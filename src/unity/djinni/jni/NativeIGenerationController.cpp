@@ -7,12 +7,12 @@
 
 namespace djinni_generated {
 
-NativeIGenerationController::NativeIGenerationController() : ::djinni::JniInterface<::IGenerationController, NativeIGenerationController>("com/novo/jniunifiedbackend/IGenerationController$CppProxy") {}
+NativeIGenerationController::NativeIGenerationController() : ::djinni::JniInterface<::IGenerationController, NativeIGenerationController>("com/florin/jniunifiedbackend/IGenerationController$CppProxy") {}
 
 NativeIGenerationController::~NativeIGenerationController() = default;
 
 
-CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+CJNIEXPORT void JNICALL Java_com_florin_jniunifiedbackend_IGenerationController_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
@@ -20,7 +20,7 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00024CppProxy_setListener(JNIEnv* jniEnv, jobject /*this*/, jobject j_generationListener)
+CJNIEXPORT void JNICALL Java_com_florin_jniunifiedbackend_IGenerationController_00024CppProxy_setListener(JNIEnv* jniEnv, jobject /*this*/, jobject j_generationListener)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -28,7 +28,7 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00024CppProxy_startGeneration(JNIEnv* jniEnv, jobject /*this*/, jint j_numThreads, jstring j_memoryLimit)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_IGenerationController_00024CppProxy_startGeneration(JNIEnv* jniEnv, jobject /*this*/, jint j_numThreads, jstring j_memoryLimit)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -38,7 +38,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IGenerationControlle
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00024CppProxy_stopGeneration(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_IGenerationController_00024CppProxy_stopGeneration(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -47,7 +47,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IGenerationControlle
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00024CppProxy_getGenerationAddress(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jstring JNICALL Java_com_florin_jniunifiedbackend_IGenerationController_00024CppProxy_getGenerationAddress(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -56,7 +56,7 @@ CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_IGenerationController
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00024CppProxy_getGenerationOverrideAddress(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jstring JNICALL Java_com_florin_jniunifiedbackend_IGenerationController_00024CppProxy_getGenerationOverrideAddress(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -65,7 +65,7 @@ CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_IGenerationController
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00024CppProxy_setGenerationOverrideAddress(JNIEnv* jniEnv, jobject /*this*/, jstring j_overrideAddress)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_IGenerationController_00024CppProxy_setGenerationOverrideAddress(JNIEnv* jniEnv, jobject /*this*/, jstring j_overrideAddress)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -74,7 +74,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_IGenerationControlle
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jlong JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00024CppProxy_getAvailableCores(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jlong JNICALL Java_com_florin_jniunifiedbackend_IGenerationController_00024CppProxy_getAvailableCores(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -83,7 +83,7 @@ CJNIEXPORT jlong JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jlong JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00024CppProxy_getMinimumMemory(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jlong JNICALL Java_com_florin_jniunifiedbackend_IGenerationController_00024CppProxy_getMinimumMemory(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -92,7 +92,7 @@ CJNIEXPORT jlong JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jlong JNICALL Java_com_novo_jniunifiedbackend_IGenerationController_00024CppProxy_getMaximumMemory(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jlong JNICALL Java_com_florin_jniunifiedbackend_IGenerationController_00024CppProxy_getMaximumMemory(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);

@@ -1,36 +1,36 @@
 #!/bin/bash
 #
-#  Novo-daemon The novo core server.
+#  Florin-daemon The Florin core server.
 #
 #
 # chkconfig: 345 80 20
-# description: Novo-daemon
-# processname: Novo-daemon
+# description: Florin-daemon
+# processname: Florin-daemon
 #
 
 # Source function library.
 . /etc/init.d/functions
 
-# you can override defaults in /etc/sysconfig/Novo-daemon, see below
-if [ -f /etc/sysconfig/Novo-daemon ]; then
-        . /etc/sysconfig/Novo-daemon
+# you can override defaults in /etc/sysconfig/Florin-daemon, see below
+if [ -f /etc/sysconfig/Florin-daemon ]; then
+        . /etc/sysconfig/Florin-daemon
 fi
 
 RETVAL=0
 
-prog=Novo-daemon
-# you can override the lockfile via DAEMON_LOCKFILE in /etc/sysconfig/Novo-daemon
-lockfile=${DAEMON_LOCKFILE-/var/lock/subsys/Novo-daemon}
+prog=Florin-daemon
+# you can override the lockfile via DAEMON_LOCKFILE in /etc/sysconfig/Florin-daemon
+lockfile=${DAEMON_LOCKFILE-/var/lock/subsys/Florin-daemon}
 
-# daemon defaults to /usr/bin/Novo-daemon, override with DAEMON_BIN
-Novo_daemon=${DAEMON_BIN-/usr/bin/Novo-daemon}
+# daemon defaults to /usr/bin/Florin-daemon, override with DAEMON_BIN
+Florin_daemon=${DAEMON_BIN-/usr/bin/Florin-daemon}
 
 # daemon opts default to -disablewallet, override with DAEMON_OPTS
-Novo_daemon_opts=${DAEMON_OPTS--disablewallet}
+Florin_daemon_opts=${DAEMON_OPTS--disablewallet}
 
 start() {
     echo -n $"Starting $prog: "
-    daemon $DAEMONOPTS $Novo_daemon $Novo_daemon_opts
+    daemon $DAEMONOPTS $Florin_daemon $Florin_daemon_opts
     RETVAL=$?
     echo
     [ $RETVAL -eq 0 ] && touch $lockfile

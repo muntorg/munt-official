@@ -1,23 +1,23 @@
-# /etc/conf.d/Novo-daemon: config file for /etc/init.d/Novo-daemon
+# /etc/conf.d/Florin-daemon: config file for /etc/init.d/Florin-daemon
 
 # Config file location
-#DAEMON_CONFIGFILE="/etc/novo/novo.conf"
+#DAEMON_CONFIGFILE="/etc/florin/florin.conf"
 
 # What directory to write pidfile to?  (created and owned by $DAEMON_USER)
-#DAEMON_PIDDIR="/var/run/Novo-daemon"
+#DAEMON_PIDDIR="/var/run/Florin-daemon"
 
 # What filename to give the pidfile
-#DAEMON_PIDFILE="${DAEMON_PIDDIR}/Novo-daemon.pid"
+#DAEMON_PIDFILE="${DAEMON_PIDDIR}/Florin-daemon.pid"
 
 # Where to write data (be mindful that the blockchain is large)
-#DAEMON_DATADIR="/var/lib/Novo-daemon"
+#DAEMON_DATADIR="/var/lib/Florin-daemon"
 
 # User and group to own process
-#DAEMON_USER="novo"
-#DAEMON_GROUP="novo"
+#DAEMON_USER="florin"
+#DAEMON_GROUP="florin"
 
 # Path to executable
-#DAEMON_BIN="/usr/bin/Novo-daemon"
+#DAEMON_BIN="/usr/bin/Florin-daemon"
 
 # Nice value to run under
 #DAEMON_NICE=0

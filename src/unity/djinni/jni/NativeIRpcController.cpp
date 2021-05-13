@@ -7,12 +7,12 @@
 
 namespace djinni_generated {
 
-NativeIRpcController::NativeIRpcController() : ::djinni::JniInterface<::IRpcController, NativeIRpcController>("com/novo/jniunifiedbackend/IRpcController$CppProxy") {}
+NativeIRpcController::NativeIRpcController() : ::djinni::JniInterface<::IRpcController, NativeIRpcController>("com/florin/jniunifiedbackend/IRpcController$CppProxy") {}
 
 NativeIRpcController::~NativeIRpcController() = default;
 
 
-CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_IRpcController_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+CJNIEXPORT void JNICALL Java_com_florin_jniunifiedbackend_IRpcController_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
@@ -20,7 +20,7 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_IRpcController_00024CppP
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_IRpcController_00024CppProxy_execute(JNIEnv* jniEnv, jobject /*this*/, jstring j_rpcCommandLine, jobject j_resultListener)
+CJNIEXPORT void JNICALL Java_com_florin_jniunifiedbackend_IRpcController_00024CppProxy_execute(JNIEnv* jniEnv, jobject /*this*/, jstring j_rpcCommandLine, jobject j_resultListener)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -29,7 +29,7 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_IRpcController_00024CppP
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_IRpcController_00024CppProxy_getAutocompleteList(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_IRpcController_00024CppProxy_getAutocompleteList(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);

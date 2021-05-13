@@ -41,7 +41,7 @@ private:
         friend ::djinni::JniInterface<::IRpcListener, ::djinni_generated::NativeIRpcListener>;
     };
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/novo/jniunifiedbackend/IRpcListener") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/florin/jniunifiedbackend/IRpcListener") };
     const jmethodID method_onFilteredCommand { ::djinni::jniGetMethodID(clazz.get(), "onFilteredCommand", "(Ljava/lang/String;)V") };
     const jmethodID method_onSuccess { ::djinni::jniGetMethodID(clazz.get(), "onSuccess", "(Ljava/lang/String;Ljava/lang/String;)V") };
     const jmethodID method_onError { ::djinni::jniGetMethodID(clazz.get(), "onError", "(Ljava/lang/String;Ljava/lang/String;)V") };

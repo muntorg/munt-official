@@ -18,12 +18,12 @@
 
 namespace djinni_generated {
 
-NativeILibraryController::NativeILibraryController() : ::djinni::JniInterface<::ILibraryController, NativeILibraryController>("com/novo/jniunifiedbackend/ILibraryController$CppProxy") {}
+NativeILibraryController::NativeILibraryController() : ::djinni::JniInterface<::ILibraryController, NativeILibraryController>("com/florin/jniunifiedbackend/ILibraryController$CppProxy") {}
 
 NativeILibraryController::~NativeILibraryController() = default;
 
 
-CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+CJNIEXPORT void JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
@@ -31,7 +31,7 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_BuildInfo(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jstring JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_BuildInfo(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -40,7 +40,7 @@ CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jint JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_InitUnityLib(JNIEnv* jniEnv, jobject /*this*/, jstring j_dataDir, jstring j_staticFilterPath, jlong j_staticFilterOffset, jlong j_staticFilterLength, jboolean j_testnet, jboolean j_spvMode, jobject j_signalHandler, jstring j_extraArgs)
+CJNIEXPORT jint JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_InitUnityLib(JNIEnv* jniEnv, jobject /*this*/, jstring j_dataDir, jstring j_staticFilterPath, jlong j_staticFilterOffset, jlong j_staticFilterLength, jboolean j_testnet, jboolean j_spvMode, jobject j_signalHandler, jstring j_extraArgs)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -56,7 +56,7 @@ CJNIEXPORT jint JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_InitUnityLibThreaded(JNIEnv* jniEnv, jobject /*this*/, jstring j_dataDir, jstring j_staticFilterPath, jlong j_staticFilterOffset, jlong j_staticFilterLength, jboolean j_testnet, jboolean j_spvMode, jobject j_signalHandler, jstring j_extraArgs)
+CJNIEXPORT void JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_InitUnityLibThreaded(JNIEnv* jniEnv, jobject /*this*/, jstring j_dataDir, jstring j_staticFilterPath, jlong j_staticFilterOffset, jlong j_staticFilterLength, jboolean j_testnet, jboolean j_spvMode, jobject j_signalHandler, jstring j_extraArgs)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -71,7 +71,7 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_InitWalletFromRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/, jstring j_phrase, jstring j_password)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_InitWalletFromRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/, jstring j_phrase, jstring j_password)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -81,7 +81,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_ContinueWalletFromRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/, jstring j_phrase, jstring j_password)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_ContinueWalletFromRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/, jstring j_phrase, jstring j_password)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -91,7 +91,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_InitWalletLinkedFromURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_linkedUri, jstring j_password)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_InitWalletLinkedFromURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_linkedUri, jstring j_password)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -101,7 +101,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_ContinueWalletLinkedFromURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_linkedUri, jstring j_password)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_ContinueWalletLinkedFromURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_linkedUri, jstring j_password)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -111,7 +111,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_InitWalletFromAndroidLegacyProtoWallet(JNIEnv* jniEnv, jobject /*this*/, jstring j_walletFile, jstring j_oldPassword, jstring j_newPassword)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_InitWalletFromAndroidLegacyProtoWallet(JNIEnv* jniEnv, jobject /*this*/, jstring j_walletFile, jstring j_oldPassword, jstring j_newPassword)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -122,7 +122,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_isValidAndroidLegacyProtoWallet(JNIEnv* jniEnv, jobject /*this*/, jstring j_walletFile, jstring j_oldPassword)
+CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_isValidAndroidLegacyProtoWallet(JNIEnv* jniEnv, jobject /*this*/, jstring j_walletFile, jstring j_oldPassword)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -132,7 +132,7 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_IsValidLinkURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_phrase)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_IsValidLinkURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_phrase)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -141,7 +141,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_ReplaceWalletLinkedFromURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_linkedUri, jstring j_password)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_ReplaceWalletLinkedFromURI(JNIEnv* jniEnv, jobject /*this*/, jstring j_linkedUri, jstring j_password)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -151,7 +151,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_EraseWalletSeedsAndAccounts(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_EraseWalletSeedsAndAccounts(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -160,7 +160,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_IsValidRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/, jstring j_phrase)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_IsValidRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/, jstring j_phrase)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -169,7 +169,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_GenerateRecoveryMnemonic(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jstring JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_GenerateRecoveryMnemonic(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -178,7 +178,7 @@ CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_GenerateGenesisKeys(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jstring JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_GenerateGenesisKeys(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -187,7 +187,7 @@ CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_ComposeRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/, jstring j_mnemonic, jlong j_birthTime)
+CJNIEXPORT jstring JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_ComposeRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/, jstring j_mnemonic, jlong j_birthTime)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -197,7 +197,7 @@ CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_TerminateUnityLib(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT void JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_TerminateUnityLib(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -205,7 +205,7 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_QRImageFromString(JNIEnv* jniEnv, jobject /*this*/, jstring j_qrString, jint j_widthHint)
+CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_QRImageFromString(JNIEnv* jniEnv, jobject /*this*/, jstring j_qrString, jint j_widthHint)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -215,7 +215,7 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_GetReceiveAddress(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jstring JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_GetReceiveAddress(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -224,7 +224,7 @@ CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_GetRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jstring JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_GetRecoveryPhrase(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -233,7 +233,7 @@ CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_IsMnemonicWallet(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_IsMnemonicWallet(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -242,7 +242,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_IsMnemonicCorrect(JNIEnv* jniEnv, jobject /*this*/, jstring j_phrase)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_IsMnemonicCorrect(JNIEnv* jniEnv, jobject /*this*/, jstring j_phrase)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -251,7 +251,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_GetMnemonicDictionary(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_GetMnemonicDictionary(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -260,7 +260,7 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_UnlockWallet(JNIEnv* jniEnv, jobject /*this*/, jstring j_password)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_UnlockWallet(JNIEnv* jniEnv, jobject /*this*/, jstring j_password)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -269,7 +269,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_LockWallet(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_LockWallet(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -278,7 +278,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_ChangePassword(JNIEnv* jniEnv, jobject /*this*/, jstring j_oldPassword, jstring j_newPassword)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_ChangePassword(JNIEnv* jniEnv, jobject /*this*/, jstring j_oldPassword, jstring j_newPassword)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -288,7 +288,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_DoRescan(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT void JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_DoRescan(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -296,7 +296,7 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_IsValidRecipient(JNIEnv* jniEnv, jobject /*this*/, jobject j_request)
+CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_IsValidRecipient(JNIEnv* jniEnv, jobject /*this*/, jobject j_request)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -305,7 +305,7 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_IsValidNativeAddress(JNIEnv* jniEnv, jobject /*this*/, jstring j_address)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_IsValidNativeAddress(JNIEnv* jniEnv, jobject /*this*/, jstring j_address)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -314,7 +314,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_IsValidBitcoinAddress(JNIEnv* jniEnv, jobject /*this*/, jstring j_address)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_IsValidBitcoinAddress(JNIEnv* jniEnv, jobject /*this*/, jstring j_address)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -323,7 +323,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jlong JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_feeForRecipient(JNIEnv* jniEnv, jobject /*this*/, jobject j_request)
+CJNIEXPORT jlong JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_feeForRecipient(JNIEnv* jniEnv, jobject /*this*/, jobject j_request)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -332,7 +332,7 @@ CJNIEXPORT jlong JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0002
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_performPaymentToRecipient(JNIEnv* jniEnv, jobject /*this*/, jobject j_request, jboolean j_substractFee)
+CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_performPaymentToRecipient(JNIEnv* jniEnv, jobject /*this*/, jobject j_request, jboolean j_substractFee)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -342,7 +342,7 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_getTransaction(JNIEnv* jniEnv, jobject /*this*/, jstring j_txHash)
+CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_getTransaction(JNIEnv* jniEnv, jobject /*this*/, jstring j_txHash)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -351,7 +351,7 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_resendTransaction(JNIEnv* jniEnv, jobject /*this*/, jstring j_txHash)
+CJNIEXPORT jstring JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_resendTransaction(JNIEnv* jniEnv, jobject /*this*/, jstring j_txHash)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -360,7 +360,7 @@ CJNIEXPORT jstring JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_getAddressBookRecords(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_getAddressBookRecords(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -369,7 +369,7 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_addAddressBookRecord(JNIEnv* jniEnv, jobject /*this*/, jobject j_address)
+CJNIEXPORT void JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_addAddressBookRecord(JNIEnv* jniEnv, jobject /*this*/, jobject j_address)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -377,7 +377,7 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_deleteAddressBookRecord(JNIEnv* jniEnv, jobject /*this*/, jobject j_address)
+CJNIEXPORT void JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_deleteAddressBookRecord(JNIEnv* jniEnv, jobject /*this*/, jobject j_address)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -385,7 +385,7 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_PersistAndPruneForSPV(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT void JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_PersistAndPruneForSPV(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -393,7 +393,7 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_ResetUnifiedProgress(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT void JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_ResetUnifiedProgress(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -401,7 +401,7 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_getLastSPVBlockInfos(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_getLastSPVBlockInfos(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -410,7 +410,7 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jfloat JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_getUnifiedProgress(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jfloat JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_getUnifiedProgress(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -419,7 +419,7 @@ CJNIEXPORT jfloat JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_000
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_getMonitoringStats(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_getMonitoringStats(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -428,7 +428,7 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_RegisterMonitorListener(JNIEnv* jniEnv, jobject /*this*/, jobject j_listener)
+CJNIEXPORT void JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_RegisterMonitorListener(JNIEnv* jniEnv, jobject /*this*/, jobject j_listener)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -436,7 +436,7 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_UnregisterMonitorListener(JNIEnv* jniEnv, jobject /*this*/, jobject j_listener)
+CJNIEXPORT void JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_UnregisterMonitorListener(JNIEnv* jniEnv, jobject /*this*/, jobject j_listener)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -444,7 +444,7 @@ CJNIEXPORT void JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_getClientInfo(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_getClientInfo(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -453,7 +453,7 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_getMutationHistory(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_getMutationHistory(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -462,7 +462,7 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_getTransactionHistory(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_getTransactionHistory(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -471,7 +471,7 @@ CJNIEXPORT jobject JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_HaveUnconfirmedFunds(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_HaveUnconfirmedFunds(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -480,7 +480,7 @@ CJNIEXPORT jboolean JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jlong JNICALL Java_com_novo_jniunifiedbackend_ILibraryController_00024CppProxy_GetBalance(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jlong JNICALL Java_com_florin_jniunifiedbackend_ILibraryController_00024CppProxy_GetBalance(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
