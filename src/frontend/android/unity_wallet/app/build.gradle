@@ -51,24 +51,24 @@ android {
     flavorDimensions "default"
     productFlavors {
         florin_testnet {
-            applicationId 'com.florin.testnet'
+            applicationId 'com.novo.testnet'
             archivesBaseName = 'florin'
             resValue "string", "app_name", "Florin-testnet"
             buildConfigField "boolean", "TESTNET", "true"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf-testnet"'
-            versionCode 300018
+            versionCode 300019
             versionName = "1.0.12"
             resValue "string", "about_text_app_name", "Florin testnet $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2020 Centure.com BV"
         }
 
         florin_mainnet {
-            applicationId 'com.florin.wallet'
+            applicationId 'com.novo.wallet'
             archivesBaseName = 'florin'
             resValue "string", "app_name", "Florin"
             buildConfigField "boolean", "TESTNET", "false"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf"'
-            versionCode 18
+            versionCode 19
             versionName = "1.0.12"
             resValue "string", "about_text_app_name", "Florin $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2020 Centure.com BV"
