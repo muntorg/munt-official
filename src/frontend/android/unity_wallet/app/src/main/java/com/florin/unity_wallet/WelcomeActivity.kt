@@ -82,35 +82,34 @@ class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
             if (resultCode == CommonStatusCodes.SUCCESS && data != null)
             {
                 val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
-                Authentication.instance.chooseAccessCode(this, null) {
-                    password->
-                    if (UnityCore.instance.isCoreReady())
-                    {
-                        if (ILibraryController.ContinueWalletLinkedFromURI(barcode.displayValue, password.joinToString("")))
-                        {
-                            gotoWalletActivity(this)
-                            return@chooseAccessCode
-                        }
-                    }
-                    else
-                    {
-                        // Create the new wallet, a coreReady event will follow which will proceed to the main activity
-                        if (ILibraryController.InitWalletLinkedFromURI(barcode.displayValue, password.joinToString("")))
-                        {
-                            return@chooseAccessCode
-                        }
-                    }
+                Authentication.instance.chooseAccessCode(
+                        this,
+                        null,
+                        action = { password->
+                            if (UnityCore.instance.isCoreReady()) {
+                                if (ILibraryController.ContinueWalletLinkedFromURI(barcode.displayValue, password.joinToString(""))) {
+                                    gotoWalletActivity(this)
+                                    return@chooseAccessCode
+                                }
+                            } else {
+                                // Create the new wallet, a coreReady event will follow which will proceed to the main activity
+                                if (ILibraryController.InitWalletLinkedFromURI(barcode.displayValue, password.joinToString(""))) {
+                                    return@chooseAccessCode
+                                }
+                            }
 
-                    // Got here so there was an error in init or continue linked wallet
-                    alert(Appcompat,  getString(R.string.no_qrsync_warning),  getString(R.string.no_qrsync_warning_title))
-                    {
-                        positiveButton(getString(R.string.button_ok))
-                        {
-                            it.dismiss()
-                        }
-                        isCancelable = true
-                    }.build().show()
-                }
+                            // Got here so there was an error in init or continue linked wallet
+                            alert(Appcompat,  getString(R.string.no_qrsync_warning),  getString(R.string.no_qrsync_warning_title))
+                            {
+                                positiveButton(getString(R.string.button_ok))
+                                {
+                                    it.dismiss()
+                                }
+                                isCancelable = true
+                            }.build().show()
+                        },
+                        cancelled = {}
+                )
             }
         }
         else

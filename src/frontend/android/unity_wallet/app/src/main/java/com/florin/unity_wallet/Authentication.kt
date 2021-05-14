@@ -132,9 +132,14 @@ class Authentication {
             negativeButton(android.R.string.cancel) { }
             positiveButton(android.R.string.ok) {
                 if (UnityCore.instance.walletReady.isCompleted && ILibraryController.IsMnemonicCorrect(contentView.recoveryPhrase.text.toString())) {
-                    chooseAccessCode(context, null) {
-                        unblock(context)
-                    }
+                    chooseAccessCode(
+                            context,
+                            null,
+                            action = fun(password: CharArray) {
+                                unblock(context)
+                            },
+                            cancelled = fun(){}
+                    )
                 } else {
                     context.alert(Appcompat, context.getString(R.string.access_code_recovery_incorrect),
                             context.getString(R.string.authentication_blocked_title)) {
@@ -215,13 +220,13 @@ class Authentication {
         dialog.show()
     }
 
-    fun chooseAccessCode(context: Context, title: String?, action: (CharArray) -> Unit) {
+    fun chooseAccessCode(context: Context, title: String?, action: (CharArray) -> Unit, cancelled: () -> Unit) {
         val contentView = LayoutInflater.from(context).inflate(R.layout.access_code_entry, null)
 
         val builder = context.alert(Appcompat) {
             this.title = title ?: context.getString(R.string.access_code_choose_title)
             customView = contentView
-            negativeButton("Cancel") {
+            negativeButton("Cancel") { cancelled()
             }
         }
 

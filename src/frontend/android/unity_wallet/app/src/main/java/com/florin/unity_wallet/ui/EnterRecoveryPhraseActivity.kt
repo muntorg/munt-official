@@ -154,20 +154,26 @@ class EnterRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
     {
         // TODO must have core started and createWallet signal
 
-        Authentication.instance.chooseAccessCode(this, null) {
-            password->
-            if (UnityCore.instance.isCoreReady()) {
-                if (ILibraryController.ContinueWalletFromRecoveryPhrase(mnemonicPhrase, password.joinToString(""))) {
-                    gotoWalletActivity(this)
-                } else {
-                    internalErrorAlert(this, "$TAG continuation failed")
-                }
-            } else {
-                // Create the new wallet, a coreReady event will follow which will proceed to the main activity
-                if (!ILibraryController.InitWalletFromRecoveryPhrase(mnemonicPhrase, password.joinToString("")))
-                    internalErrorAlert(this, "$TAG init failed")
-            }
-        }
+        val originaButtonState = recover_from_phrase_proceed_button.visibility
+        recover_from_phrase_proceed_button.visibility = View.INVISIBLE
+        Authentication.instance.chooseAccessCode(
+                this,
+                null,
+                action = { password->
+                    if (UnityCore.instance.isCoreReady()) {
+                        if (ILibraryController.ContinueWalletFromRecoveryPhrase(mnemonicPhrase, password.joinToString(""))) {
+                            gotoWalletActivity(this)
+                        } else {
+                            internalErrorAlert(this, "$TAG continuation failed")
+                        }
+                    } else {
+                        // Create the new wallet, a coreReady event will follow which will proceed to the main activity
+                        if (!ILibraryController.InitWalletFromRecoveryPhrase(mnemonicPhrase, password.joinToString("")))
+                            internalErrorAlert(this, "$TAG init failed")
+                    }
+                },
+                cancelled = fun() {recover_from_phrase_proceed_button.visibility = originaButtonState}
+        )
     }
 
     private fun promptUserForBirthDate()

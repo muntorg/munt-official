@@ -64,11 +64,16 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
             }
             "preference_change_pass_code" -> {
                 Authentication.instance.authenticate(activity!!, getString(R.string.change_passcode_auth_title), getString(R.string.change_passcode_auth_desc)) { oldPassword ->
-                    Authentication.instance.chooseAccessCode(activity!!, getString(R.string.change_passcode_auth_title)) { newPassword ->
-                        if (!ILibraryController.ChangePassword(oldPassword.joinToString(""), newPassword.joinToString(""))) {
-                            Toast.makeText(context, "Failed to change password", Toast.LENGTH_LONG).show()
-                        }
-                    }
+                    Authentication.instance.chooseAccessCode(
+                            activity!!,
+                            getString(R.string.change_passcode_auth_title),
+                            action = { newPassword ->
+                                if (!ILibraryController.ChangePassword(oldPassword.joinToString(""), newPassword.joinToString(""))) {
+                                    Toast.makeText(context, "Failed to change password", Toast.LENGTH_LONG).show()
+                                }
+                            },
+                            cancelled = {}
+                    )
                 }
             }
             "preference_rescan_wallet" -> {

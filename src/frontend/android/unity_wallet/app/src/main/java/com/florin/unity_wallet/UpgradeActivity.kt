@@ -112,14 +112,19 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
 
     private fun chooseNewAccessCodeAndUpgrade(oldPassword: String, view: View) {
         this.runOnUiThread {
-            Authentication.instance.chooseAccessCode(this, getString(R.string.access_code_choose_upgrade_title)) { accessCode ->
-                thread(true) {
-                    val newPassword = accessCode.joinToString("")
-                    ILibraryController.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword, newPassword)
-                }
+            Authentication.instance.chooseAccessCode(
+                    this,
+                    getString(R.string.access_code_choose_upgrade_title),
+                    action = { accessCode ->
+                        thread(true) {
+                            val newPassword = accessCode.joinToString("")
+                            ILibraryController.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword, newPassword)
+                        }
 
-                this.runOnUiThread { view.longSnackbar("Wallet upgrade in progress") }
-            }
+                        this.runOnUiThread { view.longSnackbar("Wallet upgrade in progress") }
+                    },
+                    cancelled = {}
+            )
         }
     }
 
