@@ -115,6 +115,52 @@ int InitUnity()
             return EXIT_FAILURE;
         }
 
+        std::string walletFile = GetArg("-wallet", DEFAULT_WALLET_DAT);
+        if (!fs::exists(GetDataDir() / walletFile))
+        {
+            //Temporary - migrate old 'Novo' wallets to new 'Florin' wallets.
+            try
+            {
+                std::string newPathString = GetDataDir().string();
+                std::string oldPathString = newPathString;
+
+                boost::replace_all(oldPathString, "Florin", "Novo");
+                boost::replace_all(oldPathString, "florin", "Novo");
+                boost::filesystem::path oldPath(oldPathString);
+                if (fs::exists( (oldPath / walletFile).string() ))
+                {
+                    for(auto& entry : boost::make_iterator_range(boost::filesystem::directory_iterator(oldPath), {}))
+                    {
+                        fs::rename((oldPath / entry.path().filename()).string(), (GetDataDir() / entry.path().filename()).string() );
+                    }
+                    if (fs::exists(oldPath / "novo.conf"))
+                        fs::rename((oldPath / "novo.conf").string(), (GetDataDir() / "Florin.conf").string());
+                    if (fs::exists(oldPath / "Novo.conf"))
+                        fs::rename((oldPath / "Novo.conf").string(), (GetDataDir() / "Florin.conf").string());
+                }
+                else
+                {
+                    std::string newPathString = GetDataDir().string();
+                    std::string oldPathString = newPathString;
+                    boost::replace_all(oldPathString, "Florin", "novo");
+                    boost::replace_all(oldPathString, "florin", "novo");
+                    oldPath = boost::filesystem::path(boost::filesystem::path(oldPathString));
+                    if (fs::exists( (oldPath / walletFile).string() ))
+                    {
+                        for(auto& entry : boost::make_iterator_range(boost::filesystem::directory_iterator(oldPath), {}))
+                        {
+       	                    fs::rename((oldPath / entry.path().filename()).string(), (GetDataDir() / entry.path().filename()).string() );
+                        }
+                        if (fs::exists(oldPath / "novo.conf"))
+	                    fs::rename((oldPath / "novo.conf").string(), (GetDataDir() / "Florin.conf").string());
+                        if (fs::exists(oldPath / "Novo.conf"))
+                            fs::rename((oldPath / "Novo.conf").string(), (GetDataDir() / "Florin.conf").string());
+                    }
+                }
+            }
+            catch(...){}
+        }
+
         // Set this early so that parameter interactions go to console
         InitLogging();
         InitParameterInteraction();
@@ -146,7 +192,6 @@ int InitUnity()
             }
         }
 
-        std::string walletFile = GetArg("-wallet", DEFAULT_WALLET_DAT);
         bool havePrimary = false;
         if (fs::exists(GetDataDir() / walletFile))
         {
