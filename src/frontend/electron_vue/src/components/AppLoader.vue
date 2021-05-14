@@ -120,7 +120,7 @@ export default {
 
 .logo-outer {
   margin: 24px;
-  background: var(--primary-color);
+  background: #000;
   width: 128px;
   height: 128px;
   border-radius: 50%;
