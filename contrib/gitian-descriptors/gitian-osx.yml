@@ -35,7 +35,7 @@ packages:
 - "flex"
 - "genisoimage"
 remotes:
-- "url": https://github.com/novocurrency/novocurrency-core.git
+- "url": https://github.com/florinxfl/florin-core.git
   "dir": "Florin"
 files:
 - "MacOSX10.11.sdk.tar.gz"

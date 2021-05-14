@@ -35,7 +35,7 @@ packages:
 - "bison"
 - "flex"
 remotes:
-- "url": https://github.com/novocurrency/novocurrency-core.git
+- "url": https://github.com/florinxfl/florin-core.git
   "dir": "Florin"
 files:
 - "iojs-v8.2.3.tar.gz"

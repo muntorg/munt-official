@@ -8,40 +8,40 @@
     </td>
     <td width="20%" border=0>
       <a href="#">
-        <img height="20px" src="https://travis-ci.org/novocurrency/novocurrency-core.svg?branch=master" alt="ci build status"/>
+        <img height="20px" src="https://travis-ci.org/florinxfl/florin-core.svg?branch=master" alt="ci build status"/>
       </a>
     </td>
   </tr>
   <tr border=0>
     <td>
-      <a href="https://github.com/novocurrency/novocurrency-core/issues">
-        <img  height="20px" src="https://img.shields.io/github/issues/novocurrency/novocurrency-core.svg?color=blue" alt="open issues"/>
+      <a href="https://github.com/florinxfl/florin-core/issues">
+        <img  height="20px" src="https://img.shields.io/github/issues/florinxfl/florin-core.svg?color=blue" alt="open issues"/>
     </td>
   </tr>
   <tr border=0>
     <td>
-      <a href="https://github.com/novocurrency/novocurrency-core/issues?q=is%3Aissue+is%3Aclosed">
-        <img  height="20px" src="https://img.shields.io/github/issues-closed/novocurrency/novocurrency-core.svg?color=blue" alt="closed issues"/>
+      <a href="https://github.com/florinxfl/florin-core/issues?q=is%3Aissue+is%3Aclosed">
+        <img  height="20px" src="https://img.shields.io/github/issues-closed/florinxfl/florin-core.svg?color=blue" alt="closed issues"/>
       </a>
     </td>
   </tr>
   <tr border=0>
     <td border=0>
-      <a href="https://github.com/novocurrency/novocurrency-core/releases">
-        <img height="20px" src="https://img.shields.io/github/downloads/novocurrency/novocurrency-core/total.svg?color=blue" alt="total downloads"/>
+      <a href="https://github.com/florinxfl/florin-core/releases">
+        <img height="20px" src="https://img.shields.io/github/downloads/florinxfl/florin-core/total.svg?color=blue" alt="total downloads"/>
       </a>
     </td>
   </tr>
   <tr border=0>
     <td>
-      <a href="https://github.com/novocurrency/novocurrency-core/commits/master">
-        <img height="20px" src="https://img.shields.io/github/commit-activity/y/novocurrency/novocurrency-core.svg" alt="commits 1y"/>
+      <a href="https://github.com/florinxfl/florin-core/commits/master">
+        <img height="20px" src="https://img.shields.io/github/commit-activity/y/florinxfl/florin-core.svg" alt="commits 1y"/>
       </a>
     </td>
   </tr>
   <tr>
     <td>
-      <a href="https://github.com/novocurrency/novocurrency-core/compare/master@%7B12month%7D...development">
+      <a href="https://github.com/florinxfl/florin-core/compare/master@%7B12month%7D...development">
         <img height="20px" src="https://img.shields.io/badge/dev%20branch-development-blue.svg" alt="active_branch"/>
       </a>
     </td>
@@ -51,7 +51,7 @@
 
 
 ### License
-All code, binaries and other assets in this repository are subject to [The Florin license](https://github.com/novocurrency/novocurrency-core/blob/master/COPYING_florin) except where explicitely stated otherwise.
+All code, binaries and other assets in this repository are subject to [The Florin license](https://github.com/florinxfl/florin-core/blob/master/COPYING_florin) except where explicitely stated otherwise.
 
 ### Branches
 `master` branch tracks the current public release; is generally updated only for each release (with accompanying tag) and very occasionally for minor documentation or other commits. If all you want is to build/track the current version of the software than use the `master` branch.
@@ -73,14 +73,14 @@ If you are thinking about contributing toward the development of Florin in some 
 
 ### Community
 Connect with the community through one or more of the following:
-[Website](https://novocurrency.com) ◾ [Slack](https://novocurrency.slack.com) ◾ [Twitter](http://twitter.com/novocurrency) ◾ [Facebook](http://facebook.com/novocurrency)
+[Website](https://florin.org) ◾ [Slack](https://novocurrency.slack.com) ◾ [Twitter](http://twitter.com/novocurrency) ◾ [Facebook](http://facebook.com/novocurrency)
 
 
 ### Downloading
-The latest binaries and installers can be found [here](https://github.com/novocurrency/novocurrency-core/releases) for all platforms, including raspbian.
+The latest binaries and installers can be found [here](https://github.com/florinxfl/florin-core/releases) for all platforms, including raspbian.
 
 ### Building
-[Binaries](https://github.com/novocurrency/novocurrency-core/releases) for both the UI as well as the daemon and command line interface for multiple architectures.
+[Binaries](https://github.com/florinxfl/florin-core/releases) for both the UI as well as the daemon and command line interface for multiple architectures.
 
 For those who really need too or are technically inclined it is of course possible to build the software yourself. Please read the [build instructions](./doc/building.md) before attempting to build the software and/or seeking support.
 

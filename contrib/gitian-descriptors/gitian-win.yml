@@ -31,7 +31,7 @@ packages:
 - "flex"
 - "libssl-dev"
 remotes:
-- "url": https://github.com/novocurrency/novocurrency-core.git
+- "url": https://github.com/florinxfl/florin-core.git
   "dir": "Florin"
 files:
 - "osslsigncode-2.0.tar.gz" #Optional; Only needed for official builds.
