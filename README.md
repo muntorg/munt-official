@@ -73,7 +73,7 @@ If you are thinking about contributing toward the development of Florin in some 
 
 ### Community
 Connect with the community through one or more of the following:
-[Website](https://florin.org) ◾ [Slack](https://novocurrency.slack.com) ◾ [Twitter](http://twitter.com/novocurrency) ◾ [Facebook](http://facebook.com/novocurrency)
+[Website](https://florin.org) ◾ [Slack](https://novocurrency.slack.com) ◾ [Twitter](http://twitter.com/florinxfl)
 
 
 ### Downloading
