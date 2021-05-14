@@ -1489,8 +1489,8 @@ static UniValue calculateholdingweight(const JSONRPCRequest& request)
     {
         optimalWeight += GetPoW2RawWeightForAmount(partAmount, requestedLockPeriodInBlocks);
     }
-    result.push_back(Pair("optimal_parts", optimalAmounts.size()));
-    result.push_back(Pair("optimal_weight", optimalWeight));
+    result.push_back(Pair("optimal_parts", (uint64_t)optimalAmounts.size()));
+    result.push_back(Pair("optimal_weight", (uint64_t)optimalWeight));
 
     return result;
 }
