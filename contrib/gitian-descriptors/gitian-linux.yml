@@ -132,7 +132,7 @@ script: |
   export CFLAGS=${CXXFLAGS}
   export LDFLAGS="-fPIC -Bsymbolic -Wl,--gc-sections"
   
-  cd Novo
+  cd Florin
   BASEPREFIX=`pwd`/depends
   # Build dependencies for each host
   for i in $HOSTS; do
