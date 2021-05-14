@@ -2,7 +2,7 @@ Florin© is written and maintained by "The Florin developers" under the employ o
 
 In addition to our own source code Florin makes use of source code, fonts and assets from a multitude of third party projects, and is compliant with the licensing for all of these projects, most of which are free and open source.
 
-The license information for these projects can be found alongside the source code at "https://github.com/novocurrency/novocurrency-core" as well as in text/json format distributed as part of the application bundle in the assets sub folder.
+The license information for these projects can be found alongside the source code at "https://github.com/florinxfl/florin-core" as well as in text/json format distributed as part of the application bundle in the assets sub folder.
 
 
 The Florin License

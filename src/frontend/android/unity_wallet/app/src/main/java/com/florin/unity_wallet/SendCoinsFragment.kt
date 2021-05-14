@@ -54,7 +54,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             field = value
             when (entryMode)
             {
-                EntryMode.Local -> mMainlayout.findViewById<Button>(R.id.button_currency).text = "N"
+                EntryMode.Local -> mMainlayout.findViewById<Button>(R.id.button_currency).text = "F"
                 EntryMode.Native -> mMainlayout.findViewById<Button>(R.id.button_currency).text = foreignCurrency.short
             }
         }

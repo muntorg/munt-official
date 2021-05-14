@@ -131,7 +131,7 @@ fun formatNativeSimple(nativeAmount: Long): String
 
 fun formatNative(nativeAmount: Long, useNativePrefix: Boolean = true): String
 {
-    return "%s %s".format(if (useNativePrefix) "N" else "",
+    return "%s %s".format(if (useNativePrefix) "F" else "",
             (DecimalFormat("+#,##0.00;-#").format(nativeAmount.toDouble() / 100000000)))
 }
 
