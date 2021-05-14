@@ -8,7 +8,7 @@ file COPYING
 <resources>
 
     <!-- general -->
-    <color name="colorPrimary">#009572</color>
+    <color name="colorPrimary">#c0aa70</color>
     <color name="colorPrimaryDark">#909090</color>
     <color name="colorAccent">#575ba0</color>
     <color name="darkText">#000000</color>
