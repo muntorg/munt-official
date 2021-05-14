@@ -2,7 +2,7 @@
   <tr border=0>
     <td border="0px" width="80%" rowspan="7">
       <a href="https://www.florin.org">
-        <img align="left" src="./src/frontend/electron/img/icon_128.png" alt="Florin"/>
+        <img align="left" src="./src/frontend/electron_vue/build/128x128.png" alt="Florin"/>
       </a>
       <p>Florin; The climate friendly blockchain based currency with an even distribution<br/>
     </td>
