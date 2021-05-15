@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_TEST_SCRIPTNUM10_H
-#define GULDEN_TEST_SCRIPTNUM10_H
+#ifndef TEST_SCRIPTNUM10_H
+#define TEST_SCRIPTNUM10_H
 
 #include <algorithm>
 #include <limits>
@@ -180,4 +180,4 @@ private:
 };
 
 
-#endif // GULDEN_TEST_BIGNUM_H
+#endif // TEST_BIGNUM_H

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GULDEN_TEST_TEST_GULDEN_H
-#define GULDEN_TEST_TEST_GULDEN_H
+#ifndef TEST_TEST_H
+#define TEST_TEST_H
 
 #include "chainparamsbase.h"
 #include "fs.h"
@@ -17,9 +17,9 @@
 #include <boost/thread.hpp>
 
 #ifdef BYPASS_TEST_REWRITES
-#define GULDEN_TEST_REWRITE
+#define TEST_REWRITE
 #else
-#define GULDEN_TEST_REWRITE BOOST_TEST(false, "test needs rewrite for Gulden")
+#define TEST_REWRITE BOOST_TEST(false, "test needs rewrite")
 #endif
 
 #define TEST_DEFAULT_TX_VERSION CTransaction::CURRENT_VERSION
