@@ -242,7 +242,7 @@ void mineTestBlock(CBlock* pblock)
 // NOTE: These tests rely on CreateNewBlock doing its own self-validation!
 BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
 {
-    GULDEN_TEST_REWRITE;
+    TEST_REWRITE;
     #if 0
     // Note that by default, these tests run with size accounting enabled.
     const CChainParams& chainparams = Params();
