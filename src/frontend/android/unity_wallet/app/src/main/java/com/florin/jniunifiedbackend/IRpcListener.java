@@ -5,7 +5,7 @@ package com.florin.jniunifiedbackend;
 
 /**
  * Interface to handle result of RPC commands
- * Calls either onSuccess or onError depending on whether command succeeds or fails
+ * Calls either onSuccess or onError depending on whether command suceedes or fails
  */
 public abstract class IRpcListener {
     /**

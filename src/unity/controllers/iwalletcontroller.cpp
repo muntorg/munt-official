@@ -25,6 +25,8 @@
 #include "i_wallet_controller.hpp"
 #include "i_wallet_listener.hpp"
 #include "account_record.hpp"
+#include "balance_record.hpp"
+#include "mutation_record.hpp"
 
 std::shared_ptr<IWalletListener> walletListener;
 

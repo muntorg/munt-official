@@ -262,51 +262,24 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         val MyRequestQueue = Volley.newRequestQueue(this)
         val failURL = "https://florin.org/buy"
         val request = object : StringRequest(Request.Method.POST,"https://blockhut.com/buysession.php",
-                Response.Listener { response ->
-                    try
+            Response.Listener { response ->
+                try
+                {
+                    var jsonResponse = JSONObject(response);
+                    if (jsonResponse.getInt("status_code") == 200)
                     {
-                        var jsonResponse = JSONObject(response);
-                        if (jsonResponse.getInt("status_code") == 200)
-                        {
-                            var sessionID = jsonResponse.getString("sessionid")
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://blockhut.com/buyflorin.php?sessionid=%s".format(sessionID)))
-                            if (intent.resolveActivity(packageManager) != null)
-                            {
-                                startActivity(intent)
-                            }
-                        }
-                        else
-                        {
-                            // Redirect user to the default fallback site
-                            //fixme: Do something with the status message here
-                            //var statusMessage = jsonResponse.getString("status_message")
-                            val intent = Intent(failURL)
-                            if (intent.resolveActivity(packageManager) != null)
-                            {
-                                startActivity(intent)
-                            }
-                        }
-                    }
-                    catch (e:Exception)
-                    {
-                        // Redirect user to the default fallback site
-                        //fixme: Do something with the error message here
-                        val intent = Intent(failURL)
+                        var sessionID = jsonResponse.getString("sessionid")
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://blockhut.com/buyflorin.php?sessionid=%s".format(sessionID)))
                         if (intent.resolveActivity(packageManager) != null)
                         {
                             startActivity(intent)
                         }
                     }
-                },
-                Response.ErrorListener
-                {
-                    // If we are sure its a local connectivity issue, alert the user, otherwise send them to the default fallback site
-                    if (it is NetworkError || it is AuthFailureError || it is NoConnectionError)
-                    {
-                        Toast.makeText(this, getString(R.string.error_check_internet_connection), Toast.LENGTH_SHORT).show()
-                    }
                     else
                     {
+                        // Redirect user to the default fallback site
+                        //fixme: Do something with the status message here
+                        //var statusMessage = jsonResponse.getString("status_message")
                         val intent = Intent(failURL)
                         if (intent.resolveActivity(packageManager) != null)
                         {
@@ -314,6 +287,33 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
                         }
                     }
                 }
+                catch (e:Exception)
+                {
+                    // Redirect user to the default fallback site
+                    //fixme: Do something with the error message here
+                    val intent = Intent(failURL)
+                    if (intent.resolveActivity(packageManager) != null)
+                    {
+                        startActivity(intent)
+                    }
+                }
+            },
+            Response.ErrorListener
+            {
+               // If we are sure its a local connectivity issue, alert the user, otherwise send them to the default fallback site
+               if (it is NetworkError || it is AuthFailureError || it is NoConnectionError)
+               {
+                   Toast.makeText(this, getString(R.string.error_check_internet_connection), Toast.LENGTH_SHORT).show()
+               }
+               else
+               {
+                   val intent = Intent(failURL)
+                   if (intent.resolveActivity(packageManager) != null)
+                   {
+                       startActivity(intent)
+                   }
+               }
+            }
         )
         // Force values to be send at x-www-form-urlencoded
         {

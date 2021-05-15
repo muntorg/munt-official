@@ -1,5 +1,5 @@
 // Copyright (c) 2018 The Florin developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za), Willem de Jonge (willem@isnapp.nl)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com), Willem de Jonge (willem@isnapp.nl)
 // Distributed under the Florin software license, see the accompanying
 // file COPYING
 
@@ -55,12 +55,13 @@ class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
     {
         thread(true)
         {
-            val recoveryPhrase = ILibraryController.GenerateRecoveryMnemonic()
+            val recoveryMnemonic = ILibraryController.GenerateRecoveryMnemonic()
             this.runOnUiThread()
             {
                 val newIntent = Intent(this, ShowRecoveryPhraseActivity::class.java)
                 //TODO: (FLORIN) Probably not the greatest way to do this - snooping?
-                newIntent.putExtra(this.packageName + "recovery_phrase", recoveryPhrase)
+                newIntent.putExtra(this.packageName + "recovery_phrase_with_birth", recoveryMnemonic.phraseWithBirthNumber)
+                newIntent.putExtra(this.packageName + "recovery_phrase", recoveryMnemonic.phrase)
                 startActivity(newIntent)
             }
         }

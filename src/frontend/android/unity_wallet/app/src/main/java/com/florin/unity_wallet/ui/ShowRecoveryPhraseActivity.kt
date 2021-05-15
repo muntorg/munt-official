@@ -41,8 +41,8 @@ class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
 
         setContentView(R.layout.activity_show_recovery_phrase)
 
-        recoveryPhrase = intent.getStringExtra(this.packageName + "recovery_phrase")
-        recoveryPhraseTrimmed = recoveryPhrase?.trimEnd('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ')
+        recoveryPhrase = intent.getStringExtra(this.packageName + "recovery_phrase_with_birth")
+        recoveryPhraseTrimmed = intent.getStringExtra(this.packageName + "recovery_phrase")
         recovery_phrase_text_view.run {
             //TODO: Reintroduce showing birth time here if/when we decide we want it in future
             text = recoveryPhraseTrimmed

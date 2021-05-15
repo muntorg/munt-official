@@ -1,5 +1,5 @@
 // Copyright (c) 2018 The Florin developers
-// Authored by: Malcolm MacLeod (mmacleod@webmail.co.za), Willem de Jonge (willem@isnapp.nl)
+// Authored by: Malcolm MacLeod (mmacleod@gmx.com), Willem de Jonge (willem@isnapp.nl)
 // Distributed under the Florin software license, see the accompanying
 // file COPYING
 

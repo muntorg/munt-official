@@ -187,8 +187,8 @@ class EnterRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
                     val unixTime = System.currentTimeMillis() / 1000L
                     when (selection)
                     {
-                        0 -> chooseAccessCodeAndProceed(ILibraryController.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*31)))
-                        1 -> chooseAccessCodeAndProceed(ILibraryController.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*365)))
+                        0 -> chooseAccessCodeAndProceed(ILibraryController.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*31)).phraseWithBirthNumber)
+                        1 -> chooseAccessCodeAndProceed(ILibraryController.ComposeRecoveryPhrase(recoveryPhrase, unixTime-(86400*365)).phraseWithBirthNumber)
                         2 -> chooseAccessCodeAndProceed(recoveryPhrase)
                     }
                 }
@@ -203,12 +203,14 @@ class EnterRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
             return
         }
 
-        /*if (recoveryPhrase == recoveryPhrase.trimEnd('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' '))
+        if (recoveryPhrase == recoveryPhrase.trimEnd('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' '))
         {
             promptUserForBirthDate()
         }
-        else*/
-        chooseAccessCodeAndProceed(recoveryPhrase)
+        else
+        {
+            chooseAccessCodeAndProceed(recoveryPhrase)
+        }
     }
 
     fun updateView()

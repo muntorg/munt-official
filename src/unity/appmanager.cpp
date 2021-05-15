@@ -369,12 +369,15 @@ void AppLifecycleManager::setCombinedRecoveryPhrase(const SecureString& combined
     setRecoveryBirthNumber(birth);
 }
 
-SecureString AppLifecycleManager::composeRecoveryPhrase(const SecureString& phrase, int64_t birthTime)
+std::pair<SecureString, int> AppLifecycleManager::composeRecoveryPhrase(const SecureString& phrase, int64_t birthTime)
 {
     if (birthTime != 0)
-        return phrase + SecureString(" ") + SecureString(i64tostr(timeToBirthNumber(birthTime)));
+    {
+        int birthNumber = timeToBirthNumber(birthTime);
+        return std::pair(phrase + SecureString(" ") + SecureString(i64tostr(birthNumber)), birthNumber);
+    }
     else
-        return phrase;
+        return std::pair(phrase, 0);
 }
 
 void AppLifecycleManager::setLinkKey(CEncodedSecretKeyExt<CExtKey> _linkKey)
