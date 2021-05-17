@@ -235,7 +235,7 @@ export default {
 
   &.active {
     color: #fff;
-    background-color: #009572;
+    background-color: #c0aa70;
 
     & a {
       color: #fff;
