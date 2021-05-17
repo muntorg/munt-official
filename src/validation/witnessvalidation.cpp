@@ -491,11 +491,11 @@ bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCa
         COutPoint outPoint = coinIter.first;
         assert(outPoint.isHash);
         Coin coin = coinIter.second;
-        if (coin.out.nValue >= (gMinimumWitnessAmount*COIN))
+        if (coin.out.nValue >= ((pPreviousIndexChain->nHeight+1 > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)*COIN))
         {
             uint64_t nUnused1, nUnused2;
-            int64_t nWeight = GetPoW2RawWeightForAmount(coin.out.nValue, GetPoW2LockLengthInBlocksFromOutput(coin.out, coin.nHeight, nUnused1, nUnused2));
-            if (nWeight < gMinimumWitnessWeight)
+            int64_t nWeight = GetPoW2RawWeightForAmount(coin.out.nValue, pPreviousIndexChain->nHeight, GetPoW2LockLengthInBlocksFromOutput(coin.out, coin.nHeight, nUnused1, nUnused2));
+            if (nWeight < (pPreviousIndexChain->nHeight+1 > 100000 ? gMinimumWitnessWeight : gMinimumWitnessWeightOld))
                 continue;
             witnessInfo.witnessSelectionPoolUnfiltered.push_back(RouletteItem(outPoint, coin, nWeight, nAge));
             witnessInfo.nTotalWeightRaw += nWeight;
