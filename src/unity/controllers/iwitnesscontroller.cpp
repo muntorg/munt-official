@@ -117,7 +117,7 @@ WitnessEstimateInfoRecord IWitnessController::getEstimatedWeight(int64_t amountT
     
     uint64_t networkWeight = GetNetworkWeight();
     const auto optimalAmounts = optimalWitnessDistribution(amountToLock, lockPeriodInBlocks, networkWeight);
-    int64_t ourTotalWeight = combinedWeight(optimalAmounts, lockPeriodInBlocks);
+    int64_t ourTotalWeight = combinedWeight(optimalAmounts, chainActive.Height(), lockPeriodInBlocks);
     
     double witnessProbability = witnessFraction(optimalAmounts, lockPeriodInBlocks, networkWeight);
     double estimatedBlocksPerDay = DailyBlocksTarget() * witnessProbability;
