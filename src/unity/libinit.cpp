@@ -131,7 +131,7 @@ int InitUnity()
                 {
                     for(auto& entry : boost::make_iterator_range(boost::filesystem::directory_iterator(oldPath), {}))
                     {
-                        fs::rename((oldPath / entry.path().filename()).string(), (GetDataDir() / entry.path().filename()).string() );
+                        try { fs::rename((oldPath / entry.path().filename()).string(), (GetDataDir() / entry.path().filename()).string() ); } catch(...) {}
                     }
                     if (fs::exists(oldPath / "novo.conf"))
                         fs::rename((oldPath / "novo.conf").string(), (GetDataDir() / "Florin.conf").string());
@@ -149,7 +149,7 @@ int InitUnity()
                     {
                         for(auto& entry : boost::make_iterator_range(boost::filesystem::directory_iterator(oldPath), {}))
                         {
-       	                    fs::rename((oldPath / entry.path().filename()).string(), (GetDataDir() / entry.path().filename()).string() );
+       	                    try { fs::rename((oldPath / entry.path().filename()).string(), (GetDataDir() / entry.path().filename()).string() ); } catch(...) {}
                         }
                         if (fs::exists(oldPath / "novo.conf"))
 	                    fs::rename((oldPath / "novo.conf").string(), (GetDataDir() / "Florin.conf").string());
