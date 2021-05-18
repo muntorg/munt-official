@@ -77,7 +77,7 @@ export default {
     },
     getRecoveryPhrase() {
       if (LibraryController.UnlockWallet(this.password)) {
-        this.recoveryPhrase = LibraryController.GetRecoveryPhrase();
+        this.recoveryPhrase = LibraryController.GetRecoveryPhrase().phrase;
         LibraryController.LockWallet();
       } else {
         this.isPasswordInvalid = true;
