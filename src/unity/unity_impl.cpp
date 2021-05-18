@@ -921,6 +921,16 @@ int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::
         SoftSetArg("-reverseheaders", "false");
         #endif
     }
+    else
+    {
+        #ifdef DJINNI_NODEJS
+        SoftSetArg("-accountpool", "3");
+        SoftSetArg("-accountpoolmobi", "1");
+        // We must look quite far ahead on witness accounts due to a bug in original electron UI
+        SoftSetArg("-accountpoolwitness", "10");
+        SoftSetArg("-keypool", "20");
+        #endif
+    }
     
     SoftSetArg("-spvstaticfilterfile", staticFilterPath);
     SoftSetArg("-spvstaticfilterfileoffset", i64tostr(staticFilterOffset));
