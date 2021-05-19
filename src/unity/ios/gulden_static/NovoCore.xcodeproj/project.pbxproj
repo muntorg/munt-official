@@ -12,6 +12,7 @@
 		5537D3FB24CF0CAE00A27959 /* lib_unity_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5537D3F924CF0BDE00A27959 /* lib_unity_objc.a */; };
 		55960D9424D73DD20028FBBF /* DBILibraryController.h in Headers */ = {isa = PBXBuildFile; fileRef = 55960D9324D73DD20028FBBF /* DBILibraryController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		55960D9624D73DE00028FBBF /* DBILibraryListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 55960D9524D73DE00028FBBF /* DBILibraryListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		55A4F7492654458F00CB501B /* DBMnemonicRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = 55A4F7482654458F00CB501B /* DBMnemonicRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		55B3960A24F54F40008A1DFB /* DBIP2pNetworkController.h in Headers */ = {isa = PBXBuildFile; fileRef = 55B3960924F54F40008A1DFB /* DBIP2pNetworkController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		55B3960C24F550D9008A1DFB /* DBIP2pNetworkListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 55B3960B24F550D9008A1DFB /* DBIP2pNetworkListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E61A12842171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */; };
@@ -61,6 +62,7 @@
 		5537D3F924CF0BDE00A27959 /* lib_unity_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = lib_unity_objc.a; sourceTree = "<group>"; };
 		55960D9324D73DD20028FBBF /* DBILibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBILibraryController.h; path = ../../../djinni/objc/DBILibraryController.h; sourceTree = "<group>"; };
 		55960D9524D73DE00028FBBF /* DBILibraryListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBILibraryListener.h; path = ../../../djinni/objc/DBILibraryListener.h; sourceTree = "<group>"; };
+		55A4F7482654458F00CB501B /* DBMnemonicRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBMnemonicRecord.h; path = ../../../djinni/objc/DBMnemonicRecord.h; sourceTree = "<group>"; };
 		55B3960924F54F40008A1DFB /* DBIP2pNetworkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBIP2pNetworkController.h; path = ../../../djinni/objc/DBIP2pNetworkController.h; sourceTree = "<group>"; };
 		55B3960B24F550D9008A1DFB /* DBIP2pNetworkListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBIP2pNetworkListener.h; path = ../../../djinni/objc/DBIP2pNetworkListener.h; sourceTree = "<group>"; };
 		E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdjinni_support_lib_UNIVERSAL.a; path = "../../../../depends/aarch64-ios/lib/libdjinni_support_lib_UNIVERSAL.a"; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 				E6EC7CF521EF24A800320806 /* DBMonitorRecord.h */,
 				E6EC7CFA21EF24A800320806 /* DBUriRecord.h */,
 				5537D3F224CF098900A27959 /* DBMonitorListener.h */,
+				55A4F7482654458F00CB501B /* DBMnemonicRecord.h */,
 				55960D9324D73DD20028FBBF /* DBILibraryController.h */,
 				55960D9524D73DE00028FBBF /* DBILibraryListener.h */,
 				55B3960924F54F40008A1DFB /* DBIP2pNetworkController.h */,
@@ -249,6 +252,7 @@
 				E6EC7D0C21EF24A900320806 /* DBPeerRecord.h in Headers */,
 				E6EC7D0921EF24A900320806 /* DBBlockInfoRecord.h in Headers */,
 				E6CEA4262264AA2D00C87DC5 /* DBPaymentResultStatus.h in Headers */,
+				55A4F7492654458F00CB501B /* DBMnemonicRecord.h in Headers */,
 				E6CEA4252264AA2D00C87DC5 /* DBOutputRecord.h in Headers */,
 				55960D9624D73DE00028FBBF /* DBILibraryListener.h in Headers */,
 				E6EC7D0421EF24A900320806 /* DBQrCodeRecord.h in Headers */,
