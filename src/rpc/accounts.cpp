@@ -413,7 +413,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
                 uint64_t nLockFromBlock = 0;
                 uint64_t nLockUntilBlock = 0;
                 uint64_t nLockPeriodInBlocks = GetPoW2LockLengthInBlocksFromOutput(iter.second.out, iter.second.nHeight, nLockFromBlock, nLockUntilBlock);
-                uint64_t nRawWeight = GetPoW2RawWeightForAmount(iter.second.out.nValue, nLockPeriodInBlocks);
+                uint64_t nRawWeight = GetPoW2RawWeightForAmount(iter.second.out.nValue, pTipIndex_->nHeight, nLockPeriodInBlocks);
                 uint64_t nAge = pTipIndex_->nHeight - nLastActiveBlock;
                 CAmount nValue = iter.second.out.nValue;
 
@@ -1410,8 +1410,8 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
 
     // arg3 - amount
     CAmount requestedAmount =  AmountFromValue(request.params[2]);
-    if (requestedAmount < (gMinimumWitnessAmount*COIN))
-        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
+    if (requestedAmount < ((chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)*COIN))
+        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", (chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)));
 
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.
@@ -1476,18 +1476,18 @@ static UniValue calculateholdingweight(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
 
     UniValue result(UniValue::VOBJ);
-    uint64_t rawWeight = GetPoW2RawWeightForAmount(requestedAmount, requestedLockPeriodInBlocks);
+    uint64_t rawWeight = GetPoW2RawWeightForAmount(requestedAmount, chainActive.Height(), requestedLockPeriodInBlocks);
     result.push_back(Pair("raw_weight", rawWeight));
 
     CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
     uint64_t networkWeight = witnessInfo.nTotalWeightEligibleRaw;
-    result.push_back(Pair("adjusted_weight", adjustedWeightForAmount(requestedAmount, requestedLockPeriodInBlocks, networkWeight)));
+    result.push_back(Pair("adjusted_weight", adjustedWeightForAmount(requestedAmount, chainActive.Height(), requestedLockPeriodInBlocks, networkWeight)));
 
     const auto optimalAmounts = optimalWitnessDistribution(requestedAmount, requestedLockPeriodInBlocks, networkWeight);    
     uint64_t optimalWeight=0;
     for (const auto& partAmount : optimalAmounts)
     {
-        optimalWeight += GetPoW2RawWeightForAmount(partAmount, requestedLockPeriodInBlocks);
+        optimalWeight += GetPoW2RawWeightForAmount(partAmount,  chainActive.Height(), requestedLockPeriodInBlocks);
     }
     result.push_back(Pair("optimal_parts", (uint64_t)optimalAmounts.size()));
     result.push_back(Pair("optimal_weight", (uint64_t)optimalWeight));
@@ -1548,8 +1548,8 @@ static UniValue extendwitnessaccount(const JSONRPCRequest& request)
 
     // arg3 - amount
     CAmount requestedAmount =  AmountFromValue(request.params[2]);
-    if (requestedAmount < (gMinimumWitnessAmount*COIN))
-        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
+    if (requestedAmount < ((chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)*COIN))
+        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", (chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)));
 
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.

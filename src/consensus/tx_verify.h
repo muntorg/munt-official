@@ -113,7 +113,7 @@ struct CWitnessBundles: std::vector<CWitnessTxBundle>
 
 };
 
-bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight, bool isOldTransactionVersion);
+bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, bool isOldTransactionVersion);
 
 CAmount CalculateWitnessPenaltyFee(const CTxOut& output);
 void IncrementWitnessFailCount(uint64_t& failCount);
@@ -127,7 +127,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState& state, bool fChe
 bool CheckTransactionContextual(const CTransaction& tx, CValidationState& state, int checkHeight);
 
 /** Build witness bundles and witness related validity checks */
-bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nSpendHeight, std::function<bool(const COutPoint&, CTxOut&, int&)> getTxOut, std::vector<CWitnessTxBundle>& bundles);
+bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nCheckHeight, std::function<bool(const COutPoint&, CTxOut&, int&)> getTxOut, std::vector<CWitnessTxBundle>& bundles);
 
 namespace Consensus {
 /**

@@ -23,6 +23,7 @@ enum class LegacyWalletResult;
 enum class PaymentResultStatus;
 struct AddressRecord;
 struct BlockInfoRecord;
+struct MnemonicRecord;
 struct MonitorRecord;
 struct MutationRecord;
 struct QrCodeRecord;
@@ -94,12 +95,12 @@ public:
     static bool IsValidRecoveryPhrase(const std::string & phrase);
 
     /** Generate a new recovery mnemonic */
-    static std::string GenerateRecoveryMnemonic();
+    static MnemonicRecord GenerateRecoveryMnemonic();
 
     static std::string GenerateGenesisKeys();
 
     /** Compute recovery phrase with birth number */
-    static std::string ComposeRecoveryPhrase(const std::string & mnemonic, int64_t birthTime);
+    static MnemonicRecord ComposeRecoveryPhrase(const std::string & mnemonic, int64_t birthTime);
 
     /** Stop the library */
     static void TerminateUnityLib();
@@ -111,7 +112,7 @@ public:
     static std::string GetReceiveAddress();
 
     /** Get the recovery phrase for the wallet */
-    static std::string GetRecoveryPhrase();
+    static MnemonicRecord GetRecoveryPhrase();
 
     /** Check if the wallet is using a mnemonic seed ie. recovery phrase (else it is a linked wallet) */
     static bool IsMnemonicWallet();

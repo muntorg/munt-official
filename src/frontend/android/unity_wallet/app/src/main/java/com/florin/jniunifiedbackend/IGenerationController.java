@@ -30,7 +30,7 @@ public abstract class IGenerationController {
     }
 
     /**
-     * Get the address of the account that is used for generation by default. Empty on failure
+     * Get the address of the account that is used for generation by default. Empty on failiure
      * Note that this isn't necessarily the actual generation address as there might be an override
      * See: getGenerationOverrideAddress
      */

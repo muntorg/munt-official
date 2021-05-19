@@ -735,6 +735,7 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/monitor_listener.hpp \
   unity/djinni/cpp/monitor_record.hpp \
   unity/djinni/cpp/mutation_record.hpp \
+  unity/djinni/cpp/mnemonic_record.hpp \
   unity/djinni/cpp/peer_record.hpp \
   unity/djinni/cpp/qr_code_record.hpp \
   unity/djinni/cpp/transaction_record.hpp \
@@ -833,6 +834,7 @@ lib_unity_jni_la_SOURCES = \
   unity/android/init_android.cpp \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
+  unity/controllers/iwalletcontroller.cpp \
   unity/controllers/ip2pnetworkcontroller.cpp \
   unity/djinni/jni/NativeBlockInfoRecord.hpp \
   unity/djinni/jni/NativeBlockInfoRecord.cpp \
@@ -840,6 +842,10 @@ lib_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeMonitorListener.hpp \
   unity/djinni/jni/NativeILibraryController.hpp \
   unity/djinni/jni/NativeILibraryController.cpp \
+  unity/djinni/jni/NativeIWalletController.hpp \
+  unity/djinni/jni/NativeIWalletController.cpp \
+  unity/djinni/jni/NativeIWalletListener.hpp \
+  unity/djinni/jni/NativeIWalletListener.cpp \
   unity/djinni/jni/NativeILibraryListener.hpp \
   unity/djinni/jni/NativeILibraryListener.cpp \
   unity/djinni/jni/NativeIP2pNetworkController.hpp \
@@ -850,6 +856,7 @@ lib_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeMonitorRecord.cpp \
   unity/djinni/jni/NativeMonitorRecord.hpp \
   unity/djinni/jni/NativeMutationRecord.cpp \
+  unity/djinni/jni/NativeMnemonicRecord.cpp \
   unity/djinni/jni/NativeMutationRecord.hpp \
   unity/djinni/jni/NativePaymentResultStatus.hpp \
   unity/djinni/jni/NativePeerRecord.hpp \
@@ -874,6 +881,8 @@ lib_unity_jni_la_SOURCES = \
   unity/djinni/cpp/i_library_controller.hpp \
   unity/djinni/cpp/i_library_controller.cpp \
   unity/djinni/cpp/i_library_listener.hpp \
+  unity/djinni/cpp/balance_record.hpp \
+  unity/djinni/cpp/mutation_record.hpp \
   $(CORE_H)
 
 nodist_lib_unity_jni_la_SOURCES = \
@@ -910,6 +919,7 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/monitor_listener.hpp \
   unity/djinni/cpp/monitor_record.hpp \
   unity/djinni/cpp/mutation_record.hpp \
+  unity/djinni/cpp/mnemonic_record.hpp \
   unity/djinni/cpp/payment_result_status.hpp \
   unity/djinni/cpp/peer_record.hpp \
   unity/djinni/cpp/qr_code_record.hpp \
@@ -956,6 +966,10 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBMutationRecord+Private.mm \
   unity/djinni/objc/DBMutationRecord.h \
   unity/djinni/objc/DBMutationRecord.mm \
+  unity/djinni/objc/DBMnemonicRecord+Private.h \
+  unity/djinni/objc/DBMnemonicRecord+Private.mm \
+  unity/djinni/objc/DBMnemonicRecord.h \
+  unity/djinni/objc/DBMnemonicRecord.mm \
   unity/djinni/objc/DBMonitorRecord.h \
   unity/djinni/objc/DBMonitorRecord.mm \
   unity/djinni/objc/DBInputRecord+Private.h \

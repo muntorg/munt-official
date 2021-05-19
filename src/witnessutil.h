@@ -33,7 +33,7 @@ int GetPoW2Phase(const CBlockIndex* pindexPrev);
 
 bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainparams, int64_t& nNumWitnessAddresses, int64_t& nTotalWeight, CChain& chain, CCoinsViewCache* viewOverride=nullptr);
 
-int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks);
+int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nHeight, int64_t nLockLengthInBlocks);
 
 
 //! Calculate how many blocks a witness transaction is locked for from an output

@@ -69,7 +69,7 @@ public abstract class IAccountsController {
         return CppProxy.purgeAccount(accountUUID);
     }
 
-    /** Get a URI that will enable 'linking' of this account in another wallet (for e.g. mobile wallet linking) for an account. Empty on failure.  */
+    /** Get a URI that will enable 'linking' of this account in another wallet (for e.g. mobile wallet linking) for an account. Empty on failiure.  */
     public static String getAccountLinkURI(String accountUUID)
     {
         return CppProxy.getAccountLinkURI(accountUUID);
@@ -83,7 +83,7 @@ public abstract class IAccountsController {
 
     /**
      * Create a new "witness-only" account from a previously exported URI
-     * Returns UUID on success, empty string on failure
+     * Returns UUID on success, empty string on failiure
      */
     public static String createAccountFromWitnessKeyURI(String witnessKeyURI, String newAccountName)
     {

@@ -55,8 +55,8 @@ std::unordered_map<std::string, std::string> IWitnessController::getNetworkLimit
             ret.insert(std::pair("maximum_lock_period_blocks", i64tostr(gMaximumWitnessLockDays*DailyBlocksTarget())));
         }
         ret.insert(std::pair("witness_cooldown_period", i64tostr(gMinimumParticipationAge)));
-        ret.insert(std::pair("minimum_witness_amount", i64tostr(gMinimumWitnessAmount)));
-        ret.insert(std::pair("minimum_witness_weight", i64tostr(gMinimumWitnessWeight)));
+        ret.insert(std::pair("minimum_witness_amount", i64tostr((chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld))));
+        ret.insert(std::pair("minimum_witness_weight", i64tostr((chainActive.Height() > 100000 ? gMinimumWitnessWeight : gMinimumWitnessWeightOld))));
         ret.insert(std::pair("minimum_lock_period_days", i64tostr(gMinimumWitnessLockDays)));        
         ret.insert(std::pair("maximum_lock_period_days", i64tostr(gMaximumWitnessLockDays)));
     }
@@ -117,9 +117,9 @@ WitnessEstimateInfoRecord IWitnessController::getEstimatedWeight(int64_t amountT
     
     uint64_t networkWeight = GetNetworkWeight();
     const auto optimalAmounts = optimalWitnessDistribution(amountToLock, lockPeriodInBlocks, networkWeight);
-    int64_t ourTotalWeight = combinedWeight(optimalAmounts, lockPeriodInBlocks);
+    int64_t ourTotalWeight = combinedWeight(optimalAmounts, chainActive.Height(), lockPeriodInBlocks);
     
-    double witnessProbability = witnessFraction(optimalAmounts, lockPeriodInBlocks, networkWeight);
+    double witnessProbability = witnessFraction(optimalAmounts, chainActive.Height(), lockPeriodInBlocks, networkWeight);
     double estimatedBlocksPerDay = DailyBlocksTarget() * witnessProbability;
     
     CAmount witnessSubsidy = GetBlockSubsidyWitness(chainActive.Tip()?chainActive.Tip()->nHeight:1);

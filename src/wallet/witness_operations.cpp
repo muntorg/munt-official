@@ -49,8 +49,8 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
     if (unspentWitnessOutputs.size() > 1)
         throw witness_error(witness::RPC_INVALID_ADDRESS_OR_KEY, strprintf("Address has too many witness outputs cannot extend "));
 
-    if (requestedAmount < (gMinimumWitnessAmount*COIN))
-        throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
+    if (requestedAmount < ((chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)*COIN))
+        throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", (chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)));
 
     if (requestedLockPeriodInBlocks > MaximumWitnessLockLength())
         throw witness_error(witness::RPC_INVALID_PARAMETER, "Maximum lock period of 3 years exceeded.");
@@ -93,15 +93,15 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
     }
 
     // Enforce minimum weight
-    int64_t newWeight = GetPoW2RawWeightForAmount(requestedAmount, requestedLockPeriodInBlocks);
-    if (newWeight < gMinimumWitnessWeight)
+    int64_t newWeight = GetPoW2RawWeightForAmount(requestedAmount, chainActive.Height(), requestedLockPeriodInBlocks);
+    if (newWeight < (chainActive.Height() > 100000 ? gMinimumWitnessWeight : gMinimumWitnessWeightOld))
     {
         throw witness_error(witness::RPC_INVALID_PARAMETER, "PoW² witness has insufficient weight.");
     }
 
     // Enforce new weight > old weight
     uint64_t notUsed1, notUsed2;
-    int64_t oldWeight = GetPoW2RawWeightForAmount(currentWitnessTxOut.nValue, GetPoW2LockLengthInBlocksFromOutput(currentWitnessTxOut, currentWitnessHeight, notUsed1, notUsed2));
+    int64_t oldWeight = GetPoW2RawWeightForAmount(currentWitnessTxOut.nValue, chainActive.Height(), GetPoW2LockLengthInBlocksFromOutput(currentWitnessTxOut, currentWitnessHeight, notUsed1, notUsed2));
     if (newWeight <= oldWeight)
     {
         throw witness_error(witness::RPC_INVALID_PARAMETER, strprintf("New weight [%d] does not exceed old weight [%d].", newWeight, oldWeight));
@@ -211,8 +211,8 @@ void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* wi
             throw std::runtime_error("Account already has an active funded witness address. Perhaps you intended to 'extend' it? See: 'help extendwitnessaccount'");
     }
 
-    if (std::any_of(amounts.begin(), amounts.end(), [](const auto& amount){ return amount < (gMinimumWitnessAmount*COIN); }))
-        throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
+    if (std::any_of(amounts.begin(), amounts.end(), [](const auto& amount){ return amount < ((chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)*COIN); }))
+        throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", (chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)));
 
     if (requestedPeriodInBlocks == 0)
         throw witness_error(witness::RPC_TYPE_ERROR, "Invalid number passed for lock period.");
@@ -228,7 +228,7 @@ void fundwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* wi
         requestedPeriodInBlocks += 50;
 
     // Enforce minimum weight for each amount
-    if (std::any_of(amounts.begin(), amounts.end(), [&](const auto& amount){ return GetPoW2RawWeightForAmount(amount, requestedPeriodInBlocks) < gMinimumWitnessWeight; }))
+    if (std::any_of(amounts.begin(), amounts.end(), [&](const auto& amount){ return GetPoW2RawWeightForAmount(amount, chainActive.Height(), requestedPeriodInBlocks) < (chainActive.Height() > 100000 ? gMinimumWitnessWeight : gMinimumWitnessWeightOld); }))
     {
         throw witness_error(witness::RPC_INVALID_PARAMETER, "PoW² witness has insufficient weight.");
     }
@@ -734,8 +734,8 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
     CTxOutPoW2Witness currentWitnessDetails;
     GetPow2WitnessOutput(currentWitnessTxOut, currentWitnessDetails);
 
-    if (std::any_of(redistributionAmounts.begin(), redistributionAmounts.end(), [](const auto& amount){ return amount < (gMinimumWitnessAmount*COIN); }))
-        throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
+    if (std::any_of(redistributionAmounts.begin(), redistributionAmounts.end(), [](const auto& amount){ return amount < ((chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)*COIN); }))
+        throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", (chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)));
 
     uint64_t remainingLockDurationInBlocks = GetPoW2RemainingLockLengthInBlocks(currentWitnessDetails.lockUntilBlock, chainActive.Tip()->nHeight);
     if (remainingLockDurationInBlocks == 0)
@@ -768,11 +768,11 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
         }
 
         // Enforce minimum weight for each amount
-        auto tooSmallTest = [&] (const auto& amount){ return GetPoW2RawWeightForAmount(amount, requestedLockPeriodInBlocks) < gMinimumWitnessWeight; };
+        auto tooSmallTest = [&] (const auto& amount){ return GetPoW2RawWeightForAmount(amount, chainActive.Height(), requestedLockPeriodInBlocks) < (chainActive.Height() > 100000 ? gMinimumWitnessWeight : gMinimumWitnessWeightOld); };
         bool witnessAmountTooSmall = std::any_of(redistributionAmounts.begin(), redistributionAmounts.end(), tooSmallTest);
         if (witnessAmountTooSmall)
         {
-            throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
+            throw witness_error(witness::RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", (chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)));
         }
 
         // Enforce new combined weight > old combined weight
@@ -781,8 +781,8 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
         uint64_t oldLockPeriod = GetPoW2LockLengthInBlocksFromOutput(currentWitnessTxOut, currentWitnessHeight, dummyLockFrom, dummyLockUntil);
         std::vector<CAmount> oldAmounts;
         std::transform(unspentWitnessOutputs.begin(), unspentWitnessOutputs.end(), std::back_inserter(oldAmounts), [](const auto& it) { return std::get<0>(it).nValue; });
-        uint64_t oldCombinedWeight = combinedWeight(oldAmounts, oldLockPeriod);
-        uint64_t newCombinedWeight = combinedWeight(redistributionAmounts, requestedLockPeriodInBlocks);
+        uint64_t oldCombinedWeight = combinedWeight(oldAmounts, currentWitnessHeight, oldLockPeriod);
+        uint64_t newCombinedWeight = combinedWeight(redistributionAmounts, currentWitnessHeight, requestedLockPeriodInBlocks);
         if (oldCombinedWeight >= newCombinedWeight)
         {
             throw witness_error(witness::RPC_TYPE_ERROR, strprintf("New combined witness weight (%" PRIu64 ") must exceed old (%" PRIu64 ")", newCombinedWeight, oldCombinedWeight));
@@ -914,18 +914,18 @@ void extendwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* 
     redistributeandextendwitnessaccount(pwallet, fundingAccount, witnessAccount, distribution, requestedLockPeriodInBlocks, pTxid, pFee);
 }
 
-uint64_t adjustedWeightForAmount(const CAmount amount, const uint64_t duration, uint64_t networkWeight)
+uint64_t adjustedWeightForAmount(const CAmount amount, const uint64_t nHeight, const uint64_t duration, uint64_t networkWeight)
 {
     uint64_t maxWeight = networkWeight / 100;
-    uint64_t rawWeight = GetPoW2RawWeightForAmount(amount, duration);
+    uint64_t rawWeight = GetPoW2RawWeightForAmount(amount, nHeight, duration);
     uint64_t weight = std::min(rawWeight, maxWeight);
     return weight;
 }
 
 /** Estimated witnessing count expressed as a fraction per block for a single amount */
-double witnessFraction(const CAmount amount, const uint64_t duration, const uint64_t totalWeight)
+double witnessFraction(const CAmount amount, const uint64_t nHeight, const uint64_t duration, const uint64_t totalWeight)
 {
-    uint64_t weight = adjustedWeightForAmount(amount, duration, totalWeight);
+    uint64_t weight = adjustedWeightForAmount(amount, nHeight, duration, totalWeight);
 
     // election probability
     const double p = double(weight) / totalWeight;
@@ -937,10 +937,10 @@ double witnessFraction(const CAmount amount, const uint64_t duration, const uint
 }
 
 /** Estimated witnessing count expressed as a fraction per block for an amount distribution */
-double witnessFraction(const std::vector<CAmount>& amounts, const uint64_t duration, const uint64_t totalWeight)
+double witnessFraction(const std::vector<CAmount>& amounts, const uint64_t nHeight, const uint64_t duration, const uint64_t totalWeight)
 {
     double fraction = std::accumulate(amounts.begin(), amounts.end(), 0.0, [=](double acc, CAmount amount) {
-        return acc + witnessFraction(amount, duration, totalWeight);
+        return acc + witnessFraction(amount, nHeight, duration, totalWeight);
     });
     return fraction;
 }
@@ -974,7 +974,7 @@ std::tuple<std::vector<CAmount>, uint64_t, CAmount> witnessDistribution(CWallet*
     return std::tuple(distribution, duration, total);
 }
 
-CAmount maxAmountForDurationAndWeight(uint64_t lockDuration, uint64_t targetWeight)
+CAmount maxAmountForDurationAndWeight(uint64_t lockDuration, uint64_t nHeight, uint64_t targetWeight)
 {
     // note that yearly_blocks is only correct for mainnet and should be parametrized for testnet, however it is consistent with
     // with other parts of the code that also use mainnet characteristics for weight determination when on testnet
@@ -988,6 +988,9 @@ CAmount maxAmountForDurationAndWeight(uint64_t lockDuration, uint64_t targetWeig
     const double C = - (double)(targetWeight);
 
     double amount = (-B + sqrt(B*B - 4.0 * A * C)) / (2.0 * A);
+    
+    if (nHeight > 100000)
+        amount /= 100;
 
     return CAmount (amount * COIN);
 }
@@ -997,11 +1000,11 @@ std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t du
     std::vector<CAmount> distribution;
 
     // Amount where maximum weight is reached and so any extra on top of that will not produce any gains
-    CAmount partMax = maxAmountForDurationAndWeight(duration, totalWeight/100);
+    CAmount partMax = maxAmountForDurationAndWeight(duration, chainActive.Height(), totalWeight/100);
     // Amount we have to be above to be a valid part of chain
-    CAmount partMin = maxAmountForDurationAndWeight(duration, gMinimumWitnessWeight)+1;
-    if (partMin < gMinimumWitnessAmount*COIN)
-        partMin = gMinimumWitnessAmount*COIN+1;
+    CAmount partMin = maxAmountForDurationAndWeight(duration, chainActive.Height(), (chainActive.Height() > 100000 ? gMinimumWitnessWeight : gMinimumWitnessWeightOld))+1;
+    if (partMin < (chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)*COIN)
+        partMin = (chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)*COIN+1;
 
     // Divide int parts into 96% of maximum workable amount.
     // Leaves some room for:
@@ -1052,21 +1055,21 @@ bool isWitnessDistributionNearOptimal(CWallet* pWallet, CAccount* account, const
     uint64_t totalWeight = witnessInfo.nTotalWeightEligibleRaw;
 
     auto [currentDistribution, duration, totalAmount] = witnessDistribution(pWallet, account);
-    double currentFraction = witnessFraction(currentDistribution, duration, totalWeight);
+    double currentFraction = witnessFraction(currentDistribution, chainActive.Height(), duration, totalWeight);
 
     auto optimalDistribution = optimalWitnessDistribution(totalAmount, duration, totalWeight);
-    double optimalFraction = witnessFraction(optimalDistribution, duration, totalWeight);
+    double optimalFraction = witnessFraction(optimalDistribution, chainActive.Height(), duration, totalWeight);
 
     const double OPTIMAL_DISTRIBUTION_THRESHOLD = 0.95;
     bool nearOptimal = currentFraction / optimalFraction >= OPTIMAL_DISTRIBUTION_THRESHOLD;
     return nearOptimal;
 }
 
-uint64_t combinedWeight(const std::vector<CAmount> amounts, uint64_t duration)
+uint64_t combinedWeight(const std::vector<CAmount> amounts, uint64_t height, uint64_t duration)
 {
     return std::accumulate(amounts.begin(), amounts.end(), uint64_t(0), [=](uint64_t acc, CAmount amount)
     {
-        return acc + GetPoW2RawWeightForAmount(amount, duration);
+        return acc + GetPoW2RawWeightForAmount(amount, height, duration);
     });
 }
 

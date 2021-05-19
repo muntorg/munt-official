@@ -19,7 +19,7 @@
       {{ $t("holding_account.compound_earnings") }}
       <toggle-button
         :value="isCompounding"
-        :color="{ checked: '#009572', unchecked: '#ddd' }"
+        :color="{ checked: '#c0aa70', unchecked: '#ddd' }"
         :labels="{
           checked: $t('common.on'),
           unchecked: $t('common.off')

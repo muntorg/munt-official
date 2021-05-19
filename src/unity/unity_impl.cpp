@@ -46,6 +46,7 @@
 #include "monitor_record.hpp"
 #include "monitor_listener.hpp"
 #include "payment_result_status.hpp"
+#include "mnemonic_record.hpp"
 #ifdef __ANDROID__
 #include "djinni_support.hpp"
 #endif
@@ -690,21 +691,19 @@ std::string ILibraryController::GenerateGenesisKeys()
     return "privkey: "+privkey+"\n"+"pubkeyID: "+pubKeyID+"\n"+"witness: "+witnessKeys+"\n"+"dev subsidy addr: "+address+"\n"+"dev subsidy pubkey: "+devSubsidyPubKey+"\n"+"dev subsidy pubkey ID: "+devSubsidyPubKeyID+"\n";
 }
 
-std::string ILibraryController::GenerateRecoveryMnemonic()
+MnemonicRecord ILibraryController::GenerateRecoveryMnemonic()
 {
     std::vector<unsigned char> entropy(16);
     GetStrongRandBytes(&entropy[0], 16);
-    #if 0
     int64_t birthTime = GetAdjustedTime();
-    #else
-    int64_t birthTime = 0;
-    #endif
-    return AppLifecycleManager::gApp->composeRecoveryPhrase(mnemonicFromEntropy(entropy, entropy.size()*8), birthTime).c_str();
+    SecureString phraseOnly = mnemonicFromEntropy(entropy, entropy.size()*8);
+    return ComposeRecoveryPhrase(phraseOnly.c_str(), birthTime);
 }
 
-std::string ILibraryController::ComposeRecoveryPhrase(const std::string & mnemonic, int64_t birthTime)
+MnemonicRecord ILibraryController::ComposeRecoveryPhrase(const std::string & mnemonic, int64_t birthTime)
 {
-    return std::string(AppLifecycleManager::composeRecoveryPhrase(SecureString(mnemonic), birthTime));
+    const auto& result = AppLifecycleManager::composeRecoveryPhrase(SecureString(mnemonic), birthTime);
+    return MnemonicRecord(result.first.c_str(), mnemonic.c_str(), result.second);
 }
 
 bool ILibraryController::InitWalletLinkedFromURI(const std::string& linked_uri, const std::string& password)
@@ -922,6 +921,16 @@ int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::
         SoftSetArg("-reverseheaders", "false");
         #endif
     }
+    else
+    {
+        #ifdef DJINNI_NODEJS
+        SoftSetArg("-accountpool", "3");
+        SoftSetArg("-accountpoolmobi", "1");
+        // We must look quite far ahead on witness accounts due to a bug in original electron UI
+        SoftSetArg("-accountpoolwitness", "10");
+        SoftSetArg("-keypool", "20");
+        #endif
+    }
     
     SoftSetArg("-spvstaticfilterfile", staticFilterPath);
     SoftSetArg("-spvstaticfilterfileoffset", i64tostr(staticFilterOffset));
@@ -1036,28 +1045,24 @@ std::string ILibraryController::GetReceiveAddress()
 }
 
 //fixme: (UNITY) - find a way to use char[] here as well as on the java side.
-std::string ILibraryController::GetRecoveryPhrase()
+MnemonicRecord ILibraryController::GetRecoveryPhrase()
 {
-    if (!pactiveWallet || !pactiveWallet->activeAccount)
-        return "";
-
-    LOCK2(cs_main, pactiveWallet->cs_wallet);
-    //WalletModel::UnlockContext ctx(walletModel->requestUnlock());
-    //if (ctx.isValid())
+    if (pactiveWallet && pactiveWallet->activeAccount)
     {
-        #if 0
-        int64_t birthTime = pactiveWallet->birthTime();
-        #else
-        int64_t birthTime = 0;
-        #endif
-
-        std::set<SecureString> allPhrases;
-        for (const auto& seedIter : pactiveWallet->mapSeeds)
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        //WalletModel::UnlockContext ctx(walletModel->requestUnlock());
+        //if (ctx.isValid())
         {
-            return AppLifecycleManager::composeRecoveryPhrase(seedIter.second->getMnemonic(), birthTime).c_str();
+            int64_t birthTime = pactiveWallet->birthTime();
+            std::set<SecureString> allPhrases;
+            for (const auto& seedIter : pactiveWallet->mapSeeds)
+            {
+                SecureString phrase = seedIter.second->getMnemonic();
+                return ComposeRecoveryPhrase(phrase.c_str(), birthTime);
+            }
         }
     }
-    return "";
+    return MnemonicRecord("", "", 0);
 }
 
 bool ILibraryController::IsMnemonicWallet()

@@ -82,7 +82,7 @@ public:
     void setRecoveryBirthNumber(int _recoveryBirth);
     void setRecoveryBirthTime(int64_t birthTime);
     SecureString getCombinedRecoveryPhrase() const;
-    static SecureString composeRecoveryPhrase(const SecureString& phrase, int64_t birthTime);
+    static std::pair<SecureString, int> composeRecoveryPhrase(const SecureString& phrase, int64_t birthTime);
     void setCombinedRecoveryPhrase(const SecureString& combinedPhrase);
     static void splitRecoveryPhraseAndBirth(const SecureString& input, SecureString& phrase, int& birthNumber);
     void setLinkKey(CEncodedSecretKeyExt<CExtKey> _linkKey);

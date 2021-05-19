@@ -11,6 +11,7 @@
 #include "unity/compat/android_wallet.h"
 #include "unity/djinni/cpp/legacy_wallet_result.hpp"
 #include "unity/djinni/cpp/i_library_controller.hpp"
+#include "mnemonic_record.hpp"
 
 extern std::string HelpMessage(HelpMessageMode mode)
 {
@@ -67,7 +68,7 @@ bool ILibraryController::InitWalletFromAndroidLegacyProtoWallet(const std::strin
             {
                 if (wallet.walletBirth > 0)
                 {
-                    return InitWalletFromRecoveryPhrase(ComposeRecoveryPhrase(wallet.walletSeedMnemonic, wallet.walletBirth), newPassword.c_str());
+                    return InitWalletFromRecoveryPhrase(ComposeRecoveryPhrase(wallet.walletSeedMnemonic, wallet.walletBirth).phrase_with_birth_number.c_str(), newPassword.c_str());
                 }
                 else
                 {

@@ -276,11 +276,11 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
     {
         if (IsPow2WitnessOutput(txout))
         {
-            if ( txout.nValue < (gMinimumWitnessAmount * COIN) )
+            if ( txout.nValue < ((checkHeight > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)  * COIN) )
             {
                 if (txout.output.witnessDetails.lockFromBlock != 1)
                 {
-                    return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d " GLOBAL_COIN_CODE " not allowed.", gMinimumWitnessAmount));
+                    return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d " GLOBAL_COIN_CODE " not allowed.", (checkHeight > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)));
                 }
             }
 
@@ -298,8 +298,8 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
                 }
             }
 
-            int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nLockLengthInBlocks);
-            if (nWeight < gMinimumWitnessWeight)
+            int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, checkHeight, nLockLengthInBlocks);
+            if (nWeight < (checkHeight > 100000 ? gMinimumWitnessWeight : gMinimumWitnessWeightOld))
             {
                 if (txout.output.witnessDetails.lockFromBlock != 1)
                 {
@@ -362,7 +362,7 @@ void IncrementWitnessFailCount(uint64_t& failCount)
         failCount = std::numeric_limits<uint64_t>::max() / 3;
 }
 
-inline bool HasSpendKey(const CTxIn& input, uint64_t nSpendHeight)
+inline bool HasSpendKey(const CTxIn& input)
 {
     // At this point we only need to check that there are 2 signatures, spending key and witness key.
     // The rest is handled by later parts of the code.
@@ -450,10 +450,10 @@ inline bool CWitnessTxBundle::IsValidSpendBundle(uint64_t nCheckHeight, const CT
 * Input/Output.
 * Signed by spending key.
 */
-inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, const CTxOut& prevOut, const CTxOut& output, uint64_t nInputHeight, uint64_t nSpendHeight)
+inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDetails, const CTxOutPoW2Witness& outputDetails, const CTxOut& prevOut, const CTxOut& output, uint64_t nInputHeight)
 {
     // Needs 2 signature (spending key)
-    if (!HasSpendKey(input, nSpendHeight))
+    if (!HasSpendKey(input))
     {
         return false;
     }
@@ -697,7 +697,7 @@ inline bool CWitnessTxBundle::IsValidChangeWitnessKeyBundle()
 }
 
 //fixme: (PHASE5) (HIGH) Implement unit test code for this function.
-bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, uint64_t nSpendHeight, bool isOldTransactionVersion)
+bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWitnessTxBundle>* pWitnessBundles, const CTxOut& prevOut, const CTxIn input, uint64_t nInputHeight, bool isOldTransactionVersion)
 {
     if (pWitnessBundles)
     {
@@ -727,7 +727,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                         break;
                     }
                     //fixme: (PHASE5) - Should be able to renew multiple in one transaction
-                    else if ( IsRenewalBundle(input, inputDetails, outputDetails, prevOut, bundle.outputs[0].first, nInputHeight, nSpendHeight) )
+                    else if ( IsRenewalBundle(input, inputDetails, outputDetails, prevOut, bundle.outputs[0].first, nInputHeight) )
                     {
                         matchedExistingBundle = true;
                         bundle.inputs.push_back(std::pair(prevOut, std::move(inputDetails)));
@@ -741,7 +741,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                 //NB! We -must- check here that we have the spending key (2 items on stack) as when we later check the built up RearrangeType bundles we have no way to check it then.
                 //So this check is very important, must not be skipped and must come before the bundle creation for these bundle types.
                 //Exception for phase 3 inputs which use the ScriptLegacyOutput, not allowing this can get your witness "stuck", ie. not being able to empty it
-                if (!HasSpendKey(input, nSpendHeight))
+                if (!HasSpendKey(input))
                 {
                     if (prevOut.GetType() != CTxOutType::ScriptLegacyOutput) // accept phase 3 inputs
                         return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-missing-spend-key");
@@ -871,7 +871,7 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
     return true;
 }
 
-bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nSpendHeight, std::function<bool(const COutPoint&, CTxOut&, int&)> getTxOut, std::vector<CWitnessTxBundle>& bundles)
+bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nCheckHeight, std::function<bool(const COutPoint&, CTxOut&, int&)> getTxOut, std::vector<CWitnessTxBundle>& bundles)
 {
     bundles.clear();
 
@@ -882,21 +882,21 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
         if (IsPow2WitnessOutput(txout))
         {
             CTxOutPoW2Witness witnessDetails; GetPow2WitnessOutput(txout, witnessDetails);
-            if ( txout.nValue < (gMinimumWitnessAmount * COIN) )
+            if ( txout.nValue < ((nCheckHeight > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld) * COIN) )
             {
                 if (witnessDetails.lockFromBlock != 1)
                 {
-                    return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d " GLOBAL_COIN_CODE " not allowed.", gMinimumWitnessAmount));
+                    return state.DoS(10, false, REJECT_INVALID, strprintf("PoW² witness output smaller than %d " GLOBAL_COIN_CODE " not allowed.", (nCheckHeight > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)));
                 }
             }
             
             uint64_t nUnused1, nUnused2;
-            uint64_t nLockLengthInBlocks = GetPoW2LockLengthInBlocksFromOutput(txout, nSpendHeight, nUnused1, nUnused2);
+            uint64_t nLockLengthInBlocks = GetPoW2LockLengthInBlocksFromOutput(txout, nCheckHeight, nUnused1, nUnused2);
             if (nLockLengthInBlocks < uint64_t(MinimumWitnessLockLength()))
             {
                 return state.DoS(10, false, REJECT_INVALID, "PoW² witness locked for less than minimum of 1 month.");
             }
-            if ((int64_t)nLockLengthInBlocks - (int64_t)nSpendHeight > int64_t(MaximumWitnessLockLength()))
+            if ((int64_t)nLockLengthInBlocks - (int64_t)nCheckHeight > int64_t(MaximumWitnessLockLength()))
             {
                 if (witnessDetails.lockFromBlock != 1)
                 {
@@ -904,8 +904,8 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
                 }
             }
 
-            int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nLockLengthInBlocks);
-            if (nWeight < gMinimumWitnessWeight)
+            int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nCheckHeight, nLockLengthInBlocks);
+            if (nWeight < (nCheckHeight > 100000 ? gMinimumWitnessWeight : gMinimumWitnessWeightOld))
             {
                 if (witnessDetails.lockFromBlock != 1)
                 {
@@ -969,7 +969,7 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
             return false;
         }
 
-        if (!CheckTxInputAgainstWitnessBundles(state, &resultBundles, inputTxOut, tx.vin[i], inputTxHeight, nSpendHeight, IsOldTransactionVersion(tx.nVersion)))
+        if (!CheckTxInputAgainstWitnessBundles(state, &resultBundles, inputTxOut, tx.vin[i], inputTxHeight, IsOldTransactionVersion(tx.nVersion)))
         {
             return false;
         }
@@ -986,7 +986,7 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, int nS
         }
         else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType)
         {
-            if (!bundle.IsValidSpendBundle(nSpendHeight, tx))
+            if (!bundle.IsValidSpendBundle(nCheckHeight, tx))
             {
                 return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-spend-bundle");
             }

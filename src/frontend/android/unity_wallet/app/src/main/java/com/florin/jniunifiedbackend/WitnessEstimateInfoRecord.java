@@ -52,7 +52,7 @@ public final class WitnessEstimateInfoRecord implements android.os.Parcelable {
         return mParts;
     }
 
-    /** The per block probability of resulting account witnessing */
+    /** The per block probability of resulting account witnesing */
     public double getEstimatedWitnessProbability() {
         return mEstimatedWitnessProbability;
     }

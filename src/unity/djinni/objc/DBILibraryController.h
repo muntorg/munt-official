@@ -4,6 +4,7 @@
 #import "DBAddressRecord.h"
 #import "DBBlockInfoRecord.h"
 #import "DBLegacyWalletResult.h"
+#import "DBMnemonicRecord.h"
 #import "DBMonitorRecord.h"
 #import "DBMutationRecord.h"
 #import "DBPaymentResultStatus.h"
@@ -99,13 +100,13 @@ extern int32_t const DBILibraryControllerVersion;
 + (BOOL)IsValidRecoveryPhrase:(nonnull NSString *)phrase;
 
 /** Generate a new recovery mnemonic */
-+ (nonnull NSString *)GenerateRecoveryMnemonic;
++ (nonnull DBMnemonicRecord *)GenerateRecoveryMnemonic;
 
 + (nonnull NSString *)GenerateGenesisKeys;
 
 /** Compute recovery phrase with birth number */
-+ (nonnull NSString *)ComposeRecoveryPhrase:(nonnull NSString *)mnemonic
-                                  birthTime:(int64_t)birthTime;
++ (nonnull DBMnemonicRecord *)ComposeRecoveryPhrase:(nonnull NSString *)mnemonic
+                                          birthTime:(int64_t)birthTime;
 
 /** Stop the library */
 + (void)TerminateUnityLib;
@@ -118,7 +119,7 @@ extern int32_t const DBILibraryControllerVersion;
 + (nonnull NSString *)GetReceiveAddress;
 
 /** Get the recovery phrase for the wallet */
-+ (nonnull NSString *)GetRecoveryPhrase;
++ (nonnull DBMnemonicRecord *)GetRecoveryPhrase;
 
 /** Check if the wallet is using a mnemonic seed ie. recovery phrase (else it is a linked wallet) */
 + (BOOL)IsMnemonicWallet;

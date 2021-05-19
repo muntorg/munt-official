@@ -1166,9 +1166,10 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         txdata.emplace_back(tx);
 
         CWitnessBundles bundles;
+        assert(GetSpendHeight(view) == pindex->nHeight);
         if ((uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2Phase5FirstBlockHeight)
         {
-            if (!BuildWitnessBundles(tx, state, GetSpendHeight(view),
+            if (!BuildWitnessBundles(tx, state, pindex->nHeight,
                     [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) -> bool {
                         const Coin& coin = view.AccessCoin(outpoint);
                         if (coin.IsSpent())

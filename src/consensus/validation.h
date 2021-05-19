@@ -20,8 +20,10 @@
 // At any convenient time comment this const and resolve compiler errors the right way, for example using DailyBlocksTarget() where apprapriate
 static const int gRefactorDailyBlocksUsage = 288;
 
-static const int gMinimumWitnessAmount = 50;
-static const int gMinimumWitnessWeight = 200;
+static const int gMinimumWitnessAmountOld = 50;
+static const int gMinimumWitnessAmount = 30;
+static const int gMinimumWitnessWeightOld = 200;
+static const int gMinimumWitnessWeight = 10000;
 static const int gMinimumParticipationAge = 100;    // This forces an attacker to split funds into at least 200 accounts to have a high percentage chance of controlling the network.
 static const int gMaximumParticipationAge = 365 * gRefactorDailyBlocksUsage; // Witnesses will essentially be required to download and parse the utxo for this many blocks back from current tip.
                                                     // We try to balance this in such a way that it allows smaller witness accounts but not ones so absurdly small that they force witnesses to unnecessarily keep years of data around.

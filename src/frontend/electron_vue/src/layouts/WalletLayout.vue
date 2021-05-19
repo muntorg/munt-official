@@ -4,7 +4,7 @@
       <section class="header flex-row">
         <div class="logo" />
         <div class="total-balance">
-          {{ totalBalance.toFixed(2) }}
+          {{ totalBalance == null ? "" : totalBalance.toFixed(2) }}
         </div>
       </section>
       <accounts-section class="accounts" />
