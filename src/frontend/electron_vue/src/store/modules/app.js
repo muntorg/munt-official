@@ -17,6 +17,7 @@ const app = {
   namespaced: true,
   state: {
     coreReady: false,
+    splashReady: false,
     status: AppStatus.start,
     unityVersion: null,
     walletExists: null,
@@ -25,6 +26,9 @@ const app = {
   mutations: {
     SET_CORE_READY(state) {
       state.coreReady = true;
+    },
+    SET_SPLASH_READY(state) {
+      state.splashReady = true;
     },
     SET_STATUS(state, status) {
       if (state.status === AppStatus.shutdown) return; // shutdown in progress, do not switch to other status
@@ -48,6 +52,9 @@ const app = {
       );
       commit("SET_CORE_READY");
       EnableDebugWindowOnCoreReady();
+    },
+    SET_SPLASH_READY({ commit }) {
+      commit("SET_SPLASH_READY");
     },
     SET_STATUS({ commit }, status) {
       commit("SET_STATUS", status);
