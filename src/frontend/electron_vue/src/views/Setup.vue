@@ -194,7 +194,7 @@ export default {
             next = 3;
           } else {
             if (this.generatedRecoveryPhrase === null) {
-              this.generatedRecoveryPhrase = LibraryController.GenerateRecoveryMnemonic();
+              this.generatedRecoveryPhrase = LibraryController.GenerateRecoveryMnemonic().phrase;
             }
             this.recoveryPhrase = this.generatedRecoveryPhrase;
           }
