@@ -251,10 +251,11 @@ public:
 
     bool fromURIString(std::string uri)
     {
-        if (!boost::starts_with(uri, GLOBAL_APP_URIPREFIX"sync:"))
+        std::string syncPrefix = GLOBAL_APP_URIPREFIX"sync:";
+        if (!boost::starts_with(uri, syncPrefix))
             return false;
 
-        uri = std::string(uri.begin()+11,uri.end());
+        uri = std::string(uri.begin()+syncPrefix.length(),uri.end());
         std::vector<unsigned char> vchSecretKey;
         std::vector<unsigned char> vchSecretCode;
         std::vector<unsigned char> vchCreationTime;
