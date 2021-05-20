@@ -58,4 +58,10 @@ public:
     bool NotifyTransaction(const CTransaction &transaction);
 };
 
+class CZMQPublishWalletTransactionNotifier : public CZMQAbstractPublishNotifier
+{
+public:
+    bool NotifyTransaction(const CTransaction &transaction);
+};
+
 #endif // ZMQ_ZMQPUBLISHNOTIFIER_H
