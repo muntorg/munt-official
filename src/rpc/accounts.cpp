@@ -930,7 +930,7 @@ static UniValue deleteaccount(const JSONRPCRequest& request)
     CAccount* account = AccountFromValue(pwallet, request.params[0], false);
 
     bool forcePurge = false;
-    if (account->IsWitnessOnly())
+    if (account->IsWitnessOnly() || account->IsReadOnly())
         forcePurge = true;
     if (request.params.size() == 1 || request.params[1].get_str() != "force")
     {
