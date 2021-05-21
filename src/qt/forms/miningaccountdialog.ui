@@ -180,8 +180,8 @@
              <property name="horizontalSpacing">
               <number>12</number>
              </property>
-             <item row="1" column="1">
-              <widget class="QSlider" name="miningMemorySlider">
+             <item row="0" column="1">
+              <widget class="QSlider" name="miningThreadSlider">
                <property name="toolTip">
                 <string notr="true"/>
                </property>
@@ -190,15 +190,45 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="0">
+             <item row="1" column="2">
+              <widget class="QLabel" name="miningArenaThreadSliderLabel">
+               <property name="text">
+                <string>#</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QLabel" name="miningMemorySliderLabel">
+               <property name="text">
+                <string notr="true">#</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="miningThreadSliderLabel">
+               <property name="text">
+                <string>#</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
               <widget class="QLabel" name="miningMemorySliderHeading">
                <property name="text">
                 <string>Memory usage</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
-              <widget class="QSlider" name="miningThreadSlider">
+             <item row="2" column="1">
+              <widget class="QSlider" name="miningMemorySlider">
                <property name="toolTip">
                 <string notr="true"/>
                </property>
@@ -214,23 +244,20 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="2">
-              <widget class="QLabel" name="miningThreadSliderLabel">
+             <item row="1" column="0">
+              <widget class="QLabel" name="miningArenaThreadSliderHeading">
                <property name="text">
-                <string>#</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                <string>Processor usage, arena setup</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="2">
-              <widget class="QLabel" name="miningMemorySliderLabel">
-               <property name="text">
-                <string notr="true">#</string>
+             <item row="1" column="1">
+              <widget class="QSlider" name="miningArenaThreadSlider">
+               <property name="toolTip">
+                <string notr="true"/>
                </property>
-               <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
                </property>
               </widget>
              </item>

@@ -159,7 +159,7 @@ CBlockIndex* FindMiningTip(CBlockIndex* pIndexParent, const CChainParams& chainp
 
 inline std::string fixedGenerateAddress="";
 //! Run the block generation threads
-void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nMemoryKb, const CChainParams& chainparams, CAccount* forAccount = nullptr, std::string generateAddress="");
+void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nArenaThreads, int64_t nMemoryKb, const CChainParams& chainparams, CAccount* forAccount = nullptr, std::string generateAddress="");
 
 //! Stop the block generation threads if they are currently active
 void PoWStopGeneration(bool notify=true);

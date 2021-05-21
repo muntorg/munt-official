@@ -698,6 +698,7 @@ void GUI::setClientModel(ClientModel *_clientModel)
                 if (miningAccount)
                 {
                     uint64_t nGenProcLimit = clientModel->getOptionsModel()->getMineThreadCount();
+                    uint64_t nGenArenaProcLimit = clientModel->getOptionsModel()->getMineArenaThreadCount();
                     uint64_t nGenMemoryLimitKilobytes = clientModel->getOptionsModel()->getMineMemory();
                     std::string readOverrideAddress;
                     CWalletDB(*pactiveWallet->dbw).ReadMiningAddressString(readOverrideAddress);
@@ -714,7 +715,7 @@ void GUI::setClientModel(ClientModel *_clientModel)
                     if (nGenProcLimit > 0 && nGenMemoryLimitKilobytes > 0)
                     {
                         LogPrintf("MiningAccountDialog::startMiningAtStartup\n");
-                        MiningAccountDialog::startMining(miningAccount, nGenProcLimit, nGenMemoryLimitKilobytes, readOverrideAddress);
+                        MiningAccountDialog::startMining(miningAccount, nGenProcLimit, nGenArenaProcLimit, nGenMemoryLimitKilobytes, readOverrideAddress);
                     }
                 }
             }

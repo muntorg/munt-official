@@ -75,6 +75,10 @@ MiningAccountDialog::MiningAccountDialog(const QStyle *_platformStyle, QWidget *
     ui->miningThreadSlider->setContentsMargins(0, 0, 0, 0);
     ui->miningThreadSlider->setToolTip(tr("Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running."));
     
+    ui->miningArenaThreadSlider->setCursor(Qt::PointingHandCursor);
+    ui->miningArenaThreadSlider->setContentsMargins(0, 0, 0, 0);
+    ui->miningArenaThreadSlider->setToolTip(tr("Increasing the number of threads will increase your arena setup time, but will also increase your energy usage and slow down other appliations that might be running."));
+    
     ui->miningMemorySlider->setCursor(Qt::PointingHandCursor);
     ui->miningMemorySlider->setContentsMargins(0, 0, 0, 0);
     ui->miningMemorySlider->setToolTip(tr("Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability."));
@@ -91,6 +95,15 @@ MiningAccountDialog::MiningAccountDialog(const QStyle *_platformStyle, QWidget *
     ui->miningThreadSlider->setTickPosition(QSlider::TicksBelow);
     ui->miningThreadSlider->setValue(nThreadSel);
     ui->miningThreadSlider->setTracking(false);
+    
+    ui->miningArenaThreadSlider->setMinimum(1);
+    ui->miningArenaThreadSlider->setMaximum(nThreadMax);
+    ui->miningArenaThreadSlider->setTickInterval(1);
+    ui->miningArenaThreadSlider->setPageStep(1);
+    ui->miningArenaThreadSlider->setSingleStep(1);
+    ui->miningArenaThreadSlider->setTickPosition(QSlider::TicksBelow);
+    ui->miningArenaThreadSlider->setValue(nThreadSel);
+    ui->miningArenaThreadSlider->setTracking(false);
     
     uint64_t systemMemoryInMb = systemPhysicalMemoryInBytes()/1024/1024;
     uint64_t nMaxMemoryInMb = std::min(systemMemoryInMb, defaultSigmaSettings.arenaSizeKb/1024);
@@ -129,6 +142,7 @@ void MiningAccountDialog::updateSliderLabels()
 {
     ui->miningMemorySliderLabel->setText(tr("%1 MB").arg(ui->miningMemorySlider->value()));
     ui->miningThreadSliderLabel->setText(tr("%1 threads").arg(ui->miningThreadSlider->value()));
+    ui->miningArenaThreadSliderLabel->setText(tr("%1 threads").arg(ui->miningArenaThreadSlider->value()));
 }
 
 void MiningAccountDialog::startMining()
@@ -136,15 +150,17 @@ void MiningAccountDialog::startMining()
     LogPrintf("MiningAccountDialog::startMining\n");
 
     uint64_t nGenProcLimit = ui->miningThreadSlider->value();
+    uint64_t nGenArenaProcLimit = ui->miningArenaThreadSlider->value();
     uint64_t nGenMemoryLimitKilobytes = ((uint64_t)ui->miningMemorySlider->value())*1024;
     
     if(clientModel && clientModel->getOptionsModel())
     {
         clientModel->getOptionsModel()->setMineThreadCount(nGenProcLimit);
+        clientModel->getOptionsModel()->setMineArenaThreadCount(nGenArenaProcLimit);
         clientModel->getOptionsModel()->setMineMemory(nGenMemoryLimitKilobytes);
     }
     
-    startMining(currentAccount, nGenProcLimit, nGenMemoryLimitKilobytes, overrideAddress.size() > 0 ? overrideAddress.toStdString() : accountAddress.toStdString());
+    startMining(currentAccount, nGenProcLimit, nGenArenaProcLimit, nGenMemoryLimitKilobytes, overrideAddress.size() > 0 ? overrideAddress.toStdString() : accountAddress.toStdString());
 
     ui->miningStopminingButton->setVisible(true);
     ui->miningStartminingButton->setVisible(false);
@@ -152,13 +168,13 @@ void MiningAccountDialog::startMining()
     slotUpdateMiningStats();
 }
 
-void MiningAccountDialog::startMining(CAccount* forAccount, uint64_t numThreads, uint64_t mineMemoryKb, std::string overrideAddress)
+void MiningAccountDialog::startMining(CAccount* forAccount, uint64_t numThreads, uint64_t numArenaThreads, uint64_t mineMemoryKb, std::string overrideAddress)
 {
     std::thread([=]
     {
         try
         {
-            PoWGenerateBlocks(true, numThreads, mineMemoryKb, Params(), forAccount, overrideAddress);
+            PoWGenerateBlocks(true, numThreads, numArenaThreads, mineMemoryKb, Params(), forAccount, overrideAddress);
         }
         catch(...)
         {
@@ -243,8 +259,10 @@ void MiningAccountDialog::setModel(WalletModel *_model)
         connect(ui->miningCheckBoxMineAtStartup, SIGNAL(clicked()),         this, SLOT(slotMineAtStartup()));
         connect(ui->miningMemorySlider,          SIGNAL(sliderMoved(int)),  this, SLOT(slotMiningMemorySettingChanging(int)));
         connect(ui->miningThreadSlider,          SIGNAL(sliderMoved(int)),  this, SLOT(slotMiningThreadSettingChanging(int)));
+        connect(ui->miningArenaThreadSlider,     SIGNAL(sliderMoved(int)),  this, SLOT(slotMiningArenaThreadSettingChanging(int)));
         connect(ui->miningMemorySlider,          SIGNAL(valueChanged(int)), this, SLOT(slotMiningMemorySettingChanged())); //Emitted only when user releases mouse at end of slider movement, not for every change
         connect(ui->miningThreadSlider,          SIGNAL(valueChanged(int)), this, SLOT(slotMiningThreadSettingChanged())); //Emitted only when user releases mouse at end of slider movement, not for every change
+        connect(ui->miningArenaThreadSlider,     SIGNAL(valueChanged(int)), this, SLOT(slotMiningArenaThreadSettingChanged())); //Emitted only when user releases mouse at end of slider movement, not for every change
     }
 }
 
@@ -259,9 +277,12 @@ void MiningAccountDialog::setClientModel(ClientModel* clientModel_)
         ui->miningCheckBoxMineAtStartup->setChecked(clientModel->getOptionsModel()->getMineAtStartup());
         
         uint64_t nGenProcLimit = clientModel->getOptionsModel()->getMineThreadCount();
+        uint64_t nGenArenaProcLimit = clientModel->getOptionsModel()->getMineArenaThreadCount();
         uint64_t nGenMemoryLimitKilobytes = clientModel->getOptionsModel()->getMineMemory();
         if (nGenProcLimit > 0)
             ui->miningThreadSlider->setValue(nGenProcLimit);
+        if (nGenArenaProcLimit > 0)
+            ui->miningArenaThreadSlider->setValue(nGenProcLimit);
         if (nGenMemoryLimitKilobytes > 0)
             ui->miningMemorySlider->setValue(nGenMemoryLimitKilobytes/1024);
     }
@@ -356,12 +377,23 @@ void MiningAccountDialog::slotMiningThreadSettingChanged()
     restartMiningIfNeeded();
 }
 
+void MiningAccountDialog::slotMiningArenaThreadSettingChanged()
+{
+    updateSliderLabels();
+    restartMiningIfNeeded();
+}
+
 void MiningAccountDialog::slotMiningMemorySettingChanging(int val)
 {
     ui->miningMemorySliderLabel->setText(tr("%1 MB").arg(val));
 }
 
 void MiningAccountDialog::slotMiningThreadSettingChanging(int val)
+{
+    ui->miningArenaThreadSliderLabel->setText(tr("%1 threads").arg(val));
+}
+
+void MiningAccountDialog::slotMiningArenaThreadSettingChanging(int val)
 {
     ui->miningThreadSliderLabel->setText(tr("%1 threads").arg(val));
 }

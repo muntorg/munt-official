@@ -78,6 +78,7 @@ public:
         MineAtStartup,          // bool
         MineMemory,             // int
         MineThreadCount,        // int
+        MineArenaThreadCount,   // int
         ProxyUse,               // bool
         ProxyIP,                // QString
         ProxyPort,              // int
@@ -121,6 +122,8 @@ public:
     void setMineMemory(uint64_t val);
     uint64_t getMineThreadCount() { return nMineThreadCount; }
     void setMineThreadCount(uint64_t val);
+    void setMineArenaThreadCount(uint64_t val);
+    uint64_t getMineArenaThreadCount() { return nMineArenaThreadCount; }
     int getDisplayUnit() { return nDisplayUnit; }
     bool getAutoHideStatusBar() const { return fAutoHideStatusBar; }
     QString getThirdPartyTxUrls() { return strThirdPartyTxUrls; }
@@ -155,6 +158,7 @@ private:
     bool fMineAtStartup;
     uint64_t nMineMemory;
     uint64_t nMineThreadCount;
+    uint64_t nMineArenaThreadCount;
     QString language;
     int nDisplayUnit;
     bool fAutoHideStatusBar;

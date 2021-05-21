@@ -555,8 +555,9 @@ void sigma_settings::verify()
 }
 
 
-sigma_context::sigma_context(sigma_settings settings_, uint64_t allocateArenaSizeKb_, uint64_t numThreads_)
+sigma_context::sigma_context(sigma_settings settings_, uint64_t allocateArenaSizeKb_, uint64_t numThreads_, uint64_t numArenaThreads_)
 : numThreads(numThreads_)
+, numArenaThreads(numArenaThreads_)
 , allocatedArenaSizeKb(allocateArenaSizeKb_)
 , settings(settings_)
 {           
@@ -594,8 +595,8 @@ void sigma_context::prepareArenas(CBlockHeader& headerData)
     // This is a bit of a paranoid measure as realistically the argon hashes are of the block header which should always be different anyway.
     uint32_t nBaseNonce = headerData.nBits ^ (uint32_t)(headerData.hashPrevBlock.GetCheapHash());
     std::vector<std::thread> workerPool;
-    workerPool.reserve(numThreads);
-    for (uint32_t nThreadIndex=0; nThreadIndex<numThreads; ++nThreadIndex)
+    workerPool.reserve(numArenaThreads);
+    for (uint32_t nThreadIndex=0; nThreadIndex<numArenaThreads; ++nThreadIndex)
     {
         workerPool.emplace_back( [&,headerData, nThreadIndex]() mutable
         {

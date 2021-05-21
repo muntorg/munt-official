@@ -282,17 +282,19 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     LOCK(cs_main);
     #endif
     
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 4)
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 5)
         throw std::runtime_error(
             "setgenerate generate ( gen_proc_limit )\n"
             "\nSet 'generate' true or false to turn generation on or off.\n"
             "Generation is limited to 'gen_proc_limit' processors, -1 is unlimited.\n"
+            "Arena setup is limited to 'gen_arena_proc_limit' processors, -1 is unlimited, takes the value of 'gen_proc_limit' if not explicitely set.\n"
             "See the getgenerate call for the current setting.\n"
             "\nArguments:\n"
-            "1. generate         (boolean, required) Set to true to turn on generation, off to turn off.\n"
-            "2. gen_proc_limit   (numeric, optional) Set the processor limit for when generation is on. Can be -1 for unlimited.\n"
-            "3. gen_memory_limit (string, optional) How much system memory to use, specify a letter G/M/K/B to determine size e.g. 524288K (Kilobytes), 512M (Megabytes), 3G (Gigabytes), defaults to bytes if no specifier given . Empty for automatic selection.\n"
-            "4. account          (string, optional) The UUID or unique label of the account.\n"
+            "1. generate             (boolean, required) Set to true to turn on generation, off to turn off.\n"
+            "2. gen_proc_limit       (numeric, optional) Set the processor limit for when generation is on. Can be -1 for unlimited.\n"
+            "3. gen_arena_proc_limit (numeric, optional) Set the processor limit for when generation is on. Can be -1 for unlimited.\n"
+            "4. gen_memory_limit     (string, optional) How much system memory to use, specify a letter G/M/K/B to determine size e.g. 524288K (Kilobytes), 512M (Megabytes), 3G (Gigabytes).\n"
+            "5. account              (string, optional) The UUID or unique label of the account.\n"
             "\nExamples:\n"
             "\nSet the generation on with a limit of one processor\n"
             + HelpExampleCli("setgenerate", "true 1") +
@@ -329,6 +331,16 @@ static UniValue setgenerate(const JSONRPCRequest& request)
         }
     }
     
+    int nGenArenaProcLimit = GetArg("-genarenaproclimit", DEFAULT_GENERATE_THREADS);
+    if (request.params.size() > 2)
+    {
+        nGenArenaProcLimit = request.params[2].get_int();
+        if (nGenArenaProcLimit == 0)
+        {
+            fGenerate = false;
+        }
+    }
+    
     if (!fGenerate)
     {
         std::thread([=]
@@ -340,9 +352,9 @@ static UniValue setgenerate(const JSONRPCRequest& request)
 
     
     CAccount* forAccount = nullptr;
-    if (request.params.size() > 3 && request.params[3].get_str().length()>0)
+    if (request.params.size() > 4 && request.params[4].get_str().length()>0)
     {
-        forAccount = AccountFromValue(pactiveWallet, request.params[3], false);
+        forAccount = AccountFromValue(pactiveWallet, request.params[4], false);
         if (forAccount && forAccount->IsPoW2Witness())
         {
             throw std::runtime_error("Witness account selected, first select a regular account as the active account or specify a regular account.");
@@ -390,9 +402,9 @@ static UniValue setgenerate(const JSONRPCRequest& request)
 
     // Allow user to override default memory selection.
     uint64_t nGenMemoryLimitBytes = std::min(systemMemory, defaultSigmaSettings.arenaSizeKb*1024);
-    if (request.params.size() > 2)
+    if (request.params.size() > 3)
     {
-        std::string sMemLimit = request.params[2].get_str();
+        std::string sMemLimit = request.params[3].get_str();
         nGenMemoryLimitBytes = GetMemLimitInBytesFromFormattedStringSpecifier(sMemLimit);
     }
     
@@ -400,12 +412,13 @@ static UniValue setgenerate(const JSONRPCRequest& request)
     normaliseBufferSize(nGenMemoryLimitBytes);
     
     SoftSetArg("-genproclimit", itostr(nGenProcLimit));
+    SoftSetArg("-genarenaproclimit", itostr(nGenArenaProcLimit));
     SoftSetArg("-genmemlimit", i64tostr(nGenMemoryLimitBytes/1024));
     std::thread([=]
     {
         try
         {
-            PoWGenerateBlocks(true, nGenProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
+            PoWGenerateBlocks(true, nGenProcLimit, nGenArenaProcLimit, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
         }
         catch(...)
         {

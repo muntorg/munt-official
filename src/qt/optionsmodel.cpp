@@ -165,6 +165,12 @@ void OptionsModel::Init(bool resetSettings)
         settings.setValue("nMineThreadCount", 0);
     }
     nMineThreadCount = settings.value("nMineThreadCount").toLongLong();
+    
+    if (!settings.contains("nMineArenaThreadCount"))
+    {
+        settings.setValue("nMineArenaThreadCount", 0);
+    }
+    nMineArenaThreadCount = settings.value("nMineArenaThreadCount").toLongLong();
 
     // Display
     if (!settings.contains("nDisplayUnit"))
@@ -313,6 +319,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return (qulonglong)nMineMemory;
         case MineThreadCount:
             return (qulonglong)nMineThreadCount;
+        case MineArenaThreadCount:
+            return (qulonglong)nMineArenaThreadCount;
         case DockOnClose:
             return fDockOnClose;
         case AutoUpdateCheck:
@@ -428,6 +436,10 @@ bool successful = true; /* set to false on parse error */
     case MineThreadCount:
         nMineThreadCount = value.toLongLong();
         settings.setValue("nMineThreadCount", (qulonglong)nMineThreadCount);
+        break;
+    case MineArenaThreadCount:
+        nMineArenaThreadCount = value.toLongLong();
+        settings.setValue("nMineArenaThreadCount", (qulonglong)nMineArenaThreadCount);
         break;
     case DockOnClose:
         fDockOnClose = value.toBool();
@@ -580,6 +592,11 @@ void OptionsModel::setMineMemory(uint64_t val)
 void OptionsModel::setMineThreadCount(uint64_t val)
 {
     setData(MineThreadCount, (qulonglong)val);
+}
+
+void OptionsModel::setMineArenaThreadCount(uint64_t val)
+{
+    setData(MineArenaThreadCount, (qulonglong)val);
 }
 
 /** Updates current unit in memory, settings and emits displayUnitChanged(newUnit) signal */

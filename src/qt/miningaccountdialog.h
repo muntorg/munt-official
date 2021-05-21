@@ -43,7 +43,7 @@ public:
 
     void updateSliderLabels();
     void startMining();
-    static void startMining(CAccount* forAccount, uint64_t numThreads, uint64_t mineMemoryKb, std::string overrideAddress);
+    static void startMining(CAccount* forAccount, uint64_t numThreads, uint64_t numArenaThreads, uint64_t mineMemoryKb, std::string overrideAddress);
     void restartMiningIfNeeded();
 public Q_SLOTS:
     void updateAddress(const QString& address);
@@ -71,8 +71,10 @@ private Q_SLOTS:
   void slotMineAtStartup();
   void slotMiningMemorySettingChanged();
   void slotMiningThreadSettingChanged();
+  void slotMiningArenaThreadSettingChanged();
   void slotMiningMemorySettingChanging(int val);
   void slotMiningThreadSettingChanging(int val);
+  void slotMiningArenaThreadSettingChanging(int val);
   void slotUpdateMiningStats();
 };
 
