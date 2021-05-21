@@ -17,7 +17,7 @@ import com.gulden.jniunifiedbackend.TransactionRecord
 import com.gulden.unity_wallet.*
 import com.gulden.unity_wallet.ui.MutationAdapter
 import com.gulden.unity_wallet.util.AppBaseFragment
-import com.gulden.unity_wallet.util.invokeNowOrOnSuccesfullCompletion
+import com.gulden.unity_wallet.util.invokeNowOrOnSuccessfulCompletion
 import kotlinx.android.synthetic.main.fragment_mutation.*
 import kotlinx.coroutines.*
 import org.jetbrains.anko.support.v4.runOnUiThread
@@ -36,7 +36,7 @@ class MutationFragment : AppBaseFragment(), UnityCore.Observer, CoroutineScope {
 
         // if wallet ready setup list immediately so list does not briefly flash empty content and
         // scroll position is kept on switching from and to this fragment
-        UnityCore.instance.walletReady.invokeNowOrOnSuccesfullCompletion(this) {
+        UnityCore.instance.walletReady.invokeNowOrOnSuccessfulCompletion(this) {
             mutationList?.emptyView = emptyMutationListView
             val mutations = ILibraryController.getMutationHistory()
 

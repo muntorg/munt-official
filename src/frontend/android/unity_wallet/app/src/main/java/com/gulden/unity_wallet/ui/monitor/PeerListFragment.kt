@@ -26,7 +26,7 @@ import kotlin.coroutines.CoroutineContext
 class PeerListFragment : AppBaseFragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
 
-    var peerUpdateJob: Job? = null
+    private var peerUpdateJob: Job? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

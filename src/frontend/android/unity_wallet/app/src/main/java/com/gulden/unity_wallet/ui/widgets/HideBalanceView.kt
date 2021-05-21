@@ -16,7 +16,7 @@ import androidx.preference.PreferenceManager
 import com.gulden.unity_wallet.Authentication
 import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.UnityCore
-import com.gulden.unity_wallet.util.invokeNowOrOnSuccesfullCompletion
+import com.gulden.unity_wallet.util.invokeNowOrOnSuccessfulCompletion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -67,7 +67,7 @@ class HideBalanceView(context: Context?, attrs: AttributeSet?) : ViewSwitcher(co
     }
 
     private fun updateViewState() {
-        UnityCore.instance.walletReady.invokeNowOrOnSuccesfullCompletion(this) {
+        UnityCore.instance.walletReady.invokeNowOrOnSuccessfulCompletion(this) {
             val isSynced = UnityCore.instance.progressPercent >= 100.0
             val isLocked = Authentication.instance.isLocked()
 

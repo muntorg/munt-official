@@ -26,7 +26,7 @@ class AddressBookAdapter(private var dataSource: ArrayList<AddressRecord>, val o
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.address_book_list_item, parent, false)
-        // set the view's size, margins, paddings and layout parameters
+        // set the view's size, margins, padding and layout parameters
         return MyViewHolder(view)
     }
 
