@@ -177,7 +177,7 @@ extern void ServerInterrupt(boost::thread_group& threadGroup);
 void CoreInterrupt(boost::thread_group& threadGroup)
 {
     LogPrintf("Core interrupt: commence core interrupt\n");
-    PoWGenerateBlocks(false, 0, 0, Params());
+    PoWGenerateBlocks(false, 0, 0, 0, Params());
     if (g_connman)
         g_connman->Interrupt();
     ServerInterrupt(threadGroup);
@@ -1765,56 +1765,59 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     if (GetBoolArg("-gen", DEFAULT_GENERATE))
     {
         uint64_t nGenProcLimit = GetArg("-genproclimit", DEFAULT_GENERATE_THREADS);
+        uint64_t nGenArenaProcLimit = GetArg("-genarenaproclimit", DEFAULT_GENERATE_THREADS);
+        if (nGenArenaProcLimit <= 0)
+            nGenArenaProcLimit = nGenProcLimit;
         uint64_t nGenMemoryLimitKilobytes = GetArg("-genmemlimit", defaultSigmaSettings.arenaSizeKb);
         
-        //fixme: (SIGMA) (DEDUP) - Move this all to a helper function that can share it with RPC (and -gen) etc.
-        #ifdef ENABLE_WALLET
-        if (pactiveWallet)
+        if (nGenProcLimit > 0 && nGenMemoryLimitKilobytes > 0)
         {
-            CAccount* miningAccount = nullptr;
-
-            LOCK2(cs_main, pactiveWallet->cs_wallet);
-            for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+            //fixme: (SIGMA) (DEDUP) - Move this all to a helper function that can share it with RPC (and -gen) etc.
+            #ifdef ENABLE_WALLET
+            if (pactiveWallet)
             {
-                (unused) accountUUID;
-                if (account->IsMiningAccount() && account->m_State == AccountState::Normal)
-                {
-                    miningAccount = account;
-                    break;
-                }
-            }
+                CAccount* miningAccount = nullptr;
 
-            if (miningAccount)
-            {
-                std::string readOverrideAddress;
-                CWalletDB(*pactiveWallet->dbw).ReadMiningAddressString(readOverrideAddress);
-                if (readOverrideAddress.size() == 0)
+                LOCK2(cs_main, pactiveWallet->cs_wallet);
+                for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
                 {
-                    CReserveKeyOrScript* miningAddress = new CReserveKeyOrScript(pactiveWallet, miningAccount, KEYCHAIN_EXTERNAL);
-                    CPubKey pubKey;
-                    if (miningAddress->GetReservedKey(pubKey))
+                    (unused) accountUUID;
+                    if (account->IsMiningAccount() && account->m_State == AccountState::Normal)
                     {
-                        CKeyID keyID = pubKey.GetID();
-                        readOverrideAddress = CNativeAddress(keyID).ToString();
+                        miningAccount = account;
+                        break;
                     }
                 }
-                if (nGenProcLimit > 0 && nGenMemoryLimitKilobytes > 0)
+
+                if (miningAccount)
                 {
+                    std::string readOverrideAddress;
+                    CWalletDB(*pactiveWallet->dbw).ReadMiningAddressString(readOverrideAddress);
+                    if (readOverrideAddress.size() == 0)
+                    {
+                        CReserveKeyOrScript* miningAddress = new CReserveKeyOrScript(pactiveWallet, miningAccount, KEYCHAIN_EXTERNAL);
+                        CPubKey pubKey;
+                        if (miningAddress->GetReservedKey(pubKey))
+                        {
+                            CKeyID keyID = pubKey.GetID();
+                            readOverrideAddress = CNativeAddress(keyID).ToString();
+                        }
+                    }
                     LogPrintf("Mine at startup using -gen into mining account\n");
-                    PoWGenerateBlocks(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams, miningAccount, readOverrideAddress);
+                    PoWGenerateBlocks(true, nGenProcLimit, nGenArenaProcLimit, nGenMemoryLimitKilobytes, chainparams, miningAccount, readOverrideAddress);
+                }
+                else
+                {
+                    LogPrintf("Mine at startup using -gen into regular account\n");
+                    PoWGenerateBlocks(true, nGenProcLimit, nGenArenaProcLimit, nGenMemoryLimitKilobytes, chainparams);
                 }
             }
             else
+            #endif
             {
                 LogPrintf("Mine at startup using -gen into regular account\n");
-                PoWGenerateBlocks(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams);
+                PoWGenerateBlocks(true, nGenProcLimit, nGenArenaProcLimit, nGenMemoryLimitKilobytes, chainparams);
             }
-        }
-        else
-        #endif
-        {
-            LogPrintf("Mine at startup using -gen into regular account\n");
-            PoWGenerateBlocks(true, nGenProcLimit, nGenMemoryLimitKilobytes, chainparams);
         }
     }
     // ********************************************************* Step 12: finished

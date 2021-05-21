@@ -41,7 +41,9 @@
 #include "utilmoneystr.h"
 #include "validation/validationinterface.h"
 
+#ifdef ENABLE_WALLET
 #include <wallet/extwallet.h>
+#endif
 
 #include <algorithm>
 #include <queue>
@@ -428,7 +430,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     // Create coinbase transaction.
     CMutableTransaction coinbaseTx( bSegSigIsEnabled ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION );
     coinbaseTx.vin.resize(1);
-    coinbaseTx.vin[0].SetPrevOutNull();
+    coinbaseTx.vin[0].prevout.SetNull();
     coinbaseTx.vout.resize((nSubsidyDev>0)?2:1);
     #ifdef ENABLE_WALLET
     CKeyID pubKeyID;
@@ -694,9 +696,9 @@ void BlockAssembler::addPackageTxs(int &nPackagesSelected, int &nDescendantsUpda
                 for (const auto& thisTransactionInputs : cannabalisedTransaction->vin)
                 {
                     uint256 txHash;
-                    if (GetTxHash(thisTransactionInputs.GetPrevOut(), txHash) && txHash == cannabalisedInputTransaction->GetHash())
+                    if (GetTxHash(thisTransactionInputs.prevout, txHash) && txHash == cannabalisedInputTransaction->GetHash())
                     {
-                        nFee += cannabalisedInputTransaction->vout[thisTransactionInputs.GetPrevOut().n].nValue;
+                        nFee += cannabalisedInputTransaction->vout[thisTransactionInputs.prevout.n].nValue;
                     }
                 }
             }
@@ -1047,8 +1049,25 @@ inline void updateHashesPerSec(uint64_t& nStart, uint64_t nStop, uint64_t nCount
         {
             dRollingHashesPerSec = ((dRollingHashesPerSec*19) + dHashesPerSec)/20;
         }
+        #ifdef ENABLE_WALLET
         static_cast<CExtWallet*>(pactiveWallet)->NotifyGenerationStatisticsUpdate();
+        #endif
     }
+}
+
+inline void clearHashesPerSecondStatistics()
+{
+    if (dHashesPerSec > 0 || dBestHashesPerSec > 0 || dRollingHashesPerSec > 0 || nArenaSetupTime > 0)
+    {
+        nArenaSetupTime = 0;
+        nHPSTimerStart = 0;
+        nHashCounter=0;
+        nHPSTimerStart = 0;
+        nHashCounter=0;
+    }
+    #ifdef ENABLE_WALLET
+    static_cast<CExtWallet*>(pactiveWallet)->NotifyGenerationStatisticsUpdate();
+    #endif
 }
 
 void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemoryKb)
@@ -1060,6 +1079,9 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
 
     static bool testnet = IsArgSet("-testnet");
     static bool regTest = GetBoolArg("-regtest", false);
+    
+    // Start with fresh statistics for every mining run
+    clearHashesPerSecondStatistics();
 
     unsigned int nExtraNonce = 0;
     std::shared_ptr<CReserveKeyOrScript> coinbaseScript;
@@ -1242,6 +1264,9 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
                     workerThreads->join();
                 }
                 nArenaSetupTime = GetTimeMillis() - nStart;
+                #ifdef ENABLE_WALLET
+                static_cast<CExtWallet*>(pactiveWallet)->NotifyGenerationStatisticsUpdate();
+                #endif
                 
                 // Mine
                 {
@@ -1432,10 +1457,12 @@ void PoWStopGeneration(bool notify)
         delete minerThread;
         minerThread = nullptr;
     }
+    #ifdef ENABLE_WALLET
     if (notify)
     {
         static_cast<CExtWallet*>(pactiveWallet)->NotifyGenerationStopped();
     }
+    #endif
 }
 
 void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount, std::string generateAddress)
@@ -1451,7 +1478,9 @@ void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nMemory, const 
 
     fixedGenerateAddress = generateAddress;
     minerThread = new boost::thread(boost::bind(&PoWGenerate, boost::cref(chainparams), forAccount, nThreads, nMemory));
+    #ifdef ENABLE_WALLET
     static_cast<CExtWallet*>(pactiveWallet)->NotifyGenerationStarted();
+    #endif
 }
 
 bool PoWGenerationIsActive()

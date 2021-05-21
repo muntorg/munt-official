@@ -669,7 +669,7 @@ int main(int argc, char** argv)
         
         printf("SIGMA=============================================================\n\n");
         {
-            sigma_context sigmaContext(defaultSigmaSettings, std::min(memAllowKb, defaultSigmaSettings.arenaSizeKb), numThreads);
+            sigma_context sigmaContext(defaultSigmaSettings, std::min(memAllowKb, defaultSigmaSettings.arenaSizeKb), numThreads, numThreads);
             if (!sigmaContext.arenaIsValid())
             {
                 printf("Failed to allocate arena memory, try again with lower memory settings.\n");
@@ -792,7 +792,7 @@ int main(int argc, char** argv)
         }
         for (auto instanceMemorySizeKb : sigmaMemorySizes)
         {
-            sigmaContexts.push_back(new sigma_context(defaultSigmaSettings, instanceMemorySizeKb, numThreads/sigmaMemorySizes.size()));
+            sigmaContexts.push_back(new sigma_context(defaultSigmaSettings, instanceMemorySizeKb, numThreads/sigmaMemorySizes.size(), numThreads/sigmaMemorySizes.size()));
         }
         
         printf("Bench mining for low difficulty target\n");
