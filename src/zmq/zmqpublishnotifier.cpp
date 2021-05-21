@@ -17,6 +17,10 @@
 #include "util.h"
 #include "rpc/server.h"
 
+#ifdef ENABLE_WALLET
+#include <wallet/wallet.h>
+#endif
+
 static std::multimap<std::string, CZMQAbstractPublishNotifier*> mapPublishNotifiers;
 
 static const char *MSG_HASHBLOCK = "hashblock";
@@ -212,4 +216,32 @@ bool CZMQPublishRawTransactionNotifier::NotifyTransaction(const CTransaction &tr
     CDataStream ss(SER_NETWORK, PROTOCOL_VERSION | RPCSerializationFlags());
     ss << transaction;
     return SendMessage(MSG_RAWTX, &(*ss.begin()), ss.size());
+}
+
+#ifdef ENABLE_WALLET
+extern void WalletTxToJSON(const CWalletTx& wtx, UniValue& entry);
+#endif
+bool CZMQPublishWalletTransactionNotifier::NotifyTransaction(const CTransaction &transaction)
+{
+    #ifdef ENABLE_WALLET
+    if (pactiveWallet && pactiveWallet->IsMine(transaction))
+    {
+        uint256 hash = transaction.GetHash();
+        LogPrint(BCLog::ZMQ, "zmq: Publish wallettx %s\n", hash.GetHex());
+
+        const CWalletTx& wtx = pactiveWallet->mapWallet[hash];
+        if (!pactiveWallet->mapWallet.count(hash))
+        {
+            LogPrint(BCLog::ZMQ, "zmq: invalid or non-wallet transaction id\n", hash.GetHex());
+        }
+        
+        UniValue entry(UniValue::VOBJ);
+        WalletTxToJSON(wtx, entry);
+        
+        std::string transactionJSON = entry.get_str();
+        
+        return SendMessage(MSG_RAWTX, &(*transactionJSON.begin()), transactionJSON.size());
+    }
+    #endif
+    return true;
 }

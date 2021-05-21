@@ -1055,6 +1055,21 @@ inline void updateHashesPerSec(uint64_t& nStart, uint64_t nStop, uint64_t nCount
     }
 }
 
+inline void clearHashesPerSecondStatistics()
+{
+    if (dHashesPerSec > 0 || dBestHashesPerSec > 0 || dRollingHashesPerSec > 0 || nArenaSetupTime > 0)
+    {
+        nArenaSetupTime = 0;
+        nHPSTimerStart = 0;
+        nHashCounter=0;
+        nHPSTimerStart = 0;
+        nHashCounter=0;
+    }
+    #ifdef ENABLE_WALLET
+    static_cast<CExtWallet*>(pactiveWallet)->NotifyGenerationStatisticsUpdate();
+    #endif
+}
+
 void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemoryKb)
 {
     LogPrintf("PoWGenerate thread started\n");
@@ -1064,6 +1079,9 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
 
     static bool testnet = IsArgSet("-testnet");
     static bool regTest = GetBoolArg("-regtest", false);
+    
+    // Start with fresh statistics for every mining run
+    clearHashesPerSecondStatistics();
 
     unsigned int nExtraNonce = 0;
     std::shared_ptr<CReserveKeyOrScript> coinbaseScript;
@@ -1247,6 +1265,9 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
                     workerThreads->join();
                 }
                 nArenaSetupTime = GetTimeMillis() - nStart;
+                #ifdef ENABLE_WALLET
+                static_cast<CExtWallet*>(pactiveWallet)->NotifyGenerationStatisticsUpdate();
+                #endif
                 
                 // Mine
                 {

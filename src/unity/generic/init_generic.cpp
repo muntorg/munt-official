@@ -140,6 +140,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-zmqpubhashtx=<address>", helptr("Enable publish hash transaction in <address>"));
     strUsage += HelpMessageOpt("-zmqpubrawblock=<address>", helptr("Enable publish raw block in <address>"));
     strUsage += HelpMessageOpt("-zmqpubrawtx=<address>", helptr("Enable publish raw transaction in <address>"));
+    strUsage += HelpMessageOpt("-zmqpubwallettx=<address>", helptr("Enable publish wallet transaction in <address>"));
     strUsage += HelpMessageOpt("-zmqpubstalledwitness=<address>", helptr("Enable publish of slow witnesses in <address>"));
 #endif
 
