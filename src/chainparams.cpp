@@ -115,6 +115,9 @@ public:
         consensus.pow2Phase5FirstBlockHeight=1140958;
         //Don't allow activation yet
         consensus.pow2WitnessSyncHeight=std::numeric_limits<uint64_t>::max();
+        //Set to activate slightly after the estimated time of the above
+        consensus.segsigUncompressedKeyAllowedTime=std::numeric_limits<uint64_t>::max();
+        
 
         // Message start string to avoid accidental cross communication with other chains or software.
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
@@ -244,6 +247,8 @@ public:
             {
                 consensus.pow2WitnessSyncHeight=10;
             }
+            consensus.segsigUncompressedKeyAllowedTime=1621630152;
+            
 
             numGenesisWitnesses = 10;
             genesisWitnessWeightDivisor = 100;

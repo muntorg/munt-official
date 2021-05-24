@@ -20,6 +20,7 @@
 #include "script/script.h"
 #include "uint256.h"
 #include <util.h>
+#include "chainparams.h"
 
 typedef std::vector<unsigned char> valtype;
 
@@ -221,10 +222,14 @@ bool static CheckPubKeyEncoding(const valtype &vchPubKey, unsigned int flags, co
     if ((flags & SCRIPT_VERIFY_STRICTENC) != 0 && !IsCompressedOrUncompressedPubKey(vchPubKey)) {
         return set_error(serror, SCRIPT_ERR_PUBKEYTYPE);
     }
-    // Only compressed keys are accepted in segsig
-    if (sigversion == SIGVERSION_SEGSIG && !IsCompressedPubKey(vchPubKey))
+    
+    if (GetTime() < Params().GetConsensus().segsigUncompressedKeyAllowedTime)
     {
-        return set_error(serror, SCRIPT_ERR_SEGSIG_PUBKEYTYPE);
+        // Only compressed keys are accepted in segsig
+        if (sigversion == SIGVERSION_SEGSIG && !IsCompressedPubKey(vchPubKey))
+        {
+            return set_error(serror, SCRIPT_ERR_SEGSIG_PUBKEYTYPE);
+        }
     }
     return true;
 }
