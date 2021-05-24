@@ -481,6 +481,50 @@ inline bool IsRenewalBundle(const CTxIn& input, const CTxOutPoW2Witness& inputDe
     return false;
 }
 
+bool CWitnessTxBundle::IsValidMultiRenewalBundle(uint64_t nSpendHeight)
+{
+    if (nSpendHeight <= Params().GetConsensus().pow2WitnessSyncHeight)
+        return false;
+        
+    if (inputs.size() < 2)
+        return false;
+    if (outputs.size() < 2)
+        return false;
+    if (inputs.size() != outputs.size())
+        return false;
+
+    // Input and outputs must always match in order
+    for (int i=0; i<inputs.size();++i)
+    {
+        const auto& input = inputs[i];
+        const auto& output = outputs[i];
+        
+        // Amount keys and lock unchanged.
+        if (std::get<0>(input).nValue != std::get<0>(output).nValue)
+            return false;
+        // Action nonce always increment
+        if (std::get<1>(input).actionNonce+1 != std::get<1>(output).actionNonce)
+            return false;
+        if (std::get<1>(input).spendingKeyID != std::get<1>(output).spendingKeyID)
+            return false;
+        if (std::get<1>(input).witnessKeyID != std::get<1>(output).witnessKeyID)
+            return false;
+        if (std::get<1>(input).lockUntilBlock != std::get<1>(output).lockUntilBlock)
+            return false;
+        // Fail count must be incremented appropriately
+        uint64_t compFailCount = std::get<1>(input).failCount;
+        IncrementWitnessFailCount(compFailCount);
+        if (compFailCount != std::get<1>(output).failCount)
+            return false;
+    }
+
+    if (!IsLockFromConsistent())
+        return false;
+
+    return true;
+}
+
+
 
 /*
 * 5) Increase amount and/or lock period. Reset lockfrom to 0. Lock period and/or amount must exceed or equal old period/amount.
@@ -727,7 +771,6 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
                         bundle.bundleType = CWitnessTxBundle::WitnessTxType::WitnessType;
                         break;
                     }
-                    //fixme: (PHASE5) - Should be able to renew multiple in one transaction
                     else if ( IsRenewalBundle(input, inputDetails, outputDetails, prevOut, std::get<0>(bundle.outputs[0]), inputTxHeight, nSpendHeight) )
                     {
                         matchedExistingBundle = true;
@@ -739,7 +782,7 @@ bool CheckTxInputAgainstWitnessBundles(CValidationState& state, std::vector<CWit
             }
             if (!matchedExistingBundle)
             {
-                //NB! We -must- check here that we have the spending key (2 items on stack) as when we later check the built up RearrangeType bundles we have no way to check it then.
+                //NB! We -must- check here that we have the spending key (2 items on stack) as when we later check the built up RearrangeType bundles, or multi renewal bundles, we have no way to check it then.
                 //So this check is very important, must not be skipped and must come before the bundle creation for these bundle types.
                 //Exception for phase 3 inputs which use the ScriptLegacyOutput, not allowing this can get your witness "stuck", ie. not being able to empty it
                 if (!HasSpendKey(input, nSpendHeight))
@@ -986,7 +1029,14 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, uint64
         {
             if (!bundle.IsValidRearrangeBundle())
             {
-                return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-rearrange-bundle");
+                if (bundle.IsValidMultiRenewalBundle(nSpendHeight))
+                {
+                    bundle.bundleType = CWitnessTxBundle::WitnessTxType::RenewType;
+                }
+                else
+                {
+                    return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-witness-invalid-rearrange-bundle");
+                }
             }
         }
         else if(bundle.bundleType == CWitnessTxBundle::WitnessTxType::SpendType)

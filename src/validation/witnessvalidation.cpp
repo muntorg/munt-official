@@ -1444,41 +1444,48 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                 case CWitnessTxBundle::RenewType:
                 {
                     // Basic sanity checks
-                    assert(bundle.inputs.size() == 1);
-                    assert(bundle.outputs.size() == 1);
+                    assert(bundle.inputs.size() > 0);
+                    assert(bundle.outputs.size() > 0);
+                    assert(bundle.inputs.size() == bundle.outputs.size());
                     assert(!std::get<2>(bundle.inputs[0]).IsNull());
                     
-                    // Find existing item
-                    SimplifiedWitnessRouletteItem originalItem(bundle.inputs[0]);
-                    auto iter = simplifiedWitnessUTXO.witnessCandidates.find(originalItem);
-                    if (iter == simplifiedWitnessUTXO.witnessCandidates.end())
-                        return false;
+                    // Treat each renew as a seperate change instead of trying to encode them all together
+                    for (uint64_t i=0; i<bundle.inputs.size(); ++i)
+                    {
+                        const auto& input = bundle.inputs[i];
+                        const auto& output = bundle.outputs[i];
                     
-                    SimplifiedWitnessRouletteItem modifiedItem = originalItem;
-                    modifiedItem.blockNumber = nBlockHeight;
-                    modifiedItem.transactionIndex = std::get<2>(bundle.outputs[0]).getTransactionIndex();
-                    modifiedItem.transactionOutputIndex = std::get<2>(bundle.outputs[0]).n;
-                    if (modifiedItem.lockFromBlock == 0)
-                        modifiedItem.lockFromBlock = modifiedItem.blockNumber;
-                    
-                    deltaStream << changeTypeRenew;
-                    deltaStream << VARINT(simplifiedWitnessUTXO.witnessCandidates.index_of(iter));
-                    //no need to encode blockNumber because it can be determined from the header
-                    deltaStream << VARINT(modifiedItem.transactionIndex);
-                    deltaStream << COMPACTSIZE(modifiedItem.transactionOutputIndex);
-                    
-                    // Update renewed item in set
-                    simplifiedWitnessUTXO.witnessCandidates.erase(iter);
-                    auto [insertIter, didInsert] = simplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
-                    if (!didInsert)
-                        assert(0);
-                    
-                    deltaItem undo;
-                    undo.changeType=changeTypeRenew;
-                    undo.removedItems.push_back(originalItem);
-                    undo.addedItems.push_back(modifiedItem);
-                    deltaItems.push_back(undo);
-                    
+                        // Find existing item
+                        SimplifiedWitnessRouletteItem originalItem(input);
+                        auto iter = simplifiedWitnessUTXO.witnessCandidates.find(originalItem);
+                        if (iter == simplifiedWitnessUTXO.witnessCandidates.end())
+                            return false;
+                        
+                        SimplifiedWitnessRouletteItem modifiedItem = originalItem;
+                        modifiedItem.blockNumber = nBlockHeight;
+                        modifiedItem.transactionIndex = std::get<2>(output).getTransactionIndex();
+                        modifiedItem.transactionOutputIndex = std::get<2>(output).n;
+                        if (modifiedItem.lockFromBlock == 0)
+                            modifiedItem.lockFromBlock = modifiedItem.blockNumber;
+                        
+                        deltaStream << changeTypeRenew;
+                        deltaStream << VARINT(simplifiedWitnessUTXO.witnessCandidates.index_of(iter));
+                        //no need to encode blockNumber because it can be determined from the header
+                        deltaStream << VARINT(modifiedItem.transactionIndex);
+                        deltaStream << COMPACTSIZE(modifiedItem.transactionOutputIndex);
+                        
+                        // Update renewed item in set
+                        simplifiedWitnessUTXO.witnessCandidates.erase(iter);
+                        auto [insertIter, didInsert] = simplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                        if (!didInsert)
+                            assert(0);
+                        
+                        deltaItem undo;
+                        undo.changeType=changeTypeRenew;
+                        undo.removedItems.push_back(originalItem);
+                        undo.addedItems.push_back(modifiedItem);
+                        deltaItems.push_back(undo);
+                    }
                     break;
                 }
                 case CWitnessTxBundle::RearrangeType:
