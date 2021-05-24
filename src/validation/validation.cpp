@@ -2854,6 +2854,13 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
         {
             return state.Invalid(false, REJECT_INVALID, "witness-signature-invalid", "block sets null witness signature");
         }
+        if (pindexPrev->nHeight > chainparams.GetConsensus().pow2WitnessSyncHeight)
+        {
+            if (block.witnessUTXODelta.size() == 0)
+            {
+                return state.Invalid(false, REJECT_INVALID, "witness-utxo-delta-invalid", "block has no witness utxo delta");
+            }
+        }
     }
     else
     {
@@ -2868,6 +2875,10 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
         if ( !std::all_of(block.witnessHeaderPoW2Sig.begin(), block.witnessHeaderPoW2Sig.end(), [](auto c){return c==0;}) )
         {
             return state.Invalid(false, REJECT_INVALID, "witness-signature-invalid", "block sets witness signature without witness version");
+        }
+        if (block.witnessUTXODelta.size() > 0)
+        {
+            return state.Invalid(false, REJECT_INVALID, "witness-utxo-delta-invalid", "block sets witness utxo delta without witness version");
         }
     }    
 
