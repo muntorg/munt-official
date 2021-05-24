@@ -347,6 +347,14 @@ void MiningAccountDialog::slotStopMining()
     
     ui->miningStopminingButton->setVisible(false);
     ui->miningStartminingButton->setVisible(true);
+    
+    ui->labelLastMiningSpeed->setText("0.0");
+    ui->labelLastMiningSpeedUnits->setText(" Mh/s");
+    ui->labelAverageMiningSpeed->setText("0.0");
+    ui->labelAverageMiningSpeedUnits->setText(" Mh/s");
+    ui->labelBestMiningSpeed->setText("0.0");
+    ui->labelBestMiningSpeedUnits->setText(" Mh/s");
+    ui->labelLastArenaSetupTime->setText("0");
 }
 
 void MiningAccountDialog::slotKeepOpenWhenMining()
@@ -390,38 +398,39 @@ void MiningAccountDialog::slotMiningMemorySettingChanging(int val)
 
 void MiningAccountDialog::slotMiningThreadSettingChanging(int val)
 {
-    ui->miningArenaThreadSliderLabel->setText(tr("%1 threads").arg(val));
+    ui->miningThreadSliderLabel->setText(tr("%1 threads").arg(val));
 }
 
 void MiningAccountDialog::slotMiningArenaThreadSettingChanging(int val)
 {
-    ui->miningThreadSliderLabel->setText(tr("%1 threads").arg(val));
+    ui->miningArenaThreadSliderLabel->setText(tr("%1 threads").arg(val));
 }
 
 void MiningAccountDialog::slotUpdateMiningStats()
 {
-    //fixme: (SIGMA) (DEDUP) - Share this code with RPC if possible
-    double dHashPerSecLog = dHashesPerSec;
-    std::string sHashPerSecLogLabel = " h";
-    selectLargesHashUnit(dHashPerSecLog, sHashPerSecLogLabel);
-    double dRollingHashPerSecLog = dRollingHashesPerSec;
-    std::string sRollingHashPerSecLogLabel = " h";
-    selectLargesHashUnit(dRollingHashPerSecLog, sRollingHashPerSecLogLabel);
-    double dBestHashPerSecLog = dBestHashesPerSec;
-    std::string sBestHashPerSecLogLabel = " h";
-    selectLargesHashUnit(dBestHashPerSecLog, sBestHashPerSecLogLabel);
-
-    
-    ui->labelLastMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf", dHashPerSecLog)));
-    ui->labelLastMiningSpeedUnits->setText(QString::fromStdString(" "+sHashPerSecLogLabel+"/s"));
-    ui->labelAverageMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf", dRollingHashPerSecLog)));
-    ui->labelAverageMiningSpeedUnits->setText(QString::fromStdString(" "+sRollingHashPerSecLogLabel+"/s"));
-    ui->labelBestMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf", dBestHashPerSecLog)));
-    ui->labelBestMiningSpeedUnits->setText(QString::fromStdString(" "+sBestHashPerSecLogLabel+"/s"));
-    ui->labelLastArenaSetupTime->setText(QString::fromStdString(strprintf("%.2lf", nArenaSetupTime/1000.0)));
-    
     if (PoWGenerationIsActive())
     {
+        //fixme: (SIGMA) (DEDUP) - Share this code with RPC if possible
+        double dHashPerSecLog = dHashesPerSec;
+        std::string sHashPerSecLogLabel = " h";
+        selectLargesHashUnit(dHashPerSecLog, sHashPerSecLogLabel);
+        double dRollingHashPerSecLog = dRollingHashesPerSec;
+        std::string sRollingHashPerSecLogLabel = " h";
+        selectLargesHashUnit(dRollingHashPerSecLog, sRollingHashPerSecLogLabel);
+        double dBestHashPerSecLog = dBestHashesPerSec;
+        std::string sBestHashPerSecLogLabel = " h";
+        selectLargesHashUnit(dBestHashPerSecLog, sBestHashPerSecLogLabel);
+
+        
+        ui->labelLastMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf", dHashPerSecLog)));
+        ui->labelLastMiningSpeedUnits->setText(QString::fromStdString(" "+sHashPerSecLogLabel+"/s"));
+        ui->labelAverageMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf", dRollingHashPerSecLog)));
+        ui->labelAverageMiningSpeedUnits->setText(QString::fromStdString(" "+sRollingHashPerSecLogLabel+"/s"));
+        ui->labelBestMiningSpeed->setText(QString::fromStdString(strprintf("%.2lf", dBestHashPerSecLog)));
+        ui->labelBestMiningSpeedUnits->setText(QString::fromStdString(" "+sBestHashPerSecLogLabel+"/s"));
+        ui->labelLastArenaSetupTime->setText(QString::fromStdString(strprintf("%.2lf", nArenaSetupTime/1000.0)));
+    
+    
         // Call again every 2 seconds as long as mining is active
         QTimer::singleShot( 2000, this, SLOT(slotUpdateMiningStats()) );
     }
