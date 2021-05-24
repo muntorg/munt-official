@@ -320,6 +320,7 @@ bool getAllUnspentWitnessCoins(CChain& chain, const CChainParams& chainParams, c
             newBlock->nTimePoW2Witness = 0;
             newBlock->hashMerkleRootPoW2Witness = uint256();
             newBlock->witnessHeaderPoW2Sig.clear();
+            newBlock->witnessUTXODelta.clear();
         }
 
         // Place the block in question at the tip of the chain.
