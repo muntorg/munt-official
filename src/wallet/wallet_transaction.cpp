@@ -970,9 +970,6 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
         {
             if (witnessHasExpired(witCoin.nAge, witCoin.nWeight, witnessInfo.nTotalWeightRaw))
             {
-                if (skipPastTransaction && nExpiredCount++ < *skipPastTransaction)
-                    continue;
-
                 addedAny = true;
                
                 // Add witness input
@@ -1026,11 +1023,6 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                 CKey privWitnessKey;
                 targetWitnessAccount->GetKey(witnessDestination.witnessKeyID, privWitnessKey);
                 targetWitnessAccount->AddKeyPubKey(privWitnessKey, privWitnessKey.GetPubKey(), KEYCHAIN_WITNESS);
-
-                //fixme: (PHASE5) - Remove this and do all in one tx instead (see note in tx_verify) as blockchain must support this first
-                if(skipPastTransaction)
-                    *skipPastTransaction = nExpiredCount;
-                break;
             }
         }
     }

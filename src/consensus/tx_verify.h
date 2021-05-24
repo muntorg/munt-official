@@ -61,6 +61,7 @@ struct CWitnessTxBundle
     CWitnessTxBundle() {}
 
     inline bool IsValidRearrangeBundle();
+    inline bool IsValidMultiRenewalBundle(uint64_t nHeight);
     inline bool IsValidSpendBundle(uint64_t nHeight, const CTransaction& transaction);
     inline bool IsValidChangeWitnessKeyBundle();
     inline bool IsValidIncreaseBundle();
