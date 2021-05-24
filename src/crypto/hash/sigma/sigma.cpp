@@ -607,7 +607,7 @@ void sigma_context::prepareArenas(CBlockHeader& headerData)
             sched_setaffinity(0, sizeof(cpuset), &cpuset);
             #endif
                 
-            for (;nThreadIndex<numHashes;nThreadIndex+=numThreads)
+            for (;nThreadIndex<numHashes;nThreadIndex+=numArenaThreads)
             {
                 headerData.nNonce = nBaseNonce+nThreadIndex;
                 argon2_echo_context context;
