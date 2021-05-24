@@ -1667,9 +1667,8 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             pfrom->fDisconnect = true;
             return false;
         }
-        if (!pfrom->fInbound && nVersion < MIN_PEER_PROTO_VERSION_OUTBOUND)
+        if (GetAdjustedTime() > Params().GetConsensus().segsigUncompressedKeyAllowedTime && !pfrom->fInbound && nVersion < MIN_PEER_PROTO_VERSION_OUTBOUND)
         {
-
             if (!gbMinimalLogging)
                 LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
             connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION_OUTBOUND)));
