@@ -2457,6 +2457,7 @@ static bool PromoteBlockIndex(CBlockIndex* pindexNew, const CBlockHeader& header
     pindexNew->nTimePoW2Witness = header.nTimePoW2Witness;
     pindexNew->hashMerkleRootPoW2Witness = header.hashMerkleRootPoW2Witness;
     pindexNew->witnessHeaderPoW2Sig = header.witnessHeaderPoW2Sig;
+    pindexNew->witnessUTXODelta = header.witnessUTXODelta;
     pindexNew->nVersion       = header.nVersion;
     pindexNew->hashMerkleRoot = header.hashMerkleRoot;
     pindexNew->nTime          = header.nTime;

@@ -152,6 +152,7 @@ public:
         nTimePoW2Witness = 0;
         hashMerkleRootPoW2Witness.SetNull();
         witnessHeaderPoW2Sig.clear();
+        witnessUTXODelta.clear();
     }
 
     bool IsNull() const
@@ -231,6 +232,7 @@ public:
         block.nTimePoW2Witness = nTimePoW2Witness;
         block.hashMerkleRootPoW2Witness = hashMerkleRootPoW2Witness;
         block.witnessHeaderPoW2Sig = witnessHeaderPoW2Sig;
+        block.witnessUTXODelta = witnessUTXODelta;
         return block;
     }
 
