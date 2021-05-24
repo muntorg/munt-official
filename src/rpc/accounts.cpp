@@ -3265,6 +3265,58 @@ static UniValue getwitnesscompound(const JSONRPCRequest& request)
     return ValueFromAmount(forAccount->getCompounding());
 }
 
+static UniValue setwitnessrewardaddress(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 2 )
+        throw std::runtime_error(
+            "setwitnessrewardaddress \"witness_account\" \"destination\"\n"
+            "\nSet the output address into which all non-compound witness earnings will be paid.\n"
+            "\nSee \"setwitnesscompound\" for how to control compounding and additional information.\n"
+            "1. \"witness_account\"        (required) The unique UUID or label for the account.\n"
+            "2. \"destination\"           (required) An address. Set empty string to reset the reward script.\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"account_uuid\",        (string) The UUID of the account that has been modified.\n"
+            "     \"amount\"               (string) The amount that has been set.\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("setwitnessrewardscript \"my witness account\" \"Vb5YMjiTA9BUYi9zPToKg3wAAdrpHNp1V2hSBVHpgLMm9sPojhnX\"", "")
+            + HelpExampleRpc("setwitnessrewardscript \"my witness account\" \"Vb5YMjiTA9BUYi9zPToKg3wAAdrpHNp1V2hSBVHpgLMm9sPojhnX\"", ""));
+
+    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+
+    if (!forAccount)
+        throw std::runtime_error("Invalid account name or UUID");
+
+    if (!forAccount->IsPoW2Witness())
+        throw std::runtime_error(strprintf("Specified account is not a witness account [%s].",  request.params[0].get_str()));
+
+    CScript scriptForNonCompoundPayments;
+    CNativeAddress address(request.params[1].get_str());
+    if (address.IsValid()) {
+        scriptForNonCompoundPayments = GetScriptForDestination(address.Get());
+    }
+
+    CWalletDB walletdb(*pwallet->dbw);
+    forAccount->setNonCompoundRewardScript(scriptForNonCompoundPayments, &walletdb);
+
+    witnessScriptsAreDirty = true;
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), HexStr(forAccount->getNonCompoundRewardScript())));
+    return result;
+}
+
 static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
@@ -3789,6 +3841,7 @@ static const CRPCCommand commandsFull[] =
     { "witness",                 "renewwitnessaccount",             &renewwitnessaccount,            true,    {"funding_account", "witness_account"} },
     { "witness",                 "setwitnesscompound",              &setwitnesscompound,             true,    {"witness_account", "amount"} },
     { "witness",                 "setwitnessrewardscript",          &setwitnessrewardscript,         true,    {"witness_account", "pubkey_or_script", "force_pubkey"} },
+    { "witness",                 "setwitnessrewardaddress",         &setwitnessrewardaddress,         true,   {"witness_account", "pubkey_or_script"} },
     { "witness",                 "setwitnessrewardtemplate",        &setwitnessrewardtemplate,       true,    {"witness_account", "reward_template"} },
     { "witness",                 "getwitnessrewardtemplate",        &getwitnessrewardtemplate,       true,    {"witness_account" } },
     { "witness",                 "splitwitnessaccount",             &splitwitnessaccount,            true,    {"funding_account", "witness_account", "amounts"} },

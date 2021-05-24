@@ -29,7 +29,7 @@ import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.unity_wallet.Config.Companion.PRECISION_SHORT
 import com.gulden.unity_wallet.R.layout.text_input_address_label
 import com.gulden.unity_wallet.ui.getDisplayDimensions
-import com.gulden.unity_wallet.util.invokeNowOrOnSuccesfullCompletion
+import com.gulden.unity_wallet.util.invokeNowOrOnSuccessfulCompletion
 import kotlinx.android.synthetic.main.fragment_send_coins.view.*
 import kotlinx.android.synthetic.main.text_input_address_label.view.*
 import kotlinx.coroutines.*
@@ -224,14 +224,14 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         (mMainlayout.findViewById<View>(R.id.send_coins_amount_secondary) as TextView?)?.text = secondaryStr
     }
 
-    private fun performAuthenticatedPayment(d : Dialog, request : UriRecipient, msg: String?, substractFee: Boolean = false)
+    private fun performAuthenticatedPayment(d : Dialog, request : UriRecipient, msg: String?, subtractFee: Boolean = false)
     {
         val amountStr = String.format("%.${PRECISION_SHORT}f", request.amount.toDouble() / 100000000)
         val message = msg ?: getString(R.string.send_coins_confirm_template, amountStr, recipientDisplayAddress)
         Authentication.instance.authenticate(this@SendCoinsFragment.activity!!,
                 null, msg = message) {
             try {
-                ILibraryController.performPaymentToRecipient(request, substractFee)
+                ILibraryController.performPaymentToRecipient(request, subtractFee)
                 d.dismiss()
             }
             catch (exception: RuntimeException) {
@@ -261,7 +261,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                 // alert dialog for confirmation of payment and reduction of amount since amount + fee exceeds balance
                 fragmentActivity.alert(Appcompat, getString(R.string.send_all_instead_msg), getString(R.string.send_all_instead_title)) {
 
-                    // on confirmation compose recipient with reduced amount and execute payment with substract fee from amount
+                    // on confirmation compose recipient with reduced amount and execute payment with subtractFee fee from amount
                     positiveButton(getString(R.string.send_all_btn)) {
                         val sendAllRequest = UriRecipient(true, recipient.address, recipient.label, recipient.desc, balance)
                         performAuthenticatedPayment(dialog!!, sendAllRequest, null,true)
@@ -340,7 +340,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             mLabelAddToAddressBook.visibility = View.INVISIBLE // use for layout already, will become visible when wallet is ready
         }
 
-        UnityCore.instance.walletReady.invokeNowOrOnSuccesfullCompletion(this) {
+        UnityCore.instance.walletReady.invokeNowOrOnSuccessfulCompletion(this) {
             if (label.isNotEmpty())
             {
                 val isInAddressBook = ILibraryController.getAddressBookRecords().count { it.name.equals(other = label, ignoreCase = true) } > 0

@@ -115,7 +115,7 @@ void normaliseBufferSize(uint64_t& nBufferSizeBytes);
 class sigma_context
 {
 public:
-    sigma_context(sigma_settings settings_, uint64_t allocateArenaSizeKb_, uint64_t numThreads_);
+    sigma_context(sigma_settings settings_, uint64_t allocateArenaSizeKb_, uint64_t numThreads_, uint64_t numArenaThreads_);
     bool arenaIsValid();
     void prepareArenas(CBlockHeader& headerData);
     void benchmarkSlowHashes(uint8_t* hashData, uint64_t numSlowHashes);
@@ -128,6 +128,7 @@ public:
     sigma_context& operator=(const sigma_context&) = delete;
 public:
     uint64_t numThreads=0;
+    uint64_t numArenaThreads=0;
     uint64_t allocatedArenaSizeKb=0;
     uint8_t* arena=nullptr;
 private:

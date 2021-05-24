@@ -306,7 +306,7 @@ public:
                         std::atomic<uint64_t> halfHashCounter=0;
                         std::atomic<uint64_t> nThreadCounter=0;
                         bool interrupt=false;
-                        sigma_context generateContext(defaultSigmaSettings, defaultSigmaSettings.arenaSizeKb, std::max(GetNumCores(), 1));
+                        sigma_context generateContext(defaultSigmaSettings, defaultSigmaSettings.arenaSizeKb, std::max(GetNumCores(), 1), std::max(GetNumCores(), 1));
                         generateContext.prepareArenas(genesis);
                         generateContext.mineBlock(&genesis, halfHashCounter, foundBlockHash, interrupt);
                     }

@@ -114,10 +114,11 @@ class TransactionInfoActivity : AppBaseActivity() {
                         v.amount.textColor = ContextCompat.getColor(this@TransactionInfoActivity, R.color.change_negative)
                         v.amount.text = formatNativeAndLocal(-output.amount, rate, useNativePrefix = true, nativeFirst = false)
                         to_container.addView(v)
-                    } else {
+                    }
+                    //else {
                         // output.isMine && signedByMe, this is likely change so don't display
                         // !output.isMine && !signedByMe, this is likely change for the other side or something else we don't care about
-                    }
+                    //}
                 }
 
                 // fee

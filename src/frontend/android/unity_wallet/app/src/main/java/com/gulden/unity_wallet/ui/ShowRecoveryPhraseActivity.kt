@@ -98,22 +98,27 @@ class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
             return
         }
 
+        button_accept_recovery_phrase.visibility = View.INVISIBLE
         // TODO must have core started and createWallet signal
 
-        Authentication.instance.chooseAccessCode(this, null) {
-            password->
-            if (UnityCore.instance.isCoreReady()) {
-                if (ILibraryController.ContinueWalletFromRecoveryPhrase(recoveryPhrase, password.joinToString(""))) {
-                    gotoWalletActivity(this)
-                } else {
-                    internalErrorAlert(this, "$TAG continuation failed")
-                }
-            } else {
-                // Create the new wallet, a coreReady event will follow which will proceed to the main activity
-                if (!ILibraryController.InitWalletFromRecoveryPhrase(recoveryPhrase, password.joinToString("")))
-                    internalErrorAlert(this, "$TAG init failed")
-            }
-        }
+        Authentication.instance.chooseAccessCode(
+                this,
+                null,
+                action = fun(password: CharArray) {
+                    if (UnityCore.instance.isCoreReady()) {
+                        if (ILibraryController.ContinueWalletFromRecoveryPhrase(recoveryPhrase, password.joinToString(""))) {
+                            gotoWalletActivity(this)
+                        } else {
+                            internalErrorAlert(this, "$TAG continuation failed")
+                        }
+                    } else {
+                        // Create the new wallet, a coreReady event will follow which will proceed to the main activity
+                        if (!ILibraryController.InitWalletFromRecoveryPhrase(recoveryPhrase, password.joinToString("")))
+                            internalErrorAlert(this, "$TAG init failed")
+                    }
+                },
+                cancelled = fun() {button_accept_recovery_phrase.visibility = View.VISIBLE}
+        )
     }
 
     @Suppress("UNUSED_PARAMETER")

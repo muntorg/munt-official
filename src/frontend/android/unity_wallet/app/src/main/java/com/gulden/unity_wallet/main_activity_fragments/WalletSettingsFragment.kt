@@ -16,7 +16,7 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.unity_wallet.*
-import com.gulden.unity_wallet.util.invokeNowOrOnSuccesfullCompletion
+import com.gulden.unity_wallet.util.invokeNowOrOnSuccessfulCompletion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -33,7 +33,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
         setPreferencesFromResource(R.xml.fragment_wallet_settings, rootKey)
 
         // if wallet ready, setup preference fields immediately so settings don't get removed in sight of user
-        UnityCore.instance.walletReady.invokeNowOrOnSuccesfullCompletion(this) {
+        UnityCore.instance.walletReady.invokeNowOrOnSuccessfulCompletion(this) {
             if (ILibraryController.IsMnemonicWallet()) {
                 preferenceScreen.removePreferenceRecursively("recovery_linked_preference")
                 preferenceScreen.removePreferenceRecursively("preference_unlink_wallet")
@@ -64,11 +64,16 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
             }
             "preference_change_pass_code" -> {
                 Authentication.instance.authenticate(activity!!, getString(R.string.change_passcode_auth_title), getString(R.string.change_passcode_auth_desc)) { oldPassword ->
-                    Authentication.instance.chooseAccessCode(activity!!, getString(R.string.change_passcode_auth_title)) { newPassword ->
-                        if (!ILibraryController.ChangePassword(oldPassword.joinToString(""), newPassword.joinToString(""))) {
-                            Toast.makeText(context, "Failed to change password", Toast.LENGTH_LONG).show()
-                        }
-                    }
+                    Authentication.instance.chooseAccessCode(
+                            activity!!,
+                            getString(R.string.change_passcode_auth_title),
+                            action = { newPassword ->
+                                if (!ILibraryController.ChangePassword(oldPassword.joinToString(""), newPassword.joinToString(""))) {
+                                    Toast.makeText(context, "Failed to change password", Toast.LENGTH_LONG).show()
+                                }
+                            },
+                            cancelled = {}
+                    )
                 }
             }
             "preference_rescan_wallet" -> {
