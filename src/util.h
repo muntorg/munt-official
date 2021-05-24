@@ -354,7 +354,7 @@ inline static void selectLargesHashUnit(double& dHashes, std::string& sLabel)
         sLabel = "kh";
         dHashes /= 1000.0;
     }
-    if (dHashes > 1000)
+    if (dHashes > 1000 || dHashes == 0)
     {
         sLabel = "Mh";
         dHashes /= 1000.0;
