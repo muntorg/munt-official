@@ -113,10 +113,9 @@ public:
         consensus.devBlockSubsidyActivationHeight=1030001;
         consensus.pow2Phase4FirstBlockHeight=1131652;
         consensus.pow2Phase5FirstBlockHeight=1140958;
-        //Don't allow activation yet
-        consensus.pow2WitnessSyncHeight=std::numeric_limits<uint64_t>::max();
-        //Set to activate slightly after the estimated time of the above
-        consensus.segsigUncompressedKeyAllowedTime=std::numeric_limits<uint64_t>::max();
+        consensus.pow2WitnessSyncHeight=1400000;
+        //Thu Jul 01 2021 08:00:00 GMT+0000
+        consensus.segsigUncompressedKeyAllowedTime=1625126400;
         
 
         // Message start string to avoid accidental cross communication with other chains or software.
