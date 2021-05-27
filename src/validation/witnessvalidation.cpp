@@ -1303,7 +1303,7 @@ bool GetSimplifiedWitnessUTXOSetForIndex(const CBlockIndex* pBlockIndex, Simplif
 }
 
 
-bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CBlock& block, CVectorWriter& deltaStream, std::vector<deltaItem>& deltaItems, SimplifiedWitnessUTXOSet& simplifiedWitnessUTXO)
+bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CBlock& block, CVectorWriter& deltaStream, std::vector<deltaItem>& deltaItems, SimplifiedWitnessUTXOSet& simplifiedWitnessUTXO, SimplifiedWitnessUTXOSet& simplifiedWitnessUTXOWithoutWitnessAction)
 {
     bool anyChanges=false;
     // Calculate changes this block would make
@@ -1406,6 +1406,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         
                         // Insert new item into set
                         simplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                        simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.insert(modifiedItem);
                         
                         deltaItem undo;
                         undo.changeType=changeTypeCreation;
@@ -1433,6 +1434,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                     
                     // Remove spent item from set
                     simplifiedWitnessUTXO.witnessCandidates.erase(iter);
+                    simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.erase(simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.find(originalItem));
                     
                     deltaItem undo;
                     undo.changeType=changeTypeSpend;
@@ -1476,6 +1478,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         
                         // Update renewed item in set
                         simplifiedWitnessUTXO.witnessCandidates.erase(iter);
+                        simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.erase(simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.find(originalItem));
                         auto [insertIter, didInsert] = simplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
                         if (!didInsert)
                             assert(0);
@@ -1513,6 +1516,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         
                         undo.removedItems.push_back(item);
                         simplifiedWitnessUTXO.witnessCandidates.erase(iter);
+                        simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.erase(simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.find(item));
                     }
 
                     // Encode and perform reinsertion of modified items
@@ -1531,6 +1535,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         deltaStream << COMPRESSEDAMOUNT(item.nValue);
                         
                         simplifiedWitnessUTXO.witnessCandidates.insert(item);
+                        simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.insert(item);
                         undo.addedItems.push_back(item);
                     }
                     deltaItems.push_back(undo);
@@ -1562,6 +1567,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
 
                         undo.removedItems.push_back(item);
                         simplifiedWitnessUTXO.witnessCandidates.erase(iter);
+                        simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.erase(simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.find(item));
                     }
 
                     // Encode and perform reinsertion of modified items
@@ -1582,6 +1588,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         //lockUntilBlock encoded once for all bundles, before this loop
                         
                         simplifiedWitnessUTXO.witnessCandidates.insert(item);
+                        simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.insert(item);
                         undo.addedItems.push_back(item);
                     }
                     deltaItems.push_back(undo);
@@ -1627,6 +1634,8 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         
                         simplifiedWitnessUTXO.witnessCandidates.erase(iter);
                         simplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                        simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.erase(simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.find(originalItem));
+                        simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.insert(modifiedItem);
                         
                         undo.removedItems.push_back(originalItem);
                         undo.addedItems.push_back(modifiedItem);
@@ -1646,6 +1655,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
 bool GetSimplifiedWitnessUTXODeltaForBlock(const CBlockIndex* pBlockIndex, const CBlock& block, std::shared_ptr<SimplifiedWitnessUTXOSet> pow2SimplifiedWitnessUTXOForPrevBlock, std::vector<unsigned char>& compWitnessUTXODelta, CPubKey* pubkey)
 {
     SimplifiedWitnessUTXOSet pow2SimplifiedWitnessUTXOModified = *pow2SimplifiedWitnessUTXOForPrevBlock;
+    SimplifiedWitnessUTXOSet pow2SimplifiedWitnessUTXOModifiedWithoutWitnessAction = pow2SimplifiedWitnessUTXOModified;
     
     #ifdef EXTRA_DELTA_TESTS
     SimplifiedWitnessUTXOSet pow2SimplifiedWitnessUTXOOrig = pow2SimplifiedWitnessUTXOModified;
@@ -1654,7 +1664,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlock(const CBlockIndex* pBlockIndex, const
     // Calculate what changes the block makes to the simplified witness utxo set
     std::vector<deltaItem> deltaItems;
     CVectorWriter deltaStream(SER_NETWORK, 0, compWitnessUTXODelta, 0);
-    if (!GetSimplifiedWitnessUTXODeltaForBlockHelper(pBlockIndex->nHeight, block, deltaStream, deltaItems, pow2SimplifiedWitnessUTXOModified))
+    if (!GetSimplifiedWitnessUTXODeltaForBlockHelper(pBlockIndex->nHeight, block, deltaStream, deltaItems, pow2SimplifiedWitnessUTXOModified, pow2SimplifiedWitnessUTXOModifiedWithoutWitnessAction))
         return false;
 
     // Our copy must have changes so should not match the original
@@ -1667,7 +1677,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlock(const CBlockIndex* pBlockIndex, const
         DO_BENCHMARKT("CheckBlockHeaderIsPoWValid - VERIFYWITNESS_SIMPLIFIED_INTERNAL", BCLog::BENCH, 0);
 
         CGetWitnessInfo witInfo;
-        GetWitnessFromSimplifiedUTXO(pow2SimplifiedWitnessUTXOOrig, pBlockIndex, witInfo);
+        GetWitnessFromSimplifiedUTXO(pow2SimplifiedWitnessUTXOModifiedWithoutWitnessAction, pBlockIndex, witInfo);
         if(witInfo.selectedWitnessTransaction.GetType() == CTxOutType::PoW2WitnessOutput)
         {
             if (witInfo.selectedWitnessTransaction.output.witnessDetails.witnessKeyID != pubkey->GetID())

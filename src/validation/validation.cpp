@@ -882,6 +882,31 @@ static int64_t nTimeIndex = 0;
 static int64_t nTimeCallbacks = 0;
 static int64_t nTimeTotal = 0;
 
+/*
+void LogWitnessInfo(CGetWitnessInfo witInfo)
+{
+    LogPrintf("witinfo>>>\n");
+    LogPrintf("filtered:\n");
+    for (const auto& item : witInfo.witnessSelectionPoolFiltered)
+    {
+        LogPrintf("outpoint %d\n", item.outpoint.n);
+        LogPrintf("coin %d\n", item.coin.nHeight);
+        LogPrintf("weight %s\n", item.nWeight);
+        LogPrintf("age %s\n", item.nAge);
+        LogPrintf("cumulative %s\n", item.nCumulativeWeight);
+    }
+    LogPrintf("unfiltered:\n");
+    for (const auto& item : witInfo.witnessSelectionPoolUnfiltered)
+    {
+        LogPrintf("outpoint %d\n", item.outpoint.n);
+        LogPrintf("coin %d\n", item.coin.nHeight);
+        LogPrintf("weight %s\n", item.nWeight);
+        LogPrintf("age %s\n", item.nAge);
+        LogPrintf("cumulative %s\n", item.nCumulativeWeight);
+    }
+    LogPrintf("<<<witinfo\n");
+}*/
+
 /** Apply the effects of this block (with given index) on the UTXO set represented by coins.
  *  Validity checks that depend on the UTXO set are also done; ConnectBlock()
  *  can fail if those validity checks fail (among other reasons). */
