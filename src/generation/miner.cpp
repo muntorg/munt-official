@@ -317,11 +317,11 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     //Until PoW2 activates mining subsidy remains full, after it activates PoW part of subsidy is reduced.
     //fixme: (PHASE5) (CLEANUP) - We can remove this after phase4 becomes active.
     Consensus::Params consensusParams = chainparams.GetConsensus();
-    CAmount nSubsidy = GetBlockSubsidy(nHeight);
+    CAmount nSubsidy = GetBlockSubsidy(nHeight).total;
     CAmount nSubsidyWitness = 0;
     if (nParentPoW2Phase >= 3)
     {
-        nSubsidyWitness = GetBlockSubsidyWitness(nHeight);
+        nSubsidyWitness = GetBlockSubsidy(nHeight).witness;
         nSubsidy -= nSubsidyWitness;
     }
 
@@ -329,9 +329,9 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     // First 'active' block of phase 4 (first block with a phase 4 parent) contains two witness subsidies so miner loses out on 20 NLG for this block
     // This block is treated special. (but special casing can dissapear for PHASE5 release.
     if (nGrandParentPoW2Phase == 3 && nParentPoW2Phase == 4)
-        nSubsidy -= GetBlockSubsidyWitness(nHeight-1);
+        nSubsidy -= GetBlockSubsidy(nHeight-1).witness;
     
-    CAmount nSubsidyDev = GetBlockSubsidyDev(nHeight);
+    CAmount nSubsidyDev = GetBlockSubsidy(nHeight).dev;
     nSubsidy -= nSubsidyDev;
 
     // PoW mining on top of a PoS block during phase 3 indicates an error of some kind.
