@@ -600,7 +600,7 @@ void static GuldenWitness()
                         }
 
                         boost::this_thread::interruption_point();
-                        CAmount witnessBlockSubsidy = GetBlockSubsidyWitness(candidateIter->nHeight);
+                        CAmount witnessBlockSubsidy = GetBlockSubsidy(candidateIter->nHeight).witness;
                         CAmount witnessFeesSubsidy = 0;
 
                         bool isMineAny = (pactiveWallet->IsMineWitness(witnessInfo.selectedWitnessTransaction) == ISMINE_WITNESS);

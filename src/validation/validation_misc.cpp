@@ -89,79 +89,100 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const CChainPar
 }
 
 
-const int finalSubsidyBlock = 2660178;
-CAmount GetBlockSubsidy(uint64_t nHeight)
+const int finalSubsidyBlock = 17727500;
+BlockSubsidy GetBlockSubsidy(uint64_t nHeight)
 {
     static bool fRegTest = GetBoolArg("-regtest", false);
     if (fRegTest)
-        return 50 * COIN;
+        return BlockSubsidy(50*COIN, 0, 0);
 
-    CAmount nSubsidy = 0;
     if(nHeight == 1)
     {
-        nSubsidy = 170000000 * COIN; // First block (premine)
+        return BlockSubsidy(170000000*COIN, 0, 0); // First block (premine)
     }
     else if(nHeight < Params().GetConsensus().fixedRewardReductionHeight)
     {
-        nSubsidy = 1000 * COIN; // 1000 Gulden per block for first 250k blocks
+        return BlockSubsidy(1000*COIN, 0, 0); // 1000 Gulden per block for first 250k blocks
     }
     else if(nHeight < Params().GetConsensus().devBlockSubsidyActivationHeight)
     {
-        nSubsidy = 100 * COIN; // 100 Gulden per block (fixed reward/no halving)
+        return BlockSubsidy(100*COIN, 0, 0); // 100 Gulden per block (fixed reward/no halving)
     }
     else if (nHeight < Params().GetConsensus().pow2Phase4FirstBlockHeight+1)
     {
-        nSubsidy = 110 * COIN; // 110 Gulden per block (fixed reward/no halving) - 50 mining, 40 development, 20 witness.
+        return BlockSubsidy(50*COIN, 20*COIN, 40*COIN); // 110 Gulden per block (fixed reward/no halving) - 50 mining, 40 development, 20 witness.
     }
     else if(nHeight <= 1226651)
     {
-        nSubsidy = 120 * COIN; // 120 Gulden per block (fixed reward/no halving) - 50 mining, 40 development, 30 witness.
+        return BlockSubsidy(50*COIN, 30*COIN, 40*COIN); // 120 Gulden per block (fixed reward/no halving) - 50 mining, 40 development, 30 witness.
     }
     else if(nHeight <= 1228003)
     {
-        nSubsidy = 200 * COIN; // 200 Gulden per block (fixed reward/no halving) - 90 mining, 80 development, 30 witness. (This was a mistake which is rectified at block 1228000
+        return BlockSubsidy(90*COIN, 30*COIN, 80*COIN); // 200 Gulden per block (fixed reward/no halving) - 90 mining, 80 development, 30 witness.
     }
-    else if(nHeight <= finalSubsidyBlock)
+    else if(nHeight <= Params().GetConsensus().halvingIntroductionHeight)
     {
-        nSubsidy = 160 * COIN; // 160 Gulden per block (fixed reward/no halving) - 50 mining, 80 development, 30 witness.
+        return BlockSubsidy(50*COIN, 30*COIN, 80*COIN); // 160 Gulden per block (fixed reward/no halving) - 50 mining, 80 development, 30 witness.
     }
-    return nSubsidy;
-}
-
-CAmount GetBlockSubsidyWitness(uint64_t nHeight)
-{
-    CAmount nSubsidy=0;
-    if (nHeight < Params().GetConsensus().pow2Phase3FirstBlockHeight)
+    // From this point on reward is as follows:
+    // 90 Gulden per block; 10 mining, 15 witness, 65 development
+    // Halving every 842500 blocks (roughly 4 years)
+    // Rewards truncated to a maximum of 2 decimal places if large enough to have a number on the left of the decimal place
+    // Otherwise truncated to 3 decimal places (if first place is occupied with a non zero number or otherwise a maximum of 4 decimal places
+    // This is done to keep numbers a bit cleaner and more manageable
+    // Halvings as follows:
+    // 5 mining, 7.5 witness, 32.5 development
+    // 2.5 mining, 3.75 witness, 16.25 development
+    // 1.25 mining, 1.87 witness, 8.12 development
+    // 0.625 mining, 0.937 witness, 4.06 development
+    // 0.312 mining, 0.468 witness, 2.03 development
+    // 0.156 mining, 0.234 witness, 1.01 development
+    // 0.0781 mining, 0.117 witness, 0.507 development
+    // 0.0390 mining, 0.0585 witness, 0.253 development
+    // 0.0195 mining, 0.0292 witness, 0.126 development
+    // 0.0976 mining, 0.0146 witness, 0.634 development
+    // 0.0488 mining, 0.0732 witness, 0.317 development
+    // 0.0244 mining, 0.0366 witness, 0.158 development
+    // 0.0122 mining, 0.0183 witness, 0.0793 development
+    // 0.0061 mining, 0.0091 witness, 0.0396 development
+    // 0.0030 mining, 0.0045 witness, 0.0198 development
+    // 0.0015 mining, 0.0022 witness, 0.0099 development
+    // 0.0007 mining, 0.0011 witness, 0.0049 development
+    // 0.0003 mining, 0.0005 witness, 0.0024 development
+    // 0.0001 mining, 0.0002 witness, 0.0012 development
+    else
     {
-        nSubsidy = 0;
+        // NB! We could use some bit shifts and other tricks here to do the halving calculations (the specific truncation rounding we are using makes it a bit difficult)
+        // However we opt instead for this simple human readable "table" layout so that it is easier for humans to inspect/verify this.
+        int nHalvings = (nHeight - 1 - Params().GetConsensus().halvingIntroductionHeight) / 842500;
+        switch(nHalvings)
+        {
+            case 0:  return BlockSubsidy(1000000*MILLICENT, 1500000*MILLICENT, 6500000*MILLICENT);
+            case 1:  return BlockSubsidy( 500000*MILLICENT,  750000*MILLICENT, 3250000*MILLICENT);
+            case 2:  return BlockSubsidy( 250000*MILLICENT,  375000*MILLICENT, 1625000*MILLICENT);
+            case 3:  return BlockSubsidy( 125000*MILLICENT,  187000*MILLICENT, 812000*MILLICENT );
+            case 4:  return BlockSubsidy(  62500*MILLICENT,   93700*MILLICENT, 406000*MILLICENT );
+            case 5:  return BlockSubsidy(  31200*MILLICENT,   46800*MILLICENT, 203000*MILLICENT );
+            case 6:  return BlockSubsidy(  15600*MILLICENT,   23400*MILLICENT, 101000*MILLICENT );
+            case 7:  return BlockSubsidy(   7810*MILLICENT,   11700*MILLICENT,  50700*MILLICENT );
+            case 8:  return BlockSubsidy(   3900*MILLICENT,    5850*MILLICENT,  25300*MILLICENT );
+            case 9:  return BlockSubsidy(   1950*MILLICENT,    2920*MILLICENT,  12600*MILLICENT );
+            case 10: return BlockSubsidy(    976*MILLICENT,    1460*MILLICENT,   6340*MILLICENT );
+            case 11: return BlockSubsidy(    488*MILLICENT,     732*MILLICENT,   3170*MILLICENT );
+            case 12: return BlockSubsidy(    244*MILLICENT,     366*MILLICENT,   1580*MILLICENT );
+            case 13: return BlockSubsidy(    122*MILLICENT,     183*MILLICENT,    793*MILLICENT );
+            case 14: return BlockSubsidy(     61*MILLICENT,      91*MILLICENT,    396*MILLICENT );
+            case 15: return BlockSubsidy(     30*MILLICENT,      45*MILLICENT,    198*MILLICENT );
+            case 16: return BlockSubsidy(     15*MILLICENT,      22*MILLICENT,     99*MILLICENT );
+            case 17: return BlockSubsidy(      7*MILLICENT,      11*MILLICENT,     49*MILLICENT );
+            case 18: return BlockSubsidy(      3*MILLICENT,       5*MILLICENT,     24*MILLICENT );
+            case 19: if (nHeight <= finalSubsidyBlock)
+                     {
+                         return BlockSubsidy(  1*MILLICENT,       2*MILLICENT,     12*MILLICENT );
+                     }
+        }
     }
-    else if (nHeight < Params().GetConsensus().pow2Phase4FirstBlockHeight+1)
-    {
-        nSubsidy = 20 * COIN; // 100 Gulden per block (no halving) - 80 mining, 20 witness
-    }
-    else if(nHeight <= 1226651)
-    {
-        nSubsidy = 30 * COIN; // 120 Gulden per block (fixed reward/no halving) - 50 mining, 40 development, 30 witness.
-    }
-    else if(nHeight <= finalSubsidyBlock)
-    {
-        nSubsidy = 30 * COIN; // 160 Gulden per block (fixed reward/no halving) - 50 mining, 80 development, 30 witness.
-    }
-    return nSubsidy;
-}
-
-CAmount GetBlockSubsidyDev(uint64_t nHeight)
-{
-    CAmount nSubsidy = 0;
-    if(nHeight >= Params().GetConsensus().devBlockSubsidyActivationHeight && nHeight <= 1226651) // 120 Gulden per block (no halving) - 50 mining, 40 development, 30 witness.
-    {
-        nSubsidy = 40 * COIN;
-    }
-    else if(nHeight >= Params().GetConsensus().devBlockSubsidyActivationHeight && nHeight <= finalSubsidyBlock) // 160 Gulden per block (no halving) - 50 mining, 80 development, 30 witness.
-    {
-        nSubsidy = 80 * COIN;
-    }
-    return nSubsidy;
+    return BlockSubsidy(0, 0, 0);
 }
 
 bool IsInitialBlockDownload()
