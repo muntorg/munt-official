@@ -93,12 +93,16 @@ const int finalSubsidyBlock = 17727500;
 BlockSubsidy GetBlockSubsidy(uint64_t nHeight)
 {
     static bool fRegTest = GetBoolArg("-regtest", false);
+    static bool fTestnet = IsArgSet("-testnet");
     if (fRegTest)
         return BlockSubsidy(50*COIN, 0, 0);
 
     if(nHeight == 1)
     {
-        return BlockSubsidy(170000000*COIN, 0, 0); // First block (premine)
+        CAmount witnessSubsidyGenesis=0;
+        if (fTestnet)
+            witnessSubsidyGenesis=30*COIN;
+        return BlockSubsidy(170000000*COIN, witnessSubsidyGenesis, 0); // First block (premine)
     }
     else if(nHeight < Params().GetConsensus().fixedRewardReductionHeight)
     {
