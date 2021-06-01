@@ -764,7 +764,7 @@ bool GenerateSimplifiedWitnessUTXODeltaUndoForHeader(std::vector<unsigned char>&
                 for (const auto& addItem : deltaItem.addedItems)
                 {
                     auto addIter = pow2SimplifiedWitnessUTXOUndo.witnessCandidates.find(addItem);
-                    deltaUndoStream << (uint64_t)pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addIter);
+                    deltaUndoStream << VARINT(pow2SimplifiedWitnessUTXOUndo.witnessCandidates.index_of(addIter));
                     pow2SimplifiedWitnessUTXOUndo.witnessCandidates.erase(addIter);
                 }
                 for (const auto& removeItem : deltaItem.removedItems)
