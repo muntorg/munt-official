@@ -58,10 +58,12 @@ public:
     bool NotifyTransaction(const CTransaction &transaction);
 };
 
+#ifdef ENABLE_WALLET
 class CZMQPublishWalletTransactionNotifier : public CZMQAbstractPublishNotifier
 {
 public:
-    bool NotifyTransaction(const CTransaction &transaction);
+    bool NotifyWalletTransaction(CWallet* const pWallet, const CWalletTx &wtx);
 };
+#endif
 
 #endif // ZMQ_ZMQPUBLISHNOTIFIER_H

@@ -1175,6 +1175,8 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
             }
 
             bool ret = AddToWallet(wtx, false);
+            //NB! We delibritely do this from here and not inside AddToWallet, because we sometimes add transactions that are not ours via AddToWallet (e.g. see lower down in this function where we add the incoming transactions)
+            GetMainSignals().WalletTransactionAdded(this, wtx);
 
             // Update account state
             //fixme: (PHASE5) - More efficient way to do this?

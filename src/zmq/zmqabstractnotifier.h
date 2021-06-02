@@ -6,6 +6,9 @@
 #define ZMQ_ZMQABSTRACTNOTIFIER_H
 
 #include "zmqconfig.h"
+#ifdef ENABLE_WALLET
+#include <wallet/wallet.h>
+#endif
 
 class CBlockIndex;
 class CZMQAbstractNotifier;
@@ -35,6 +38,9 @@ public:
     virtual bool NotifyBlock(const CBlockIndex *pindex);
     virtual bool NotifyStalledWitness(const CBlockIndex* pDelayedIndex, uint64_t nSecondsDelayed);
     virtual bool NotifyTransaction(const CTransaction &transaction);
+    #ifdef ENABLE_WALLET
+    virtual bool NotifyWalletTransaction(CWallet* const pWallet, const CWalletTx &wtx);
+    #endif
 
 protected:
     void *psocket;
