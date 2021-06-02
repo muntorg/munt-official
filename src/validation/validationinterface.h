@@ -24,6 +24,10 @@
 
 #include "primitives/transaction.h" // CTransaction(Ref)
 
+#ifdef ENABLE_WALLET
+class CWalletTx;
+#endif
+
 class CBlock;
 class CBlockIndex;
 struct CBlockLocator;
@@ -51,6 +55,9 @@ public:
     virtual void UpdatedBlockTip([[maybe_unused]] const CBlockIndex *pindexNew, [[maybe_unused]] const CBlockIndex *pindexFork, [[maybe_unused]] bool fInitialDownload) {}
     virtual void TransactionAddedToMempool([[maybe_unused]] const CTransactionRef &ptxn) {}
     virtual void TransactionDeletedFromMempool([[maybe_unused]] const uint256 &hash, [[maybe_unused]] MemPoolRemovalReason reason) {}
+    #ifdef ENABLE_WALLET
+    virtual void WalletTransactionAdded([[maybe_unused]] CWallet* const pWallet, [[maybe_unused]] const CWalletTx& wtx) {}
+    #endif
     virtual void BlockConnected([[maybe_unused]] const std::shared_ptr<const CBlock> &block, [[maybe_unused]] const CBlockIndex *pindex, [[maybe_unused]] const std::vector<CTransactionRef> &txnConflicted) {}
     virtual void BlockDisconnected([[maybe_unused]] const std::shared_ptr<const CBlock> &block) {}
     virtual void SetBestChain([[maybe_unused]] const CBlockLocator &locator) {}
@@ -72,6 +79,10 @@ struct CMainSignals {
     boost::signals2::signal<void (const CTransactionRef &)> TransactionAddedToMempool;
     /** Notifies listeners of a transaction having been removed from mempool. Currently only triggered with MemPoolRemovalReason::EXPIRY. */
     boost::signals2::signal<void (const uint256& hash, MemPoolRemovalReason reason)> TransactionDeletedFromMempool;
+    #ifdef ENABLE_WALLET
+    /** Notifies listeners of a transaction having been added to the wallet. */
+    boost::signals2::signal<void (CWallet* const pWallet, const CWalletTx& wtx)> WalletTransactionAdded;
+    #endif
     /**
      * Notifies listeners of a block being connected.
      * Provides a vector of transactions evicted from the mempool as a result.

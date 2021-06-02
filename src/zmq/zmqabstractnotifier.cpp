@@ -11,17 +11,24 @@ CZMQAbstractNotifier::~CZMQAbstractNotifier()
     assert(!psocket);
 }
 
-bool CZMQAbstractNotifier::NotifyBlock(const CBlockIndex * /*CBlockIndex*/)
+bool CZMQAbstractNotifier::NotifyBlock(const CBlockIndex* /*CBlockIndex*/)
 {
     return true;
 }
 
-bool CZMQAbstractNotifier::NotifyStalledWitness(const CBlockIndex* pDelayedIndex, uint64_t nSecondsDelayed)
+bool CZMQAbstractNotifier::NotifyStalledWitness(const CBlockIndex* /*pDelayedIndex*/, uint64_t /*nSecondsDelayed*/)
 {
     return true;
 }
 
-bool CZMQAbstractNotifier::NotifyTransaction(const CTransaction &/*transaction*/)
+bool CZMQAbstractNotifier::NotifyTransaction(const CTransaction& /*transaction*/)
 {
     return true;
 }
+
+#ifdef ENABLE_WALLET
+bool CZMQAbstractNotifier::NotifyWalletTransaction(CWallet* const pWallet, const CWalletTx& /*wtx*/)
+{
+    return true;
+}
+#endif
