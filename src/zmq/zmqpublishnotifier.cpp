@@ -17,16 +17,13 @@
 #include "util.h"
 #include "rpc/server.h"
 
-#ifdef ENABLE_WALLET
-#include <wallet/wallet.h>
-#endif
-
 static std::multimap<std::string, CZMQAbstractPublishNotifier*> mapPublishNotifiers;
 
 static const char *MSG_HASHBLOCK = "hashblock";
 static const char *MSG_HASHTX    = "hashtx";
 static const char *MSG_RAWBLOCK  = "rawblock";
 static const char *MSG_RAWTX     = "rawtx";
+static const char *MSG_WALLETTX     = "wallettx";
 static const char *MSG_STALLEDWITNESS = "stalledwitness";
 
 // Internal function to send multipart message
@@ -220,28 +217,19 @@ bool CZMQPublishRawTransactionNotifier::NotifyTransaction(const CTransaction &tr
 
 #ifdef ENABLE_WALLET
 extern void WalletTxToJSON(const CWalletTx& wtx, UniValue& entry);
-#endif
-bool CZMQPublishWalletTransactionNotifier::NotifyTransaction(const CTransaction &transaction)
+extern void ListTransactions(CWallet* const pwallet, const CWalletTx& wtx, const std::string& strAccount, int nMinDepth, bool fLong, UniValue& ret, const isminefilter& filter);
+bool CZMQPublishWalletTransactionNotifier::NotifyWalletTransaction(CWallet* const pWallet_, const CWalletTx& wtx)
 {
-    #ifdef ENABLE_WALLET
-    if (pactiveWallet && pactiveWallet->IsMine(transaction))
-    {
-        uint256 hash = transaction.GetHash();
-        LogPrint(BCLog::ZMQ, "zmq: Publish wallettx %s\n", hash.GetHex());
-
-        const CWalletTx& wtx = pactiveWallet->mapWallet[hash];
-        if (!pactiveWallet->mapWallet.count(hash))
-        {
-            LogPrint(BCLog::ZMQ, "zmq: invalid or non-wallet transaction id\n", hash.GetHex());
-        }
-        
-        UniValue entry(UniValue::VOBJ);
-        WalletTxToJSON(wtx, entry);
-        
-        std::string transactionJSON = entry.get_str();
-        
-        return SendMessage(MSG_RAWTX, &(*transactionJSON.begin()), transactionJSON.size());
-    }
-    #endif
-    return true;
+    uint256 hash = wtx.GetHash();
+    LogPrint(BCLog::ZMQ, "zmq: Publish wallettx %s\n", hash.GetHex());
+          
+    UniValue entry(UniValue::VOBJ);
+    WalletTxToJSON(wtx, entry);
+    UniValue details(UniValue::VARR);
+    ListTransactions(pWallet_, wtx, "*", 0, false, details, ISMINE_SPENDABLE);
+    entry.push_back(Pair("details", details));
+            
+    std::string transactionJSON = entry.write();
+    return SendMessage(MSG_WALLETTX, &(*transactionJSON.begin()), transactionJSON.size());
 }
+#endif

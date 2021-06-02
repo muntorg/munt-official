@@ -28,6 +28,9 @@ void RegisterValidationInterface(CValidationInterface* pwalletIn)
     g_signals.UpdatedBlockTip.connect(boost::bind(&CValidationInterface::UpdatedBlockTip, pwalletIn, _1, _2, _3));
     g_signals.TransactionAddedToMempool.connect(boost::bind(&CValidationInterface::TransactionAddedToMempool, pwalletIn, _1));
     g_signals.TransactionDeletedFromMempool.connect(boost::bind(&CValidationInterface::TransactionDeletedFromMempool, pwalletIn, _1, _2));
+    #ifdef ENABLE_WALLET
+    g_signals.WalletTransactionAdded.connect(boost::bind(&CValidationInterface::WalletTransactionAdded, pwalletIn, _1, _2));
+    #endif
     g_signals.BlockConnected.connect(boost::bind(&CValidationInterface::BlockConnected, pwalletIn, _1, _2, _3));
     g_signals.BlockDisconnected.connect(boost::bind(&CValidationInterface::BlockDisconnected, pwalletIn, _1));
     g_signals.SetBestChain.connect(boost::bind(&CValidationInterface::SetBestChain, pwalletIn, _1));
@@ -51,6 +54,9 @@ void UnregisterValidationInterface(CValidationInterface* pwalletIn)
     g_signals.BlockConnected.disconnect(boost::bind(&CValidationInterface::BlockConnected, pwalletIn, _1, _2, _3));
     g_signals.TransactionAddedToMempool.disconnect(boost::bind(&CValidationInterface::TransactionAddedToMempool, pwalletIn, _1));
     g_signals.TransactionDeletedFromMempool.disconnect(boost::bind(&CValidationInterface::TransactionDeletedFromMempool, pwalletIn, _1, _2));
+    #ifdef ENABLE_WALLET
+    g_signals.WalletTransactionAdded.disconnect(boost::bind(&CValidationInterface::WalletTransactionAdded, pwalletIn, _1, _2));
+    #endif
     g_signals.UpdatedBlockTip.disconnect(boost::bind(&CValidationInterface::UpdatedBlockTip, pwalletIn, _1, _2, _3));
     g_signals.StalledWitness.disconnect(boost::bind(&CValidationInterface::StalledWitness, pwalletIn, _1, _2));
     g_signals.PruningConflictingBlock.disconnect(boost::bind(&CValidationInterface::PruningConflictingBlock, pwalletIn, _1));
