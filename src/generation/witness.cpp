@@ -442,7 +442,7 @@ void static GuldenWitness()
 
     static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
     static bool regTest = GetBoolArg("-regtest", false);
-    static bool testNet = GetBoolArg("-testnet", false);
+    static bool testNet = IsArgSet("-testnet");
 
     CChainParams chainparams = Params();
     try
