@@ -389,7 +389,11 @@ public:
     void GetAllCoins(std::map<COutPoint, Coin>& allCoins) const override
     {
         base->GetAllCoins(allCoins);
-
+        
+        // It is possible (in fact likely) for the same batch to be both erasing and writing the same entryref e.g. if swapping one block 1963 for a competing block 1963
+        // cacheCoins is 'randomly' ordered so doing this would create random behaviour and an inconsistent coin database
+        // To overcome this we erase first always, and then pool up the inserts to do at the end
+        std::vector<std::pair<COutPoint, Coin>> addCoins;
         for (auto iter : cacheCoins)
         {
             if (iter.second.coin.out.IsNull())
@@ -401,29 +405,24 @@ public:
             }
             else
             {
-                allCoins[iter.first] = iter.second.coin;
+                addCoins.push_back(std::pair(iter.first, iter.second.coin));
             }
+        }
+        for (const auto& [outPoint, coin] : addCoins)
+        {
+            allCoins[outPoint] = coin;
         }
     }
     
     void GetAllCoinsIndexBased(std::map<COutPoint, Coin>& allCoinsIndexBased) const override
     {
-        base->GetAllCoinsIndexBased(allCoinsIndexBased);
-
-        for (auto iter : cacheCoins)
+        std::map<COutPoint, Coin> allCoins;
+        GetAllCoins(allCoins);
+        
+        for (const auto& [outPoint, coin] : allCoins)
         {
-            COutPoint indexBased(iter.second.coin.nHeight, iter.second.coin.nTxIndex, iter.first.n);
-            if (iter.second.coin.out.IsNull())
-            {
-                if (allCoinsIndexBased.find(indexBased) != allCoinsIndexBased.end())
-                {
-                    allCoinsIndexBased.erase(indexBased);
-                }
-            }
-            else
-            {
-                allCoinsIndexBased[indexBased] = iter.second.coin;
-            }
+            COutPoint indexBased(coin.nHeight, coin.nTxIndex, outPoint.n);
+            allCoinsIndexBased[indexBased] = coin;
         }
     }
 
