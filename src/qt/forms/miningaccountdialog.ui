@@ -377,7 +377,7 @@
              <item row="2" column="1">
               <widget class="QLabel" name="labelBestMiningSpeed">
                <property name="text">
-                <string notr="true">0</string>
+                <string notr="true">0.00</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -387,7 +387,7 @@
              <item row="3" column="1">
               <widget class="QLabel" name="labelLastArenaSetupTime">
                <property name="text">
-                <string notr="true">0</string>
+                <string notr="true">0.00</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -411,7 +411,7 @@
              <item row="0" column="1">
               <widget class="QLabel" name="labelLastMiningSpeed">
                <property name="text">
-                <string notr="true">0</string>
+                <string notr="true">0.00</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -428,7 +428,7 @@
              <item row="1" column="1">
               <widget class="QLabel" name="labelAverageMiningSpeed">
                <property name="text">
-                <string notr="true">0</string>
+                <string notr="true">0.00</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

@@ -348,13 +348,13 @@ void MiningAccountDialog::slotStopMining()
     ui->miningStopminingButton->setVisible(false);
     ui->miningStartminingButton->setVisible(true);
     
-    ui->labelLastMiningSpeed->setText("0.0");
+    ui->labelLastMiningSpeed->setText("0.00");
     ui->labelLastMiningSpeedUnits->setText(" Mh/s");
-    ui->labelAverageMiningSpeed->setText("0.0");
+    ui->labelAverageMiningSpeed->setText("0.00");
     ui->labelAverageMiningSpeedUnits->setText(" Mh/s");
-    ui->labelBestMiningSpeed->setText("0.0");
+    ui->labelBestMiningSpeed->setText("0.00");
     ui->labelBestMiningSpeedUnits->setText(" Mh/s");
-    ui->labelLastArenaSetupTime->setText("0");
+    ui->labelLastArenaSetupTime->setText("0.00");
 }
 
 void MiningAccountDialog::slotKeepOpenWhenMining()
