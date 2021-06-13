@@ -28,6 +28,13 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, CTxUndo &txund
 
 //fixme: (PHASE5) Add additional tests for new segsig related coin features.
 
+template <typename T>
+T& operator<<(T& os, const COutPoint& op)
+{
+    os << op.ToString();
+    return os;
+}
+
 namespace
 {
 //! equality test
@@ -111,7 +118,7 @@ public:
 
 }
 
-BOOST_FIXTURE_TEST_SUITE(coins_tests, BasicTestingSetup)
+BOOST_FIXTURE_TEST_SUITE(coins_tests, TestingSetup)
 
 static const unsigned int NUM_SIMULATION_ITERATIONS = 40000;
 
@@ -554,6 +561,274 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
 
     // Verify coverage.
     BOOST_CHECK(spent_a_duplicate_coinbase);
+}
+
+// This test is similar to the previous test except the emphasis is on testing the functionality of index based outpoints
+// In particular it is tested that when reorganising multiple times (multiple different transactions with the same index) that the index remains consistent
+BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
+{
+    fPrintToConsole = true;
+
+    // A simple map to track what we expect the cache stack to represent.
+    std::map<COutPoint, Coin> resultHashBased;
+    std::map<COutPoint, COutPoint> resultIndexBased;
+    uint64_t heightOffset = 100;
+    uint64_t blockCount = 0;
+    std::vector<std::vector<CTransaction>> blocks;
+    std::vector<std::vector<CTransaction>> removedblocks;
+    std::vector<std::vector<CTxUndo>> blockUndo;
+    std::map<COutPoint, std::tuple<uint64_t, uint64_t, uint64_t>> allCoins;
+    
+    // The cache stack.
+    CCoinsViewDB& base = *pcoinsdbview; //Proper coins view db as the base
+    std::vector<CCoinsViewCacheTest*> stack; // A stack of CCoinsViewCaches on top.
+    stack.push_back(new CCoinsViewCacheTest(&base)); // Start with one cache.
+    
+    // "Genesis" block
+    {
+        blockCount = 1;
+        blocks.push_back(std::vector<CTransaction>());
+        blockUndo.push_back(std::vector<CTxUndo>());
+        
+        CMutableTransaction tx(CTransaction::CURRENT_VERSION);
+        tx.vin.resize(1);
+        tx.vout.resize(100);
+        for (int outputIndex=0; outputIndex<100; ++outputIndex)
+        {
+            tx.vout[outputIndex].nValue = outputIndex; //Keep txs unique unless intended to duplicate
+            tx.vout[outputIndex].output.scriptPubKey.assign(InsecureRand32() & 0x3F, 0); // Random sizes so we can test memory usage accounting
+        }        
+        assert(CTransaction(tx).IsCoinBase());
+        
+        for (uint64_t outputIndex = 0; outputIndex < 100; ++outputIndex)
+        {
+            allCoins[COutPoint(tx.GetHash(), outputIndex)] = std::tuple(heightOffset+blockCount-1, 0, outputIndex);
+        }
+        
+        // Call UpdateCoins on the top cache
+        CTxUndo undo;
+        UpdateCoins(tx, *(stack.back()), undo, heightOffset, 0);
+        
+        blocks[blockCount-1].push_back(tx);
+        blockUndo[blockCount-1].push_back(undo);
+    }
+    
+    bool lastActionWasDisconnect=false;
+    for (unsigned int simStep = 0; simStep < NUM_SIMULATION_ITERATIONS; simStep++)
+    {
+        uint32_t randiter = InsecureRand32();
+
+        // For first 100 iterations add a new block so we have something to work with that
+        // After that 5/20 times, add a new "block"
+        if (simStep<100 || randiter % 20 < 10)
+        {
+            //Simulate connecting a block
+            ++blockCount;
+            
+            LogPrintf("Connect block [%d]\n", blockCount+heightOffset);
+            blocks.push_back(std::vector<CTransaction>());
+            blockUndo.push_back(std::vector<CTxUndo>());
+            
+            /*if (lastActionWasDisconnect)
+            {
+                for (const auto& removedTransaction : removedblocks.back())
+                {
+                    // Call UpdateCoins on the top cache
+                    CTxUndo undo;
+                    UpdateCoins(removedTransaction, *(stack.back()), undo, heightOffset+blockCount-1, txIndex);
+                    blocks[blockCount-1].push_back(removedTransaction);
+                    blockUndo[blockCount-1].push_back(undo);
+                }
+            }
+            else*/
+            {    
+                uint64_t numTransactions = (randiter % 3) + 1;
+                for (uint64_t txIndex=0; txIndex < numTransactions; ++txIndex)
+                {
+                    uint64_t numInputs = (randiter % 3) + 1;
+                    uint64_t numOutputs = (randiter % 3) + 1;
+
+                    CMutableTransaction tx(CTransaction::CURRENT_VERSION);
+                    tx.vin.resize(numInputs);
+                    for (uint64_t inputIndex = 0; inputIndex < numInputs; ++inputIndex)
+                    {
+                        uint64_t selectedInput = InsecureRand32() % allCoins.size();
+                        auto selectedCoinIter = allCoins.begin();
+                        
+                        // Prevent selection from same block we are in
+                        while (true)
+                        {
+                            std::advance(selectedCoinIter, selectedInput);
+                            if (std::get<0>(selectedCoinIter->second) != blockCount+heightOffset-1)
+                                break;  
+                            selectedInput = InsecureRand32() % allCoins.size();
+                            selectedCoinIter = allCoins.begin();
+                        }
+                        
+                        // Use index based outpoints half the time, but only once we are a little bit into the simulation, so that we first rule out problems with regular inputs
+                        bool indexBased = false;
+                        if (simStep>400)
+                            indexBased = (InsecureRand32() % 100) < 80;
+                        
+                        if (indexBased)
+                        {
+                            tx.vin[inputIndex] = CTxIn(COutPoint(std::get<0>(selectedCoinIter->second), std::get<1>(selectedCoinIter->second), std::get<2>(selectedCoinIter->second)), CScript(), 0, 0);
+                            LogPrintf("Spend output as index input [%s] [%s]\n", COutPoint(std::get<0>(selectedCoinIter->second), std::get<1>(selectedCoinIter->second), std::get<2>(selectedCoinIter->second)).ToString(), selectedCoinIter->first.ToString());
+                        }
+                        else
+                        {
+                            tx.vin[inputIndex] = CTxIn(selectedCoinIter->first, CScript(), 0, 0);
+                            LogPrintf("Spend output as hash input [%s] [%s]\n", selectedCoinIter->first.ToString(), COutPoint(std::get<0>(selectedCoinIter->second), std::get<1>(selectedCoinIter->second), std::get<2>(selectedCoinIter->second)).ToString());
+                        }
+                        allCoins.erase(selectedCoinIter);
+                    }
+                    tx.vout.resize(numOutputs);
+                    for (uint64_t outputIndex = 0; outputIndex < numOutputs; ++outputIndex)
+                    {
+                        tx.vout[outputIndex].nValue = simStep; //Keep txs unique unless intended to duplicate
+                        tx.vout[outputIndex].output.scriptPubKey.assign(InsecureRand32() & 0x3F, 0); // Random sizes so we can test memory usage accounting                    
+                    }
+                    assert(!CTransaction(tx).IsCoinBase());
+                    
+                    for (uint64_t outputIndex = 0; outputIndex < numOutputs; ++outputIndex)
+                    {
+                        LogPrintf("Create output [%s] [%s]\n", COutPoint(tx.GetHash(), outputIndex).ToString(), COutPoint(heightOffset+blockCount-1, txIndex, outputIndex).ToString());
+                        allCoins[COutPoint(tx.GetHash(), outputIndex)] = std::tuple(heightOffset+blockCount-1, txIndex, outputIndex);
+                    }
+                    
+                    // Call UpdateCoins on the top cache
+                    CTxUndo undo;
+                    UpdateCoins(tx, *(stack.back()), undo, heightOffset+blockCount-1, txIndex);
+                    blocks[blockCount-1].push_back(tx);
+                    blockUndo[blockCount-1].push_back(undo);
+                }
+            }
+            
+            lastActionWasDisconnect = false;
+        }
+        else if (randiter % 20 < 18)
+        {
+            //Simulate disconnecting a block
+            LogPrintf("Disconnect block [%d]\n", blockCount+heightOffset);
+            
+            int txIndex=0;
+            for (const auto& tx :  blocks[blockCount-1])
+            {
+                // Remove outputs
+                int outputIndex=0;
+                for (const auto& txOut : tx.vout)
+                {
+                    LogPrintf("Spend output [%s]\n", COutPoint(tx.GetHash(), outputIndex).ToString());
+                    allCoins.erase(allCoins.find(COutPoint(tx.GetHash(), outputIndex)));
+
+                    stack.back()->SpendCoin(COutPoint(tx.GetHash(), outputIndex));
+                    ++outputIndex;
+                }
+                
+                // restore inputs
+                if (!tx.IsCoinBase())
+                {
+                    CTxUndo &txundo = blockUndo[blockCount-1][txIndex];
+                    for (int64_t j = tx.vin.size(); j-- > 0;)
+                    {   
+                        const COutPoint &out = tx.vin[j].GetPrevOut();
+                        CoinUndo undo = txundo.vprevout[j];
+                        
+                        if (out.isHash)
+                        {
+                            assert(COutPoint(undo.prevhash, out.n) == out);
+                            LogPrintf("Unspend hash input [%s] [%s]\n", out.ToString(), COutPoint((uint64_t)undo.nHeight, undo.nTxIndex, out.n).ToString());
+                        }
+                        else
+                        {
+                            LogPrintf("Unspend index input [%s] [%s]\n", COutPoint((uint64_t)undo.nHeight, undo.nTxIndex, out.n).ToString(), COutPoint(undo.prevhash, out.n).ToString());
+                        }
+                        //NB! We delibritely don't use "out" as the outpoint here as we always want it to be hash based.
+                        allCoins[COutPoint(undo.prevhash, out.n)] = std::tuple((uint64_t)undo.nHeight, undo.nTxIndex, out.n);
+                        
+                        int res = ApplyTxInUndo(std::move(undo), *(stack.back()), out);
+                        BOOST_CHECK (res != DISCONNECT_FAILED);
+                    }
+                }
+                ++txIndex;
+            }
+            removedblocks.push_back(blocks[blockCount-1]);
+            blocks.pop_back();
+            blockUndo.pop_back();
+            --blockCount;
+            lastActionWasDisconnect = true;
+        }
+        else if (randiter % 20 == 19)
+        {
+            LogPrintf("Flush caches [%d]\n", blockCount);
+            if (stack.size() > 1)
+            {
+                unsigned int flushIndex = InsecureRandRange(stack.size() - 1);
+                stack[flushIndex]->Flush();
+            }
+        }
+        
+        // For every iteration make sure our expected UTXO matches our real UTXO
+        {
+            std::map<COutPoint, Coin> utxoAllCoins;
+            stack.back()->GetAllCoins(utxoAllCoins);
+            
+            std::vector<COutPoint> allCoinsL;
+            for (const auto& [outPoint, coins] : utxoAllCoins)
+            {
+                allCoinsL.push_back(outPoint);
+            }
+            std::vector<COutPoint> allCoinsR;
+            for (const auto& [key, value] : allCoins)
+            {
+                allCoinsR.push_back(key);
+            }
+            BOOST_REQUIRE_EQUAL_COLLECTIONS(allCoinsL.begin(), allCoinsL.end(), allCoinsR.begin(), allCoinsR.end());
+            
+            std::map<COutPoint, Coin> utxoAllCoinsIndexBased;
+            stack.back()->GetAllCoinsIndexBased(utxoAllCoinsIndexBased);
+            
+            std::vector<COutPoint> allCoinsIndexBasedL;
+            for (const auto& [outPoint, coins] : utxoAllCoinsIndexBased)
+            {
+                allCoinsIndexBasedL.push_back(outPoint);
+            }
+            std::vector<COutPoint> allCoinsIndexBasedR;
+            for (const auto& [key, value] : allCoins)
+            {
+                allCoinsIndexBasedR.push_back(COutPoint(std::get<0>(value), std::get<1>(value), std::get<2>(value)));
+            }
+            std::sort(allCoinsIndexBasedR.begin(), allCoinsIndexBasedR.end());
+            
+            BOOST_REQUIRE_EQUAL_COLLECTIONS(allCoinsIndexBasedL.begin(), allCoinsIndexBasedL.end(), allCoinsIndexBasedR.begin(), allCoinsIndexBasedR.end());
+            
+            
+            //fetchcoin
+            for (const auto& [key, value] : allCoins)
+            {
+                CDataStream CoinLStream(SER_DISK, CLIENT_VERSION);
+                {
+                    Coin CoinL;
+                    stack.back()->GetCoin(key, CoinL);
+                    CoinLStream << CoinL;
+                }
+                CDataStream CoinRStream(SER_DISK, CLIENT_VERSION);
+                {
+                    Coin CoinR;
+                    stack.back()->GetCoin(COutPoint(std::get<0>(value), std::get<1>(value), std::get<2>(value)), CoinR);
+                    CoinRStream << CoinR;
+                }
+                BOOST_CHECK_EQUAL(HexStr(CoinLStream.begin(), CoinLStream.end()), HexStr(CoinRStream.begin(), CoinRStream.end()));
+            }
+        }
+    }
+    
+    // Clean up the stack.
+    while (stack.size() > 0)
+    {
+        delete stack.back();
+        stack.pop_back();
+    }
 }
 
 
