@@ -119,7 +119,7 @@ public:
     }
 
     size_t DynamicMemoryUsage() const {
-        return RecursiveDynamicUsage(out);
+        return memusage::DynamicUsage(out.output.scriptPubKey);
     }
 };
 
