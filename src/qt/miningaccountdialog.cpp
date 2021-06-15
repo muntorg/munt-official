@@ -77,7 +77,7 @@ MiningAccountDialog::MiningAccountDialog(const QStyle *_platformStyle, QWidget *
     
     ui->miningArenaThreadSlider->setCursor(Qt::PointingHandCursor);
     ui->miningArenaThreadSlider->setContentsMargins(0, 0, 0, 0);
-    ui->miningArenaThreadSlider->setToolTip(tr("Increasing the number of threads will increase your arena setup time, but will also increase your energy usage and slow down other appliations that might be running."));
+    ui->miningArenaThreadSlider->setToolTip(tr("Changing the number of threads will affect your arena setup time. The optimal number of threads to use is machine specific using all available cores is not always fastest"));
     
     ui->miningMemorySlider->setCursor(Qt::PointingHandCursor);
     ui->miningMemorySlider->setContentsMargins(0, 0, 0, 0);
