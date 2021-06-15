@@ -538,7 +538,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>ClientModel</name>
     <message>
-        <location filename="../../clientmodel.cpp" line="+195"/>
+        <location filename="../../clientmodel.cpp" line="+187"/>
         <source>Network Alert</source>
         <translation>Network Alert</translation>
     </message>
@@ -988,7 +988,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Conversion estimate</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="+402"/>
+        <location filename="../../gui.cpp" line="+405"/>
         <source>&amp;Address</source>
         <translation>&amp;Address</translation>
     </message>
@@ -1003,7 +1003,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Operating in SPV mode (simple payment verification)</translation>
     </message>
     <message>
-        <location line="+1105"/>
+        <location line="+1106"/>
         <source>%1 block(s) remaining.</source>
         <translation>%1 block(s) remaining.</translation>
     </message>
@@ -1013,7 +1013,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Wallet balances</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="-830"/>
+        <location filename="../../gui.cpp" line="-831"/>
         <source>Check for Updates</source>
         <translation>Check for Updates</translation>
     </message>
@@ -1023,7 +1023,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Check for software updates</translation>
     </message>
     <message>
-        <location line="+1220"/>
+        <location line="+1221"/>
         <source>Software update warning</source>
         <translation>Software update warning</translation>
     </message>
@@ -1099,7 +1099,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Imported witness</translation>
     </message>
     <message>
-        <location filename="../../gui.cpp" line="-1373"/>
+        <location filename="../../gui.cpp" line="-1374"/>
         <location line="+6"/>
         <location line="+6"/>
         <source>&amp;Overview</source>
@@ -1344,7 +1344,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <location line="+233"/>
+        <location line="+234"/>
         <source>%1 client</source>
         <translation>%1 client</translation>
     </message>
@@ -1526,7 +1526,7 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>GuldenAmountField</name>
     <message>
-        <location filename="../../amountfield.cpp" line="+310"/>
+        <location filename="../../amountfield.cpp" line="+308"/>
         <source>Max</source>
         <translation>Max</translation>
     </message>
@@ -1565,7 +1565,12 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Lock funds for:</translation>
     </message>
     <message>
-        <location line="+65"/>
+        <location line="-218"/>
+        <source>Enter receiving address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+283"/>
         <source>3 years</source>
         <translation>3 years</translation>
     </message>
@@ -1585,12 +1590,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Receiving address</translation>
     </message>
     <message>
-        <location line="+45"/>
-        <source>Enter receiving address</source>
-        <translation>Enter receiving address</translation>
-    </message>
-    <message>
-        <location line="+7"/>
+        <location line="+52"/>
         <source>Enter label</source>
         <translation>Enter label</translation>
     </message>
@@ -1852,20 +1852,25 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>MiningAccountDialog</name>
     <message>
-        <location filename="../../forms/miningaccountdialog.ui" line="+373"/>
+        <location filename="../../forms/miningaccountdialog.ui" line="+400"/>
         <source>Arena setup time</source>
         <translation>Arena setup time</translation>
     </message>
     <message>
-        <location filename="../../miningaccountdialog.cpp" line="+130"/>
-        <location line="+231"/>
+        <location filename="../../miningaccountdialog.cpp" line="+143"/>
+        <location line="+253"/>
         <source>%1 MB</source>
         <translation>%1 MB</translation>
     </message>
     <message>
-        <location line="-285"/>
+        <location line="-320"/>
         <source>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</source>
         <translation>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Changing the number of threads will affect your arena setup time. The optimal number of threads to use is machine specific using all available cores is not always fastest</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1873,13 +1878,15 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</translation>
     </message>
     <message>
-        <location line="+51"/>
-        <location line="+235"/>
+        <location line="+60"/>
+        <location line="+1"/>
+        <location line="+256"/>
+        <location line="+5"/>
         <source>%1 threads</source>
         <translation>%1 threads</translation>
     </message>
     <message>
-        <location line="-87"/>
+        <location line="-106"/>
         <source>Address copied to clipboard</source>
         <translation>Address copied to clipboard</translation>
     </message>
@@ -1889,7 +1896,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Mining address</translation>
     </message>
     <message>
-        <location filename="../../forms/miningaccountdialog.ui" line="-300"/>
+        <location filename="../../forms/miningaccountdialog.ui" line="-327"/>
         <source>My mining address</source>
         <translation>My mining address</translation>
     </message>
@@ -1914,7 +1921,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>My mining settings</translation>
     </message>
     <message>
-        <location line="+28"/>
+        <location line="+58"/>
         <source>Memory usage</source>
         <translation>Memory usage</translation>
     </message>
@@ -1924,12 +1931,18 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Processor usage</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="-47"/>
+        <location line="+20"/>
         <source>#</source>
         <translation>#</translation>
     </message>
     <message>
-        <location line="+40"/>
+        <location line="+34"/>
+        <source>Processor usage, arena setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+37"/>
         <source>Automatically mine at startup</source>
         <translation>Automatically mine at startup</translation>
     </message>
@@ -2000,7 +2013,12 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</translation>
     </message>
     <message>
-        <location line="+248"/>
+        <location line="-3"/>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+251"/>
         <source>Mining</source>
         <translation>Mining</translation>
     </message>
@@ -2020,12 +2038,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Import account type</translation>
     </message>
     <message>
-        <location filename="../../newaccountdialog.cpp" line="-251"/>
-        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;</translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location filename="../../newaccountdialog.cpp" line="-250"/>
         <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
         <translation>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</translation>
     </message>
@@ -2834,7 +2847,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Enter a Gulden URL</translation>
     </message>
     <message>
-        <location line="+844"/>
+        <location line="+850"/>
         <source>%1 d</source>
         <translation>%1 d</translation>
     </message>
@@ -3370,7 +3383,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Enter label</translation>
     </message>
     <message>
-        <location filename="../../receivecoinsdialog.cpp" line="+156"/>
+        <location filename="../../receivecoinsdialog.cpp" line="+158"/>
         <source>Address copied to clipboard</source>
         <translation>Address copied to clipboard</translation>
     </message>
@@ -3413,7 +3426,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
     </message>
     <message>
         <location filename="../../forms/receivecoinsdialog.ui" line="+226"/>
-        <location filename="../../receivecoinsdialog.cpp" line="+115"/>
+        <location filename="../../receivecoinsdialog.cpp" line="+164"/>
         <source>Request %1 Gulden</source>
         <translation>Request %1 Gulden</translation>
     </message>
@@ -3542,7 +3555,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Gulden:Gg3gP7QrE2R1hYhpWfaotQtMgRkByqxMZg</translation>
     </message>
     <message>
-        <location filename="../../receivecoinsdialog.cpp" line="-153"/>
+        <location filename="../../receivecoinsdialog.cpp" line="-202"/>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
         <translation>Resulting URI too long, try to reduce the text for label / message.</translation>
     </message>
@@ -3553,7 +3566,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Copy request to clipboard</translation>
     </message>
     <message>
-        <location filename="../../receivecoinsdialog.cpp" line="+157"/>
+        <location filename="../../receivecoinsdialog.cpp" line="+206"/>
         <source>Request Gulden</source>
         <translation>Request Gulden</translation>
     </message>
@@ -3703,27 +3716,27 @@ Remember to install the new key on any witness device (pi) or service you are us
 <context>
     <name>SendCoinsDialog</name>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="+490"/>
+        <location filename="../../sendcoinsdialog.cpp" line="+502"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location line="-336"/>
+        <location line="-337"/>
         <source>&amp;Delete</source>
         <translation>&amp;Delete</translation>
     </message>
     <message>
-        <location line="-24"/>
+        <location line="-29"/>
         <source>&amp;Edit</source>
         <translation>&amp;Edit</translation>
     </message>
     <message>
-        <location line="+884"/>
+        <location line="+971"/>
         <source>(no label)</source>
         <translation>(no label)</translation>
     </message>
     <message>
-        <location filename="../../forms/sendcoinsdialog.ui" line="+219"/>
+        <location filename="../../forms/sendcoinsdialog.ui" line="+228"/>
         <source>Quantity:</source>
         <translation>Quantity:</translation>
     </message>
@@ -3758,7 +3771,7 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>Change:</translation>
     </message>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="-948"/>
+        <location filename="../../sendcoinsdialog.cpp" line="-1036"/>
         <source>Copy amount</source>
         <translation>Copy amount</translation>
     </message>
@@ -3793,33 +3806,38 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>Copy change</translation>
     </message>
     <message>
-        <location line="+414"/>
+        <location line="+65"/>
+        <source>Sell</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+356"/>
         <source>Send</source>
         <translation>Send</translation>
     </message>
     <message>
-        <location line="-354"/>
+        <location line="-359"/>
         <source>&amp;Send</source>
         <translation>&amp;Send</translation>
     </message>
     <message>
-        <location line="+626"/>
+        <location line="+712"/>
         <source>Payment request expired.</source>
         <translation>Payment request expired.</translation>
     </message>
     <message>
-        <location filename="../../forms/sendcoinsdialog.ui" line="+298"/>
+        <location filename="../../forms/sendcoinsdialog.ui" line="+316"/>
         <source>Hide</source>
         <translation>Hide</translation>
     </message>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="-623"/>
+        <location filename="../../sendcoinsdialog.cpp" line="-706"/>
         <source>&amp;Clear</source>
         <translation>&amp;Clear</translation>
     </message>
     <message>
-        <location filename="../../forms/sendcoinsdialog.ui" line="-749"/>
-        <location filename="../../sendcoinsdialog.cpp" line="+632"/>
+        <location filename="../../forms/sendcoinsdialog.ui" line="-776"/>
+        <location filename="../../sendcoinsdialog.cpp" line="+715"/>
         <source>Send Coins</source>
         <translation>Send Coins</translation>
     </message>
@@ -3844,7 +3862,7 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>Insufficient funds!</translation>
     </message>
     <message>
-        <location line="+370"/>
+        <location line="+379"/>
         <source>If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</source>
         <translation>If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</translation>
     </message>
@@ -3854,7 +3872,7 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>Custom change address</translation>
     </message>
     <message>
-        <location line="+175"/>
+        <location line="+193"/>
         <source>Transaction Fee:</source>
         <translation>Transaction Fee:</translation>
     </message>
@@ -3864,12 +3882,12 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>Choose...</translation>
     </message>
     <message>
-        <location line="+24"/>
+        <location line="+30"/>
         <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until your have validated the complete chain.</source>
         <translation>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until your have validated the complete chain.</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+3"/>
         <source>Warning: Fee estimation is currently not possible.</source>
         <translation>Warning: Fee estimation is currently not possible.</translation>
     </message>
@@ -3879,7 +3897,7 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>collapse fee-settings</translation>
     </message>
     <message>
-        <location line="+42"/>
+        <location line="+51"/>
         <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
         <translation>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</translation>
     </message>
@@ -3930,22 +3948,22 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>fast</translation>
     </message>
     <message>
-        <location line="+30"/>
+        <location line="+33"/>
         <source>Request Replace-By-Fee</source>
         <translation>Request Replace-By-Fee</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="-3"/>
         <source>Indicates that the sender may wish to replace this transaction with a new one paying higher fees (prior to being confirmed).</source>
         <translation>Indicates that the sender may wish to replace this transaction with a new one paying higher fees (prior to being confirmed).</translation>
     </message>
     <message>
-        <location line="+36"/>
+        <location line="+39"/>
         <source>Confirm the send action</source>
         <translation>Confirm the send action</translation>
     </message>
     <message>
-        <location line="+25"/>
+        <location line="+50"/>
         <source>Clear all fields of the form.</source>
         <translation>Clear all fields of the form.</translation>
     </message>
@@ -3960,7 +3978,7 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>Balance:</translation>
     </message>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="-330"/>
+        <location filename="../../sendcoinsdialog.cpp" line="-411"/>
         <location line="+5"/>
         <location line="+5"/>
         <location line="+4"/>
@@ -3988,7 +4006,7 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>This transaction signals replaceability (optin-RBF).</translation>
     </message>
     <message>
-        <location line="+248"/>
+        <location line="+329"/>
         <source>PoW² is not yet active, please wait for activation and try again.</source>
         <translation>PoW² is not yet active, please wait for activation and try again.</translation>
     </message>
@@ -4124,7 +4142,7 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>TrafficGraphWidget</name>
     <message>
-        <location filename="../../trafficgraphwidget.cpp" line="+80"/>
+        <location filename="../../trafficgraphwidget.cpp" line="+81"/>
         <source>KB/s</source>
         <translation>KB/s</translation>
     </message>
@@ -4374,7 +4392,7 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>TransactionTableModel</name>
     <message>
-        <location filename="../../transactiontablemodel.cpp" line="+273"/>
+        <location filename="../../transactiontablemodel.cpp" line="+276"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
@@ -4944,7 +4962,7 @@ If you  have recently received funds you may need to wait for them to clear befo
 <context>
     <name>WalletModel</name>
     <message>
-        <location filename="../../walletmodel.cpp" line="+905"/>
+        <location filename="../../walletmodel.cpp" line="+908"/>
         <location line="+46"/>
         <location line="+9"/>
         <source>Fee bump error</source>
@@ -5066,7 +5084,7 @@ Generally when someone else generates a block at the same time as yours.</transl
 <context>
     <name>WelcomeDialog</name>
     <message>
-        <location filename="../../welcomedialog.cpp" line="+175"/>
+        <location filename="../../welcomedialog.cpp" line="+177"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
@@ -5145,37 +5163,37 @@ Generally when someone else generates a block at the same time as yours.</transl
 <context>
     <name>WitnessDialog</name>
     <message>
-        <location filename="../../witnessdialog.cpp" line="+278"/>
+        <location filename="../../witnessdialog.cpp" line="+279"/>
         <source>Okay</source>
         <translation>Okay</translation>
     </message>
     <message>
-        <location filename="../../forms/witnessdialog.ui" line="+834"/>
+        <location filename="../../forms/witnessdialog.ui" line="+857"/>
         <source>Extend</source>
         <translation>Extend</translation>
     </message>
     <message>
-        <location line="-653"/>
+        <location line="-676"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location line="+696"/>
+        <location line="+719"/>
         <source>Optimize</source>
         <translation>Optimize</translation>
     </message>
     <message>
-        <location filename="../../witnessdialog.cpp" line="+537"/>
+        <location filename="../../witnessdialog.cpp" line="+538"/>
         <source>%1 months</source>
         <translation>%1 months</translation>
     </message>
     <message>
-        <location filename="../../forms/witnessdialog.ui" line="-802"/>
+        <location filename="../../forms/witnessdialog.ui" line="-825"/>
         <source>To begin witnessing, you have to fund the witness account.</source>
         <translation>To begin witnessing, you have to fund the witness account.</translation>
     </message>
     <message>
-        <location line="+329"/>
+        <location line="+352"/>
         <source>Parts</source>
         <translation>Parts</translation>
     </message>
@@ -5209,7 +5227,7 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
         <translation>Note: this problem is only within the user interface and your funds are secure.</translation>
     </message>
     <message>
-        <location filename="../../witnessdialog.cpp" line="-177"/>
+        <location filename="../../witnessdialog.cpp" line="-178"/>
         <source>Close graph</source>
         <translation>Close graph</translation>
     </message>
@@ -5219,7 +5237,7 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
         <translation>Show graph</translation>
     </message>
     <message>
-        <location filename="../../forms/witnessdialog.ui" line="-562"/>
+        <location filename="../../forms/witnessdialog.ui" line="-585"/>
         <source>Projected earnings graph</source>
         <translation>Projected earnings graph</translation>
     </message>
@@ -5230,6 +5248,7 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
     </message>
     <message>
         <location line="+24"/>
+        <location line="+23"/>
         <location line="+46"/>
         <location line="+23"/>
         <location line="+23"/>
@@ -5240,7 +5259,8 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
         <location line="+23"/>
         <location line="+23"/>
         <location line="+23"/>
-        <location filename="../../witnessdialog.cpp" line="-605"/>
+        <location filename="../../witnessdialog.cpp" line="-606"/>
+        <location line="+1"/>
         <location line="+1"/>
         <location line="+1"/>
         <location line="+1"/>
@@ -5265,7 +5285,12 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
         <translation>n/a</translation>
     </message>
     <message>
-        <location line="-256"/>
+        <location line="-279"/>
+        <source>Lock time elapsed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+23"/>
         <source>Lock time remaining</source>
         <translation>Lock time remaining</translation>
     </message>
@@ -5397,7 +5422,7 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
         <translation>&amp;Months</translation>
     </message>
     <message>
-        <location line="+641"/>
+        <location line="+642"/>
         <source>%1 blocks</source>
         <translation>%1 blocks</translation>
     </message>
@@ -5466,6 +5491,110 @@ Witness weight: %5
         <location line="-37"/>
         <source>A minimum amount of %1 is required.</source>
         <translation>A minimum amount of %1 is required.</translation>
+    </message>
+</context>
+<context>
+    <name>gulden-core</name>
+    <message>
+        <location filename="../../guldenstrings.cpp" line="+12"/>
+        <location line="+1"/>
+        <source>None</source>
+        <translation type="unfinished">None</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Done loading</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Erasing block index...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Error reading from database, shutting down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Legacy account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Loading P2P addresses...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Loading banlist...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Loading block index...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Loading wallet...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>My account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Pruning blockstore...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Reloading block index...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rescanning...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rewinding blocks...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Starting network threads...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Upgrading block index...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Verifying blocks...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Wallet unlock required for wallet upgrade</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zapping all transactions from wallet...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

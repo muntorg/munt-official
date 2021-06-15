@@ -27,7 +27,7 @@
     </message>
     <message>
         <source>Rotate key</source>
-        <translation>Key roteren</translation>
+        <translation>draaiknop</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -55,7 +55,7 @@
     </message>
     <message>
         <source>Scan QR to connect to your mobile Gulden app</source>
-        <translation>Scan QR-code om te linken met uw mobiele Gulden-app</translation>
+        <translation>Scan QR-code om verbinding te maken met uw mobiele Gulden-app</translation>
     </message>
     <message>
         <source>Click here to make QR code visible.
@@ -651,8 +651,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Ontvangstadres</translation>
     </message>
     <message>
-        <source>Enter receiving address</source>
-        <translation>Voer ontvangstadres in</translation>
+        <source>Enter receiving address (Gulden, IBAN)</source>
+        <translation>Voer ontvangstadres in (Gulden, IBAN)</translation>
     </message>
     <message>
         <source>Enter label</source>
@@ -669,6 +669,18 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Address book</source>
         <translation>Adresboek</translation>
+    </message>
+    <message>
+        <source>Amount exceeds maximum for IBAN payment.</source>
+        <translation>Bedrag is groter dan maximum voor een IBAN-betaling</translation>
+    </message>
+    <message>
+        <source>Amount below minimum for IBAN payment.</source>
+        <translation>Bedrag is kleiner dan minimum voor een IBAN-betaling</translation>
+    </message>
+    <message>
+        <source>A recipient name is required for IBAN payments.</source>
+        <translation>De naam van de begunstigde is noodzakelijk voor een IBAN betaling</translation>
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
@@ -689,6 +701,10 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Save</source>
         <translation>Opslaan</translation>
+    </message>
+    <message>
+        <source>Will require approximately %1 Gulden including IBAN service fee</source>
+        <translation>Ongeveer %1 Gulden is vereist, inclusief IBAN-transactiekosten</translation>
     </message>
 </context>
 <context>
@@ -867,10 +883,6 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
     <message>
         <source>n/a</source>
         <translation>n.v.t.</translation>
-    </message>
-    <message>
-        <source>Lock time elapsed</source>
-        <translation>Verstreken looptijd</translation>
     </message>
     <message>
         <source>Lock time remaining</source>
@@ -1262,8 +1274,8 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
         <translation>Importeer een rekening type</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Dagelijks beheer&lt;/li&gt;&lt;li&gt;Verstuur en ontvang Gulden&lt;/li&gt;</translation>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Dagelijks beheer&lt;/li&gt;&lt;li&gt;Verstuur en ontvang Gulden&lt;/li&gt;&lt;li&gt;Verstuur geld naar een IBAN bankrekening&lt;/li&gt;</translation>
     </message>
     <message>
         <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
@@ -1811,7 +1823,7 @@ Als u recentelijk Guldens hebt ontvangen, moet u even wachten voor u deze kunt u
     </message>
     <message>
         <source>Enter your recovery phrase from a previous install. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
-        <translation>Voer uw herstelzin in van een vorige instalatie, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
+        <translation>Voer uw herstelzin in van een vorige installatie, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot uw zin = Guldens weg.</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By using the Gulden app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Gulden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>

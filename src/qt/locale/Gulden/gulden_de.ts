@@ -651,8 +651,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Empfangsadresse</translation>
     </message>
     <message>
-        <source>Enter receiving address</source>
-        <translation>Gib Empfangsadresse ein</translation>
+        <source>Enter receiving address (Gulden, IBAN)</source>
+        <translation>Gib Empfangsadresse ein (Gulden, IBAN)</translation>
     </message>
     <message>
         <source>Enter label</source>
@@ -669,6 +669,18 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Address book</source>
         <translation>Adressbuch</translation>
+    </message>
+    <message>
+        <source>Amount exceeds maximum for IBAN payment.</source>
+        <translation>Der Betrag übersteigt das Maximum für IBAN-Zahlungen.</translation>
+    </message>
+    <message>
+        <source>Amount below minimum for IBAN payment.</source>
+        <translation>Betrag unter dem Minimum für IBAN-Zahlungen.</translation>
+    </message>
+    <message>
+        <source>A recipient name is required for IBAN payments.</source>
+        <translation>Für IBAN-Zahlungen ist ein Empfängername erforderlich</translation>
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
@@ -689,6 +701,10 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Save</source>
         <translation>Speichern</translation>
+    </message>
+    <message>
+        <source>Will require approximately %1 Gulden including IBAN service fee</source>
+        <translation>Erfordert ungefähr %1 Gulden einschließlich einer IBAN Servicegebühr</translation>
     </message>
 </context>
 <context>
@@ -1261,8 +1277,8 @@ WARNUNG: Mit dem QR Code ist es möglich auf deine Einlagen zuzugreifen, deswege
         <translation>Kontotyp importieren</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Tägliches Management&lt;/li&gt;&lt;li&gt;Gulden senden und empfangen&lt;/li&gt;</translation>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Tägliches Management&lt;/li&gt;&lt;li&gt;Gulden senden und empfangen&lt;/li&gt;&lt;li&gt;Geld an jedes IBAN-Konto senden&lt;/li&gt;</translation>
     </message>
     <message>
         <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
