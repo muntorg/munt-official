@@ -1,3 +1,26 @@
+2.4.0
+
+CONSENSUS - Reward reductions; these will activate at block 1'400'000
+CORE      - Implement a new/simplified way of tracking the witness specific portion of the UTXO set, this improves code simplicity as well as efficiency in a variety of ways
+CORE      - Implement methods/functionality to track/encode witness set "deltas" (changes) between blocks
+CONSENSUS - Store the witness set delta as part of each header, this allows for a very efficient syncing method which we are calling "witness sync"
+CONSENSUS - Enable spending of addresses with uncompressed keys again
+CONSENSUS - Allow renewal of multiple parts of the same witness account in a single transaction instead of requiring a renewal for each part
+CORE/UI   - Introduce a seperate mining paramater for number of threads to use for "arena setup" when mining so that this can be set independently of "mining threads"
+CORE      - Fix a sync issue that would sometimes cause new installs to get stuck when syncing the first few blocks 
+CORE      - Apply some optimisations to ConnectBlock calls that should improve performance quite substantially on some machines
+RPC       - "setgenerate" gains an extra parameter for the above, all miners should be aware of this as previous setgenerate syntax may fail
+RPC       - New command "setwitnessrewardaddress"
+RPC       - New command "restoreaccount"
+RPC       - Improve behaviour of "deleteaccount" to permanently remove/purge accounts from the wallet if they are readonly accounts; as opposed to the regular behaviour of just hiding accounts that applies to other account types
+RPC       - Fix return value of "enablenetwork" command
+UI        - Show "elapsed" time to current date for witness accounts
+ZMQ       - Add a new ZMQ channel "zmqpubwallettx"
+
+And a variety of other small performance, stability and code quality enhancements, general maintenence etc..
+
+
+
 2.3.12
 
 CORE    - Mining/Witness stability fix; Fix an issue that was causing periodic freezing of some mining/witnessing nodes
