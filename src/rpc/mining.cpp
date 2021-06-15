@@ -505,18 +505,20 @@ static UniValue getmininginfo(const JSONRPCRequest& request)
     LOCK(cs_main);
 
     UniValue obj(UniValue::VOBJ);
-    obj.push_back(Pair("blocks",           (int)chainActive.Height()));
-    obj.push_back(Pair("currentblocksize", (uint64_t)nLastBlockSize));
-    obj.push_back(Pair("currentblockweight", (uint64_t)nLastBlockWeight));
-    obj.push_back(Pair("currentblocktx",   (uint64_t)nLastBlockTx));
-    obj.push_back(Pair("difficulty",       (double)GetDifficulty()));
-    obj.push_back(Pair("errors",           GetWarnings("statusbar")));
-    obj.push_back(Pair("genproclimit",     (int)GetArg("-genproclimit", DEFAULT_GENERATE_THREADS)));
-    obj.push_back(Pair("genmemlimit",      (uint64_t)GetArg("-genmemlimit", DEFAULT_GENERATE_THREADS)));
-    obj.push_back(Pair("networkhashps",    getnetworkhashps(request)));
-    obj.push_back(Pair("pooledtx",         (uint64_t)mempool.size()));
-    obj.push_back(Pair("chain",            Params().NetworkIDString()));
-    obj.push_back(Pair("generate",         getgenerate(request)));
+    obj.push_back(Pair("blocks",                           (int)chainActive.Height()));
+    obj.push_back(Pair("currentblocksize",                 (uint64_t)nLastBlockSize));
+    obj.push_back(Pair("currentblockweight",               (uint64_t)nLastBlockWeight));
+    obj.push_back(Pair("currentblocktx",                   (uint64_t)nLastBlockTx));
+    obj.push_back(Pair("difficulty",                       (double)GetDifficulty()));
+    obj.push_back(Pair("errors",                           GetWarnings("statusbar")));
+    obj.push_back(Pair("genproclimit",                     (int)GetArg("-genproclimit", DEFAULT_GENERATE_THREADS)));
+    obj.push_back(Pair("genmemlimit",                      (uint64_t)GetArg("-genmemlimit", DEFAULT_GENERATE_THREADS)));
+    obj.push_back(Pair("networkhashps",                    getnetworkhashps(request)));
+    obj.push_back(Pair("pooledtx",                         (uint64_t)mempool.size()));
+    obj.push_back(Pair("chain",                            Params().NetworkIDString()));
+    obj.push_back(Pair("selected_shavite_implementation",  selectedAlgorithmName(gSelShavite)));
+    obj.push_back(Pair("selected_argon_implementation",    selectedAlgorithmName(gSelArgon)));
+    obj.push_back(Pair("selected_echo_implementation",     selectedAlgorithmName(gSelEcho)));
     return obj;
 }
 
