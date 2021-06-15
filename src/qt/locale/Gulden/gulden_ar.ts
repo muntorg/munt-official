@@ -9,6 +9,631 @@
     <extra-po-header-project_id_version>VERSION</extra-po-header-project_id_version>
     <extra-po-headers>Project-Id-Version,POT-Creation-Date,PO-Revision-Date,Last-Translator,Language-Team,X-Qt-Contexts,Language,X-Qt-Contexts,MIME-Version,Content-Type,Content-Transfer-Encoding,Plural-Forms</extra-po-headers>
 <context>
+    <name>AccountSelectionWidget</name>
+    <message>
+        <source>Frame</source>
+        <translation>إطار</translation>
+    </message>
+    <message>
+        <source>Funding account</source>
+        <translation>تمويل الحساب</translation>
+    </message>
+</context>
+<context>
+    <name>AccountSettingsDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>نعم</translation>
+    </message>
+    <message>
+        <source>Rotate key</source>
+        <translation>مفتاح التدوير</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>إلغاء</translation>
+    </message>
+    <message>
+        <source>Change name of account</source>
+        <translation>تغيير اسم الحساب</translation>
+    </message>
+    <message>
+        <source>Enter name of account.</source>
+        <translation>أدخل اسم الحساب.</translation>
+    </message>
+    <message>
+        <source>Delete account</source>
+        <translation>حذف الحساب</translation>
+    </message>
+    <message>
+        <source>Copy sync code</source>
+        <translation>نسخ رمز المزامنة</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation>تم</translation>
+    </message>
+    <message>
+        <source>Scan QR to connect to your mobile Gulden app</source>
+        <translation>امسح رمز الاستجابة السريعة QR  للاتصال بتطبيق Gulden على هاتفك المحمول</translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</source>
+        <translation>اضغط هنا لإظهار رمز الاستجابة السريعة QR.
+تحذير: يرجى التأكد من أنك الشخص الوحيد الذي يمكنه رؤية رمز الاستجابة السريعة هذا وإلا يمكن استخدامه للوصول إلى حسابك.</translation>
+    </message>
+    <message>
+        <source>Scan QR with a witnessing device to link the device to your wallet</source>
+        <translation>امسح رمز الاستجابة السريعة QR  بجهاز witnessing  لربط الجهاز بمحفظتك</translation>
+    </message>
+    <message>
+        <source>Click here to make QR code visible.
+WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to earn on your behalf and steal your witness earnings.</source>
+        <translation>اضغط هنا لإظهار رمز الاستجابة السريعة QR.
+تحذير: يرجى التأكد من أنك الشخص الوحيد الذي يمكنه رؤية رمز الاستجابة السريعة هذا وإلا يمكن استخدامه لكسب المال نيابة عنك وسرقة أرباح الايداع witness</translation>
+    </message>
+    <message>
+        <source>Please fund the witness account first.</source>
+        <translation>الرجاء تمويل حساب الإيداع (witness) أولا.</translation>
+    </message>
+    <message>
+        <source>Account not empty, please first empty your account before trying to delete it.</source>
+        <translation>الحساب ليس فارغًا ، يرجى إفراغ حسابك أولاً قبل محاولة حذفه.</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1 from your account list?
+</source>
+        <translation>هل أنت متأكد من أنك تريد حذف %1 من قائمة حسابك؟</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %1 from your account list?
+The account will continue to be monitored and will be restored should it receive new funds in future.</source>
+        <translation>هل أنت متأكد من أنك تريد حذف %1 من قائمة حسابك؟
+ستستمر مراقبة الحساب وستتم استعادته إذا تلقى أموالًا جديدة في المستقبل.</translation>
+    </message>
+</context>
+<context>
+    <name>FundWitnessDialog</name>
+    <message>
+        <source>Okay</source>
+        <translation>حسناً</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>إلغاء</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>الكمية</translation>
+    </message>
+    <message>
+        <source>Fund</source>
+        <translation>الأموال</translation>
+    </message>
+    <message>
+        <source>Extend</source>
+        <translation>تمديد</translation>
+    </message>
+    <message>
+        <source>Extend a witness to increase amount and/or locking duration. A funding account is needed to provide the transaction fee, even if the amount is not increased.</source>
+        <translation>قم بمد حساب الايداع الشاهد لزيادة المبلغ أو مدة القفل. هناك حاجة إلى حساب تمويل لتوفير رسوم المعاملة ، حتى إذا لم يتم زيادة المبلغ.</translation>
+    </message>
+    <message>
+        <source>Fund your witness to start witnessing and earn rewards.</source>
+        <translation>قم بتمويل حساب الايداع الشاهد للبدء  وكسب المكافآت.</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to extend the witness?</source>
+        <translation>هل أنت متأكد أنك تريد تمديد فترة الايداع لحساب الشاهد؟</translation>
+    </message>
+    <message>
+        <source>%1 will be locked for %2 days (%3).</source>
+        <translation>سيتم التأمين والقفل %1 لمدة %2 يوم (%3).</translation>
+    </message>
+    <message>
+        <source>It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.</source>
+        <translation>لن يكون من الممكن تحت أي ظرف من الظروف إنفاق أو نقل هذه الأموال طوال فترة الإغلاق.</translation>
+    </message>
+    <message>
+        <source>Extend witness</source>
+        <translation>تمديد حساب الشاهد</translation>
+    </message>
+    <message>
+        <source>No funding account selected</source>
+        <translation>لم يتم اختيار حساب تمويل</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to fund the witness?</source>
+        <translation>هل أنت متأكد أنك تريد تمويل حساب الشاهد؟</translation>
+    </message>
+    <message>
+        <source>Fund witness</source>
+        <translation>أموال حساب الشاهد</translation>
+    </message>
+</context>
+<context>
+    <name>GUI</name>
+    <message>
+        <source>Okay</source>
+        <translation>حسناً</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>إلغاء</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>المجموع</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>مقفل</translation>
+    </message>
+    <message>
+        <source>Pending</source>
+        <translation>قيد الانتظار</translation>
+    </message>
+    <message>
+        <source>Spendable</source>
+        <translation>قابل للإنفاق</translation>
+    </message>
+    <message>
+        <source>Conversion estimate</source>
+        <translation>تقدير التحويلات</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>العنوان</translation>
+    </message>
+    <message>
+        <source>Withdrawable funds in this account is not yet mature, please wait and try again later.</source>
+        <translation>الأموال القابلة للسحب في هذا الحساب ليست جاهزة بعد ، يرجى الانتظار والمحاولة مرة أخرى لاحقًا.</translation>
+    </message>
+    <message>
+        <source>Operating in SPV mode (simple payment verification)</source>
+        <translation>العمل في وضع SPV (التحقق من الدفع البسيط)</translation>
+    </message>
+    <message>
+        <source>%1 block(s) remaining.</source>
+        <translation>%1 كتلة (كتل) متبقية.</translation>
+    </message>
+    <message>
+        <source>Wallet balances</source>
+        <translation>أرصدة المحفظة</translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation>تحقق من وجود تحديثات</translation>
+    </message>
+    <message>
+        <source>Check for software updates</source>
+        <translation>تحقق من وجود تحديثات البرامج</translation>
+    </message>
+    <message>
+        <source>Software update warning</source>
+        <translation>تحقق من وجود تحديثات البرامج</translation>
+    </message>
+    <message>
+        <source>Software update</source>
+        <translation>تحديث النظام</translation>
+    </message>
+    <message>
+        <source>Renewing witness account will incur a transaction fee: </source>
+        <translation>تجديد حساب الشاهد سيتكبد رسوم معاملة:</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>ارسال</translation>
+    </message>
+    <message>
+        <source>This feature is not yet available, please try again after block 797000.</source>
+        <translation>هذه الميزة غير متوفرة بعد ، يرجى المحاولة مرة أخرى بعد الكتلة 797000.</translation>
+    </message>
+    <message>
+        <source>The funds in this account are currently locked for witnessing and cannot be transfered, please wait until lock expires or for earnings to accumulate before trying again.</source>
+        <translation>الأموال الموجودة في هذا الحساب مقفلة حاليًا للمشاهدة ولا يمكن تحويلها ، يرجى الانتظار حتى انتهاء صلاحية القفل أو حتى تتراكم الأرباح قبل المحاولة مرة أخرى.</translation>
+    </message>
+    <message>
+        <source>Tabs toolbar</source>
+        <translation>علامة تبويب شريط أدوات</translation>
+    </message>
+    <message>
+        <source>My accounts</source>
+        <translation>الحسابات</translation>
+    </message>
+    <message>
+        <source>Add account</source>
+        <translation>إضافة حساب</translation>
+    </message>
+    <message>
+        <source>&amp;Password</source>
+        <translation>كلمة المرور</translation>
+    </message>
+    <message>
+        <source>Change wallet password</source>
+        <translation>تغيير كلمة مرور المحفظة</translation>
+    </message>
+    <message>
+        <source>&amp;Backup</source>
+        <translation>نسخ احتياطي</translation>
+    </message>
+    <message>
+        <source>Backup wallet</source>
+        <translation>نسخ احتياطي للمحفظة</translation>
+    </message>
+    <message>
+        <source>Imported witness</source>
+        <translation>حساب الشاهد المستور witness</translation>
+    </message>
+    <message>
+        <source>&amp;Overview</source>
+        <translation>ملخص</translation>
+    </message>
+    <message>
+        <source>View statistics and information for witness account.</source>
+        <translation>عرض الإحصائيات والمعلومات لحساب الشاهد witness</translation>
+    </message>
+    <message>
+        <source>Show general overview of wallet</source>
+        <translation>عرض نظرة عامة على المحفظة</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation>ارسال</translation>
+    </message>
+    <message>
+        <source>Send coins to a Gulden address</source>
+        <translation>أرسل العملات  إلى عنوان Gulden</translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation>استقبال</translation>
+    </message>
+    <message>
+        <source>Request payments (generates QR codes and gulden: URIs)</source>
+        <translation>طلب المدفوعات (توليدرموز QR و gulden: URIs)</translation>
+    </message>
+    <message>
+        <source>&amp;Transactions</source>
+        <translation>المعاملات</translation>
+    </message>
+    <message>
+        <source>Browse transaction history</source>
+        <translation>تصفح سجل المعاملات</translation>
+    </message>
+    <message>
+        <source>&amp;Show / Hide</source>
+        <translation>اظهار / اخفاء</translation>
+    </message>
+    <message>
+        <source>Show or hide the main Window</source>
+        <translation>إظهار أو إخفاء النافذة الرئيسية</translation>
+    </message>
+    <message>
+        <source>&amp;Import key</source>
+        <translation>استيراد مفتاح</translation>
+    </message>
+    <message>
+        <source>Import a private key address</source>
+        <translation>استيراد عنوان مفتاح خاص</translation>
+    </message>
+    <message>
+        <source>&amp;Import witness</source>
+        <translation>استيراد حساب الشاهد witness</translation>
+    </message>
+    <message>
+        <source>Import a witness-only account</source>
+        <translation>استيراد حساب الشهود فقط witness</translation>
+    </message>
+    <message>
+        <source>&amp;Rescan transactions</source>
+        <translation>إعادة تفحص المعاملات</translation>
+    </message>
+    <message>
+        <source>Rescan the blockchain looking for any missing transactions</source>
+        <translation>أعد فحص blockchain بحثًا عن أي معاملات مفقودة</translation>
+    </message>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation>فتح URl</translation>
+    </message>
+    <message>
+        <source>Open a gulden: URI or payment request</source>
+        <translation>افتح gulden: URI أو طلب الدفع</translation>
+    </message>
+    <message>
+        <source>&amp;Backup Wallet...</source>
+        <translation> المحفظة الاحتياطية ...</translation>
+    </message>
+    <message>
+        <source>Backup wallet to another location</source>
+        <translation>المحفظة الاحتياطية إلى موقع آخر</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation>إرسال العناوين ...</translation>
+    </message>
+    <message>
+        <source>Show the list of used sending addresses and labels</source>
+        <translation>إظهار قائمة عناوين الإرسال والتسميات المستخدمة</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation>استقبال العناوين</translation>
+    </message>
+    <message>
+        <source>Show the list of used receiving addresses and labels</source>
+        <translation>اعرض قائمة عناوين الاستلام والتسميات المستخدمة</translation>
+    </message>
+    <message>
+        <source>E&amp;xit</source>
+        <translation>الخروج</translation>
+    </message>
+    <message>
+        <source>Quit application</source>
+        <translation>بإنهاء التطبيق</translation>
+    </message>
+    <message>
+        <source>&amp;Debug window</source>
+        <translation>نافذة التصحيح</translation>
+    </message>
+    <message>
+        <source>&amp;Command-line options</source>
+        <translation>خيارات سطر الأوامر</translation>
+    </message>
+</context>
+<context>
+    <name>AskPassphraseDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation>إلغاء</translation>
+    </message>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>العبارة السرية</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>ادخل عبارة المرور السرية</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>عبارة مرور سرية جديدة</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>ادخل عبارة المرور السرية مرة أخرى</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation>نعم</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>أدخل عبارة مرور جديدة إلى المحفظة. الرجاء استخدام عبارة مرور تتكون من 10 حروف عشوائية على الاقل, أو أكثر من 7 كلمات</translation>
+    </message>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>تشفير المحفظة</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
+        <translation>هذه العملية تحتاج كلمة مرور لفتح المحفظة.</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>إفتح المحفظة</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation>هذه العملية تحتاج كلمة مرور محفظتك لفك تشفيرها </translation>
+    </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>فك تشفير المحفظة</translation>
+    </message>
+    <message>
+        <source>Change passphrase</source>
+        <translation>تغيير كلمة المرور</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase to the wallet.</source>
+        <translation>أدخل عبارة المرور القديمة والجديدة للمحفظة.</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>تأكيد تشفير المحفظة</translation>
+    </message>
+    <message>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR GULDEN&lt;/b&gt;!</source>
+        <translation>تحذير: إذا قمت بتشفير محفظتك وفقدت عبارة المرور الخاصة بك ، فستفقد كل عملات GULDEN!</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to encrypt your wallet?</source>
+        <translation>هل أنت متأكد من رغبتك في تشفير محفظتك ؟</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>المحفظة مشفرة</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your Gulden from being stolen by malware infecting your computer.</source>
+        <translation>سيتم إغلاق %1 الآن لإنهاء عملية التشفير. تذكر أن تشفير محفظتك لا يمكن أن يحمي Gulden بشكل كامل من السرقة عن طريق البرامج الضارة التي تصيب جهاز الكمبيوتر الخاص بك.</translation>
+    </message>
+    <message>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <translation>هام: أي نسخة إحتياطية سابقة  قمت بها لمحفظتك يجب استبدالها  بأخرى حديثة، مشفرة. لأسباب أمنية، النسخ الاحتياطية السابقة لملفات المحفظة الغير مشفرة تصبح عديمة الفائدة مع بداية استخدام المحفظة المشفرة الجديدة.</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed</source>
+        <translation>فشل تشفير المحفظة</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation>فشل تشفير المحفظة بسبب خطأ داخلي. لم يتم تشفير المحفظة.</translation>
+    </message>
+    <message>
+        <source>The supplied passphrases do not match.</source>
+        <translation>كلمتي المرور ليست متطابقة</translation>
+    </message>
+    <message>
+        <source>Wallet unlock failed</source>
+        <translation>فشل فتح المحفظة</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>عبارة المرور التي تم إدخالها لفك تشفير المحفظة غير صحيحة.</translation>
+    </message>
+    <message>
+        <source>Wallet decryption failed</source>
+        <translation>فشل فك تشفير المحفظة</translation>
+    </message>
+    <message>
+        <source>Wallet passphrase was successfully changed.</source>
+        <translation>لقد تم تغيرعبارة المرور بنجاح</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>تحذير: مفتاح الحروف الكبيرة مفعل</translation>
+    </message>
+</context>
+<context>
+    <name>EditAddressDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation>إلغاء</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation>الوصف</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation>حسناً</translation>
+    </message>
+    <message>
+        <source>Edit Address</source>
+        <translation>تعديل العنوان</translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;وصف</translation>
+    </message>
+    <message>
+        <source>The label associated with this address list entry</source>
+        <translation>الملصق المرتبط بقائمة العناوين المدخلة</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;العنوان</translation>
+    </message>
+    <message>
+        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
+        <translation>العنوان المرتبط بقائمة العناوين المدخلة. و التي يمكن تعديلها فقط بواسطة ارسال العناوين</translation>
+    </message>
+    <message>
+        <source>New receiving address</source>
+        <translation>عنوان أستلام جديد</translation>
+    </message>
+    <message>
+        <source>New sending address</source>
+        <translation>عنوان إرسال جديد</translation>
+    </message>
+    <message>
+        <source>Edit receiving address</source>
+        <translation>تعديل عنوان الأستلام</translation>
+    </message>
+    <message>
+        <source>Edit sending address</source>
+        <translation>تعديل عنوان الارسال</translation>
+    </message>
+    <message>
+        <source>The entered address &quot;%1&quot; is not a valid Gulden address.</source>
+        <translation>العنوان الذي تم إدخاله &quot;%1&quot; ليس عنوان Gulden صالحًا.</translation>
+    </message>
+    <message>
+        <source>The entered address &quot;%1&quot; is already in the address book.</source>
+        <translation>هدا العنوان &quot;%1&quot; موجود مسبقا في دفتر العناوين</translation>
+    </message>
+    <message>
+        <source>Could not unlock wallet.</source>
+        <translation>تعذر فتح المحفظة.</translation>
+    </message>
+    <message>
+        <source>New key generation failed.</source>
+        <translation>فشل إنشاء مفتاح جديد.</translation>
+    </message>
+</context>
+<context>
+    <name>BackupDialog</name>
+    <message>
+        <source>Done</source>
+        <translation>تم</translation>
+    </message>
+    <message>
+        <source>Backup phrase</source>
+        <translation>عبارة النسخة الاحتياطية</translation>
+    </message>
+    <message>
+        <source>Show backup phrase</source>
+        <translation>اظهار عبارة النسخة الاحتياطية</translation>
+    </message>
+    <message>
+        <source>It is also recommended to save an encrypted disk backup of the wallet, in addition to storing the above recovery phrase.</source>
+        <translation>يوصى أيضًا بحفظ نسخة احتياطية من القرص المشفر للمحفظة ، بالإضافة إلى تخزين عبارة الاسترداد أعلاه.</translation>
+    </message>
+    <message>
+        <source>Save to file</source>
+        <translation>احفظ الملف</translation>
+    </message>
+    <message>
+        <source>Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>فيما يلي عبارة الاسترداد السرية الخاصة بك ، قم بتدوينها واحتفظ بها بأمان.
+ نسيان أو فقدان العبارة السرية سيؤدي الى فقدان الوصول الى المحفظة</translation>
+    </message>
+    <message>
+        <source>Below are your secret recovery phrases, write them down and keep them safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</source>
+        <translation>فيما يلي عبارة الاسترداد السرية الخاصة بك ، قم بتدوينها واحتفظ بها بأمان.
+ نسيان أو فقدان العبارة السرية سيؤدي الى فقدان الوصول الى المحفظة</translation>
+    </message>
+    <message>
+        <source>No recovery phrases present for this wallet.</source>
+        <translation>لا توجد عبارات استرداد لهذه المحفظة.</translation>
+    </message>
+    <message>
+        <source>Your wallet contains some legacy non-HD accounts, these cannot be restored using recovery phrases and require regular disk backup. Please ensure you make regular disk backups of your wallet, or delete the legacy account in order to ensure your funds remain secured.</source>
+        <translation>تحتوي محفظتك على بعض الحسابات القديمة غير عالية الدقة ، ولا يمكن استعادتها باستخدام عبارات الاسترداد وتتطلب نسخًا احتياطيًا منتظمًا للقرص. يرجى التأكد من عمل نسخ احتياطية منتظمة على القرص من محفظتك ، أو حذف الحساب القديم لضمان بقاء أموالك آمنة.</translation>
+    </message>
+</context>
+<context>
+    <name>AccountSummaryWidget</name>
+    <message>
+        <source>Account balances</source>
+        <translation>أرصدة الحساب</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>المجموع</translation>
+    </message>
+    <message>
+        <source>Locked</source>
+        <translation>مقفل</translation>
+    </message>
+    <message>
+        <source>Pending</source>
+        <translation>معلق</translation>
+    </message>
+    <message>
+        <source>Spendable</source>
+        <translation>قابل للإنفاق</translation>
+    </message>
+    <message>
+        <source>Conversion estimate</source>
+        <translation>تقدير التحويلات</translation>
+    </message>
+</context>
+<context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
@@ -71,12 +696,20 @@
         <translation>استقبال العناوين</translation>
     </message>
     <message>
+        <source>These are your Gulden addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>هذه هي عناوين Gulden الخاصة بك لإرسال المدفوعات. تحقق دائمًا من المبلغ وعنوان الاستلام قبل إرسال العملات.</translation>
+    </message>
+    <message>
+        <source>These are your Gulden addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>هذه هي عناوين Gulden الخاصة بك لتلقي المدفوعات. يوصى باستخدام عنوان استلام جديد لكل معاملة.</translation>
+    </message>
+    <message>
         <source>&amp;Copy Address</source>
         <translation>انسخ العنوان</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
-        <translation>نسخ &amp;الوصف</translation>
+        <translation>نسخ الوصف</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
@@ -88,7 +721,7 @@
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
-        <translation>ملف مفصول بفواصل (*.csv)</translation>
+        <translation>ملف القيم المفصولة بفواصل (*.csv)</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -96,7 +729,7 @@
     </message>
     <message>
         <source>There was an error trying to save the address list to %1. Please try again.</source>
-        <translation>لقد حدث خطأ أثناء  حفظ قائمة العناوين إلى %1. يرجى المحاولة مرة أخرى.</translation>
+        <translation>لقد حدث خطأ أثناء حفظ قائمة العناوين إلى %1. يرجى المحاولة مرة أخرى.</translation>
     </message>
 </context>
 <context>
@@ -228,6 +861,14 @@
 <context>
     <name>AddressTableModel</name>
     <message>
+        <source>Description</source>
+        <translation>الوصف</translation>
+    </message>
+    <message>
+        <source>(no description)</source>
+        <translation>(بدون وصف)</translation>
+    </message>
+    <message>
         <source>Label</source>
         <translation>وصف</translation>
     </message>
@@ -314,7 +955,7 @@
     </message>
     <message>
         <source>Amount</source>
-        <translation>مبلغ</translation>
+        <translation>المبلغ</translation>
     </message>
     <message>
         <source>Coin Selection</source>
@@ -322,7 +963,7 @@
     </message>
     <message>
         <source>Quantity:</source>
-        <translation>الكمية :</translation>
+        <translation>الكمية:</translation>
     </message>
     <message>
         <source>Bytes:</source>
@@ -362,7 +1003,7 @@
     </message>
     <message>
         <source>Received with label</source>
-        <translation>مستقبل مع ملصق</translation>
+        <translation>الاستلام مع التسمية</translation>
     </message>
     <message>
         <source>Received with address</source>
@@ -374,15 +1015,15 @@
     </message>
     <message>
         <source>Confirmations</source>
-        <translation>تأكيدات</translation>
+        <translation>التأكيدات</translation>
     </message>
     <message>
         <source>Confirmed</source>
-        <translation>تأكيد</translation>
+        <translation>تم التأكيد</translation>
     </message>
     <message>
         <source>Copy address</source>
-        <translation>  انسخ عنوان</translation>
+        <translation>انسخ العنوان</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -397,6 +1038,14 @@
         <translation>نسخ رقم العملية</translation>
     </message>
     <message>
+        <source>Lock unspent</source>
+        <translation>قفل غير منفق</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>فتح غير المنفق</translation>
+    </message>
+    <message>
         <source>Copy quantity</source>
         <translation>نسخ الكمية </translation>
     </message>
@@ -409,8 +1058,16 @@
         <translation>نسخ بعد الرسوم</translation>
     </message>
     <message>
+        <source>Copy dust</source>
+        <translation>انسخ الغبار</translation>
+    </message>
+    <message>
         <source>Copy change</source>
         <translation>نسخ التعديل</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 مقفل)</translation>
     </message>
     <message>
         <source>yes</source>
@@ -419,6 +1076,18 @@
     <message>
         <source>no</source>
         <translation>لا</translation>
+    </message>
+    <message>
+        <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
+        <translation>يتحول لون هذا الملصق إلى اللون الأحمر إذا تلقى أي متلقي كمية أقل من عتبة الغبار الحالية.</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation>يمكن أن تتنوع +/- %1 ساتوشي لكل إدخال.</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>التغيير من %1 (%2)</translation>
     </message>
     <message>
         <source>(change)</source>
@@ -600,105 +1269,6 @@
     </message>
 </context>
 <context>
-    <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>حوار جملة السر</translation>
-    </message>
-    <message>
-        <source>Enter passphrase</source>
-        <translation>ادخل كلمة المرور</translation>
-    </message>
-    <message>
-        <source>New passphrase</source>
-        <translation>كلمة مرور جديدة</translation>
-    </message>
-    <message>
-        <source>Repeat new passphrase</source>
-        <translation>ادخل كلمة المرور الجديدة مرة أخرى</translation>
-    </message>
-    <message>
-        <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation>أدخل عبارة مرور جديدة إلى المحفظة. الرجاء استخدام عبارة مرور تتكون من10 حروف عشوائية على الاقل, أو أكثر من 7 كلمات</translation>
-    </message>
-    <message>
-        <source>Encrypt wallet</source>
-        <translation>تشفير المحفظة</translation>
-    </message>
-    <message>
-        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation>هذه العملية تحتاج كلمة مرور محفظتك لفتحها</translation>
-    </message>
-    <message>
-        <source>Unlock wallet</source>
-        <translation>إفتح المحفظة</translation>
-    </message>
-    <message>
-        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation>هذه العملية تحتاج كلمة مرور محفظتك لفك تشفيرها </translation>
-    </message>
-    <message>
-        <source>Decrypt wallet</source>
-        <translation>فك تشفير المحفظة</translation>
-    </message>
-    <message>
-        <source>Change passphrase</source>
-        <translation>تغيير كلمة المرور</translation>
-    </message>
-    <message>
-        <source>Enter the old passphrase and new passphrase to the wallet.</source>
-        <translation>أدخل كلمة المرور القديمة والجديدة للمحفظة.</translation>
-    </message>
-    <message>
-        <source>Confirm wallet encryption</source>
-        <translation>تأكيد تشفير المحفظة</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to encrypt your wallet?</source>
-        <translation>هل أنت متأكد من رغبتك في تشفير محفظتك ؟</translation>
-    </message>
-    <message>
-        <source>Wallet encrypted</source>
-        <translation>محفظة مشفرة</translation>
-    </message>
-    <message>
-        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
-        <translation>هام: أي نسخة إحتياطية سابقة  قمت بها لمحفظتك يجب استبدالها  بأخرى حديثة، مشفرة. لأسباب أمنية، النسخ الاحتياطية السابقة لملفات المحفظة الغير مشفرة تصبح عديمة الفائدة مع بداية استخدام المحفظة المشفرة الجديدة.</translation>
-    </message>
-    <message>
-        <source>Wallet encryption failed</source>
-        <translation>فشل تشفير المحفظة</translation>
-    </message>
-    <message>
-        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
-        <translation>فشل تشفير المحفظة بسبب خطأ داخلي. لم يتم تشفير محفظتك.</translation>
-    </message>
-    <message>
-        <source>The supplied passphrases do not match.</source>
-        <translation>كلمتي المرور ليستا متطابقتان</translation>
-    </message>
-    <message>
-        <source>Wallet unlock failed</source>
-        <translation>فشل فتح المحفظة</translation>
-    </message>
-    <message>
-        <source>The passphrase entered for the wallet decryption was incorrect.</source>
-        <translation>كلمة المرور التي تم إدخالها لفك تشفير المحفظة غير صحيحة.</translation>
-    </message>
-    <message>
-        <source>Wallet decryption failed</source>
-        <translation>فشل   فك التشفير المحفظة</translation>
-    </message>
-    <message>
-        <source>Wallet passphrase was successfully changed.</source>
-        <translation>لقد تم تغير عبارة مرور المحفظة بنجاح</translation>
-    </message>
-    <message>
-        <source>Warning: The Caps Lock key is on!</source>
-        <translation>تحذير: مفتاح الحروف الكبيرة مفعل</translation>
-    </message>
-</context>
-<context>
     <name>BanTableModel</name>
     <message>
         <source>IP/Netmask</source>
@@ -720,12 +1290,23 @@
         <translation>&amp;نسخ الصورة</translation>
     </message>
     <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>خطأ في ترميز عنوان URI في رمز الاستجابة السريعة QR.</translation>
+    </message>
+    <message>
         <source>Save QR Code</source>
         <translation>حفظ رمز الاستجابة السريعة QR</translation>
     </message>
     <message>
         <source>PNG Image (*.png)</source>
         <translation>صورة PNG (*.png)</translation>
+    </message>
+</context>
+<context>
+    <name>ClientModel</name>
+    <message>
+        <source>Network Alert</source>
+        <translation>تنبيه الشبكة</translation>
     </message>
 </context>
 <context>
@@ -847,61 +1428,17 @@
     </message>
 </context>
 <context>
-    <name>EditAddressDialog</name>
+    <name>ExchangeRateDialog</name>
     <message>
-        <source>Edit Address</source>
-        <translation>عدل العنوان</translation>
-    </message>
-    <message>
-        <source>&amp;Label</source>
-        <translation>&amp;وصف</translation>
-    </message>
-    <message>
-        <source>The label associated with this address list entry</source>
-        <translation>الملصق المرتبط بقائمة العناوين المدخلة</translation>
-    </message>
-    <message>
-        <source>&amp;Address</source>
-        <translation>&amp;العنوان</translation>
-    </message>
-    <message>
-        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
-        <translation>العنوان المرتبط بقائمة العناوين المدخلة. و التي يمكن تعديلها فقط بواسطة ارسال العناوين</translation>
-    </message>
-    <message>
-        <source>New receiving address</source>
-        <translation>عنوان أستلام جديد</translation>
-    </message>
-    <message>
-        <source>New sending address</source>
-        <translation>عنوان إرسال جديد</translation>
-    </message>
-    <message>
-        <source>Edit receiving address</source>
-        <translation>تعديل عنوان الأستلام</translation>
-    </message>
-    <message>
-        <source>Edit sending address</source>
-        <translation>تعديل عنوان الارسال</translation>
-    </message>
-    <message>
-        <source>The entered address &quot;%1&quot; is already in the address book.</source>
-        <translation>هدا العنوان &quot;%1&quot; موجود مسبقا في دفتر العناوين</translation>
-    </message>
-    <message>
-        <source>Could not unlock wallet.</source>
-        <translation> يمكن فتح المحفظة.</translation>
-    </message>
-    <message>
-        <source>New key generation failed.</source>
-        <translation>فشل توليد مفتاح جديد.</translation>
+        <source>Select currency</source>
+        <translation>اختر العملة</translation>
     </message>
 </context>
 <context>
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
-        <translation>سيتم انشاء دليل بيانات جديد</translation>
+        <translation>سيتم إنشاء دليل بيانات جديد.</translation>
     </message>
     <message>
         <source>name</source>
@@ -909,11 +1446,11 @@
     </message>
     <message>
         <source>Directory already exists. Add %1 if you intend to create a new directory here.</source>
-        <translation>الدليل موجوج بالفعل. أضف %1 لو نويت إنشاء دليل جديد هنا.</translation>
+        <translation>الدليل موجود بالفعل. أضف %1 إذا كنت تنوي إنشاء دليل جديد هنا.</translation>
     </message>
     <message>
         <source>Path already exists, and is not a directory.</source>
-        <translation>المسار موجود بالفعل، وهو ليس دليلاً.</translation>
+        <translation>المسار موجود بالفعل ، وليس دليلاً.</translation>
     </message>
     <message>
         <source>Cannot create data directory here.</source>

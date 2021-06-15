@@ -1410,8 +1410,20 @@ Per specificare più URL separarli con una barra verticale &quot;|&quot;.</trans
 <context>
     <name>GuldenSendCoinsEntry</name>
     <message>
+        <source>Amount exceeds maximum for IBAN payment.</source>
+        <translation>L&apos;importo supera il massimo per il pagamento IBAN</translation>
+    </message>
+    <message>
+        <source>Amount below minimum for IBAN payment.</source>
+        <translation>Importo inferiore al minimo per il pagamento IBAN.</translation>
+    </message>
+    <message>
         <source>The amount you want to send equals your balance, it will be adjusted for the transaction fee. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
         <translation>L&apos;importo che si desidera inviare è uguale al saldo, verrà regolato per la commissione di transazione. Si prega di assicurarsi che questo sia ciò che si desidera prima di procedere per evitare il pagamento a breve del destinatario.</translation>
+    </message>
+    <message>
+        <source>Will require approximately %1 Gulden including IBAN service fee</source>
+        <translation>Richiederà approssimativamente %1 Gulden incluso il costo del servizio IBAN</translation>
     </message>
 </context>
 <context>

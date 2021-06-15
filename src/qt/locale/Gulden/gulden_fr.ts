@@ -652,8 +652,8 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <translation>Adresse de réception</translation>
     </message>
     <message>
-        <source>Enter receiving address</source>
-        <translation>Entrez l&apos;adresse de réception</translation>
+        <source>Enter receiving address (Gulden, IBAN)</source>
+        <translation>Entrez l&apos;adresse de réception (Gulden, IBAN)</translation>
     </message>
     <message>
         <source>Enter label</source>
@@ -670,6 +670,18 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>Address book</source>
         <translation>Carnet d&apos;adresses</translation>
+    </message>
+    <message>
+        <source>Amount exceeds maximum for IBAN payment.</source>
+        <translation>Le montant dépasse le maximum pour le paiement IBAN.</translation>
+    </message>
+    <message>
+        <source>Amount below minimum for IBAN payment.</source>
+        <translation>Montant inférieur au minimum pour le paiement IBAN.</translation>
+    </message>
+    <message>
+        <source>A recipient name is required for IBAN payments.</source>
+        <translation>Un nom de destinataire est requis pour les paiements IBAN.</translation>
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
@@ -690,6 +702,10 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
     <message>
         <source>Save</source>
         <translation>Enregistrer</translation>
+    </message>
+    <message>
+        <source>Will require approximately %1 Gulden including IBAN service fee</source>
+        <translation>Nécessite environ %1 Gulden, y compris les frais de service IBAN.</translation>
     </message>
 </context>
 <context>
@@ -1262,8 +1278,8 @@ ATTENTION: assurez-vous que vous êtes la seule personne qui peut voir ce QR cod
         <translation>Importé un type de compte</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;/li&gt;</source>
-        <translation>&lt;li&gt;Gestion quotidienne des fonds&lt;/li&gt;&lt;li&gt;Envoyer et recevoir Gulden&lt;/li&gt;</translation>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Gestion quotidienne des fonds&lt;/li&gt;&lt;li&gt;Envoyer et recevoir Gulden&lt;/li&gt;&lt;li&gt;Envoyer des fonds à n&apos;importe quel compte IBAN intelligible&lt;/li&gt;</translation>
     </message>
     <message>
         <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>

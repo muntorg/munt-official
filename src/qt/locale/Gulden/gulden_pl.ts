@@ -653,8 +653,8 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Adres odbiorcy</translation>
     </message>
     <message>
-        <source>Enter receiving address</source>
-        <translation>Wprowadź adres odbiorcy</translation>
+        <source>Enter receiving address (Gulden, IBAN)</source>
+        <translation>Wprowadź adres odbiorcy (Gulden, IBAN)</translation>
     </message>
     <message>
         <source>Enter label</source>
@@ -671,6 +671,18 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Address book</source>
         <translation>Książka adresowa</translation>
+    </message>
+    <message>
+        <source>Amount exceeds maximum for IBAN payment.</source>
+        <translation>Kwota przekracza maksimum dla płatności IBAN.</translation>
+    </message>
+    <message>
+        <source>Amount below minimum for IBAN payment.</source>
+        <translation>Kwota poniżej minimum dla płatności IBAN.</translation>
+    </message>
+    <message>
+        <source>A recipient name is required for IBAN payments.</source>
+        <translation>Nazwa odbiorcy jest wymagana do płatności IBAN.</translation>
     </message>
     <message>
         <source>The amount you want to send exceeds your balance, amount has been automatically adjusted downwards to match your balance. Please ensure this is what you want before proceeding to avoid short payment of your recipient.</source>
@@ -691,6 +703,10 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>Save</source>
         <translation>Zapisz</translation>
+    </message>
+    <message>
+        <source>Will require approximately %1 Gulden including IBAN service fee</source>
+        <translation>Wymaga około %1 Gulden, w tym opłaty za usługę IBAN</translation>
     </message>
 </context>
 <context>
@@ -1263,8 +1279,8 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
         <translation>Importuj typ konta</translation>
     </message>
     <message>
-        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;</source>
-        <translation>&lt;li&gt;Codzienne zarządzanie funduszami &lt;/li&gt;&lt;li&gt; Wysyłanie i otrzymywanie Gulden&lt;/li&gt;</translation>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;&lt;li&gt;Send funds to any elligible IBAN account&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Codzienne zarządzanie funduszami &lt;/li&gt;&lt;li&gt; Wysyłanie i otrzymywanie Gulden&lt;/li&gt;&lt;li&gt;Wysyłanie środków na dowolne ważne konto IBAN&lt;/li&gt;</translation>
     </message>
     <message>
         <source>&lt;li&gt;Top up, manage and control your mobile funds from the desktop&lt;/li&gt;&lt;li&gt;Empty your mobile funds with ease if phone is broken or stolen&lt;/li&gt;</source>
