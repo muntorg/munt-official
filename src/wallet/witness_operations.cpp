@@ -409,6 +409,11 @@ void rotatewitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
         CTxOut rotatedWitnessTxOutput;
         rotatedWitnessTxOutput.SetType(CTxOutType::PoW2WitnessOutput);
         rotatedWitnessTxOutput.output.witnessDetails.lockFromBlock = currentWitnessDetails.lockFromBlock;
+        // Ensure consistent lock from
+        if (rotatedWitnessTxOutput.output.witnessDetails.lockFromBlock == 0)
+        {
+            rotatedWitnessTxOutput.output.witnessDetails.lockFromBlock = currentWitnessHeight;
+        }
         rotatedWitnessTxOutput.output.witnessDetails.lockUntilBlock = currentWitnessDetails.lockUntilBlock;
         rotatedWitnessTxOutput.output.witnessDetails.spendingKeyID = currentWitnessDetails.spendingKeyID;
         rotatedWitnessTxOutput.output.witnessDetails.witnessKeyID = pubWitnessKey.GetID();
