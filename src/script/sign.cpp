@@ -508,7 +508,7 @@ static Stacks CombineSignatures(const CScript& scriptPubKey, const BaseSignature
     case TX_STANDARD_WITNESS:
     case TX_STANDARD_PUBKEY_HASH:
         assert(0);
-        break;
+        return Stacks();
     default:
         return Stacks();
     }
