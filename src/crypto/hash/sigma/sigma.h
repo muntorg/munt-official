@@ -99,6 +99,12 @@ extern sigma_settings defaultSigmaSettings;
 
 // We select the optimal implementation of these hash functions to match our CPU once at program start and then just use the function pointers throghout the SIGMA code.
 void selectOptimisedImplementations();
+extern uint64_t gSelShavite;
+extern uint64_t gSelEcho;
+extern uint64_t gSelArgon;
+// Get a human readable name for the selections above
+std::string selectedAlgorithmName(uint64_t nSel);
+
 inline HashReturn (*selected_echo256_opt_Init)(echo256_opt_hashState* state) = nullptr;
 inline HashReturn (*selected_echo256_opt_Update)(echo256_opt_hashState* state, const unsigned char* data, uint64_t databitlen) = nullptr;
 inline HashReturn (*selected_echo256_opt_Final)(echo256_opt_hashState* state, unsigned char* hashval) = nullptr;

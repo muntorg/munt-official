@@ -114,6 +114,10 @@ inline void sigmaRandomFastHashRef(uint64_t nPseudoRandomAlg, uint8_t* data1, ui
     }
 }
 
+uint64_t gSelShavite=0;
+uint64_t gSelEcho=0;
+uint64_t gSelArgon=0;
+
 uint64_t nNumShaviteTrials=100;
 uint64_t nNumEchoTrials=100;
 uint64_t nNumArgonTrials=10;
@@ -133,7 +137,7 @@ uint64_t nNumArgonTrials=10;
         selected_shavite3_256_opt_Update = shavite3_256_opt_##CPU##_Update;\
         selected_shavite3_256_opt_Final  = shavite3_256_opt_##CPU##_Final;\
         nBestTimeShavite=nTime;\
-        nSelShavite=IDX;\
+        gSelShavite=IDX;\
     }\
 }
 #define SELECT_OPTIMISED_ECHO(CPU, IDX) \
@@ -153,7 +157,7 @@ uint64_t nNumArgonTrials=10;
         selected_echo256_opt_Final       = echo256_opt_##CPU##_Final;\
         selected_echo256_opt_UpdateFinal = echo256_opt_##CPU##_UpdateFinal;\
         nBestTimeEcho=nTime;\
-        nSelEcho=IDX;\
+        gSelEcho=IDX;\
     }\
 }      
 #define SELECT_OPTIMISED_ARGON(CPU, IDX) \
@@ -177,7 +181,7 @@ uint64_t nNumArgonTrials=10;
     {\
         selected_argon2_echo_hash = argon2_echo_ctx_##CPU;\
         nBestTimeArgon=nTime;\
-        nSelArgon=IDX;\
+        gSelArgon=IDX;\
     }\
 }
 #define FORCE_SELECT_OPTIMISED_SHAVITE(CPU, IDX) \
@@ -185,7 +189,7 @@ uint64_t nNumArgonTrials=10;
     selected_shavite3_256_opt_Init   = shavite3_256_opt_##CPU##_Init;\
     selected_shavite3_256_opt_Update = shavite3_256_opt_##CPU##_Update;\
     selected_shavite3_256_opt_Final  = shavite3_256_opt_##CPU##_Final;\
-    nSelShavite=IDX;\
+    gSelShavite=IDX;\
 }
 #define FORCE_SELECT_OPTIMISED_ECHO(CPU, IDX) \
 {\
@@ -193,90 +197,95 @@ uint64_t nNumArgonTrials=10;
     selected_echo256_opt_Update      = echo256_opt_##CPU##_Update;\
     selected_echo256_opt_Final       = echo256_opt_##CPU##_Final;\
     selected_echo256_opt_UpdateFinal = echo256_opt_##CPU##_UpdateFinal;\
-    nSelEcho=IDX;\
+    gSelEcho=IDX;\
 }      
 #define FORCE_SELECT_OPTIMISED_ARGON(CPU, IDX) \
 {\
     selected_argon2_echo_hash = argon2_echo_ctx_##CPU;\
-    nSelArgon=IDX;\
+    gSelArgon=IDX;\
 }
 
 #ifdef ARCH_CPU_X86_FAMILY
-void LogSelection(uint64_t nSel, std::string sAlgoName)
+std::string selectedAlgorithmName(uint64_t nSel)
 {
     switch (nSel)
     {
         case 0:
-            LogPrintf("[%d] Selected reference implementation \n", sAlgoName); break;
+            return "reference implementation";
         case 1:
-            LogPrintf("[%d] Selected avx512f-aes\n", sAlgoName); break;
+            return "avx512f-aes";
         case 2:
-            LogPrintf("[%d] Selected avx2-aes\n", sAlgoName); break;
+            return "avx2-aes";
         case 3:
-            LogPrintf("[%d] Selected avx-aes\n", sAlgoName); break;
+            return "avx-aes";
         case 4:
-            LogPrintf("[%d] Selected sse4-aes\n", sAlgoName); break;
+            return "sse4-aes";
         case 5:
-            LogPrintf("[%d] Selected sse3-aes\n", sAlgoName); break;
+            return "sse3-aes";
         case 6:
-            LogPrintf("[%d] Selected sse2-aes\n", sAlgoName); break;
+            return "sse2-aes";
         case 7:
-            LogPrintf("[%d] Selected avx512f\n", sAlgoName); break;
+            return "avx512f";
         case 8:
-            LogPrintf("[%d] Selected avx2\n", sAlgoName); break;
+            return "avx2";
         case 9:
-            LogPrintf("[%d] Selected avx\n", sAlgoName); break;
+            return "avx";
         case 10:
-            LogPrintf("[%d] Selected sse4\n", sAlgoName); break;
+            return "sse4";
         case 11:
-            LogPrintf("[%d] Selected sse3\n", sAlgoName); break;
+            return "sse3";
         case 12:
-            LogPrintf("[%d] Selected sse2\n", sAlgoName); break;
+            return "sse2";
         case 9999:
-            LogPrintf("[%d] Selected hybrid implementation\n", sAlgoName); break;
+            return "hybrid implementation";
     }
+    return "";
 }
 #elif defined(ARCH_CPU_ARM_FAMILY)
-void LogSelection(uint64_t nSel, std::string sAlgoName)
+std::string selectedAlgorithmName(uint64_t nSel)
 {
     switch (nSel)
     {
-        case 0:
-            LogPrintf("[%d] Selected reference implementation (no NEON support)\n", sAlgoName); break;
+         case 0:
+            return "reference implementation (no NEON support)";
         case 1:
-            LogPrintf("[%d] Selected Cortex-A53 optimised NEON support (no hardware AES)\n", sAlgoName); break;
+            return "Cortex-A53 optimised NEON support (no hardware AES)";
         case 2:
-            LogPrintf("[%d] Selected Cortex-A57 optimised NEON support (no hardware AES)\n", sAlgoName); break;
+            return "Cortex-A57 optimised NEON support (no hardware AES)";
         case 3:
-            LogPrintf("[%d] Selected Cortex-A72 optimised NEON support (no hardware AES)\n", sAlgoName); break;
+            return "Cortex-A72 optimised NEON support (no hardware AES)";
         case 4:
-            LogPrintf("[%d] Selected Cortex-A53 optimised NEON+AES support\n", sAlgoName); break;
+            return "Cortex-A53 optimised NEON+AES support";
         case 5:
-            LogPrintf("[%d] Selected Cortex-A57 optimised NEON+AES support\n", sAlgoName); break;
+            return "Cortex-A57 optimised NEON+AES support";
         case 6:
-            LogPrintf("[%d] Selected Cortex-A72 optimised NEON+AES support\n", sAlgoName); break;
+            return "Cortex-A72 optimised NEON+AES support";
         case 7:
-            LogPrintf("[%d] Selected Thunderx optimised NEON+AES support\n", sAlgoName); break;
+            return "Thunderx optimised NEON+AES support";
         case 9999:
-            LogPrintf("[%d] Selected hybrid implementation\n", sAlgoName); break;
+            return "hybrid implementation";
     }
+    return "";
 }
 #ifndef __APPLE__
 #include <sys/auxv.h>
 #endif
 #else
-void LogSelection(uint64_t nSel, std::string sAlgoName)
+std::string selectedAlgorithmName(uint64_t nSel)
 {
     //fixme: (SIGMA) Implement for riscv
+    return "";
 }
 #endif
 
+void LogSelection(uint64_t nSel, std::string sAlgoName)
+{
+    std::string sAlgoImplementation = selectedAlgorithmName(nSel);
+    LogPrintf("[%s] Selected %s\n", sAlgoName, sAlgoImplementation);
+}
+
 void selectOptimisedImplementations()
 {
-    uint64_t nSelShavite=0;
-    uint64_t nSelEcho=0;
-    uint64_t nSelArgon=0;
-
     #ifndef ARCH_CPU_X86_FAMILY
     std::string data = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
     std::vector<unsigned char> outHash(32);
@@ -530,9 +539,9 @@ void selectOptimisedImplementations()
     #endif
     
 logselection:
-    LogSelection(nSelShavite, "shavite");
-    LogSelection(nSelEcho, "echo");
-    LogSelection(nSelArgon, "argon");
+    LogSelection(gSelShavite, "shavite");
+    LogSelection(gSelEcho, "echo");
+    LogSelection(gSelArgon, "argon");
 }
 
 void normaliseBufferSize(uint64_t& nBufferSizeBytes)
