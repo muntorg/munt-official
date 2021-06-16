@@ -725,7 +725,7 @@ static UniValue dumpdiffarray(const JSONRPCRequest& request)
     RPCTypeCheck(request.params, {UniValue::VNUM, UniValue::VSTR});
     
     std::ofstream file;
-    boost::filesystem::path filepath = request.params[0].get_str();
+    boost::filesystem::path filepath = request.params[1].get_str();
     filepath = boost::filesystem::absolute(filepath);
     file.open(filepath.string().c_str(), std::ios::out|std::ios::trunc);
     if (!file.is_open())

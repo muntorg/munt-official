@@ -16,11 +16,11 @@ rpcuser=os.environ["CHECKPOINT_RPC_USER"]
 rpcpass=os.environ["CHECKPOINT_RPC_PASSWORD"]
 rpcport=os.environ["CHECKPOINT_RPC_PORT"]
 rpcip=os.environ["CHECKPOINT_RPC_IP"]
-difffilename=os.environ["DIFF_FILENAME"]
+difffilename=os.environ["STATICDIFF_FILENAME"]
 # ====== END USER SETTINGS ======
 
 access = AuthServiceProxy("http://"+rpcuser+":"+rpcpass+"@"+rpcip+":"+rpcport)
 
 chain_height = access.getblockcount()
 access.dumpdiffarray(chain_height, difffilename)
-
+print(chain_height)
