@@ -122,7 +122,7 @@ WitnessEstimateInfoRecord IWitnessController::getEstimatedWeight(int64_t amountT
     double witnessProbability = witnessFraction(optimalAmounts, lockPeriodInBlocks, networkWeight);
     double estimatedBlocksPerDay = DailyBlocksTarget() * witnessProbability;
     
-    CAmount witnessSubsidy = GetBlockSubsidyWitness(chainActive.Tip()?chainActive.Tip()->nHeight:1);
+    CAmount witnessSubsidy = GetBlockSubsidy(chainActive.Tip()?chainActive.Tip()->nHeight:1).witness;
 
     CAmount estimatedDaileyEarnings = estimatedBlocksPerDay * witnessSubsidy;
     CAmount estimatedLifetimeEarnings = estimatedBlocksPerDay * lockPeriodInDays * witnessSubsidy;
