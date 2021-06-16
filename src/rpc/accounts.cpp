@@ -711,17 +711,25 @@ static UniValue dumpdiffarray(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() != 1)
+    if (request.fHelp || request.params.size() != 2)
         throw std::runtime_error(
-            "dumpdiffarray  ( height )\n"
+            "dumpdiffarray  \"height\" \"filename\"\n"
             "\nDump code for a c++ array containing 'height' integers, where each integer represents the difficulty (nBits) of a block.\n"
             "\nThis mainly exists for testing and development purposes, and can be used to help verify that your client has not been tampered with.\n"
             "\nArguments:\n"
             "1. height     (numeric) The number of blocks to add to the array.\n"
+            "1. filename   (string) Where to write the data, file will be overwritten.\n"
             "\nExamples:\n"
-            + HelpExampleCli("dumpdiffarray 260000", ""));
+            + HelpExampleCli("dumpdiffarray 1260000", ""));
 
-    RPCTypeCheck(request.params, boost::assign::list_of(UniValue::VNUM));
+    RPCTypeCheck(request.params, {UniValue::VNUM, UniValue::VSTR});
+    
+    std::ofstream file;
+    boost::filesystem::path filepath = request.params[0].get_str();
+    filepath = boost::filesystem::absolute(filepath);
+    file.open(filepath.string().c_str(), std::ios::out|std::ios::trunc);
+    if (!file.is_open())
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open target file");
 
     std::string reverseOutBuffer;
     std::string scratchBuffer;
@@ -747,7 +755,9 @@ static UniValue dumpdiffarray(const JSONRPCRequest& request)
     }
 
     std::reverse(reverseOutBuffer.begin(), reverseOutBuffer.end());
-    LogPrintf("%s",reverseOutBuffer);
+
+    file.write(reverseOutBuffer.begin(), reverseOutBuffer.size());
+    file.close();
 
     return reverseOutBuffer;
 }
