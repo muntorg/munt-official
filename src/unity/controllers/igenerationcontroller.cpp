@@ -109,7 +109,7 @@ bool IGenerationController::startGeneration(int32_t numThreads, const std::strin
     {
         try
         {
-            PoWGenerateBlocks(true, numThreads, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
+            PoWGenerateBlocks(true, numThreads, numThreads, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
         }
         catch(...)
         {

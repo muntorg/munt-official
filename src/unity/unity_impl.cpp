@@ -220,15 +220,15 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         // our own transactions.
 
         uint256 txHash;
-        if (txin.prevout.isHash)
+        if (txin.GetPrevOut().isHash)
         {
-            txHash = txin.prevout.getTransactionHash();
+            txHash = txin.GetPrevOut().getTransactionHash();
         }
         else
         {
-            if (!pwallet->GetTxHash(txin.prevout, txHash))
+            if (!pwallet->GetTxHash(txin.GetPrevOut(), txHash))
             {
-                LogPrintf("Transaction with no corresponding hash found, txid [%d] [%d]\n", txin.prevout.getTransactionBlockNumber(), txin.prevout.getTransactionIndex());
+                LogPrintf("Transaction with no corresponding hash found, txid [%d] [%d]\n", txin.GetPrevOut().getTransactionBlockNumber(), txin.GetPrevOut().getTransactionIndex());
                 continue;
             }
         }
@@ -236,9 +236,9 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         if (mi != pwallet->mapWallet.end())
         {
             const CWalletTx& prev = (*mi).second;
-            if (txin.prevout.n < prev.tx->vout.size())
+            if (txin.GetPrevOut().n < prev.tx->vout.size())
             {
-                const auto& prevOut =  prev.tx->vout[txin.prevout.n];
+                const auto& prevOut =  prev.tx->vout[txin.GetPrevOut().n];
                 if (!ExtractDestination(prevOut, dest) && !prevOut.IsUnspendable())
                 {
                     LogPrintf("Unknown transaction type found, txid %s\n", wtx.GetHash().ToString());
@@ -1351,7 +1351,7 @@ PaymentResultStatus ILibraryController::performPaymentToRecipient(const UriRecip
     // Prevent accidental double spends
     for (const auto &txin : wtx.tx->vin)
     {
-        pactiveWallet->LockCoin(txin.prevout);
+        pactiveWallet->LockCoin(txin.GetPrevOut());
     }
 
     return PaymentResultStatus::SUCCESS;

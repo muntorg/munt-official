@@ -155,7 +155,7 @@ public:
         checkpointData = (CCheckpointData)
         {
             {
-                #include "chainparams_mainnet_static_checkpoint_data.cpp"
+                #include "data/chainparams_mainnet_static_checkpoint_data.cpp"
             }
         };
 

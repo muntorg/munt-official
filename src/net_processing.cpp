@@ -1667,7 +1667,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             pfrom->fDisconnect = true;
             return false;
         }
-        if (GetAdjustedTime() > Params().GetConsensus().segsigUncompressedKeyAllowedTime && !pfrom->fInbound && nVersion < MIN_PEER_PROTO_VERSION_OUTBOUND)
+        if (GetAdjustedTime() > (int64_t)Params().GetConsensus().segsigUncompressedKeyAllowedTime && !pfrom->fInbound && nVersion < MIN_PEER_PROTO_VERSION_OUTBOUND)
         {
             if (!gbMinimalLogging)
                 LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);

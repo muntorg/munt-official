@@ -43,8 +43,8 @@
   </tr>
   <tr>
     <td>
-      <a href="https://github.com/Gulden/gulden-official/compare/master@%7B12month%7D...2.3_development">
-        <img height="20px" src="https://img.shields.io/badge/dev%20branch-2.3_development-blue.svg" alt="active_branch"/>
+      <a href="https://github.com/Gulden/gulden-official/compare/master@%7B12month%7D...2.4_development">
+        <img height="20px" src="https://img.shields.io/badge/dev%20branch-2.4_development-blue.svg" alt="active_branch"/>
       </a>
     </td>
   </tr>
@@ -58,7 +58,7 @@ All code, binaries and other assets in this repository are subject to [The Gulde
 ### Branches
 `master` branch tracks the current public release; is generally updated only for each release (with accompanying tag) and very occasionally for minor documentation or other commits. If all you want is to build/track the current version of the sofrware than use the `master` branch.
 
-Each major version of the software gets its own branch e.g. `2.4_development`, `2.3_development` where if `2.4` were the next major release than both `2.4` and `2.3` may see some activity with `2.3` getting minor backports and updates while `2.4` development continues.
+Each major version of the software gets its own branch e.g. `2.5_development`, `2.4_development` where if `2.5` were the next major release than both `2.5` and `2.4` may see some activity with `2.4` getting minor backports and updates while `2.5` development continues.
 
 Major features are worked on in temporary feature branches until they can be merged back into one of the development branches. The currently most active branch, where most development that will go into the next major release is taking place is linked in the table at the top of this README as the `dev branch` and may be updated as development mandates seperate branches, for development changes you will generally want to work on this branch.
 

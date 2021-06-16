@@ -494,10 +494,10 @@ bool CWitnessTxBundle::IsValidMultiRenewalBundle(uint64_t nSpendHeight)
         return false;
 
     // Input and outputs must always match in order
-    for (int i=0; i<inputs.size();++i)
+    for (uint64_t inputIndex=0; inputIndex<inputs.size();++inputIndex)
     {
-        const auto& input = inputs[i];
-        const auto& output = outputs[i];
+        const auto& input = inputs[inputIndex];
+        const auto& output = outputs[inputIndex];
         
         // Amount keys and lock unchanged.
         if (std::get<0>(input).nValue != std::get<0>(output).nValue)

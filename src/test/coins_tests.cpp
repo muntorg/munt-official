@@ -718,6 +718,7 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
                 int outputIndex=0;
                 for (const auto& txOut : tx.vout)
                 {
+                    (unused)txOut;
                     LogPrintf("Spend output [%s]\n", COutPoint(tx.GetHash(), outputIndex).ToString());
                     allCoins.erase(allCoins.find(COutPoint(tx.GetHash(), outputIndex)));
 
