@@ -10,7 +10,7 @@ CORE      - Implement methods/functionality to track/encode witness set "deltas"
 CONSENSUS - Store the witness set delta as part of each header, this allows for a very efficient syncing method which we are calling "witness sync"
 CONSENSUS - Enable spending of addresses with uncompressed keys again
 CONSENSUS - Allow renewal of multiple parts of the same witness account in a single transaction instead of requiring a renewal for each part
-CORE/UI   - Introduce a seperate mining paramater for number of threads to use for "arena setup" when mining so that this can be set independently of "mining threads"
+CORE/UI   - Introduce a separate mining parameter for number of threads to use for "arena setup" when mining so that this can be set independently of "mining threads"
 CORE      - Fix a sync issue that would sometimes cause new installs to get stuck when syncing the first few blocks 
 CORE      - Apply some optimisations to ConnectBlock calls that should improve performance quite substantially on some machines
 RPC       - "setgenerate" gains an extra parameter for the above, all miners should be aware of this as previous setgenerate syntax may fail
