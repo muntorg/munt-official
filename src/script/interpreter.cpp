@@ -223,7 +223,7 @@ bool static CheckPubKeyEncoding(const valtype &vchPubKey, unsigned int flags, co
         return set_error(serror, SCRIPT_ERR_PUBKEYTYPE);
     }
     
-    if (GetTime() < Params().GetConsensus().segsigUncompressedKeyAllowedTime)
+    if (GetTime() < (int64_t)Params().GetConsensus().segsigUncompressedKeyAllowedTime)
     {
         // Only compressed keys are accepted in segsig
         if (sigversion == SIGVERSION_SEGSIG && !IsCompressedPubKey(vchPubKey))

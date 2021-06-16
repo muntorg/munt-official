@@ -2879,7 +2879,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
         {
             return state.Invalid(false, REJECT_INVALID, "witness-signature-invalid", "block sets null witness signature");
         }
-        if (pindexPrev->nHeight > Params().GetConsensus().pow2WitnessSyncHeight)
+        if ((int64_t)pindexPrev->nHeight > (int64_t)Params().GetConsensus().pow2WitnessSyncHeight)
         {
             if (block.witnessUTXODelta.size() == 0)
             {

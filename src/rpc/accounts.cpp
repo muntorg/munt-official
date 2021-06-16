@@ -756,7 +756,7 @@ static UniValue dumpdiffarray(const JSONRPCRequest& request)
 
     std::reverse(reverseOutBuffer.begin(), reverseOutBuffer.end());
 
-    file.write(reverseOutBuffer.begin(), reverseOutBuffer.size());
+    file.write(&reverseOutBuffer[0], reverseOutBuffer.size());
     file.close();
 
     return reverseOutBuffer;
