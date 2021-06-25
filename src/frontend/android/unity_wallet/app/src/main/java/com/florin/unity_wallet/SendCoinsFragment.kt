@@ -203,7 +203,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         val amount = amountEditStr.toDoubleOrZero()
         when (entryMode) {
             EntryMode.Native -> {
-                primaryStr = "N %s".format(amountEditStr)
+                primaryStr = "F %s".format(amountEditStr)
                 if (localRate > 0.0) {
                     secondaryStr = String.format("(%s %.${foreignCurrency.precision}f)", foreignCurrency.short, localRate * amount)
                 }
@@ -213,7 +213,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             EntryMode.Local -> {
                 primaryStr = "%s %s".format(foreignCurrency.short, amountEditStr)
                 if (localRate > 0.0) {
-                    secondaryStr = String.format("(N %.${PRECISION_SHORT}f)", amount / localRate)
+                    secondaryStr = String.format("(F %.${PRECISION_SHORT}f)", amount / localRate)
                 }
             }
         }

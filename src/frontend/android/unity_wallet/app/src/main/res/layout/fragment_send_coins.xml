@@ -46,7 +46,7 @@ file COPYING
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:textSize="24sp"
-            android:hint="N 0,00"
+            android:hint="F 0,00"
             android:inputType="none"
             tools:clickable="false"
             tools:ignore="HardcodedText" />
