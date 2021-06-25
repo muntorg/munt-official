@@ -65,7 +65,7 @@ std::unordered_map<std::string, std::string> IWitnessController::getNetworkLimit
 
 static int64_t GetNetworkWeight()
 {
-    int64_t nNetworkWeight = 200000;
+    static int64_t nNetworkWeight = 9000000;
     if (chainActive.Tip())
     {
         static uint64_t lastUpdate = 0;
@@ -87,9 +87,10 @@ static int64_t GetNetworkWeight()
                 {
                     return nNetworkWeight;
                 }
-                if (witnessInfo.nTotalWeightEligibleRaw != 0)
+                //fixme: Ideally this should use nTotalWeightEligibleRaw, but its not set from the above calls and would require additional computation
+                if (witnessInfo.nTotalWeightRaw != 0)
                 {
-                    nNetworkWeight = witnessInfo.nTotalWeightEligibleRaw;
+                    nNetworkWeight = witnessInfo.nTotalWeightRaw;
                 }
             }
         }
@@ -124,10 +125,10 @@ WitnessEstimateInfoRecord IWitnessController::getEstimatedWeight(int64_t amountT
     
     CAmount witnessSubsidy = GetBlockSubsidy(chainActive.Tip()?chainActive.Tip()->nHeight:1).witness;
 
-    CAmount estimatedDaileyEarnings = estimatedBlocksPerDay * witnessSubsidy;
-    CAmount estimatedLifetimeEarnings = estimatedBlocksPerDay * lockPeriodInDays * witnessSubsidy;
+    CAmount estimatedDailyEarnings = estimatedBlocksPerDay * witnessSubsidy;
+    CAmount estimatedLifetimeEarnings = (DailyBlocksTarget() * lockPeriodInDays) * witnessProbability * witnessSubsidy;
     
-    return WitnessEstimateInfoRecord(networkWeight, ourTotalWeight, optimalAmounts.size(), witnessProbability, estimatedBlocksPerDay, estimatedDaileyEarnings, estimatedLifetimeEarnings);
+    return WitnessEstimateInfoRecord(networkWeight, ourTotalWeight, optimalAmounts.size(), witnessProbability, estimatedBlocksPerDay, estimatedDailyEarnings, estimatedLifetimeEarnings);
 }
 
 WitnessFundingResultRecord IWitnessController::fundWitnessAccount(const std::string& fundingAccountUUID, const std::string& witnessAccountUUID, int64_t fundingAmount, int64_t requestedLockPeriodInBlocks)
