@@ -1410,8 +1410,8 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
 
     // arg3 - amount
     CAmount requestedAmount =  AmountFromValue(request.params[2]);
-    if (requestedAmount < ((chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)*COIN))
-        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", (chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)));
+    if (requestedAmount < (gMinimumWitnessAmount*COIN))
+        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
 
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.
@@ -1548,8 +1548,8 @@ static UniValue extendwitnessaccount(const JSONRPCRequest& request)
 
     // arg3 - amount
     CAmount requestedAmount =  AmountFromValue(request.params[2]);
-    if (requestedAmount < ((chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)*COIN))
-        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", (chainActive.Height() > 100000 ? gMinimumWitnessAmount : gMinimumWitnessAmountOld)));
+    if (requestedAmount < (gMinimumWitnessAmount*COIN))
+        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Witness amount must be %d or larger", gMinimumWitnessAmount));
 
     // arg4 - lock period.
     // Calculate lock period based on suffix (if one is present) otherwise leave as is.
