@@ -219,17 +219,17 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
         // our own transactions.
         uint256 txHashPrev;
         bool havePrevOut=true;
-        if (txin.prevout.isHash)
+        if (txin.GetPrevOut().isHash)
         {
-            txHashPrev = txin.prevout.getTransactionHash();
+            txHashPrev = txin.GetPrevOut().getTransactionHash();
         }
         else
         {
-            if (!pwallet->GetTxHash(txin.prevout, txHashPrev))
+            if (!pwallet->GetTxHash(txin.GetPrevOut(), txHashPrev))
             {
                 if (!fSPV)
                 {
-                    LogPrintf("Transaction with no corresponding hash found, txid [%d] [%d]\n", txin.prevout.getTransactionBlockNumber(), txin.prevout.getTransactionIndex());
+                    LogPrintf("Transaction with no corresponding hash found, txid [%d] [%d]\n", txin.GetPrevOut().getTransactionBlockNumber(), txin.GetPrevOut().getTransactionIndex());
                 }
                 havePrevOut = false;
             }
@@ -244,9 +244,9 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
             if (mi != pwallet->mapWallet.end())
             {
                 const CWalletTx& prev = (*mi).second;
-                if (txin.prevout.n < prev.tx->vout.size())
+                if (txin.GetPrevOut().n < prev.tx->vout.size())
                 {
-                    const auto& prevOut =  prev.tx->vout[txin.prevout.n];
+                    const auto& prevOut =  prev.tx->vout[txin.GetPrevOut().n];
                     if (!ExtractDestination(prevOut, dest) && !prevOut.IsUnspendable())
                     {
                         LogPrintf("Unknown transaction type found, txid %s\n", wtx.GetHash().ToString());
@@ -1329,7 +1329,7 @@ PaymentResultStatus ILibraryController::performPaymentToRecipient(const UriRecip
     // Prevent accidental double spends
     for (const auto &txin : wtx.tx->vin)
     {
-        pactiveWallet->LockCoin(txin.prevout);
+        pactiveWallet->LockCoin(txin.GetPrevOut());
     }
 
     return PaymentResultStatus::SUCCESS;
