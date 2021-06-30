@@ -902,7 +902,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
                 {
                     if (txv.vin.size() > i)
                     {
-                        sigdata = CombineSignatures(prevPubKey, TransactionSignatureChecker(signingKeyID, CKeyID(), &txConst, i, amount), sigdata, DataFromTransaction(txv, i));
+                        sigdata = CombineSignatures(prevPubKey, TransactionSignatureChecker(signingKeyID, CKeyID(), &txConst, i, amount), sigdata, DataFromTransaction(txv, i), SIGVERSION_SEGSIG);
                     }
                 }
                 
