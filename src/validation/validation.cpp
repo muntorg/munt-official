@@ -3235,7 +3235,9 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
     // (but if it does not build on our best tip, let the SendMessages loop relay it)
     //fixme: (PHASE5) (HIGH) This will probably increase forks slightly - but we need to keep pushing tip contenders out in case of stalled witness
     // Maybe we could 'delay' such candidates slightly, store them in a cache and then only relay after some time has passed with tip not advancing.
-    if (((!IsInitialBlockDownload())||IsArgSet("-regtest")) && (chainActive.Tip() == pindex->pprev || pindex->nHeight >= chainActive.Tip()->nHeight))
+    static bool fRegTest = GetBoolArg("-regtest", false);
+    static bool fRegTestLegacy = GetBoolArg("-regtestlegacy", false);
+    if (((!IsInitialBlockDownload())||fRegTest||fRegTestLegacy) && (chainActive.Tip() == pindex->pprev || pindex->nHeight >= chainActive.Tip()->nHeight))
         GetMainSignals().NewPoWValidBlock(pindex, pblock);
 
     int nHeight = pindex->nHeight;

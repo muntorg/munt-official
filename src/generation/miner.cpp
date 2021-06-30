@@ -1079,6 +1079,7 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
 
     static bool testnet = IsArgSet("-testnet");
     static bool regTest = GetBoolArg("-regtest", false);
+    static bool regTestLegacy = GetBoolArg("-regtestlegacy", false);
     
     // Start with fresh statistics for every mining run
     clearHashesPerSecondStatistics();
@@ -1130,7 +1131,7 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
 
         // Ensure we are reasonably caught up with peers, so we don't waste time mining on an obsolete chain.
         // In testnet/regtest mode we expect to be able to mine without peers.
-        if (!regTest && !testnet)
+        if (!regTest && !regTestLegacy && !testnet)
         {
             while (true)
             {
@@ -1146,7 +1147,7 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
         {
             // If we have no peers, pause mining until we do, otherwise theres no real point in mining.
             // In testnet/regtest mode we expect to be able to mine without peers.
-            if (!regTest && !testnet)
+            if (!regTest && !regTestLegacy && !testnet)
             {
                 while (true)
                 {

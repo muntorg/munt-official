@@ -731,6 +731,10 @@ bool SetStartOnSystemStartup(bool fAutoStart)
             {
                 strArgs += QString::fromStdString(strprintf(" -regtest=%s", GetBoolArg("-regtest", false)));
             }
+            if (IsArgSet("-regtestlegacy"))
+            {
+                strArgs += QString::fromStdString(strprintf(" -regtestlegacy=%s", GetBoolArg("-regtestlegacy", false)));
+            }
 
 #ifdef UNICODE
             boost::scoped_array<TCHAR> args(new TCHAR[strArgs.length() + 1]);
@@ -847,6 +851,10 @@ bool SetStartOnSystemStartup(bool fAutoStart)
         else if (IsArgSet("-regtest"))
         {
             optionFile << strprintf("-regtest=%d\n", GetBoolArg("-regtest", false));
+        }
+        else if (IsArgSet("-regtestlegacy"))
+        {
+            optionFile << strprintf("-regtestlegacy=%d\n", GetBoolArg("-regtestlegacy", false));
         }
         optionFile << "Terminal=false\n";
         optionFile << "Hidden=false\n";
