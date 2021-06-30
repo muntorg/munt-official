@@ -20,6 +20,7 @@
 const std::string CBaseChainParams::MAIN = "main";
 const std::string CBaseChainParams::TESTNET = "test";
 const std::string CBaseChainParams::REGTEST = "regtest";
+const std::string CBaseChainParams::REGTESTLEGACY = "regtest_legacy";
 
 void AppendParamsHelpMessages(std::string& strUsage, bool debugHelp)
 {
@@ -71,6 +72,19 @@ public:
     }
 };
 
+/*
+ * Regression test
+ */
+class CBaseRegTestLegacyParams : public CBaseChainParams
+{
+public:
+    CBaseRegTestLegacyParams()
+    {
+        nRPCPort = 18332;
+        strDataDir = "regtest_legacy";
+    }
+};
+
 static std::unique_ptr<CBaseChainParams> globalChainBaseParams;
 
 const CBaseChainParams& BaseParams()
@@ -87,6 +101,8 @@ std::unique_ptr<CBaseChainParams> CreateBaseChainParams(const std::string& chain
         return std::unique_ptr<CBaseChainParams>(new CBaseTestNetParams());
     else if (chain == CBaseChainParams::REGTEST)
         return std::unique_ptr<CBaseChainParams>(new CBaseRegTestParams());
+    else if (chain == CBaseChainParams::REGTESTLEGACY)
+        return std::unique_ptr<CBaseChainParams>(new CBaseRegTestLegacyParams());
     else
         throw std::runtime_error(strprintf("%s: Unknown chain %s.", __func__, chain));
 }
@@ -99,12 +115,15 @@ void SelectBaseParams(const std::string& chain)
 std::string ChainNameFromCommandLine()
 {
     bool fRegTest = GetBoolArg("-regtest", false);
+    bool fRegTestLegacy = GetBoolArg("-regtestlegacy", false);
     bool fTestNet = IsArgSet("-testnet");
 
-    if (fTestNet && fRegTest)
+    if (fTestNet && (fRegTest||fRegTestLegacy))
         throw std::runtime_error("Invalid combination of -regtest and -testnet.");
     if (fRegTest)
         return CBaseChainParams::REGTEST;
+    if (fRegTestLegacy)
+        return CBaseChainParams::REGTESTLEGACY;
     if (fTestNet)
     {
         std::string sTestnetParams = GetArg("-testnet", "");

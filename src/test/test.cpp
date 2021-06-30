@@ -118,7 +118,7 @@ TestingSetup::~TestingSetup()
         fs::remove_all(pathTemp);
 }
 
-TestChain100Setup::TestChain100Setup() : TestingSetup(CBaseChainParams::REGTEST)
+TestChain100Setup::TestChain100Setup() : TestingSetup(CBaseChainParams::REGTESTLEGACY)
 {
     // Generate a 100-block chain:
     coinbaseKey.MakeNewKey(true);

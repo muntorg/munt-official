@@ -53,6 +53,7 @@
 #include <validation/witnessvalidation.h>
 
 #include <boost/algorithm/string/predicate.hpp> // for ends_with()
+#include <boost/uuid/uuid.hpp>
 
 /**
  * Return average network hashes per second based on the last 'lookup' blocks,
@@ -143,12 +144,16 @@ static UniValue getnetworkhashps(const JSONRPCRequest& request)
     return GetNetworkHashPS(lookup, request.params.size() > 1 ? request.params[1].get_int() : -1);
 }
 
+extern void TryPopulateAndSignWitnessBlock(CBlockIndex* candidateIter, CChainParams& chainparams, Consensus::Params& consensusParams, CGetWitnessInfo witnessInfo, std::shared_ptr<CBlock> pWitnessBlock, std::map<boost::uuids::uuid, std::shared_ptr<CReserveKeyOrScript>>& reserveKeys, bool& encounteredError, bool& signedBlock);
+
 static UniValue generateBlocks(std::shared_ptr<CReserveKeyOrScript> coinbaseScript, int nGenerate, uint64_t nMaxTries, bool keepScript)
 {
     static const int nInnerLoopCount = 0x10000;
     int nHeightEnd = 0;
     int nHeight = 0;
 
+    std::map<boost::uuids::uuid, std::shared_ptr<CReserveKeyOrScript>> reservedKeys;
+    
     {   // Don't keep cs_main locked
         LOCK(cs_main);
         nHeight = chainActive.Height();
@@ -176,9 +181,31 @@ static UniValue generateBlocks(std::shared_ptr<CReserveKeyOrScript> coinbaseScri
         if (pblock->nNonce == nInnerLoopCount) {
             continue;
         }
-        std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
+
+        CChainParams chainparams = Params();
+        Consensus::Params consensus = chainparams.GetConsensus();
+        CGetWitnessInfo witnessInfo;
+        if (!GetWitness(chainActive, chainparams, nullptr, chainActive.Tip(), *pblock, witnessInfo))
+        {
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "Unable to get witness for block");
+        }
+            
+        std::shared_ptr<CBlock> shared_pblock = std::make_shared<CBlock>(*pblock);
         if (!ProcessNewBlock(Params(), shared_pblock, true, NULL, false, true))
-            throw JSONRPCError(RPC_INTERNAL_ERROR, "ProcessNewBlock, block not accepted");
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "ProcessNewBlock, PoW block not accepted");
+        
+        // Perform witnessing
+        {   
+            bool encounteredError=false;
+            bool signedBlock=false;
+            TryPopulateAndSignWitnessBlock(chainActive.Tip(), chainparams, consensus, witnessInfo, shared_pblock, reservedKeys, encounteredError, signedBlock);
+            if (encounteredError || !signedBlock)
+                throw JSONRPCError(RPC_INTERNAL_ERROR, "Unable to witness block");
+            
+            if (!ProcessNewBlock(Params(), shared_pblock, true, NULL, false, true))
+                throw JSONRPCError(RPC_INTERNAL_ERROR, "ProcessNewBlock, witness block not accepted");
+        }
+        
         ++nHeight;
         blockHashes.push_back(pblock->GetHashLegacy().GetHex());
 
