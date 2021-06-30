@@ -480,31 +480,71 @@ static Stacks CombineSignatures(const CScript& scriptPubKey, const BaseSignature
     case TX_PUBKEY:
     case TX_PUBKEYHASH:
         // Signatures are bigger than placeholders or empty scripts:
-        if (sigs1.script.empty() || sigs1.script[0].empty())
-            return sigs2;
-        return sigs1;
-    case TX_SCRIPTHASH:
-        if (sigs1.script.empty() || sigs1.script.back().empty())
-            return sigs2;
-        else if (sigs2.script.empty() || sigs2.script.back().empty())
-            return sigs1;
+        if (sigversion == SIGVERSION_BASE)
+        {
+            if (sigs1.script.empty() || sigs1.script[0].empty())
+                return sigs2;
+        }
         else
         {
-            // Recur to combine:
-            valtype spk = sigs1.script.back();
-            CScript pubKey2(spk.begin(), spk.end());
+            if (sigs1.segregatedSignatureData.empty() || sigs1.segregatedSignatureData[0].empty())
+                return sigs2;
+        }
+        return sigs1;
+    case TX_SCRIPTHASH:
+        if (sigversion == SIGVERSION_BASE)
+        {
+            if (sigs1.script.empty() || sigs1.script.back().empty())
+                return sigs2;
+            else if (sigs2.script.empty() || sigs2.script.back().empty())
+                return sigs1;
+            else
+            {
+                // Recur to combine:
+                valtype spk = sigs1.script.back();
+                CScript pubKey2(spk.begin(), spk.end());
 
-            txnouttype txType2;
-            std::vector<std::vector<unsigned char> > vSolutions2;
-            Solver(pubKey2, txType2, vSolutions2);
-            sigs1.script.pop_back();
-            sigs2.script.pop_back();
-            Stacks result = CombineSignatures(pubKey2, checker, txType2, vSolutions2, sigs1, sigs2, sigversion);
-            result.script.push_back(spk);
-            return result;
+                txnouttype txType2;
+                std::vector<std::vector<unsigned char> > vSolutions2;
+                Solver(pubKey2, txType2, vSolutions2);
+                sigs1.script.pop_back();
+                sigs2.script.pop_back();
+                Stacks result = CombineSignatures(pubKey2, checker, txType2, vSolutions2, sigs1, sigs2, sigversion);
+                result.script.push_back(spk);
+                return result;
+            }
+        }
+        else
+        {
+            if (sigs1.segregatedSignatureData.empty() || sigs1.segregatedSignatureData.back().empty())
+                return sigs2;
+            else if (sigs2.segregatedSignatureData.empty() || sigs2.segregatedSignatureData.back().empty())
+                return sigs1;
+            else
+            {
+                // Recur to combine:
+                valtype spk = sigs1.segregatedSignatureData.back();
+                CScript pubKey2(spk.begin(), spk.end());
+
+                txnouttype txType2;
+                std::vector<std::vector<unsigned char> > vSolutions2;
+                Solver(pubKey2, txType2, vSolutions2);
+                sigs1.segregatedSignatureData.pop_back();
+                sigs2.segregatedSignatureData.pop_back();
+                Stacks result = CombineSignatures(pubKey2, checker, txType2, vSolutions2, sigs1, sigs2, sigversion);
+                result.segregatedSignatureData.push_back(spk);
+                return result;
+            }
         }
     case TX_MULTISIG:
-        return Stacks(CombineMultisig(scriptPubKey, checker, vSolutions, sigs1.script, sigs2.script, sigversion));
+        if (sigversion == SIGVERSION_BASE)
+        {
+            return Stacks(CombineMultisig(scriptPubKey, checker, vSolutions, sigs1.script, sigs2.script, sigversion));
+        }
+        else
+        {
+            return Stacks(CombineMultisig(scriptPubKey, checker, vSolutions, sigs1.segregatedSignatureData, sigs2.segregatedSignatureData, sigversion));
+        }
     case TX_STANDARD_WITNESS:
     case TX_STANDARD_PUBKEY_HASH:
         assert(0);
@@ -515,13 +555,13 @@ static Stacks CombineSignatures(const CScript& scriptPubKey, const BaseSignature
 }
 
 SignatureData CombineSignatures(const CScript& scriptPubKey, const BaseSignatureChecker& checker,
-                          const SignatureData& scriptSig1, const SignatureData& scriptSig2)
+                          const SignatureData& scriptSig1, const SignatureData& scriptSig2, SigVersion sigversion)
 {
     txnouttype txType;
     std::vector<std::vector<unsigned char> > vSolutions;
     Solver(scriptPubKey, txType, vSolutions);
 
-    return CombineSignatures(scriptPubKey, checker, txType, vSolutions, Stacks(scriptSig1), Stacks(scriptSig2), SIGVERSION_BASE).Output();
+    return CombineSignatures(scriptPubKey, checker, txType, vSolutions, Stacks(scriptSig1), Stacks(scriptSig2), sigversion).Output();
 }
 
 namespace {
