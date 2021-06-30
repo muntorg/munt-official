@@ -930,6 +930,15 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     uint256 hashPrevBlock = pindex->pprev == NULL ? uint256() : pindex->pprev->GetBlockHashPoW2();
     uint256 hashBestBlock = view.GetBestBlock();
     assert(hashPrevBlock == hashBestBlock);
+    
+    // Previous block must be witnessed
+    if (IsPow2Phase4Active(pindex->pprev))
+    {
+        if (pindex->pprev->nVersionPoW2Witness == 0)
+        {
+            return state.DoS(100, false, REJECT_INVALID, "invalid-prevblock-unwitnessed", false, "previous block lacks witness information");
+        }
+    }
 
     // Special case for the genesis block, skipping connection of its transactions
     // (its coinbase is unspendable)
