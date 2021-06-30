@@ -254,7 +254,7 @@ def main():
 
     logging.debug("Temporary test directory at %s" % tmpdir)
 
-    enable_GuldenD = config["components"].getboolean("ENABLE_GuldenD")
+    enable_GuldenD = config["components"].getboolean("ENABLE_GULDEND")
 
     if not enable_GuldenD:
         print("No functional tests to run.")
