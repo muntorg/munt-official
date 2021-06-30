@@ -1,3 +1,12 @@
+2.0.3
+
+CONSENSUS: Improve holding account earning curve, activates at block 114000
+UI: Fix an issue with debug menu sometimes being disable on macOS
+CORE: Fix an issue that was leading to occasional client freezes and drop in hashrate as a result.
+
+
+
+
 2.0.2
 
 Fix an issue updating some wallets (mostly windows machines)
