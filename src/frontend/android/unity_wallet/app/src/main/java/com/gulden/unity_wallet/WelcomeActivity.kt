@@ -100,7 +100,7 @@ class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
                             }
 
                             // Got here so there was an error in init or continue linked wallet
-                            alert(Appcompat,  getString(R.string.no_qrsync_warning),  getString(R.string.no_qrsync_warning_title))
+                            alert(Appcompat,  getString(R.string.no_guldensync_warning),  getString(R.string.no_guldensync_warning_title))
                             {
                                 positiveButton(getString(R.string.button_ok))
                                 {
