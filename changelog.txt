@@ -1,5 +1,6 @@
 2.4.1
 
+RPC       - New command "getlinkedaccount" as counterpart for existing "importlinkedaccount" command
 CORE      - Fix a DoS attack that can be utilised against miners
 
 
