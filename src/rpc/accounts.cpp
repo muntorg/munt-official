@@ -61,17 +61,20 @@ static UniValue gethashps(const JSONRPCRequest& request)
     double dHashPerSecLog = dHashesPerSec;
     std::string sHashPerSecLogLabel = " h";
     selectLargesHashUnit(dHashPerSecLog, sHashPerSecLogLabel);
+    
     double dRollingHashPerSecLog = dRollingHashesPerSec;
     std::string sRollingHashPerSecLogLabel = " h";
     selectLargesHashUnit(dRollingHashPerSecLog, sRollingHashPerSecLogLabel);
+    
     double dBestHashPerSecLog = dBestHashesPerSec;
     std::string sBestHashPerSecLogLabel = " h";
     selectLargesHashUnit(dBestHashPerSecLog, sBestHashPerSecLogLabel);
     
     UniValue rec(UniValue::VOBJ);
-    rec.push_back(Pair("last_reported", strprintf("%lf %s", dHashPerSecLog, sHashPerSecLogLabel)));
+    rec.push_back(Pair("last_reported",   strprintf("%lf %s", dHashPerSecLog, sHashPerSecLogLabel)));
     rec.push_back(Pair("rolling_average", strprintf("%lf %s", dRollingHashPerSecLog, sRollingHashPerSecLogLabel)));
-    rec.push_back(Pair("best_reported", strprintf("%lf %s", dBestHashPerSecLog, sBestHashPerSecLogLabel)));
+    rec.push_back(Pair("best_reported",   strprintf("%lf %s", dBestHashPerSecLog, sBestHashPerSecLogLabel)));
+    rec.push_back(Pair("arena_setup",     strprintf("%lfs", nArenaSetupTime/1000.0)));
 
     return rec;
     return strprintf("%lf %s/s (best %lf %s/s)", dHashPerSecLog, sHashPerSecLogLabel, dBestHashPerSecLog, sBestHashPerSecLogLabel);
@@ -1802,7 +1805,7 @@ static UniValue importlinkedaccount(const JSONRPCRequest& request)
             "importlinkedaccount \"name\" \"encoded_key_uri\" \n"
             "\nImport a linked account from an \"encoded_key_uri\"\n"
             "1. \"name\"       (string) Name to assign to the new account.\n"
-            "2. \"encoded_key_uri\" (string) Encoded string containing the extended public key for the account.\n"
+            "2. \"encoded_key_uri\" (string) Encoded string containing the extended public key for the account, you can get one of these using 'getlinkedaccount'.\n"
             "\nResult:\n"
             "\nReturn the UUID of the new account.\n"
             "\nExamples:\n"
@@ -1830,6 +1833,49 @@ static UniValue importlinkedaccount(const JSONRPCRequest& request)
 
     return getUUIDAsString(account->getUUID());
 }
+
+
+static UniValue getlinkedaccount(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "getlinkedaccount \"account\" \n"
+            "\nImport a linked account from an \"encoded_key_uri\"\n"
+            "1. \"account\"       (string) Name to assign to the new account.\n"
+            "\nResult:\n"
+            "\nReturn the encoded_key_uri of the account which can then be imported into another wallet via 'importlinkedaccount'.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getlinkedaccount \"Linked account\" \"", "")
+            + HelpExampleRpc("getlinkedaccount \"Linked account\" \"", ""));
+
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+
+    EnsureWalletIsUnlocked(pwallet);
+    
+    CAccount* forAccount = AccountFromValue(pwallet, request.params[0], false);
+    if (!forAccount)
+        throw std::runtime_error("Invalid account name or UUID");
+    
+    if (!forAccount->IsHD())
+        throw std::runtime_error("Not a HD account");
+
+    std::string encodedURI = GLOBAL_APP_URIPREFIX "sync:" + CEncodedSecretKeyExt<CExtKey>(*(static_cast<CAccountHD*>(forAccount)->GetAccountMasterPrivKey())).SetCreationTime(i64tostr(forAccount->getEarliestPossibleCreationTime())).ToURIString();
+
+    return encodedURI;
+}
+
+
 
 static UniValue getactiveseed(const JSONRPCRequest& request)
 {
@@ -3871,6 +3917,7 @@ static const CRPCCommand commandsFull[] =
     { "accounts",                "restoreaccount",                  &restoreaccount,                 true,    {"account"} },
     { "accounts",                "getreadonlyaccount",              &getreadonlyaccount,             true,    {"account"} },
     { "accounts",                "importreadonlyaccount",           &importreadonlyaccount,          true,    {"name", "encoded_key"} },
+    { "accounts",                "getlinkedaccount",                &getlinkedaccount,               true,    {"account"} },
     { "accounts",                "importlinkedaccount",             &importlinkedaccount,            true,    {"name", "encoded_key_uri"} },
     { "accounts",                "setactiveaccount",                &setactiveaccount,               true,    {"account"} },
 
