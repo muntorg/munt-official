@@ -1,3 +1,10 @@
+2.4.1
+
+CORE      - Fix a DoS attack that can be utilised against miners
+
+
+
+
 2.4.0
 
 CONSENSUS - Implement proposed reward reductions and halving, as decided by community and GAB
