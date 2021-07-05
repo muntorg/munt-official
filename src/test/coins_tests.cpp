@@ -759,15 +759,51 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             --blockCount;
             lastActionWasDisconnect = true;
         }
-        else if (randiter % 20 == 19)
+        
+        if (InsecureRandRange(100) == 0)
         {
-            LogPrintf("Flush caches [%d]\n", blockCount);
-            if (stack.size() > 1)
+            // Every 100 iterations, flush an intermediate cache
+            if (stack.size() > 1 && InsecureRandBool() == 0)
             {
                 unsigned int flushIndex = InsecureRandRange(stack.size() - 1);
                 stack[flushIndex]->Flush();
+                LogPrintf("Flush cache [%d]\n", flushIndex);
             }
         }
+        if (InsecureRandRange(100) == 0)
+        {
+            // Every 100 iterations, change the cache stack.
+            if (stack.size() > 0 && InsecureRandBool() == 0)
+            {
+                //Remove the top cache
+                stack.back()->Flush();
+                delete stack.back();
+                stack.pop_back();
+                
+                LogPrintf("Pop cache from stack\n");
+            }
+            if (stack.size() == 0 || (stack.size() < 4 && InsecureRandBool()))
+            {
+                LogPrintf("Add cache to stack\n");
+                
+                //Add a new cache
+                CCoinsView* tip = &base;
+                if (stack.size() > 0)
+                {
+                    tip = stack.back();
+                }
+                else
+                {
+                    //removed_all_caches = true;
+                }
+                stack.push_back(new CCoinsViewCacheTest(tip));
+                if (stack.size() == 4)
+                {
+                    //reached_4_caches = true;
+                }
+            }
+        }
+        
         
         // For every iteration make sure our expected UTXO matches our real UTXO
         {
@@ -789,19 +825,18 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             std::map<COutPoint, Coin> utxoAllCoinsIndexBased;
             stack.back()->GetAllCoinsIndexBased(utxoAllCoinsIndexBased);
             
-            std::vector<COutPoint> allCoinsIndexBasedL;
+            std::vector<COutPoint> allCoinsIndexBasedUTXO;
             for (const auto& [outPoint, coins] : utxoAllCoinsIndexBased)
             {
-                allCoinsIndexBasedL.push_back(outPoint);
+                allCoinsIndexBasedUTXO.push_back(outPoint);
             }
-            std::vector<COutPoint> allCoinsIndexBasedR;
+            std::vector<COutPoint> allCoinsIndexBasedTracked;
             for (const auto& [key, value] : allCoins)
             {
-                allCoinsIndexBasedR.push_back(COutPoint(std::get<0>(value), std::get<1>(value), std::get<2>(value)));
+                allCoinsIndexBasedTracked.push_back(COutPoint(std::get<0>(value), std::get<1>(value), std::get<2>(value)));
             }
-            std::sort(allCoinsIndexBasedR.begin(), allCoinsIndexBasedR.end());
-            
-            BOOST_REQUIRE_EQUAL_COLLECTIONS(allCoinsIndexBasedL.begin(), allCoinsIndexBasedL.end(), allCoinsIndexBasedR.begin(), allCoinsIndexBasedR.end());
+            std::sort(allCoinsIndexBasedTracked.begin(), allCoinsIndexBasedTracked.end());
+            BOOST_REQUIRE_EQUAL_COLLECTIONS(allCoinsIndexBasedUTXO.begin(), allCoinsIndexBasedUTXO.end(), allCoinsIndexBasedTracked.begin(), allCoinsIndexBasedTracked.end());
             
             
             //fetchcoin
