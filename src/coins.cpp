@@ -198,7 +198,7 @@ CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoins
     assert(insertOutpoint.isHash);
 
     // Ensure consistency
-    validateInsert(outpoint, tmp.nHeight, tmp.nTxIndex, outpoint.n);
+    validateInsert(insertOutpoint, tmp.nHeight, tmp.nTxIndex, outpoint.n);
 
     // have it in base view, auto-create copy in the cache   
     if (tmp.nHeight == MEMPOOL_HEIGHT && tmp.nTxIndex == MEMPOOL_INDEX)
