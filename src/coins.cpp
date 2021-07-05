@@ -524,6 +524,8 @@ void CCoinsViewCache::Uncache(const COutPoint& hash)
     if (pChainedWitView)
         pChainedWitView->Uncache(hash);
 
+    assert(hash.isHash);
+
     CCoinsMap::iterator it = cacheCoins.find(hash);
     if (it != cacheCoins.end() && it->second.flags == 0)
     {
