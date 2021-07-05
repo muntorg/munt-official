@@ -1090,16 +1090,26 @@ bool CWallet::LoadToWallet(const CWalletTx& wtxIn)
     wtx.BindWallet(this);
     wtxOrdered.insert(std::pair(wtx.nOrderPos, TxPair(&wtx, nullptr)));
     AddToSpends(hash);
-    for (const CTxIn& txin : wtx.tx->vin) {
-        const CWalletTx* prevtx = GetWalletTx(txin.GetPrevOut());
-        if (prevtx) {
-            if (prevtx->nIndex == -1 && !prevtx->hashUnset()) {
-                MarkConflicted(prevtx->hashBlock, wtx.GetHash());
+
+    return true;
+}
+
+void CWallet::HandleTransactionsLoaded()
+{
+    for  (const auto& [hash, wtx] : mapWallet)
+    {
+        for (const CTxIn& txin : wtx.tx->vin)
+        {
+            const CWalletTx* prevtx = GetWalletTx(txin.GetPrevOut());
+            if (prevtx)
+            {
+                if (prevtx->nIndex == -1 && !prevtx->hashUnset())
+                {
+                    MarkConflicted(prevtx->hashBlock, wtx.GetHash());
+                }
             }
         }
     }
-
-    return true;
 }
 
 void CWallet::ClearCacheForTransaction(const uint256& hash)

@@ -750,7 +750,13 @@ public:
 
     void MarkDirty();
     bool AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose=true, bool fSelfComitted=false);
+    //NB! After calling this function one or more times 'HandleTransactionsLoaded' must be called as well for final processing
     bool LoadToWallet(const CWalletTx& wtxIn);
+    // This function allows us to move work out of LoadToWallet and into a place where mapWalletHash is already fully populated
+    // As a result it performs massively faster on some wallets
+    // NB! This must be called after 'LoadToWallet' is called one or more times
+    void HandleTransactionsLoaded();
+    
     void TransactionAddedToMempool(const CTransactionRef& tx) override;
     void TransactionDeletedFromMempool( const uint256 &hash, MemPoolRemovalReason reason) override;
     void BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtxConflicted) override;
