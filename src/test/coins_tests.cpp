@@ -691,7 +691,6 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
                 }
             }
             
-            lastActionWasDisconnect = false;
         }
         else if (randiter % 20 < 18)
         {

@@ -1093,7 +1093,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                     return state.DoS(100, false, REJECT_INVALID, "invalid-witness", false, "could not determine a valid witness for block");
                 if(witInfo.selectedWitnessTransaction.GetType() == CTxOutType::PoW2WitnessOutput)
                 {
-                    if (witInfo.selectedWitnessTransaction.output.witnessDetails.witnessKeyID != pubkey.GetID())
+                    if (witInfo.selectedWitnessTransaction.output.witnessDetails.witnessKeyID != witnessPubKey.GetID())
                         return state.DoS(100, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature incorrect for block");
                 }
                 else
@@ -1329,7 +1329,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         {
             CPubKey pubkey;
             uint256 hash = block.GetHashPoW2();
-            if (witnessPubKey.IsNull())
+            if (witnessPubKey.IsValid())
                 return state.DoS(50, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature validation failed");
 
             std::vector<unsigned char> compWitnessUTXODelta;
