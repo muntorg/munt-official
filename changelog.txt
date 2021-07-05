@@ -1,3 +1,14 @@
+2.4.2
+
+CORE      - Introduce some code that makes it easier for users that missed the fork to update with any manual intervention
+CORE      - Fix an issue with fresh syncs stalling, regression was introduced in 2.4.1 release
+CORE      - Introduce some performance improvements to the code
+CORE      - Fix a rare issue with index based utxo getting corrupted (memory only, disk data remained valid)
+CORE      - Various regtest/testing improvements and general codebase cleanup
+
+
+
+
 2.4.1
 
 RPC       - Add arena setup time to "gethashps" output
