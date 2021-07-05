@@ -1,10 +1,11 @@
 2.4.2
 
+CONSENSUS - Fix an issue with fresh syncs stalling, regression was introduced in 2.4.1 release
+CONSENSUS - Fix a rare issue with index based utxo getting corrupted (memory only, disk data remained valid)
 CORE      - Fix an issue that was causing unnecessarily frequent flushing to disk; this should bring large performance improvements for machines with slow disks
+CORE      - CORE: Major load time performance increase on large wallets, especially on machines with slower disks
 CORE      - Introduce some code that makes it easier for users that missed the fork to update with any manual intervention
-CORE      - Fix an issue with fresh syncs stalling, regression was introduced in 2.4.1 release
 CORE      - Introduce some performance improvements to the code
-CORE      - Fix a rare issue with index based utxo getting corrupted (memory only, disk data remained valid)
 CORE      - Various regtest/testing improvements and general codebase cleanup
 
 
