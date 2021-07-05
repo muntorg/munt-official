@@ -408,22 +408,13 @@ public:
     
     void GetAllCoinsIndexBased(std::map<COutPoint, Coin>& allCoinsIndexBased) const override
     {
-        base->GetAllCoinsIndexBased(allCoinsIndexBased);
-
-        for (auto iter : cacheCoins)
+        std::map<COutPoint, Coin> allCoins;
+        GetAllCoins(allCoins);
+        
+        for (auto& [outPoint, coin] : allCoins)
         {
-            COutPoint indexBased(iter.second.coin.nHeight, iter.second.coin.nTxIndex, iter.first.n);
-            if (iter.second.coin.out.IsNull())
-            {
-                if (allCoinsIndexBased.find(indexBased) != allCoinsIndexBased.end())
-                {
-                    allCoinsIndexBased.erase(indexBased);
-                }
-            }
-            else
-            {
-                allCoinsIndexBased[indexBased] = iter.second.coin;
-            }
+            COutPoint indexBased(coin.nHeight, coin.nTxIndex, outPoint.n);
+            allCoinsIndexBased[indexBased] = coin;
         }
     }
 

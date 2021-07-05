@@ -210,9 +210,11 @@ CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoins
     }
     else
     {
-        auto refRetIter = (cacheCoinRefs.emplace(COutPoint(tmp.nHeight, tmp.nTxIndex, insertOutpoint.n), insertOutpoint)).first;
+        cacheCoinRefs[(COutPoint(tmp.nHeight, tmp.nTxIndex, insertOutpoint.n))] = insertOutpoint;
         if (pRefIterReturn)
-            *pRefIterReturn = refRetIter;
+        {
+            *pRefIterReturn = cacheCoinRefs.find(COutPoint(tmp.nHeight, tmp.nTxIndex, insertOutpoint.n));
+        }
     }
     auto retIter = cacheCoins.emplace(std::piecewise_construct, std::forward_as_tuple(insertOutpoint), std::forward_as_tuple(std::move(tmp))).first;
     
@@ -267,7 +269,7 @@ void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possi
     }
     else
     {
-        cacheCoinRefs.emplace(COutPoint(coin.nHeight, coin.nTxIndex, outpoint.n), outpoint);
+        cacheCoinRefs[(COutPoint(coin.nHeight, coin.nTxIndex, outpoint.n))] = outpoint;
     }
     auto [coinIter, inserted] = cacheCoins.emplace(std::piecewise_construct, std::forward_as_tuple(outpoint), std::tuple<>());
     
@@ -329,7 +331,10 @@ void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, CoinUndo* moveout, bo
     {
         if (coinRefIter != cacheCoinRefs.end())
         {
-            cacheCoinRefs.erase(coinRefIter);
+            if ((!outpoint.isHash) || coinRefIter->second == outpoint)
+            {
+                cacheCoinRefs.erase(coinRefIter);
+            }
         }
         else
         {
@@ -420,7 +425,7 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     }
                     else
                     {
-                        writeRefHashes.emplace_back(COutPoint(entry.coin.nHeight, entry.coin.nTxIndex, it->first.n), it->first);
+                        //writeRefHashes.emplace_back(COutPoint(entry.coin.nHeight, entry.coin.nTxIndex, it->first.n), it->first);
                     }
                 }
             }
@@ -448,7 +453,7 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     }
                     else
                     {
-                        cacheCoinRefs.erase(COutPoint(itUs->second.coin.nHeight, itUs->second.coin.nTxIndex, itUs->first.n));
+                        //cacheCoinRefs.erase(COutPoint(itUs->second.coin.nHeight, itUs->second.coin.nTxIndex, itUs->first.n));
                     }
                     cacheCoins.erase(itUs);
                 }
@@ -470,10 +475,32 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
         CCoinsMap::iterator itOld = it++;
         mapCoins.erase(itOld);
     }
-    for (const auto& [outPoint, entryHash] : writeRefHashes)
+    
+    //fixme: (MED) The commented out loop below (and two corresponding commented out line above) are technically more efficient than the code we have here (below)
+    //However is having robustness issues, while I think we have resolved all issues now
+    //Rather than take a risk, we instead favour the simpler more robust code
+    //re-visit this in future and establish via more testing that the other code path is fully robust (as well as faster) before re-enabling
+    //otherwise consider purging it in future  if not.
+    cacheCoinRefs.clear();
+    for (const auto& [outPoint, entry] : cacheCoins)
     {
-        cacheCoinRefs.emplace(outPoint, entryHash);
+        if (entry.coin.IsSpent())
+        {
+            cacheCoinRefs[COutPoint(entry.coin.nHeight, entry.coin.nTxIndex, outPoint.n)] = outPoint;
+        }
     }
+    for (const auto& [outPoint, entry] : cacheCoins)
+    {
+        if (!entry.coin.IsSpent())
+        {
+            cacheCoinRefs[COutPoint(entry.coin.nHeight, entry.coin.nTxIndex, outPoint.n)] = outPoint;
+        }
+    }
+    /*for (const auto& [outPoint, entryHash] : writeRefHashes)
+    {
+        //cacheCoinRefs.emplace(outPoint, entryHash);
+        cacheCoinRefs[outPoint] = entryHash;
+    }*/
     
     hashBlock = hashBlockIn;
     return true;
@@ -507,7 +534,15 @@ void CCoinsViewCache::Uncache(const COutPoint& hash)
         }
         else
         {
-            cacheCoinRefs.erase(COutPoint(it->second.coin.nHeight, it->second.coin.nTxIndex, it->first.n));
+            COutPoint indexBased = COutPoint(it->second.coin.nHeight, it->second.coin.nTxIndex, it->first.n);
+            auto refIter = cacheCoinRefs.find(indexBased);
+            if (refIter != cacheCoinRefs.end())
+            {
+                if (refIter->second == hash)
+                {
+                    cacheCoinRefs.erase(COutPoint(it->second.coin.nHeight, it->second.coin.nTxIndex, it->first.n));
+                }
+            }
         }
         cacheCoins.erase(it);
     }
