@@ -932,7 +932,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     assert(hashPrevBlock == hashBestBlock);
     
     // Previous block must be witnessed
-    if (pindex->nHeight >= Params().GetConsensus().pow2Phase4FirstBlockHeight+2)
+    if (pindex->nHeight >= (int64_t)Params().GetConsensus().pow2Phase4FirstBlockHeight+2)
     {
         if (pindex->pprev->nVersionPoW2Witness == 0)
         {
@@ -1327,7 +1327,6 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         if ((uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2WitnessSyncHeight)
         {
             CPubKey pubkey;
-            uint256 hash = block.GetHashPoW2();
             if (witnessPubKey.IsValid())
                 return state.DoS(50, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature validation failed");
 
