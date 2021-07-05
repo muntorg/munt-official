@@ -1144,6 +1144,9 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
     catch (...) {
         result = DB_CORRUPT;
     }
+    
+    // Batch process code that would otherwise be called for every LoadToWallet call
+    pwallet->HandleTransactionsLoaded();
 
     for (const auto& labelPair : pwallet->mapAccountLabels)
         {

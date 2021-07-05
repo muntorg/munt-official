@@ -1326,8 +1326,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     {
         if ((uint64_t)pindex->nHeight > chainparams.GetConsensus().pow2WitnessSyncHeight)
         {
-            CPubKey pubkey;
-            if (witnessPubKey.IsValid())
+            if (!witnessPubKey.IsValid())
                 return state.DoS(50, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature validation failed");
 
             std::vector<unsigned char> compWitnessUTXODelta;
