@@ -613,7 +613,6 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
         blockUndo[blockCount-1].push_back(undo);
     }
     
-    bool lastActionWasDisconnect=false;
     for (unsigned int simStep = 0; simStep < NUM_SIMULATION_ITERATIONS; simStep++)
     {
         uint32_t randiter = InsecureRand32();
@@ -629,18 +628,6 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             blocks.push_back(std::vector<CTransaction>());
             blockUndo.push_back(std::vector<CTxUndo>());
             
-            /*if (lastActionWasDisconnect)
-            {
-                for (const auto& removedTransaction : removedblocks.back())
-                {
-                    // Call UpdateCoins on the top cache
-                    CTxUndo undo;
-                    UpdateCoins(removedTransaction, *(stack.back()), undo, heightOffset+blockCount-1, txIndex);
-                    blocks[blockCount-1].push_back(removedTransaction);
-                    blockUndo[blockCount-1].push_back(undo);
-                }
-            }
-            else*/
             {    
                 uint64_t numTransactions = (randiter % 3) + 1;
                 for (uint64_t txIndex=0; txIndex < numTransactions; ++txIndex)
@@ -757,7 +744,6 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             blocks.pop_back();
             blockUndo.pop_back();
             --blockCount;
-            lastActionWasDisconnect = true;
         }
         
         if (InsecureRandRange(100) == 0)
@@ -813,11 +799,13 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             std::vector<COutPoint> allCoinsL;
             for (const auto& [outPoint, coins] : utxoAllCoins)
             {
+                (unused) coins;
                 allCoinsL.push_back(outPoint);
             }
             std::vector<COutPoint> allCoinsR;
             for (const auto& [key, value] : allCoins)
             {
+                (unused) value;
                 allCoinsR.push_back(key);
             }
             BOOST_REQUIRE_EQUAL_COLLECTIONS(allCoinsL.begin(), allCoinsL.end(), allCoinsR.begin(), allCoinsR.end());
@@ -828,11 +816,13 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             std::vector<COutPoint> allCoinsIndexBasedUTXO;
             for (const auto& [outPoint, coins] : utxoAllCoinsIndexBased)
             {
+                (unused) coins;
                 allCoinsIndexBasedUTXO.push_back(outPoint);
             }
             std::vector<COutPoint> allCoinsIndexBasedTracked;
             for (const auto& [key, value] : allCoins)
             {
+                (unused) value;
                 allCoinsIndexBasedTracked.push_back(COutPoint(std::get<0>(value), std::get<1>(value), std::get<2>(value)));
             }
             std::sort(allCoinsIndexBasedTracked.begin(), allCoinsIndexBasedTracked.end());

@@ -109,11 +109,13 @@ struct CWitnessTxBundle
             WriteCompactSize(s, inputs.size());
             for (const auto& [txOut, txOutWitness, outPoint] : inputs)
             {
+                (void) outPoint;
                 STRWRITE(std::pair(txOut, txOutWitness));
             }
             WriteCompactSize(s, outputs.size());
             for (const auto& [txOut, txOutWitness, outPoint] : outputs)
             {
+                (void) outPoint;
                 STRWRITE(std::pair(txOut, txOutWitness));
             }
         }

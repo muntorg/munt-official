@@ -818,6 +818,7 @@ bool GenerateSimplifiedWitnessUTXODeltaUndoForHeader(std::vector<unsigned char>&
                     
                     pow2SimplifiedWitnessUTXOUndo.witnessCandidates.erase(addIter);
                     auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXOUndo.witnessCandidates.insert(deltaItem.removedItems[i]);
+                    (unused) insertIter;
                     if (!didInsert)
                         return false;
                     
@@ -851,7 +852,8 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
         deltaUndoStream >> COMPACTSIZE(updatedWitnessItem.transactionOutputIndex);
         
         pow2SimplifiedWitnessUTXO.witnessCandidates.erase(witnessIter);
-        auto [iter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(updatedWitnessItem);
+        auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(updatedWitnessItem);
+        (unused) insertIter;
         if (!didInsert)
             return false;
     }
@@ -883,7 +885,8 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
                 deltaUndoStream >> VARINT(item.lockUntilBlock);
                 deltaUndoStream >> item.witnessPubKeyID;
                 
-                auto [iter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
+                auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
+                (unused) insertIter;
                 if (!didInsert)
                     return false;
 
@@ -904,6 +907,7 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
                 
                 pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
                 auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                (unused) insertIter;
                 if (!didInsert)
                     return false;
                 
@@ -936,6 +940,7 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
                     deltaUndoStream >> COMPRESSEDAMOUNT(item.nValue);
                     
                     auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
+                    (unused) insertIter;
                     if (!didInsert)
                         return false;
                 }
@@ -971,6 +976,7 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
                     deltaUndoStream >> VARINT(item.lockFromBlock);
                     
                     auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
+                    (unused) insertIter;
                     if (!didInsert)
                         return false;
                 }
@@ -998,6 +1004,7 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
                     
                     pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
                     auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
+                    (unused) insertIter;
                     if (!didInsert)
                         return false;
                 }
@@ -1040,6 +1047,7 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
         
         pow2SimplifiedWitnessUTXO.witnessCandidates.erase(removedItemIter);
         auto [updatedItemIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(updatedWitnessItem);
+        (unused) updatedItemIter;
         if (!didInsert)
             return false;
         
@@ -1070,7 +1078,8 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
                 deltaStream >> VARINT(modifiedItem.lockUntilBlock);
                 deltaStream >> modifiedItem.witnessPubKeyID;
                 
-                auto [iter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                (unused) insertIter;
                 if (!didInsert)
                     return false;
                 
@@ -1111,6 +1120,7 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
                 
                 pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
                 auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                (unused) insertIter;
                 if (!didInsert)
                     return false;
                 
@@ -1149,6 +1159,7 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
                     deltaStream >> COMPACTSIZE(item.transactionOutputIndex);
                     deltaStream >> COMPRESSEDAMOUNT(item.nValue);
                     auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
+                    (unused) insertIter;
                     if (!didInsert)
                         return false;
                     
@@ -1187,6 +1198,7 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
                     deltaStream >> COMPACTSIZE(item.transactionOutputIndex);
                     deltaStream >> COMPRESSEDAMOUNT(item.nValue);
                     auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(item);
+                    (unused) insertIter;
                     if (!didInsert)
                         return false;
                     
@@ -1220,6 +1232,7 @@ bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, Simplif
                     
                     pow2SimplifiedWitnessUTXO.witnessCandidates.erase(itemIter);
                     auto [insertIter, didInsert] = pow2SimplifiedWitnessUTXO.witnessCandidates.insert(changedItem);
+                    (unused) insertIter;
                     if (!didInsert)
                         return false;
                     
@@ -1352,6 +1365,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                     
                     simplifiedWitnessUTXO.witnessCandidates.erase(iter);
                     auto [insertIter, didInsert] = simplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                    (unused) insertIter;
                     if (!didInsert)
                         return false;
                     
@@ -1480,6 +1494,7 @@ bool GetSimplifiedWitnessUTXODeltaForBlockHelper(uint64_t nBlockHeight, const CB
                         simplifiedWitnessUTXO.witnessCandidates.erase(iter);
                         simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.erase(simplifiedWitnessUTXOWithoutWitnessAction.witnessCandidates.find(originalItem));
                         auto [insertIter, didInsert] = simplifiedWitnessUTXO.witnessCandidates.insert(modifiedItem);
+                        (unused) insertIter;
                         if (!didInsert)
                             assert(0);
                         

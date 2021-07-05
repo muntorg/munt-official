@@ -963,7 +963,6 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
     }
     GetWitnessInfo(chainActive, Params(), nullptr, chainActive.Tip()->pprev, block, witnessInfo, chainActive.Tip()->nHeight);
     bool addedAny=false;
-    uint64_t nExpiredCount=0;
     for (const auto& witCoin : witnessInfo.witnessSelectionPoolUnfiltered)
     {
         if (::IsMine(*targetWitnessAccount, witCoin.coin.out))

@@ -441,6 +441,7 @@ bool CBlockTreeDB::UpdateBatchSync(const std::vector<std::pair<int, const CBlock
     }
     for (const auto& [hash, diskPos]: vEraseTxIndexes)
     {
+        (unused) diskPos;
         batch.Erase(std::pair(DB_TXINDEX, hash));
     }
     for (const auto& [hash, diskPos]: vWriteTxIndexes)
