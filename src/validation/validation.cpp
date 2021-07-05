@@ -1072,6 +1072,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
     CBlockUndo blockundo;
 
+    CPubKey witnessPubKey;
     //fixme: (PHASE5) Ideally this would be placed lower down (just before CAmount blockReward = nFees + nSubsidy;) 
     //However GetWitness calls recursively into ConnectBlock and CCheckQueueControl has a non-recursive mutex - so we must call this before creating 
     // Witness block must have valid signature from witness.
@@ -1079,12 +1080,13 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     {
         if (block.nVersionPoW2Witness != 0)
         {
-            CPubKey pubkey;
+            CPubKey witnessPubKey;
             uint256 hash = block.GetHashPoW2();
-            if (!pubkey.RecoverCompact(hash, block.witnessHeaderPoW2Sig))
+            if (!witnessPubKey.RecoverCompact(hash, block.witnessHeaderPoW2Sig))
                 return state.DoS(50, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature validation failed");
 
-            if (fVerifyWitness)
+            // Prefer delta verification where possible
+            if (fVerifyWitness && !fVerifyWitnessDelta)
             {
                 CGetWitnessInfo witInfo;
                 if (!GetWitness(chain, chainparams, &view, pindex->pprev, block, witInfo))
@@ -1327,11 +1329,11 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
         {
             CPubKey pubkey;
             uint256 hash = block.GetHashPoW2();
-            if (!pubkey.RecoverCompact(hash, block.witnessHeaderPoW2Sig))
+            if (witnessPubKey.IsNull())
                 return state.DoS(50, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature validation failed");
 
             std::vector<unsigned char> compWitnessUTXODelta;
-            if (!GetSimplifiedWitnessUTXODeltaForBlock(pindex, block, pow2SimplifiedWitnessUTXOForPrevBlock, compWitnessUTXODelta, &pubkey))
+            if (!GetSimplifiedWitnessUTXODeltaForBlock(pindex, block, pow2SimplifiedWitnessUTXOForPrevBlock, compWitnessUTXODelta, &witnessPubKey))
             {
                 return state.DoS(100, error("ConnectBlock(): Unable to compute witness delta for block"), REJECT_INVALID, "bad-witness-utxo-delta");
             }

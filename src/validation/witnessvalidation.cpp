@@ -1016,7 +1016,9 @@ bool UndoSimplifiedWitnessUTXODeltaForHeader(SimplifiedWitnessUTXOSet& pow2Simpl
 }
 
 //fixme: (WITNESS_SYNC) - REMOVE AFTER TESTING
+#ifdef DEBUG
 #define EXTRA_DELTA_TESTS 1
+#endif
 
 bool ApplySimplifiedWitnessUTXODeltaForHeader(const CBlockIndex* pIndex, SimplifiedWitnessUTXOSet& pow2SimplifiedWitnessUTXO, std::vector<unsigned char>& undoWitnessUTXODelta)
 {
