@@ -3784,6 +3784,33 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
     chainActive.SetTip(it->second);
 
     PruneBlockIndexCandidates();
+    
+    
+    // If we were stuck on the wrong side of a fork (due to not updating)
+    // And have now updated to a newer version, then this block may be valid on the newer version despite being marked invalid previously by the outdated version
+    // If we don't reconsider the block we will be permanently "stuck"
+    // We can use the checkpoint to find out if this is the case, so we do this here.
+    // If we are the ancestor of a checkpoint then reset the failiure flags and try again
+    int numReset = 0;
+    int64_t lastCheckpointHeight = Checkpoints::LastCheckPointHeight();
+    bool fTestNet = IsArgSet("-testnet");
+    if (chainActive.Tip()->nHeight < lastCheckpointHeight)
+    {
+        for (auto it = mapBlockIndex.begin(); it != mapBlockIndex.end(); ++it)
+        {
+            CBlockIndex* resetIndex = it->second;
+            if ((fTestNet || ((resetIndex->nHeight > lastCheckpointHeight - 300000) && resetIndex->nHeight < lastCheckpointHeight)) && !resetIndex->IsValid())
+            {
+                // Reset block failiure flags and give it another chance
+                ResetBlockFailureFlags(resetIndex);
+                ++numReset;
+            }
+        }
+    }
+    if (numReset > 0)
+    {
+        LogPrintf("LoadBlockIndexDB(): Allowing [%d] invalid blocks below checkpoint height to have their validity reconsidered \n", numReset);
+    }
 
     LogPrintf("%s: hashBestChain=%s height=%d date=%s progress=%f\n", __func__,
         chainActive.Tip()->GetBlockHashPoW2().ToString(), chainActive.Height(),

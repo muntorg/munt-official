@@ -677,32 +677,6 @@ bool FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<con
         {
             if (!pindex->IsValid(BLOCK_VALID_TREE))
             {
-                // If we were stuck on the wrong side of a fork (due to not updating)
-                // And have now updated to a newer version, then this block may be valid on the newer version despite being marked invalid previously by the outdated version
-                // If we don't reconsider the block we will be permanently "stuck"
-                // We can use the checkpoint to find out if this is the case, so we do this here.
-                // If we are the ancestor of a checkpoint then reset the failiure flags and try again
-                if (pindex->nHeight < Checkpoints::LastCheckPointHeight())
-                {
-                    // Only allow this once per hash, use shortened hashes to save memory, the risk of collision is okay.
-                    // NB! This can only trigger in special cases so we don't have to be that worried about an adversary delibritely crafting hash collisions as an attack.
-                    // However we use a primitive salt anyway as a precaution.
-                    static std::set<uint64_t> alreadyReset;
-                    static uint64_t resetSalt = GetRand(std::numeric_limits<uint64_t>::max());
-                    uint64_t smallHash = pindex->GetBlockHashPoW2().GetCheapHash() ^ resetSalt;
-                    if (alreadyReset.find(smallHash) == alreadyReset.end())
-                    {
-                        auto resetIndex = mapBlockIndex.find(pindex->GetBlockHashPoW2());
-                        if (resetIndex != mapBlockIndex.end())
-                        {
-                            // Reset block failiure flags and give it another chance
-                            ResetBlockFailureFlags(resetIndex->second);
-                            // Only do this once though
-                            alreadyReset.insert(smallHash);
-                        }
-                    }
-                }
-
                 // We consider the chain that this peer is on invalid.
                 return false;
             }
