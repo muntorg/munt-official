@@ -316,6 +316,31 @@ void CCoinsViewDB::GetAllCoinsIndexBased(std::map<COutPoint, Coin>& allCoinsInde
     }
 }
 
+void CCoinsViewDB::GetAllCoinsIndexBasedDirect(std::map<COutPoint, Coin>& allCoinsIndexBased) const
+{
+    CCoinsViewCursor* cursor = Cursor();
+    if (cursor)
+    {
+        while (cursor->Valid())
+        {
+            COutPoint outPoint;
+            if (!cursor->GetKey(outPoint))
+                throw std::runtime_error("Error fetching record from witness cache.");
+            
+            Coin outCoin;
+            if (!cursor->GetValue(outCoin))
+                throw std::runtime_error("Error fetching record from witness cache.");
+            
+            COutPoint indexBased(outCoin.nHeight, outCoin.nTxIndex, outPoint.n);
+
+            allCoinsIndexBased.emplace(std::pair(indexBased, outCoin));
+
+            cursor->Next();
+        }
+        delete cursor;
+    }
+}
+
 CBlockTreeDB::CBlockTreeDB(size_t nCacheSize, bool fMemory, bool fWipe) : CDBWrapper(GetDataDir() / "blocks" / "index", nCacheSize, fMemory, fWipe) {
 }
 

@@ -838,6 +838,14 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             std::sort(allCoinsIndexBasedTracked.begin(), allCoinsIndexBasedTracked.end());
             BOOST_REQUIRE_EQUAL_COLLECTIONS(allCoinsIndexBasedUTXO.begin(), allCoinsIndexBasedUTXO.end(), allCoinsIndexBasedTracked.begin(), allCoinsIndexBasedTracked.end());
             
+            std::map<COutPoint, Coin> utxoAllCoinsIndexBasedDirect;
+            stack.back()->GetAllCoinsIndexBasedDirect(utxoAllCoinsIndexBased);
+            std::vector<COutPoint> allCoinsIndexBasedUTXODirect;
+            for (const auto& [outPoint, coins] : utxoAllCoinsIndexBased)
+            {
+                allCoinsIndexBasedUTXODirect.push_back(outPoint);
+            }
+            BOOST_REQUIRE_EQUAL_COLLECTIONS(allCoinsIndexBasedUTXODirect.begin(), allCoinsIndexBasedUTXODirect.end(), allCoinsIndexBasedTracked.begin(), allCoinsIndexBasedTracked.end());
             
             //fetchcoin
             for (const auto& [key, value] : allCoins)

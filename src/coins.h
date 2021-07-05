@@ -251,6 +251,7 @@ public:
 
     virtual void GetAllCoins(std::map<COutPoint, Coin>&) const {};
     virtual void GetAllCoinsIndexBased(std::map<COutPoint, Coin>&) const {};
+    virtual void GetAllCoinsIndexBasedDirect(std::map<COutPoint, Coin>& allCoins) const {};
     /*virtual int GetDepth() const
     {
         return 0;
@@ -284,6 +285,10 @@ public:
     void GetAllCoinsIndexBased(std::map<COutPoint, Coin>& allCoins) const override
     {
         base->GetAllCoinsIndexBased(allCoins);
+    }
+    void GetAllCoinsIndexBasedDirect(std::map<COutPoint, Coin>& allCoins) const override
+    {
+        base->GetAllCoinsIndexBasedDirect(allCoins);
     }
 };
 
@@ -415,6 +420,20 @@ public:
         {
             COutPoint indexBased(coin.nHeight, coin.nTxIndex, outPoint.n);
             allCoinsIndexBased[indexBased] = coin;
+        }
+    }
+    
+    //fixme: (FUT) We keep this form around but don't use it
+    // If/When we can prove beyond a shadow of a doubt that it introduces no problems and that it really is faster consider switching to it, otherwise we should delete and stick to the simpler implementation
+    void GetAllCoinsIndexBasedDirect(std::map<COutPoint, Coin>& allCoinsIndexBased) const override
+    {
+        for (auto iter : cacheCoins)
+        {
+            COutPoint indexBased(iter.second.coin.nHeight, iter.second.coin.nTxIndex, iter.first.n);
+            if (!iter.second.coin.out.IsNull())
+            {
+                allCoinsIndexBased[indexBased] = iter.second.coin;
+            }
         }
     }
 
