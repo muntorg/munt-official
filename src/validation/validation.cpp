@@ -932,7 +932,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     assert(hashPrevBlock == hashBestBlock);
     
     // Previous block must be witnessed
-    if (IsPow2Phase4Active(pindex->pprev))
+    if (pindex->nHeight >= Params().GetConsensus().pow2Phase4FirstBlockHeight+2)
     {
         if (pindex->pprev->nVersionPoW2Witness == 0)
         {
