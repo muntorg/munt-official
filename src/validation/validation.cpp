@@ -1080,7 +1080,6 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     {
         if (block.nVersionPoW2Witness != 0)
         {
-            CPubKey witnessPubKey;
             uint256 hash = block.GetHashPoW2();
             if (!witnessPubKey.RecoverCompact(hash, block.witnessHeaderPoW2Sig))
                 return state.DoS(50, false, REJECT_INVALID, "invalid-witness-signature", false, "witness signature validation failed");
