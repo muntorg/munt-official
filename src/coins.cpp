@@ -524,9 +524,26 @@ void CCoinsViewCache::Uncache(const COutPoint& hash)
     if (pChainedWitView)
         pChainedWitView->Uncache(hash);
 
-    assert(hash.isHash);
-
-    CCoinsMap::iterator it = cacheCoins.find(hash);
+    //NB! Though it may not seem obvious from browsing the code there is one instance where this function can be called with an index based outpoint instead of a hash
+    //This is when loading a wallet that has a transaction with a prevout that is index based (and not in the wallet)
+    //We then get called from ReacceptWalletTransactions/AcceptToMemoryPool with an index based outpoint
+    //So we handle that special case here then rest of the function MUST work on hash based only as the argument name implies
+    COutPoint canonicalHash = hash;
+    if (!hash.isHash)
+    {
+        auto refIter = cacheCoinRefs.find(hash);
+        if (refIter == cacheCoinRefs.end())
+        {
+            return;
+        }
+        else
+        {
+            canonicalHash = refIter->second;
+        }
+    }
+    
+    
+    CCoinsMap::iterator it = cacheCoins.find(canonicalHash);
     if (it != cacheCoins.end() && it->second.flags == 0)
     {
         cachedCoinsUsage -= it->second.coin.DynamicMemoryUsage();
@@ -540,7 +557,7 @@ void CCoinsViewCache::Uncache(const COutPoint& hash)
             auto refIter = cacheCoinRefs.find(indexBased);
             if (refIter != cacheCoinRefs.end())
             {
-                if (refIter->second == hash)
+                if (refIter->second == canonicalHash)
                 {
                     cacheCoinRefs.erase(COutPoint(it->second.coin.nHeight, it->second.coin.nTxIndex, it->first.n));
                 }
