@@ -2336,6 +2336,23 @@ bool InvalidateBlock(CValidationState& state, const CChainParams& chainparams, C
     return true;
 }
 
+bool ResetBlockFailureFlagsForSingleBlock(CBlockIndex *pindex) {
+    AssertLockHeld(cs_main);
+
+    pindex->nStatus &= ~BLOCK_FAILED_MASK;
+    setDirtyBlockIndex.insert(pindex);
+    if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) && pindex->nChainTx && setBlockIndexCandidates.value_comp()(chainActive.Tip(), pindex))
+    {
+        setBlockIndexCandidates.insert(pindex);
+    }
+    if (pindex == pindexBestInvalid)
+    {
+        // Reset invalid block marker if it was pointing to one of those.
+        pindexBestInvalid = NULL;
+    }
+    return true;
+}
+
 bool ResetBlockFailureFlags(CBlockIndex *pindex) {
     AssertLockHeld(cs_main);
 
@@ -3801,7 +3818,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
             if ((fTestNet || ((resetIndex->nHeight > lastCheckpointHeight - 300000) && resetIndex->nHeight < lastCheckpointHeight)) && !resetIndex->IsValid())
             {
                 // Reset block failiure flags and give it another chance
-                ResetBlockFailureFlags(resetIndex);
+                ResetBlockFailureFlagsForSingleBlock(resetIndex);
                 ++numReset;
             }
         }
