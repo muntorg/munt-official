@@ -1,4 +1,4 @@
-2.4.2
+2.4.3
 
 CONSENSUS - Fix an issue with fresh syncs stalling, regression was introduced in 2.4.1 release
 CONSENSUS - Fix a rare issue with index based utxo getting corrupted (memory only, disk data remained valid)
