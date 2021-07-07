@@ -16,7 +16,7 @@ $(package)_cflags_ios=-Wno-implicit-function-declaration
 endef
 
 define $(package)_preprocess_cmds
-  sed -i.old2 's/__atomic_compare_exchange/__atomic_compare_exchange_db/' dbinc/atomic.h dbinc/atomic.h && \
+  sed -i.old2 's/__atomic_compare_exchange/__atomic_compare_exchange_db/' dbinc/atomic.h && \
   sed -i.old 's/atomic_init/atomic_init_db/' dbinc/atomic.h mp/mp_region.c mp/mp_mvcc.c mp/mp_fget.c mutex/mut_method.c mutex/mut_tas.c && \
   cp -f $(BASEDIR)/config.guess $(BASEDIR)/config.sub dist
 endef
