@@ -245,7 +245,7 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
                     if (tx.vin[i].scriptSig.size() != 0)
                         return false;
                     CScript scriptSigTemp = PushAll(tx.vin[i].segregatedSignatureData.stack);
-                    if (!EvalScript(stack, scriptSigTemp, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), SCRIPT_V2))
+                    if (!EvalScript(stack, scriptSigTemp, SCRIPT_VERIFY_NONE, BaseSignatureChecker(CKeyID(), CKeyID()), IsOldTransactionVersion(tx.nVersion) ? SCRIPT_V1 : SCRIPT_V2))
                         return false;
                 }
                 if (stack.empty())

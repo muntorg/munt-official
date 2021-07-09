@@ -42,7 +42,7 @@ from io import BytesIO
 
 MAX_BLOCK_SIGOPS = 20000
 
-# Genesis block time (regtest)
+# Genesis block time (regtestlegacy)
 TIME_GENESIS_BLOCK = 1296688602
 
 # From BIP141
@@ -50,7 +50,7 @@ WITNESS_COMMITMENT_HEADER = b"\xaa\x21\xa9\xed"
 
 
 def create_block(hashprev, coinbase, ntime=None, *, version=1):
-    """Create a block (with regtest difficulty)."""
+    """Create a block (with regtestlegacy difficulty)."""
     block = CBlock()
     block.nVersion = version
     if ntime is None:
@@ -114,7 +114,7 @@ def create_coinbase(height, pubkey=None):
                         ser_string(serialize_script_num(height)), 0xffffffff))
     coinbaseoutput = CTxOut()
     coinbaseoutput.nValue = 50 * COIN
-    halvings = int(height / 150)  # regtest
+    halvings = int(height / 150)  # regtestlegacy
     coinbaseoutput.nValue >>= halvings
     if (pubkey is not None):
         coinbaseoutput.scriptPubKey = CScript([pubkey, OP_CHECKSIG])

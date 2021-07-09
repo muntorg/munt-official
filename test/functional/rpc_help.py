@@ -33,7 +33,7 @@ class HelpRpcTest(GuldenTestFramework):
         # command titles
         titles = [line[3:-3] for line in node.help().splitlines() if line.startswith('==')]
 
-        components = ['Accounts', 'Block_generation', 'Blockchain', 'Control', 'Developer', 'Generating', 'Mining', 'Mnemonics', 'Network', 'Rawtransactions', 'Util']
+        components = ['Accounts', 'Block_generation', 'Blockchain', 'Control', 'Developer', 'Generating', 'Mnemonics', 'Network', 'Rawtransactions', 'Util']
 
         if self.is_wallet_compiled():
             components.append('Wallet')

@@ -509,7 +509,7 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
             self.nodes = []
 
             def cache_path(n, *paths):
-                return os.path.join(get_datadir_path(self.options.cachedir, n), "regtest", *paths)
+                return os.path.join(get_datadir_path(self.options.cachedir, n), "regtestlegacy", *paths)
 
             for i in range(MAX_NODES):
                 for entry in os.listdir(cache_path(i)):

@@ -86,7 +86,7 @@ MAGIC_BYTES = {
     "mainnet":  b"\xfc\xfe\xf7\xe0",  # mainnet
     ###fixme:
     "testnet3": b"\x3c\x7a\x79\x43",  # testnet3
-    "regtest":  b"\xfc\xfe\xf7\xff",  # regtest
+    "regtestlegacy":  b"\xfc\xfe\xf7\xff",  # regtestlegacy
 }
 
 
@@ -112,7 +112,7 @@ class P2PConnection(asyncio.Protocol):
     def is_connected(self):
         return self._transport is not None
 
-    def peer_connect(self, dstaddr, dstport, net="regtest"):
+    def peer_connect(self, dstaddr, dstport, net="regtestlegacy"):
         assert not self.is_connected
         self.dstaddr = dstaddr
         self.dstport = dstport

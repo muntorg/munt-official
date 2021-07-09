@@ -1785,7 +1785,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         // They will only slow the sync down
         if (IsInitialBlockDownload())
         {
-            if (pfrom->nStartingHeight < Checkpoints::LastCheckPointHeight())
+            if (pfrom->nStartingHeight < Checkpoints::LastCheckPointHeight() && Checkpoints::LastCheckPointHeight() != 0)
             {
                 LOCK(cs_main);
                 pfrom->fDisconnect = true;

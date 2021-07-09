@@ -902,14 +902,14 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
                 {
                     if (txv.vin.size() > i)
                     {
-                        sigdata = CombineSignatures(prevPubKey, TransactionSignatureChecker(signingKeyID, CKeyID(), &txConst, i, amount), sigdata, DataFromTransaction(txv, i), SIGVERSION_SEGSIG);
+                        sigdata = CombineSignatures(prevPubKey, TransactionSignatureChecker(signingKeyID, CKeyID(), &txConst, i, amount), sigdata, DataFromTransaction(txv, i), IsOldTransactionVersion(mergedTx.nVersion) ? SIGVERSION_BASE : SIGVERSION_SEGSIG);
                     }
                 }
                 
                 UpdateTransaction(mergedTx, i, sigdata);
 
                 ScriptError serror = SCRIPT_ERR_OK;
-                if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.segregatedSignatureData, STANDARD_SCRIPT_VERIFY_FLAGS, TransactionSignatureChecker(signingKeyID, CKeyID(), &txConst, i, amount), SCRIPT_V2, &serror)) {
+                if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.segregatedSignatureData, STANDARD_SCRIPT_VERIFY_FLAGS, TransactionSignatureChecker(signingKeyID, CKeyID(), &txConst, i, amount), IsOldTransactionVersion(mergedTx.nVersion) ? SCRIPT_V1 : SCRIPT_V2, &serror)) {
                     TxInErrorToJSON(mergedTx.nVersion, txin, vErrors, ScriptErrorString(serror));
                 }
                 break;

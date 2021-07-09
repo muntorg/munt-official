@@ -31,7 +31,7 @@ from test_framework.siphash import siphash256
 from test_framework.util import hex_str_to_bytes, assert_equal
 
 MIN_VERSION_SUPPORTED = 60001
-MY_VERSION = 70014  # past bip-31 for ping/pong
+MY_VERSION = 70020  # past bip-31 for ping/pong
 MY_SUBVERSION = b"/python-mininode-tester:0.0.3/"
 MY_RELAY = 1 # from version 70001 onwards, fRelay should be appended to version messages (BIP37)
 
@@ -520,10 +520,31 @@ class CTransaction:
         return "CTransaction(nVersion=%i vin=%s vout=%s wit=%s nLockTime=%i)" \
             % (self.nVersion, repr(self.vin), repr(self.vout), repr(self.wit), self.nLockTime)
 
+def get_compact_size(inp):
+    if inp < 0xfd:
+        return inp.to_bytes(1, 'little')
+    elif inp < 0xffff:
+        return b'\xfd' + inp.to_bytes(2, 'little')
+    elif inp < 0xffffffff:
+        return b'\xfe' + inp.to_bytes(4, 'little')
+    else:
+        return b'\xff' + inp.to_bytes(8, 'little')
+
+def read_compact_size(f):
+    ni = struct.unpack("<c", f.read(1))[0][0]
+    if ni < 253:
+        return ni
+    if ni == 253:  # integer of 2 bytes
+        size = 2
+    elif ni == 254:  # integer of 4 bytes
+        size = 4
+    else:  # integer of 8 bytes
+        size = 8
+    return int.from_bytes(byteint[1:1+size][::-1], 'big')
 
 class CBlockHeader:
     __slots__ = ("hash", "hashMerkleRoot", "hashPrevBlock", "nBits", "nNonce",
-                 "nTime", "nVersion", "sha256")
+                 "nTime", "nVersion", "sha256", "nVersionPoW2Witness", "nTimePoW2Witness", "hashMerkleRootPoW2Witness", "witnessHeaderPoW2Sig", "witnessUTXODelta")
 
     def __init__(self, header=None):
         if header is None:
@@ -535,38 +556,70 @@ class CBlockHeader:
             self.nTime = header.nTime
             self.nBits = header.nBits
             self.nNonce = header.nNonce
+
+            self.nVersionPoW2Witness = header.nVersionPoW2Witness
+            self.nTimePoW2Witness = header.nTimePoW2Witness
+            self.hashMerkleRootPoW2Witness = header.hashMerkleRootPoW2Witness
+            self.witnessHeaderPoW2Sig = header.witnessHeaderPoW2Sig
+            self.witnessUTXODelta = header.witnessUTXODelta
+
             self.sha256 = header.sha256
             self.hash = header.hash
             self.calc_sha256()
 
     def set_null(self):
+        self.nVersionPoW2Witness = 0
+        self.nTimePoW2Witness = 0
+        self.hashMerkleRootPoW2Witness = 0
         self.nVersion = 1
         self.hashPrevBlock = 0
         self.hashMerkleRoot = 0
         self.nTime = 0
         self.nBits = 0
         self.nNonce = 0
+        self.witnessHeaderPoW2Sig = 0
+        self.witnessUTXODelta = 0
         self.sha256 = None
         self.hash = None
 
     def deserialize(self, f):
+        self.nVersionPoW2Witness = struct.unpack("<i", f.read(4))[0]
+        self.nTimePoW2Witness = struct.unpack("<I", f.read(4))[0]
+        self.hashMerkleRootPoW2Witness = deser_uint256(f)
+
         self.nVersion = struct.unpack("<i", f.read(4))[0]
         self.hashPrevBlock = deser_uint256(f)
         self.hashMerkleRoot = deser_uint256(f)
         self.nTime = struct.unpack("<I", f.read(4))[0]
         self.nBits = struct.unpack("<I", f.read(4))[0]
         self.nNonce = struct.unpack("<I", f.read(4))[0]
+
+        if self.nVersionPoW2Witness != 0:
+            self.witnessHeaderPoW2Sig = f.read(65)
+            deltaSize = read_compact_size(f)
+            self.witnessUTXODelta = f.read(deltaSize)
+
         self.sha256 = None
         self.hash = None
 
     def serialize(self):
         r = b""
+        r += struct.pack("<i", self.nVersionPoW2Witness)
+        r += struct.pack("<I", self.nTimePoW2Witness)
+        r += ser_uint256(self.hashMerkleRootPoW2Witness)
+
         r += struct.pack("<i", self.nVersion)
         r += ser_uint256(self.hashPrevBlock)
         r += ser_uint256(self.hashMerkleRoot)
         r += struct.pack("<I", self.nTime)
         r += struct.pack("<I", self.nBits)
         r += struct.pack("<I", self.nNonce)
+
+        if self.nVersionPoW2Witness != 0:
+            r += self.witnessHeaderPoW2Sig
+            deltaSize = get_compact_size(len(self.witnessUTXODelta))
+            r += struct.pack("<c", deltaSize)
+            r += self.witnessUTXODelta
         return r
 
     def calc_sha256(self):
@@ -578,6 +631,13 @@ class CBlockHeader:
             r += struct.pack("<I", self.nTime)
             r += struct.pack("<I", self.nBits)
             r += struct.pack("<I", self.nNonce)
+
+            if self.nVersionPoW2Witness != 0:
+                r += self.witnessHeaderPoW2Sig
+                deltaSize = get_compact_size(len(self.witnessUTXODelta))
+                r += struct.pack("<c", deltaSize)
+                r += self.witnessUTXODelta
+
             self.sha256 = uint256_from_str(hash256(r))
             self.hash = encode(hash256(r)[::-1], 'hex_codec').decode('ascii')
 
@@ -591,8 +651,8 @@ class CBlockHeader:
             % (self.nVersion, self.hashPrevBlock, self.hashMerkleRoot,
                time.ctime(self.nTime), self.nBits, self.nNonce)
 
-BLOCK_HEADER_SIZE = len(CBlockHeader().serialize())
-assert_equal(BLOCK_HEADER_SIZE, 80)
+#BLOCK_HEADER_SIZE = len(CBlockHeader().serialize())
+#assert_equal(BLOCK_HEADER_SIZE, 80)
 
 class CBlock(CBlockHeader):
     __slots__ = ("vtx",)

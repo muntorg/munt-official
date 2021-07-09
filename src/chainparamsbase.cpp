@@ -20,7 +20,7 @@
 const std::string CBaseChainParams::MAIN = "main";
 const std::string CBaseChainParams::TESTNET = "test";
 const std::string CBaseChainParams::REGTEST = "regtest";
-const std::string CBaseChainParams::REGTESTLEGACY = "regtest_legacy";
+const std::string CBaseChainParams::REGTESTLEGACY = "regtestlegacy";
 
 void AppendParamsHelpMessages(std::string& strUsage, bool debugHelp)
 {
@@ -81,7 +81,7 @@ public:
     CBaseRegTestLegacyParams()
     {
         nRPCPort = 18332;
-        strDataDir = "regtest_legacy";
+        strDataDir = "regtestlegacy";
     }
 };
 
