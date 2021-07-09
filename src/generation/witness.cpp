@@ -349,7 +349,7 @@ static std::tuple<bool, CMutableTransaction, CWitnessBundles> CreateWitnessCoinb
 
     // Sign witness coinbase.
     {
-        LOCK(pactiveWallet->cs_wallet);
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
         if (!pactiveWallet->SignTransaction(selectedWitnessAccount, coinbaseTx, SignType::Witness, &selectedWitnessOutput))
         {
             std::string strErrorMessage = strprintf("Failed to sign witness coinbase: height[%d] chain-tip-height[%d]", nWitnessHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
