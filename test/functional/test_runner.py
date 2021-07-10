@@ -102,7 +102,7 @@ BASE_SCRIPTS = [
     # vv Tests less than 30s vv
     ###'wallet_keypool_topup.py',
     ###'interface_zmq.py',
-    ###'interface_gulden_cli.py',
+    'interface_gulden_cli.py',
     ###'mempool_resurrect.py',
     ###'wallet_txn_doublespend.py --mineblock',
     ###'tool_wallet.py',
