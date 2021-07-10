@@ -168,7 +168,7 @@ BASE_SCRIPTS = [
     'wallet_encryption.py',
     ###'feature_dersig.py',
     ###'feature_cltv.py',
-    ###'rpc_uptime.py',
+    'rpc_uptime.py',
     ###'wallet_resendwallettransactions.py',
     ###'wallet_fallbackfee.py',
     'feature_minchainwork.py',
