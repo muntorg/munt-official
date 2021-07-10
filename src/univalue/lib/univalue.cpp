@@ -306,7 +306,9 @@ bool UniValue::get_bool() const
 
 const std::string& UniValue::get_str() const
 {
-    if (typ != VSTR)
+    if (typ == VNULL)
+        return getValStr();
+    else if (typ != VSTR)
         throw std::runtime_error("JSON value is not a string as expected");
     return getValStr();
 }
