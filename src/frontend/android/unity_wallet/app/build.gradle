@@ -59,7 +59,7 @@ android {
             versionCode 300022
             versionName = "2.0.2"
             resValue "string", "about_text_app_name", "Florin testnet $versionName ($versionCode)"
-            resValue "string", "about_text_app_copyright", "© 2020 Centure.com BV"
+            resValue "string", "about_text_app_copyright", "© 2021 Centure.com BV"
         }
 
         florin_mainnet {
@@ -71,7 +71,7 @@ android {
             versionCode 22
             versionName = "2.0.2"
             resValue "string", "about_text_app_name", "Florin $versionName ($versionCode)"
-            resValue "string", "about_text_app_copyright", "© 2020 Centure.com BV"
+            resValue "string", "about_text_app_copyright", "© 2021 Centure.com BV"
         }
     }
 
