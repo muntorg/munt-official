@@ -78,7 +78,7 @@ void WitnessDurationWidget::durationValueChanged(int newValueDays)
     }
 }
 
-#define WITNESS_SUBSIDY 30
+#define WITNESS_SUBSIDY 15
 
 void WitnessDurationWidget::update()
 {
