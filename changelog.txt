@@ -1,3 +1,11 @@
+2.4.4
+
+UI        - Fix witness earning estimates for recent reward changes
+CORE      - Improve regression in coin cache performance
+
+
+
+
 2.4.3
 
 CONSENSUS - Fix an issue with fresh syncs stalling, regression was introduced in 2.4.1 release
