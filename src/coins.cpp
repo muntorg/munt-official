@@ -44,14 +44,12 @@ SaltedOutpointHasher::SaltedOutpointHasher() : k0(GetRand(std::numeric_limits<ui
 
 CCoinsViewCache::CCoinsViewCache(CCoinsView *baseIn)
 : CCoinsViewBacked(baseIn)
-, cacheMempoolRefs(0)
 , cachedCoinsUsage(0)
 , pChainedWitView(nullptr)
 {}
 
 CCoinsViewCache::CCoinsViewCache(CCoinsViewCache *baseIn)
 : CCoinsViewBacked(baseIn)
-, cacheMempoolRefs(0)
 , cachedCoinsUsage(0)
 , pChainedWitView(baseIn->pChainedWitView?std::shared_ptr<CCoinsViewCache>(new CCoinsViewCache(baseIn->pChainedWitView.get())):nullptr)
 {}
@@ -198,21 +196,22 @@ CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoins
     assert(insertOutpoint.isHash);
 
     // Ensure consistency
-    validateInsert(outpoint, tmp.nHeight, tmp.nTxIndex, outpoint.n);
+    validateInsert(insertOutpoint, tmp.nHeight, tmp.nTxIndex, outpoint.n);
 
     // have it in base view, auto-create copy in the cache   
     if (tmp.nHeight == MEMPOOL_HEIGHT && tmp.nTxIndex == MEMPOOL_INDEX)
     {
-        ++cacheMempoolRefs;
         if (pRefIterReturn)
             *pRefIterReturn = cacheCoinRefs.end();
             
     }
     else
     {
-        auto refRetIter = (cacheCoinRefs.emplace(COutPoint(tmp.nHeight, tmp.nTxIndex, insertOutpoint.n), insertOutpoint)).first;
+        cacheCoinRefs[(COutPoint(tmp.nHeight, tmp.nTxIndex, insertOutpoint.n))] = insertOutpoint;
         if (pRefIterReturn)
-            *pRefIterReturn = refRetIter;
+        {
+            *pRefIterReturn = cacheCoinRefs.find(COutPoint(tmp.nHeight, tmp.nTxIndex, insertOutpoint.n));
+        }
     }
     auto retIter = cacheCoins.emplace(std::piecewise_construct, std::forward_as_tuple(insertOutpoint), std::forward_as_tuple(std::move(tmp))).first;
     
@@ -261,13 +260,9 @@ void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possi
     // Ensure consistency
     validateInsert(outpoint, coin.nHeight, coin.nTxIndex, outpoint.n);
 
-    if (coin.nHeight == MEMPOOL_HEIGHT && coin.nTxIndex == MEMPOOL_INDEX)
+    if (!(coin.nHeight == MEMPOOL_HEIGHT && coin.nTxIndex == MEMPOOL_INDEX))
     {
-        ++cacheMempoolRefs;
-    }
-    else
-    {
-        cacheCoinRefs.emplace(COutPoint(coin.nHeight, coin.nTxIndex, outpoint.n), outpoint);
+        cacheCoinRefs[(COutPoint(coin.nHeight, coin.nTxIndex, outpoint.n))] = outpoint;
     }
     auto [coinIter, inserted] = cacheCoins.emplace(std::piecewise_construct, std::forward_as_tuple(outpoint), std::tuple<>());
     
@@ -329,11 +324,10 @@ void CCoinsViewCache::SpendCoin(const COutPoint &outpoint, CoinUndo* moveout, bo
     {
         if (coinRefIter != cacheCoinRefs.end())
         {
-            cacheCoinRefs.erase(coinRefIter);
-        }
-        else
-        {
-            --cacheMempoolRefs;
+            if ((!outpoint.isHash) || coinRefIter->second == outpoint)
+            {
+                cacheCoinRefs.erase(coinRefIter);
+            }
         }
         cacheCoins.erase(coinIter);
     }
@@ -387,8 +381,8 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
 {
     // It is possible (in fact likely) for the same batch to be both erasing and writing the same entryref e.g. if swapping one block 1963 for a competing block 1963
     // mapCoins is 'randomly' ordered so doing this would create random behaviour and an inconsistent coin database
-    // To overcome this we erase first always, and then pool up the inserts to do at the end
-    std::vector<std::pair<COutPoint, COutPoint>> writeRefHashes;
+    // To overcome this we erase first always, and then pool up the inserts to do at the end, where we must still carefully order the inserts as well
+    std::vector<COutPoint> modificationMap;
     for (CCoinsMap::iterator it = mapCoins.begin(); it != mapCoins.end();)
     {
         // Ignore non-dirty entries (optimization).
@@ -414,13 +408,9 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     {
                         entry.flags |= CCoinsCacheEntry::FRESH;
                     }
-                    if (entry.coin.nHeight == MEMPOOL_HEIGHT && entry.coin.nTxIndex == MEMPOOL_INDEX)
+                    if (!(entry.coin.nHeight == MEMPOOL_HEIGHT && entry.coin.nTxIndex == MEMPOOL_INDEX))
                     {
-                        ++cacheMempoolRefs;
-                    }
-                    else
-                    {
-                        writeRefHashes.emplace_back(COutPoint(entry.coin.nHeight, entry.coin.nTxIndex, it->first.n), it->first);
+                        modificationMap.push_back(it->first);
                     }
                 }
             }
@@ -442,11 +432,7 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     // modified and being pruned. This means we can just delete
                     // it from the parent.
                     cachedCoinsUsage -= itUs->second.coin.DynamicMemoryUsage();
-                    if (itUs->second.coin.nHeight == MEMPOOL_HEIGHT && itUs->second.coin.nTxIndex == MEMPOOL_INDEX)
-                    {
-                        --cacheMempoolRefs;
-                    }
-                    else
+                    if (!(itUs->second.coin.nHeight == MEMPOOL_HEIGHT && itUs->second.coin.nTxIndex == MEMPOOL_INDEX))
                     {
                         cacheCoinRefs.erase(COutPoint(itUs->second.coin.nHeight, itUs->second.coin.nTxIndex, itUs->first.n));
                     }
@@ -470,9 +456,35 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
         CCoinsMap::iterator itOld = it++;
         mapCoins.erase(itOld);
     }
-    for (const auto& [outPoint, entryHash] : writeRefHashes)
+    
+    //fixme: (MED) The commented out loop below (and two corresponding commented out line above) are technically more efficient than the code we have here (below)
+    //However is having robustness issues, while I think we have resolved all issues now
+    //Rather than take a risk, we instead favour the simpler more robust code
+    //re-visit this in future and establish via more testing that the other code path is fully robust (as well as faster) before re-enabling
+    //otherwise consider purging it in future  if not.
+    int64_t nTime = GetTimeMicros();
+    
+    for (const auto& outPoint : modificationMap)
     {
-        cacheCoinRefs.emplace(outPoint, entryHash);
+        const auto& iter = cacheCoins.find(outPoint);
+        if (iter != cacheCoins.end())
+        {
+            if (iter->second.coin.IsSpent())
+            {
+                cacheCoinRefs[COutPoint(iter->second.coin.nHeight, iter->second.coin.nTxIndex, outPoint.n)] = outPoint;
+            }
+        }
+    }
+    for (const auto& outPoint : modificationMap)
+    {
+        const auto& iter = cacheCoins.find(outPoint);
+        if (iter != cacheCoins.end())
+        {
+            if (!iter->second.coin.IsSpent())
+            {
+                cacheCoinRefs[COutPoint(iter->second.coin.nHeight, iter->second.coin.nTxIndex, outPoint.n)] = outPoint;
+            }
+        }
     }
     
     hashBlock = hashBlockIn;
@@ -487,7 +499,6 @@ bool CCoinsViewCache::Flush()
     bool fOk = base->BatchWrite(cacheCoins, hashBlock);
     cacheCoins.clear();
     cacheCoinRefs.clear();
-    cacheMempoolRefs = 0;
     cachedCoinsUsage = 0;
     return fOk;
 }
@@ -497,17 +508,40 @@ void CCoinsViewCache::Uncache(const COutPoint& hash)
     if (pChainedWitView)
         pChainedWitView->Uncache(hash);
 
-    CCoinsMap::iterator it = cacheCoins.find(hash);
-    if (it != cacheCoins.end() && it->second.flags == 0)
+    //NB! Though it may not seem obvious from browsing the code there is one instance where this function can be called with an index based outpoint instead of a hash
+    //This is when loading a wallet that has a transaction with a prevout that is index based (and not in the wallet)
+    //We then get called from ReacceptWalletTransactions/AcceptToMemoryPool with an index based outpoint
+    //So we handle that special case here then rest of the function MUST work on hash based only as the argument name implies
+    COutPoint canonicalHash = hash;
+    if (!hash.isHash)
     {
-        cachedCoinsUsage -= it->second.coin.DynamicMemoryUsage();
-        if (it->second.coin.nHeight == MEMPOOL_HEIGHT && it->second.coin.nTxIndex == MEMPOOL_INDEX)
+        auto refIter = cacheCoinRefs.find(hash);
+        if (refIter == cacheCoinRefs.end())
         {
-            --cacheMempoolRefs;
+            return;
         }
         else
         {
-            cacheCoinRefs.erase(COutPoint(it->second.coin.nHeight, it->second.coin.nTxIndex, it->first.n));
+            canonicalHash = refIter->second;
+        }
+    }
+    
+    
+    CCoinsMap::iterator it = cacheCoins.find(canonicalHash);
+    if (it != cacheCoins.end() && it->second.flags == 0)
+    {
+        cachedCoinsUsage -= it->second.coin.DynamicMemoryUsage();
+        if (!(it->second.coin.nHeight == MEMPOOL_HEIGHT && it->second.coin.nTxIndex == MEMPOOL_INDEX))
+        {
+            COutPoint indexBased = COutPoint(it->second.coin.nHeight, it->second.coin.nTxIndex, it->first.n);
+            auto refIter = cacheCoinRefs.find(indexBased);
+            if (refIter != cacheCoinRefs.end())
+            {
+                if (refIter->second == canonicalHash)
+                {
+                    cacheCoinRefs.erase(COutPoint(it->second.coin.nHeight, it->second.coin.nTxIndex, it->first.n));
+                }
+            }
         }
         cacheCoins.erase(it);
     }
