@@ -221,11 +221,7 @@ bool static CheckPubKeyEncoding(const valtype &vchPubKey, unsigned int flags, co
     if ((flags & SCRIPT_VERIFY_STRICTENC) != 0 && !IsCompressedOrUncompressedPubKey(vchPubKey)) {
         return set_error(serror, SCRIPT_ERR_PUBKEYTYPE);
     }
-    // Only compressed keys are accepted in segsig
-    if (sigversion == SIGVERSION_SEGSIG && !IsCompressedPubKey(vchPubKey))
-    {
-        return set_error(serror, SCRIPT_ERR_SEGSIG_PUBKEYTYPE);
-    }
+    
     return true;
 }
 
