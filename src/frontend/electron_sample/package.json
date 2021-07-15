@@ -1,6 +1,6 @@
 {
   "name": "gulden-electron-sample",
-  "version": "2.4.3",
+  "version": "2.4.4",
   "description": "A minimal Electron application using Gulden unified backend",
   "author": "Malcolm MacLeod",
   "license": "Gulden",
