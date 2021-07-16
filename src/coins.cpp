@@ -462,7 +462,6 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
     //Rather than take a risk, we instead favour the simpler more robust code
     //re-visit this in future and establish via more testing that the other code path is fully robust (as well as faster) before re-enabling
     //otherwise consider purging it in future  if not.
-    int64_t nTime = GetTimeMicros();
     
     for (const auto& outPoint : modificationMap)
     {
