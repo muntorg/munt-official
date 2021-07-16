@@ -74,7 +74,7 @@ static UniValue gethashps(const JSONRPCRequest& request)
     rec.push_back(Pair("last_reported",   strprintf("%lf %s", dHashPerSecLog, sHashPerSecLogLabel)));
     rec.push_back(Pair("rolling_average", strprintf("%lf %s", dRollingHashPerSecLog, sRollingHashPerSecLogLabel)));
     rec.push_back(Pair("best_reported",   strprintf("%lf %s", dBestHashPerSecLog, sBestHashPerSecLogLabel)));
-    rec.push_back(Pair("arena_setup",     strprintf("%lfs", nArenaSetupTime/1000.0)));
+    rec.push_back(Pair("arena_setup",     strprintf("%lf s", nArenaSetupTime/1000.0)));
 
     return rec;
     return strprintf("%lf %s/s (best %lf %s/s)", dHashPerSecLog, sHashPerSecLogLabel, dBestHashPerSecLog, sBestHashPerSecLogLabel);
