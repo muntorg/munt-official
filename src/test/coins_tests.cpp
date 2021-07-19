@@ -74,7 +74,7 @@ public:
 
     uint256 GetBestBlock() const override { return hashBestBlock_; }
 
-    bool BatchWrite(CCoinsMap& mapCoins, const uint256& hashBlock) override
+    bool BatchWrite(CCoinsMap& mapCoins, const uint256& hashBlock, bool allowFastPath) override
     {
         for (CCoinsMap::iterator it = mapCoins.begin(); it != mapCoins.end(); ) {
             if (it->second.flags & CCoinsCacheEntry::DIRTY) {
@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE(coins_cache_simulation_test)
             if (stack.size() > 1 && InsecureRandBool() == 0)
             {
                 unsigned int flushIndex = InsecureRandRange(stack.size() - 1);
-                stack[flushIndex]->Flush();
+                stack[flushIndex]->Flush(true);
             }
         }
         if (InsecureRandRange(100) == 0)
@@ -256,7 +256,7 @@ BOOST_AUTO_TEST_CASE(coins_cache_simulation_test)
             if (stack.size() > 0 && InsecureRandBool() == 0)
             {
                 //Remove the top cache
-                stack.back()->Flush();
+                stack.back()->Flush(true);
                 delete stack.back();
                 stack.pop_back();
             }
@@ -528,7 +528,7 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
             if (stack.size() > 1 && InsecureRandBool() == 0)
             {
                 unsigned int flushIndex = InsecureRandRange(stack.size() - 1);
-                stack[flushIndex]->Flush();
+                stack[flushIndex]->Flush(true);
             }
         }
         if (InsecureRandRange(100) == 0)
@@ -536,7 +536,7 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
             // Every 100 iterations, change the cache stack.
             if (stack.size() > 0 && InsecureRandBool() == 0)
             {
-                stack.back()->Flush();
+                stack.back()->Flush(true);
                 delete stack.back();
                 stack.pop_back();
             }
@@ -613,6 +613,10 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
         blockUndo[blockCount-1].push_back(undo);
     }
     
+    //#define DO_RECONNECT_TESTS
+    #ifdef DO_RECONNECT_TESTS
+    bool lastActionWasDisconnect=false;
+    #endif
     for (unsigned int simStep = 0; simStep < NUM_SIMULATION_ITERATIONS; simStep++)
     {
         uint32_t randiter = InsecureRand32();
@@ -628,69 +632,207 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             blocks.push_back(std::vector<CTransaction>());
             blockUndo.push_back(std::vector<CTxUndo>());
             
+            // Low chance event, reconnect the same block we just disconnected again
+            #ifdef DO_RECONNECT_TESTS
+            if (lastActionWasDisconnect && randiter % 100 < 5)
+            {
+                LogPrintf("reconnect block [%d]\n", blockCount+heightOffset);
+
+                int txIndex = 0;
+                for (const auto& removedTransaction : removedblocks.back())
+                {
+                    CTxUndo undo;
+                    UpdateCoins(removedTransaction, *(stack.back()), undo, heightOffset+blockCount-1, txIndex);
+                    
+                    for (uint64_t inputIndex = 0; inputIndex < removedTransaction.vin.size(); ++inputIndex)
+                    {
+                        if (removedTransaction.vin[inputIndex].GetPrevOut().isHash)
+                        {
+                            allCoins.erase(allCoins.find(removedTransaction.vin[inputIndex].GetPrevOut()));
+                        }
+                        else
+                        {
+                            bool removed = false;
+                            for (const auto& [hashOutPoint, indexOutPoint] : allCoins)
+                            {
+                                if (removedTransaction.vin[inputIndex].GetPrevOut() == COutPoint(std::get<0>(indexOutPoint), std::get<1>(indexOutPoint), std::get<2>(indexOutPoint)))
+                                {
+                                    allCoins.erase(allCoins.find(hashOutPoint));
+                                    removed = true;
+                                    break;
+                                }
+                            }
+                            if (!removed)
+                            {
+                                assert(0);
+                            }
+                        }
+                    }
+                    
+                    for (uint64_t outputIndex = 0; outputIndex < removedTransaction.vout.size(); ++outputIndex)
+                    {
+                        LogPrintf("Recreate output [%s] [%s]\n", COutPoint(removedTransaction.GetHash(), outputIndex).ToString(), COutPoint(heightOffset+blockCount-1, txIndex, outputIndex).ToString());
+                        allCoins[COutPoint(removedTransaction.GetHash(), outputIndex)] = std::tuple(heightOffset+blockCount-1, txIndex, outputIndex);
+                    }
+                    
+                    txIndex++;
+                    blocks[blockCount-1].push_back(removedTransaction);
+                    blockUndo[blockCount-1].push_back(undo);
+                }
+            }
+            else
+            #endif
             {    
                 uint64_t numTransactions = (randiter % 3) + 1;
                 for (uint64_t txIndex=0; txIndex < numTransactions; ++txIndex)
                 {
-                    uint64_t numInputs = (randiter % 3) + 1;
-                    uint64_t numOutputs = (randiter % 3) + 1;
+                    // Randomly re-use a previously disconnected transaction instead of creating a new one
+                    bool reusedPreviouslyDisconnectedTransaction=false;
+                    #ifdef DO_RECONNECT_TESTS
+                    if (lastActionWasDisconnect && randiter % 100 < 25)
+                    {
+                        lastActionWasDisconnect = false;
+                        
+                        uint64_t oldTxIndex = InsecureRand32() % removedblocks.back().size();
+                        const auto& removedTransaction = removedblocks.back()[oldTxIndex];
 
-                    CMutableTransaction tx(CTransaction::CURRENT_VERSION);
-                    tx.vin.resize(numInputs);
-                    for (uint64_t inputIndex = 0; inputIndex < numInputs; ++inputIndex)
-                    {
-                        uint64_t selectedInput = InsecureRand32() % allCoins.size();
-                        auto selectedCoinIter = allCoins.begin();
-                        
-                        // Prevent selection from same block we are in
-                        while (true)
+                        bool stillHaveAllInputs=true;
+                        for (uint64_t inputIndex = 0; inputIndex < removedTransaction.vin.size(); ++inputIndex)
                         {
-                            std::advance(selectedCoinIter, selectedInput);
-                            if (std::get<0>(selectedCoinIter->second) != blockCount+heightOffset-1)
-                                break;  
-                            selectedInput = InsecureRand32() % allCoins.size();
-                            selectedCoinIter = allCoins.begin();
+                            if (removedTransaction.vin[inputIndex].GetPrevOut().isHash)
+                            {
+                                if (allCoins.find(removedTransaction.vin[inputIndex].GetPrevOut()) == allCoins.end())
+                                {
+                                    stillHaveAllInputs = false;
+                                    break;
+                                }
+                                else
+                                {
+                                    bool found = false;
+                                    for (const auto& [hashOutPoint, indexOutPoint] : allCoins)
+                                    {
+                                        if (removedTransaction.vin[inputIndex].GetPrevOut() == COutPoint(std::get<0>(indexOutPoint), std::get<1>(indexOutPoint), std::get<2>(indexOutPoint)))
+                                        {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!found)
+                                    {
+                                        stillHaveAllInputs = false;
+                                        break;
+                                    }
+                                }
+                            }
                         }
                         
-                        // Use index based outpoints half the time, but only once we are a little bit into the simulation, so that we first rule out problems with regular inputs
-                        bool indexBased = false;
-                        if (simStep>400)
-                            indexBased = (InsecureRand32() % 100) < 80;
-                        
-                        if (indexBased)
-                        {
-                            tx.vin[inputIndex] = CTxIn(COutPoint(std::get<0>(selectedCoinIter->second), std::get<1>(selectedCoinIter->second), std::get<2>(selectedCoinIter->second)), CScript(), 0, 0);
-                            LogPrintf("Spend output as index input [%s] [%s]\n", COutPoint(std::get<0>(selectedCoinIter->second), std::get<1>(selectedCoinIter->second), std::get<2>(selectedCoinIter->second)).ToString(), selectedCoinIter->first.ToString());
+                        if (stillHaveAllInputs)
+                        {      
+                            CTxUndo undo;
+                            UpdateCoins(removedTransaction, *(stack.back()), undo, heightOffset+blockCount-1, txIndex);
+                            for (uint64_t inputIndex = 0; inputIndex < removedTransaction.vin.size(); ++inputIndex)
+                            {
+                                if (removedTransaction.vin[inputIndex].GetPrevOut().isHash)
+                                {
+                                    allCoins.erase(allCoins.find(removedTransaction.vin[inputIndex].GetPrevOut()));
+                                }
+                                else
+                                {
+                                    bool removed = false;
+                                    for (const auto& [hashOutPoint, indexOutPoint] : allCoins)
+                                    {
+                                        if (removedTransaction.vin[inputIndex].GetPrevOut() == COutPoint(std::get<0>(indexOutPoint), std::get<1>(indexOutPoint), std::get<2>(indexOutPoint)))
+                                        {
+                                            allCoins.erase(allCoins.find(hashOutPoint));
+                                            removed = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!removed)
+                                    {
+                                        assert(0);
+                                    }
+                                }
+                            }
+                            
+                            for (uint64_t outputIndex = 0; outputIndex < removedTransaction.vout.size(); ++outputIndex)
+                            {
+                                LogPrintf("Recreate output [%s] [%s]\n", COutPoint(removedTransaction.GetHash(), outputIndex).ToString(), COutPoint(heightOffset+blockCount-1, txIndex, outputIndex).ToString());
+                                allCoins[COutPoint(removedTransaction.GetHash(), outputIndex)] = std::tuple(heightOffset+blockCount-1, txIndex, outputIndex);
+                            }
+                            
+                            blocks[blockCount-1].push_back(removedTransaction);
+                            blockUndo[blockCount-1].push_back(undo);
+                            reusedPreviouslyDisconnectedTransaction = true;
                         }
-                        else
-                        {
-                            tx.vin[inputIndex] = CTxIn(selectedCoinIter->first, CScript(), 0, 0);
-                            LogPrintf("Spend output as hash input [%s] [%s]\n", selectedCoinIter->first.ToString(), COutPoint(std::get<0>(selectedCoinIter->second), std::get<1>(selectedCoinIter->second), std::get<2>(selectedCoinIter->second)).ToString());
-                        }
-                        allCoins.erase(selectedCoinIter);
                     }
-                    tx.vout.resize(numOutputs);
-                    for (uint64_t outputIndex = 0; outputIndex < numOutputs; ++outputIndex)
-                    {
-                        tx.vout[outputIndex].nValue = simStep; //Keep txs unique unless intended to duplicate
-                        tx.vout[outputIndex].output.scriptPubKey.assign(InsecureRand32() & 0x3F, 0); // Random sizes so we can test memory usage accounting                    
-                    }
-                    assert(!CTransaction(tx).IsCoinBase());
+                    #endif
                     
-                    for (uint64_t outputIndex = 0; outputIndex < numOutputs; ++outputIndex)
+                    if (!reusedPreviouslyDisconnectedTransaction)
                     {
-                        LogPrintf("Create output [%s] [%s]\n", COutPoint(tx.GetHash(), outputIndex).ToString(), COutPoint(heightOffset+blockCount-1, txIndex, outputIndex).ToString());
-                        allCoins[COutPoint(tx.GetHash(), outputIndex)] = std::tuple(heightOffset+blockCount-1, txIndex, outputIndex);
+                        uint64_t numInputs = (randiter % 3) + 1;
+                        uint64_t numOutputs = (randiter % 3) + 1;
+
+                        CMutableTransaction tx(CTransaction::CURRENT_VERSION);
+                        tx.vin.resize(numInputs);
+                        for (uint64_t inputIndex = 0; inputIndex < numInputs; ++inputIndex)
+                        {
+                            uint64_t selectedInput = InsecureRand32() % allCoins.size();
+                            auto selectedCoinIter = allCoins.begin();
+                            
+                            // Prevent selection from same block we are in
+                            while (true)
+                            {
+                                std::advance(selectedCoinIter, selectedInput);
+                                if (std::get<0>(selectedCoinIter->second) != blockCount+heightOffset-1)
+                                    break;  
+                                selectedInput = InsecureRand32() % allCoins.size();
+                                selectedCoinIter = allCoins.begin();
+                            }
+                            
+                            // Use index based outpoints half the time, but only once we are a little bit into the simulation, so that we first rule out problems with regular inputs
+                            bool indexBased = false;
+                            if (simStep>400)
+                                indexBased = (InsecureRand32() % 100) < 80;
+                            
+                            if (indexBased)
+                            {
+                                tx.vin[inputIndex] = CTxIn(COutPoint(std::get<0>(selectedCoinIter->second), std::get<1>(selectedCoinIter->second), std::get<2>(selectedCoinIter->second)), CScript(), 0, 0);
+                                LogPrintf("Spend output as index input [%s] [%s]\n", COutPoint(std::get<0>(selectedCoinIter->second), std::get<1>(selectedCoinIter->second), std::get<2>(selectedCoinIter->second)).ToString(), selectedCoinIter->first.ToString());
+                            }
+                            else
+                            {
+                                tx.vin[inputIndex] = CTxIn(selectedCoinIter->first, CScript(), 0, 0);
+                                LogPrintf("Spend output as hash input [%s] [%s]\n", selectedCoinIter->first.ToString(), COutPoint(std::get<0>(selectedCoinIter->second), std::get<1>(selectedCoinIter->second), std::get<2>(selectedCoinIter->second)).ToString());
+                            }
+                            allCoins.erase(selectedCoinIter);
+                        }
+                        tx.vout.resize(numOutputs);
+                        for (uint64_t outputIndex = 0; outputIndex < numOutputs; ++outputIndex)
+                        {
+                            tx.vout[outputIndex].nValue = simStep; //Keep txs unique unless intended to duplicate
+                            tx.vout[outputIndex].output.scriptPubKey.assign(InsecureRand32() & 0x3F, 0); // Random sizes so we can test memory usage accounting                    
+                        }
+                        assert(!CTransaction(tx).IsCoinBase());
+                        
+                        for (uint64_t outputIndex = 0; outputIndex < numOutputs; ++outputIndex)
+                        {
+                            LogPrintf("Create output [%s] [%s]\n", COutPoint(tx.GetHash(), outputIndex).ToString(), COutPoint(heightOffset+blockCount-1, txIndex, outputIndex).ToString());
+                            allCoins[COutPoint(tx.GetHash(), outputIndex)] = std::tuple(heightOffset+blockCount-1, txIndex, outputIndex);
+                        }
+                        
+                        // Call UpdateCoins on the top cache
+                        CTxUndo undo;
+                        UpdateCoins(tx, *(stack.back()), undo, heightOffset+blockCount-1, txIndex);
+                        blocks[blockCount-1].push_back(tx);
+                        blockUndo[blockCount-1].push_back(undo);
                     }
-                    
-                    // Call UpdateCoins on the top cache
-                    CTxUndo undo;
-                    UpdateCoins(tx, *(stack.back()), undo, heightOffset+blockCount-1, txIndex);
-                    blocks[blockCount-1].push_back(tx);
-                    blockUndo[blockCount-1].push_back(undo);
                 }
             }
             
+            #ifdef DO_RECONNECT_TESTS
+            lastActionWasDisconnect = false;
+            #endif
         }
         else if (randiter % 20 < 18)
         {
@@ -743,6 +885,9 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             blocks.pop_back();
             blockUndo.pop_back();
             --blockCount;
+            #ifdef DO_RECONNECT_TESTS
+            lastActionWasDisconnect = true;
+            #endif
         }
         
         if (InsecureRandRange(100) == 0)
@@ -751,7 +896,7 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             if (stack.size() > 1 && InsecureRandBool() == 0)
             {
                 unsigned int flushIndex = InsecureRandRange(stack.size() - 1);
-                stack[flushIndex]->Flush();
+                stack[flushIndex]->Flush(true);
                 LogPrintf("Flush cache [%d]\n", flushIndex);
             }
         }
@@ -761,7 +906,7 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             if (stack.size() > 0 && InsecureRandBool() == 0)
             {
                 //Remove the top cache
-                stack.back()->Flush();
+                stack.back()->Flush(true);
                 delete stack.back();
                 stack.pop_back();
                 
@@ -986,7 +1131,7 @@ void WriteCoinsViewEntry(CCoinsView& view, CAmount value, char flags)
     CCoinsMap map;
     CCoinsRefMap refmap;
     InsertCoinsMapEntry(map, refmap, value, flags);
-    view.BatchWrite(map, {});
+    view.BatchWrite(map, {}, true);
 }
 
 class SingleEntryCacheTest
