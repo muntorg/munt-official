@@ -1,3 +1,5 @@
+2.0.4
+
 2.0.3
 
 CONSENSUS: Improve holding account earning curve, activates at block 114000
