@@ -634,14 +634,14 @@ static UniValue dumpdiffarray(const JSONRPCRequest& request)
             "\nThis mainly exists for testing and development purposes, and can be used to help verify that your client has not been tampered with.\n"
             "\nArguments:\n"
             "1. height     (numeric) The number of blocks to add to the array.\n"
-            "1. filename   (string) Where to write the data, file will be overwritten.\n"
+            "2. filename   (string) Where to write the data, file will be overwritten.\n"
             "\nExamples:\n"
             + HelpExampleCli("dumpdiffarray 1260000", ""));
 
     RPCTypeCheck(request.params, {UniValue::VNUM, UniValue::VSTR});
     
     std::ofstream file;
-    boost::filesystem::path filepath = request.params[0].get_str();
+    boost::filesystem::path filepath = request.params[1].get_str();
     filepath = boost::filesystem::absolute(filepath);
     file.open(filepath.string().c_str(), std::ios::out|std::ios::trunc);
     if (!file.is_open())
@@ -672,7 +672,7 @@ static UniValue dumpdiffarray(const JSONRPCRequest& request)
 
     std::reverse(reverseOutBuffer.begin(), reverseOutBuffer.end());
 
-    file.write(reverseOutBuffer.begin(), reverseOutBuffer.size());
+    file.write(&reverseOutBuffer[0], reverseOutBuffer.size());
     file.close();
 
     return reverseOutBuffer;
@@ -3422,7 +3422,7 @@ static UniValue setwitnessrewardtemplate(const JSONRPCRequest& request)
         rewardTemplate.destinations.push_back(rewardDestination);
     }
 
-    rewardTemplate.validate(GetBlockSubsidyWitness(chainActive.Height()));
+    rewardTemplate.validate(GetBlockSubsidy(chainActive.Height()).witness);
 
     CWalletDB walletdb(*pwallet->dbw);
     forAccount->setRewardTemplate(rewardTemplate, &walletdb);
