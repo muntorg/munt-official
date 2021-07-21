@@ -101,58 +101,46 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const CChainPar
 // 210'832.28999999 - final total supply (circulated ICO + mining/holding rewards)
 // 196'832.29799999 - final total supply factoring in genesis accounts
 
-CAmount GetBlockSubsidy(uint64_t nHeight)
+BlockSubsidy GetBlockSubsidy(uint64_t nHeight)
 {
     static bool fRegTest = GetBoolArg("-regtest", false);
     static bool fTestNet = IsArgSet("-testnet");
     if (fTestNet)
-        return 20*COIN;
+        return BlockSubsidy(10*COIN, 10*COIN, 0);
 
     if (fRegTest)
-        return 50*COIN;
+        return BlockSubsidy(50*COIN, 0*COIN, 0);
 
-    CAmount subsidy = 10*CENT;
-    if (nHeight == 0)
-        subsidy = 994'744'000*COIN;
-    else if (nHeight >= 100000)
-        subsidy = 25*CENT/10;
+    CAmount subsidyMining = 10*CENT;
+    {
+        if (nHeight == 0)
+            subsidyMining = 994'744'000*COIN;
+        else if (nHeight >= 100000)
+            subsidyMining = 25*CENT/10;
     
-    // Subsidy is cut in half every 400000 blocks (count starts from 100'000); Which will occur approximately every 4 years.
-    // Don't ever shift by more than the bit width (64)
-    uint64_t halvings = std::max((int64_t)((nHeight + 300000) / 400000)-1, (int64_t)0);
-    if (halvings >= 22)
-        subsidy = 0;
-    else
-        subsidy >>= halvings;
+        // Subsidy is cut in half every 400000 blocks (count starts from 100'000); Which will occur approximately every 4 years.
+        // Don't ever shift by more than the bit width (64)
+        uint64_t halvings = std::max((int64_t)((nHeight + 300000) / 400000)-1, (int64_t)0);
+        if (halvings >= 22)
+            subsidyMining = 0;
+        else
+            subsidyMining >>= halvings;
+    }
+    CAmount subsidyWitness = 10*CENT;
+    {
+        if (nHeight >= 100000)
+            subsidyWitness = 75*CENT/10;
 
-    return subsidy+GetBlockSubsidyWitness(nHeight);
-}
+        // Subsidy is cut in half every 400000 blocks (count starts from 100'000); Which will occur approximately every 4 years.
+        // Don't ever shift by more than the bit width (64)
+        uint64_t halvings = std::max((int64_t)((nHeight + 300000) / 400000)-1, (int64_t)0);
+        if (halvings >= 23)
+            subsidyWitness = 0;
+        else
+            subsidyWitness >>= halvings;
+    }
 
-CAmount GetBlockSubsidyWitness(uint64_t nHeight)
-{
-    static bool fRegTest = GetBoolArg("-regtest", false);
-    static bool fTestNet = IsArgSet("-testnet");
-    if (fTestNet)
-        return 10*COIN;
-
-    CAmount subsidy = 10*CENT;
-    if (nHeight >= 100000)
-        subsidy = 75*CENT/10;
-
-    // Subsidy is cut in half every 400000 blocks (count starts from 100'000); Which will occur approximately every 4 years.
-    // Don't ever shift by more than the bit width (64)
-    uint64_t halvings = std::max((int64_t)((nHeight + 300000) / 400000)-1, (int64_t)0);
-    if (halvings >= 23)
-        subsidy = 0;
-    else
-        subsidy >>= halvings;
-
-    return subsidy;
-}
-
-CAmount GetBlockSubsidyDev(uint64_t nHeight)
-{
-    return 0;
+    return BlockSubsidy(subsidyMining, subsidyWitness, 0);
 }
 
 bool IsInitialBlockDownload()

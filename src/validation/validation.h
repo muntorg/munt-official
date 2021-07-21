@@ -354,10 +354,23 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &tx, const CChainParams
 /** Find the best known block, and make it the tip of the block chain */
 bool ActivateBestChain(CValidationState& state, const CChainParams& chainparams, std::shared_ptr<const CBlock> pblock = std::shared_ptr<const CBlock>());
 
+struct BlockSubsidy
+{
+    BlockSubsidy(CAmount mining_, CAmount witness_, CAmount dev_)
+    : mining(mining_)
+    , witness(witness_)
+    , dev(dev_)
+    , total(mining_ + witness_ + dev_)
+    {
+    }
+    CAmount mining;
+    CAmount witness;
+    CAmount dev;
+    CAmount total;
+};
+
 /** The reward that must be paid out per block */
-CAmount GetBlockSubsidy(uint64_t nHeight);
-CAmount GetBlockSubsidyDev(uint64_t nHeight);
-CAmount GetBlockSubsidyWitness(uint64_t nHeight);
+BlockSubsidy GetBlockSubsidy(uint64_t nHeight);
 inline std::string devSubsidyAddress = "024ab66a6765794f3e5149b633950285b18e0e0b1dab4f19fc5d62710e6d539c66";
 
 /** Guess verification progress (as a fraction between 0.0=genesis and 1.0=current tip). */
