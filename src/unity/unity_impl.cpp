@@ -873,8 +873,8 @@ bool ILibraryController::IsValidLinkURI(const std::string& linked_uri)
 
 bool testnet_;
 bool spvMode_;
-const std::string& extraArgs_;
-const std::string& staticFilterPath_;
+const std::string extraArgs_;
+const std::string staticFilterPath_;
 int64_t staticFilterOffset_;
 int64_t staticFilterLength_;
 
