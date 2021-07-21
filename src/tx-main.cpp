@@ -634,12 +634,13 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
         if (!fHashSingle || (i < mergedTx.vout.size()))
             ProduceSignature(MutableTransactionSignatureCreator(signingKeyID, accountsToTry, &mergedTx, i, amount, nHashType), coin.out, sigdata, SignType::Spend, mergedTx.nVersion);
 
+        ScriptVersion scriptversion = (txin.segregatedSignatureData.IsNull()) ? SCRIPT_V1 : SCRIPT_V2;
+        
         // ... and merge in other signatures:
         for(const CTransaction& txv : txVariants)
-            sigdata = CombineSignatures(prevPubKey, MutableTransactionSignatureChecker(signingKeyID, CKeyID(), &mergedTx, i, amount), sigdata, DataFromTransaction(txv, i));
+            sigdata = CombineSignatures(prevPubKey, MutableTransactionSignatureChecker(signingKeyID, CKeyID(), &mergedTx, i, amount), sigdata, DataFromTransaction(txv, i), (scriptversion == SCRIPT_V1) ? SIGVERSION_BASE : SIGVERSION_SEGSIG);
         UpdateTransaction(mergedTx, i, sigdata);
-
-        ScriptVersion scriptversion = (txin.segregatedSignatureData.IsNull()) ? SCRIPT_V1 : SCRIPT_V2;
+       
         if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.segregatedSignatureData, STANDARD_SCRIPT_VERIFY_FLAGS, MutableTransactionSignatureChecker(signingKeyID, CKeyID(), &mergedTx, i, amount), scriptversion))
             fComplete = false;
     }
