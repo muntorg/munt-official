@@ -13,7 +13,7 @@
 const int32_t nMaxHeight = 0;
 const int32_t nDiffArraySize = nMaxHeight + 1;
 const int32_t udiff[nDiffArraySize] = {
-0
+ #include "../data/static_diff_data.cpp"
 };
 
 
@@ -35,9 +35,6 @@ unsigned int diff_old(int nHeight, unsigned int nPowLimit)
         LOCK(logCS);
         LogPrintf("<STATICDIFF> Height=%d Diff=%08x\n", nHeight, nRet);
     }
-
-    if (nRet > nPowLimit)
-        return nPowLimit;
 
     return nRet;
 }
