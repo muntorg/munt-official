@@ -432,8 +432,12 @@ void PrintExceptionContinue(const std::exception* pex, const char* pszThread)
     fprintf(stderr, "\n\n************************\n%s\n", message.c_str());
 }
 
+std::string defaultDataDirOverride="";
 fs::path GetDefaultDataDir()
 {
+    if (!defaultDataDirOverride.empty())
+        return defaultDataDirOverride;
+
     // Windows < Vista: C:\Documents and Settings\Username\Application Data\florin
     // Windows >= Vista: C:\Users\Username\AppData\Roaming\florin
     // Mac: ~/Library/Application Support/florin
