@@ -5,7 +5,8 @@ const mining = {
     stats: null,
     settings: {
       memorySize: null,
-      threadCount: null
+      threadCount: null,
+      arenaThreadCount: null
     }
   },
   mutations: {
@@ -20,6 +21,9 @@ const mining = {
     },
     SET_THREAD_COUNT(state, threadCount) {
       state.settings.threadCount = threadCount;
+    },
+    SET_ARENA_THREAD_COUNT(state, arenaThreadCount) {
+      state.settings.arenaThreadCount = arenaThreadCount;
     }
   },
   actions: {
@@ -34,6 +38,9 @@ const mining = {
     },
     SET_THREAD_COUNT({ commit }, threadCount) {
       commit("SET_THREAD_COUNT", threadCount);
+    },
+    SET_ARENA_THREAD_COUNT({ commit }, arenaThreadCount) {
+      commit("SET_ARENA_THREAD_COUNT", arenaThreadCount);
     }
   }
 };

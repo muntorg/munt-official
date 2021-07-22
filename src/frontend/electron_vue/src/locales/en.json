@@ -75,6 +75,7 @@
     "memory_to_use": "Memory to use",
     "moving_average": "Moving average",
     "number_of_threads": "Number of threads",
+    "number_of_arena_threads": "Number of arena setup threads",
     "statistics": "Statistics",
     "thread" : "thread | threads"
   },

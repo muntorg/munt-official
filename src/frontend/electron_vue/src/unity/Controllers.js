@@ -1000,20 +1000,22 @@ class WitnessController {
 }
 
 class GenerationController {
-  static async StartGenerationAsync(numThreads, memoryLimit) {
+  static async StartGenerationAsync(numThreads, numArenaThreads, memoryLimit) {
     return handleError(
       await ipc.callMain("NJSIGenerationController.startGenerationAsync", {
         numThreads,
+        numArenaThreads,
         memoryLimit
       })
     );
   }
 
-  static StartGeneration(numThreads, memoryLimit) {
+  static StartGeneration(numThreads, numArenaThreads, memoryLimit) {
     return handleError(
       ipc.sendSync(
         "NJSIGenerationController.startGeneration",
         numThreads,
+        numArenaThreads,
         memoryLimit
       )
     );

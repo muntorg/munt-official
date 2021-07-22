@@ -71,6 +71,7 @@
     "memory_to_use": "Geheugengebruik",
     "moving_average": "Voortschrijdend gemiddelde",
     "number_of_threads": "Aantal threads",
+    "number_of_arena_threads": "Aantal arena setup threads",
     "statistics": "Statistieken",
     "thread" : "thread | threads"
   },

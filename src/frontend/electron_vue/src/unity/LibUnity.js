@@ -2713,11 +2713,12 @@ class LibUnity {
       "NJSIGenerationController.startGenerationAsync",
       async data => {
         console.log(
-          `IPC: generationController.startGenerationAsync(${data.numThreads}, ${data.memoryLimit})`
+          `IPC: generationController.startGenerationAsync(${data.numThreads}, ${data.numArenaThreads}, ${data.memoryLimit})`
         );
         try {
           let result = this.generationController.startGeneration(
             data.numThreads,
+            data.numArenaThreads,
             data.memoryLimit
           );
           return {
@@ -2732,13 +2733,14 @@ class LibUnity {
 
     ipc.on(
       "NJSIGenerationController.startGeneration",
-      (event, numThreads, memoryLimit) => {
+      (event, numThreads, numArenaThreads, memoryLimit) => {
         console.log(
-          `IPC: generationController.startGeneration(${numThreads}, ${memoryLimit})`
+          `IPC: generationController.startGeneration(${numThreads}, ${numArenaThreads}, ${memoryLimit})`
         );
         try {
           let result = this.generationController.startGeneration(
             numThreads,
+            numArenaThreads,
             memoryLimit
           );
           event.returnValue = {
