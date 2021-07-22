@@ -353,7 +353,7 @@ void CWallet::importPrivKey(const CKey& privKey, std::string sAccountName)
 
     pactiveWallet->addAccount(newAccount, sAccountName);
 
-    //fixme: (FUT) (ACCOUNTS) - Optionally take a key bith date here.
+    //fixme: (FUT) (ACCOUNTS) - Optionally take a key birth date here.
     if (!importPrivKeyIntoAccount(newAccount, privKey, importKeyID, 1))
     {
         //Error messages aleady handled internally by importPrivKeyIntoAccount.
