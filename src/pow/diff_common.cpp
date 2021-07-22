@@ -14,7 +14,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* indexLast, const CBlockHeade
         return indexLast->nBits;
 
     static int nDeltaSwitchoverBlock = 0;
-    static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(0, nMaxHeight);
+    static int nOldDiffSwitchoverBlock = DIFF_SWITCHOVER(0, 117761);
 
     if ((indexLast->nHeight+1) >= nOldDiffSwitchoverBlock)
     {
