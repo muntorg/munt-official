@@ -39,7 +39,7 @@ def print_checkpoint(height):
 # close to the tip this is a performance optimization which is most notable right after a release with new checkpoints
 # the extra before last checkpoint helps initial partial sync, which needs 2 checkpoints for secure initialization
 chain_height = access.getblockcount()
-last_checkpoint = chain_height - 2 * 576
+last_checkpoint = chain_height - 1 * 576
 extra_before_last = last_checkpoint - 2 * 576
 checkpoint_period = 5000
 
