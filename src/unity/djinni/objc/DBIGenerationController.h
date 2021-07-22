@@ -16,6 +16,7 @@
  * Number of threads should not exceed physical threads, memory limit is a string specifier in the form of #B/#K/#M/#G (e.g. 102400B, 10240K, 1024M, 1G)
  */
 + (BOOL)startGeneration:(int32_t)numThreads
+        numArenaThreads:(int32_t)numArenaThreads
             memoryLimit:(nonnull NSString *)memoryLimit;
 
 /** Stop any active block generation (proof of work) */

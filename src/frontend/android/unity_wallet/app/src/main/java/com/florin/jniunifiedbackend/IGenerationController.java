@@ -17,9 +17,10 @@ public abstract class IGenerationController {
      * Activate block generation (proof of work)
      * Number of threads should not exceed physical threads, memory limit is a string specifier in the form of #B/#K/#M/#G (e.g. 102400B, 10240K, 1024M, 1G)
      */
-    public static boolean startGeneration(int numThreads, String memoryLimit)
+    public static boolean startGeneration(int numThreads, int numArenaThreads, String memoryLimit)
     {
         return CppProxy.startGeneration(numThreads,
+                                        numArenaThreads,
                                         memoryLimit);
     }
 
@@ -94,7 +95,7 @@ public abstract class IGenerationController {
 
         public static native void setListener(IGenerationListener generationListener);
 
-        public static native boolean startGeneration(int numThreads, String memoryLimit);
+        public static native boolean startGeneration(int numThreads, int numArenaThreads, String memoryLimit);
 
         public static native boolean stopGeneration();
 

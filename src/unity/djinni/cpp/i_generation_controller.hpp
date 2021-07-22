@@ -25,7 +25,7 @@ public:
      * Activate block generation (proof of work)
      * Number of threads should not exceed physical threads, memory limit is a string specifier in the form of #B/#K/#M/#G (e.g. 102400B, 10240K, 1024M, 1G)
      */
-    static bool startGeneration(int32_t numThreads, const std::string & memoryLimit);
+    static bool startGeneration(int32_t numThreads, int32_t numArenaThreads, const std::string & memoryLimit);
 
     /** Stop any active block generation (proof of work) */
     static bool stopGeneration();
