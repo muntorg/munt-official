@@ -616,7 +616,7 @@ void sigma_context::prepareArenas(CBlockHeader& headerData)
             sched_setaffinity(0, sizeof(cpuset), &cpuset);
             #endif
                 
-            for (;nThreadIndex<numHashes;nThreadIndex+=numThreads)
+            for (;nThreadIndex<numHashes;nThreadIndex+=numArenaThreads)
             {
                 headerData.nNonce = nBaseNonce+nThreadIndex;
                 argon2_echo_context context;
@@ -998,7 +998,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
 sigma_context::~sigma_context()
 {
     #if defined(__linux) && defined(DJINNI_NODEJS)
-    munmap(arena, (allocatedArenaSizeKb*1024));
+    (uint8_t*)munmap(arena, (allocatedArenaSizeKb*1024));
     #else
     free(arena);
     #endif
