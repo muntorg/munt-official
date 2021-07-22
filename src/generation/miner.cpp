@@ -428,9 +428,9 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     nLastBlockWeight = nBlockWeight;
 
     // Create coinbase transaction.
-    CMutableTransaction coinbaseTx( bSegSigIsEnabled ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::CURRENT_VERSION );
+    CMutableTransaction coinbaseTx( bSegSigIsEnabled ? CTransaction::SEGSIG_ACTIVATION_VERSION : CTransaction::SEGSIG_ACTIVATION_VERSION-1);
     coinbaseTx.vin.resize(1);
-    coinbaseTx.vin[0].prevout.SetNull();
+    coinbaseTx.vin[0].SetPrevOutNull();
     coinbaseTx.vout.resize((nSubsidyDev>0)?2:1);
     #ifdef ENABLE_WALLET
     CKeyID pubKeyID;
@@ -696,9 +696,9 @@ void BlockAssembler::addPackageTxs(int &nPackagesSelected, int &nDescendantsUpda
                 for (const auto& thisTransactionInputs : cannabalisedTransaction->vin)
                 {
                     uint256 txHash;
-                    if (GetTxHash(thisTransactionInputs.prevout, txHash) && txHash == cannabalisedInputTransaction->GetHash())
+                    if (GetTxHash(thisTransactionInputs.GetPrevOut(), txHash) && txHash == cannabalisedInputTransaction->GetHash())
                     {
-                        nFee += cannabalisedInputTransaction->vout[thisTransactionInputs.prevout.n].nValue;
+                        nFee += cannabalisedInputTransaction->vout[thisTransactionInputs.GetPrevOut().n].nValue;
                     }
                 }
             }
@@ -1070,7 +1070,7 @@ inline void clearHashesPerSecondStatistics()
     #endif
 }
 
-void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nMemoryKb)
+void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nArenaThreads, uint64_t nMemoryKb)
 {
     LogPrintf("PoWGenerate thread started\n");
     RenameThread(GLOBAL_APPNAME"-generate");
@@ -1196,7 +1196,8 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
                 {
                     continue;
                 }
-                pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pindexParent, coinbaseScript, true, pWitnessBlockToEmbed, false, nExtraNonce);
+
+                pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pindexParent, coinbaseScript, true, pWitnessBlockToEmbed, nExtraNonce);
                 if (!pblocktemplate.get())
                 {
                     LogPrintf("PoWGenerate: Failed to create block-template.\n");
@@ -1237,7 +1238,7 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
                         normaliseBufferSize(trySizeBytes);
                         try
                         {
-                            sigmaContexts.push_back(std::unique_ptr<sigma_context>(new sigma_context(defaultSigmaSettings, trySizeBytes/1024, nThreads/sigmaMemorySizes.size())));
+                            sigmaContexts.push_back(std::unique_ptr<sigma_context>(new sigma_context(defaultSigmaSettings, trySizeBytes/1024, nThreads/sigmaMemorySizes.size(), nArenaThreads/sigmaMemorySizes.size())));
                             break;
                         }
                         catch (...)
@@ -1465,7 +1466,7 @@ void PoWStopGeneration(bool notify)
     #endif
 }
 
-void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount, std::string generateAddress)
+void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nArenaThreads, int64_t nMemory, const CChainParams& chainparams, CAccount* forAccount, std::string generateAddress)
 {
     LOCK(miningCS);
     if (nThreads < 0)
@@ -1475,9 +1476,12 @@ void PoWGenerateBlocks(bool fGenerate, int64_t nThreads, int64_t nMemory, const 
 
     if (nThreads == 0 || !fGenerate)
         return;
+    
+    if (nArenaThreads < 0)
+        nArenaThreads = nThreads;
 
     fixedGenerateAddress = generateAddress;
-    minerThread = new boost::thread(boost::bind(&PoWGenerate, boost::cref(chainparams), forAccount, nThreads, nMemory));
+    minerThread = new boost::thread(boost::bind(&PoWGenerate, boost::cref(chainparams), forAccount, nThreads, nArenaThreads, nMemory));
     #ifdef ENABLE_WALLET
     static_cast<CExtWallet*>(pactiveWallet)->NotifyGenerationStarted();
     #endif
