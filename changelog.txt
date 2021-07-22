@@ -1,5 +1,21 @@
 2.0.4
 
+CORE      - CORE: Major load time performance increase on large wallets, especially on machines with slower disks
+CORE      - Fix an issue that was causing unnecessarily frequent flushing to disk; this should bring large performance improvements for machines with slow disks
+CORE      - Fix a sync issue that would sometimes cause new installs to get stuck when syncing the first few blocks
+CORE      - Apply some optimisations to ConnectBlock calls that should improve performance quite substantially on some machines
+CORE/UI   - Introduce a separate mining parameter for number of threads to use for "arena setup" when mining so that this can be set independently of "mining threads"
+RPC       - "setgenerate" gains an extra parameter for the above, all miners should be aware of this as previous setgenerate syntax may fail
+RPC       - Add "selected_shavite_implementation", "selected_echo_implementation" and "selected_argon_implementation" to "getmininginfo" output
+RPC       - Add arena setup time to "gethashps" output
+CORE      - Introduce some code that makes it easier for users that missed the fork to update with any manual intervention
+CORE      - Introduce some performance improvements to the code
+CONSENSUS - Fix a rare issue with index based utxo getting corrupted (memory only, disk data remained valid)
+
+Various other minor improvements from upstream codebase
+
+
+
 2.0.3
 
 CONSENSUS: Improve holding account earning curve, activates at block 114000
