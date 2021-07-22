@@ -60,9 +60,11 @@ static UniValue gethashps(const JSONRPCRequest& request)
     double dHashPerSecLog = dHashesPerSec;
     std::string sHashPerSecLogLabel = " h";
     selectLargesHashUnit(dHashPerSecLog, sHashPerSecLogLabel);
+    
     double dRollingHashPerSecLog = dRollingHashesPerSec;
     std::string sRollingHashPerSecLogLabel = " h";
     selectLargesHashUnit(dRollingHashPerSecLog, sRollingHashPerSecLogLabel);
+    
     double dBestHashPerSecLog = dBestHashesPerSec;
     std::string sBestHashPerSecLogLabel = " h";
     selectLargesHashUnit(dBestHashPerSecLog, sBestHashPerSecLogLabel);
