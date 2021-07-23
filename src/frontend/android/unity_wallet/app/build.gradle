@@ -59,7 +59,7 @@ android {
             resValue "string", "app_name", "Florin-testnet"
             buildConfigField "boolean", "TESTNET", "true"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf-testnet"'
-            versionCode 300025
+            versionCode 300026
             versionName = "2.0.4"
             resValue "string", "about_text_app_name", "Florin testnet $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2021 Centure.com BV"
@@ -71,7 +71,7 @@ android {
             resValue "string", "app_name", "Florin"
             buildConfigField "boolean", "TESTNET", "false"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf"'
-            versionCode 25
+            versionCode 26
             versionName = "2.0.4"
             resValue "string", "about_text_app_name", "Florin $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2021 Centure.com BV"
