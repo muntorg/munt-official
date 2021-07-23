@@ -1198,7 +1198,7 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
                     continue;
                 }
 
-                pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pindexParent, coinbaseScript, true, pWitnessBlockToEmbed, nExtraNonce);
+                pblocktemplate = BlockAssembler(Params()).CreateNewBlock(pindexParent, coinbaseScript, true, pWitnessBlockToEmbed, false, nExtraNonce);
                 if (!pblocktemplate.get())
                 {
                     LogPrintf("PoWGenerate: Failed to create block-template.\n");
