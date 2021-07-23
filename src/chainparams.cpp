@@ -115,10 +115,7 @@ public:
         consensus.pow2Phase4FirstBlockHeight=1131652;
         consensus.pow2Phase5FirstBlockHeight=1140958;
         consensus.pow2WitnessSyncHeight=1400000;
-        consensus.halvingIntroductionHeight=consensus.pow2WitnessSyncHeight;
-        //Thu Jul 01 2021 08:00:00 GMT+0000
-        consensus.segsigUncompressedKeyAllowedTime=1625126400;
-        
+        consensus.halvingIntroductionHeight=consensus.pow2WitnessSyncHeight;        
 
         // Message start string to avoid accidental cross communication with other chains or software.
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
@@ -319,9 +316,7 @@ public:
             {
                 consensus.pow2WitnessSyncHeight=10;
             }
-            consensus.halvingIntroductionHeight=consensus.pow2WitnessSyncHeight;
-            consensus.segsigUncompressedKeyAllowedTime=1621630152;
-            
+            consensus.halvingIntroductionHeight=consensus.pow2WitnessSyncHeight;            
 
             numGenesisWitnesses = 10;
             genesisWitnessWeightDivisor = 100;
