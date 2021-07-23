@@ -14,10 +14,13 @@ android {
     compileSdkVersion 29
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         multiDexEnabled true
         versionCode 1
         versionName "1.0"
+        ndk {
+            debugSymbolLevel 'FULL'
+        }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

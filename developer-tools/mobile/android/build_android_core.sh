@@ -122,5 +122,7 @@ do
   mkdir src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib} | true
   cp build_android_${target_host}/src/.libs/lib_unity_jni.so src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/
   cp ${LIB_DIR}/${target_host}/libc++_shared.so src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/
-  ${STRIP} --strip-unneeded src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/*.so
+  ${STRIP} --enable-deterministic-archives --only-keep-debug src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/lib_unity_jni.so -o src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/lib_unity_jni.so.dbg
+  ${STRIP} --enable-deterministic-archives --only-keep-debug src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/libc++_shared.so -o src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/libc++_shared.so.dbg
+  ${STRIP} --enable-deterministic-archives --strip-unneeded src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib}/*.so
 done
