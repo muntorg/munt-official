@@ -44,15 +44,6 @@ bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, 
         return false;
     }
 
-    // Signing with uncompressed keys is disabled for segsig transactions
-    if (GetTime() < (int64_t)Params().GetConsensus().segsigUncompressedKeyAllowedTime)
-    {
-        if (sigversion == SIGVERSION_SEGSIG && !key.IsCompressed())
-        {
-            LogPrintf("Error: TransactionSignatureCreator::CreateSig failed-key-not-compressed\n");
-            return false;
-        }
-    }
 
     uint256 hash = SignatureHash(scriptCode, *txTo, nIn, nHashType, amount, sigversion);
     if (sigversion == SIGVERSION_SEGSIG)
