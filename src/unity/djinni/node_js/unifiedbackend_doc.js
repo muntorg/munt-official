@@ -343,7 +343,7 @@ declare class NJSIGenerationController
      * Activate block generation (proof of work)
      * Number of threads should not exceed physical threads, memory limit is a string specifier in the form of #B/#K/#M/#G (e.g. 102400B, 10240K, 1024M, 1G)
      */
-    static declare function startGeneration(numThreads: number, memoryLimit: string): boolean;
+    static declare function startGeneration(numThreads: number, numArenaThreads: number, memoryLimit: string): boolean;
     /** Stop any active block generation (proof of work) */
     static declare function stopGeneration(): boolean;
     /**

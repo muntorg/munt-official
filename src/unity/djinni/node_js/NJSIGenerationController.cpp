@@ -37,23 +37,24 @@ Napi::Value NJSIGenerationController::startGeneration(const Napi::CallbackInfo& 
 
 
     //Check if method called with right number of arguments
-    if(info.Length() != 2)
+    if(info.Length() != 3)
     {
-        Napi::Error::New(env, "NJSIGenerationController::startGeneration needs 2 arguments").ThrowAsJavaScriptException();
+        Napi::Error::New(env, "NJSIGenerationController::startGeneration needs 3 arguments").ThrowAsJavaScriptException();
     }
 
     //Check if parameters have correct types
     auto arg_0 = info[0].ToNumber().Int32Value();
-    std::string arg_1 = info[1].As<Napi::String>();
+    auto arg_1 = info[1].ToNumber().Int32Value();
+    std::string arg_2 = info[2].As<Napi::String>();
 
     try
     {
-        auto result = IGenerationController::startGeneration(arg_0,arg_1);
+        auto result = IGenerationController::startGeneration(arg_0,arg_1,arg_2);
 
         //Wrap result in node object
-        auto arg_2 = Napi::Value::From(env, result);
+        auto arg_3 = Napi::Value::From(env, result);
 
-        return arg_2;
+        return arg_3;
     }
     catch (std::exception& e)
     {

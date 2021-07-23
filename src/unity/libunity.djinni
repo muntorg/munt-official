@@ -565,7 +565,7 @@ i_generation_controller = interface +c {
     static setListener(generationListener : i_generation_listener);
     # Activate block generation (proof of work)
     # Number of threads should not exceed physical threads, memory limit is a string specifier in the form of #B/#K/#M/#G (e.g. 102400B, 10240K, 1024M, 1G)
-    static startGeneration(numThreads : i32, memoryLimit : string) : bool;
+    static startGeneration(numThreads : i32, numArenaThreads : i32, memoryLimit : string) : bool;
     # Stop any active block generation (proof of work)
     static stopGeneration() : bool;
     # Get the address of the account that is used for generation by default. Empty on failiure

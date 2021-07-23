@@ -82,7 +82,7 @@ CAccount* findMiningAccount(CWallet* pWallet)
     return nullptr;
 }
 
-bool IGenerationController::startGeneration(int32_t numThreads, const std::string& memoryLimit)
+bool IGenerationController::startGeneration(int32_t numThreads, int32_t numArenaThreads, const std::string& memoryLimit)
 {
     if (!pactiveWallet)
     {
@@ -90,7 +90,7 @@ bool IGenerationController::startGeneration(int32_t numThreads, const std::strin
     }
     
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
-    CAccount* forAccount = findMiningAccount(pactiveWallet);        
+    CAccount* forAccount = findMiningAccount(pactiveWallet);
     if (!forAccount)
     {
         return false;
@@ -109,7 +109,7 @@ bool IGenerationController::startGeneration(int32_t numThreads, const std::strin
     {
         try
         {
-            PoWGenerateBlocks(true, numThreads, numThreads, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
+            PoWGenerateBlocks(true, numThreads, numArenaThreads, nGenMemoryLimitBytes/1024, Params(), forAccount, overrideAccountAddress);
         }
         catch(...)
         {

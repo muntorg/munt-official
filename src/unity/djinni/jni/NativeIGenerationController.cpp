@@ -28,11 +28,12 @@ CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IGenerationController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_IGenerationController_00024CppProxy_startGeneration(JNIEnv* jniEnv, jobject /*this*/, jint j_numThreads, jstring j_memoryLimit)
+CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_IGenerationController_00024CppProxy_startGeneration(JNIEnv* jniEnv, jobject /*this*/, jint j_numThreads, jint j_numArenaThreads, jstring j_memoryLimit)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::IGenerationController::startGeneration(::djinni::I32::toCpp(jniEnv, j_numThreads),
+                                                          ::djinni::I32::toCpp(jniEnv, j_numArenaThreads),
                                                           ::djinni::String::toCpp(jniEnv, j_memoryLimit));
         return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)

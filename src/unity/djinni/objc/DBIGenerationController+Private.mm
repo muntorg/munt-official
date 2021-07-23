@@ -38,9 +38,11 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
 }
 
 + (BOOL)startGeneration:(int32_t)numThreads
+        numArenaThreads:(int32_t)numArenaThreads
             memoryLimit:(nonnull NSString *)memoryLimit {
     try {
         auto objcpp_result_ = ::IGenerationController::startGeneration(::djinni::I32::toCpp(numThreads),
+                                                                       ::djinni::I32::toCpp(numArenaThreads),
                                                                        ::djinni::String::toCpp(memoryLimit));
         return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
