@@ -961,6 +961,53 @@ static UniValue deleteaccount(const JSONRPCRequest& request)
 }
 
 
+static UniValue restoreaccount(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
+        throw std::runtime_error(
+            "restoreaccount \"account\"\n"
+            "\nRestore an account that has previously been deleted. Note account must still be in wallet does not work on purged accounts.\n"
+            "\nArguments:\n"
+            "1. \"account\"        (string) The UUID or unique label of the account.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("restoreaccount \"My account\"", "")
+            + HelpExampleRpc("restoreaccount \"My account\"", ""));
+
+    if (!pwallet)
+        throw std::runtime_error("Cannot use command without an active wallet");
+
+    CAccount* restoreAccount;
+    try
+    {
+        restoreAccount = AccountFromValue(pwallet, request.params[0], false);
+    }
+    catch(...)
+    {
+        restoreAccount = AccountFromValue(pwallet, UniValue(request.params[0].get_str() + " [Deleted]"), false);
+    }
+
+    std::string name = restoreAccount->getLabel();
+    if (name.find(_("[Deleted]")) != std::string::npos)
+    {
+        name = name.replace(name.find(_("[Deleted]")), _("[Deleted]").length(), _("[Restored]"));
+    }
+
+    // Add the account, don't let it steal focus (this can create issues on e.g. mobile wallets where the UI/Unity lib expects a single account to always be the active one)
+    static_cast<CExtWallet*>(pactiveWallet)->addAccount(restoreAccount, name, false);
+
+    return true;
+}
+
 static UniValue rpccreateaccounthelper(CWallet* pwallet, std::string accountName, std::string accountType, bool bMakeActive=true)
 {
     CAccount* account = CreateAccountHelper(pwallet, accountName, accountType, bMakeActive);
@@ -3811,6 +3858,7 @@ static const CRPCCommand commands[] =
     { "accounts",                "changeaccountname",               &changeaccountname,              true,    {"account", "name"} },
     { "accounts",                "createaccount",                   &createaccount,                  true,    {"name", "type"} },
     { "accounts",                "deleteaccount",                   &deleteaccount,                  true,    {"account", "force"} },
+    { "accounts",                "restoreaccount",                  &restoreaccount,                 true,    {"account"} },
     { "accounts",                "getactiveaccount",                &getactiveaccount,               true,    {} },
     { "accounts",                "getreadonlyaccount",              &getreadonlyaccount,             true,    {"account"} },
     { "accounts",                "importreadonlyaccount",           &importreadonlyaccount,          true,    {"name", "encoded_key"} },
