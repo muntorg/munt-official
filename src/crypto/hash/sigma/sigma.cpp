@@ -1023,7 +1023,7 @@ template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader h
     uint32_t nBaseNonce = headerData.nBits ^ (uint32_t)(headerData.hashPrevBlock.GetCheapHash());
     uint64_t nPostNonce = headerData.nPostNonce;
     uint64_t nPreNonce = headerData.nPreNonce;
-        
+    
     // 1. Reset nonce to base nonce and select the pre nonce.
     // This leaves the post nonce in a 'default' but 'pseudo random' state.
     // We do this instead of zeroing out the post-nonce to reduce the predictability of the data to be hashed and therefore make it harder to attack the hash functions.

@@ -25,7 +25,6 @@
 #define SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS     0x20000000
 #define SERIALIZE_BLOCK_HEADER_NO_POW2_WITNESS_SIG 0x40000000
 
-
 inline double GetHumanDifficultyFromBits(uint64_t nBits)
 {
     int nShift = (nBits >> 24) & 0xff;

@@ -770,6 +770,7 @@ void static GuldenWitness()
                 {
                     continue;
                 }
+
                 
                 for (const auto candidateIter : candidateOrphans)
                 {
