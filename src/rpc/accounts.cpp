@@ -721,7 +721,7 @@ static UniValue dumpdiffarray(const JSONRPCRequest& request)
             "\nThis mainly exists for testing and development purposes, and can be used to help verify that your client has not been tampered with.\n"
             "\nArguments:\n"
             "1. height     (numeric) The number of blocks to add to the array.\n"
-            "1. filename   (string) Where to write the data, file will be overwritten.\n"
+            "2. filename   (string) Where to write the data, file will be overwritten.\n"
             "\nExamples:\n"
             + HelpExampleCli("dumpdiffarray 1260000", ""));
 

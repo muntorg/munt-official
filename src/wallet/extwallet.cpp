@@ -1067,11 +1067,12 @@ bool CExtWallet::ImportKeysIntoWitnessOnlyWitnessAccount(CAccount* forAccount, s
 
 std::vector<std::pair<CKey, uint64_t>> CExtWallet::ParseWitnessKeyURL(SecureString sEncodedPrivWitnessKeysURL)
 {
-    if (!boost::starts_with(sEncodedPrivWitnessKeysURL, GLOBAL_APP_URIPREFIX"://witnesskeys?keys="))
+    std::string keyPrefix = GLOBAL_APP_URIPREFIX"://witnesskeys?keys=";
+    if (!boost::starts_with(sEncodedPrivWitnessKeysURL, keyPrefix))
         throw std::runtime_error("Not a valid \"witness only\" witness account URI");
 
     std::vector<SecureString> encodedPrivateWitnessKeyStrings;
-    SecureString encPrivWitnessKeyWithoutPrefix(sEncodedPrivWitnessKeysURL.begin()+26, sEncodedPrivWitnessKeysURL.end());
+    SecureString encPrivWitnessKeyWithoutPrefix(sEncodedPrivWitnessKeysURL.begin()+keyPrefix.length(), sEncodedPrivWitnessKeysURL.end());
     boost::split(encodedPrivateWitnessKeyStrings, encPrivWitnessKeyWithoutPrefix, boost::is_any_of(":"));
 
     std::vector<std::pair<CKey, uint64_t>> privateWitnessKeys;
