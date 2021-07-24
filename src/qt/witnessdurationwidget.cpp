@@ -98,7 +98,7 @@ void WitnessDurationWidget::update()
     uint64_t duration = nDays * DailyBlocksTarget();
     uint64_t networkWeight = GetNetworkWeight();
     const auto optimalAmounts = optimalWitnessDistribution(nAmount, duration, networkWeight);
-    int64_t nOurWeight = combinedWeight(optimalAmounts, duration);
+    int64_t nOurWeight = combinedWeight(optimalAmounts, chainActive.Height(), duration);
 
     if (nOurWeight < nRequiredWeight)
     {
@@ -106,7 +106,7 @@ void WitnessDurationWidget::update()
         return;
     }
 
-    double witnessProbability = witnessFraction(optimalAmounts, duration, networkWeight);
+    double witnessProbability = witnessFraction(optimalAmounts, chainActive.Height(), duration, networkWeight);
     double fBlocksPerDay = DailyBlocksTarget() * witnessProbability;
 
     nEarnings = fBlocksPerDay * nDays * WITNESS_SUBSIDY;

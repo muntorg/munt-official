@@ -419,7 +419,7 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
                 uint64_t nLockFromBlock = 0;
                 uint64_t nLockUntilBlock = 0;
                 uint64_t nLockPeriodInBlocks = GetPoW2LockLengthInBlocksFromOutput(iter.second.out, iter.second.nHeight, nLockFromBlock, nLockUntilBlock);
-                uint64_t nRawWeight = GetPoW2RawWeightForAmount(iter.second.out.nValue, nLockPeriodInBlocks);
+                uint64_t nRawWeight = GetPoW2RawWeightForAmount(iter.second.out.nValue, pTipIndex_->nHeight, nLockPeriodInBlocks);
                 uint64_t nAge = pTipIndex_->nHeight - nLastActiveBlock;
                 CAmount nValue = iter.second.out.nValue;
 

@@ -299,7 +299,7 @@ bool CheckTransactionContextual(const CTransaction& tx, CValidationState &state,
                 }
             }
 
-            int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nLockLengthInBlocks);
+            int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, checkHeight, nLockLengthInBlocks);
             if (nWeight < gMinimumWitnessWeight)
             {
                 if (txout.output.witnessDetails.lockFromBlock != 1)
@@ -949,7 +949,7 @@ bool BuildWitnessBundles(const CTransaction& tx, CValidationState& state, uint64
                 }
             }
 
-            int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nLockLengthInBlocks);
+            int64_t nWeight = GetPoW2RawWeightForAmount(txout.nValue, nSpendHeight, nLockLengthInBlocks);
             if (nWeight < gMinimumWitnessWeight)
             {
                 if (witnessDetails.lockFromBlock != 1)

@@ -502,7 +502,7 @@ bool GetWitnessInfo(CChain& chain, const CChainParams& chainParams, CCoinsViewCa
         if (coin.out.nValue >= (gMinimumWitnessAmount*COIN))
         {
             uint64_t nUnused1, nUnused2;
-            int64_t nWeight = GetPoW2RawWeightForAmount(coin.out.nValue, GetPoW2LockLengthInBlocksFromOutput(coin.out, coin.nHeight, nUnused1, nUnused2));
+            int64_t nWeight = GetPoW2RawWeightForAmount(coin.out.nValue, pPreviousIndexChain->nHeight, GetPoW2LockLengthInBlocksFromOutput(coin.out, coin.nHeight, nUnused1, nUnused2));
             if (nWeight < gMinimumWitnessWeight)
                 continue;
             witnessInfo.witnessSelectionPoolUnfiltered.push_back(RouletteItem(outPoint, coin, nWeight, nAge));
@@ -570,7 +570,7 @@ bool GetWitnessFromSimplifiedUTXO(SimplifiedWitnessUTXOSet simplifiedWitnessUTXO
 
             if (simplifiedRouletteItem.nValue >= (gMinimumWitnessAmount*COIN))
             {
-                item.nWeight = GetPoW2RawWeightForAmount(item.coin.out.nValue, simplifiedRouletteItem.GetLockLength());
+                item.nWeight = GetPoW2RawWeightForAmount(item.coin.out.nValue, nBlockHeight, simplifiedRouletteItem.GetLockLength());
                 if (item.nWeight < gMinimumWitnessWeight)
                     continue;
                 witnessInfo.witnessSelectionPoolUnfiltered.push_back(item);
@@ -611,7 +611,7 @@ bool GetWitnessFromUTXO(std::vector<RouletteItem> witnessUtxo, CBlockIndex* pBlo
             if (rouletteItem.coin.out.nValue >= (gMinimumWitnessAmount*COIN))
             {
                 uint64_t nUnused1, nUnused2;
-                int64_t nWeight = GetPoW2RawWeightForAmount(rouletteItem.coin.out.nValue, GetPoW2LockLengthInBlocksFromOutput(rouletteItem.coin.out, rouletteItem.coin.nHeight, nUnused1, nUnused2));
+                int64_t nWeight = GetPoW2RawWeightForAmount(rouletteItem.coin.out.nValue, nBlockHeight, GetPoW2LockLengthInBlocksFromOutput(rouletteItem.coin.out, rouletteItem.coin.nHeight, nUnused1, nUnused2));
                 if (nWeight < gMinimumWitnessWeight)
                     continue;
                 witnessInfo.witnessSelectionPoolUnfiltered.push_back(rouletteItem);

@@ -191,8 +191,9 @@ int GetPoW2Phase(const CBlockIndex* pindexPrev)
 }
 
 //NB! nAmount is already in internal monetary format (8 zeros) form when entering this function - i.e. the nAmount for 22 NLG is '2200000000' and not '22'
-int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nLockLengthInBlocks)
+int64_t GetPoW2RawWeightForAmount(int64_t nAmount, int64_t nHeight, int64_t nLockLengthInBlocks)
 {
+    (unused) nHeight;
     // We rebase the entire formula to to match internal monetary format (8 zeros), so that we can work with fixed point precision.
     // We rebase back to 10 at the end for the final weight.
     static const arith_uint256 base = arith_uint256(COIN);
@@ -270,7 +271,7 @@ bool GetPow2NetworkWeight(const CBlockIndex* pIndex, const CChainParams& chainpa
                 CTxOut output = iter.second.out;
 
                 uint64_t nUnused1, nUnused2;
-                nTotalWeight += GetPoW2RawWeightForAmount(output.nValue, GetPoW2LockLengthInBlocksFromOutput(output, iter.second.nHeight, nUnused1, nUnused2));
+                nTotalWeight += GetPoW2RawWeightForAmount(output.nValue, pIndex->nHeight, GetPoW2LockLengthInBlocksFromOutput(output, iter.second.nHeight, nUnused1, nUnused2));
                 ++nNumWitnessAddresses;
             }
         }
