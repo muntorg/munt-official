@@ -511,7 +511,7 @@ public:
         consensus.halvingIntroductionHeight=consensus.pow2WitnessSyncHeight;
         numGenesisWitnesses = 10;
         genesisWitnessWeightDivisor = 100;
-        
+
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x00");
@@ -532,10 +532,9 @@ public:
         pchMessageStart[3] = 0xFF; // 0xFF
         nDefaultPort = 18444;
         nPruneAfterHeight = 1000;
-        
+
         GenerateGenesisBlock(genesis, "regtestregtestregtestregtest", genesisWitnessPrivKey, numGenesisWitnesses, 1296688602, UintToArith256(consensus.powLimit).GetCompact(), 0, true, false, consensus);
-        consensus.segsigUncompressedKeyAllowedTime=genesis.nTime;
-            
+
         consensus.hashGenesisBlock = genesis.GetHashPoW2();
         //assert(consensus.hashGenesisBlock == uint256S("0x3e4b830e0f75f7b72060ae5ebcc22fdf5df57c7e2350a2669ac4f8a2d734e1bc"));
         //assert(genesis.hashMerkleRoot == uint256S("0x4bed0bcb3e6097445ae68d455137625bb66f0e7ba06d9db80290bf72e3d6dcf8"));
