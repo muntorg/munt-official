@@ -243,16 +243,6 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
     LOCK(cs_main);
     #endif
 
-    int64_t nTotalWeightAll = 0;
-    int64_t nNumWitnessAddressesAll = 0;
-    int64_t nPow2Phase = 1;
-    std::string sWitnessAddress;
-    UniValue jsonAllWitnessAddresses(UniValue::VARR);
-    boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > witnessWeightStats;
-    boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > witnessAmountStats;
-    boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > lockPeriodWeightStats;
-    boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > ageStats;
-
     CBlockIndex* pTipIndexStart = nullptr;
     CBlockIndex* pTipIndexEnd = nullptr;
     bool fVerbose = false;
@@ -312,7 +302,17 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
     CCoinsViewCache viewNew(pcoinsTip);
         
     while (pTipIndex_ && (pTipIndex_->nHeight >= pTipIndexEnd->nHeight))
-    {   
+    {
+        int64_t nTotalWeightAll = 0;
+        int64_t nNumWitnessAddressesAll = 0;
+        int64_t nPow2Phase = 1;
+        std::string sWitnessAddress;
+        UniValue jsonAllWitnessAddresses(UniValue::VARR);
+        boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > witnessWeightStats;
+        boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > witnessAmountStats;
+        boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > lockPeriodWeightStats;
+        boost::accumulators::accumulator_set<double, boost::accumulators::stats<boost::accumulators::tag::median(boost::accumulators::with_p_square_quantile), boost::accumulators::tag::mean, boost::accumulators::tag::min, boost::accumulators::tag::max> > ageStats;
+
         CValidationState state;
         if (!ForceActivateChain(pTipIndex_, nullptr, state, Params(), tempChain, viewNew))
             throw std::runtime_error("Could not locate a valid PoW² chain that contains this block as tip.");
