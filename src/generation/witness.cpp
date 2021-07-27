@@ -412,8 +412,8 @@ void TryPopulateAndSignWitnessBlock(CBlockIndex* candidateIter, CChainParams& ch
     
     CAmount witnessBlockSubsidy = isGenesisWitness ? 0 : GetBlockSubsidy(candidateIter->nHeight).witness;
     CAmount witnessFeesSubsidy = 0;
-    
-    bool isMineAny = (pactiveWallet->IsMine(witnessInfo.selectedWitnessTransaction) == ISMINE_WITNESS);
+
+    bool isMineAny = (pactiveWallet->IsMineWitness(witnessInfo.selectedWitnessTransaction) == ISMINE_WITNESS);
     bool isMineTestnetGenesis = false;
     CAccount* selectedWitnessAccount = nullptr;
     std::shared_ptr<CAccount> deleteAccount = nullptr;
