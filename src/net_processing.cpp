@@ -1642,16 +1642,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             return false;
         }
 
-        //fixme: (POST-PHASE5) We can remove this; we temporarily accept incoming connections from old peers but refuse to establish outgoing ones with them.
-        if (nVersion < 70016 && !pfrom->fInbound)
-        {
-            if (!gbMinimalLogging)
-                LogPrintf("outgoing peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
-            connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, strprintf("Version must be %d or greater", 70016)));
-            pfrom->fDisconnect = true;
-            return false;
-        }
-
         if (nVersion == 10300)
             nVersion = 300;
         if (!vRecv.empty())
