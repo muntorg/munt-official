@@ -118,7 +118,7 @@ public:
 
 }
 
-BOOST_FIXTURE_TEST_SUITE(coins_tests, BasicTestingSetup)
+BOOST_FIXTURE_TEST_SUITE(coins_tests, TestingSetup)
 
 static const unsigned int NUM_SIMULATION_ITERATIONS = 40000;
 

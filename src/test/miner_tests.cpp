@@ -40,7 +40,7 @@
 // The test was on MAIN before. Switched it to REGTEST for faster generation of the blockinfo table
 // might want to redo this on MAIN.
 struct RegtestingSetup : public TestingSetup {
-    RegtestingSetup() : TestingSetup(CBaseChainParams::REGTEST) {
+    RegtestingSetup() : TestingSetup(CBaseChainParams::REGTESTLEGACY) {
 
     }
 };

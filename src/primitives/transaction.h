@@ -1161,8 +1161,8 @@ inline void UnserializeTransaction(TxType& tx, Stream& s) {
 struct CWitnessBundles;
 typedef std::shared_ptr<const CWitnessBundles> CWitnessBundlesRef;
 
-//fixme: (PHASE5) Remove
-#define CURRENT_TX_VERSION_POW2 CTransaction::SEGSIG_ACTIVATION_VERSION
+//fixme: regtest; when we update all tests to segsig in future we can remove this
+#define CURRENT_TX_VERSION_POW2 (IsArgSet("-regtestlegacy")) ? 1 : CTransaction::SEGSIG_ACTIVATION_VERSION
 
 /** The basic transaction that is broadcasted on the network and contained in
  * blocks.  A transaction can contain multiple inputs and outputs.

@@ -104,12 +104,24 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const CChainPar
 BlockSubsidy GetBlockSubsidy(uint64_t nHeight)
 {
     static bool fRegTest = GetBoolArg("-regtest", false);
+    static bool fRegTestLegacy = GetBoolArg("-regtestlegacy", false);
     static bool fTestNet = IsArgSet("-testnet");
     if (fTestNet)
         return BlockSubsidy(10*COIN, 10*COIN, 0);
 
+    if (fRegTestLegacy)
+        return BlockSubsidy(50*COIN, 0, 0); 
     if (fRegTest)
-        return BlockSubsidy(50*COIN, 0*COIN, 0);
+    {
+        if (nHeight == 0)
+        {
+            return BlockSubsidy(50*COIN, 50*COIN, 0*COIN);
+        }
+        else
+        {
+            return BlockSubsidy(50*COIN, 50*COIN, 50*COIN);
+        }
+    }
 
     CAmount subsidyMining = 10*CENT;
     {

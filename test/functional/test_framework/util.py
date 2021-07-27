@@ -290,8 +290,8 @@ def initialize_datadir(dirname, n):
     if not os.path.isdir(datadir):
         os.makedirs(datadir)
     with open(os.path.join(datadir, "Gulden.conf"), 'w', encoding='utf8') as f:
-        f.write("regtest=1\n")
-        f.write("[regtest]\n")
+        f.write("regtestlegacy=1\n")
+        f.write("[regtestlegacy]\n")
         f.write("port=" + str(p2p_port(n)) + "\n")
         f.write("rpcport=" + str(rpc_port(n)) + "\n")
         f.write("server=1\n")
@@ -324,8 +324,8 @@ def get_auth_cookie(datadir):
                 if line.startswith("rpcpassword="):
                     assert password is None  # Ensure that there is only one rpcpassword line
                     password = line.split("=")[1].strip("\n")
-    if os.path.isfile(os.path.join(datadir, "regtest", ".cookie")) and os.access(os.path.join(datadir, "regtest", ".cookie"), os.R_OK):
-        with open(os.path.join(datadir, "regtest", ".cookie"), 'r', encoding="ascii") as f:
+    if os.path.isfile(os.path.join(datadir, "regtestlegacy", ".cookie")) and os.access(os.path.join(datadir, "regtestlegacy", ".cookie"), os.R_OK):
+        with open(os.path.join(datadir, "regtestlegacy", ".cookie"), 'r', encoding="ascii") as f:
             userpass = f.read()
             split_userpass = userpass.split(':')
             user = split_userpass[0]
@@ -336,9 +336,9 @@ def get_auth_cookie(datadir):
 
 # If a cookie file exists in the given datadir, delete it.
 def delete_cookie_file(datadir):
-    if os.path.isfile(os.path.join(datadir, "regtest", ".cookie")):
+    if os.path.isfile(os.path.join(datadir, "regtestlegacy", ".cookie")):
         logger.debug("Deleting leftover cookie file")
-        os.remove(os.path.join(datadir, "regtest", ".cookie"))
+        os.remove(os.path.join(datadir, "regtestlegacy", ".cookie"))
 
 def get_bip9_status(node, key):
     info = node.getblockchaininfo()
@@ -351,7 +351,7 @@ def set_node_times(nodes, t):
 def disconnect_nodes(from_connection, node_num):
     for peer_id in [peer['id'] for peer in from_connection.getpeerinfo() if "testnode%d" % node_num in peer['subver']]:
         try:
-            from_connection.disconnectnode(nodeid=peer_id)
+            from_connection.disconnectnode(node_id=peer_id)
         except JSONRPCException as e:
             # If this node is disconnected between calculating the peer id
             # and issuing the disconnect, don't worry about it.

@@ -46,8 +46,9 @@ uint256 CBlock::GetPoWHash() const
     uint256 hashRet;
 
     static bool fRegTest = IsArgSet("-regtest");
+    static bool fRegTestLegacy = IsArgSet("-regtestlegacy");
     //CBSU - maybe use a static functor or something here instead of having the branch 
-    if (fRegTest)
+    if (fRegTestLegacy)
     {
         arith_uint256 thash;
         arith_uint256 fhash;
@@ -58,7 +59,7 @@ uint256 CBlock::GetPoWHash() const
     else
     {
         //CBSU - maybe use a static functor or something here instead of having the branch 
-        static bool hashCity = IsArgSet("-testnet") ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false;
+        static bool hashCity = (fRegTest) ? true : ( (IsArgSet("-testnet")) ? ( GetArg("-testnet", "")[0] == 'C' ? true : false ) : false);
         if (hashCity)
         {
             arith_uint256 thash;

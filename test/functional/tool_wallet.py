@@ -19,7 +19,7 @@ class ToolWalletTest(GuldenTestFramework):
 
     def gulden_wallet_process(self, *args):
         binary = self.config["environment"]["BUILDDIR"] + '/src/Gulden-wallet' + self.config["environment"]["EXEEXT"]
-        args = ['-datadir={}'.format(self.nodes[0].datadir), '-regtest'] + list(args)
+        args = ['-datadir={}'.format(self.nodes[0].datadir), '-regtestlegacy'] + list(args)
         return subprocess.Popen([binary] + args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 
     def assert_raises_tool_error(self, error, *args):

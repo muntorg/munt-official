@@ -2719,6 +2719,9 @@ bool IsSegSigEnabled(const CBlockIndex* pindexPrev)
 bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& state, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev, int64_t nAdjustedTime)
 {
     assert(pindexPrev != NULL);
+    
+    bool fTestNet = IsArgSet("-testnet");
+
     //const int nHeight = pindexPrev->nHeight + 1;
     // Check proof of work
     if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
@@ -2729,7 +2732,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
         return state.Invalid(false, REJECT_INVALID, "time-too-old", "blocks PoW timestamp is too early");
 
     // Check timestamp
-    if (pindexPrev->nHeight > (IsArgSet("-testnet") ? 446500 : 437500) )
+    if (pindexPrev->nHeight > (fTestNet ? 446500 : 437500) )
     {
         if (block.GetBlockTime() > nAdjustedTime + MAX_FUTURE_BLOCK_TIME)
             return state.Invalid(false, REJECT_INVALID, "time-too-new", "block timestamp too far in the future");
@@ -3097,7 +3100,9 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
     // (but if it does not build on our best tip, let the SendMessages loop relay it)
     //fixme: (PHASE5) (HIGH) This will probably increase forks slightly - but we need to keep pushing tip contenders out in case of stalled witness
     // Maybe we could 'delay' such candidates slightly, store them in a cache and then only relay after some time has passed with tip not advancing.
-    if (((!IsInitialBlockDownload())||IsArgSet("-regtest")) && (chainActive.Tip() == pindex->pprev || pindex->nHeight >= chainActive.Tip()->nHeight))
+    static bool fRegTest = GetBoolArg("-regtest", false);
+    static bool fRegTestLegacy = GetBoolArg("-regtestlegacy", false);
+    if (((!IsInitialBlockDownload())||fRegTest||fRegTestLegacy) && (chainActive.Tip() == pindex->pprev || pindex->nHeight >= chainActive.Tip()->nHeight))
         GetMainSignals().NewPoWValidBlock(pindex, pblock);
 
     int nHeight = pindex->nHeight;

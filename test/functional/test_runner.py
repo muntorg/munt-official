@@ -102,14 +102,14 @@ BASE_SCRIPTS = [
     # vv Tests less than 30s vv
     ###'wallet_keypool_topup.py',
     ###'interface_zmq.py',
-    ###'interface_gulden_cli.py',
+    'interface_gulden_cli.py',
     ###'mempool_resurrect.py',
     ###'wallet_txn_doublespend.py --mineblock',
     ###'tool_wallet.py',
     ###'wallet_txn_clone.py',
     ###'wallet_txn_clone.py --segwit',
     ###'rpc_getchaintips.py',
-    ###'rpc_misc.py',
+    'rpc_misc.py',
     ###'interface_rest.py',
     ###'mempool_spend_coinbase.py',
     ###'mempool_reorg.py',
@@ -125,7 +125,7 @@ BASE_SCRIPTS = [
     ###'feature_proxy.py',
     ###'rpc_signrawtransaction.py',
     ###'wallet_groups.py',
-    ###'p2p_disconnect_ban.py',
+    'p2p_disconnect_ban.py',
     ###'rpc_decodescript.py',
     ###'rpc_blockchain.py',
     ###'rpc_deprecated.py',
@@ -151,8 +151,8 @@ BASE_SCRIPTS = [
     ###'rpc_preciousblock.py',
     ###'wallet_importprunedfunds.py',
     ###'p2p_leak_tx.py',
-    ###'rpc_signmessage.py',
-    ###'wallet_balance.py',
+    'rpc_signmessage.py',
+    'wallet_balance.py',
     ###'feature_nulldummy.py',
     ###'mempool_accept.py',
     ###'wallet_import_rescan.py',
@@ -165,10 +165,10 @@ BASE_SCRIPTS = [
     'rpc_named_arguments.py',
     ###'wallet_listsinceblock.py',
     ###'p2p_leak.py',
-    ###'wallet_encryption.py',
+    'wallet_encryption.py',
     ###'feature_dersig.py',
     ###'feature_cltv.py',
-    ###'rpc_uptime.py',
+    'rpc_uptime.py',
     ###'wallet_resendwallettransactions.py',
     ###'wallet_fallbackfee.py',
     'feature_minchainwork.py',
@@ -183,8 +183,8 @@ BASE_SCRIPTS = [
     ###'rpc_deriveaddresses.py',
     ###'rpc_deriveaddresses.py --usecli',
     ###'rpc_scantxoutset.py',
-    ###'feature_logging.py',
-    ###'p2p_node_network_limited.py',
+    'feature_logging.py',
+    'p2p_node_network_limited.py',
     ###'feature_blocksdir.py',
     ###'feature_config_args.py',
     'rpc_help.py',
@@ -254,7 +254,7 @@ def main():
 
     logging.debug("Temporary test directory at %s" % tmpdir)
 
-    enable_GuldenD = config["components"].getboolean("ENABLE_GuldenD")
+    enable_GuldenD = config["components"].getboolean("ENABLE_GULDEND")
 
     if not enable_GuldenD:
         print("No functional tests to run.")
