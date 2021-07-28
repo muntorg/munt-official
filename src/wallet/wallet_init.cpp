@@ -721,16 +721,10 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
     // Ensure we leave the wallet in a locked state
     if (!walletInstance->IsLocked())
     {
-        if (fSPV)
-        {
-            walletInstance->fAutoLock = true;
-            walletInstance->nUnlockSessions++;
-            walletInstance->nUnlockedSessionsOwnedByShadow++;
-        }
-        else
-        {
-            walletInstance->Lock();
-        }
+        // However don't lock immediately let the shadow pool thread generate accounts still if it needs too
+        walletInstance->fAutoLock = true;
+        walletInstance->nUnlockSessions++;
+        walletInstance->nUnlockedSessionsOwnedByShadow++;
     }
 
     return walletInstance;

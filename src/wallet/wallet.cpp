@@ -1733,7 +1733,7 @@ void CWallet::AvailableCoins(std::vector<CKeyStore*>& accountsToTry, std::vector
             if (!CheckFinalTx(*pcoin, IsPartialSyncActive() ? partialChain : chainActive))
                 continue;
 
-            if (pcoin->IsCoinBase() && pcoin->GetBlocksToMaturity() > 0)
+            if (pcoin->IsCoinBase() && pcoin->GetBlocksToMaturity() > 0 && pcoin->nTimeSmart != Params().GenesisBlock().nTime)
                 continue;
 
             int nDepth = pcoin->GetDepthInMainChain();

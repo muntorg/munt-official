@@ -1026,7 +1026,9 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
                             fNoncriticalErrors = true; // ... but do warn the user there is something wrong.
                             // Rescan if there is a bad transaction record:
                             if (strType == "tx" || strType == "wtx")
+                            {
                                 SoftSetBoolArg("-rescan", true);
+                            }
                         }
                     }
                     if (!strErr.empty())
@@ -1130,7 +1132,9 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet, WalletLoadState& nExtraLoadStat
                     fNoncriticalErrors = true; // ... but do warn the user there is something wrong.
                     // Rescan if there is a bad transaction record:
                     if (strType == "tx" || strType == "wtx")
+                    {
                         SoftSetBoolArg("-rescan", true);
+                    }
                 }
             }
             if (!strErr.empty())
