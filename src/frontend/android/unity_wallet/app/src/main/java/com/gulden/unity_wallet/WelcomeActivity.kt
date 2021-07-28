@@ -88,13 +88,13 @@ class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
                         null,
                         action = { password->
                             if (UnityCore.instance.isCoreReady()) {
-                                if (ILibraryController.ContinueWalletLinkedFromURI(barcode.displayValue, password.joinToString(""))) {
+                                if (ILibraryController.ContinueWalletLinkedFromURI(barcode?.displayValue, password.joinToString(""))) {
                                     gotoWalletActivity(this)
                                     return@chooseAccessCode
                                 }
                             } else {
                                 // Create the new wallet, a coreReady event will follow which will proceed to the main activity
-                                if (ILibraryController.InitWalletLinkedFromURI(barcode.displayValue, password.joinToString(""))) {
+                                if (ILibraryController.InitWalletLinkedFromURI(barcode?.displayValue, password.joinToString(""))) {
                                     return@chooseAccessCode
                                 }
                             }

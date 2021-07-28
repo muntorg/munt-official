@@ -111,7 +111,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
                 if (data != null) {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
 
-                    if (!ILibraryController.IsValidLinkURI(barcode.displayValue)) {
+                    if (!ILibraryController.IsValidLinkURI(barcode?.displayValue)) {
                         AlertDialog.Builder(context!!)
                                 .setTitle(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning_title))
                                 .setMessage(getString(com.gulden.unity_wallet.R.string.no_guldensync_warning))
@@ -154,7 +154,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
                             if (ILibraryController.GetBalance() > 0) R.string.guldensync_info_message_non_empty_wallet else R.string.guldensync_info_message_empty_wallet, true
                     ) {
                         it.dismiss()
-                        (activity as WalletActivity).performLink(barcode.displayValue)
+                        (activity as WalletActivity).performLink(barcode!!.displayValue!!)
                     }
                 }
             }

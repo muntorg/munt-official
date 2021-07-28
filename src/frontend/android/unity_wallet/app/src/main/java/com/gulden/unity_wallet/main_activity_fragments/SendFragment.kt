@@ -296,15 +296,15 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
             {
                 if (data != null) {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
-                    val qrContent = barcode.displayValue
+                    val qrContent = barcode?.displayValue
                     val recipient = try {
-                        createRecipient(qrContent)
+                        createRecipient(qrContent!!)
                     }
                     catch (e: InvalidRecipientException) {
                         errorMessage(getString(R.string.not_gulden_qr, qrContent))
                         return
                     }
-                    SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+                    SendCoinsFragment.newInstance(recipient!!, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
                 }
             }
         } else {
