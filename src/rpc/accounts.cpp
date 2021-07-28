@@ -1589,6 +1589,64 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
     }
 }
 
+static UniValue calculatewitnessweight(const JSONRPCRequest& request)
+{
+    #ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
+    #else
+    LOCK(cs_main);
+    #endif
+
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 2)
+        throw std::runtime_error(
+            "calculatewitnessweight \"amount\" \"time\" \n"
+            "calculate what the witness weight would be for a given \"amount\" and time period \"time\"\n"
+            "\nArguments:\n"
+            "1. \"amount\"          (string, required) The amount of " GLOBAL_COIN_CODE " to hold locked in the witness account.\n"
+            "2. \"time\"            (string, required) The time period for which the funds should be locked in the witness account. By default this is interpreted as blocks e.g. \"1000\", suffix with \"y\", \"m\", \"w\", \"d\", \"b\" to specifically work in years, months, weeks, days or blocks.\n"
+            "\nResult:\n"
+            "[\n"
+            "     \"txid\":\"txid\",  (string) The txid of the created transaction\n"
+            "     \"fee_amount\":n  (string) The fee that was paid.\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("calculateholdingweight \"120\" \"2y\"", "")
+            + HelpExampleRpc("calculateholdingweight \"120\" \"2y\"", ""));
+
+    // arg1 - amount
+    CAmount requestedAmount =  AmountFromValue(request.params[0]);
+
+    // arg2 - lock period.
+    // Calculate lock period based on suffix (if one is present) otherwise leave as is.
+    std::string formattedLockPeriodSpecifier = request.params[1].getValStr();
+    uint64_t requestedLockPeriodInBlocks = GetLockPeriodInBlocksFromFormattedStringSpecifier(formattedLockPeriodSpecifier);
+    if (requestedLockPeriodInBlocks == 0)
+        throw JSONRPCError(RPC_TYPE_ERROR, "Invalid number passed for lock period.");
+
+    UniValue result(UniValue::VOBJ);
+    uint64_t rawWeight = GetPoW2RawWeightForAmount(requestedAmount, chainActive.Height(), requestedLockPeriodInBlocks);
+    result.push_back(Pair("raw_weight", rawWeight));
+
+    CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
+    uint64_t networkWeight = witnessInfo.nTotalWeightEligibleRaw;
+    result.push_back(Pair("adjusted_weight", adjustedWeightForAmount(requestedAmount, chainActive.Height(), requestedLockPeriodInBlocks, networkWeight)));
+
+    const auto optimalAmounts = optimalWitnessDistribution(requestedAmount, requestedLockPeriodInBlocks, networkWeight);    
+    uint64_t optimalWeight=0;
+    for (const auto& partAmount : optimalAmounts)
+    {
+        optimalWeight += GetPoW2RawWeightForAmount(partAmount,  chainActive.Height(), requestedLockPeriodInBlocks);
+    }
+    result.push_back(Pair("optimal_parts", (uint64_t)optimalAmounts.size()));
+    result.push_back(Pair("optimal_weight", (uint64_t)optimalWeight));
+
+    return result;
+}
+
 static UniValue extendwitnessaccount(const JSONRPCRequest& request)
 {
     #ifdef ENABLE_WALLET
@@ -3881,6 +3939,7 @@ static const CRPCCommand commandsFull[] =
     //fixme: (PHASE5) Many of these belong in accounts category as well.
     //We should consider allowing multiple categories for commands, so its easier for people to discover commands under specific topics they are interested in.
     { "witness",                 "createwitnessaccount",            &createwitnessaccount,           true,    {"name"} },
+    { "witness",                 "calculatewitnessweight",          &calculatewitnessweight,         true,    { "amount", "time" } },
     { "witness",                 "extendwitnessaccount",            &extendwitnessaccount,           true,    {"funding_account", "witness_account", "amount", "time" } },
     { "witness",                 "extendwitnessaddress",            &extendwitnessaddress,           true,    {"funding_account", "witness_address", "amount", "time" } },
     { "witness",                 "fundwitnessaccount",              &fundwitnessaccount,             true,    {"funding_account", "witness_account", "amount", "time", "force_multiple" } },

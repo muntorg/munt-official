@@ -109,6 +109,7 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
 witnessOutputsInfoVector getCurrentOutputsForWitnessAccount(CAccount* forAccount);
 
 bool isWitnessDistributionNearOptimal(CWallet* pWallet, CAccount* account, const CGetWitnessInfo& witnessInfo);
+uint64_t adjustedWeightForAmount(const CAmount amount, const uint64_t nHeight, const uint64_t duration, uint64_t networkWeight);
 std::tuple<std::vector<CAmount>, uint64_t, CAmount> witnessDistribution(CWallet* pWallet, CAccount* account);
 std::vector<CAmount> optimalWitnessDistribution(CAmount totalAmount, uint64_t duration, uint64_t totalWeight);
 uint64_t combinedWeight(const std::vector<CAmount> amounts, uint64_t nHeight, uint64_t duration);
