@@ -273,10 +273,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
                     {
                         var sessionID = jsonResponse.getString("sessionid")
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://blockhut.com/buy.php?sessionid=%s".format(sessionID)))
-                        if (intent.resolveActivity(packageManager) != null)
-                        {
-                            startActivity(intent)
-                        }
+                        startActivity(intent)
                     }
                     else
                     {
@@ -295,10 +292,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
                     // Redirect user to the default fallback site
                     //fixme: Do something with the error message here
                     val intent = Intent(failURL)
-                    if (intent.resolveActivity(packageManager) != null)
-                    {
-                        startActivity(intent)
-                    }
+                    startActivity(intent)
                 }
             },
             Response.ErrorListener
@@ -311,10 +305,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
                else
                {
                    val intent = Intent(failURL)
-                   if (intent.resolveActivity(packageManager) != null)
-                   {
-                       startActivity(intent)
-                   }
+                   startActivity(intent)
                }
             }
         )
