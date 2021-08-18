@@ -1699,13 +1699,11 @@ bool GetSimplifiedWitnessUTXODeltaForBlock(const CBlockIndex* pBlockIndex, const
         {
             if (witInfo.selectedWitnessTransaction.output.witnessDetails.witnessKeyID != pubkey->GetID())
             {
-                assert(0);
                 return false;
             }
         }
         else
         {
-            assert(0);
             return false;
         }
     }

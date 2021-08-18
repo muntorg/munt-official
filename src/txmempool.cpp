@@ -29,11 +29,11 @@
 
 CTxMemPoolEntry::CTxMemPoolEntry(const CTransactionRef& _tx, const CAmount& _nFee,
                                  int64_t _nTime, unsigned int _entryHeight,
-                                 bool _spendsCoinbase, int64_t _sigOpsCost, LockPoints lp):
+                                 uint64_t _spendCoinbaseCount, int64_t _sigOpsCost, LockPoints lp):
     tx(_tx), nFee(_nFee), nTime(_nTime), entryHeight(_entryHeight),
-    spendsCoinbase(_spendsCoinbase), sigOpCost(_sigOpsCost), lockPoints(lp)
+    spendCoinbaseCount(_spendCoinbaseCount), sigOpCost(_sigOpsCost), lockPoints(lp)
 {
-    nTxWeight = GetTransactionWeight(*tx);
+    nTxWeight = tx->GetTotalSize();
     nUsageSize = RecursiveDynamicUsage(tx);
 
     nCountWithDescendants = 1;
@@ -68,6 +68,11 @@ void CTxMemPoolEntry::UpdateLockPoints(const LockPoints& lp)
 size_t CTxMemPoolEntry::GetTxSize() const
 {
     return GetVirtualTransactionSize(nTxWeight, sigOpCost);
+}
+
+size_t CTxMemPoolEntry::GetTxSizeDiscounted() const
+{
+    return GetVirtualTransactionSizeDiscounted(nTxWeight, spendCoinbaseCount, sigOpCost);
 }
 
 // Update the given tx for any in-mempool descendants.

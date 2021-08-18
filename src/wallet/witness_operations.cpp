@@ -124,7 +124,7 @@ void extendwitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
     CMutableTransaction extendWitnessTransaction(CTransaction::SEGSIG_ACTIVATION_VERSION);
     {
         // Add the existing witness output as an input
-        pwallet->AddTxInput(extendWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut, true, currentWitnessHeight, currentWitnessTxIndex), false);
+        pwallet->AddTxInput(extendWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut, true, false, currentWitnessHeight, currentWitnessTxIndex), false);
 
         // Add new witness output
         CTxOut extendedWitnessTxOutput;
@@ -398,7 +398,7 @@ void rotatewitnessaddresshelper(CAccount* fundingAccount, witnessOutputsInfoVect
     for (const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessTxIndex, currentWitnessOutpoint]: unspentWitnessOutputs)
     {
         // Add input
-        pwallet->AddTxInput(rotateWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut, true, currentWitnessHeight, currentWitnessTxIndex), false);
+        pwallet->AddTxInput(rotateWitnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut, true, false, currentWitnessHeight, currentWitnessTxIndex), false);
 
         // Get witness details
         CTxOutPoW2Witness currentWitnessDetails;
@@ -834,7 +834,7 @@ void redistributeandextendwitnessaccount(CWallet* pwallet, CAccount* fundingAcco
         // Add all original outputs as inputs
         for (const auto& [currentWitnessTxOut, currentWitnessHeight, currentWitnessTxIndex, currentWitnessOutpoint]: unspentWitnessOutputs)
         {
-            pwallet->AddTxInput(witnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut, true, currentWitnessHeight, currentWitnessTxIndex), false);
+            pwallet->AddTxInput(witnessTransaction, CInputCoin(currentWitnessOutpoint, currentWitnessTxOut, true, false, currentWitnessHeight, currentWitnessTxIndex), false);
 
             CTxOutPoW2Witness details;
             if (!GetPow2WitnessOutput(currentWitnessTxOut, details))

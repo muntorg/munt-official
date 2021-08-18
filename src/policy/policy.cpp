@@ -307,3 +307,23 @@ int64_t GetVirtualTransactionSize(const CTransaction& tx, int64_t nSigOpCost)
 {
     return GetVirtualTransactionSize(GetTransactionWeight(tx), nSigOpCost);
 }
+
+const uint64_t STANDARD_COINBASE_INPUT_SIZE_DISCOUNT = 60;
+const uint64_t STANDARD_COINBASE_SIGOP_COST_DISCOUNT = 1;   
+int64_t GetVirtualTransactionSizeDiscounted(int64_t nWeight, uint64_t numCoinbaseInputs, int64_t nSigOpCost)
+{
+    uint64_t coinbaseInputsToDiscount=(numCoinbaseInputs>2?numCoinbaseInputs-2:numCoinbaseInputs);
+    uint64_t weightDiscount = STANDARD_COINBASE_INPUT_SIZE_DISCOUNT * coinbaseInputsToDiscount;
+    uint64_t sigOpCostDiscount = STANDARD_COINBASE_SIGOP_COST_DISCOUNT * coinbaseInputsToDiscount;
+    uint64_t discountedWeight = nWeight>weightDiscount?nWeight-weightDiscount:nWeight;
+    uint64_t discountedSigOps = nSigOpCost>sigOpCostDiscount?nSigOpCost-sigOpCostDiscount:nSigOpCost;
+    
+    return (std::max(discountedWeight, discountedSigOps * nBytesPerSigOp));
+}
+
+
+int64_t GetVirtualTransactionSizeDiscounted(const CTransaction& tx, uint64_t numCoinbaseInputs, int64_t nSigOpCost)
+{
+    uint64_t nTxWeight = GetTransactionWeight(tx);    
+    return GetVirtualTransactionSizeDiscounted(nTxWeight, numCoinbaseInputs, nSigOpCost);
+}

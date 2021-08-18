@@ -550,7 +550,15 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
                     }
                 }
 
-                unsigned int nBytes = GetVirtualTransactionSize(txNew);
+                unsigned int numCoinBase = 0;
+                for (const auto& coin : setCoins)
+                {
+                    if (coin.isCoinBase)
+                    {
+                        ++numCoinBase;
+                    }
+                }
+                unsigned int nBytesDiscounted = GetVirtualTransactionSizeDiscounted(txNew, numCoinBase);
 
                 CTransaction txNewConst(txNew);
 
@@ -565,13 +573,13 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
                 if (coinControl && coinControl->nConfirmTarget > 0)
                     currentConfirmationTarget = coinControl->nConfirmTarget;
 
-                CAmount nFeeNeeded = GetMinimumFee(nBytes, currentConfirmationTarget, ::mempool, ::feeEstimator);
+                CAmount nFeeNeeded = GetMinimumFee(nBytesDiscounted, currentConfirmationTarget, ::mempool, ::feeEstimator);
                 if (coinControl && coinControl->fOverrideFeeRate)
-                    nFeeNeeded = coinControl->nFeeRate.GetFee(nBytes);
+                    nFeeNeeded = coinControl->nFeeRate.GetFee(nBytesDiscounted);
 
                 // If we made it here and we aren't even able to meet the relay fee on the next pass, give up
                 // because we must be at the maximum allowed fee.
-                if (nFeeNeeded < ::minRelayTxFee.GetFee(nBytes))
+                if (nFeeNeeded < ::minRelayTxFee.GetFee(nBytesDiscounted))
                 {
                     strFailReason = _("Transaction too large for fee policy");
                     return false;
@@ -653,7 +661,7 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
     if (GetBoolArg("-walletrejectlongchains", DEFAULT_WALLET_REJECT_LONG_CHAINS)) {
         // Lastly, ensure this tx will pass the mempool's chain limits
         LockPoints lp;
-        CTxMemPoolEntry entry(wtxNew.tx, 0, 0, 0, false, 0, lp);
+        CTxMemPoolEntry entry(wtxNew.tx, 0, 0, 0, 0, 0, lp);
         CTxMemPool::setEntries setAncestors;
         size_t nLimitAncestors = GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT);
         size_t nLimitAncestorSize = GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT)*1000;
@@ -927,7 +935,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
     if (GetBoolArg("-walletrejectlongchains", DEFAULT_WALLET_REJECT_LONG_CHAINS)) {
         // Lastly, ensure this tx will pass the mempool's chain limits
         LockPoints lp;
-        CTxMemPoolEntry entry(wtxNew.tx, 0, 0, 0, false, 0, lp);
+        CTxMemPoolEntry entry(wtxNew.tx, 0, 0, 0, 0, 0, lp);
         CTxMemPool::setEntries setAncestors;
         size_t nLimitAncestors = GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT);
         size_t nLimitAncestorSize = GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT)*1000;
@@ -972,7 +980,7 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                 addedAny = true;
                
                 // Add witness input
-                AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, allowIndexBased, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
+                AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, allowIndexBased, false, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
 
                 // Add witness output
                 CTxOut renewedWitnessTxOutput;
@@ -1061,7 +1069,7 @@ void CWallet::PrepareUpgradeWitnessAccountTransaction(CAccount* funderAccount, C
         if (::IsMine(*targetWitnessAccount, witCoin.coin.out))
         {
             // Add witness input
-            AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, true, witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
+            AddTxInput(tx, CInputCoin(witCoin.outpoint, witCoin.coin.out, true, false,witCoin.coin.nHeight, witCoin.coin.nTxIndex), false);
 
             // Add witness output
             CTxOut renewedWitnessTxOutput;
