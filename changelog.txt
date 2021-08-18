@@ -1,6 +1,13 @@
-2.4.5
+2.4.6
 
 CORE      - Introduce a discount on relay fees for transactions that contain mining/witness rewards
+
+
+
+
+2.4.5
+
+CORE      - Chain stability fix for rare issue experienced by some peers
 
 
 
