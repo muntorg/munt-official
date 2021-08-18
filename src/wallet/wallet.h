@@ -221,6 +221,8 @@ public:
             throw std::invalid_argument("walletTx should not be null");
         if (i >= walletTx->tx->vout.size())
             throw std::out_of_range("The output index is out of range");
+        
+        isCoinBase = walletTx->tx->IsCoinBase();
 
         if (allowIndexBased && walletTx->GetDepthInMainChain() > COINBASE_MATURITY && walletTx->nHeight > 1 && walletTx->nIndex >= 0)
         {
@@ -236,7 +238,8 @@ public:
         txout = walletTx->tx->vout[i];
     }
 
-    CInputCoin(const COutPoint& outpoint_, const CTxOut& txout_, bool allowIndexBased, uint64_t nBlockHeight=0, uint64_t nTxIndex=0)
+    CInputCoin(const COutPoint& outpoint_, const CTxOut& txout_, bool allowIndexBased, bool isCoinBase_, uint64_t nBlockHeight=0, uint64_t nTxIndex=0)
+    : isCoinBase(isCoinBase_)
     {
         if (allowIndexBased && nBlockHeight < (uint64_t)chainActive.Tip()->nHeight && ((uint64_t)chainActive.Tip()->nHeight - nBlockHeight > (uint64_t)COINBASE_MATURITY))
         {
@@ -253,6 +256,7 @@ public:
 
     COutPoint outpoint;
     CTxOut txout;
+    bool isCoinBase;
 
     bool operator<(const CInputCoin& rhs) const {
         return outpoint < rhs.outpoint;

@@ -242,7 +242,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
     if (fPartialChecksOnly)
     {
         LOCK(pool.cs);
-        CTxMemPoolEntry entry(ptx, 0, nAcceptTime, chain.Height(), false, 0, LockPoints());
+        CTxMemPoolEntry entry(ptx, 0, nAcceptTime, chain.Height(), 0, 0, LockPoints());
 
         // Store transaction in memory pool
         pool.addUnchecked(hash, entry, false);
@@ -322,18 +322,19 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
 
         // Keep track of transactions that spend a coinbase, which we re-scan
         // during reorgs to ensure COINBASE_MATURITY is still met.
-        bool fSpendsCoinbase = false;
+        uint64_t spendsCoinbaseCount = 0;
         for(const CTxIn &txin : tx.vin) {
             const Coin &coin = view.AccessCoin(txin.GetPrevOut());
             if (coin.IsCoinBase()) {
-                fSpendsCoinbase = true;
-                break;
+                ++spendsCoinbaseCount;
             }
         }
 
         CTxMemPoolEntry entry(ptx, nFees, nAcceptTime, chainActive.Height(),
-                              fSpendsCoinbase, nSigOpsCost, lp);
+                              spendsCoinbaseCount, nSigOpsCost, lp);
+        
         unsigned int nSize = entry.GetTxSize();
+        unsigned int nDiscountedSize = entry.GetTxSizeDiscounted();
 
         // Check that the transaction doesn't have an excessive number of
         // sigops, making it impossible to mine. Since the coinbase transaction
@@ -344,13 +345,13 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
             return state.DoS(0, false, REJECT_NONSTANDARD, "bad-txns-too-many-sigops", false,
                 strprintf("%d", nSigOpsCost));
 
-        CAmount mempoolRejectFee = pool.GetMinFee(GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000).GetFee(nSize);
+        CAmount mempoolRejectFee = pool.GetMinFee(GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000).GetFee(nDiscountedSize);
         if (mempoolRejectFee > 0 && nModifiedFees < mempoolRejectFee) {
             return state.DoS(0, false, REJECT_INSUFFICIENTFEE, "mempool min fee not met", false, strprintf("%d < %d", nFees, mempoolRejectFee));
         }
 
         // No transactions are allowed below minRelayTxFee except from disconnected blocks
-        if (fLimitFree && nModifiedFees < ::minRelayTxFee.GetFee(nSize)) {
+        if (fLimitFree && nModifiedFees < ::minRelayTxFee.GetFee(nDiscountedSize)) {
             return state.DoS(0, false, REJECT_INSUFFICIENTFEE, "min relay fee not met");
         }
 
@@ -401,7 +402,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         const bool fReplacementTransaction = setConflicts.size();
         if (fReplacementTransaction)
         {
-            CFeeRate newFeeRate(nModifiedFees, nSize);
+            CFeeRate newFeeRate(nModifiedFees, nDiscountedSize);
             std::set<uint256> setConflictsParents;
             const int maxDescendantsToVisit = 100;
             CTxMemPool::setEntries setIterConflicting;
@@ -507,14 +508,14 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
             // Finally in addition to paying more fees than the conflicts the
             // new transaction must pay for its own bandwidth.
             CAmount nDeltaFees = nModifiedFees - nConflictingFees;
-            if (nDeltaFees < ::incrementalRelayFee.GetFee(nSize))
+            if (nDeltaFees < ::incrementalRelayFee.GetFee(nDiscountedSize))
             {
                 return state.DoS(0, false,
                         REJECT_INSUFFICIENTFEE, "insufficient fee", false,
                         strprintf("rejecting replacement %s, not enough additional fees to relay; %s < %s",
                               hash.ToString(),
                               FormatMoney(nDeltaFees),
-                              FormatMoney(::incrementalRelayFee.GetFee(nSize))));
+                              FormatMoney(::incrementalRelayFee.GetFee(nDiscountedSize))));
             }
         }
 

@@ -15,7 +15,7 @@
 #include "wallet/wallet.h"
 #endif
 
-#include <boost/foreach.hpp> // Zreverse_foreach
+#include <boost/foreach.hpp> // reverse_foreach
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/join.hpp>
 #include <boost/thread.hpp>
