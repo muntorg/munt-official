@@ -1,3 +1,10 @@
+2.4.5
+
+CORE      - Introduce a discount on relay fees for transactions that contain mining/witness rewards
+
+
+
+
 2.4.4
 
 UI        - Fix witness earning estimates for recent reward changes
