@@ -269,7 +269,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
                     if (jsonResponse.getInt("status_code") == 200)
                     {
                         var sessionID = jsonResponse.getString("sessionid")
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://blockhut.com/buy.php?sessionid=%s".format(sessionID)))
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://blockhut.com/buyflorin.php?sessionid=%s".format(sessionID)))
                         startActivity(intent)
                     }
                     else
