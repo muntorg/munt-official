@@ -107,15 +107,18 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
         if (accountsToTry.empty())
             return false;
         
+        std::string strAccountsToTry;
         std::vector<CKeyStore*> keystores;
         keystores.reserve(accountsToTry.size());
         for (auto account : accountsToTry)
         {
+            strAccountsToTry += account->getLabel() + " ";
             keystores.push_back(account);
         }
         
         if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, keystores, &txNewConst, nIn, amount, SIGHASH_ALL), *prevout, sigdata, type, txNewConst.nVersion))
         {
+            LogPrintf("CWallet::SignTransaction failed to produce signature [signing accounts: %s]", strAccountsToTry.c_str());
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);
@@ -635,6 +638,7 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
 
                 if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
                 {
+                    LogPrintf("CWallet::CreateTransaction ProduceSignature call failed\n");
                     strFailReason = _("Signing transaction failed");
                     return false;
                 }
@@ -822,6 +826,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                     SignatureData sigdata;
                     if (!ProduceSignature(DummySignatureCreator(accountsToTry), CTxOut(), sigdata, Spend, txNew.nVersion))
                     {
+                        LogPrintf("DummySignatureCreator: Failed to sign dummy transaction\n");
                         strFailReason = _("Signing transaction failed");
                         return false;
                     }
@@ -911,9 +916,12 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
 
                 if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
                 {
+                    LogPrintf("CWallet::AddFeeForTransaction ProduceSignature call failed\n");
                     strFailReason = _("Signing transaction failed");
                     return false;
-                } else {
+                }
+                else
+                {
                     UpdateTransaction(txNew, nIn, sigdata);
                 }
 
@@ -1039,12 +1047,12 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
         std::string sFailReason;
         if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFeeOut, true, sFailReason, coinControl))
         {
-            strError = "Unable to add fee";
+            strError = "Unable to add fee: " + sFailReason;
             return false;
         }
         return true;
     }
-    strError = "Unable to add fee";
+    strError = "Unable to locate any expired inputs for account";
     return false;
 }
 

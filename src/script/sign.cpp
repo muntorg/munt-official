@@ -40,7 +40,7 @@ bool TransactionSignatureCreator::CreateSig(std::vector<unsigned char>& vchSig, 
     }
     if (!gotKey)
     {
-        LogPrintf("Error: TransactionSignatureCreator::CreateSig failed-no-key\n");
+        LogPrintf("Error: TransactionSignatureCreator::CreateSig failed-no-key [accountsToTry.size()==%d]\n", accountsToTry.size());
         return false;
     }
 

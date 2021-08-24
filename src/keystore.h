@@ -121,9 +121,11 @@ public:
             if (mi != mapKeys.end())
             {
                 keyOut = mi->second;
+                LogPrintf("CBasicKeyStore::GetKey: success\n");
                 return true;
             }
         }
+        LogPrintf("CBasicKeyStore::GetKey: failed\n");
         return false;
     }
     bool GetKey(const CKeyID &address, int64_t& HDKeyIndex) const
@@ -134,9 +136,11 @@ public:
             if (mi != mapHDKeys.end())
             {
                 HDKeyIndex = mi->second;
+                LogPrintf("CBasicKeyStore::GetKey2: success\n");
                 return true;
             }
         }
+        LogPrintf("CBasicKeyStore::GetKey2: failed\n");
         return false;
     }
     bool GetKeyIDWithHighestIndex(CKeyID& HDKeyID) const

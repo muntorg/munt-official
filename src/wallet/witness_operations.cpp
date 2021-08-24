@@ -330,6 +330,7 @@ void renewwitnessaccount(CWallet* pwallet, CAccount* fundingAccount, CAccount* w
     uint256 upgradeTransactionHash;
     if (!pwallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &upgradeTransactionHash))
     {
+        LogPrintf("renewwitnessaccount Failed to sign transaction [%s]", strError.c_str());
         throw std::runtime_error(strprintf("Failed to sign transaction [%s]", strError.c_str()));
     }
 

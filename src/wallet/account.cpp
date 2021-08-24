@@ -487,6 +487,7 @@ bool CAccountHD::GetKey(CExtKey& childKey, int nChain) const
 
 bool CAccountHD::GetKey(const CKeyID& keyID, CKey& key) const
 {
+    LogPrintf("CAccountHD::GetKey\n");
     assert(!m_readOnly);
     assert(IsHD());
 
@@ -494,17 +495,25 @@ bool CAccountHD::GetKey(const CKeyID& keyID, CKey& key) const
     // They are stored instead of generated on demand (so that they work in encrypted wallets)
     if (IsPoW2Witness())
     {
+        LogPrintf("CAccountHD::GetKey is-a-witness-account\n");
         if (internalKeyStore.GetKey(keyID, key))
         {
             // But skip it if it is an empty key... (Which can happen by design)
             // Technical: Witness keystore is filled with "public/empty" pairs as the public keys are created and then populated on demand with "public/witness" keys only when they are needed/generated (first use)
             if (key.IsValid())
+            {
+                LogPrintf("CAccountHD::GetKey - witness returned valid key\n");
                 return true;
+            }
+            LogPrintf("CAccountHD::GetKey - witness invalid key\n");
         }
     }
 
     if (IsLocked())
+    {
+        LogPrintf("CAccountHD::GetKey - failed because of lock\n");
         return false;
+    }
 
     int64_t nKeyIndex = -1;
     CExtKey privKey;
@@ -514,6 +523,7 @@ bool CAccountHD::GetKey(const CKeyID& keyID, CKey& key) const
         if(privKey.Neuter().pubkey.GetID() != keyID)
             assert(0);
         key = privKey.key;
+        LogPrintf("CAccountHD::GetKey - generated external key\n");
         return true;
     }
     if (internalKeyStore.GetKey(keyID, nKeyIndex))
@@ -522,8 +532,10 @@ bool CAccountHD::GetKey(const CKeyID& keyID, CKey& key) const
         if(privKey.Neuter().pubkey.GetID() != keyID)
             assert(0);
         key = privKey.key;
+        LogPrintf("CAccountHD::GetKey - generated internal key\n");
         return true;
     }
+    LogPrintf("CAccountHD::GetKey - failed\n");
     return false;
 }
 
@@ -925,11 +937,14 @@ bool CAccount::Unlock(const CKeyingMaterial& vMasterKeyIn, bool& needsWriteToDis
 
 bool CAccount::GetKey(const CKeyID& keyID, CKey& key) const
 {
+    LogPrintf("CAccount::GetKey\n");
+
     return externalKeyStore.GetKey(keyID, key) || internalKeyStore.GetKey(keyID, key);
 }
 
 bool CAccount::GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const
 {
+    LogPrintf("CAccount::GetKey2\n");
     return externalKeyStore.GetKey(address, encryptedKeyOut) || internalKeyStore.GetKey(address, encryptedKeyOut);
 }
 
