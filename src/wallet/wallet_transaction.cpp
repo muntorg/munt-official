@@ -74,6 +74,7 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
     {
         if (input.GetPrevOut().IsNull() && txNewConst.IsPoW2WitnessCoinBase())
         {
+            LogPrintf("~~~~SignTransaction: Skipping witness coinbase null prevout\n", nIn, tx.vin.size());
             nIn++;
             continue;
         }
@@ -84,6 +85,7 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
         {
             if (prevOutOverride)
             {
+                LogPrintf("~~~~SignTransaction: Applying prevout override\n", nIn, tx.vin.size());
                 prevout = prevOutOverride;
             }
             else
@@ -116,9 +118,10 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
             keystores.push_back(account);
         }
         
+        LogPrintf("CWallet::SignTransaction try produce signature for input %d of %d signingkeyid:%s\n", nIn, tx.vin.size(), signingKeyID.ToString());
         if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, keystores, &txNewConst, nIn, amount, SIGHASH_ALL), *prevout, sigdata, type, txNewConst.nVersion))
         {
-            LogPrintf("CWallet::SignTransaction failed to produce signature [signing accounts: %s]", strAccountsToTry.c_str());
+            LogPrintf("CWallet::SignTransaction failed to produce signature [signing accounts: %s] [transaction: %s]\n", strAccountsToTry.c_str(), txNewConst.ToString());
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);
