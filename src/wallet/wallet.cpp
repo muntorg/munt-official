@@ -1365,12 +1365,18 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
         todo.erase(now);
         done.insert(now);
         auto it = mapWallet.find(now);
-        if (it == mapWallet.end())
+        if (fSPV)
         {
-            forceRestart();
-            return;
+            if (it == mapWallet.end())
+            {
+                forceRestart();
+                return;
+            }
         }
-        //assert(it != mapWallet.end());
+        else
+        {
+            assert(it != mapWallet.end());
+        }
         CWalletTx& wtx = it->second;
         int currentconfirm = wtx.GetDepthInMainChain();
         if (conflictconfirms < currentconfirm || (conflictconfirms == currentconfirm && wtx.nIndex >= 0))
