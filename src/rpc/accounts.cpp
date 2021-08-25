@@ -3101,7 +3101,6 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
     uint256 finalTransactionHash;
     {
         LOCK2(cs_main, pactiveWallet->cs_wallet);
-        LogPrintf("Try sign renew transaction\n");
         if (!pactiveWallet->SignAndSubmitTransaction(changeReserveKey, tx, strError, &finalTransactionHash, SignType::Spend))
         {
             LogPrintf("Failed to sign renew transaction [%s]\n", strError.c_str());

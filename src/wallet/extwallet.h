@@ -156,7 +156,6 @@ public:
 
     virtual bool GetKey(const CKeyID &address, CKey& keyOut) const
     {
-        LogPrintf(" extwallet::GetKey\n");
         LOCK(cs_wallet);
         for (const auto& [accountUUID, forAccount] : mapAccounts)
         {

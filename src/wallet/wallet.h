@@ -1042,7 +1042,6 @@ bool CWallet::DummySignTx(std::vector<CKeyStore*>& accountsToTry, CMutableTransa
 
         if (!ProduceSignature(DummySignatureCreator(accountsToTry), coin.txout, sigdata, type, txNew.nVersion))
         {
-            LogPrintf("DummySignTx: Failed to sign dummy transaction\n");
             return false;
         }
         else

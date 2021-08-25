@@ -74,7 +74,6 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
     {
         if (input.GetPrevOut().IsNull() && txNewConst.IsPoW2WitnessCoinBase())
         {
-            LogPrintf("~~~~SignTransaction: Skipping witness coinbase null prevout\n", nIn, tx.vin.size());
             nIn++;
             continue;
         }
@@ -85,7 +84,6 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
         {
             if (prevOutOverride)
             {
-                LogPrintf("~~~~SignTransaction: Applying prevout override\n", nIn, tx.vin.size());
                 prevout = prevOutOverride;
             }
             else
@@ -118,13 +116,11 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
             keystores.push_back(account);
         }
         
-        LogPrintf("CWallet::SignTransaction try produce signature for input %d of %d signingkeyid:%s\n", nIn, tx.vin.size(), signingKeyID.ToString());
         if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, keystores, &txNewConst, nIn, amount, SIGHASH_ALL), *prevout, sigdata, type, txNewConst.nVersion))
         {
             LogPrintf("CWallet::SignTransaction failed to produce signature [signing accounts: %s] [transaction: %s]\n", strAccountsToTry.c_str(), txNewConst.ToString());
             return false;
         }
-        LogPrintf("CWallet::SignTransaction UpdateTransaction for input %d of %d signingkeyid:%s\n", nIn, tx.vin.size(), signingKeyID.ToString());
         UpdateTransaction(tx, nIn, sigdata);
         nIn++;
     }
@@ -642,7 +638,6 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
 
                 if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
                 {
-                    LogPrintf("CWallet::CreateTransaction ProduceSignature call failed\n");
                     strFailReason = _("Signing transaction failed");
                     return false;
                 }
@@ -830,7 +825,6 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                     SignatureData sigdata;
                     if (!ProduceSignature(DummySignatureCreator(accountsToTry), CTxOut(), sigdata, Spend, txNew.nVersion))
                     {
-                        LogPrintf("DummySignatureCreator: Failed to sign dummy transaction\n");
                         strFailReason = _("Signing transaction failed");
                         return false;
                     }

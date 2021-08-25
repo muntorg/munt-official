@@ -307,24 +307,18 @@ bool CCryptoKeyStore::AddCryptedKey(const CPubKey &vchPubKey, const std::vector<
 
 bool CCryptoKeyStore::GetKey(const CKeyID &address, std::vector<unsigned char>& encryptedKeyOut) const
 {
-    LogPrintf(" CCryptoKeyStore::GetKey\n");
     {
         LOCK(cs_KeyStore);
         if (!IsCrypted())
-        {
-            LogPrintf(" CCryptoKeyStore::GetKey failed-not-crypted\n");
             return false;
-        }
 
         CryptedKeyMap::const_iterator mi = mapCryptedKeys.find(address);
         if (mi != mapCryptedKeys.end())
         {
             encryptedKeyOut = (*mi).second.second;
-            LogPrintf(" CCryptoKeyStore::GetKey success\n");
             return true;
         }
     }
-    LogPrintf(" CCryptoKeyStore::GetKey failed-not-found\n");
     return false;
 }
 
@@ -339,31 +333,24 @@ bool CCryptoKeyStore::GetKeyIDWithHighestIndex(CKeyID &address) const
 
 bool CCryptoKeyStore::GetKey(const CKeyID &address, CKey& keyOut) const
 {
-    LogPrintf(" CCryptoKeyStore::GetKey2\n");
     {
         LOCK(cs_KeyStore);
         if (!IsCrypted())
-        {
-            LogPrintf(" CCryptoKeyStore::GetKey2 not-crypted-get-from-basic\n");
             return CBasicKeyStore::GetKey(address, keyOut);
-        }
 
         CryptedKeyMap::const_iterator mi = mapCryptedKeys.find(address);
         if (mi != mapCryptedKeys.end())
         {
             const CPubKey &vchPubKey = (*mi).second.first;
             const std::vector<unsigned char> &vchCryptedSecret = (*mi).second.second;
-            LogPrintf(" CCryptoKeyStore::GetKey2 return-decrypted\n");
             return DecryptKey(vMasterKey, vchCryptedSecret, vchPubKey, keyOut);
         }
     }
-    LogPrintf(" CCryptoKeyStore::GetKey2 failed\n");
     return false;
 }
 
 bool CCryptoKeyStore::GetKey(const CKeyID &address, int64_t& HDKeyIndex) const
 {
-    LogPrintf(" CCryptoKeyStore::GetKey3\n");
     // For HD we don't encrypt anything here - as the public key we need access to anyway, and the index is not special info - we derive the private key when we need it.
     {
         LOCK(cs_KeyStore);
