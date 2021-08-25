@@ -59,7 +59,7 @@ extern bool bSpendZeroConfChange;
 extern bool fWalletRbf;
 extern bool fSPV;
 
-static const unsigned int DEFAULT_ACCOUNT_KEYPOOL_SIZE = 100;
+static const unsigned int DEFAULT_ACCOUNT_KEYPOOL_SIZE = 30;
 //! -paytxfee default
 static const CAmount DEFAULT_TRANSACTION_FEE = 0;
 //! -fallbackfee default
