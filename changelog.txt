@@ -1,3 +1,13 @@
+2.4.7
+
+CORE      - Fix an issue that would cause witness loop to terminate under some error conditions
+CORE      - Remove behaviour that would cause a complete resync under some error conditions, only do this on mobile/spv wallets and favour a plain assert on regular wallets instead
+RPC       - Improve output for `validateaddress` command when used on witness addresses
+MISC      - Various minor logging improvements to help with stability and user support
+
+
+
+
 2.4.6
 
 CORE      - Introduce a discount on relay fees for transactions that contain mining/witness rewards
