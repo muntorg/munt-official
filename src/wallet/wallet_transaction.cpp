@@ -124,6 +124,7 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
             LogPrintf("CWallet::SignTransaction failed to produce signature [signing accounts: %s] [transaction: %s]\n", strAccountsToTry.c_str(), txNewConst.ToString());
             return false;
         }
+        LogPrintf("CWallet::SignTransaction UpdateTransaction for input %d of %d signingkeyid:%s\n", nIn, tx.vin.size(), signingKeyID.ToString());
         UpdateTransaction(tx, nIn, sigdata);
         nIn++;
     }
@@ -1001,6 +1002,16 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                     strError = "Unable to correctly retrieve data";
                     return false;
                 }
+                
+                if (!HaveKey(witnessDestination.spendingKeyID))
+                {
+                    strError = strprintf("Spending key for [%s] not available in wallet", CNativeAddress(CPoW2WitnessDestination(witnessDestination.spendingKeyID, witnessDestination.witnessKeyID)).ToString());
+                }
+                
+                if (!HaveKey(witnessDestination.witnessKeyID))
+                {
+                    strError = strprintf("Witness key for [%s] not available in wallet", CNativeAddress(CPoW2WitnessDestination(witnessDestination.spendingKeyID, witnessDestination.witnessKeyID)).ToString());
+                }
 
                 // Increment fail count appropriately
                 IncrementWitnessFailCount(witnessDestination.failCount);
@@ -1010,7 +1021,6 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
                 {
                     witnessDestination.lockFromBlock = witCoin.coin.nHeight;
                 }
-
 
                 if (GetPoW2Phase(chainActive.Tip()) >= 4)
                 {
