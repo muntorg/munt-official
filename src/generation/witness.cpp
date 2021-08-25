@@ -607,7 +607,7 @@ void TryPopulateAndSignWitnessBlock(CBlockIndex* candidateIter, CChainParams& ch
         }
         else
         {
-            std::string strErrorMessage = strprintf("Coinbase error, failed to create coinbase for witness block [%d].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
+            std::string strErrorMessage = strprintf("Coinbase error, failed to create coinbase for witness block [%d] current chain tip [%d].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
             CAlert::Notify(strErrorMessage, true, true);
             LogPrintf("GuldenWitness: [Error] %s\n", strErrorMessage.c_str());
             encounteredError=true;
