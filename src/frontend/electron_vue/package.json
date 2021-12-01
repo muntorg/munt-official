@@ -2,7 +2,7 @@
   "name": "Gulden",
   "description": "Gulden currency",
   "author": "Centure.com BV",
-  "version": "2.4.7",
+  "version": "2.4.8",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
