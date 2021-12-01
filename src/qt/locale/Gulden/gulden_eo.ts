@@ -181,16 +181,16 @@
         <translation>Sumo</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>Neniu</translation>
+    </message>
+    <message>
         <source>%1 h</source>
         <translation>%1 h</translation>
     </message>
     <message>
         <source>%1 m</source>
         <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Neniu</translation>
     </message>
     <message>
         <source>N/A</source>

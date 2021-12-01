@@ -1,3 +1,10 @@
+2.4.8
+
+Final maintanence release ahead of upcoming 2.5 series of builds; 2.5 will fully activate witness sync and drop the deprecated Qt UI in favour of the electron one
+
+
+
+
 2.4.7
 
 CORE      - Fix an issue that would cause witness loop to terminate under some error conditions

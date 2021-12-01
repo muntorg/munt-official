@@ -629,6 +629,10 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Moje konta</translation>
     </message>
     <message>
+        <source>Enter receiving address</source>
+        <translation>Wpisz adres odbiorczy</translation>
+    </message>
+    <message>
         <source>1 month</source>
         <translation>1 miesiąc</translation>
     </message>
@@ -836,6 +840,10 @@ Pamiętaj, aby zainstalować nowy klucz na dowolnym urządzeniu witness (pi) lub
     <message>
         <source>Upgrade</source>
         <translation>Aktualizacja</translation>
+    </message>
+    <message>
+        <source>Lock time elapsed</source>
+        <translation>Upłynął czas blokady</translation>
     </message>
     <message>
         <source>To begin witnessing, you have to fund the witness account.</source>
@@ -1259,6 +1267,10 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć ten QR kod, ponieważ można go wykorzystać do uzyskania dostępu do funduszy.</translation>
     </message>
     <message>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Codzienne zarządzanie funduszami&lt;/li&gt;&lt;li&gt;Wysyłaj i odbieraj Guldeny&lt;/li&gt;</translation>
+    </message>
+    <message>
         <source>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</source>
         <translation>&lt;li&gt; Rywalizuj z innymi górnikami, aby stworzyć Gulden z czasem bezczynności procesora &lt;/li&gt; &lt;li&gt; Pomóż zabezpieczyć sieć &lt;/li&gt;</translation>
     </message>
@@ -1590,6 +1602,10 @@ OSTRZEŻENIE: Upewnij się, że jesteś jedyną osobą, która może zobaczyć t
     <message>
         <source>Payment request expired.</source>
         <translation>Żądanie płatności wygasło.</translation>
+    </message>
+    <message>
+        <source>Sell</source>
+        <translation>Sprzedać</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -2805,6 +2821,10 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
         <translation>1 miesiąc</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>Żaden</translation>
+    </message>
+    <message>
         <source>1 year</source>
         <translation>1 rok</translation>
     </message>
@@ -2843,10 +2863,6 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
     <message>
         <source>%1 s</source>
         <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Żaden</translation>
     </message>
     <message>
         <source>N/A</source>
@@ -3801,8 +3817,24 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
         <translation>Formularz</translation>
     </message>
     <message>
+        <source>Parts</source>
+        <translation>Części</translation>
+    </message>
+    <message>
         <source>A minimum weight of %1 is required, but selected weight is only %2. Please increase the amount or lock time for a larger weight.</source>
         <translation>Wymagana jest minimalna waga %1, ale wybrana waga to tylko %2. Zwiększ ilość lub czas blokady, aby uzyskać większą wagę.</translation>
+    </message>
+    <message>
+        <source>Funds will be locked for %1 days (%2). It will not be possible under any circumstances to spend or move these funds for the duration of the lock period.
+
+Estimated earnings: %3 (%4% per month)
+Witness weight: %5
+%6</source>
+        <translation>Środki zostaną zablokowane na %1 dni (%2). W żadnym wypadku nie będzie możliwe wydawanie lub przenoszenie tych środków na czas trwania blokady.
+
+Szacunkowe zarobki: %3 (%4% miesięcznie)
+Waga świadka: %5
+%6</translation>
     </message>
     <message>
         <source>A minimum amount of %1 is required.</source>
@@ -3862,6 +3894,14 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
 </context>
 <context>
     <name>MiningAccountDialog</name>
+    <message>
+        <source>Changing the number of threads will affect your arena setup time. The optimal number of threads to use is machine specific using all available cores is not always fastest</source>
+        <translation>Zmiana liczby wątków wpłynie na czas konfiguracji areny. Optymalna liczba wątków do użycia zależy od maszyny, a użycie wszystkich dostępnych rdzeni nie zawsze jest najszybsze</translation>
+    </message>
+    <message>
+        <source>Processor usage, arena setup</source>
+        <translation>Wykorzystanie procesora, konfiguracja areny</translation>
+    </message>
     <message>
         <source>Arena setup time</source>
         <translation>Czas przygotowania areny</translation>
@@ -4233,6 +4273,89 @@ Zasadniczo, gdy ktoś inny generuje blok w tym samym czasie co twój.</translati
     <message>
         <source>Future earnings forecast:</source>
         <translation>Prognoza przyszłych zysków:</translation>
+    </message>
+</context>
+<context>
+    <name>gulden-core</name>
+    <message>
+        <source>None</source>
+        <translation>Żaden</translation>
+    </message>
+    <message>
+        <source>Done loading</source>
+        <translation>Wczytywanie zakończone</translation>
+    </message>
+    <message>
+        <source>Erasing block index...</source>
+        <translation>Usuwam indeks bloku ...</translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation>Błąd odczytu z bazy danych, wyłączam się.</translation>
+    </message>
+    <message>
+        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
+        <translation>Nieprawidłowy lub brak bloku genezy. Błędny folder_danych dla sieci?</translation>
+    </message>
+    <message>
+        <source>Legacy account</source>
+        <translation>Konto starszego typu</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Wczytywanie P2P adresów...</translation>
+    </message>
+    <message>
+        <source>Loading banlist...</source>
+        <translation>Ładowanie listy zablokowanych...</translation>
+    </message>
+    <message>
+        <source>Loading block index...</source>
+        <translation>Ładowanie indeksu bloku...</translation>
+    </message>
+    <message>
+        <source>Loading wallet...</source>
+        <translation>Wczytywanie portfela...</translation>
+    </message>
+    <message>
+        <source>My account</source>
+        <translation>Moje konto</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore...</source>
+        <translation>Przycinanie zapisu bloków...</translation>
+    </message>
+    <message>
+        <source>Reloading block index...</source>
+        <translation>Ponowne ładowanie indeksu bloku...</translation>
+    </message>
+    <message>
+        <source>Rescanning...</source>
+        <translation>Ponowne skanowanie...</translation>
+    </message>
+    <message>
+        <source>Rewinding blocks...</source>
+        <translation>Przewijanie bloków ...</translation>
+    </message>
+    <message>
+        <source>Starting network threads...</source>
+        <translation>Uruchamiam wątki sieciowe...</translation>
+    </message>
+    <message>
+        <source>Upgrading block index...</source>
+        <translation>Aktualizuję indeks bloku...</translation>
+    </message>
+    <message>
+        <source>Verifying blocks...</source>
+        <translation>Weryfikacja bloków...</translation>
+    </message>
+    <message>
+        <source>Wallet unlock required for wallet upgrade</source>
+        <translation>Odblokowanie portfela wymagane do aktualizacji portfela</translation>
+    </message>
+    <message>
+        <source>Zapping all transactions from wallet...</source>
+        <translation>Zapisywanie wszystkich transakcji z portfela...</translation>
     </message>
 </context>
 <context>

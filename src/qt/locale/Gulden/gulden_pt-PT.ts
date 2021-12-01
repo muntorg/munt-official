@@ -1217,6 +1217,10 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
         <translation>Quantia</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>Nenhum</translation>
+    </message>
+    <message>
         <source>%1 d</source>
         <translation>%1 d</translation>
     </message>
@@ -1231,10 +1235,6 @@ A conta irá continuar a ser monitorizada e será restaurada caso receba fundos 
     <message>
         <source>%1 s</source>
         <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Nenhum</translation>
     </message>
     <message>
         <source>N/A</source>

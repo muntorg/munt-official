@@ -817,6 +817,10 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Importo</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>Nessuno</translation>
+    </message>
+    <message>
         <source>Enter a Gulden URL</source>
         <translation>Inserisci indirizzo URL Gulden</translation>
     </message>
@@ -835,10 +839,6 @@ The account will continue to be monitored and will be restored should it receive
     <message>
         <source>%1 s</source>
         <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Nessuno</translation>
     </message>
     <message>
         <source>N/A</source>

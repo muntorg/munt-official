@@ -196,6 +196,10 @@
         <translation>Összeg</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>Semmi</translation>
+    </message>
+    <message>
         <source>%1 d</source>
         <translation>%1 n</translation>
     </message>
@@ -210,10 +214,6 @@
     <message>
         <source>%1 s</source>
         <translation>%1 mp</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Semmi</translation>
     </message>
     <message>
         <source>N/A</source>

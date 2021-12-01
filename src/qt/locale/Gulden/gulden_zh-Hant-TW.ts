@@ -971,6 +971,10 @@
         <translation>金額</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>無</translation>
+    </message>
+    <message>
         <source>%1 d</source>
         <translation>%1 天</translation>
     </message>
@@ -985,10 +989,6 @@
     <message>
         <source>%1 s</source>
         <translation>%1 秒</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>無</translation>
     </message>
     <message>
         <source>N/A</source>

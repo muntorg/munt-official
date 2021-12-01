@@ -196,6 +196,10 @@
         <translation>Cantitate</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>Niciuna</translation>
+    </message>
+    <message>
         <source>%1 d</source>
         <translation>%1 z</translation>
     </message>
@@ -210,10 +214,6 @@
     <message>
         <source>%1 s</source>
         <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Niciuna</translation>
     </message>
     <message>
         <source>N/A</source>

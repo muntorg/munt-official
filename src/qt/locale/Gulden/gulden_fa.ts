@@ -499,6 +499,10 @@
         <translation>مبلغ</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>هیچکدام</translation>
+    </message>
+    <message>
         <source>%1 d</source>
         <translation>%1 روز</translation>
     </message>
@@ -513,10 +517,6 @@
     <message>
         <source>%1 s</source>
         <translation>%1 ثانیه</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>هیچکدام</translation>
     </message>
     <message>
         <source>N/A</source>

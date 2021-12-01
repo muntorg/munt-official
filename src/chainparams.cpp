@@ -166,9 +166,9 @@ public:
         {
             consensus.defaultAssumeValid = uint256S("");
         }
-        
+
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000013805bf10554d4553");
+        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000013805bf50536e6868");
     }
 };
 

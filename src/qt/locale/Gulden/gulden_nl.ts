@@ -627,6 +627,10 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Mijn rekeningen</translation>
     </message>
     <message>
+        <source>Enter receiving address</source>
+        <translation>Voer ontvangstadres in</translation>
+    </message>
+    <message>
         <source>1 month</source>
         <translation>1 maand</translation>
     </message>
@@ -833,6 +837,10 @@ Remember to install the new key on any witness device (pi) or service you are us
     <message>
         <source>Upgrade</source>
         <translation>Upgraden</translation>
+    </message>
+    <message>
+        <source>Lock time elapsed</source>
+        <translation>Looptijd verlopen</translation>
     </message>
     <message>
         <source>To begin witnessing, you have to fund the witness account.</source>
@@ -1254,6 +1262,10 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegang tot uw Guldens.</translation>
     </message>
     <message>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Algemeen beheer van je Guldens&lt;/li&gt;&lt;li&gt;Guldens ontvangen en versturen&lt;/li&gt;</translation>
+    </message>
+    <message>
         <source>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</source>
         <translation>&lt;li&gt;Concurreer met andere miners door Gulden te creëren met jouw vrije CPU kracht&lt;/li&gt;&lt;li&gt;Help het netwerk beveiligen&lt;/li&gt;</translation>
     </message>
@@ -1585,6 +1597,10 @@ WAARSCHUWING: Laat niemand anders deze QR code zien, anders heeft diegene toegan
     <message>
         <source>Payment request expired.</source>
         <translation>Betalingsverzoek verlopen.</translation>
+    </message>
+    <message>
+        <source>Sell</source>
+        <translation>Verkopen</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -2797,6 +2813,10 @@ Normaal gesproken als iemand anders een block genereert op dezelfde tijd als u.<
         <translation>1 maand</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>Geen</translation>
+    </message>
+    <message>
         <source>1 year</source>
         <translation>1 jaar</translation>
     </message>
@@ -2835,10 +2855,6 @@ Normaal gesproken als iemand anders een block genereert op dezelfde tijd als u.<
     <message>
         <source>%1 s</source>
         <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Geen</translation>
     </message>
     <message>
         <source>N/A</source>
@@ -3862,6 +3878,14 @@ Witness gewicht: %5
 <context>
     <name>MiningAccountDialog</name>
     <message>
+        <source>Changing the number of threads will affect your arena setup time. The optimal number of threads to use is machine specific using all available cores is not always fastest</source>
+        <translation>Het wijzigen van het aantal threads heeft invloed op je arena setup tijd. Het optimale aantal threads verschil per machine. Alle cores gebruiken is niet per definitie het snelste.</translation>
+    </message>
+    <message>
+        <source>Processor usage, arena setup</source>
+        <translation>Processorgebruik, arena setup</translation>
+    </message>
+    <message>
         <source>Arena setup time</source>
         <translation>Arena setup tijd</translation>
     </message>
@@ -4232,6 +4256,89 @@ Witness gewicht: %5
     <message>
         <source>Future earnings forecast:</source>
         <translation>Toekomstverwachting voor de inkomsten:</translation>
+    </message>
+</context>
+<context>
+    <name>gulden-core</name>
+    <message>
+        <source>None</source>
+        <translation>Geen</translation>
+    </message>
+    <message>
+        <source>Done loading</source>
+        <translation>Laden gereed</translation>
+    </message>
+    <message>
+        <source>Erasing block index...</source>
+        <translation>Blokindex verwijderen...</translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation>Fout bij uitlezen database, af aan het sluiten.</translation>
+    </message>
+    <message>
+        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
+        <translation>Onjuist of geen genesis blok gevonden. Verkeerde datadir voor netwerk?</translation>
+    </message>
+    <message>
+        <source>Legacy account</source>
+        <translation>Legacy-rekening</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>P2P adressen worden geladen...</translation>
+    </message>
+    <message>
+        <source>Loading banlist...</source>
+        <translation>Banlijst wordt geladen...</translation>
+    </message>
+    <message>
+        <source>Loading block index...</source>
+        <translation>Blokindex wordt geladen...</translation>
+    </message>
+    <message>
+        <source>Loading wallet...</source>
+        <translation>Portemonnee wordt geladen...</translation>
+    </message>
+    <message>
+        <source>My account</source>
+        <translation>Mijn account</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore...</source>
+        <translation>Blockstore verwijderen...</translation>
+    </message>
+    <message>
+        <source>Reloading block index...</source>
+        <translation>Block index herladen...</translation>
+    </message>
+    <message>
+        <source>Rescanning...</source>
+        <translation>Herscannen...</translation>
+    </message>
+    <message>
+        <source>Rewinding blocks...</source>
+        <translation>Blokken terugspelen...</translation>
+    </message>
+    <message>
+        <source>Starting network threads...</source>
+        <translation>Starten netwerk threads...</translation>
+    </message>
+    <message>
+        <source>Upgrading block index...</source>
+        <translation>Blokindex upgraden...</translation>
+    </message>
+    <message>
+        <source>Verifying blocks...</source>
+        <translation>Blokken verifiëren...</translation>
+    </message>
+    <message>
+        <source>Wallet unlock required for wallet upgrade</source>
+        <translation>Portemonee ontgrendelen verplicht voor upgrade</translation>
+    </message>
+    <message>
+        <source>Zapping all transactions from wallet...</source>
+        <translation>Alle transacties uit de portemonnee verwijderen...</translation>
     </message>
 </context>
 <context>

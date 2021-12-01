@@ -227,12 +227,12 @@ Le compte continuera d&apos;être surveillé et sera rétabli s&apos;il reçoit 
         <translation>Montant</translation>
     </message>
     <message>
-        <source>%1 d</source>
-        <translation>%1 j</translation>
-    </message>
-    <message>
         <source>None</source>
         <translation>Aucun</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 j</translation>
     </message>
     <message>
         <source>%1 and %2</source>

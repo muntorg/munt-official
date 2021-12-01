@@ -752,6 +752,10 @@
         <translation>거래액</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>없음</translation>
+    </message>
+    <message>
         <source>%1 d</source>
         <translation>%1 일</translation>
     </message>
@@ -766,10 +770,6 @@
     <message>
         <source>%1 s</source>
         <translation>%1 초</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>없음</translation>
     </message>
     <message>
         <source>N/A</source>

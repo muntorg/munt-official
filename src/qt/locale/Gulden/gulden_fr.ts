@@ -2801,6 +2801,10 @@ Généralement quand quelqu&apos;un d&apos;autre génère un bloc en même temps
         <translation>1 mois</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>Aucun</translation>
+    </message>
+    <message>
         <source>1 year</source>
         <translation>1 an</translation>
     </message>
@@ -2839,10 +2843,6 @@ Généralement quand quelqu&apos;un d&apos;autre génère un bloc en même temps
     <message>
         <source>%1 s</source>
         <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Aucun</translation>
     </message>
     <message>
         <source>N/A</source>

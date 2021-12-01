@@ -1555,7 +1555,12 @@ The account will continue to be monitored and will be restored should it receive
         <translation>My accounts</translation>
     </message>
     <message>
-        <location line="+117"/>
+        <location line="-122"/>
+        <source>Enter receiving address</source>
+        <translation>Enter receiving address</translation>
+    </message>
+    <message>
+        <location line="+239"/>
         <source>1 month</source>
         <translation>1 month</translation>
     </message>
@@ -1565,12 +1570,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Lock funds for:</translation>
     </message>
     <message>
-        <location line="-218"/>
-        <source>Enter receiving address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+283"/>
+        <location line="+65"/>
         <source>3 years</source>
         <translation>3 years</translation>
     </message>
@@ -1852,12 +1852,22 @@ The account will continue to be monitored and will be restored should it receive
 <context>
     <name>MiningAccountDialog</name>
     <message>
-        <location filename="../../forms/miningaccountdialog.ui" line="+400"/>
+        <location filename="../../miningaccountdialog.cpp" line="+80"/>
+        <source>Changing the number of threads will affect your arena setup time. The optimal number of threads to use is machine specific using all available cores is not always fastest</source>
+        <translation>Changing the number of threads will affect your arena setup time. The optimal number of threads to use is machine specific using all available cores is not always fastest</translation>
+    </message>
+    <message>
+        <location filename="../../forms/miningaccountdialog.ui" line="+250"/>
+        <source>Processor usage, arena setup</source>
+        <translation>Processor usage, arena setup</translation>
+    </message>
+    <message>
+        <location line="+150"/>
         <source>Arena setup time</source>
         <translation>Arena setup time</translation>
     </message>
     <message>
-        <location filename="../../miningaccountdialog.cpp" line="+143"/>
+        <location filename="../../miningaccountdialog.cpp" line="+63"/>
         <location line="+253"/>
         <source>%1 MB</source>
         <translation>%1 MB</translation>
@@ -1868,12 +1878,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Increasing the number of threads will increase your mining speed, but will also increase your energy usage and slow down other appliations that might be running.</translation>
     </message>
     <message>
-        <location line="+4"/>
-        <source>Changing the number of threads will affect your arena setup time. The optimal number of threads to use is machine specific using all available cores is not always fastest</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+4"/>
+        <location line="+8"/>
         <source>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</source>
         <translation>Reducing memory usage is not recommended. It will slow down your mining while using the same amount of processor power and energy as before. Only use this as a last resort on machines that have low memory availability.</translation>
     </message>
@@ -1937,12 +1942,7 @@ The account will continue to be monitored and will be restored should it receive
         <translation>#</translation>
     </message>
     <message>
-        <location line="+34"/>
-        <source>Processor usage, arena setup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+37"/>
+        <location line="+71"/>
         <source>Automatically mine at startup</source>
         <translation>Automatically mine at startup</translation>
     </message>
@@ -2008,17 +2008,17 @@ WARNING: please ensure that you are the only person who can see this QR code as 
 WARNING: please ensure that you are the only person who can see this QR code as otherwise it could be used to access your funds.</translation>
     </message>
     <message>
-        <location line="-78"/>
+        <location line="-81"/>
+        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;</source>
+        <translation>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;</translation>
+    </message>
+    <message>
+        <location line="+3"/>
         <source>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</source>
         <translation>&lt;li&gt;Compete against other miners to create Gulden with your idle CPU time&lt;/li&gt;&lt;li&gt;Help secure the network&lt;/li&gt;</translation>
     </message>
     <message>
-        <location line="-3"/>
-        <source>&lt;li&gt;Day to day fund management&lt;/li&gt;&lt;li&gt;Send and receive Gulden&lt;/li&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+251"/>
+        <location line="+248"/>
         <source>Mining</source>
         <translation>Mining</translation>
     </message>
@@ -2817,7 +2817,12 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>1 month</translation>
     </message>
     <message>
-        <location line="-6"/>
+        <location filename="../../guiutil.cpp" line="+1066"/>
+        <source>None</source>
+        <translation>None</translation>
+    </message>
+    <message>
+        <location filename="../../GuldenGUI.cpp" line="-6"/>
         <source>1 year</source>
         <translation>1 year</translation>
     </message>
@@ -2832,7 +2837,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>%1 months</translation>
     </message>
     <message>
-        <location filename="../../guiutil.cpp" line="+138"/>
+        <location filename="../../guiutil.cpp" line="-928"/>
         <source>Enter an address (e.g. %1)</source>
         <translation>Enter an address (e.g. %1)</translation>
     </message>
@@ -2847,7 +2852,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>Enter a Gulden URL</translation>
     </message>
     <message>
-        <location line="+850"/>
+        <location line="+858"/>
         <source>%1 d</source>
         <translation>%1 d</translation>
     </message>
@@ -2868,12 +2873,7 @@ WARNING: please ensure that you are the only person who can see this QR code as 
         <translation>%1 s</translation>
     </message>
     <message>
-        <location line="-10"/>
-        <source>None</source>
-        <translation>None</translation>
-    </message>
-    <message>
-        <location line="+5"/>
+        <location line="-5"/>
         <source>N/A</source>
         <translation>N/A</translation>
     </message>
@@ -3806,12 +3806,7 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>Copy change</translation>
     </message>
     <message>
-        <location line="+65"/>
-        <source>Sell</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+356"/>
+        <location line="+421"/>
         <source>Send</source>
         <translation>Send</translation>
     </message>
@@ -3826,12 +3821,17 @@ Remember to install the new key on any witness device (pi) or service you are us
         <translation>Payment request expired.</translation>
     </message>
     <message>
+        <location line="-709"/>
+        <source>Sell</source>
+        <translation>Sell</translation>
+    </message>
+    <message>
         <location filename="../../forms/sendcoinsdialog.ui" line="+316"/>
         <source>Hide</source>
         <translation>Hide</translation>
     </message>
     <message>
-        <location filename="../../sendcoinsdialog.cpp" line="-706"/>
+        <location filename="../../sendcoinsdialog.cpp" line="+3"/>
         <source>&amp;Clear</source>
         <translation>&amp;Clear</translation>
     </message>
@@ -5188,7 +5188,12 @@ Generally when someone else generates a block at the same time as yours.</transl
         <translation>%1 months</translation>
     </message>
     <message>
-        <location filename="../../forms/witnessdialog.ui" line="-825"/>
+        <location filename="../../forms/witnessdialog.ui" line="-696"/>
+        <source>Lock time elapsed</source>
+        <translation>Lock time elapsed</translation>
+    </message>
+    <message>
+        <location line="-129"/>
         <source>To begin witnessing, you have to fund the witness account.</source>
         <translation>To begin witnessing, you have to fund the witness account.</translation>
     </message>
@@ -5285,12 +5290,7 @@ When the emptying transaction is confirmed in the blockchain you can fund this a
         <translation>n/a</translation>
     </message>
     <message>
-        <location line="-279"/>
-        <source>Lock time elapsed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+23"/>
+        <location line="-256"/>
         <source>Lock time remaining</source>
         <translation>Lock time remaining</translation>
     </message>
@@ -5499,102 +5499,102 @@ Witness weight: %5
         <location filename="../../guldenstrings.cpp" line="+12"/>
         <location line="+1"/>
         <source>None</source>
-        <translation type="unfinished">None</translation>
+        <translation>None</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Done loading</source>
-        <translation type="unfinished"></translation>
+        <translation>Done loading</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Erasing block index...</source>
-        <translation type="unfinished"></translation>
+        <translation>Erasing block index...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Error reading from database, shutting down.</source>
-        <translation type="unfinished"></translation>
+        <translation>Error reading from database, shutting down.</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
-        <translation type="unfinished"></translation>
+        <translation>Incorrect or no genesis block found. Wrong datadir for network?</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Legacy account</source>
-        <translation type="unfinished"></translation>
+        <translation>Legacy account</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Loading P2P addresses...</source>
-        <translation type="unfinished"></translation>
+        <translation>Loading P2P addresses...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Loading banlist...</source>
-        <translation type="unfinished"></translation>
+        <translation>Loading banlist...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Loading block index...</source>
-        <translation type="unfinished"></translation>
+        <translation>Loading block index...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Loading wallet...</source>
-        <translation type="unfinished"></translation>
+        <translation>Loading wallet...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>My account</source>
-        <translation type="unfinished"></translation>
+        <translation>My account</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Pruning blockstore...</source>
-        <translation type="unfinished"></translation>
+        <translation>Pruning blockstore...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Reloading block index...</source>
-        <translation type="unfinished"></translation>
+        <translation>Reloading block index...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Rescanning...</source>
-        <translation type="unfinished"></translation>
+        <translation>Rescanning...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Rewinding blocks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Rewinding blocks...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Starting network threads...</source>
-        <translation type="unfinished"></translation>
+        <translation>Starting network threads...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Upgrading block index...</source>
-        <translation type="unfinished"></translation>
+        <translation>Upgrading block index...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Verifying blocks...</source>
-        <translation type="unfinished"></translation>
+        <translation>Verifying blocks...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Wallet unlock required for wallet upgrade</source>
-        <translation type="unfinished"></translation>
+        <translation>Wallet unlock required for wallet upgrade</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Zapping all transactions from wallet...</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapping all transactions from wallet...</translation>
     </message>
 </context>
 <context>

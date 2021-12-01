@@ -627,6 +627,10 @@ The account will continue to be monitored and will be restored should it receive
         <translation>Meine Konten</translation>
     </message>
     <message>
+        <source>Enter receiving address</source>
+        <translation>Gib Empfangsadresse ein</translation>
+    </message>
+    <message>
         <source>1 month</source>
         <translation>1 Monat</translation>
     </message>
@@ -834,6 +838,10 @@ Denke daran, den neuen Schlüssel auf jedem Witness-Gerät (pi) oder Dienst zu i
     <message>
         <source>Upgrade</source>
         <translation>Aktualisiere</translation>
+    </message>
+    <message>
+        <source>Lock time elapsed</source>
+        <translation>Restlaufzeit vorbei</translation>
     </message>
     <message>
         <source>To begin witnessing, you have to fund the witness account.</source>
@@ -1588,6 +1596,10 @@ WARNUNG: Mit dem QR Code ist es möglich auf deine Einlagen zuzugreifen, deswege
     <message>
         <source>Payment request expired.</source>
         <translation>Zahlungsanforderung abgelaufen.</translation>
+    </message>
+    <message>
+        <source>Sell</source>
+        <translation>Verkaufen</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -2800,6 +2812,10 @@ Im Allgemeinen, wenn eine andere Person gleichzeitig mit dir einen Block generie
         <translation>1 Monat</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>Keine</translation>
+    </message>
+    <message>
         <source>1 year</source>
         <translation>1 Jahr</translation>
     </message>
@@ -2838,10 +2854,6 @@ Im Allgemeinen, wenn eine andere Person gleichzeitig mit dir einen Block generie
     <message>
         <source>%1 s</source>
         <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Keine</translation>
     </message>
     <message>
         <source>N/A</source>
@@ -4234,6 +4246,77 @@ Witness-Gewicht: %5
     <message>
         <source>Future earnings forecast:</source>
         <translation>Zukünftige Einnahmenprognose:</translation>
+    </message>
+</context>
+<context>
+    <name>gulden-core</name>
+    <message>
+        <source>None</source>
+        <translation>Keine</translation>
+    </message>
+    <message>
+        <source>Done loading</source>
+        <translation>Laden fertig</translation>
+    </message>
+    <message>
+        <source>Erasing block index...</source>
+        <translation>Blockindex löschen...</translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation>Fehler beim lesen der Datenbank, Ausführung wird beendet.</translation>
+    </message>
+    <message>
+        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
+        <translation>Fehlerhafter oder kein Genesis-Block gefunden. Falsches Datenverzeichnis für das Netzwerk?</translation>
+    </message>
+    <message>
+        <source>Legacy account</source>
+        <translation>Legacy-Konto</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>P2P Adressen laden...</translation>
+    </message>
+    <message>
+        <source>Loading banlist...</source>
+        <translation>Lade Sperrliste...</translation>
+    </message>
+    <message>
+        <source>Loading block index...</source>
+        <translation>Lade Blockindex...</translation>
+    </message>
+    <message>
+        <source>Loading wallet...</source>
+        <translation>Wallet laden...</translation>
+    </message>
+    <message>
+        <source>My account</source>
+        <translation>Mein Konto</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore...</source>
+        <translation>Kürze Blockspeicher...</translation>
+    </message>
+    <message>
+        <source>Reloading block index...</source>
+        <translation>Blockindex neu laden...</translation>
+    </message>
+    <message>
+        <source>Rescanning...</source>
+        <translation>Durchsuche erneut...</translation>
+    </message>
+    <message>
+        <source>Upgrading block index...</source>
+        <translation>Blockindex upgraden...</translation>
+    </message>
+    <message>
+        <source>Verifying blocks...</source>
+        <translation>Verifiziere Blöcke...</translation>
+    </message>
+    <message>
+        <source>Zapping all transactions from wallet...</source>
+        <translation>Lösche alle Transaktionen aus Wallet...</translation>
     </message>
 </context>
 <context>

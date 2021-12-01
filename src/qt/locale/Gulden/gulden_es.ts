@@ -973,6 +973,10 @@
         <translation>Cantidad</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>Ninguno</translation>
+    </message>
+    <message>
         <source>%1 d</source>
         <translation>%1 d</translation>
     </message>
@@ -987,10 +991,6 @@
     <message>
         <source>%1 s</source>
         <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Ninguno</translation>
     </message>
     <message>
         <source>N/A</source>

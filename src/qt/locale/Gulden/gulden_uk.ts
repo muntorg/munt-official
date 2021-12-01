@@ -196,6 +196,10 @@
         <translation>Кількість</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>Відсутні</translation>
+    </message>
+    <message>
         <source>%1 d</source>
         <translation>%1 д</translation>
     </message>
@@ -210,10 +214,6 @@
     <message>
         <source>%1 s</source>
         <translation>%1 с</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Відсутні</translation>
     </message>
     <message>
         <source>N/A</source>

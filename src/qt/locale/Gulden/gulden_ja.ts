@@ -977,6 +977,10 @@
         <translation>総額</translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>なし</translation>
+    </message>
+    <message>
         <source>%1 d</source>
         <translation>%1日</translation>
     </message>
@@ -991,10 +995,6 @@
     <message>
         <source>%1 s</source>
         <translation>%1秒</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>なし</translation>
     </message>
     <message>
         <source>N/A</source>
