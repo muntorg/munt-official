@@ -2,9 +2,9 @@
   <div class="setup-view flex-col">
     <div class="steps-container">
       <!-- step 1: choose setup type -->
-      <gulden-section v-if="current === 1">
-        <h2>{{ $t("setup.setup_gulden_wallet") }}</h2>
-        <gulden-section>
+      <app-section v-if="current === 1">
+        <h2>{{ $t("setup.setup_your_wallet") }}</h2>
+        <app-section>
           <div class="settings-row" @click="setupWallet(false)">
             {{ $t("setup.create_new") }}
             <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
@@ -13,20 +13,20 @@
             {{ $t("setup.recover_existing") }}
             <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
           </div>
-        </gulden-section>
-      </gulden-section>
+        </app-section>
+      </app-section>
 
       <!-- step 2: show recovery phrase -->
-      <gulden-section v-else-if="current === 2">
+      <app-section v-else-if="current === 2">
         <h2 class="important">{{ $t("common.important") }}</h2>
         <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
-        <gulden-section class="phrase">
+        <app-section class="phrase">
           {{ recoveryPhrase }}
-        </gulden-section>
-      </gulden-section>
+        </app-section>
+      </app-section>
 
       <!-- step 3: enter/repeat recovery phrase -->
-      <gulden-section v-else-if="current === 3">
+      <app-section v-else-if="current === 3">
         <h2>{{ $t("setup.enter_recovery_phrase") }}</h2>
         <p v-if="!isRecovery">{{ $t("setup.repeat_your_recovery_phrase") }}</p>
         <p v-else>{{ $t("setup.enter_existing_recovery_phrase") }}</p>
@@ -39,26 +39,26 @@
           @possible-phrase="onPossiblePhrase"
           @enter="validatePhraseOnEnter"
         />
-      </gulden-section>
+      </app-section>
 
       <!-- step 4: enter a password -->
       <div v-else-if="current === 4">
         <h2>{{ $t("setup.choose_password") }}</h2>
         <p>{{ $t("setup.choose_password_information") }}</p>
-        <gulden-form-field :title="$t('common.password')">
+        <app-form-field :title="$t('common.password')">
           <input ref="password" type="password" v-model="password1" />
-        </gulden-form-field>
-        <gulden-form-field :title="$t('setup.repeat_password')">
+        </app-form-field>
+        <app-form-field :title="$t('setup.repeat_password')">
           <input
             type="password"
             v-model="password2"
             :class="password2Status"
             @keydown="validatePasswordsOnEnter"
           />
-        </gulden-form-field>
+        </app-form-field>
       </div>
     </div>
-    <gulden-button-section class="steps-buttons">
+    <app-button-section class="steps-buttons">
       <template v-slot:left>
         <button v-if="showPreviousButton" @click="previousStep">
           {{ $t("buttons.previous") }}
@@ -81,12 +81,12 @@
           {{ $t("buttons.next") }}
         </button>
       </template>
-    </gulden-button-section>
+    </app-button-section>
   </div>
 </template>
 
 <script>
-import { LibraryController } from "../unity/Controllers";
+import {LibraryController} from "../unity/Controllers";
 import PhraseInput from "../components/PhraseInput";
 import EventBus from "../EventBus.js";
 
@@ -222,7 +222,7 @@ export default {
                 this.password1
               )
             ) {
-              this.$router.push({ name: "account" });
+              this.$router.push({name: "account"});
             }
           } else {
             if (
@@ -231,7 +231,7 @@ export default {
                 this.password1
               )
             ) {
-              this.$router.push({ name: "account" });
+              this.$router.push({name: "account"});
             }
           }
           break;
@@ -284,6 +284,11 @@ export default {
 
 .arrow {
   float: right;
+  color: #000;
+}
+
+.settings-row:hover > .arrow {
+  color: #000;
 }
 
 .phrase {

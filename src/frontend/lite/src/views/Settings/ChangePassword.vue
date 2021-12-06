@@ -6,7 +6,7 @@
     </h2>
 
     <!-- step 1: Enter old password -->
-    <gulden-form-field v-if="current === 1">
+    <app-form-field v-if="current === 1">
       <input
         ref="passwordold"
         type="password"
@@ -14,26 +14,26 @@
         @keydown="validatePasswordOnEnter"
         :class="passwordOldStatus"
       />
-    </gulden-form-field>
+    </app-form-field>
 
     <!-- step 2: enter new password -->
     <div v-else>
-      <gulden-form-field :title="$t('common.password')">
+      <app-form-field :title="$t('common.password')">
         <input ref="password1" type="password" v-model="password1" />
-      </gulden-form-field>
-      <gulden-form-field :title="$t('setup.repeat_password')">
+      </app-form-field>
+      <app-form-field :title="$t('setup.repeat_password')">
         <input
           type="password"
           v-model="password2"
           :class="password2Status"
           @keydown="validatePasswordRepeatOnEnter"
         />
-      </gulden-form-field>
+      </app-form-field>
     </div>
 
     <div class="flex-1" />
 
-    <gulden-button-section>
+    <app-button-section>
       <template v-slot:right>
         <button
           v-if="current === 1"
@@ -50,7 +50,7 @@
           {{ $t("buttons.change_password") }}
         </button>
       </template>
-    </gulden-button-section>
+    </app-button-section>
   </div>
 </template>
 

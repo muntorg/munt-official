@@ -60,7 +60,7 @@
     "recover_existing": "I already have a Gulden wallet",
     "repeat_password": "Repeat password",
     "repeat_your_recovery_phrase": "To make sure you have correctly written down your recovery phrase, enter your phrase in the boxes below.",
-    "setup_gulden_wallet": "Make a choice",
+    "setup_your_wallet": "Make a choice",
     "this_is_your_recovery_phrase": "This is your recovery phrase. Keep your backup phrase in a safe place. Lose phrase or someone else with access to the phrase = lose Gulden."
   },
   "transaction_details": {

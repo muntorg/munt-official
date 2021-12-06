@@ -1,5 +1,5 @@
 <template>
-  <div class="gulden-button-section flex-row">
+  <div class="app-button-section flex-row">
     <div class="left">
       <slot name="left" />
     </div>
@@ -15,12 +15,12 @@
 
 <script>
 export default {
-  name: "GuldenButtonSection"
+  name: "AppButtonSection"
 };
 </script>
 
 <style lang="less" scoped>
-.gulden-button-section {
+.app-button-section {
   width: 100%;
 
   & .left {
