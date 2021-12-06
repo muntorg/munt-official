@@ -60,7 +60,7 @@
     "recover_existing": "Ik heb al een Gulden portemonnee",
     "repeat_password": "Herhaal wachtwoord",
     "repeat_your_recovery_phrase": "Voer jouw herstelzin in om te controleren dat je deze goed hebt opgeschreven.",
-    "setup_gulden_wallet": "Maak een keuze",
+    "setup_your_wallet": "Maak een keuze",
     "this_is_your_recovery_phrase": "Dit is jouw herstelzin. Bewaar de herstelzin op een veilige plek. Zin kwijt of iemand toegang tot je zin = Gulden weg."
   },
   "transaction_details": {

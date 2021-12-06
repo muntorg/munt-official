@@ -6,7 +6,7 @@
     </h2>
 
     <!-- step 1: Enter password -->
-    <gulden-form-field v-if="current === 1">
+    <app-form-field v-if="current === 1">
       <input
         ref="password"
         type="password"
@@ -14,19 +14,19 @@
         @keydown="getRecoveryPhraseOnEnter"
         :class="computedStatus"
       />
-    </gulden-form-field>
+    </app-form-field>
 
     <!-- step 2: Show recovery phrase -->
     <div v-else>
       <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
-      <gulden-section class="phrase">
+      <app-section class="phrase">
         {{ recoveryPhrase }}
-      </gulden-section>
+      </app-section>
     </div>
 
     <div class="flex-1" />
 
-    <gulden-button-section>
+    <app-button-section>
       <template v-slot:right>
         <button
           v-if="current === 1"
@@ -39,7 +39,7 @@
           {{ $t("buttons.ready") }}
         </button>
       </template>
-    </gulden-button-section>
+    </app-button-section>
   </div>
 </template>
 

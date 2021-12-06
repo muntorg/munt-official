@@ -1,6 +1,6 @@
 <template>
   <div class="wallet-password-dialog">
-    <gulden-form-field :title="$t('common.password')">
+    <app-form-field :title="$t('common.password')">
       <input
         ref="password"
         type="password"
@@ -8,14 +8,14 @@
         @keydown="validatePasswordOnEnter"
         :class="computedStatus"
       />
-    </gulden-form-field>
-    <gulden-button-section class="buttons">
+    </app-form-field>
+    <app-button-section class="buttons">
       <template v-slot:right>
         <button @click="validatePassword" :disabled="isButtonDisabled">
           {{ $t("buttons.unlock") }}
         </button>
       </template>
-    </gulden-button-section>
+    </app-button-section>
   </div>
 </template>
 

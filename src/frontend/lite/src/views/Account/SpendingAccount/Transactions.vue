@@ -31,13 +31,13 @@
 
       <div class="flex-1" />
 
-      <gulden-button-section>
+      <app-button-section>
         <template v-slot:middle>
           <button @click="buyGulden" class="buy-gulden" :disabled="buyDisabled">
             {{ $t("buttons.buy_your_first_gulden") }}
           </button>
         </template>
-      </gulden-button-section>
+      </app-button-section>
     </div>
   </div>
 </template>
