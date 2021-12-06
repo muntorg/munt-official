@@ -7,11 +7,11 @@
         <app-section>
           <div class="settings-row" @click="setupWallet(false)">
             {{ $t("setup.create_new") }}
-            <fa-icon :icon="['fal', 'long-arrow-right']" class="arrow" />
+            <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
           </div>
           <div class="settings-row" @click="setupWallet(true)">
             {{ $t("setup.recover_existing") }}
-            <fa-icon :icon="['fal', 'long-arrow-right']" class="arrow" />
+            <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
           </div>
         </app-section>
       </app-section>
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { LibraryController } from "../unity/Controllers";
+import {LibraryController} from "../unity/Controllers";
 import PhraseInput from "../components/PhraseInput";
 import EventBus from "../EventBus.js";
 
@@ -194,9 +194,10 @@ export default {
             next = 3;
           } else {
             if (this.generatedRecoveryPhrase === null) {
-              this.generatedRecoveryPhrase = LibraryController.GenerateRecoveryMnemonic().phrase;
+              var mnemonic = LibraryController.GenerateRecoveryMnemonic();
+              this.generatedRecoveryPhrase = mnemonic.phrase_with_birth_number;
+              this.recoveryPhrase = mnemonic.phrase;
             }
-            this.recoveryPhrase = this.generatedRecoveryPhrase;
           }
           break;
         case 3:
@@ -214,13 +215,24 @@ export default {
           }
           break;
         case 4:
-          if (
-            LibraryController.InitWalletFromRecoveryPhrase(
-              this.recoveryPhrase,
-              this.password1
-            )
-          ) {
-            this.$router.push({ name: "account" });
+          if (this.isRecovery) {
+            if (
+              LibraryController.InitWalletFromRecoveryPhrase(
+                this.recoveryPhrase,
+                this.password1
+              )
+            ) {
+              this.$router.push({name: "account"});
+            }
+          } else {
+            if (
+              LibraryController.InitWalletFromRecoveryPhrase(
+                this.generatedRecoveryPhrase,
+                this.password1
+              )
+            ) {
+              this.$router.push({name: "account"});
+            }
           }
           break;
       }
@@ -260,14 +272,19 @@ export default {
 }
 
 .settings-row {
-  padding: 4px 0;
-  border-bottom: 1px solid #ccc;
+  margin: 0 -10px;
+  padding: 10px;
   cursor: pointer;
+}
+
+.settings-row:hover {
+  color: var(--primary-color);
+  background-color: var(--hover-color);
 }
 
 .arrow {
   float: right;
-  color: #fff;
+  color: #000;
 }
 
 .settings-row:hover > .arrow {

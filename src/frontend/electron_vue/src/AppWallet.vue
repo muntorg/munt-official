@@ -1,6 +1,6 @@
 <template>
   <div class="app-wallet">
-    <app-loader />
+    <app-loader v-if="showLoader" />
     <modal-dialog v-model="modal" />
     <component :is="layout">
       <router-view />
@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import AppStatus from "./AppStatus";
 import AppLoader from "./components/AppLoader";
 import ModalDialog from "./components/ModalDialog";
 import EventBus from "./EventBus.js";
@@ -27,7 +29,10 @@ export default {
     AppLoader,
     ModalDialog,
     SetupLayout,
-    WalletLayout
+    WalletLayout,
+  },
+  created() {
+    this.onStatusChanged();
   },
   mounted() {
     EventBus.$on("close-dialog", this.closeModal);
@@ -38,17 +43,45 @@ export default {
     EventBus.$off("show-dialog", this.showModal);
   },
   computed: {
+    ...mapState("app", ["splashReady", "status"]),
     layout() {
       return this.$route.meta.layout || WalletLayout;
-    }
+    },
+    showLoader() {
+      return (
+        this.splashReady === false ||
+        (this.status !== AppStatus.ready && this.status !== AppStatus.setup)
+      );
+    },
+  },
+  watch: {
+    status() {
+      this.onStatusChanged();
+    },
   },
   methods: {
+    onStatusChanged() {
+      let routeName;
+      switch (this.status) {
+        case AppStatus.setup:
+          routeName = "setup";
+          break;
+        case AppStatus.synchronize:
+          routeName = "transactions";
+          break;
+        case AppStatus.ready:
+          routeName = "transactions";
+          break;
+      }
+      if (routeName === undefined || this.$route.name === routeName) return;
+      this.$router.push({ name: routeName });
+    },
     closeModal() {
       this.modal = null;
     },
     showModal(modal) {
       this.modal = modal;
-    }
-  }
+    },
+  },
 };
 </script>

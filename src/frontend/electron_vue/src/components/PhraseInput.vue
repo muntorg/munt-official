@@ -168,7 +168,7 @@ export default {
 <style lang="less" scoped>
 .phrase-input-wrapper {
   width: calc(100% + 10px);
-  margin: 0 0 0 -5px;
+  margin: -5px 0 0 -5px;
 }
 
 .word-input {
