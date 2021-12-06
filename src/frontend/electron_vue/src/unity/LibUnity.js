@@ -309,7 +309,7 @@ class LibUnity {
 
     libraryListener.notifyInitWithoutExistingWallet = function() {
       console.log("received: notifyInitWithoutExistingWallet");
-      self.newRecoveryPhrase = libraryController.GenerateRecoveryMnemonic().phrase;
+      self.newRecoveryPhrase = libraryController.GenerateRecoveryMnemonic();
       store.dispatch("app/SET_WALLET_EXISTS", false);
     };
 

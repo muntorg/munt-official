@@ -9,7 +9,13 @@ if (os.platform() === "win32") {
 } else if (os.platform() === "linux") {
   file = "libflorin_linux_" + os.arch() + ".node";
 } else if (os.platform() === "darwin") {
-  file = "libflorin_macos_" + os.arch() + ".node";
+  // Temporary override while arm64 is unsupported
+  if (os.arch() === "arm64") {
+    console.log("Using ARM64, please make sure Rosetta is installed.");
+    file = "libflorin_macos_x64.node";
+  } else {
+    file = "libflorin_macos_" + os.arch() + ".node";
+  }
 } else {
   throw "Unable to determine platform";
 }

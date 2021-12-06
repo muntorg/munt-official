@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import {mapState} from "vuex";
 import AppWallet from "./AppWallet";
 
 export default {
@@ -13,7 +14,20 @@ export default {
   components: {
     AppWallet
   },
+  created() {
+    this.changeLanguage(this.language);
+    document.querySelector("html").dataset.theme = this.theme;
+  },
+  watch: {
+    language() {
+      this.changeLanguage(this.language);
+    },
+    theme() {
+      document.querySelector("html").dataset.theme = this.theme;
+    }
+  },
   computed: {
+    ...mapState("app", ["language", "theme"]),
     isWallet() {
       switch (window.location.hash.toLowerCase()) {
         case "#/debug":
@@ -21,6 +35,13 @@ export default {
         default:
           return true;
       }
+    }
+  },
+  methods: {
+    changeLanguage(language) {
+      if (this.$i18n.locale === language) return;
+      this.$i18n.locale = language;
+      this.$forceUpdate();
     }
   }
 };
@@ -34,7 +55,7 @@ export default {
   font-family: euclid, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 15px;
   -webkit-text-size-adjust: none;
   text-rendering: optimizeLegibility;
   font-variant-ligatures: none;
