@@ -33,8 +33,8 @@
 
       <app-button-section>
         <template v-slot:middle>
-          <button @click="buyGulden" class="buy-gulden" :disabled="buyDisabled">
-            {{ $t("buttons.buy_your_first_gulden") }}
+          <button @click="buyCoins" class="buy-coins" :disabled="buyDisabled">
+            {{ $t("buttons.buy_your_first_coins") }}
           </button>
         </template>
       </app-button-section>
@@ -144,7 +144,7 @@ export default {
         showButtons: false
       });
     },
-    async buyGulden() {
+    async buyCoins() {
       try {
         this.buyDisabled = true;
         let url = await BackendUtilities.GetBuySessionUrl();
@@ -213,7 +213,7 @@ h4 {
   height: 100%;
 }
 
-.buy-gulden {
+.buy-coins {
   width: 100%;
 }
 </style>
