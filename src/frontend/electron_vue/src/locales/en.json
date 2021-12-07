@@ -49,6 +49,10 @@
     "password": "Password",
     "receiving_address": "Receiving address"
   },
+  "new_wallet": {
+    "title": "Welcome to your Florin wallet",
+    "information": "This wallet is only stored on your device.<br />Never give anyone else access to your wallet.<br />Keep the backup phrase you see at installation in a safe place.<br />Lose phrase or someone else with access to the phrase = lose Florin."
+  },
   "holding_account": {
     "compound_earnings": "compound earnings",
     "status": "Status",
@@ -77,7 +81,7 @@
     "number_of_threads": "Number of threads",
     "number_of_arena_threads": "Number of arena setup threads",
     "statistics": "Statistics",
-    "thread" : "thread | threads"
+    "thread": "thread | threads"
   },
   "password_dialog": {
     "unlock_wallet": "Unlock wallet"

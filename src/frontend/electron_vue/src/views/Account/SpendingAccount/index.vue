@@ -15,7 +15,7 @@
       </section>
     </portal>
 
-    <mutation-list
+    <transactions
       :mutations="mutations"
       @tx-hash="onTxHash"
       :tx-hash="txHash"
@@ -56,7 +56,7 @@
 import { mapState } from "vuex";
 import EventBus from "../../../EventBus";
 
-import MutationList from "./MutationList";
+import Transactions from "./Transactions";
 import Send from "./Send";
 import Receive from "./Receive";
 import TransactionDetails from "./TransactionDetails";
@@ -80,7 +80,7 @@ export default {
     EventBus.$off("close-right-sidebar", this.closeRightSidebar);
   },
   components: {
-    MutationList
+    Transactions
   },
   computed: {
     ...mapState("wallet", ["mutations"]),
@@ -132,6 +132,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.spending-account {
+  height: 100%;
+  padding: 20px 15px 15px 15px;
+}
 .header {
   & > .info {
     width: calc(100% - 26px);
