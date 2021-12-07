@@ -45,6 +45,10 @@
     "password": "Wachtwoord",
     "receiving_address": "Ontvangstadres"
   },
+  "new_wallet": {
+    "title": "Welkom bij jouw Florin portemonnee",
+    "information": "Deze portemonnee staat alleen op jouw apparaat.<br/>Geef nooit iemand anders toegang tot jouw portemonnee.<br/>Bewaar de herstelzin die je te zien krijgt tijdens installatie op een veilige plek.<br/>Herstelzin kwijt of iemand toegang tot je herstelzin = Florin weg."
+  },
   "holding_account": {
     "compound_earnings": "cumulatieve inkomsten",
     "status": "Status",
@@ -73,7 +77,7 @@
     "number_of_threads": "Aantal threads",
     "number_of_arena_threads": "Aantal arena setup threads",
     "statistics": "Statistieken",
-    "thread" : "thread | threads"
+    "thread": "thread | threads"
   },
   "password_dialog": {
     "unlock_wallet": "Ontgrendel portemonnee"
