@@ -2,7 +2,7 @@
   "buttons": {
     "back": "Back",
     "buy_gulden": "Buy Gulden",
-    "sell_gulden": "Sell Gulden",
+    "sell_coins": "Sell Gulden",
     "buy_your_first_coins": "Buy your first Gulden",
     "change_password": "Change password",
     "clear": "Clear",
@@ -78,9 +78,10 @@
     "your_address": "Your Gulden address",
     "qr_copied_to_clipboard": "QR copied to clipboard"
   },
-  "send_gulden": {
+  "send_coins": {
+    "enter_label": "Enter label",
     "confirm_transaction": "Confirm transaction",
-    "enter_gulden_address": "Enter Gulden address",
+    "enter_coins_address": "Enter Gulden address",
     "target_account": "Send to account"
   }
 }
