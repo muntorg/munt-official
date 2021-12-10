@@ -19,6 +19,8 @@
     "buy_coins": "Koop Florin",
     "sell_coins": "Verkoop Florin",
     "buy_your_first_coins": "Koop jouw eerste Florin",
+    "clear": "Wissen",
+        "confirm": "Bevestig",
     "change_password": "Verander wachtwoord",
     "create_mining_account": "Mining rekening aanmaken",
     "finish": "Klaar",
@@ -118,6 +120,7 @@
   "send_coins": {
     "enter_label": "Voer label in",
     "enter_coins_address": "Voer Florin adres in",
+    "confirm_transaction": "Bevestig transactie",
     "target_account": "Verstuur naar account"
   },
   "renew_holding_account": {
