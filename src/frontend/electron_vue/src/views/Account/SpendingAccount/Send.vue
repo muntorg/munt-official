@@ -28,7 +28,6 @@
         type="text"
         :placeholder="$t('send_coins.enter_label')"
       />
-
       <input
         v-model="password"
         type="password"
@@ -38,25 +37,30 @@
         @keydown="onPasswordKeydown"
       />
     </div>
-
     <div class="buttons">
+      <button @click="clearInput" class="clear" :disabled="disableClearButton">
+        {{ $t("buttons.clear") }}
+      </button>
+      <button
+        @click="showConfirmation"
+        class="send-coins"
+        :disabled="disableSendButton"
+      >
+        {{ $t("buttons.send") }}
+      </button>
       <button @click="sellCoins" class="sell-coins" :disabled="sellDisabled">
         {{ $t("buttons.sell_coins") }}
-      </button>
-      <button @click="trySend" class="send-coins" :disabled="disableSendButton">
-        {{ $t("buttons.send") }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import {
-  LibraryController,
-  AccountsController
-} from "../../../unity/Controllers";
-import { BackendUtilities } from "@/unity/Controllers";
+import {mapState} from "vuex";
+import {LibraryController, AccountsController} from "@/unity/Controllers";
+import ConfirmTransactionDialog from "./ConfirmTransactionDialog";
+import EventBus from "@/EventBus";
+import {BackendUtilities} from "@/unity/Controllers";
 
 export default {
   name: "Send",
@@ -92,6 +96,12 @@ export default {
         this.isAmountInvalid || this.isAddressInvalid || this.isPasswordInvalid
       );
     },
+    disableClearButton() {
+      if (this.amount !== null && !isNaN(parseFloat(this.amount))) return false;
+      if (this.address !== null && this.address.length > 0) return false;
+      if (this.password !== null && this.password.length > 0) return false;
+      return true;
+    },
     disableSendButton() {
       if (isNaN(parseFloat(this.amount))) return true;
       if (this.address === null || this.address.trim().length === 0)
@@ -109,6 +119,10 @@ export default {
   },
   mounted() {
     this.$refs.amount.focus();
+    EventBus.$on("transaction-succeeded", this.onTransactionSucceeded);
+  },
+  beforeDestroy() {
+    EventBus.$off("transaction-succeeded", this.onTransactionSucceeded);
   },
   methods: {
     async sellCoins() {
@@ -126,7 +140,14 @@ export default {
     onPasswordKeydown() {
       this.isPasswordInvalid = false;
     },
-    trySend() {
+    clearInput() {
+      this.amount = null;
+      this.address = null;
+      this.password = null;
+      this.label = null;
+      this.$refs.amount.focus();
+    },
+    showConfirmation() {
       /*
        todo:
         - replace amount input by custom amount input (this one is too basic)
@@ -151,29 +172,19 @@ export default {
 
       if (this.hasErrors) return;
 
-      // create payment request
-      var request = {
-        valid: true,
-        address: this.address,
-        label: this.label || "",
-        desc: "",
-        amount: this.amount * 100000000
-      };
-
-      // try to make the payment
-      let result = LibraryController.PerformPaymentToRecipient(request, false);
-      if (result === 0) {
-        // payment succeeded
-        this.amount = null;
-        this.address = null;
-        this.label = null;
-        this.password = null;
-      } else {
-        // payment failed
-        console.log("someting went wrong, but don't exactly know what.");
-      }
-      // lock the wallet again
-      LibraryController.LockWallet();
+      EventBus.$emit("show-dialog", {
+        title: this.$t("send_coins.confirm_transaction"),
+        component: ConfirmTransactionDialog,
+        componentProps: {
+          amount: this.amount,
+          address: this.address,
+          password: this.password
+        },
+        showButtons: false
+      });
+    },
+    onTransactionSucceeded() {
+      this.$router.push({name: "transactions"});
     }
   }
 };
@@ -188,6 +199,10 @@ export default {
   }
 }
 
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
 input {
   border: 0;
   margin: 0 0 10px 0;
@@ -198,13 +213,31 @@ input {
 .buttons {
   display: flex;
   flex-direction: row;
-}
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 
-.send-coins {
-  flex: 1;
-  margin-left: 10px;
-}
-.sell-coins {
-  flex: 0 0 150px;
+  & > .clear {
+    width: 150px;
+    height: 40px;
+    margin-bottom: 5px;
+  }
+  & > .clear:not([disabled]) {
+    height: 40px;
+    line-height: 39px;
+    background-color: #fff;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+  }
+  & > .send-coins {
+    margin: 0 15px 0 15px;
+    min-width: 150px;
+    width: calc(100% - 170px - 30px - 30px - 170px);
+    margin-bottom: 5px;
+  }
+  & > .sell-coins {
+    width: 150px;
+    margin-bottom: 5px;
+  }
 }
 </style>
