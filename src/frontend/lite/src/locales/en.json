@@ -1,7 +1,7 @@
 {
   "buttons": {
     "back": "Back",
-    "buy_gulden": "Buy Gulden",
+    "buy_coins": "Buy Gulden",
     "sell_gulden": "Sell Gulden",
     "buy_your_first_coins": "Buy your first Gulden",
     "change_password": "Change password",
@@ -70,11 +70,11 @@
     },
     "hash": "Hash"
   },
-  "receive_gulden": {
+  "receive_coins": {
     "address_copied_to_clipboard": "Address copied to clipboard",
-    "buy_or_receive_gulden": "Buy or receive Gulden",
+    "buy_or_receive_coins": "Buy or receive Gulden",
     "click_to_copy_qr": "Click to copy QR",
-    "information": "After each transaction you will receive a new address, but the previous address will stil work.",
+    "information": "After each transaction you will receive a new address, but the previous address will still work.",
     "your_address": "Your Gulden address",
     "qr_copied_to_clipboard": "QR copied to clipboard"
   },

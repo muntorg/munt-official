@@ -1,31 +1,37 @@
 <template>
   <div class="receive-view flex-col">
-    <h2>{{ $t("receive_gulden.your_address") }}</h2>
-    <p class="information">{{ $t("receive_gulden.information") }}</p>
-    <div class="qr" @click="copyQr">
-      <vue-qrcode
-        ref="qrcode"
-        class="qrcode"
-        :width="280"
-        :margin="0"
-        :value="receiveAddress"
-        :color="{ dark: '#000000', light: '#ffffff' }"
-      />
+    <!-- <portal to="sidebar-right-title">
+      {{ $t("buttons.receive") }}
+    </portal> -->
+
+    <div class="main">
+      <h4>{{ $t("receive_coins.your_address") }}</h4>
+      <p class="information">{{ $t("receive_coins.information") }}</p>
+      <div class="qr" @click="copyQr">
+        <vue-qrcode
+          ref="qrcode"
+          class="qrcode"
+          :width="280"
+          :margin="0"
+          :value="receiveAddress"
+          :color="{dark: '#000000', light: '#ffffff'}"
+        />
+      </div>
     </div>
     <div class="address-row flex-row">
       <div class="flex-1" />
       <clipboard-field
         class="address"
         :value="receiveAddress"
-        confirmation="receive_gulden.address_copied_to_clipboard"
+        confirmation="receive_coins.address_copied_to_clipboard"
       ></clipboard-field>
       <div class="flex-1" />
     </div>
     <div class="flex-1" />
     <app-button-section>
       <template v-slot:middle>
-        <button @click="buyGulden" class="buy-gulden" :disabled="buyDisabled">
-          {{ $t("buttons.buy_gulden") }}
+        <button @click="buyCoins" class="buy-coins" :disabled="buyDisabled">
+          {{ $t("buttons.buy_coins") }}
         </button>
       </template>
     </app-button-section>
@@ -33,10 +39,10 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 import VueQrcode from "vue-qrcode";
-import { clipboard, nativeImage } from "electron";
-import { BackendUtilities } from "@/unity/Controllers";
+import {clipboard, nativeImage} from "electron";
+import {BackendUtilities} from "@/unity/Controllers";
 
 export default {
   name: "Receive",
@@ -52,7 +58,7 @@ export default {
     ...mapState("wallet", ["receiveAddress"])
   },
   methods: {
-    async buyGulden() {
+    async buyCoins() {
       try {
         this.buyDisabled = true;
         let url = await BackendUtilities.GetBuySessionUrl();
@@ -98,7 +104,7 @@ export default {
     font-size: 1em;
     line-height: 1.4em;
   }
-  & .buy-gulden {
+  & .buy-coins {
     width: 100%;
   }
 }
