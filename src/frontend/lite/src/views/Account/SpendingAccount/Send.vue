@@ -1,56 +1,66 @@
 <template>
   <div class="send-view flex-col">
-    <input
-      v-model="amount"
-      ref="amount"
-      type="number"
-      step="0.01"
-      placeholder="0.00"
-      :class="amountClass"
-      min="0"
-      :max="maxAmount"
-      @change="isAmountInvalid = false"
-    />
-    <input
-      v-model="address"
-      type="text"
-      :placeholder="$t('send_gulden.enter_gulden_address')"
-      :class="addressClass"
-      @keydown="isAddressInvalid = false"
-    />
-    <input
-      v-model="password"
-      type="password"
-      v-show="walletPassword === null"
-      :placeholder="$t('common.enter_your_password')"
-      :class="passwordClass"
-      @keydown="onPasswordKeydown"
-    />
-    <div class="flex-1" />
+    <!-- <portal to="sidebar-right-title">
+      {{ $t("buttons.send") }}
+    </portal> -->
+
+    <div class="main">
+      <input
+        v-model="amount"
+        ref="amount"
+        type="number"
+        step="0.01"
+        placeholder="0.00"
+        :class="amountClass"
+        min="0"
+        :max="maxAmount"
+        @change="isAmountInvalid = false"
+      />
+      <input
+        v-model="address"
+        type="text"
+        :placeholder="$t('send_coins.enter_coins_address')"
+        :class="addressClass"
+        @keydown="isAddressInvalid = false"
+      />
+      <input
+        v-model="label"
+        type="text"
+        :placeholder="$t('send_coins.enter_label')"
+      />
+      <input
+        v-model="password"
+        type="password"
+        v-show="walletPassword === null"
+        :placeholder="$t('common.enter_your_password')"
+        :class="passwordClass"
+        @keydown="onPasswordKeydown"
+      />
+    </div>
     <div class="buttons">
       <button @click="clearInput" class="clear" :disabled="disableClearButton">
         {{ $t("buttons.clear") }}
       </button>
       <button
         @click="showConfirmation"
-        class="send"
+        class="send-coins"
         :disabled="disableSendButton"
       >
         {{ $t("buttons.send") }}
       </button>
-      <button @click="sellGulden" class="sell-gulden" :disabled="sellDisabled">
-        {{ $t("buttons.sell_gulden") }}
+      <button @click="sellCoins" class="sell-coins" :disabled="sellDisabled">
+        {{ $t("buttons.sell_coins") }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { LibraryController, AccountsController } from "@/unity/Controllers";
+import {mapState} from "vuex";
+import {LibraryController, AccountsController} from "@/unity/Controllers";
 import ConfirmTransactionDialog from "./ConfirmTransactionDialog";
 import EventBus from "@/EventBus";
-import { BackendUtilities } from "@/unity/Controllers";
+import {BackendUtilities} from "@/unity/Controllers";
 
 export default {
   name: "Send",
@@ -59,6 +69,7 @@ export default {
       amount: null,
       maxAmount: null,
       address: null,
+      label: null,
       password: null,
       isAmountInvalid: false,
       isAddressInvalid: false,
@@ -114,7 +125,7 @@ export default {
     EventBus.$off("transaction-succeeded", this.onTransactionSucceeded);
   },
   methods: {
-    async sellGulden() {
+    async sellCoins() {
       try {
         this.sellDisabled = true;
         let url = await BackendUtilities.GetSellSessionUrl();
@@ -133,9 +144,16 @@ export default {
       this.amount = null;
       this.address = null;
       this.password = null;
+      this.label = null;
       this.$refs.amount.focus();
     },
     showConfirmation() {
+      /*
+       todo:
+        - replace amount input by custom amount input (this one is too basic)
+        - improve notifications / messages on success and error
+       */
+
       // validate amount
       let accountBalance = AccountsController.GetActiveAccountBalance();
       if (accountBalance.availableExcludingLocked / 100000000 < this.amount) {
@@ -155,7 +173,7 @@ export default {
       if (this.hasErrors) return;
 
       EventBus.$emit("show-dialog", {
-        title: this.$t("send_gulden.confirm_transaction"),
+        title: this.$t("send_coins.confirm_transaction"),
         component: ConfirmTransactionDialog,
         componentProps: {
           amount: this.amount,
@@ -166,7 +184,7 @@ export default {
       });
     },
     onTransactionSucceeded() {
-      this.$router.push({ name: "transactions" });
+      this.$router.push({name: "transactions"});
     }
   }
 };
@@ -175,16 +193,34 @@ export default {
 <style lang="less" scoped>
 .send-view {
   height: 100%;
+  
+  .main {
+    flex: 1;
+  }
 }
 
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
+input {
+  border: 0;
+  margin: 0 0 10px 0;
+  font-style: normal;
+  font-size: 14px;
+}
+
 .buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+
   & > .clear {
-    width: 170px;
+    width: 150px;
     height: 40px;
+    margin-bottom: 5px;
   }
   & > .clear:not([disabled]) {
     height: 40px;
@@ -193,14 +229,15 @@ input[type="number"]::-webkit-inner-spin-button {
     border: 1px solid var(--primary-color);
     color: var(--primary-color);
   }
-
-  & > .send {
-    margin: 0 30px 0 30px;
+  & > .send-coins {
+    margin: 0 15px 0 15px;
+    min-width: 150px;
     width: calc(100% - 170px - 30px - 30px - 170px);
+    margin-bottom: 5px;
   }
-
-  & > .sell-gulden {
-    width: 170px;
+  & > .sell-coins {
+    width: 150px;
+    margin-bottom: 5px;
   }
 }
 </style>
