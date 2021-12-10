@@ -78,9 +78,10 @@
     "your_address": "Jouw Gulden adres",
     "qr_copied_to_clipboard": "QR gekopieerd naar klembord"
   },
-  "send_gulden": {
+  "send_coins": {
+    "enter_label": "Voer label in",
     "confirm_transaction": "Bevestig transactie",
-    "enter_gulden_address": "Voer Gulden adres in",
+    "enter_coins_address": "Voer Gulden adres in",
     "target_account": "Verstuur naar account"
   }
 }
