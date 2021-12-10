@@ -118,8 +118,12 @@
     "hash": "Hash"
   },
   "receive_coins": {
+    "address_copied_to_clipboard": "Address copied to clipboard",
     "buy_or_receive_coins": "Buy or receive Florin",
-    "your_address": "Your address"
+    "click_to_copy_qr": "Click to copy QR",
+    "information": "After each transaction you will receive a new address, but the previous address will still work.",
+    "your_address": "Your Florin address",
+    "qr_copied_to_clipboard": "QR copied to clipboard"
   },
   "send_coins": {
     "enter_label": "Enter label",

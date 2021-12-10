@@ -6,27 +6,43 @@
 
     <div class="main">
       <h4>{{ $t("receive_coins.your_address") }}</h4>
-      <div class="qr" @click="copyAddress">
+      <p class="information">{{ $t("receive_coins.information") }}</p>
+      <div class="qr" @click="copyQr">
         <vue-qrcode
+          ref="qrcode"
           class="qrcode"
-          :width="288"
+          :width="280"
           :margin="0"
           :value="receiveAddress"
+          :color="{dark: '#000000', light: '#ffffff'}"
         />
-        <div class="address">{{ receiveAddress }}</div>
       </div>
     </div>
-    <button @click="buyCoins" class="buy-coins" :disabled="buyDisabled">
-      {{ $t("buttons.buy_coins") }}
-    </button>
+    <div class="address-row flex-row">
+      <div class="flex-1" />
+      <clipboard-field
+        class="address"
+        :value="receiveAddress"
+        confirmation="receive_coins.address_copied_to_clipboard"
+      ></clipboard-field>
+      <div class="flex-1" />
+    </div>
+    <div class="flex-1" />
+    <app-button-section>
+      <template v-slot:middle>
+        <button @click="buyCoins" class="buy-coins" :disabled="buyDisabled">
+          {{ $t("buttons.buy_coins") }}
+        </button>
+      </template>
+    </app-button-section>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { clipboard } from "electron";
+import {mapState} from "vuex";
 import VueQrcode from "vue-qrcode";
-import { BackendUtilities } from "@/unity/Controllers";
+import {clipboard, nativeImage} from "electron";
+import {BackendUtilities} from "@/unity/Controllers";
 
 export default {
   name: "Receive",
@@ -54,8 +70,9 @@ export default {
         this.buyDisabled = false;
       }
     },
-    copyAddress() {
-      clipboard.writeText(this.receiveAddress);
+    copyQr() {
+      let img = nativeImage.createFromDataURL(this.$refs.qrcode.$el.src);
+      clipboard.writeImage(img);
     }
   }
 };
@@ -64,31 +81,31 @@ export default {
 <style lang="less" scoped>
 .receive-view {
   height: 100%;
-
-  & .main {
-    flex: 1;
-
-    & .qr {
-      background-color: #fff;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    & .qrcode {
-      width: 100%;
-      max-width: 300px;
-      padding: 26px;
-    }
-
-    & .address {
-      font-size: 0.85em;
-      line-height: 32px;
-      user-select: all !important;
-    }
+  text-align: center;
+  & .information {
+    margin: 0 0 30px 0;
   }
-}
-
-button {
-  width: 100%;
+  & .qr {
+    text-align: center;
+    cursor: pointer;
+    margin: 0 auto;
+  }
+  & .qrcode {
+    width: 100%;
+    max-width: 140px;
+  }
+  & .address-row {
+    width: 100%;
+    text-align: center;
+  }
+  & .address {
+    margin: 5px 0 0 0;
+    font-weight: 500;
+    font-size: 1em;
+    line-height: 1.4em;
+  }
+  & .buy-coins {
+    width: 100%;
+  }
 }
 </style>

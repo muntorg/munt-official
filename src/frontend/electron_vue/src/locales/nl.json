@@ -114,8 +114,12 @@
     "hash": "Hash"
   },
   "receive_coins": {
-    "buy_or_receive_coins": "Koop of ontvang Florin",
-    "your_address": "Jouw adres"
+    "address_copied_to_clipboard": "Adres gekopieerd naar klembord",
+    "buy_or_receive_coins": "Koop of ontvang Gulden",
+    "click_to_copy_qr": "Klik om QR te kopiëren",
+    "information": "Na iedere transactie krijg je een nieuw adres, maar het vorige adres blijft werken.",
+    "your_address": "Jouw Gulden adres",
+    "qr_copied_to_clipboard": "QR gekopieerd naar klembord"
   },
   "send_coins": {
     "enter_label": "Voer label in",
