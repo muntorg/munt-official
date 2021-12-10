@@ -49,6 +49,11 @@ export default {
     mutations: null,
     txHash: null
   },
+  data() {
+    return {
+      buyDisabled: false
+    };
+  },
   computed: {
     hasMutations() {
       return this.mutations ? this.mutations.length > 0 : false;
