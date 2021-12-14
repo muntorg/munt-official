@@ -942,7 +942,7 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
 
     // Special case for the genesis block, skipping connection of its transactions
     // (its coinbase is unspendable)
-    if (block.GetHashLegacy() == chainparams.GetConsensus().hashGenesisBlock)
+    if (block.GetHashPoW2() == chainparams.GetConsensus().hashGenesisBlock)
     {
         if (!fJustCheck)
         {
