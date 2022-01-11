@@ -80,7 +80,7 @@ int InitUnity()
     noui_connect();
 
     AppLifecycleManager appManager; 
-    appManager.signalAppInitializeResult.connect(boost::bind(handleAppInitResult, _1));
+    appManager.signalAppInitializeResult.connect(boost::bind(handleAppInitResult, boost::placeholders::_1));
     appManager.signalAboutToInitMain.connect(&handlePreInitMain);
     appManager.signalAppShutdownFinished.connect(&handleFinalShutdown);
 
