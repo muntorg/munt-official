@@ -1,3 +1,18 @@
+2.0.6
+
+Massively reduce transaction fees across the network
+Fix a crash when performing a reindex (e.g. if enabling -txindex in florin.conf)
+
+
+
+
+2.0.5
+
+Introduce a discount on relay fees for transactions that contain mining/witness rewards
+
+
+
+
 2.0.4
 
 CORE      - CORE: Major load time performance increase on large wallets, especially on machines with slower disks
