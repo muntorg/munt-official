@@ -248,8 +248,8 @@ function getLibUnityCode() {
         } => {`
       );
 
-      args = f.args.length > 0 ? f.args.split(", ") : [];
-      consoleArgs = "";
+      let args = f.args.length > 0 ? f.args.split(", ") : [];
+      let consoleArgs = "";
       if (args.length > 0) {
         for (let k = 0; k < args.length; k++) {
           consoleArgs += k > 0 ? ", " : "";
