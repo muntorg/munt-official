@@ -6,21 +6,9 @@
       "holding": "Holding"
     }
   },
-  "buttons": {
-    "back": "Terug",
-    "buy_coins": "Koop Gulden",
-    "sell_coins": "Verkoop Gulden",
-    "buy_your_first_coins": "Koop jouw eerste Gulden",
-    "change_password": "Verander wachtwoord",
-    "clear": "Wissen",
-    "confirm": "Bevestig",
-    "finish": "Klaar",{
-  "accounts_section": {
-    "accounts": "Rekeningen",
-    "categories": {
-      "spending": "Spending",
-      "holding": "Holding"
-    }
+  "account_settings": {
+    "title": "Account settings",
+    "name": "Name"
   },
   "add_holding_account": {
     "daily": "per dag",
@@ -36,7 +24,7 @@
     "sell_coins": "Verkoop Gulden",
     "buy_your_first_coins": "Koop jouw eerste Gulden",
     "clear": "Wissen",
-        "confirm": "Bevestig",
+    "confirm": "Bevestig",
     "change_password": "Verander wachtwoord",
     "create_mining_account": "Mining rekening aanmaken",
     "finish": "Klaar",
@@ -44,19 +32,24 @@
     "next": "Volgende",
     "ok": "OK",
     "previous": "Vorige",
+    "ready": "Ready",
     "receive": "Ontvangen",
     "renew": "Vernieuwen",
     "send": "Versturen",
     "start": "Start",
     "stop": "Stop",
+    "transactions": "Transactions",
     "unlock": "Ontgrendelen"
+  },
+  "clipboard_field": {
+    "copied_to_clipboard": "Copied to clipboard"
   },
   "common": {
     "account_name": "Rekeningnaam",
     "amount": "Bedrag",
     "enter_your_password": "Voer jouw wachtwoord in",
-    "information": "Informatie",
     "important": "Belangrijk",
+    "information": "Informatie",
     "months": "Maanden",
     "on": "aan",
     "off": "uit",
@@ -103,7 +96,8 @@
   "settings": {
     "header": "Instellingen",
     "change_password": "Verander wachtwoord",
-    "view_recovery_phrase": "Bekijk herstelzin"
+    "view_recovery_phrase": "Bekijk herstelzin",
+    "choose_theme": "Choose theme"
   },
   "setup": {
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
@@ -145,19 +139,6 @@
   },
   "renew_holding_account": {
     "funding_account": "Betaal vergoeding van account"
-  }
-}
-
-    "next": "Volgende",
-    "ok": "OK",
-    "previous": "Vorige",
-    "ready": "Klaar",
-    "receive": "Ontvangen",
-    "send": "Versturen",
-    "start": "Start",
-    "stop": "Stop",
-    "transactions": "Transacties",
-    "unlock": "Ontgrendelen"
   },
   "clipboard_field": {
     "copied_to_clipboard": "Gekopieerd naar klembord"
