@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import {BackendUtilities} from "@/unity/Controllers";
-import {mapState} from "vuex";
+import { BackendUtilities } from "@/unity/Controllers";
+import { mapState } from "vuex";
 import TransactionDetailsDialog from "../../../components/TransactionDetailsDialog";
 import EventBus from "../../../EventBus";
 

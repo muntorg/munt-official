@@ -14,7 +14,7 @@
           :width="280"
           :margin="0"
           :value="receiveAddress"
-          :color="{dark: '#000000', light: '#ffffff'}"
+          :color="{ dark: '#000000', light: '#ffffff' }"
         />
       </div>
     </div>
@@ -39,10 +39,10 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 import VueQrcode from "vue-qrcode";
-import {clipboard, nativeImage} from "electron";
-import {BackendUtilities} from "@/unity/Controllers";
+import { clipboard, nativeImage } from "electron";
+import { BackendUtilities } from "@/unity/Controllers";
 import UIConfig from "../../../../ui-config.json";
 
 export default {

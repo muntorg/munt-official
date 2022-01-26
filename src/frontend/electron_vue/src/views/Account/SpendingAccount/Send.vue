@@ -55,11 +55,11 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
-import {LibraryController, AccountsController} from "@/unity/Controllers";
+import { mapState } from "vuex";
+import { LibraryController, AccountsController } from "@/unity/Controllers";
 import ConfirmTransactionDialog from "./ConfirmTransactionDialog";
 import EventBus from "@/EventBus";
-import {BackendUtilities} from "@/unity/Controllers";
+import { BackendUtilities } from "@/unity/Controllers";
 import UIConfig from "../../../../ui-config.json";
 
 export default {
@@ -185,7 +185,7 @@ export default {
       });
     },
     onTransactionSucceeded() {
-      this.$router.push({name: "transactions"});
+      this.$router.push({ name: "transactions" });
     }
   }
 };
