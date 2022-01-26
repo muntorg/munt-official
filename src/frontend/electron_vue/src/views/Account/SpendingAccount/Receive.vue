@@ -1,6 +1,6 @@
 <template>
   <div class="receive-view flex-col">
-    <portal to="sidebar-right-title">
+    <portal v-if="UIConfig.showSidebar" to="sidebar-right-title">
       {{ $t("buttons.receive") }}
     </portal>
 
@@ -43,6 +43,7 @@ import {mapState} from "vuex";
 import VueQrcode from "vue-qrcode";
 import {clipboard, nativeImage} from "electron";
 import {BackendUtilities} from "@/unity/Controllers";
+import UIConfig from "../../../../ui-config.json";
 
 export default {
   name: "Receive",
@@ -51,7 +52,8 @@ export default {
   },
   data() {
     return {
-      buyDisabled: false
+      buyDisabled: false,
+      UIConfig: UIConfig
     };
   },
   computed: {

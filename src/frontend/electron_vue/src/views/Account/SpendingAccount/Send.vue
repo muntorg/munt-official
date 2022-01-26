@@ -1,9 +1,8 @@
 <template>
   <div class="send-view flex-col">
-    <portal to="sidebar-right-title">
+    <portal v-if="UIConfig.showSidebar" to="sidebar-right-title">
       {{ $t("buttons.send") }}
     </portal>
-
     <div class="main">
       <input
         v-model="amount"
@@ -61,6 +60,7 @@ import {LibraryController, AccountsController} from "@/unity/Controllers";
 import ConfirmTransactionDialog from "./ConfirmTransactionDialog";
 import EventBus from "@/EventBus";
 import {BackendUtilities} from "@/unity/Controllers";
+import UIConfig from "../../../../ui-config.json";
 
 export default {
   name: "Send",
@@ -74,7 +74,8 @@ export default {
       isAmountInvalid: false,
       isAddressInvalid: false,
       isPasswordInvalid: false,
-      sellDisabled: false
+      sellDisabled: false,
+      UIConfig: UIConfig
     };
   },
   computed: {

@@ -4,6 +4,8 @@
       <div class="logo-inner"></div>
     </div>
     <div class="version-container">
+      <span>Florin </span>
+      <span class="divider">|</span>
       <span>Unity: {{ unityVersion }}</span>
       <span class="divider">|</span>
       <span>Wallet: {{ walletVersion }}</span>
@@ -15,7 +17,7 @@
         {{ $t("loader.shutdown") }}
       </p>
       <div v-show="isSynchronizing">
-        <div>{{ $t("loader.synchronizing") }}</div>
+        <div class="sync-desc">{{ $t("loader.synchronizing") }}</div>
         <progress ref="progress" max="100" value="0"></progress>
       </div>
     </div>
@@ -23,9 +25,10 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 import AppStatus from "../AppStatus";
-import { LibraryController } from "../unity/Controllers";
+import {LibraryController} from "../unity/Controllers";
+import UIConfig from "../../ui-config.json";
 
 let progressTimeout = null;
 let progressCount = 0;
@@ -35,7 +38,8 @@ export default {
   data() {
     return {
       electronVersion: process.versions.electron,
-      progress: 0
+      progress: 0,
+      UIConfig: UIConfig
     };
   },
   computed: {
@@ -76,21 +80,27 @@ export default {
   },
   methods: {
     onStatusChanged() {
-      let routeName;
-      switch (this.status) {
-        case AppStatus.setup:
-          routeName = "setup";
-          break;
-        case AppStatus.synchronize:
-          routeName = "account";
+      if (this.UIConfig.showSidebar) {
+        let routeName;
+        switch (this.status) {
+          case AppStatus.setup:
+            routeName = "setup";
+            break;
+          case AppStatus.synchronize:
+            routeName = "account";
+            this.updateProgress();
+            break;
+          case AppStatus.ready:
+            routeName = "account";
+            break;
+        }
+        if (routeName === undefined || this.$route.name === routeName) return;
+        this.$router.push({name: routeName});
+      } else {
+        if (this.status === AppStatus.synchronize) {
           this.updateProgress();
-          break;
-        case AppStatus.ready:
-          routeName = "account";
-          break;
+        }
       }
-      if (routeName === undefined || this.$route.name === routeName) return;
-      this.$router.push({ name: routeName });
     },
     updateProgress() {
       clearTimeout(progressTimeout);
@@ -123,8 +133,8 @@ export default {
 }
 
 .logo-outer {
-  margin: 24px;
-  background: #000;
+  margin: 0 0 50px 0;
+  background: var(--secondary-color);
   width: 128px;
   height: 128px;
   border-radius: 50%;
@@ -134,14 +144,16 @@ export default {
 }
 
 .logo-inner {
-  width: 64px;
-  height: 64px;
+  width: 98px;
+  height: 98px;
   background: url("../img/logo.svg");
   background-size: cover;
 }
 
 .version-container {
-  margin: 16px 0;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  color: #999;
 
   & .divider {
     margin: 0 8px;
@@ -149,17 +161,21 @@ export default {
 }
 
 .info {
-  min-height: 100px;
+  margin: 0 0 50px 0;
+}
+
+.sync-desc {
+  margin: 0 0 10px 0;
 }
 
 progress[value] {
   appearance: none;
   width: 100%;
-  height: 4px;
+  height: 5px;
 }
 
 progress[value]::-webkit-progress-bar {
-  background-color: #eee;
+  background-color: #efefef;
 }
 
 progress[value]::-webkit-progress-value {

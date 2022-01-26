@@ -1,13 +1,16 @@
 <template>
   <section class="wallet-layout flex-row" :class="walletLayoutClasses">
-    <section class="sidebar-left">
+    <section v-if="UIConfig.showSidebar" class="sidebar-left">
       <section class="header flex-row">
         <div class="logo" />
-        <div class="total-balance">
-          {{ totalBalance == null ? "" : totalBalance.toFixed(2) }}
+        <div class="total-balance flex-row">
+          <div class="coin">
+            {{ totalBalance == null ? "" : totalBalance.toFixed(2) }}
+          </div>
+          <div class="fiat">{{ totalBalanceFiat }}</div>
         </div>
       </section>
-      <accounts-section class="accounts" />
+      <accounts-section v-if="UIConfig.showSidebar" class="accounts" />
       <section class="footer flex-row">
         <div class="status" />
         <div class="button" @click="changeLockSettings">
@@ -58,10 +61,11 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import {mapState, mapGetters} from "vuex";
 import AccountsSection from "./AccountsSection";
 import WalletPasswordDialog from "../components/WalletPasswordDialog";
 import EventBus from "../EventBus";
+import UIConfig from "../../ui-config.json";
 
 export default {
   name: "WalletLayout",
@@ -69,14 +73,15 @@ export default {
     return {
       isHeaderSlotEmpty: true,
       isFooterSlotEmpty: true,
-      isSidebarRightSlotEmpty: true
+      isSidebarRightSlotEmpty: true,
+      UIConfig: UIConfig
     };
   },
   components: {
     AccountsSection
   },
   computed: {
-    ...mapState("app", ["progress"]),
+    ...mapState("app", ["progress", "rate"]),
     ...mapState("wallet", ["activeAccount", "walletPassword"]),
     ...mapGetters("wallet", ["totalBalance", "miningAccount"]),
     walletLayoutClasses() {
@@ -84,10 +89,15 @@ export default {
       if (this.isHeaderSlotEmpty) classes.push("no-header");
       if (this.isFooterSlotEmpty) classes.push("no-footer");
       if (this.isSidebarRightSlotEmpty) classes.push("no-sidebar-right");
+      if (this.isHideSidebarLeft) classes.push("no-sidebar-left");
       return classes;
     },
     lockIcon() {
       return this.walletPassword ? "unlock" : "lock";
+    },
+    totalBalanceFiat() {
+      if (!this.rate) return "";
+      return `€ ${(this.totalBalance * this.rate).toFixed(2)}`;
     }
   },
   watch: {
@@ -110,16 +120,24 @@ export default {
         if (this.$route.path === `/account/${this.miningAccount.UUID}`) return;
         this.$router.push({
           name: "account",
-          params: { id: this.miningAccount.UUID }
+          params: {id: this.miningAccount.UUID}
         });
       } else {
         if (this.$route.name === "setup-mining") return;
-        this.$router.push({ name: "setup-mining" });
+        this.$router.push({name: "setup-mining"});
       }
+    },
+    routeTo(route) {
+      this.$router.push({name: route});
+    },
+    getButtonClassNames(route) {
+      let classNames = ["button"];
+      if (route === this.$route.name) classNames.push("active");
+      return classNames;
     },
     showSettings() {
       if (this.$route.path === "/settings/") return;
-      this.$router.push({ name: "settings" });
+      this.$router.push({name: "settings"});
     },
     changeLockSettings() {
       if (this.walletPassword) {

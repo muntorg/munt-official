@@ -24,30 +24,59 @@
       </app-section>
     </div>
 
-    <portal to="footer-slot">
+    <div v-if="UIConfig.showSidebar">
+      <div class="flex-1" />
       <app-button-section>
-        <button
-          v-if="current === 1"
-          @click="getRecoveryPhrase"
-          :disabled="isNextDisabled"
-        >
-          {{ $t("buttons.next") }}
-        </button>
+        <template v-slot:left>
+          <button v-if="current === 1" @click="routeTo('settings')">
+            {{ $t("buttons.back") }}
+          </button>
+        </template>
+        <template v-slot:right>
+          <button
+            v-if="current === 1"
+            @click="getRecoveryPhrase"
+            :disabled="isNextDisabled"
+          >
+            {{ $t("buttons.next") }}
+          </button>
+          <button v-if="current === 2" @click="ready">
+            {{ $t("buttons.ready") }}
+          </button>
+        </template>
       </app-button-section>
-    </portal>
+    </div>
+    <div v-else>
+      <portal to="footer-slot">
+        <app-button-section>
+          <button
+            v-if="current === 1"
+            @click="getRecoveryPhrase"
+            :disabled="isNextDisabled"
+          >
+            {{ $t("buttons.next") }}
+          </button>
+          <button v-if="current === 2" @click="ready">
+            {{ $t("buttons.ready") }}
+          </button>
+        </app-button-section>
+      </portal>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { LibraryController } from "../../unity/Controllers";
+import {mapState} from "vuex";
+import {LibraryController} from "../../unity/Controllers";
+import UIConfig from "../../../ui-config.json";
 
 export default {
   data() {
     return {
       recoveryPhrase: null,
       password: "",
-      isPasswordInvalid: false
+      isPasswordInvalid: false,
+      UIConfig: UIConfig
     };
   },
   mounted() {
@@ -82,19 +111,29 @@ export default {
       } else {
         this.isPasswordInvalid = true;
       }
+    },
+    ready() {
+      this.$router.push({name: "settings"});
+    },
+    routeTo(route) {
+      this.$router.push({name: route});
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
+.view-recovery-phrase-view {
+  height: 100%;
+}
+
 .phrase {
-  padding: 10px;
+  padding: 15px;
   font-size: 1.05em;
   font-weight: 500;
   text-align: center;
   word-spacing: 4px;
   background-color: #f5f5f5;
-  user-select: all;
+  user-select: none;
 }
 </style>
