@@ -28,3 +28,9 @@ export default {
   }
 };
 </script>
+
+<style lang="less" scoped>
+h4 {
+  margin-bottom: 10px;
+}
+</style>
