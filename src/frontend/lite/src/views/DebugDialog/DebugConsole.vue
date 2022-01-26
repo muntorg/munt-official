@@ -128,7 +128,7 @@ export default {
       this.preventAutocompleteList = false;
       switch (event.keyCode) {
         case 13: {
-          let result = await RpcController.Execute(this.command);
+          let result = await RpcController.ExecuteAsync(this.command);
           this.command = "";
 
           this.value.output.push({
