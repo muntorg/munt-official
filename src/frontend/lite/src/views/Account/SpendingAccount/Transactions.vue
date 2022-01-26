@@ -124,6 +124,7 @@ export default {
           language = "en";
           break;
       }
+
       return date.toLocaleString(language, options);
     },
     formatTime(timestamp) {
