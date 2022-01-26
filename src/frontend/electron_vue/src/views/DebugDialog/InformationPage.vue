@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { LibraryController } from "../../unity/Controllers";
+import {LibraryController} from "../../unity/Controllers";
 let timeout;
 
 export default {
@@ -130,9 +130,12 @@ export default {
 .information-page {
   width: 100%;
   height: 100%;
-
+  & h4 {
+    margin: 0 0 10px 0;
+  }
   & .flex-row > div {
-    line-height: 18px;
+    font-size: 0.95em;
+    line-height: 20px;
   }
   & .flex-row :first-child {
     min-width: 180px;

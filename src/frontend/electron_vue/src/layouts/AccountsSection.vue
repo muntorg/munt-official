@@ -32,7 +32,7 @@
           >
             <router-link
               class="flex-col"
-              :to="{ name: 'account', params: { id: account.UUID } }"
+              :to="{name: 'account', params: {id: account.UUID}}"
             >
               <span class="ellipsis">{{ account.label }}</span>
               <span class="balance">{{ account.balance.toFixed(2) }}</span>
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import {mapState, mapGetters} from "vuex";
 
 export default {
   name: "AccountsSection",
@@ -127,7 +127,7 @@ export default {
     addAccountFor(category) {
       switch (category) {
         case "holding":
-          this.$router.push({ name: "add-holding-account" });
+          this.$router.push({name: "add-holding-account"});
           break;
         default:
           console.log(`add account for ${category} not implemented yet`);

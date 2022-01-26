@@ -22,9 +22,9 @@
     "back": "Back",
     "buy_coins": "Buy Florin",
     "sell_coins": "Sell Florin",
+    "buy_your_first_coins": "Buy your first Florin",
     "clear": "Clear",
     "confirm": "Confirm",
-    "buy_your_first_coins": "Buy your first Florin",
     "change_password": "Change password",
     "create_mining_account": "Create mining account",
     "finish": "Finish",
@@ -32,12 +32,17 @@
     "next": "Next",
     "ok": "OK",
     "previous": "Previous",
+    "ready": "Ready",
     "receive": "Receive",
     "renew": "Renew",
     "send": "Send",
     "start": "Start",
     "stop": "Stop",
+    "transactions": "Transactions",
     "unlock": "Unlock"
+  },
+  "clipboard_field": {
+    "copied_to_clipboard": "Copied to clipboard"
   },
   "common": {
     "account_name": "Account name",
@@ -91,7 +96,8 @@
   "settings": {
     "header": "Settings",
     "change_password": "Change password",
-    "view_recovery_phrase": "View recovery phrase"
+    "view_recovery_phrase": "View recovery phrase",
+    "choose_theme": "Choose theme"
   },
   "setup": {
     "choose_password": "Choose a password of at least 6 characters",
@@ -130,7 +136,6 @@
     "enter_coins_address": "Enter Florin address",
     "confirm_transaction": "Confirm transaction",
     "target_account": "Send to account"
-
   },
   "renew_holding_account": {
     "funding_account": "Pay renewal fee from account"
