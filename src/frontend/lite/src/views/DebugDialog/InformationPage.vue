@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import {LibraryController} from "../../unity/Controllers";
+import { LibraryController } from "../../unity/Controllers";
 let timeout;
 
 export default {

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 import AppStatus from "./AppStatus";
 import AppLoader from "./components/AppLoader";
 import ModalDialog from "./components/ModalDialog";
@@ -74,7 +74,7 @@ export default {
           break;
       }
       if (routeName === undefined || this.$route.name === routeName) return;
-      this.$router.push({name: routeName});
+      this.$router.push({ name: routeName });
     },
     closeModal() {
       this.modal = null;

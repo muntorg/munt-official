@@ -66,8 +66,8 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
-import {LibraryController} from "../../unity/Controllers";
+import { mapState } from "vuex";
+import { LibraryController } from "../../unity/Controllers";
 import UIConfig from "../../../ui-config.json";
 
 export default {
@@ -113,10 +113,10 @@ export default {
       }
     },
     ready() {
-      this.$router.push({name: "settings"});
+      this.$router.push({ name: "settings" });
     },
     routeTo(route) {
-      this.$router.push({name: route});
+      this.$router.push({ name: route });
     }
   }
 };

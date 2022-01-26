@@ -25,9 +25,9 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 import AppStatus from "../AppStatus";
-import {LibraryController} from "../unity/Controllers";
+import { LibraryController } from "../unity/Controllers";
 import UIConfig from "../../ui-config.json";
 
 let progressTimeout = null;
@@ -95,7 +95,7 @@ export default {
             break;
         }
         if (routeName === undefined || this.$route.name === routeName) return;
-        this.$router.push({name: routeName});
+        this.$router.push({ name: routeName });
       } else {
         if (this.status === AppStatus.synchronize) {
           this.updateProgress();

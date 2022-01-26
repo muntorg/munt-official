@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import {mapState, mapGetters} from "vuex";
+import { mapState, mapGetters } from "vuex";
 import EventBus from "../../../EventBus";
 import WalletPasswordDialog from "../../../components/WalletPasswordDialog";
 
@@ -117,10 +117,10 @@ export default {
     },
     rightSidebarProps() {
       if (this.rightSidebar === TransactionDetails) {
-        return {txHash: this.txHash};
+        return { txHash: this.txHash };
       }
       if (this.rightSidebar === AccountSettings) {
-        return {account: this.account};
+        return { account: this.account };
       }
       return null;
     },
@@ -150,7 +150,7 @@ export default {
     },
     showSettings() {
       if (this.$route.path === "/settings/") return;
-      this.$router.push({name: "settings"});
+      this.$router.push({ name: "settings" });
     },
     changeLockSettings() {
       if (this.walletPassword) {

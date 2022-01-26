@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import {LibraryController} from "../unity/Controllers";
+import { LibraryController } from "../unity/Controllers";
 import PhraseInput from "../components/PhraseInput";
 import EventBus from "../EventBus.js";
 
@@ -222,7 +222,7 @@ export default {
                 this.password1
               )
             ) {
-              this.$router.push({name: "account"});
+              this.$router.push({ name: "account" });
             }
           } else {
             if (
@@ -231,7 +231,7 @@ export default {
                 this.password1
               )
             ) {
-              this.$router.push({name: "account"});
+              this.$router.push({ name: "account" });
             }
           }
           break;

@@ -10,7 +10,7 @@
           <div class="fiat">{{ totalBalanceFiat }}</div>
         </div>
       </section>
-        <accounts-section v-if="UIConfig.showSidebar" class="accounts" />
+      <accounts-section v-if="UIConfig.showSidebar" class="accounts" />
       <section class="footer flex-row">
         <div class="status" />
         <div class="button" @click="changeLockSettings">
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import {mapState, mapGetters} from "vuex";
+import { mapState, mapGetters } from "vuex";
 import AccountsSection from "./AccountsSection";
 import WalletPasswordDialog from "../components/WalletPasswordDialog";
 import EventBus from "../EventBus";
@@ -120,15 +120,15 @@ export default {
         if (this.$route.path === `/account/${this.miningAccount.UUID}`) return;
         this.$router.push({
           name: "account",
-          params: {id: this.miningAccount.UUID}
+          params: { id: this.miningAccount.UUID }
         });
       } else {
         if (this.$route.name === "setup-mining") return;
-        this.$router.push({name: "setup-mining"});
+        this.$router.push({ name: "setup-mining" });
       }
     },
     routeTo(route) {
-      this.$router.push({name: route});
+      this.$router.push({ name: route });
     },
     getButtonClassNames(route) {
       let classNames = ["button"];
@@ -137,7 +137,7 @@ export default {
     },
     showSettings() {
       if (this.$route.path === "/settings/") return;
-      this.$router.push({name: "settings"});
+      this.$router.push({ name: "settings" });
     },
     changeLockSettings() {
       if (this.walletPassword) {

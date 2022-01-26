@@ -33,10 +33,9 @@ const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
 } else {
-  app.on('second-instance', (event, commandLine, workingDirectory) => {
-      focusMainWindow();
-    }
-  );
+  app.on("second-instance", (event, commandLine, workingDirectory) => {
+    focusMainWindow();
+  });
   // Protocol handler for osx
   app.on("open-url", (event, url) => {
     event.preventDefault();
@@ -322,8 +321,7 @@ if (isDevelopment) {
 }
 
 function focusMainWindow() {
-  if (winMain)
-  {
+  if (winMain) {
     if (winMain.isMinimized()) winMain.restore();
     else winMain.show();
     winMain.focus();

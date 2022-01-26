@@ -4,13 +4,13 @@
       <main-header :title="$t('settings.header')" />
     </portal>
     <div class="settings-row">
-      <router-link :to="{name: 'view-recovery-phrase'}">
+      <router-link :to="{ name: 'view-recovery-phrase' }">
         {{ $t("settings.view_recovery_phrase") }}
         <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
       </router-link>
     </div>
     <div class="settings-row">
-      <router-link :to="{name: 'change-password'}">
+      <router-link :to="{ name: 'change-password' }">
         {{ $t("settings.change_password") }}
         <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
       </router-link>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 import UIConfig from "../../../ui-config.json";
 
 export default {
@@ -63,7 +63,7 @@ export default {
       this.$store.dispatch("app/SET_THEME", theme);
     },
     routeTo(route) {
-      this.$router.push({name: route});
+      this.$router.push({ name: route });
     }
   },
   data() {
