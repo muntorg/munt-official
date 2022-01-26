@@ -1,12 +1,12 @@
 <template>
-  <div class="change-password-view flex-col">
+  <div class="change-password-view">
     <h2>
       <span v-if="current === 1">{{ $t("common.enter_your_password") }}</span>
       <span v-else>{{ $t("setup.choose_password") }}</span>
     </h2>
 
     <!-- step 1: Enter old password -->
-    <app-form-field v-if="current === 1">
+    <app-form-field v-if="current === 1" :title="$t('common.password')">
       <input
         ref="passwordold"
         type="password"
@@ -32,8 +32,30 @@
     </div>
 
     <div class="flex-1" />
-
-    <app-button-section>
+    <portal v-if="!UIConfig.showSidebar" to="footer-slot">
+      <app-button-section>
+        <button
+          v-if="current === 1"
+          @click="nextStep"
+          :disabled="isNextDisabled"
+        >
+          {{ $t("buttons.next") }}
+        </button>
+        <button
+          v-if="current === 2"
+          @click="nextStep"
+          :disabled="isNextDisabled"
+        >
+          {{ $t("buttons.change_password") }}
+        </button>
+      </app-button-section>
+    </portal>
+    <app-button-section v-else>
+      <template v-slot:left>
+        <button v-if="current === 1" @click="routeTo('settings')">
+          {{ $t("buttons.back") }}
+        </button>
+      </template>
       <template v-slot:right>
         <button
           v-if="current === 1"
@@ -55,8 +77,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { LibraryController } from "../../unity/Controllers";
+import {mapState} from "vuex";
+import {LibraryController} from "../../unity/Controllers";
+import UIConfig from "../../../ui-config.json";
 
 export default {
   data() {
@@ -65,7 +88,8 @@ export default {
       passwordold: "",
       password1: "",
       password2: "",
-      isPasswordInvalid: false
+      isPasswordInvalid: false,
+      UIConfig: UIConfig
     };
   },
   computed: {
@@ -117,7 +141,7 @@ export default {
                 this.password2
               );
             }
-            this.$router.push({ name: "transactions" });
+            this.$router.push({name: "transactions"});
           }
           break;
       }
@@ -139,6 +163,9 @@ export default {
       } else {
         this.isPasswordInvalid = true;
       }
+    },
+    routeTo(route) {
+      this.$router.push({name: route});
     }
   }
 };

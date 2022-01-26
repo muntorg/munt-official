@@ -1,18 +1,40 @@
 {
+  "accounts_section": {
+    "accounts": "Accounts",
+    "categories": {
+      "spending": "Spending",
+      "holding": "Holding"
+    }
+  },
+  "account_settings": {
+    "title": "Account settings",
+    "name": "Name"
+  },
+  "add_holding_account": {
+    "daily": "daily",
+    "estimated_earnings": "Estimated earnings",
+    "funding_account": "Funding account",
+    "lock_for": "Lock for",
+    "overall": "overall",
+    "title": "Add holding account"
+  },
   "buttons": {
     "back": "Back",
     "buy_coins": "Buy Gulden",
-    "sell_gulden": "Sell Gulden",
+    "sell_coins": "Sell Gulden",
     "buy_your_first_coins": "Buy your first Gulden",
-    "change_password": "Change password",
     "clear": "Clear",
     "confirm": "Confirm",
+    "change_password": "Change password",
+    "create_mining_account": "Create mining account",
     "finish": "Finish",
+    "lock": "Lock",
     "next": "Next",
     "ok": "OK",
     "previous": "Previous",
     "ready": "Ready",
     "receive": "Receive",
+    "renew": "Renew",
     "send": "Send",
     "start": "Start",
     "stop": "Stop",
@@ -23,10 +45,14 @@
     "copied_to_clipboard": "Copied to clipboard"
   },
   "common": {
+    "account_name": "Account name",
     "amount": "Amount",
     "enter_your_password": "Enter your password",
     "important": "Important",
     "information": "Information",
+    "months": "Months",
+    "on": "on",
+    "off": "off",
     "password": "Password",
     "receiving_address": "Receiving address"
   },
@@ -34,9 +60,35 @@
     "title": "Welcome to your Gulden wallet",
     "information": "This wallet is only stored on your device.<br />Never give anyone else access to your wallet.<br />Keep the backup phrase you see at installation in a safe place.<br />Lose phrase or someone else with access to the phrase = lose Gulden."
   },
+  "holding_account": {
+    "compound_earnings": "compound earnings",
+    "status": "Status",
+    "coins_locked": "Gulden locked",
+    "coins_earned": "Gulden earned",
+    "locked_from_block": "Locked from block",
+    "locked_until_block": "Locked until block",
+    "lock_duration": "Lock duration",
+    "blocks": "blocks",
+    "remaining_lock_period": "Remaining lock period",
+    "required_earnings_frequency": "Required earnings frequency",
+    "expected_earnings_frequency": "Expected earnings frequency",
+    "account_weight": "Account weight",
+    "network_weight": "Network weight"
+  },
   "loader": {
     "shutdown": "Shutting down...",
     "synchronizing": "Your wallet is now synchronizing with the Gulden network. This may take some time to complete."
+  },
+  "mining": {
+    "arena_setup_time": "Arena setup time",
+    "best_reported_speed": "Best reported speed",
+    "last_reported_speed": "Last reported speed",
+    "memory_to_use": "Memory to use",
+    "moving_average": "Moving average",
+    "number_of_threads": "Number of threads",
+    "number_of_arena_threads": "Number of arena setup threads",
+    "statistics": "Statistics",
+    "thread": "thread | threads"
   },
   "password_dialog": {
     "unlock_wallet": "Unlock wallet"

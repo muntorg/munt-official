@@ -1,19 +1,21 @@
 <template>
   <div class="settings-list-view">
-    <h2>{{ $t("settings.header") }}</h2>
-    <router-link :to="{ name: 'view-recovery-phrase' }">
-      <div class="settings-row">
+    <portal v-if="UIConfig.showSidebar" to="header-slot">
+      <main-header :title="$t('settings.header')" />
+    </portal>
+    <div class="settings-row">
+      <router-link :to="{name: 'view-recovery-phrase'}">
         {{ $t("settings.view_recovery_phrase") }}
         <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
-      </div>
-    </router-link>
-    <router-link :to="{ name: 'change-password' }">
-      <div class="settings-row">
+      </router-link>
+    </div>
+    <div class="settings-row">
+      <router-link :to="{name: 'change-password'}">
         {{ $t("settings.change_password") }}
         <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
-      </div>
-    </router-link>
-    <div class="settings-row flex-row">
+      </router-link>
+    </div>
+    <div v-if="UIConfig.hasThemes" class="settings-row flex-row">
       <div class="flex-1">{{ $t("settings.choose_theme") }}</div>
       <div
         :class="getThemeSelectClassNames('blue')"
@@ -24,11 +26,25 @@
         @click="switchTheme('orange')"
       ></div>
     </div>
+    <div style="flex: 1" />
+    <portal v-if="!UIConfig.showSidebar" to="footer-slot">
+      <div />
+    </portal>
+    <div v-else style="margin-top: 20px">
+      <app-button-section class="buttons">
+        <template v-slot:left>
+          <button @click="routeTo('transactions')">
+            {{ $t("buttons.back") }}
+          </button>
+        </template>
+      </app-button-section>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
+import UIConfig from "../../../ui-config.json";
 
 export default {
   computed: {
@@ -45,12 +61,25 @@ export default {
     },
     switchTheme(theme) {
       this.$store.dispatch("app/SET_THEME", theme);
+    },
+    routeTo(route) {
+      this.$router.push({name: route});
     }
+  },
+  data() {
+    return {
+      UIConfig: UIConfig
+    };
   }
 };
 </script>
 
 <style lang="less" scoped>
+.settings-list-view {
+  display: flex;
+  flex-direction: column;
+}
+
 .settings-row {
   margin: 0 -10px;
   padding: 10px;

@@ -1,16 +1,7 @@
 <template>
-  <div class="app-loader flex-col">
+  <div class="app-loader flex-col" v-if="showLoader">
     <div class="logo-outer flex-col">
       <div class="logo-inner"></div>
-    </div>
-    <div class="info">
-      <p v-show="isShuttingDown">
-        {{ $t("loader.shutdown") }}
-      </p>
-      <div v-show="isSynchronizing">
-        <div class="sync-desc">{{ $t("loader.synchronizing") }}</div>
-        <progress ref="progress" max="100" value="0"></progress>
-      </div>
     </div>
     <div class="version-container">
       <span>Gulden LITE</span>
@@ -21,13 +12,23 @@
       <span class="divider">|</span>
       <span>Electron: {{ electronVersion }}</span>
     </div>
+    <div class="info">
+      <p v-show="isShuttingDown">
+        {{ $t("loader.shutdown") }}
+      </p>
+      <div v-show="isSynchronizing">
+        <div class="sync-desc">{{ $t("loader.synchronizing") }}</div>
+        <progress ref="progress" max="100" value="0"></progress>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 import AppStatus from "../AppStatus";
-import { LibraryController } from "../unity/Controllers";
+import {LibraryController} from "../unity/Controllers";
+import UIConfig from "../../ui-config.json";
 
 let progressTimeout = null;
 let progressCount = 0;
@@ -37,7 +38,8 @@ export default {
   data() {
     return {
       electronVersion: process.versions.electron,
-      progress: 0
+      progress: 0,
+      UIConfig: UIConfig
     };
   },
   computed: {
@@ -78,8 +80,26 @@ export default {
   },
   methods: {
     onStatusChanged() {
-      if (this.status === AppStatus.synchronize) {
-        this.updateProgress();
+      if (this.UIConfig.showSidebar) {
+        let routeName;
+        switch (this.status) {
+          case AppStatus.setup:
+            routeName = "setup";
+            break;
+          case AppStatus.synchronize:
+            routeName = "account";
+            this.updateProgress();
+            break;
+          case AppStatus.ready:
+            routeName = "account";
+            break;
+        }
+        if (routeName === undefined || this.$route.name === routeName) return;
+        this.$router.push({name: routeName});
+      } else {
+        if (this.status === AppStatus.synchronize) {
+          this.updateProgress();
+        }
       }
     },
     updateProgress() {
@@ -126,7 +146,7 @@ export default {
 .logo-inner {
   width: 98px;
   height: 98px;
-  background: url("../img/logo.svg");
+  background: url("../img/logo-start.svg");
   background-size: cover;
 }
 
