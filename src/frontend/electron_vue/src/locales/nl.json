@@ -6,6 +6,10 @@
       "holding": "Holding"
     }
   },
+  "account_settings": {
+    "title": "Account settings",
+    "name": "Name"
+  },
   "add_holding_account": {
     "daily": "per dag",
     "estimated_earnings": "Geschatte opbrengst",
@@ -20,7 +24,7 @@
     "sell_coins": "Verkoop Florin",
     "buy_your_first_coins": "Koop jouw eerste Florin",
     "clear": "Wissen",
-        "confirm": "Bevestig",
+    "confirm": "Bevestig",
     "change_password": "Verander wachtwoord",
     "create_mining_account": "Mining rekening aanmaken",
     "finish": "Klaar",
@@ -28,19 +32,24 @@
     "next": "Volgende",
     "ok": "OK",
     "previous": "Vorige",
+    "ready": "Ready",
     "receive": "Ontvangen",
     "renew": "Vernieuwen",
     "send": "Versturen",
     "start": "Start",
     "stop": "Stop",
+    "transactions": "Transactions",
     "unlock": "Ontgrendelen"
+  },
+  "clipboard_field": {
+    "copied_to_clipboard": "Copied to clipboard"
   },
   "common": {
     "account_name": "Rekeningnaam",
     "amount": "Bedrag",
     "enter_your_password": "Voer jouw wachtwoord in",
-    "information": "Informatie",
     "important": "Belangrijk",
+    "information": "Informatie",
     "months": "Maanden",
     "on": "aan",
     "off": "uit",
@@ -87,7 +96,8 @@
   "settings": {
     "header": "Instellingen",
     "change_password": "Verander wachtwoord",
-    "view_recovery_phrase": "Bekijk herstelzin"
+    "view_recovery_phrase": "Bekijk herstelzin",
+    "choose_theme": "Choose theme"
   },
   "setup": {
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
