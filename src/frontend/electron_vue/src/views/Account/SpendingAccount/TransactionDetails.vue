@@ -5,10 +5,6 @@
     </portal>
 
     <div class="main">
-      <!--
-      <h5>Send to</h5>
-      <div class="tx-address">address here</div>
-      -->
       <h5>{{ $t("transaction_details.hash") }}</h5>
       <div class="tx-hash">{{ txHash }}</div>
     </div>
@@ -43,8 +39,9 @@ export default {
   }
 
   .tx-hash {
+    margin: 0;
     padding: 10px;
-    font-size: 0.9em;
+    font-size: 0.8em;
     line-height: 1.2em;
     user-select: text;
     word-wrap: break-word;

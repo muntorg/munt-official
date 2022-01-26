@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 import AppStatus from "./AppStatus";
 import AppLoader from "./components/AppLoader";
 import ModalDialog from "./components/ModalDialog";
@@ -29,7 +29,7 @@ export default {
     AppLoader,
     ModalDialog,
     SetupLayout,
-    WalletLayout,
+    WalletLayout
   },
   created() {
     this.onStatusChanged();
@@ -52,12 +52,12 @@ export default {
         this.splashReady === false ||
         (this.status !== AppStatus.ready && this.status !== AppStatus.setup)
       );
-    },
+    }
   },
   watch: {
     status() {
       this.onStatusChanged();
-    },
+    }
   },
   methods: {
     onStatusChanged() {
@@ -74,14 +74,14 @@ export default {
           break;
       }
       if (routeName === undefined || this.$route.name === routeName) return;
-      this.$router.push({ name: routeName });
+      this.$router.push({name: routeName});
     },
     closeModal() {
       this.modal = null;
     },
     showModal(modal) {
       this.modal = modal;
-    },
-  },
+    }
+  }
 };
 </script>

@@ -3,7 +3,7 @@
     <div class="tx-amount">{{ computedAmount }}</div>
     <div class="tx-fee">{{ computedFee }}</div>
     <div class="tx-to">
-      <fa-icon :icon="['far', 'long-arrow-down']" />
+      <fa-icon :icon="['fal', 'long-arrow-down']" />
     </div>
     <div class="tx-address">{{ address }}</div>
     <button @click="confirm" class="button">

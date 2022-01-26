@@ -1,46 +1,117 @@
 <template>
   <div class="settings-list-view">
-    <portal to="header-slot">
+    <portal v-if="!UIConfig.showSidebar" to="header-slot">
       <main-header :title="$t('settings.header')" />
     </portal>
     <div class="settings-row">
-      <router-link :to="{ name: 'view-recovery-phrase' }">
+      <router-link :to="{name: 'view-recovery-phrase'}">
         {{ $t("settings.view_recovery_phrase") }}
         <fa-icon :icon="['fal', 'long-arrow-right']" class="arrow" />
       </router-link>
     </div>
     <div class="settings-row">
-      <router-link :to="{ name: 'change-password' }">
+      <router-link :to="{name: 'change-password'}">
         {{ $t("settings.change_password") }}
         <fa-icon :icon="['fal', 'long-arrow-right']" class="arrow" />
       </router-link>
     </div>
-
-    <portal to="footer-slot">
+    <div v-if="UIConfig.hasThemes" class="settings-row flex-row">
+      <div class="flex-1">{{ $t("settings.choose_theme") }}</div>
+      <div
+        :class="getThemeSelectClassNames('blue')"
+        @click="switchTheme('blue')"
+      ></div>
+      <div
+        :class="getThemeSelectClassNames('orange')"
+        @click="switchTheme('orange')"
+      ></div>
+    </div>
+    <div style="flex: 1" />
+    <portal v-if="UIConfig.showSidebar" to="footer-slot">
       <div />
     </portal>
+    <div v-else style="margin-top: 20px">
+      <app-button-section class="buttons">
+        <template v-slot:left>
+          <button @click="routeTo('transactions')">
+            {{ $t("buttons.back") }}
+          </button>
+        </template>
+      </app-button-section>
+    </div>
   </div>
 </template>
 
+<script>
+import {mapState} from "vuex";
+import UIConfig from "../../../ui-config.json";
+
+export default {
+  computed: {
+    ...mapState("app", ["theme"])
+  },
+  methods: {
+    getThemeSelectClassNames(theme) {
+      const classNames = ["theme-select", theme];
+      if (theme === "blue" && this.theme !== "orange")
+        classNames.push("selected");
+      else if (theme === "orange" && this.theme === "orange")
+        classNames.push("selected");
+      return classNames.join(" ");
+    },
+    switchTheme(theme) {
+      this.$store.dispatch("app/SET_THEME", theme);
+    },
+    routeTo(route) {
+      this.$router.push({name: route});
+    }
+  },
+  data() {
+    return {
+      UIConfig: UIConfig
+    };
+  }
+};
+</script>
+
 <style lang="less" scoped>
-.settings-row {
-  padding: 4px 0;
-  border-bottom: 1px solid #ccc;
+.settings-list-view {
+  display: flex;
+  flex-direction: column;
 }
 
-.settings-row a {
-  display: inline-block;
-  width: 100%;
-  line-height: 20px;
+.settings-row {
+  margin: 0 -10px;
+  padding: 10px;
+}
+
+a > .settings-row:hover {
+  color: var(--primary-color);
+  background-color: var(--hover-color);
+  cursor: pointer;
 }
 
 .arrow {
   float: right;
-  margin: 6px 0 0 0;
-  color: #fff;
 }
 
-a:hover > .arrow {
-  color: #000;
+.theme-select {
+  border: 2px solid #fff;
+  border-radius: 18px;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.theme-select.blue {
+  background-color: #0039cc;
+}
+.theme-select.orange {
+  background-color: #ee6622;
+}
+
+.selected {
+  box-shadow: 0 0 0 1px #000;
 }
 </style>

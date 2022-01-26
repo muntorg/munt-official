@@ -31,7 +31,8 @@
       </app-form-field>
     </div>
 
-    <portal to="footer-slot">
+    <div class="flex-1" />
+    <portal v-if="!UIConfig.showSidebar" to="footer-slot">
       <app-button-section>
         <button
           v-if="current === 1"
@@ -49,12 +50,36 @@
         </button>
       </app-button-section>
     </portal>
+    <app-button-section v-else>
+      <template v-slot:left>
+        <button v-if="current === 1" @click="routeTo('settings')">
+          {{ $t("buttons.back") }}
+        </button>
+      </template>
+      <template v-slot:right>
+        <button
+          v-if="current === 1"
+          @click="nextStep"
+          :disabled="isNextDisabled"
+        >
+          {{ $t("buttons.next") }}
+        </button>
+        <button
+          v-if="current === 2"
+          @click="nextStep"
+          :disabled="isNextDisabled"
+        >
+          {{ $t("buttons.change_password") }}
+        </button>
+      </template>
+    </app-button-section>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { LibraryController } from "../../unity/Controllers";
+import {mapState} from "vuex";
+import {LibraryController} from "../../unity/Controllers";
+import UIConfig from "../../../ui-config.json";
 
 export default {
   data() {
@@ -63,7 +88,8 @@ export default {
       passwordold: "",
       password1: "",
       password2: "",
-      isPasswordInvalid: false
+      isPasswordInvalid: false,
+      UIConfig: UIConfig
     };
   },
   computed: {
@@ -115,7 +141,7 @@ export default {
                 this.password2
               );
             }
-            this.$router.push({ name: "account" });
+            this.$router.push({name: "account"});
           }
           break;
       }
@@ -137,7 +163,16 @@ export default {
       } else {
         this.isPasswordInvalid = true;
       }
+    },
+    routeTo(route) {
+      this.$router.push({name: route});
     }
   }
 };
 </script>
+
+<style lang="less" scoped>
+.change-password-view {
+  height: 100%;
+}
+</style>

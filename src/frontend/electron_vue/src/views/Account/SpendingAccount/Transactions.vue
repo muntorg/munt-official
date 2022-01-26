@@ -11,8 +11,7 @@
           class="mutation-row flex-row"
           v-for="mutation in group.mutations"
           :key="mutation.txHash"
-          @click="selectTxHash(mutation.txHash)"
-          @contextmenu="showTxMenu($event, mutation)"
+          @click="showTransactionDetails(mutation)"
           :class="mutationRowClass(mutation.txHash)"
         >
           <div class="icon">
@@ -43,18 +42,19 @@
 
 <script>
 import {BackendUtilities} from "@/unity/Controllers";
+import {mapState} from "vuex";
+import TransactionDetailsDialog from "../../../components/TransactionDetailsDialog";
+import EventBus from "../../../EventBus";
+
 export default {
   name: "Transactions",
-  props: {
-    mutations: null,
-    txHash: null
-  },
   data() {
     return {
       buyDisabled: false
     };
   },
   computed: {
+    ...mapState("wallet", ["mutations"]),
     hasMutations() {
       return this.mutations ? this.mutations.length > 0 : false;
     },
@@ -136,30 +136,24 @@ export default {
     formatAmount(amount) {
       return `${(amount / 100000000).toFixed(2)}`;
     },
-    selectTxHash(txHash) {
-      this.$emit("tx-hash", txHash);
-    },
-    showTxMenu(e, mutation) {
-      console.log("XXX");
-      if (
-        mutation.status !== 1 &&
-        mutation.status !== 2 &&
-        mutation.status !== 3
-      ) {
-        // const contextMenu = new Menu();
-        // contextMenu.append(
-        //   new MenuItem({
-        //     label: "Abandon transaction",
-        //     click() {
-        //       WalletController.AbandonTransaction(mutation.txHash);
-        //     }
-        //   })
-        // );
-        // contextMenu.popup({ x: e.x, y: e.y });
-      }
-    },
     mutationRowClass(txHash) {
       return txHash === this.txHash ? "selected" : "";
+    },
+    showTransactionDetails(mutation) {
+      EventBus.$emit("show-dialog", {
+        title: this.$t(
+          `transaction_details.title.${
+            mutation.change > 0
+              ? "incoming_transaction"
+              : "outgoing_transaction"
+          }`
+        ),
+        component: TransactionDetailsDialog,
+        componentProps: {
+          mutation: mutation
+        },
+        showButtons: false
+      });
     },
     async buyCoins() {
       try {
