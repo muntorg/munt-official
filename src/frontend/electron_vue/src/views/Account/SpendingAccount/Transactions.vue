@@ -170,6 +170,7 @@ export default {
   }
 };
 </script>
+
 <style lang="less" scoped>
 .transactions-view {
   height: 100%;
