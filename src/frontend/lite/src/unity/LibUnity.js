@@ -187,6 +187,7 @@ class LibUnity {
         staticFilterPath = path.join(staticFilterPath, "staticfiltercp");
       }
     }
+    var spvMode = true;
 
     console.log(`init unity lib threaded`);
     this.libraryController.InitUnityLibThreaded(
@@ -195,7 +196,7 @@ class LibUnity {
       staticFilterOffset,
       staticFilterLength,
       this.options.useTestnet,
-      true, //spv mode
+      spvMode,
       this.libraryListener,
       this.options.extraArgs
     );
