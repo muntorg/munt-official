@@ -205,14 +205,20 @@ class LibUnity {
       console.log(`wallet folder ${this.options.walletPath} already exists`);
     }
 
+    var staticFilterPath = "";
+    var staticFilterOffset = -1;
+    var staticFilterLength = -1;
+    //Load static filter files here if/when we start using them for non spv clients.
+    var spvMode = false;
+
     console.log(`init unity lib threaded`);
     this.libraryController.InitUnityLibThreaded(
       this.options.walletPath,
-      "",
-      -1,
-      -1,
+      staticFilterPath,
+      staticFilterOffset,
+      staticFilterLength,
       this.options.useTestnet,
-      false, // non spv mode
+      spvMode,
       this.libraryListener,
       this.options.extraArgs
     );
