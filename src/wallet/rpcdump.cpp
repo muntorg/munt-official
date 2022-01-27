@@ -656,20 +656,25 @@ UniValue checkwalletagainstutxo(const JSONRPCRequest& request)
         return NullUniValue;
     }
 
-    int nMismatchSpent;
-    int nOrphansFound;
-    int64_t nBalanceInQuestion;
-    pwallet->CompareWalletAgainstUTXO(nMismatchSpent, nOrphansFound, nBalanceInQuestion);
+    int nMismatchFound=0;
+    int nWalletMissingUTXO = 0;
+    int nWalletSpentCoinsStillInUTXO = 0;
+    int nWalletCoinsNotInUTXO = 0;
+    int nOrphansFound=0;
+    int64_t nBalanceInQuestion=0;
+    pwallet->CompareWalletAgainstUTXO(nMismatchFound, nWalletMissingUTXO, nWalletSpentCoinsStillInUTXO, nWalletCoinsNotInUTXO, nOrphansFound, nBalanceInQuestion);
     UniValue result(UniValue::VOBJ);
-    if(!nMismatchSpent && !nOrphansFound)
+    if(!nMismatchFound && !nOrphansFound)
     {
         result.push_back(std::pair("wallet check passed", true));
     }
     else
     {
-        if(nMismatchSpent)
+        if(nMismatchFound)
         {
-            result.push_back(std::pair("mismatched spent coins", nMismatchSpent));
+            result.push_back(std::pair("coins in UTXO but not in wallet", nWalletMissingUTXO));
+            result.push_back(std::pair("coins spent in wallet but are in UTXO", nWalletSpentCoinsStillInUTXO));
+            result.push_back(std::pair("coins in wallet but not in UTXO", nWalletCoinsNotInUTXO));
             result.push_back(std::pair("amount in question", ValueFromAmount(nBalanceInQuestion)));
         }
         if(nOrphansFound)
@@ -694,10 +699,13 @@ UniValue repairwalletfromutxo(const JSONRPCRequest& request)
         return NullUniValue;
     }
 
-    int nMismatchSpent;
-    int nOrphansFound;
-    int64_t nBalanceInQuestion;
-    pwallet->CompareWalletAgainstUTXO(nMismatchSpent, nOrphansFound, nBalanceInQuestion, true);
+    int nMismatchFound=0;
+    int nWalletMissingUTXO = 0;
+    int nWalletSpentCoinsStillInUTXO = 0;
+    int nWalletCoinsNotInUTXO = 0;
+    int nOrphansFound=0;
+    int64_t nBalanceInQuestion=0;
+    pwallet->CompareWalletAgainstUTXO(nMismatchFound, nWalletMissingUTXO, nWalletSpentCoinsStillInUTXO, nWalletCoinsNotInUTXO, nOrphansFound, nBalanceInQuestion, true);
     return NullUniValue;
 }
 
@@ -719,7 +727,7 @@ UniValue removeallorphans(const JSONRPCRequest& request)
     uint64_t numErased;
     uint64_t numDetected;
     std::string strError;
-    bool success = pwallet->RemoveAllOrphans(numErased, numDetected, strError);
+    bool success = (pwallet->RemoveAllOrphans(numErased, numDetected, strError) == DB_LOAD_OK);
     
     UniValue result(UniValue::VOBJ);
     result.push_back(std::pair("succeeded", success));
