@@ -47,6 +47,8 @@ import {
   faRedoAlt
 } from "@fortawesome/pro-light-svg-icons";
 
+import {faListUl, faLongArrowDown} from "@fortawesome/pro-regular-svg-icons";
+
 library.add([
   faAngleDoubleLeft,
   faArrowFromBottom,
@@ -73,7 +75,9 @@ library.add([
   faUniversity,
   faUnlock,
   faUserCircle,
-  faRedoAlt
+  faRedoAlt,
+  faLongArrowDown,
+  faListUl
 ]);
 
 Vue.component("fa-icon", FontAwesomeIcon);

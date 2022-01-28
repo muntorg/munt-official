@@ -154,6 +154,7 @@ export default {
   font-size: 0.8em;
   text-transform: uppercase;
   color: #999;
+  margin-bottom: 20px;
 
   & .divider {
     margin: 0 8px;
