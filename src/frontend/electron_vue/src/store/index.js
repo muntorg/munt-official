@@ -17,8 +17,17 @@ if (process.type !== "renderer") {
 
   userSettingsPersistedState = createPersistedState({
     storage: store,
-    invertIgnored: true, // use invertIgnored because we only want to store the paths in the ignoredPaths list
-    ignoredPaths: ["mining.settings"]
+    invertIgnored: true, // use invertIgnored because we only want to store the paths in the ignoredPaths list and only persist on specific commits
+    ignoredPaths: [
+      // only store the paths listed below
+      "mining.settings"
+    ],
+    ignoredCommits: [
+      // only update persisted state on commits listed below
+      "mining/SET_MEMORY_SIZE",
+      "mining/SET_THREAD_COUNT",
+      "mining/SET_ARENA_THREAD_COUNT"
+    ]
   });
 }
 export default new Vuex.Store({
