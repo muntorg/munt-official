@@ -5,22 +5,39 @@
         <main-header
           class="info"
           :title="account.label"
-          :subtitle="account.balance.toFixed(2)"
+          :subtitle="account.balance.toFixed(2) + ' ' + totalBalanceFiat"
         />
-        <div class="settings flex-col">
+        <div
+          v-if="!UIConfig.showSidebar"
+          style="margin-right: 10px"
+          class="button"
+          @click="showSettings"
+        >
+          <fa-icon :icon="['fal', 'cog']" />
+        </div>
+        <div
+          v-if="!UIConfig.showSidebar"
+          class="button"
+          @click="changeLockSettings"
+        >
+          <fa-icon :icon="['fal', lockIcon]" />
+        </div>
+        <div v-if="UIConfig.showSidebar" class="settings flex-col">
           <span class="button" @click="setRightSidebar('Settings')">
             <fa-icon :icon="['fal', 'cog']" />
           </span>
         </div>
       </section>
     </portal>
-
-    <mutation-list
+    <transactions
+      v-if="UIConfig.showSidebar"
       :mutations="mutations"
       @tx-hash="onTxHash"
       :tx-hash="txHash"
     />
-
+    <div v-if="!UIConfig.showSidebar">
+      <router-view />
+    </div>
     <portal to="footer-slot">
       <section class="footer">
         <span
@@ -53,14 +70,16 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import EventBus from "../../../EventBus";
+import WalletPasswordDialog from "../../../components/WalletPasswordDialog";
 
-import MutationList from "./MutationList";
-import SendGulden from "./SendGulden";
-import ReceiveGulden from "./ReceiveGulden";
+import Transactions from "./Transactions";
+import Send from "./Send";
+import Receive from "./Receive";
 import TransactionDetails from "./TransactionDetails";
 import AccountSettings from "../AccountSettings";
+import UIConfig from "../../../../ui-config.json";
 
 export default {
   name: "SpendingAccount",
@@ -70,7 +89,8 @@ export default {
   data() {
     return {
       rightSidebar: null,
-      txHash: null
+      txHash: null,
+      UIConfig: UIConfig
     };
   },
   mounted() {
@@ -80,15 +100,20 @@ export default {
     EventBus.$off("close-right-sidebar", this.closeRightSidebar);
   },
   components: {
-    MutationList
+    Transactions
   },
   computed: {
-    ...mapState("wallet", ["mutations"]),
+    ...mapState("app", ["rate"]),
+    ...mapState("wallet", ["mutations", "walletPassword"]),
+    ...mapGetters("wallet", ["totalBalance"]),
+    lockIcon() {
+      return this.walletPassword ? "unlock" : "lock";
+    },
     showSendButton() {
-      return !this.rightSidebar || this.rightSidebar !== SendGulden;
+      return !this.rightSidebar || this.rightSidebar !== Send;
     },
     showReceiveButton() {
-      return !this.rightSidebar || this.rightSidebar !== ReceiveGulden;
+      return !this.rightSidebar || this.rightSidebar !== Receive;
     },
     rightSidebarProps() {
       if (this.rightSidebar === TransactionDetails) {
@@ -98,17 +123,21 @@ export default {
         return { account: this.account };
       }
       return null;
+    },
+    totalBalanceFiat() {
+      if (!this.rate) return "";
+      return `€ ${(this.totalBalance * this.rate).toFixed(2)}`;
     }
   },
   methods: {
     setRightSidebar(name) {
       switch (name) {
         case "Send":
-          this.rightSidebar = SendGulden;
+          this.rightSidebar = Send;
           this.txHash = null;
           break;
         case "Receive":
-          this.rightSidebar = ReceiveGulden;
+          this.rightSidebar = Receive;
           this.txHash = null;
           break;
         case "TransactionDetails":
@@ -117,6 +146,21 @@ export default {
         case "Settings":
           this.rightSidebar = AccountSettings;
           break;
+      }
+    },
+    showSettings() {
+      if (this.$route.path === "/settings/") return;
+      this.$router.push({ name: "settings" });
+    },
+    changeLockSettings() {
+      if (this.walletPassword) {
+        this.$store.dispatch("wallet/SET_WALLET_PASSWORD", null);
+      } else {
+        EventBus.$emit("show-dialog", {
+          title: this.$t("password_dialog.unlock_wallet"),
+          component: WalletPasswordDialog,
+          showButtons: false
+        });
       }
     },
     closeRightSidebar() {
@@ -132,7 +176,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.spending-account {
+  height: 100%;
+  padding: 20px 15px 15px 15px;
+}
 .header {
+  align-items: center;
+
   & > .info {
     width: calc(100% - 26px);
     padding-right: 10px;

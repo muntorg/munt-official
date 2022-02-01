@@ -1,5 +1,5 @@
 <template>
-  <div class="send-gulden flex-col">
+  <div class="send-coins flex-col">
     <portal to="sidebar-right-title">
       {{ $t("buttons.send") }}
     </portal>
@@ -12,13 +12,13 @@
         type="text"
         readonly
       />
-      <gulden-form-field :title="$t('send_gulden.target_account')">
+      <app-form-field :title="$t('send_coins.target_account')">
         <select-list
           :options="fundingAccounts"
           :default="fundingAccount"
           v-model="fundingAccount"
         />
-      </gulden-form-field>
+      </app-form-field>
 
       <input
         v-model="password"
@@ -44,7 +44,7 @@ import {
 import EventBus from "../../../EventBus";
 
 export default {
-  name: "SendGulden",
+  name: "Send",
   data() {
     return {
       amount: null,
@@ -128,7 +128,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.send-gulden {
+.send-coins {
   height: 100%;
 
   .main {

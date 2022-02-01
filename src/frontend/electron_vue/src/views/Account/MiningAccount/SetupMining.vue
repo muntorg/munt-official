@@ -4,29 +4,29 @@
       <main-header :title="$t('setup_mining.title')"></main-header>
     </portal>
 
-    <gulden-section>
+    <app-section>
       <div class="mining-info">
         {{ $t("setup_mining.information") }}
       </div>
-    </gulden-section>
-    <gulden-form-field :title="$t('common.password')">
+    </app-section>
+    <app-form-field :title="$t('common.password')">
       <input
         type="password"
         v-model="password"
         :class="computedStatus"
         @keydown="createMiningAccountOnEnter"
       />
-    </gulden-form-field>
+    </app-form-field>
 
     <portal to="footer-slot">
-      <gulden-button-section>
+      <app-button-section>
         <button
           @click="createMiningAccount(password)"
           :disabled="!isEnableMiningButtonEnabled"
         >
           {{ $t("buttons.create_mining_account") }}
         </button>
-      </gulden-button-section>
+      </app-button-section>
     </portal>
   </div>
 </template>

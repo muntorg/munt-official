@@ -8,8 +8,8 @@ module.exports = {
       mainProcessWatch: [],
       mainProcessArgs: [],
       builderOptions: {
-        appId: "com.novocurrency.desktop-wallet",
-        productName: "Novo",
+        appId: "com.gulden.desktop-wallet",
+        productName: "Gulden",
         extraFiles: [],
         publish: null,
         afterSign: "./notarize.js",

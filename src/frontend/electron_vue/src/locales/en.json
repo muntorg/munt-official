@@ -3,7 +3,7 @@
     "accounts": "Accounts",
     "categories": {
       "spending": "Spending",
-      "holding": "Holding"
+      "holding": "Witness"
     }
   },
   "account_settings": {
@@ -16,10 +16,15 @@
     "funding_account": "Funding account",
     "lock_for": "Lock for",
     "overall": "overall",
-    "title": "Add holding account"
+    "title": "Add witness account"
   },
   "buttons": {
     "back": "Back",
+    "buy_coins": "Buy Gulden",
+    "sell_coins": "Sell Gulden",
+    "buy_your_first_coins": "Buy your first Gulden",
+    "clear": "Clear",
+    "confirm": "Confirm",
     "change_password": "Change password",
     "create_mining_account": "Create mining account",
     "finish": "Finish",
@@ -27,12 +32,17 @@
     "next": "Next",
     "ok": "OK",
     "previous": "Previous",
+    "ready": "Ready",
     "receive": "Receive",
     "renew": "Renew",
     "send": "Send",
     "start": "Start",
     "stop": "Stop",
+    "transactions": "Transactions",
     "unlock": "Unlock"
+  },
+  "clipboard_field": {
+    "copied_to_clipboard": "Copied to clipboard"
   },
   "common": {
     "account_name": "Account name",
@@ -46,11 +56,15 @@
     "password": "Password",
     "receiving_address": "Receiving address"
   },
+  "new_wallet": {
+    "title": "Welcome to your Gulden wallet",
+    "information": "This wallet is only stored on your device.<br />Never give anyone else access to your wallet.<br />Keep the backup phrase you see at installation in a safe place.<br />Lose phrase or someone else with access to the phrase = lose Gulden."
+  },
   "holding_account": {
     "compound_earnings": "compound earnings",
     "status": "Status",
-    "gulden_locked": "Gulden locked",
-    "gulden_earned": "Gulden earned",
+    "coins_locked": "Gulden locked",
+    "coins_earned": "Gulden earned",
     "locked_from_block": "Locked from block",
     "locked_until_block": "Locked until block",
     "lock_duration": "Lock duration",
@@ -72,8 +86,9 @@
     "memory_to_use": "Memory to use",
     "moving_average": "Moving average",
     "number_of_threads": "Number of threads",
+    "number_of_arena_threads": "Number of arena setup threads",
     "statistics": "Statistics",
-    "thread" : "thread | threads"
+    "thread": "thread | threads"
   },
   "password_dialog": {
     "unlock_wallet": "Unlock wallet"
@@ -81,7 +96,8 @@
   "settings": {
     "header": "Settings",
     "change_password": "Change password",
-    "view_recovery_phrase": "View recovery phrase"
+    "view_recovery_phrase": "View recovery phrase",
+    "choose_theme": "Choose theme"
   },
   "setup": {
     "choose_password": "Choose a password of at least 6 characters",
@@ -96,7 +112,7 @@
     "recover_existing": "I want to recover my wallet using my recovery phrase",
     "repeat_password": "Repeat password",
     "repeat_your_recovery_phrase": "To make sure you have correctly written down your recovery phrase, enter your phrase in the boxes below.",
-    "setup_gulden_wallet": "Setup your Gulden wallet",
+    "setup_your_wallet": "Setup your Gulden wallet",
     "this_is_your_recovery_phrase": "This is your recovery phrase. Keep your backup phrase in a safe place. Lose phrase or someone else with access to the phrase = lose Gulden."
   },
   "setup_mining": {
@@ -104,16 +120,25 @@
     "information": "Before you can start mining Gulden a mining account needs to be created. Enter your password to unlock your wallet and create a mining account."
   },
   "transaction_details": {
-    "title": "Transaction details",
+   "title": {
+      "incoming_transaction": "Incoming transaction",
+      "outgoing_transaction": "Outgoing transaction"
+    },
     "hash": "Hash"
   },
-  "receive_gulden": {
-    "buy_or_receive_gulden": "Buy or receive Gulden",
-    "your_address": "Your address"
+  
+  "receive_coins": {
+    "address_copied_to_clipboard": "Address copied to clipboard",
+    "buy_or_receive_coins": "Buy or receive Gulden",
+    "click_to_copy_qr": "Click to copy QR",
+    "information": "After each transaction you will receive a new address, but the previous address will still work.",
+    "your_address": "Your Gulden address",
+    "qr_copied_to_clipboard": "QR copied to clipboard"
   },
-  "send_gulden": {
+  "send_coins": {
     "enter_label": "Enter label",
-    "enter_gulden_address": "Enter Gulden address",
+    "enter_coins_address": "Enter Gulden address",
+    "confirm_transaction": "Confirm transaction",
     "target_account": "Send to account"
   },
   "renew_holding_account": {

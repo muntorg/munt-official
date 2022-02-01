@@ -68,7 +68,7 @@ export default {
       switch (account.type) {
         case "Desktop":
           return "spending";
-        case "Witness":
+        case "Holding":
           return "holding";
       }
       return null;
@@ -93,7 +93,7 @@ export default {
           types = ["Desktop"];
           break;
         case "holding":
-          types = ["Witness"];
+          types = ["Holding"];
           break;
       }
       if (types === undefined) return [];

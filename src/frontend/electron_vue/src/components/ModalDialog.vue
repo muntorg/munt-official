@@ -17,11 +17,11 @@
           v-bind="componentProps"
         ></component>
       </div>
-      <gulden-button-section class="buttons" v-if="showButtons">
+      <app-button-section class="buttons" v-if="showButtons">
         <template v-slot:right>
           <button @click="closeModal">{{ $t("buttons.ok") }}</button>
         </template>
-      </gulden-button-section>
+      </app-button-section>
     </div>
   </div>
 </template>
@@ -101,7 +101,7 @@ export default {
   height: 64px;
   line-height: 64px;
   padding: 0 24px;
-  border-bottom: 1px solid #e1e1e1;
+  border-bottom: 1px solid var(--main-border-color);
   font-size: 1.2rem;
 
   & .close {
@@ -115,8 +115,8 @@ export default {
   }
 
   & .icon:hover {
-    color: #1d1c1d;
-    background-color: #f6f6f6;
+    color: var(--primary-color);
+    background: var(--hover-color);
     cursor: pointer;
   }
 }

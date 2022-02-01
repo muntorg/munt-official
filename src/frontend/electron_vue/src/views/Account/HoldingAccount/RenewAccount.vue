@@ -1,17 +1,17 @@
 <template>
-  <div class="send-gulden flex-col">
+  <div class="send-coins flex-col">
     <portal to="sidebar-right-title">
       {{ $t("buttons.renew") }}
     </portal>
 
     <div class="main">
-      <gulden-form-field :title="$t('renew_holding_account.funding_account')">
+      <app-form-field :title="$t('renew_holding_account.funding_account')">
         <select-list
           :options="fundingAccounts"
           :default="fundingAccount"
           v-model="fundingAccount"
         />
-      </gulden-form-field>
+      </app-form-field>
 
       <input
         v-model="password"
@@ -114,7 +114,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.send-gulden {
+.send-coins {
   height: 100%;
 
   .main {

@@ -124,11 +124,11 @@ export default {
         command.selectionStart = command.selectionEnd = command.value.length;
       }, 0);
     },
-    onRpcInputKeyDown() {
+    async onRpcInputKeyDown() {
       this.preventAutocompleteList = false;
       switch (event.keyCode) {
         case 13: {
-          let result = RpcController.Execute(this.command);
+          let result = await RpcController.ExecuteAsync(this.command);
           this.command = "";
 
           this.value.output.push({

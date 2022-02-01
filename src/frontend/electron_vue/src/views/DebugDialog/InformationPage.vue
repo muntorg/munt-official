@@ -1,6 +1,6 @@
 <template>
   <div class="information-page">
-    <gulden-section>
+    <app-section>
       <h4>General</h4>
 
       <div class="flex-row">
@@ -23,9 +23,9 @@
         <div>Startup time</div>
         <div class="ellipsis">{{ startupTime }}</div>
       </div>
-    </gulden-section>
+    </app-section>
 
-    <gulden-section>
+    <app-section>
       <h4>Network</h4>
       <div class="flex-row">
         <div>Status</div>
@@ -35,9 +35,9 @@
         <div>Connection count</div>
         <div>{{ numberOfConnections }}</div>
       </div>
-    </gulden-section>
+    </app-section>
 
-    <gulden-section>
+    <app-section>
       <h4>Block chain</h4>
       <div class="flex-row">
         <div>Number of blocks</div>
@@ -51,9 +51,9 @@
         <div>Last block hash</div>
         <div>{{ clientInfo.chain_tip_hash }}</div>
       </div>
-    </gulden-section>
+    </app-section>
 
-    <gulden-section>
+    <app-section>
       <h4>Memory pool</h4>
       <div class="flex-row">
         <div>Number of transactions</div>
@@ -63,7 +63,7 @@
         <div>Memory usage</div>
         <div>{{ clientInfo.mempool_memory_size }}</div>
       </div>
-    </gulden-section>
+    </app-section>
   </div>
 </template>
 
@@ -130,9 +130,12 @@ export default {
 .information-page {
   width: 100%;
   height: 100%;
-
+  & h4 {
+    margin: 0 0 10px 0;
+  }
   & .flex-row > div {
-    line-height: 18px;
+    font-size: 0.95em;
+    line-height: 20px;
   }
   & .flex-row :first-child {
     min-width: 180px;

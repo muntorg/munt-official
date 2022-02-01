@@ -1,15 +1,17 @@
 import Vue from "vue";
 
 import CurrencyInput from "./CurrencyInput";
+import ClipboardField from "./ClipboardField";
 import MainHeader from "./layout/MainHeader";
-import GuldenButtonSection from "./layout/GuldenButtonSection";
-import GuldenFormField from "./layout/GuldenFormField";
-import GuldenSection from "./layout/GuldenSection";
+import AppButtonSection from "./layout/AppButtonSection";
+import AppFormField from "./layout/AppFormField";
+import AppSection from "./layout/AppSection";
 import SelectList from "./SelectList";
 
+Vue.component(ClipboardField.name, ClipboardField);
 Vue.component(CurrencyInput.name, CurrencyInput);
 Vue.component(MainHeader.name, MainHeader);
-Vue.component(GuldenButtonSection.name, GuldenButtonSection);
-Vue.component(GuldenFormField.name, GuldenFormField);
-Vue.component(GuldenSection.name, GuldenSection);
+Vue.component(AppButtonSection.name, AppButtonSection);
+Vue.component(AppFormField.name, AppFormField);
+Vue.component(AppSection.name, AppSection);
 Vue.component(SelectList.name, SelectList);

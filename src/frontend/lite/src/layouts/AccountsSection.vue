@@ -51,10 +51,10 @@ export default {
   name: "AccountsSection",
   data() {
     return {
-      categories: ["spending", "holding"],
+      categories: ["spending", "witness"],
       opened: {
         spending: false,
-        holding: false
+        witness: false
       }
     };
   },
@@ -68,8 +68,8 @@ export default {
       switch (account.type) {
         case "Desktop":
           return "spending";
-        case "Holding":
-          return "holding";
+        case "Witness":
+          return "witness";
       }
       return null;
     }
@@ -92,8 +92,8 @@ export default {
         case "spending":
           types = ["Desktop"];
           break;
-        case "holding":
-          types = ["Holding"];
+        case "witness":
+          types = ["Witness"];
           break;
       }
       if (types === undefined) return [];
@@ -118,16 +118,16 @@ export default {
     },
     showNewAccountFor(category) {
       switch (category) {
-        case "holding":
-          return this.$route.name === "add-holding-account";
+        case "witness":
+          return this.$route.name === "add-witness-account";
         default:
           return false;
       }
     },
     addAccountFor(category) {
       switch (category) {
-        case "holding":
-          this.$router.push({ name: "add-holding-account" });
+        case "witness":
+          this.$router.push({ name: "add-witness-account" });
           break;
         default:
           console.log(`add account for ${category} not implemented yet`);
