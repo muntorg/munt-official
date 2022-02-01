@@ -20,7 +20,6 @@ GZIP_ENV="-9n"
 export PYTHONPATH
 
 DAEMON_BIN=$(top_builddir)/src/$(_DAEMON_NAME)$(EXEEXT)
-QT_BIN=$(top_builddir)/src/qt/$(_GUI_NAME)$(EXEEXT)
 CLI_BIN=$(top_builddir)/src/$(_CLI_NAME)$(EXEEXT)
 WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win$(WINDOWS_BITS)-setup$(EXEEXT)
 
@@ -34,11 +33,8 @@ OSX_BACKGROUND_SVG=background.svg
 OSX_BACKGROUND_IMAGE=background.tiff
 OSX_BACKGROUND_IMAGE_DPIS=36 72
 OSX_DSSTORE_GEN=DS_Store
-OSX_DEPLOY_SCRIPT=$(top_srcdir)/contrib/macdeploy/macdeployqtplus
 OSX_FANCY_PLIST=$(top_srcdir)/contrib/macdeploy/fancy.plist
-OSX_INSTALLER_ICONS=$(top_srcdir)/src/qt/res/icons/Gulden.icns
-OSX_PLIST=$(top_builddir)/share/qt/Info.plist #not installed
-OSX_QT_TRANSLATIONS = da,de,es,hu,ru,uk,zh_CN,zh_TW
+OSX_INSTALLER_ICONS=$(top_srcdir)/src/frontend/electron/build/icon.icns
 
 DIST_DOCS = $(wildcard doc/*.md) $(wildcard doc/release-notes/*.md)
 DIST_CONTRIB = $(top_srcdir)/contrib/Gulden-cli.bash-completion \
@@ -70,7 +66,6 @@ dist-hook:
 strip: all-recursive
 	$(MKDIR_P) $(top_builddir)/release
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(DAEMON_BIN) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(QT_BIN) $(top_builddir)/release
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(CLI_BIN) $(top_builddir)/release
 
 
@@ -95,10 +90,6 @@ $(OSX_APP)/Contents/Resources/Gulden.icns: $(OSX_INSTALLER_ICONS)
 	$(MKDIR_P) $(@D)
 	$(INSTALL_DATA) $< $@
 
-$(OSX_APP)/Contents/MacOS/Gulden: $(QT_BIN)
-	$(MKDIR_P) $(@D)
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM)  $< $@
-
 $(OSX_APP)/Contents/Resources/Base.lproj/InfoPlist.strings:
 	$(MKDIR_P) $(@D)
 	echo '{	CFBundleDisplayName = "$(PACKAGE_NAME)"; CFBundleName = "$(PACKAGE_NAME)"; }' > $@
@@ -112,7 +103,7 @@ osx_volname:
 
 if BUILD_DARWIN
 $(OSX_DMG): $(OSX_APP_BUILT) $(OSX_PACKAGING) $(OSX_BACKGROUND_IMAGE)
-	$(PYTHON) $(OSX_DEPLOY_SCRIPT) $(OSX_APP) -add-qt-tr $(OSX_QT_TRANSLATIONS) -translations-dir=$(QT_TRANSLATION_DIR) -dmg -fancy $(OSX_FANCY_PLIST) -verbose 2 -volname $(OSX_VOLNAME)
+	$(PYTHON) $(OSX_DEPLOY_SCRIPT) $(OSX_APP) -dmg -fancy $(OSX_FANCY_PLIST) -verbose 2 -volname $(OSX_VOLNAME)
 
 $(OSX_BACKGROUND_IMAGE).png: contrib/macdeploy/$(OSX_BACKGROUND_SVG)
 	sed 's/PACKAGE_NAME/$(PACKAGE_NAME)/' < "$<" | $(RSVG_CONVERT) -f png -d 36 -p 36 -o $@
@@ -148,9 +139,6 @@ $(APP_DIST_DIR)/.VolumeIcon.icns: $(top_srcdir)/src/qt/res/icons/Gulden.icns
 
 
 
-$(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Gulden: $(OSX_APP_BUILT) $(OSX_PACKAGING)
-	INSTALLNAMETOOL=$(INSTALLNAMETOOL)  OTOOL=$(OTOOL) STRIP=$(STRIP) $(PYTHON) $(OSX_DEPLOY_SCRIPT) $(OSX_APP) -translations-dir=$(QT_TRANSLATION_DIR) -add-qt-tr $(OSX_QT_TRANSLATIONS) -verbose 2
-
 deploydir: $(APP_DIST_EXTRAS)
 endif
 
@@ -161,9 +149,6 @@ endif
 if TARGET_WINDOWS
 deploy: $(WIN_INSTALLER)
 endif
-
-$(QT_BIN): FORCE
-	$(MAKE) -C src qt/$(@F)
 
 $(DAEMON_BIN): FORCE
 	$(MAKE) -C src $(@F)

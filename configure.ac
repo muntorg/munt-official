@@ -394,7 +394,6 @@ case $host in
 
          openssl_prefix=`$BREW --prefix openssl 2>/dev/null`
          bdb_prefix=`$BREW --prefix berkeley-db4 2>/dev/null`
-         qt5_prefix=`$BREW --prefix qt5 2>/dev/null`
          if test x$openssl_prefix != x; then
            PKG_CONFIG_PATH="$openssl_prefix/lib/pkgconfig:$PKG_CONFIG_PATH"
            export PKG_CONFIG_PATH
@@ -402,10 +401,6 @@ case $host in
          if test x$bdb_prefix != x; then
            CPPFLAGS="$CPPFLAGS -I$bdb_prefix/include"
            LIBS="$LIBS -L$bdb_prefix/lib"
-         fi
-         if test x$qt5_prefix != x; then
-           PKG_CONFIG_PATH="$qt5_prefix/lib/pkgconfig:$PKG_CONFIG_PATH"
-           export PKG_CONFIG_PATH
          fi
        fi
      else
@@ -743,12 +738,7 @@ if test x$build_libs_objc != xno; then
   AC_SUBST(DJINNI_OBJCXXFLAGS)
 fi
 
-GULDEN_QT_INIT
-
-dnl sets $gulden_enable_qt, $gulden_enable_qt_test, $gulden_enable_qt_dbus
-GULDEN_QT_CONFIGURE([$use_pkgconfig], [qt5])
-
-if test x$build_utils$build_libs_node_js$build_libs_jni$build_libs_objc$build_daemon$gulden_enable_qt$use_tests$use_bench = xnonononononono; then
+if test x$build_utils$build_libs_node_js$build_libs_jni$build_libs_objc$build_daemon$use_tests$use_bench = xnonononononono; then
     use_boost=no
 else
     use_boost=yes
@@ -932,11 +922,7 @@ if test x$use_pkgconfig = xyes; then
       PKG_CHECK_MODULES([SSL], [libssl],, [AC_MSG_ERROR(openssl  not found.)])
       PKG_CHECK_MODULES([CRYPTO], [libcrypto],,[AC_MSG_ERROR(libcrypto  not found.)])
       PKG_CHECK_MODULES([PROTOBUF], [protobuf],[have_protobuf=yes],[have_protobuf=no])
-      GULDEN_QT_CHECK([PKG_CHECK_MODULES([PROTOBUF], [protobuf], [have_protobuf=yes], [GULDEN_QT_FAIL(libprotobuf not found)])])
-      if test x$use_qr != xno; then
-        GULDEN_QT_CHECK([PKG_CHECK_MODULES([QR], [libqrencode], [have_qrencode=yes], [have_qrencode=no])])
-      fi
-      if test x$build_utils$build_daemon$gulden_enable_qt$use_tests$build_libs_node_js != xnonononono; then
+      if test x$build_utils$build_daemon$use_tests$build_libs_node_js != xnonononono; then
         PKG_CHECK_MODULES([EVENT], [libevent],, [AC_MSG_ERROR(libevent not found.)])
         if test x$TARGET_OS != xwindows; then
           PKG_CHECK_MODULES([EVENT_PTHREADS], [libevent_pthreads],, [AC_MSG_ERROR(libevent_pthreads not found.)])
@@ -964,7 +950,7 @@ else
   AC_CHECK_HEADER([openssl/crypto.h],,AC_MSG_ERROR(libcrypto headers missing))
   AC_CHECK_LIB([crypto],      [main],CRYPTO_LIBS=-lcrypto, AC_MSG_ERROR(libcrypto missing))
 
-  if test x$build_utils$build_daemon$gulden_enable_qt$use_tests$build_libs_node_js != xnonononono; then
+  if test x$build_utils$build_daemon$use_tests$build_libs_node_js != xnonononono; then
     AC_CHECK_HEADER([event2/event.h],, AC_MSG_ERROR(libevent headers missing),)
     AC_CHECK_LIB([event],[main],EVENT_LIBS=-levent,AC_MSG_ERROR(libevent missing))
     if test x$TARGET_OS != xwindows; then
@@ -993,12 +979,6 @@ else
         ZMQ_CFLAGS="$ZMQ_CFLAGS -DZMQ_STATIC"
       ;;
     esac
-  fi
-
-  GULDEN_QT_CHECK(AC_CHECK_LIB([protobuf] ,[main],[PROTOBUF_LIBS=-lprotobuf], GULDEN_QT_FAIL(libprotobuf not found)))
-  if test x$use_qr != xno; then
-    GULDEN_QT_CHECK([AC_CHECK_LIB([qrencode], [main],[QR_LIBS=-lqrencode], [have_qrencode=no])])
-    GULDEN_QT_CHECK([AC_CHECK_HEADER([qrencode.h],, have_qrencode=no)])
   fi
 fi
 
@@ -1029,7 +1009,7 @@ dnl univalue check
 
 need_bundled_univalue=yes
 
-if test x$build_utils$build_daemon$gulden_enable_qt$use_tests$use_bench$build_libs_node_js = xnononononono; then
+if test x$build_utils$build_daemon$use_tests$use_bench$build_libs_node_js = xnononononono; then
   need_bundled_univalue=no
 else
 
@@ -1072,8 +1052,6 @@ fi
 AM_CONDITIONAL([EMBEDDED_UNIVALUE],[test x$need_bundled_univalue = xyes])
 AC_SUBST(UNIVALUE_CFLAGS)
 AC_SUBST(UNIVALUE_LIBS)
-
-GULDEN_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
 
 AC_MSG_CHECKING([whether to build _DAEMON_NAME])
 AM_CONDITIONAL([BUILD_DAEMON], [test x$build_daemon = xyes])
@@ -1154,58 +1132,6 @@ else
   fi
 fi
 
-dnl these are only used when qt is enabled
-BUILD_TEST_QT=""
-if test x$gulden_enable_qt != xno; then
-  dnl enable dbus support
-  AC_MSG_CHECKING([whether to build GUI with support for D-Bus])
-  if test x$gulden_enable_qt_dbus != xno; then
-    AC_DEFINE([USE_DBUS],[1],[Define if dbus support should be compiled in])
-  fi
-  AC_MSG_RESULT($gulden_enable_qt_dbus)
-
-  dnl enable graph support
-  PKG_CHECK_MODULES([QWT], [Qt5Qwt6],, [PKG_CHECK_MODULES([QWT], [Qt5Qwt],, [PKG_CHECK_MODULES([QWT], [Qt5Qwt5],, [AC_MSG_ERROR(qwt not found.)])])])
-
-  dnl enable webview support
-  if test x$with_webview = xwebengine; then
-      PKG_CHECK_MODULES([QWEB], [Qt5WebEngineWidgets], [AC_DEFINE([HAVE_WEBENGINE_VIEW],[1],[Define if embedded webview should use Qt WebEngine])], [AC_MSG_ERROR(Qt WebEngine not found.)])
-  else
-    if test x$with_webview = xwebkit; then
-      PKG_CHECK_MODULES([QWEB], [Qt5WebKit Qt5WebKitWidgets], [AC_DEFINE([HAVE_WEBKIT],[1],[Define if embedded webview should use Qt WebKit])], [AC_MSG_ERROR(Qt WebKit not found.)])
-    fi
-  fi
-
-  dnl enable qr support
-  AC_MSG_CHECKING([whether to build GUI with support for QR codes])
-  if test x$have_qrencode = xno; then
-    if test x$use_qr = xyes; then
-     AC_MSG_ERROR("QR support requested but cannot be built. use --without-qrencode")
-    fi
-    AC_MSG_RESULT(no)
-  else
-    if test x$use_qr != xno; then
-      AC_MSG_RESULT(yes)
-      AC_DEFINE([USE_QRCODE],[1],[Define if QR support should be compiled in])
-      use_qr=yes
-    else
-      AC_MSG_RESULT(no)
-    fi
-  fi
-
-  if test x$XGETTEXT = x; then
-    AC_MSG_WARN("xgettext is required to update qt translations")
-  fi
-
-  AC_MSG_CHECKING([whether to build test_Gulden])
-  if test x$use_gui_tests$gulden_enable_qt_test = xyesyes; then
-    AC_MSG_RESULT([yes])
-    BUILD_TEST_QT="yes"
-  else
-    AC_MSG_RESULT([no])
-  fi
-fi
-
 AM_CONDITIONAL([ENABLE_ZMQ], [test "x$use_zmq" = "xyes"])
 
 AC_MSG_CHECKING([whether to build test_gulden])
@@ -1224,7 +1150,7 @@ else
   AC_MSG_RESULT([no])
 fi
 
-if test x$build_utils$build_libs_node_js$build_libs_jni$build_libs_objc$build_daemon$gulden_enable_qt$use_bench$use_tests = xnononononononono; then
+if test x$build_utils$build_libs_node_js$build_libs_jni$build_libs_objc$build_daemon$use_bench$use_tests = xnononononononono; then
   AC_MSG_ERROR([No targets! Please specify at least one of: --with-utils --with-jni-libs --with-objc-libs --with-daemon --with-gui --enable-bench or --enable-tests])
 fi
 
@@ -1233,8 +1159,6 @@ AM_CONDITIONAL([BUILD_DARWIN], [test x$BUILD_OS = xdarwin])
 AM_CONDITIONAL([TARGET_WINDOWS], [test x$TARGET_OS = xwindows])
 AM_CONDITIONAL([ENABLE_WALLET],[test x$enable_wallet = xyes])
 AM_CONDITIONAL([ENABLE_TESTS],[test x$BUILD_TEST = xyes])
-AM_CONDITIONAL([ENABLE_QT],[test x$gulden_enable_qt = xyes])
-AM_CONDITIONAL([ENABLE_QT_TESTS],[test x$BUILD_TEST_QT = xyes])
 AM_CONDITIONAL([ENABLE_BENCH],[test x$use_bench = xyes])
 AM_CONDITIONAL([USE_QRCODE], [test x$use_qr = xyes])
 AM_CONDITIONAL([USE_LCOV],[test x$use_lcov = xyes])
@@ -1292,7 +1216,7 @@ AC_SUBST(EVENT_PTHREADS_LIBS)
 AC_SUBST(ZMQ_LIBS)
 AC_SUBST(PROTOBUF_LIBS)
 AC_SUBST(QR_LIBS)
-AC_CONFIG_FILES([Makefile src/Makefile doc/man/Makefile share/setup.nsi share/qt/Info.plist test/config.ini])
+AC_CONFIG_FILES([Makefile src/Makefile doc/man/Makefile share/setup.nsi test/config.ini])
 AC_CONFIG_FILES([contrib/devtools/split-debug.sh],[chmod +x contrib/devtools/split-debug.sh])
 AC_CONFIG_FILES([doc/Doxyfile])
 AC_CONFIG_LINKS([test/functional/test_runner.py:test/functional/test_runner.py])
@@ -1352,11 +1276,6 @@ esac
 echo
 echo "Options used to compile and link:"
 echo "  with wallet   = $enable_wallet"
-echo "  with gui / qt = $gulden_enable_qt"
-if test x$gulden_enable_qt != xno; then
-    echo "    qt version  = $Gulden_qt_got_major_vers"
-    echo "    with qr     = $use_qr"
-fi
 echo "  with zmq      = $use_zmq"
 echo "  with test     = $use_tests"
 echo "  with bench    = $use_bench"

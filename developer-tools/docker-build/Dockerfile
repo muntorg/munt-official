@@ -23,12 +23,7 @@ RUN apt-get update && apt-get install  -y \
 RUN apt-get update && apt-get install  -y \
     libqrencode-dev \
     libminiupnpc-dev \
-    qtwebengine5-dev \
-    libqwt-qt5-dev \
-    libqwt-headers \
     python3-zmq \
-    qtbase5-dev \
-    qttools5-dev-tools \
     protobuf-compiler \
     libdbus-1-dev \
     libharfbuzz-dev \
@@ -37,5 +32,4 @@ RUN apt-get update && apt-get install  -y \
  && rm -rf /var/lib/apt/lists/* 
 
 ADD *.sh /root/
-COPY Qt5Qwt.pc /usr/share/pkgconfig/
 CMD /root/build.sh
