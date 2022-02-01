@@ -32,7 +32,6 @@ SOURCES_PATH ?= $(BASEDIR)/sources
 WORK_PATH = $(BASEDIR)/work
 BASE_CACHE ?= $(BASEDIR)/built
 SDK_PATH ?= $(BASEDIR)/SDKs
-NO_QT ?=
 NO_QR ?=
 NO_BDB ?=
 NO_WALLET ?=
@@ -143,8 +142,6 @@ build_id:=$(shell env CC='$(build_CC)' CXX='$(build_CXX)' AR='$(build_AR)' RANLI
 $(host_arch)_$(host_os)_id:=$(shell env CC='$(host_CC)' CXX='$(host_CXX)' AR='$(host_AR)' RANLIB='$(host_RANLIB)' STRIP='$(host_STRIP)' SHA256SUM='$(build_SHA256SUM)' DEBUG='$(DEBUG)' ./gen_id '$(HOST_ID_SALT)' 'GUIX_ENVIRONMENT=$(realpath $(GUIX_ENVIRONMENT))')
 
 
-qt_packages_$(NO_QT) = $(qt_packages) $(qt_$(host_os)_packages) $(qt_$(host_arch)_$(host_os)_packages) $(qrencode_packages_)
-
 bdb_packages_$(NO_BDB) = $(bdb_packages)
 wallet_packages_$(NO_WALLET) = $(bdb_packages_)
 
@@ -153,12 +150,8 @@ upnp_packages_$(NO_UPNP) = $(upnp_packages)
 zmq_packages_$(NO_ZMQ) = $(zmq_packages)
 rapidcheck_packages_$(RAPIDCHECK) = $(rapidcheck_packages)
 
-packages += $($(host_arch)_$(host_os)_packages) $($(host_os)_packages) $(qt_packages_) $(wallet_packages_) $(upnp_packages_) $(EXTRA_PACKAGES)
+packages += $($(host_arch)_$(host_os)_packages) $($(host_os)_packages) $(wallet_packages_) $(upnp_packages_) $(EXTRA_PACKAGES)
 native_packages += $($(host_arch)_$(host_os)_native_packages) $($(host_os)_native_packages)
-
-ifneq ($(qt_packages_),)
-native_packages += $(qt_native_packages)
-endif
 
 ifneq ($(zmq_packages_),)
 packages += $(zmq_packages)
@@ -227,7 +220,6 @@ $(host_prefix)/share/config.site : config.site.in $(host_prefix)/.stamp_$(final_
             -e 's|@CPPFLAGS@|$(strip $(host_CPPFLAGS) $(host_$(release_type)_CPPFLAGS))|' \
             -e 's|@LDFLAGS@|$(strip $(host_LDFLAGS) $(host_$(release_type)_LDFLAGS))|' \
             -e 's|@allow_host_packages@|$(ALLOW_HOST_PACKAGES)|' \
-            -e 's|@no_qt@|$(NO_QT)|' \
             -e 's|@no_qr@|$(NO_QR)|' \
             -e 's|@no_zmq@|$(NO_ZMQ)|' \
             -e 's|@no_wallet@|$(NO_WALLET)|' \

@@ -5,12 +5,6 @@ qrencode_android_packages = qrencode
 qrencode_darwin_packages = qrencode
 qrencode_mingw32_packages = qrencode
 
-qt_linux_packages:=qt expat dbus libxcb xcb_proto libXau xproto freetype fontconfig libX11 xextproto libXext xtrans
-qt_darwin_packages=qt
-qt_mingw32_packages=qt
-qt_native_packages = native_protobuf
-qt_packages = qrencode protobuf zlib
-
 ifneq ($(host_os),ios)
 ifneq ($(host_flavor),android)
 packages += libevent zeromq libcryptopp
