@@ -47,7 +47,7 @@ import {
   faRedoAlt
 } from "@fortawesome/pro-light-svg-icons";
 
-import {faListUl, faLongArrowDown} from "@fortawesome/pro-regular-svg-icons";
+import { faListUl, faLongArrowDown } from "@fortawesome/pro-regular-svg-icons";
 
 library.add([
   faAngleDoubleLeft,

@@ -225,7 +225,7 @@ export default {
   line-height: 16px;
 
   &:hover {
-    background-color: #222;
+    background-color: var(--account-background-color--hover);
   }
 
   & a {
@@ -235,7 +235,7 @@ export default {
 
   &.active {
     color: #fff;
-    background-color: #c0aa70;
+    background-color: var(--account-background-color--active);
 
     & a {
       color: #fff;
