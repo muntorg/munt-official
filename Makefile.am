@@ -34,7 +34,7 @@ OSX_BACKGROUND_IMAGE=background.tiff
 OSX_BACKGROUND_IMAGE_DPIS=36 72
 OSX_DSSTORE_GEN=DS_Store
 OSX_FANCY_PLIST=$(top_srcdir)/contrib/macdeploy/fancy.plist
-OSX_INSTALLER_ICONS=$(top_srcdir)/src/frontend/electron/build/icon.icns
+OSX_INSTALLER_ICONS=$(top_srcdir)/src/frontend/electron_vue/build/icon.icns
 
 DIST_DOCS = $(wildcard doc/*.md) $(wildcard doc/release-notes/*.md)
 DIST_CONTRIB = $(top_srcdir)/contrib/Gulden-cli.bash-completion \
