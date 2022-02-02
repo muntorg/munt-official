@@ -15,7 +15,6 @@
 #include "validation/witnessvalidation.h"
 #include "versionbits.h"
 #include "net_processing.h"
-#include "timedata.h"
 #include "txdb.h"
 
 #include "primitives/transaction.h"

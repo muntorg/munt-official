@@ -17,7 +17,6 @@
 #include "core_io.h"
 #include "init.h"
 #include "keystore.h"
-#include "validation/validation.h"
 #include "merkleblock.h"
 #include "net.h"
 #include "policy/policy.h"

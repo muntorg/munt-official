@@ -8,8 +8,6 @@
 #include <boost/program_options.hpp>
 #include <thread>
 
-#include <crypto/hash/sigma/sigma.h>
-
 #include <cryptopp/config.h>
 #include <cryptopp/aes.h>
 #include <cryptopp/modes.h>

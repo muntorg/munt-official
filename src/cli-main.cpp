@@ -30,7 +30,6 @@
 #include "support/events.h"
 
 #include <univalue.h>
-#include "util.h"
 
 static const char DEFAULT_RPCCONNECT[] = "127.0.0.1";
 static const int DEFAULT_HTTP_CLIENT_TIMEOUT=900;

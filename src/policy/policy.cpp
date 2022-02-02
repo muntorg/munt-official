@@ -22,7 +22,6 @@
 
 //fixme: (PHASE5) - we can remove these includes
 #include "witnessutil.h"
-#include "validation/validation.h"
 
 CAmount GetDustThreshold(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
 {

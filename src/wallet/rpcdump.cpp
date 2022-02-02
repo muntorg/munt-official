@@ -26,8 +26,6 @@
 #include "core_io.h"
 #include "rpcwallet.h"
 
-#include "rpcwallet.h"
-
 #include <fstream>
 #include <stdint.h>
 
@@ -308,7 +306,6 @@ UniValue importaddress(const JSONRPCRequest& request)
 
 //fixme: (PHASE5) - We can remove this include after phase4 activation
 #include "witnessutil.h"
-#include "validation/validation.h"
 
 UniValue importprunedfunds(const JSONRPCRequest& request)
 {

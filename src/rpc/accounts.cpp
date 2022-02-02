@@ -23,7 +23,6 @@
 #include <wallet/rpcwallet.h>
 #include "wallet/wallet.h"
 #include "wallet/coincontrol.h"
-#include "wallet/wallet.h"
 #include "wallet/witness_operations.h"
 #endif
 
@@ -44,8 +43,6 @@
 
 #include "utilmoneystr.h"
 
-#include <consensus/validation.h>
-#include <consensus/consensus.h>
 #include "net.h"
 
 

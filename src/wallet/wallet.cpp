@@ -59,7 +59,6 @@
 
 //fixme: (PHASE5) - we can remove these includes after phase4 activation.
 #include "witnessutil.h"
-#include "validation/validation.h"
 
 std::vector<CWalletRef> vpwallets;
 CWalletRef pactiveWallet = NULL;

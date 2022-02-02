@@ -23,7 +23,6 @@
 #include "key.h"
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
-#include "net.h"
 #include "policy/feerate.h"
 #include "policy/policy.h"
 #include "pow/pow.h"

@@ -82,7 +82,6 @@
 #include "zmq/zmqnotificationinterface.h"
 #endif
 
-#include "util.h"
 #include <compat/sys.h>
 
 bool fFeeEstimatesInitialized = false;
