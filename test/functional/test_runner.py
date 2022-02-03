@@ -175,7 +175,7 @@ BASE_SCRIPTS = [
     ###'rpc_getblockstats.py',
     ###'wallet_create_tx.py',
     ###'p2p_fingerprint.py',
-    ###'feature_uacomment.py',
+    'feature_uacomment.py',
     ###'wallet_coinbase_category.py',
     'feature_filelock.py',
     ###'p2p_unrequested_blocks.py',
