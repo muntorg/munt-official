@@ -37,7 +37,7 @@ class HTTPBasicsTest(GuldenTestFramework):
         config = configparser.ConfigParser()
         config.read_file(open(self.options.configfile))
         gen_rpcauth = config['environment']['RPCAUTH']
-        p = subprocess.Popen([sys.executable, gen_rpcauth, self.user], stdout=subprocess.PIPE, universal_newlines=True)
+        p = subprocess.Popen([sys.executable, gen_rpcauth, self.user], stdout=subprocess.PIPE, universal_newlines=True, text=True)
         lines = p.stdout.read().splitlines()
         rpcauth3 = lines[1]
         self.password = lines[3]
