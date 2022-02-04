@@ -71,7 +71,7 @@ BASE_SCRIPTS = [
     # Longest test should go first, to favor running tests in parallel
     ###'feature_fee_estimation.py',
     ###'wallet_hd.py',
-    ###'wallet_backup.py',
+    'wallet_backup.py',
     # vv Tests less than 5m vv
     ###'mining_getblocktemplate_longpoll.py',
     ###'feature_maxuploadtarget.py',
