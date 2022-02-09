@@ -13,7 +13,7 @@
             </div>
             <div class="balance">{{ getBalanceFor(category) }}</div>
           </div>
-          <div class="add" v-if="category !== 'spending'">
+          <div class="add">
             <div class="button" @click="addAccountFor(category)">
               <fa-icon :icon="['fal', 'plus']" />
             </div>
@@ -120,6 +120,8 @@ export default {
       switch (category) {
         case "holding":
           return this.$route.name === "add-holding-account";
+        case "spending":
+          return this.$route.name === "add-spending-account";
         default:
           return false;
       }
@@ -128,6 +130,9 @@ export default {
       switch (category) {
         case "holding":
           this.$router.push({ name: "add-holding-account" });
+          break;
+        case "spending":
+          this.$router.push({ name: "add-spending-account" });
           break;
         default:
           console.log(`add account for ${category} not implemented yet`);
