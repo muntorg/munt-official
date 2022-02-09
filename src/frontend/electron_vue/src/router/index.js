@@ -31,6 +31,14 @@ const routes = [
       )
   },
   {
+    path: "/add-spending-account",
+    name: "add-spending-account",
+    component: () =>
+      import(
+        /* webpackChunkName: "add-holding-account" */ "../views/Account/SpendingAccount/AddSpendingAccount.vue"
+      )
+  },
+  {
     path: "/setup",
     name: "setup",
     component: () =>

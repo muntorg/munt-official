@@ -18,6 +18,9 @@
     "overall": "overall",
     "title": "Add holding account"
   },
+  "add_spending_account": {
+    "title": "Add spending account"
+  },
   "buttons": {
     "back": "Back",
     "buy_coins": "Buy Florin",
@@ -39,7 +42,8 @@
     "start": "Start",
     "stop": "Stop",
     "transactions": "Transactions",
-    "unlock": "Unlock"
+    "unlock": "Unlock",
+    "done": "Done"
   },
   "clipboard_field": {
     "copied_to_clipboard": "Copied to clipboard"
@@ -120,13 +124,13 @@
     "information": "Before you can start mining Florin a mining account needs to be created. Enter your password to unlock your wallet and create a mining account."
   },
   "transaction_details": {
-   "title": {
+    "title": {
       "incoming_transaction": "Incoming transaction",
       "outgoing_transaction": "Outgoing transaction"
     },
     "hash": "Hash"
   },
-  
+
   "receive_coins": {
     "address_copied_to_clipboard": "Address copied to clipboard",
     "buy_or_receive_coins": "Buy or receive Florin",
