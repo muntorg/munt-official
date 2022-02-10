@@ -1672,7 +1672,7 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
         if (!CheckDiskSpace(48 * 2 * 2 * pcoinsTip->GetCacheSize()))
             return state.Error("out of disk space");
         // Flush the chainstate (which may refer to block index entries).
-        if (!pcoinsTip->Flush(chainActive.Tip() ? (GetAdjustedTime() - chainActive.Tip()->GetBlockTime() > (12 * 60 * 60) ): false))
+        if (!pcoinsTip->Flush())
             return AbortNode(state, "Failed to write to coin database");
         nLastFlush = nNow;
     }
@@ -1805,7 +1805,7 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
         CCoinsViewCache view(pcoinsTip);
         if (DisconnectBlock(block, pindexDelete, view) != DISCONNECT_OK)
             return error("DisconnectTip(): DisconnectBlock %s failed", pindexDelete->GetBlockHashPoW2().ToString());
-        bool flushed = view.Flush(chainActive.Tip() ? (GetAdjustedTime() - chainActive.Tip()->GetBlockTime() > (12 * 60 * 60)) : false);
+        bool flushed = view.Flush();
         assert(flushed);
     }
     LogPrint(BCLog::BENCH, "- Disconnect block: %.2fms\n", (GetTimeMicros() - nStart) * 0.001);
@@ -1955,7 +1955,7 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
         }
         nTime3 = GetTimeMicros(); nTimeConnectTotal += nTime3 - nTime2;
         LogPrint(BCLog::BENCH, "  - Connect total: %.2fms [%.2fs]\n", (nTime3 - nTime2) * 0.001, nTimeConnectTotal * 0.000001);
-        bool flushed = view.Flush(chainActive.Tip() ? (GetAdjustedTime() - chainActive.Tip()->GetBlockTime() > (12 * 60 * 60)) : false);
+        bool flushed = view.Flush();
         assert(flushed);
     }
     int64_t nTime4 = GetTimeMicros(); nTimeFlush += nTime4 - nTime3;
