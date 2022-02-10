@@ -74,7 +74,7 @@ public:
 
     uint256 GetBestBlock() const override { return hashBestBlock_; }
 
-    bool BatchWrite(CCoinsMap& mapCoins, const uint256& hashBlock, bool allowFastPath) override
+    bool BatchWrite(CCoinsMap& mapCoins, const uint256& hashBlock) override
     {
         for (CCoinsMap::iterator it = mapCoins.begin(); it != mapCoins.end(); ) {
             if (it->second.flags & CCoinsCacheEntry::DIRTY) {
@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE(coins_cache_simulation_test)
             if (stack.size() > 1 && InsecureRandBool() == 0)
             {
                 unsigned int flushIndex = InsecureRandRange(stack.size() - 1);
-                stack[flushIndex]->Flush(true);
+                stack[flushIndex]->Flush();
             }
         }
         if (InsecureRandRange(100) == 0)
@@ -256,7 +256,7 @@ BOOST_AUTO_TEST_CASE(coins_cache_simulation_test)
             if (stack.size() > 0 && InsecureRandBool() == 0)
             {
                 //Remove the top cache
-                stack.back()->Flush(true);
+                stack.back()->Flush();
                 delete stack.back();
                 stack.pop_back();
             }
@@ -528,7 +528,7 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
             if (stack.size() > 1 && InsecureRandBool() == 0)
             {
                 unsigned int flushIndex = InsecureRandRange(stack.size() - 1);
-                stack[flushIndex]->Flush(true);
+                stack[flushIndex]->Flush();
             }
         }
         if (InsecureRandRange(100) == 0)
@@ -536,7 +536,7 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
             // Every 100 iterations, change the cache stack.
             if (stack.size() > 0 && InsecureRandBool() == 0)
             {
-                stack.back()->Flush(true);
+                stack.back()->Flush();
                 delete stack.back();
                 stack.pop_back();
             }
@@ -896,7 +896,7 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             if (stack.size() > 1 && InsecureRandBool() == 0)
             {
                 unsigned int flushIndex = InsecureRandRange(stack.size() - 1);
-                stack[flushIndex]->Flush(true);
+                stack[flushIndex]->Flush();
                 LogPrintf("Flush cache [%d]\n", flushIndex);
             }
         }
@@ -906,7 +906,7 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             if (stack.size() > 0 && InsecureRandBool() == 0)
             {
                 //Remove the top cache
-                stack.back()->Flush(true);
+                stack.back()->Flush();
                 delete stack.back();
                 stack.pop_back();
                 
@@ -1131,7 +1131,7 @@ void WriteCoinsViewEntry(CCoinsView& view, CAmount value, char flags)
     CCoinsMap map;
     CCoinsRefMap refmap;
     InsertCoinsMapEntry(map, refmap, value, flags);
-    view.BatchWrite(map, {}, true);
+    view.BatchWrite(map, {});
 }
 
 class SingleEntryCacheTest
