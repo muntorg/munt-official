@@ -104,7 +104,7 @@ CChain chainActive;
 CBlockIndex *pindexBestHeader = NULL;
 CPartialChain partialChain;
 CBlockIndex *pindexBestPartial = nullptr;
-CWaitableCriticalSection csBestBlock;
+Mutex csBestBlock;
 CConditionVariable cvBlockChange;
 int nScriptCheckThreads = 0;
 std::atomic_bool fImporting(false);

@@ -235,7 +235,7 @@ extern uint64_t nLastBlockTx;
 extern uint64_t nLastBlockSize;
 extern uint64_t nLastBlockWeight;
 extern const std::string strMessageMagic;
-extern CWaitableCriticalSection csBestBlock;
+extern Mutex csBestBlock;
 extern CConditionVariable cvBlockChange;
 extern std::atomic_bool fImporting;
 extern bool fReindex;
