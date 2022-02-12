@@ -1413,7 +1413,7 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
         std::string msg = "addmultisigaddress num_required [\"key\",...] ( \"account\" )\n"
             "\nAdd a num-required-to-sign multisignature address to the wallet.\n"
             "Each key is a " GLOBAL_APPNAME " address or hex-encoded public key.\n"
-            "If 'account' is specified (DEPRECATED), assign address to that account.\n"
+            "Assign address to the specified account.\n"
 
             "\nArguments:\n"
             "1. num_required   (numeric, required) The number of required signatures out of the n keys or addresses.\n"
