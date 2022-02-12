@@ -1482,9 +1482,11 @@ static UniValue getchaintips(const JSONRPCRequest& request)
     return res;
 }
 
+extern std::atomic_bool fDumpMempoolLater;
 UniValue mempoolInfoToJSON()
 {
     UniValue ret(UniValue::VOBJ);
+    ret.push_back(Pair("loaded", fDumpMempoolLater));
     ret.push_back(Pair("size", (int64_t) mempool.size()));
     ret.push_back(Pair("bytes", (int64_t) mempool.GetTotalTxSize()));
     ret.push_back(Pair("usage", (int64_t) mempool.DynamicMemoryUsage()));
@@ -1503,6 +1505,7 @@ static UniValue getmempoolinfo(const JSONRPCRequest& request)
             "\nReturns details on the active state of the TX memory pool.\n"
             "\nResult:\n"
             "{\n"
+            "  \"loaded\": xxxxx              (boolean) True if the mempool is fully loaded\n"
             "  \"size\": xxxxx,               (numeric) Current tx count\n"
             "  \"bytes\": xxxxx,              (numeric) Sum of all virtual transaction sizes.\n"
             "  \"usage\": xxxxx,              (numeric) Total memory usage for the mempool\n"
