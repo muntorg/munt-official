@@ -776,7 +776,7 @@ public:
 
     // Up until latest built in checkpoint height we are only interested in these ranges and not all blocks.
     //fixme: (UNITY) (SPV) Move this into spvscanner rather.
-    CCriticalSection cs_blockFilterRanges;
+    RecursiveMutex cs_blockFilterRanges;
     std::vector<std::tuple<uint64_t, uint64_t>> blockFilterRanges;
 private:
     int nHeightOffset;

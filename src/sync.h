@@ -5,7 +5,7 @@
 //
 // File contains modifications by: The Gulden developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2022 The Gulden developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
@@ -27,7 +27,7 @@
 ////////////////////////////////////////////////
 
 /*
-CCriticalSection mutex;
+RecursiveMutex mutex;
     boost::recursive_mutex mutex;
 
 LOCK(mutex);
@@ -95,10 +95,10 @@ void static inline DeleteLock(void* cs) {}
  * Wrapped boost mutex: supports recursive locking, but no waiting
  * TODO: We should move away from using the recursive lock by default.
  */
-class CCriticalSection : public AnnotatedMixin<boost::recursive_mutex>
+class RecursiveMutex : public AnnotatedMixin<boost::recursive_mutex>
 {
 public:
-    ~CCriticalSection() {
+    ~RecursiveMutex() {
         DeleteLock((void*)this);
     }
 };
@@ -174,7 +174,7 @@ public:
     }
 };
 
-typedef CMutexLock<CCriticalSection> CCriticalBlock;
+typedef CMutexLock<RecursiveMutex> CCriticalBlock;
 
 #define PASTE(x, y) x ## y
 #define PASTE2(x, y) PASTE(x, y)

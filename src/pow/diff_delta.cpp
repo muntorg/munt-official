@@ -302,7 +302,7 @@ unsigned int GetNextWorkRequired_DELTA (const CBlockIndex* pindexLast, const CBl
     {
         if (nPrevHeight != pindexLast->nHeight ||  bnNew.GetCompact() != nPrevDifficulty)
         {
-            static CCriticalSection logCS;
+            static RecursiveMutex logCS;
             LOCK(logCS);
             LogPrintf("<DELTA> Height= %d\n" , pindexLast->nHeight);
             LogPrintf("%s" , sLogInfo.c_str());

@@ -475,7 +475,7 @@ public:
         >
     > indexed_transaction_set;
 
-    mutable CCriticalSection cs;
+    mutable RecursiveMutex cs;
     indexed_transaction_set mapTx;
 
     typedef indexed_transaction_set::nth_index<0>::type::iterator txiter;

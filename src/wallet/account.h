@@ -400,7 +400,7 @@ public:
 
     CCryptoKeyStore externalKeyStore;
     CCryptoKeyStore internalKeyStore;
-    mutable CCriticalSection cs_keypool;
+    mutable RecursiveMutex cs_keypool;
     std::set<int64_t> setKeyPoolInternal;
     std::set<int64_t> setKeyPoolExternal;
     AccountState m_State = AccountState::Normal;

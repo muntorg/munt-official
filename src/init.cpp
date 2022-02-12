@@ -188,7 +188,7 @@ extern void ServerShutdown(boost::thread_group& threadGroup);
 void CoreShutdown(boost::thread_group& threadGroup)
 {
     LogPrintf("Core shutdown: commence core shutdown\n");
-    static CCriticalSection cs_Shutdown;
+    static RecursiveMutex cs_Shutdown;
 
     TRY_LOCK(cs_Shutdown, lockShutdown);
     if (!lockShutdown)

@@ -52,7 +52,7 @@
 //Gulden includes
 #include "streams.h"
 
-CCriticalSection processBlockCS;
+RecursiveMutex processBlockCS;
 
 #ifdef ENABLE_WALLET
 CReserveKeyOrScript::CReserveKeyOrScript(CWallet* pwalletIn, CAccount* forAccount, int64_t forKeyChain)

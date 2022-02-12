@@ -51,6 +51,6 @@ typedef CReserveScript CReserveKeyOrScript;
 #endif
 
 //! Prevent both mining and witnessing from trying to process a block at the same time.
-extern CCriticalSection processBlockCS;
+extern RecursiveMutex processBlockCS;
 
 #endif

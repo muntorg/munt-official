@@ -81,7 +81,7 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
             }
         #else
             static sigma_verify_context verify(defaultSigmaSettings,std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::thread::hardware_concurrency()));
-            static CCriticalSection csPOW;
+            static RecursiveMutex csPOW;
             LOCK(csPOW);
 
             // Testnet optimisation - only verify last 5 days worth of blocks

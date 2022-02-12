@@ -58,7 +58,7 @@ public:
     virtual ~CExtWallet(){};
 
     //Members that are shared with CWallet.
-    mutable CCriticalSection cs_wallet;
+    mutable RecursiveMutex cs_wallet;
     uint64_t nTimeFirstKey = 0;
     //const std::string strWalletFile;
     std::unique_ptr<CWalletDBWrapper> dbw;

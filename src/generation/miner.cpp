@@ -1031,7 +1031,7 @@ int64_t nArenaSetupTime = 0;
 int64_t nHPSTimerStart = 0;
 int64_t nHashCounter=0;
 std::atomic<int64_t> nHashThrottle(-1);
-static CCriticalSection timerCS;
+static RecursiveMutex timerCS;
 
 inline void updateHashesPerSec(uint64_t& nStart, uint64_t nStop, uint64_t nCount)
 {
@@ -1443,7 +1443,7 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
 }
 
 boost::thread* minerThread = nullptr;
-CCriticalSection miningCS;
+RecursiveMutex miningCS;
 
 void PoWStopGeneration(bool notify)
 {

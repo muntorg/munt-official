@@ -30,7 +30,7 @@
 class CKeyStore
 {
 protected:
-    mutable CCriticalSection cs_KeyStore;
+    mutable RecursiveMutex cs_KeyStore;
 
 public:
     virtual ~CKeyStore() {}

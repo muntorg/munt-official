@@ -31,7 +31,7 @@ unsigned int diff_old(int nHeight, unsigned int nPowLimit)
     static bool fDebug = LogAcceptCategory(BCLog::DELTA);
     if (fDebug)
     {
-        static CCriticalSection logCS;
+        static RecursiveMutex logCS;
         LOCK(logCS);
         LogPrintf("<STATICDIFF> Height=%d Diff=%08x\n", nHeight, nRet);
     }
