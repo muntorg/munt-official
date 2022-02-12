@@ -222,6 +222,7 @@ CORE_H = rpc/accounts.h \
   undo.h \
   util.h \
   util/time.h \
+  util/check.h \
   utilmoneystr.h \
   utilstrencodings.h \
   validation/validation.h \
