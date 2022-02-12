@@ -223,6 +223,7 @@ CORE_H = rpc/accounts.h \
   util.h \
   util/time.h \
   util/check.h \
+  util/getuniquepath.h \
   utilmoneystr.h \
   utilstrencodings.h \
   validation/validation.h \
@@ -689,6 +690,7 @@ lib_util_a_SOURCES = \
   utilmoneystr.cpp \
   utilstrencodings.cpp \
   util/time.cpp \
+  util/getuniquepath.cpp \
   $(CORE_H)
 
 # generic: shared between everything except the unity libraries (which provide their own specialised implementations)
