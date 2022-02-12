@@ -109,6 +109,19 @@ public:
     unsigned int GetRejectCode() const { return chRejectCode; }
     std::string GetRejectReason() const { return strRejectReason; }
     std::string GetDebugMessage() const { return strDebugMessage; }
+    std::string ToString() const
+    {
+        if (IsValid())
+        {
+            return "Valid";
+        }
+
+        if (!strDebugMessage.empty()) {
+            return strRejectReason + ", " + strDebugMessage;
+        }
+
+        return strRejectReason;
+    }
 };
 
 #endif
