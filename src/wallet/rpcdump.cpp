@@ -19,7 +19,7 @@
 #include "script/standard.h"
 #include "sync.h"
 #include "util.h"
-#include "utiltime.h"
+#include "util/time.h"
 #include "wallet.h"
 #include "walletdb.h"
 #include "merkleblock.h"
@@ -37,22 +37,6 @@
 
 
 
-static std::string EncodeDumpTime(int64_t nTime) {
-    return DateTimeStrFormat("%Y-%m-%dT%H:%M:%SZ", nTime);
-}
-
-static int64_t DecodeDumpTime(const std::string &str) {
-    static const boost::posix_time::ptime epoch = boost::posix_time::from_time_t(0);
-    static const std::locale loc(std::locale::classic(),
-        new boost::posix_time::time_input_facet("%Y-%m-%dT%H:%M:%SZ"));
-    std::istringstream iss(str);
-    iss.imbue(loc);
-    boost::posix_time::ptime ptime(boost::date_time::not_a_date_time);
-    iss >> ptime;
-    if (ptime.is_not_a_date_time())
-        return 0;
-    return (ptime - epoch).total_seconds();
-}
 
 static std::string EncodeDumpString(const std::string &str) {
     std::stringstream ret;
@@ -539,7 +523,7 @@ UniValue importwallet(const JSONRPCRequest& request)
             LogPrintf("Skipping import of %s (key already present)\n", CNativeAddress(keyid).ToString());
             continue;
         }
-        int64_t nTime = DecodeDumpTime(vstr[1]);
+        int64_t nTime = ParseISO8601DateTime(vstr[1]);
         std::string strLabel;
         bool fLabel = true;
         for (unsigned int nStr = 2; nStr < vstr.size(); nStr++) {
@@ -792,9 +776,9 @@ UniValue dumpwallet(const JSONRPCRequest& request)
 
     // produce output
     file << strprintf("# Wallet dump created by " GLOBAL_APPNAME " %s\n", CLIENT_BUILD);
-    file << strprintf("# * Created on %s\n", EncodeDumpTime(GetTime()));
+    file << strprintf("# * Created on %s\n", FormatISO8601DateTime(GetTime()));
     file << strprintf("# * Best block at time of backup was %i (%s),\n", chainActive.Height(), chainActive.Tip()->GetBlockHashPoW2().ToString());
-    file << strprintf("#   timestamp %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));
+    file << strprintf("#   timestamp %s\n", FormatISO8601DateTime(chainActive.Tip()->GetBlockTime()));
     file << "\n";
 
     // add the base58check encoded extended master if the wallet uses HD 
@@ -815,7 +799,7 @@ UniValue dumpwallet(const JSONRPCRequest& request)
     }*/
     for (std::vector<std::pair<int64_t, CKeyID> >::const_iterator it = vKeyBirth.begin(); it != vKeyBirth.end(); it++) {
         const CKeyID &keyid = it->second;
-        std::string strTime = EncodeDumpTime(it->first);
+        std::string strTime = FormatISO8601DateTime(it->first);
         std::string strAddr = CNativeAddress(keyid).ToString();
         CKey key;
         if (pwallet->GetKey(keyid, key)) {

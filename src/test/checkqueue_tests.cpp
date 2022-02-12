@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "util.h"
-#include "utiltime.h"
+#include "util/time.h"
 #include "validation/validation.h"
 
 #include "test/test.h"

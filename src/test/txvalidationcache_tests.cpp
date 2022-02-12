@@ -18,7 +18,7 @@
 #include "random.h"
 #include "script/standard.h"
 #include "test/test.h"
-#include "utiltime.h"
+#include "util/time.h"
 
 #ifdef ENABLE_WALLET
 #include <wallet/wallet.h>

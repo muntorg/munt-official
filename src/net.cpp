@@ -1087,7 +1087,7 @@ void CConnman::NodeInactivityChecker(CNode* pnode)
     pnode->inactivityTimer.async_wait([this, pnode](const boost::system::error_code& ec) {
 
         if (!ec) {
-            int64_t nTime = GetSystemTimeInSeconds();
+            int64_t nTime = GetTimeSeconds();
             if (nTime - pnode->nTimeConnected > 60)
             {
                 if (pnode->nLastRecv == 0 || pnode->nLastSend == 0)
@@ -2483,7 +2483,7 @@ unsigned int CConnman::GetSendBufferSize() const{ return nSendBufferMaxSize; }
 
 CNode::CNode(NodeId idIn, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn, socket_t hSocketIn, const CAddress& addrIn, uint64_t nKeyedNetGroupIn, uint64_t nLocalHostNonceIn, const CAddress &addrBindIn, const std::string& addrNameIn, bool fInboundIn) :
     hSocket(std::move(hSocketIn)),
-    nTimeConnected(GetSystemTimeInSeconds()),
+    nTimeConnected(GetTimeSeconds()),
     addr(addrIn),
     addrBind(addrBindIn),
     fInbound(fInboundIn),
@@ -2575,7 +2575,7 @@ void CNode::AskFor(const CInv& inv)
         nRequestTime = it->second;
     else
         nRequestTime = 0;
-    LogPrint(BCLog::NET, "askfor %s  %d (%s) peer=%d\n", inv.ToString(), nRequestTime, DateTimeStrFormat("%H:%M:%S", nRequestTime/1000000), id);
+    LogPrint(BCLog::NET, "askfor %s  %d (%s) peer=%d\n", inv.ToString(), nRequestTime, FormatISO8601DateTime(nRequestTime/1000000), id);
 
     // Make sure not to reuse time indexes to keep things in the same order
     int64_t nNow = GetTimeMicros() - 1000000;
@@ -2665,7 +2665,7 @@ void CConnman::ResumeSend(CNode *pnode)
 
         LOCK(pnode->cs_vSend);
 
-        pnode->nLastSend = GetSystemTimeInSeconds();
+        pnode->nLastSend = GetTimeSeconds();
         pnode->nSendBytes += bytes_transferred;
 
         pnode->nSendSize -= bytes_transferred;

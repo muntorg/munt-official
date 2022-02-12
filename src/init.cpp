@@ -1139,7 +1139,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         OpenDebugLog();
 
     if (!fLogTimestamps)
-        LogPrintf("Startup time: %s\n", DateTimeStrFormat("%Y-%m-%d %H:%M:%S", GetTime()));
+        LogPrintf("Startup time: %s\n", FormatISO8601DateTime(GetTime()));
     LogPrintf("Default data directory %s\n", GetDefaultDataDir().string());
     LogPrintf("Using data directory %s\n", GetDataDir().string());
     LogPrintf("Using config file %s\n", GetConfigFile(GetArg("-conf", DEFAULT_CONF_FILENAME)).string());
