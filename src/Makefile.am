@@ -224,6 +224,7 @@ CORE_H = rpc/accounts.h \
   util/time.h \
   util/check.h \
   util/syscall_sandbox.h \
+  util/threadnames.h \
   util/getuniquepath.h \
   utilmoneystr.h \
   utilstrencodings.h \
@@ -692,6 +693,7 @@ lib_util_a_SOURCES = \
   utilstrencodings.cpp \
   util/time.cpp \
   util/syscall_sandbox.cpp \
+  util/threadnames.cpp \
   util/getuniquepath.cpp \
   $(CORE_H)
 
