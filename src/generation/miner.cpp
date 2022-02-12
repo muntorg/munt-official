@@ -1077,9 +1077,9 @@ void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, u
 
     int64_t nUpdateTimeStart = GetTimeMillis();
 
-    static bool testnet = IsArgSet("-testnet");
-    static bool regTest = GetBoolArg("-regtest", false);
-    static bool regTestLegacy = GetBoolArg("-regtestlegacy", false);
+    static bool testnet = Params().IsTestnet();
+    static bool regTest = Params().IsRegtest();
+    static bool regTestLegacy = Params().IsRegtestLegacy();
     
     // Start with fresh statistics for every mining run
     clearHashesPerSecondStatistics();

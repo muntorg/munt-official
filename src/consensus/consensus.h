@@ -27,7 +27,7 @@ static const int64_t MAX_BLOCK_SIGOPS_COST = 80000;
 static const int COINBASE_MATURITY_MAINNET = 100;
 static const int COINBASE_MATURITY_TESTNET = 10;
 
-#define COINBASE_MATURITY (IsArgSet("-testnet") ? COINBASE_MATURITY_TESTNET : COINBASE_MATURITY_MAINNET)
+#define COINBASE_MATURITY (::Params().IsTestnet() ? COINBASE_MATURITY_TESTNET : COINBASE_MATURITY_MAINNET)
 
 /** Flags for nSequence and nLockTime locks */
 enum {
