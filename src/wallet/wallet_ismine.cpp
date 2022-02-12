@@ -154,8 +154,8 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
         while (pindex && !fAbortRescan && nWorkQuantity > 0)
         {
             // Temporarily release lock to allow shadow key allocation a chance to do it's thing
-            LEAVE_CRITICAL_SECTION(cs_main)
             LEAVE_CRITICAL_SECTION(cs_wallet)
+            LEAVE_CRITICAL_SECTION(cs_main)
             nTransactionScanProgressPercent = ((pindex->nHeight-nProgressStart) / (double)(nWorkQuantity)) * 100;
             nTransactionScanProgressPercent = std::max(1, std::min(99, nTransactionScanProgressPercent));
             if (pindex->nHeight % 100 == 0 && nProgressTip - nProgressStart > 0)
