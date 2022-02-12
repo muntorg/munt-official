@@ -92,9 +92,9 @@ bool GetTransaction(const uint256 &hash, CTransactionRef &txOut, const CChainPar
 const int finalSubsidyBlock = 17727500;
 BlockSubsidy GetBlockSubsidy(uint64_t nHeight)
 {
-    static bool fRegTest = GetBoolArg("-regtest", false);
-    static bool fRegTestLegacy = GetBoolArg("-regtestlegacy", false);
-    static bool fTestnet = IsArgSet("-testnet");
+    static bool fRegTest = Params().IsRegtest();
+    static bool fRegTestLegacy = Params().IsRegtestLegacy();
+    static bool fTestnet = Params().IsTestnet();
     if (fRegTestLegacy)
         return BlockSubsidy(50*COIN, 0, 0); 
     if (fRegTest)

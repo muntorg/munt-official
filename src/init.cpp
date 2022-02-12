@@ -757,7 +757,7 @@ bool AppInitParameterInteraction()
     // also see: InitParameterInteraction()
     
     #ifdef BETA_BUILD
-    if (!IsArgSet("-testnet"))
+    if (!chainparams.IsTestNet())
     {
         return InitError(errortr("Running beta builds on mainnet is dangerous, please don't do this."));
     }

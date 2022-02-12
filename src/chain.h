@@ -21,6 +21,8 @@
 
 #include <vector>
 #include <valarray>
+
+#include "chainparams.h"
 /**
  * Maximum amount of time that a block timestamp is allowed to exceed the
  * current network-adjusted time before the block will be accepted.
@@ -389,7 +391,7 @@ public:
     int64_t GetMedianTimePast() const
     {
         int nMedianTimeSpan = 11;
-        if (nHeight >  437500 || IsArgSet("-testnet"))
+        if (nHeight >  437500 || Params().IsTestnet())
             nMedianTimeSpan = 3;
 
         //fixme: (PHASE5) - This needs unit tests
@@ -436,7 +438,7 @@ public:
     int64_t GetMedianTimePastPoW() const
     {
         int nMedianTimeSpan = 11;
-        if (nHeight >  437500 || IsArgSet("-testnet"))
+        if (nHeight >  437500 || Params().IsTestnet())
             nMedianTimeSpan = 3;
 
         std::valarray<int64_t> pmedian(nMedianTimeSpan);
@@ -458,7 +460,7 @@ public:
     int64_t GetMedianTimePastWitness() const
     {
         int nMedianTimeSpan = 11;
-        if (nHeight >  437500 || IsArgSet("-testnet"))
+        if (nHeight >  437500 || Params().IsTestnet())
             nMedianTimeSpan = 3;
 
         std::valarray<int64_t> pmedian(nMedianTimeSpan);

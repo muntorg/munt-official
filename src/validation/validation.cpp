@@ -2867,7 +2867,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
 {
     assert(pindexPrev != NULL);
     
-    bool fTestNet = IsArgSet("-testnet");
+    bool fTestNet = Params().IsTestnet();
 
     //const int nHeight = pindexPrev->nHeight + 1;
     // Check proof of work
@@ -3260,8 +3260,8 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
     // (but if it does not build on our best tip, let the SendMessages loop relay it)
     //fixme: (PHASE5) (HIGH) This will probably increase forks slightly - but we need to keep pushing tip contenders out in case of stalled witness
     // Maybe we could 'delay' such candidates slightly, store them in a cache and then only relay after some time has passed with tip not advancing.
-    static bool fRegTest = GetBoolArg("-regtest", false);
-    static bool fRegTestLegacy = GetBoolArg("-regtestlegacy", false);
+    static bool fRegTest = Params().IsRegtest();
+    static bool fRegTestLegacy = Params().IsRegtestLegacy();
     if (((!IsInitialBlockDownload())||fRegTest||fRegTestLegacy) && (chainActive.Tip() == pindex->pprev || pindex->nHeight >= chainActive.Tip()->nHeight))
         GetMainSignals().NewPoWValidBlock(pindex, pblock);
 
@@ -3809,7 +3809,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
     // If we are the ancestor of a checkpoint then reset the failiure flags and try again
     int numReset = 0;
     int64_t lastCheckpointHeight = Checkpoints::LastCheckPointHeight();
-    bool fTestNet = IsArgSet("-testnet");
+    bool fTestNet = Params().IsTestnet();
     if (chainActive.Tip()->nHeight < lastCheckpointHeight)
     {
         for (auto it = mapBlockIndex.begin(); it != mapBlockIndex.end(); ++it)

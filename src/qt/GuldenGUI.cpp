@@ -330,7 +330,7 @@ void GUI::requestRenewWitness(CAccount* funderAccount)
 
     CAccount* targetWitnessAccount = pactiveWallet->getActiveAccount();
 
-    if (!chainActive.Tip() || (IsArgSet("-testnet") && chainActive.Tip()->nHeight < 100) || (!IsArgSet("-testnet") && chainActive.Tip()->nHeight < 797000))
+    if (!chainActive.Tip() || (Params().IsTestnet() && chainActive.Tip()->nHeight < 100) || (!Params().IsTestnet() && chainActive.Tip()->nHeight < 797000))
     {
         QString message = tr("This feature is not yet available, please try again after block 797000.");
         QDialog* d = createDialog(this, message, tr("Okay"), QString(""), 400, 180);

@@ -33,8 +33,8 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
 
     bnTarget.SetCompact(block->nBits, &fNegative, &fOverflow);
 
-    static bool fRegTest = IsArgSet("-regtest");
-    static bool fRegTestLegacy = IsArgSet("-regtestlegacy");
+    static bool fRegTest = Params().IsRegtest();
+    static bool fRegTestLegacy = Params().IsRegtestLegacy();
     if (!(fRegTest||fRegTestLegacy) && block->nTime > 1571320800)
     {
         uint256 newProofOfWorkLimit = uint256S("0x003fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
