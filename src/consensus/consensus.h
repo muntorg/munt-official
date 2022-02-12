@@ -14,6 +14,7 @@
 #define CONSENSUS_CONSENSUS_H
 
 #include <stdint.h>
+#include "chainparams.h"
 
 /** The maximum allowed size for a serialized block, in bytes (only for buffer size limits) */
 static const unsigned int MAX_BLOCK_SERIALIZED_SIZE = 1000000;
