@@ -2177,8 +2177,8 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         vRecv >> locator >> hashStop;
 
         LOCK(cs_main);
-        static bool fRegTest = IsArgSet("-regtest");
-        static bool fRegTestLegacy = IsArgSet("-regtestlegacy");
+        static bool fRegTest = Params().IsRegtest();
+        static bool fRegTestLegacy = Params().IsRegtestLegacy();
         if (IsInitialBlockDownload() && !pfrom->fWhitelisted && !fRegTest && !fRegTestLegacy)
         {
             LogPrint(BCLog::NET, "Ignoring getheaders from peer=%d because node is in initial block download\n", pfrom->GetId());

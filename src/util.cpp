@@ -545,6 +545,9 @@ fs::path GetConfigFile(const std::string& confPath)
 
 void ArgsManager::ReadConfigFile(const std::string& confPath)
 {
+    static bool fTestnet = IsArgSet("-testnet");
+    static bool fRegTest = IsArgSet("-regtest");
+    static bool fRegTestLegacy = IsArgSet("-regtestlegacy");
     fs::ifstream streamConfig(GetConfigFile(confPath));
     if (!streamConfig.good())
         return; // No Gulden.conf file is OK
@@ -559,11 +562,11 @@ void ArgsManager::ReadConfigFile(const std::string& confPath)
             // Don't overwrite existing settings so command line settings override Gulden.conf
             std::string strKey = std::string("-") + it->string_key;
             std::string strValue = it->value[0];
-            if (IsArgSet("-regtest"))
+            if (fRegTest)
                 boost::replace_all(strKey, "regtest.", "");
-            if (IsArgSet("-regtestlegacy"))
+            if (fRegTestLegacy)
                 boost::replace_all(strKey, "regtestlegacy.", "");
-            else if (IsArgSet("-testnet"))
+            else if (fTestnet)
                 boost::replace_all(strKey, "testnet.", "");
             else
                 boost::replace_all(strKey, "mainnet.", "");
@@ -571,6 +574,13 @@ void ArgsManager::ReadConfigFile(const std::string& confPath)
             if (mapArgs.count(strKey) == 0)
                 mapArgs[strKey] = strValue;
             mapMultiArgs[strKey].push_back(strValue);
+            
+            if (strKey == "-testnet")
+                fTestnet=true;
+            if (strKey == "-regtest")
+                fRegTest=true;
+            if (strKey == "-regtestlegacy")
+                fRegTestLegacy=true;
         }
     }
     // If datadir is changed in .conf file:

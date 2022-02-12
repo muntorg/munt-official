@@ -373,7 +373,7 @@ uint64_t MinimumWitnessLockLength()
     {
         return gMinimumWitnessLockDays * gRefactorDailyBlocksUsage;
     }
-    else if (IsArgSet("-testnet"))
+    else if (Params().IsTestnet())
     {
         return 50;
     }
@@ -385,7 +385,7 @@ uint64_t MinimumWitnessLockLength()
 
 uint64_t MaximumWitnessLockLength()
 {
-    if (IsArgSet("-testnet"))
+    if (Params().IsTestnet())
     {
         return gMaximumWitnessLockDays * gRefactorDailyBlocksUsage;
     }

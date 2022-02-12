@@ -185,7 +185,7 @@ static UniValue generateBlocks(std::shared_ptr<CReserveKeyOrScript> coinbaseScri
         CChainParams chainparams = Params();
         Consensus::Params consensus = chainparams.GetConsensus();
         CGetWitnessInfo witnessInfo;
-        if (IsArgSet("-regtest"))
+        if (Params().IsRegtest())
         {
             if (!GetWitness(chainActive, chainparams, nullptr, chainActive.Tip(), *pblock, witnessInfo))
             {
@@ -198,7 +198,7 @@ static UniValue generateBlocks(std::shared_ptr<CReserveKeyOrScript> coinbaseScri
             throw JSONRPCError(RPC_INTERNAL_ERROR, "ProcessNewBlock, PoW block not accepted");
         
         // Perform witnessing
-        if (IsArgSet("-regtest"))
+        if (Params().IsRegtest())
         {   
             bool encounteredError=false;
             bool signedBlock=false;
@@ -266,7 +266,7 @@ static UniValue generate(const JSONRPCRequest& request)
             + HelpExampleCli("generate", "11")
         );
 
-    if (!IsArgSet("-regtest"))
+    if (!Params().IsRegtest())
         throw std::runtime_error("generate command only for regtest; for mainnet/testnet use setgenerate");
 
     int nGenerate = request.params[0].get_int();
@@ -487,7 +487,7 @@ static UniValue generatetoaddress(const JSONRPCRequest& request)
             + HelpExampleCli("generatetoaddress", "11 \"myaddress\"")
         );
 
-    if (!IsArgSet("-regtest") && !IsArgSet("-regtestlegacy"))
+    if (!Params().IsRegtest() && !Params().IsRegtestLegacy())
         throw std::runtime_error("generatetoaddress command only for regtest; for mainnet/testnet use setgenerate");
 
     int nGenerate = request.params[0].get_int();

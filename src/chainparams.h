@@ -85,6 +85,9 @@ public:
     const CCheckpointData& Checkpoints() const { return checkpointData; }
     void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout);
 
+    bool IsTestnet() const { return fIsTestnet; }
+    bool IsRegtest() const { return fIsRegtest; }
+    bool IsRegtestLegacy() const { return fIsRegtestLegacy; }
     //fixme: (testnet) remove after official testnet restarted
     bool IsOfficialTestnetV1() const { return fIsOfficialTestnetV1; }
     
@@ -115,6 +118,9 @@ protected:
     bool fMineBlocksOnDemand;
     CCheckpointData checkpointData;
     bool fIsOfficialTestnetV1;
+    bool fIsTestnet;
+    bool fIsRegtest;
+    bool fIsRegtestLegacy;
 };
 
 /**

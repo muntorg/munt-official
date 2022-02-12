@@ -386,7 +386,7 @@ bool GetWitnessHelper(uint256 blockHash, CGetWitnessInfo& witnessInfo, uint64_t 
         // We must have at least 100 accounts to keep odds of being selected down below 1% at all times.
         if (witnessInfo.witnessSelectionPoolFiltered.size() < 100)
         {
-            if(!IsArgSet("-testnet") && nBlockHeight > 880000)
+            if(!Params().IsTestnet() && nBlockHeight > 880000)
                 CAlert::Notify("Warning network is experiencing low levels of witnessing participants!", true, true);
 
 

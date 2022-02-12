@@ -643,13 +643,13 @@ void static GuldenWitness()
     if (!pactiveWallet)
         return;
 
-    static bool regTest = GetBoolArg("-regtest", false);
-    static bool regTestLegacy = GetBoolArg("-regtestlegacy", false);
+    static bool regTest = Params().IsRegtest();
+    static bool regTestLegacy = Params().IsRegtestLegacy();
     // Don't use witness loop on regtest
     if (regTest || regTestLegacy)
         return;
     
-    static bool testNet = IsArgSet("-testnet");
+    static bool testNet = Params().IsTestnet();
 
     CChainParams chainparams = Params();
     try
