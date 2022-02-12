@@ -105,7 +105,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "signrawtransaction", 1, "prev_txs" },
     { "signrawtransaction", 2, "priv_keys" },
     { "sendrawtransaction", 1, "allow_high_fees" },
-    { "fundrawtransaction", 1, "options" },
+    { "fundrawtransaction", 2, "options" },
     { "gettxout", 1, "n" },
     { "gettxout", 2, "include_mempool" },
     { "gettxoutproof", 0, "txids" },
