@@ -151,6 +151,7 @@ CORE_H = rpc/accounts.h \
   coins.h \
   compat.h \
   compat/arch.h \
+  compat/cpuid.h \
   compat/sys.h \
   compat/sse.h \
   compat/sse2neon.h \
