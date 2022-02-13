@@ -548,8 +548,8 @@ crypto_lib_crypto_arm_thunderx_aes_a_SOURCES = \
 crypto_lib_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES)
 crypto_lib_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 crypto_lib_crypto_a_SOURCES = \
-  crypto/bytevectorhash.h \
-  crypto/bytevectorhash.cpp \
+  util/bytevectorhash.h \
+  util/bytevectorhash.cpp \
   crypto/chacha20.h \
   crypto/chacha20.cpp \
   crypto/hash/scrypt.h \

@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "hash.h"
+#include <crypto/hash.h>
 #include <random.h>
 #include "bytevectorhash.h"
 
@@ -16,4 +16,3 @@ size_t ByteVectorHash::operator()(const std::vector<unsigned char>& input) const
 {
     return CSipHasher(m_k0, m_k1).Write(input.data(), input.size()).Finalize();
 }
-

@@ -22,7 +22,7 @@
 #include <uint256.h>
 #include <undo.h>
 #include "chain.h"
-#include <crypto/bytevectorhash.h>
+#include <util/bytevectorhash.h>
 
 /**
  * This implements a Golomb-coded set as defined in BIP 158. It is a
