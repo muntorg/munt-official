@@ -782,7 +782,7 @@ int ExpireMempoolForPartialSync(const std::shared_ptr<const CBlock>& pblock, con
         std::vector<uint256> removed;
         int numExpired = mempool.Expire(expireTime, &removed);
         for (const auto& txHash: removed) {
-            GetMainSignals().TransactionDeletedFromMempool(txHash, MemPoolRemovalReason::EXPIRY);
+            GetMainSignals().TransactionRemovedFromMempool(txHash, MemPoolRemovalReason::EXPIRY);
         }
         return numExpired;
     }

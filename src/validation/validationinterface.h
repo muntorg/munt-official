@@ -54,7 +54,7 @@ public:
     virtual void StalledWitness([[maybe_unused]] const CBlockIndex* pBlock, [[maybe_unused]] uint64_t nSeconds) {}
     virtual void UpdatedBlockTip([[maybe_unused]] const CBlockIndex *pindexNew, [[maybe_unused]] const CBlockIndex *pindexFork, [[maybe_unused]] bool fInitialDownload) {}
     virtual void TransactionAddedToMempool([[maybe_unused]] const CTransactionRef &ptxn) {}
-    virtual void TransactionDeletedFromMempool([[maybe_unused]] const uint256 &hash, [[maybe_unused]] MemPoolRemovalReason reason) {}
+    virtual void TransactionRemovedFromMempool([[maybe_unused]] const uint256 &hash, [[maybe_unused]] MemPoolRemovalReason reason) {}
     #ifdef ENABLE_WALLET
     virtual void WalletTransactionAdded([[maybe_unused]] CWallet* const pWallet, [[maybe_unused]] const CWalletTx& wtx) {}
     #endif
@@ -78,7 +78,7 @@ struct CMainSignals {
     /** Notifies listeners of a transaction having been added to mempool. */
     boost::signals2::signal<void (const CTransactionRef &)> TransactionAddedToMempool;
     /** Notifies listeners of a transaction having been removed from mempool. Currently only triggered with MemPoolRemovalReason::EXPIRY. */
-    boost::signals2::signal<void (const uint256& hash, MemPoolRemovalReason reason)> TransactionDeletedFromMempool;
+    boost::signals2::signal<void (const uint256& hash, MemPoolRemovalReason reason)> TransactionRemovedFromMempool;
     #ifdef ENABLE_WALLET
     /** Notifies listeners of a transaction having been added to the wallet. */
     boost::signals2::signal<void (CWallet* const pWallet, const CWalletTx& wtx)> WalletTransactionAdded;

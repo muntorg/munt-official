@@ -27,7 +27,7 @@ void RegisterValidationInterface(CValidationInterface* pwalletIn)
     g_signals.StalledWitness.connect(boost::bind(&CValidationInterface::StalledWitness, pwalletIn, _1, _2));
     g_signals.UpdatedBlockTip.connect(boost::bind(&CValidationInterface::UpdatedBlockTip, pwalletIn, _1, _2, _3));
     g_signals.TransactionAddedToMempool.connect(boost::bind(&CValidationInterface::TransactionAddedToMempool, pwalletIn, _1));
-    g_signals.TransactionDeletedFromMempool.connect(boost::bind(&CValidationInterface::TransactionDeletedFromMempool, pwalletIn, _1, _2));
+    g_signals.TransactionRemovedFromMempool.connect(boost::bind(&CValidationInterface::TransactionRemovedFromMempool, pwalletIn, _1, _2));
     #ifdef ENABLE_WALLET
     g_signals.WalletTransactionAdded.connect(boost::bind(&CValidationInterface::WalletTransactionAdded, pwalletIn, _1, _2));
     #endif
@@ -53,7 +53,7 @@ void UnregisterValidationInterface(CValidationInterface* pwalletIn)
     g_signals.BlockDisconnected.disconnect(boost::bind(&CValidationInterface::BlockDisconnected, pwalletIn, _1));
     g_signals.BlockConnected.disconnect(boost::bind(&CValidationInterface::BlockConnected, pwalletIn, _1, _2, _3));
     g_signals.TransactionAddedToMempool.disconnect(boost::bind(&CValidationInterface::TransactionAddedToMempool, pwalletIn, _1));
-    g_signals.TransactionDeletedFromMempool.disconnect(boost::bind(&CValidationInterface::TransactionDeletedFromMempool, pwalletIn, _1, _2));
+    g_signals.TransactionRemovedFromMempool.disconnect(boost::bind(&CValidationInterface::TransactionRemovedFromMempool, pwalletIn, _1, _2));
     #ifdef ENABLE_WALLET
     g_signals.WalletTransactionAdded.disconnect(boost::bind(&CValidationInterface::WalletTransactionAdded, pwalletIn, _1, _2));
     #endif
@@ -70,7 +70,7 @@ void UnregisterAllValidationInterfaces()
     g_signals.Broadcast.disconnect_all_slots();
     g_signals.SetBestChain.disconnect_all_slots();
     g_signals.TransactionAddedToMempool.disconnect_all_slots();
-    g_signals.TransactionDeletedFromMempool.disconnect_all_slots();
+    g_signals.TransactionRemovedFromMempool.disconnect_all_slots();
     g_signals.BlockConnected.disconnect_all_slots();
     g_signals.BlockDisconnected.disconnect_all_slots();
     g_signals.UpdatedBlockTip.disconnect_all_slots();

@@ -1433,7 +1433,7 @@ void CWallet::TransactionAddedToMempool(const CTransactionRef& ptx) {
     SyncTransaction(ptx);
 }
 
-void CWallet::TransactionDeletedFromMempool(const uint256& hash, MemPoolRemovalReason reason)
+void CWallet::TransactionRemovedFromMempool(const uint256& hash, MemPoolRemovalReason reason)
 {
     LOCK2(cs_main, cs_wallet);
 
