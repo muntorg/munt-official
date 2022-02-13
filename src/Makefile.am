@@ -231,6 +231,7 @@ CORE_H = rpc/accounts.h \
   util/syscall_sandbox.h \
   util/threadnames.h \
   util/getuniquepath.h \
+  attributes.h \
   utilmoneystr.h \
   utilstrencodings.h \
   validation/validation.h \
