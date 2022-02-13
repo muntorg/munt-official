@@ -158,6 +158,7 @@ CORE_H = rpc/accounts.h \
   compat/byteswap.h \
   compat/endian.h \
   compat/sanity.h \
+  compat/assumptions.h \
   compressor.h \
   blockfilter.h \
   consensus/consensus.h \

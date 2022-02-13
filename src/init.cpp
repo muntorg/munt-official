@@ -83,6 +83,7 @@
 #endif
 
 #include <compat/sys.h>
+#include <compat/assumptions.h>
 
 bool fFeeEstimatesInitialized = false;
 
