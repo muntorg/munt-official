@@ -151,6 +151,7 @@
   },
   "link_holding_account": {
     "title": "Link Holding Account",
-    "information": "Linking a holding account with another wallet."
+    "information": "Linking a holding account with another wallet.",
+    "no_funds": "Holding account must be funded before it is possible to link it with other wallets."
   }
 }
