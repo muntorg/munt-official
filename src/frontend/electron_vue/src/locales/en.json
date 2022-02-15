@@ -43,7 +43,8 @@
     "stop": "Stop",
     "transactions": "Transactions",
     "unlock": "Unlock",
-    "done": "Done"
+    "done": "Done",
+    "holding_key": "Holding Key"
   },
   "clipboard_field": {
     "copied_to_clipboard": "Copied to clipboard"
@@ -147,5 +148,9 @@
   },
   "renew_holding_account": {
     "funding_account": "Pay renewal fee from account"
+  },
+  "link_holding_account": {
+    "title": "Link Holding Account",
+    "information": "Linking a holding account with another wallet."
   }
 }

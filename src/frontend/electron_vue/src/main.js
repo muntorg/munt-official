@@ -44,7 +44,8 @@ import {
   faUniversity,
   faUnlock,
   faUserCircle,
-  faRedoAlt
+  faRedoAlt,
+  faKey
 } from "@fortawesome/pro-light-svg-icons";
 
 import { faListUl, faLongArrowDown } from "@fortawesome/pro-regular-svg-icons";
@@ -76,6 +77,7 @@ library.add([
   faUnlock,
   faUserCircle,
   faRedoAlt,
+  faKey,
   faLongArrowDown,
   faListUl
 ]);
