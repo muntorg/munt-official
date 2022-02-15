@@ -43,6 +43,7 @@ LIB_GENERIC=lib_generic.a
 LIB_CRYPTO_SSE3=crypto/lib_crypto_sse3.a
 LIB_CRYPTO_SSE3_AES=crypto/lib_crypto_sse3_aes.a
 LIB_CRYPTO_SSE4=crypto/lib_crypto_sse4.a
+LIB_CRYPTO_SSE4_SHANI=crypto/lib_crypto_sse4_shani.a
 LIB_CRYPTO_SSE4_AES=crypto/lib_crypto_sse4_aes.a
 LIB_CRYPTO_AVX=crypto/lib_crypto_avx.a
 LIB_CRYPTO_AVX_AES=crypto/lib_crypto_avx_aes.a
@@ -57,6 +58,7 @@ LIB_CRYPTO_ARM_CORTEX_A57_AES=crypto/lib_crypto_arm_cortex_a57_aes.a
 LIB_CRYPTO_ARM_CORTEX_A72=crypto/lib_crypto_arm_cortex_a72.a
 LIB_CRYPTO_ARM_CORTEX_A72_AES=crypto/lib_crypto_arm_cortex_a72_aes.a
 LIB_CRYPTO_ARM_THUNDERX_AES=crypto/lib_crypto_arm_thunderx_aes.a
+LIB_CRYPTO_ARM_V8_CRYPTO=crypto/lib_crypto_arm_v8_crypto.a
 LIB_CRYPTO=crypto/lib_crypto.a
 LIB_ANDROID_COMPAT=lib_android_compat.a
 LIBGULDENQT=qt/libguldenqt.a
@@ -81,8 +83,8 @@ endif
 $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C $(@D) $(@F)
 
-LIB_CRYPTO_ARM = $(LIB_CRYPTO_ARM_CORTEX_A53) $(LIB_CRYPTO_ARM_CORTEX_A53_AES) $(LIB_CRYPTO_ARM_CORTEX_A57) $(LIB_CRYPTO_ARM_CORTEX_A57_AES) $(LIB_CRYPTO_ARM_CORTEX_A72) $(LIB_CRYPTO_ARM_CORTEX_A72_AES) $(LIB_CRYPTO_ARM_THUNDERX_AES)
-LIB_CRYPTO_INTEL = $(LIB_CRYPTO_SSE3) $(LIB_CRYPTO_SSE3_AES) $(LIB_CRYPTO_SSE4) $(LIB_CRYPTO_SSE4_AES) $(LIB_CRYPTO_AVX) $(LIB_CRYPTO_AVX_AES) $(LIB_CRYPTO_AVX2) $(LIB_CRYPTO_AVX2_AES) $(LIB_CRYPTO_AVX512F) $(LIB_CRYPTO_AVX512F_AES)
+LIB_CRYPTO_ARM = $(LIB_CRYPTO_ARM_CORTEX_A53) $(LIB_CRYPTO_ARM_CORTEX_A53_AES) $(LIB_CRYPTO_ARM_CORTEX_A57) $(LIB_CRYPTO_ARM_CORTEX_A57_AES) $(LIB_CRYPTO_ARM_CORTEX_A72) $(LIB_CRYPTO_ARM_CORTEX_A72_AES) $(LIB_CRYPTO_ARM_THUNDERX_AES) $(LIB_CRYPTO_ARM_V8_CRYPTO)
+LIB_CRYPTO_INTEL = $(LIB_CRYPTO_SSE3) $(LIB_CRYPTO_SSE3_AES) $(LIB_CRYPTO_SSE4) $(LIB_CRYPTO_SSE4_SHANI) $(LIB_CRYPTO_SSE4_AES) $(LIB_CRYPTO_AVX) $(LIB_CRYPTO_AVX_AES) $(LIB_CRYPTO_AVX2) $(LIB_CRYPTO_AVX2_AES) $(LIB_CRYPTO_AVX512F) $(LIB_CRYPTO_AVX512F_AES)
 LIB_CRYPTO_ALL = $(LIB_CRYPTO) $(LIB_CRYPTO_INTEL) $(LIB_CRYPTO_ARM)
 
 # Make is not made aware of per-object dependencies to avoid limiting building parallelization
@@ -404,7 +406,13 @@ crypto_lib_crypto_sse4_a_SOURCES = \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_sse4.h \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_sse4.cpp \
   crypto/hash/sigma/argon_echo/opt/core_opt_sse4.h \
-  crypto/hash/sigma/argon_echo/opt/core_opt_sse4.cpp
+  crypto/hash/sigma/argon_echo/opt/core_opt_sse4.cpp \
+  crypto/sha256_sse4.cpp
+
+crypto_lib_crypto_sse4_shani_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE4_SHANI_FLAGS)
+crypto_lib_crypto_sse4_shani_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE4_SHANI_FLAGS)
+crypto_lib_crypto_sse4_shani_a_SOURCES = \
+  crypto/sha256_x86_shani.cpp
 
 crypto_lib_crypto_sse4_aes_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_SSE4_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
 crypto_lib_crypto_sse4_aes_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_SSE4_FLAGS) $(PLATFORM_INTRINSICS_AES_FLAGS)
@@ -547,6 +555,11 @@ crypto_lib_crypto_arm_thunderx_aes_a_SOURCES = \
   crypto/hash/sigma/shavite3_256/opt/shavite3_256_opt_arm_thunderx_aes.cpp \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_thunderx_aes.h \
   crypto/hash/sigma/argon_echo/opt/core_opt_arm_thunderx_aes.cpp
+  
+crypto_lib_crypto_arm_v8_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PLATFORM_INTRINSICS_ARMV8_CRYPTO_FLAGS)
+crypto_lib_crypto_arm_v8_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PLATFORM_INTRINSICS_ARMV8_CRYPTO_FLAGS)
+crypto_lib_crypto_arm_v8_crypto_a_SOURCES = \
+  crypto/sha256_arm_shani.cpp
 
 crypto_lib_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES)
 crypto_lib_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)

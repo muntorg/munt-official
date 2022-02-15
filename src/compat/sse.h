@@ -10,6 +10,7 @@
 #define COMPAT_SSE_H
 
 #include <compat/arch.h>
+#include <cstdint>
 
 #if defined(ARCH_CPU_X86_FAMILY)
     #include <emmintrin.h>

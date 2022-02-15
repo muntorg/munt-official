@@ -27,12 +27,18 @@ AC_DEFUN([INTRINSIC_FLAG_CHECK],
   AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_SSE3_FLAGS, $INTRINSICFLAGS)])
   AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_SSE3 ")
   
-  dnl fixme: We should handle also -msse4.1  -msse4.2  -msse4 -msse4a - however these are a complicated mess.
+  dnl fixme: We should handle also -msse4.1  -msse4.2  -msse4 -msse4a all as seperate things; however these are a complicated mess, for now we just assume that SSE4 includes 4.1 and 4.2 and if these aren't present then no sse4 at all
   INTRINSICFLAGS="-O3 -mmmx  -msse  -msse2  -msse3  -mssse3 -msse4.1 -msse4.2 -DCOMPILER_HAS_SSE4"
   CXXFLAGS="-Werror $INTRINSICFLAGS"
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [PASSED=yes], [PASSED=no] )
   AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_SSE4_FLAGS, $INTRINSICFLAGS)])
   AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_SSE4 ")
+  
+  INTRINSICFLAGS="-O3 -msse4 -msha -DCOMPILER_HAS_SSE4_SHANI"
+  CXXFLAGS="-Werror $INTRINSICFLAGS"
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [PASSED=yes], [PASSED=no] )
+  AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_SSE4_SHANI_FLAGS, $INTRINSICFLAGS)])
+  AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_SSE4_SHANI ")  
   
   INTRINSICFLAGS="-O3 -mmmx  -msse  -msse2  -msse3  -mssse3 -msse4.1 -msse4.2 -mavx -DCOMPILER_HAS_AVX"
   CXXFLAGS="-Werror $INTRINSICFLAGS"
@@ -140,6 +146,14 @@ AC_DEFUN([INTRINSIC_FLAG_CHECK],
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [PASSED=yes], [PASSED=no] )
   AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_THUNDERX_AES_FLAGS, $INTRINSICFLAGS)])
   AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_THUNDERX_AES ")
+  
+  INTRINSICFLAGS="-O3 -march=armv8-a+crypto -DCOMPILER_HAS_ARMV8_CRYPTO"
+  CXXFLAGS="-Werror $INTRINSICFLAGS"
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [PASSED=yes], [PASSED=no] )
+  AS_IF([test "$PASSED" = yes], [AC_SUBST(PLATFORM_INTRINSICS_ARMV8_CRYPTO_FLAGS, $INTRINSICFLAGS)])
+  AS_IF([test "$PASSED" = yes], COMPILERINSTRINSICS+="-DCOMPILER_HAS_ARMV8_CRYPTO ")
+  
+  
   
   dnl -------------------------- End of arm tests ------------------------------------------
   
