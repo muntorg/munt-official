@@ -153,7 +153,7 @@ static const unsigned int DATABASE_WRITE_INTERVAL = 10;
 static const unsigned int DATABASE_WRITE_INTERVAL = 60 * 60;
 #endif
 /** Time to wait (in seconds) between flushing chainstate to disk. */
-static const unsigned int DATABASE_FLUSH_INTERVAL = 24 * 60 * 60;
+static const unsigned int DATABASE_FLUSH_INTERVAL = 2 * 60 * 60;
 /** Maximum length of reject messages. */
 static const unsigned int MAX_REJECT_MESSAGE_LENGTH = 111;
 /** Average delay between local address broadcasts in seconds. */

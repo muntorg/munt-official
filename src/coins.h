@@ -85,6 +85,19 @@ public:
     , nHeight(0)
     , nTxIndex(0)
     { }
+    
+    bool operator==(const Coin& otherCoin) const
+    {
+        if (out != otherCoin.out)
+            return false;
+        if (nHeight != otherCoin.nHeight)
+            return false;
+        if (nTxIndex != otherCoin.nTxIndex)
+            return false;
+        return true;
+        //unsigned int fCoinBase : 1;
+        //unsigned int fSegSig : 1;
+    }
 
     bool IsCoinBase() const {
         return fCoinBase;
@@ -252,6 +265,7 @@ public:
     virtual void GetAllCoins(std::map<COutPoint, Coin>&) const {};
     virtual void GetAllCoinsIndexBased(std::map<COutPoint, Coin>&) const {};
     virtual void GetAllCoinsIndexBasedDirect(std::map<COutPoint, Coin>& allCoins) const {};
+    virtual void SanityCheckCoinCache() const {};
     /*virtual int GetDepth() const
     {
         return 0;
@@ -289,6 +303,10 @@ public:
     void GetAllCoinsIndexBasedDirect(std::map<COutPoint, Coin>& allCoins) const override
     {
         base->GetAllCoinsIndexBasedDirect(allCoins);
+    }
+    void SanityCheckCoinCache() const override
+    {
+        base->SanityCheckCoinCache();
     }
 };
 
@@ -435,6 +453,26 @@ public:
                 allCoinsIndexBased[indexBased] = iter.second.coin;
             }
         }
+    }
+    
+    void SanityCheckCoinCache() const override
+    {
+        std::map<COutPoint, Coin> allCoinsIndexBased;
+        GetAllCoinsIndexBasedDirect(allCoinsIndexBased);
+        
+        std::map<COutPoint, Coin> allCoinsIndexBasedComp;
+        for (auto [indexBased, hashBased] : cacheCoinRefs)
+        {
+            auto findIter = cacheCoins.find(hashBased);
+            assert(findIter != cacheCoins.end());
+            if (!findIter->second.coin.out.IsNull())
+            {
+                allCoinsIndexBasedComp[indexBased] = findIter->second.coin;
+            }
+        }
+        
+	if (!std::equal(std::begin(allCoinsIndexBased),std::end(allCoinsIndexBased),std::begin(allCoinsIndexBasedComp),std::end(allCoinsIndexBasedComp)))
+        	assert(0);
     }
 
 private:
