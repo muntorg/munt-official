@@ -126,6 +126,12 @@ AC_ARG_ENABLE([wallet],
   [enable_wallet=$enableval],
   [enable_wallet=yes])
 
+AC_ARG_WITH([bdb],
+  [AS_HELP_STRING([--without-bdb],
+  [disable bdb wallet support (default is enabled if wallet is enabled)])],
+  [use_bdb=$withval],
+  [use_bdb=auto])
+
 AC_ARG_WITH([miniupnpc],
   [AS_HELP_STRING([--with-miniupnpc],
   [enable UPNP (default is yes if libminiupnpc is found)])],
@@ -408,9 +414,12 @@ case $host in
            PKG_CONFIG_PATH="$openssl_prefix/lib/pkgconfig:$PKG_CONFIG_PATH"
            export PKG_CONFIG_PATH
          fi
-         if test x$bdb_prefix != x; then
-           CPPFLAGS="$CPPFLAGS -I$bdb_prefix/include"
-           LIBS="$LIBS -L$bdb_prefix/lib"
+
+         if test "$use_bdb" != "no" && $BREW list --versions berkeley-db@4 >/dev/null && test "$BDB_CFLAGS" = "" && test "$BDB_LIBS" = ""; then
+           bdb_prefix=$($BREW --prefix berkeley-db@4 2>/dev/null)
+           dnl This must precede the call to GULDEN_FIND_BDB48 below.
+           BDB_CFLAGS="-I$bdb_prefix/include"
+           BDB_LIBS="-L$bdb_prefix/lib -ldb_cxx-4.8"
          fi
          if test x$qt5_prefix != x; then
            PKG_CONFIG_PATH="$qt5_prefix/lib/pkgconfig:$PKG_CONFIG_PATH"
@@ -746,11 +755,6 @@ AC_SUBST(LEVELDB_CPPFLAGS)
 AC_SUBST(LIBLEVELDB)
 AC_SUBST(LIBMEMENV)
 
-if test "$enable_wallet" != "no"; then
-    dnl Check for libdb_cxx only if wallet enabled
-    GULDEN_FIND_BDB48
-fi
-
 dnl Check for libminiupnpc (optional)
 if test x$use_upnp != xno; then
   AC_CHECK_HEADERS(
@@ -766,6 +770,20 @@ if test x$build_libs_objc != xno; then
     DJINNI_OBJCXXFLAGS=-I$prefix/include/objc
   fi
   AC_SUBST(DJINNI_OBJCXXFLAGS)
+fi
+
+if test "$enable_wallet" != "no"; then
+    dnl Check for libdb_cxx only if wallet enabled
+    if test "$use_bdb" != "no"; then
+      GULDEN_FIND_BDB48
+    fi
+    dnl Disable wallet if --without-bdb
+    if test "$use_bdb" = "no"; then
+        if test "$enable_wallet" = "yes"; then
+            AC_MSG_ERROR([wallet functionality requested but no BDB or SQLite support available.])
+        fi
+        enable_wallet=no
+    fi
 fi
 
 GULDEN_QT_INIT
@@ -1147,6 +1165,7 @@ AC_MSG_CHECKING([if wallet should be enabled])
 if test "$enable_wallet" != "no"; then
   AC_MSG_RESULT([yes])
   AC_DEFINE_UNQUOTED([ENABLE_WALLET],[1],[Define to 1 to enable wallet functions])
+  enable_wallet=yes
 
 else
   AC_MSG_RESULT([no])
@@ -1376,7 +1395,10 @@ esac
 
 echo
 echo "Options used to compile and link:"
-echo "  with wallet   = $enable_wallet"
+echo "  with wallet     = $enable_wallet"
+if test "$enable_wallet" != "no"; then
+    echo "    with bdb      = $use_bdb"
+fi
 echo "  with gui / qt = $gulden_enable_qt"
 if test x$gulden_enable_qt != xno; then
     echo "    qt version  = $Gulden_qt_got_major_vers"
