@@ -9,7 +9,7 @@
 # Distributed under the GULDEN software license, see the accompanying
 # file COPYING
 
-DIST_SUBDIRS = secp256k1 univalue
+DIST_SUBDIRS = secp256k1
 
 AM_LDFLAGS_NO_THREADS = $(LIBTOOL_LDFLAGS) $(HARDENED_LDFLAGS)
 AM_LDFLAGS = $(PTHREAD_CFLAGS) $(AM_LDFLAGS_NO_THREADS)
@@ -17,20 +17,11 @@ AM_CXXFLAGS = $(HARDENED_CXXFLAGS) $(ERROR_CXXFLAGS)
 AM_CPPFLAGS = $(HARDENED_CPPFLAGS)
 EXTRA_LIBRARIES =
 
-if EMBEDDED_UNIVALUE
-LIBUNIVALUE = univalue/libunivalue.la
-
-$(LIBUNIVALUE): $(wildcard univalue/lib/*) $(wildcard univalue/include/*)
-	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C $(@D) $(@F)
-else
-LIBUNIVALUE = $(UNIVALUE_LIBS)
-endif
-
 CONFIG_INCLUDES=-I$(builddir)/config
 COMMON_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BDB_CPPFLAGS) $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS) $(CRYPTOPP_CFLAGS)
 
 COMMON_INCLUDES += -I$(srcdir)/secp256k1/include
-COMMON_INCLUDES += $(UNIVALUE_CFLAGS)
+COMMON_INCLUDES += -I$(srcdir)/$(UNIVALUE_INCLUDE_DIR_INT)
 
 LIB_SERVER=lib_server.a
 LIB_RPC=lib_rpc.a
@@ -104,10 +95,11 @@ EXTRA_LIBRARIES += \
   $(LIB_ZMQ)
 
 lib_LTLIBRARIES = $(LIB_UNITY_JNI) $(LIB_UNITY_NODE_JS)
+noinst_LTLIBRARIES =
+noinst_LIBRARIES =
 
 bin_PROGRAMS =
 noinst_PROGRAMS =
-noinst_LIBRARIES =
 TESTS =
 BENCHMARKS =
 
@@ -300,7 +292,7 @@ lib_server_a_SOURCES = \
   $(CORE_H)
 
 # node: shared between Daemon, GUI client and unity libraries.
-lib_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) -I$(srcdir)/univalue/include
+lib_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 lib_node_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 lib_node_a_SOURCES = \
   addrdb.cpp \
@@ -845,8 +837,8 @@ lib_unity_node_js_la_SOURCES = \
 NJS_DEPS = $(LIB_CONSENSUS) $(LIB_NODE) $(LIB_UTIL) $(LIB_COMMON) $(LIB_SERVER) $(LIB_RPC) $(LIB_GENERIC) $(LIB_WALLET) $(LIB_CRYPTO_ALL) $(LIB_ZMQ)
 lib_unity_node_js_la_LDFLAGS = -shared -module -no-undefined -export-dynamic $(AM_LDFLAGS) $(RELDFLAGS) -pthread
 lib_unity_node_js_la_LIBADD = $(NJS_DEPS) $(NJS_DEPS) $(LIBSECP256K1) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(SSL_LIBS) $(ZMQ_LIBS) -lqrencode -lpthread -lcryptopp $(SSL_LIBS) -lcrypto
-lib_unity_node_js_la_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
-lib_unity_node_js_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(COMMON_INCLUDES) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
+lib_unity_node_js_la_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
+lib_unity_node_js_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(COMMON_INCLUDES) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) -I$(srcdir)/unity/djinni/node_js -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
 endif
 
 # unity library (for java)#
@@ -921,8 +913,8 @@ ANDROID_DEPS = $(LIB_COMPAT) $(LIB_CONSENSUS) $(LIB_NODE) $(LIB_UTIL) $(LIB_COMM
 
 lib_unity_jni_la_LDFLAGS = -shared -module -export-dynamic $(AM_LDFLAGS_NO_THREADS) $(RELDFLAGS) -llog
 lib_unity_jni_la_LIBADD = $(ANDROID_DEPS) $(ANDROID_DEPS) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(LIBUNIVALUE) $(PROTOBUF_LIBS) -lqrencode -lcryptopp
-lib_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/unity/djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
-lib_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(COMMON_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/unity/djinni/support-lib/jni -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
+lib_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/unity/djinni/support-lib/jni -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
+lib_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(COMMON_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/unity/djinni/support-lib/jni -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
 endif
 #
 
@@ -931,7 +923,7 @@ if BUILD_LIBS_OBJC
 
 noinst_LIBRARIES += $(LIB_UNITY_OBJC)
 
-lib_unity_objc_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) -I$(srcdir)/univalue/include -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
+lib_unity_objc_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
 lib_unity_objc_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -I$(srcdir)/unity/djinni/cpp
 lib_unity_objc_a_OBJCXXFLAGS = -fobjc-arc  -I$(srcdir)/unity/djinni/cpp $(DJINNI_OBJCXXFLAGS)
 
@@ -1173,7 +1165,6 @@ $(top_srcdir)/$(subdir)/config/build-config.h.in:  $(am__configure_deps)
 
 clean-local:
 	-$(MAKE) -C secp256k1 clean
-	-$(MAKE) -C univalue clean
 	-rm -f leveldb/*/*.gcda leveldb/*/*.gcno leveldb/helpers/memenv/*.gcda leveldb/helpers/memenv/*.gcno
 	-rm -f config.h
 	-rm -rf test/__pycache__
@@ -1211,3 +1202,5 @@ endif
 if ENABLE_QT_TESTS
 include Makefile.qttest.include
 endif
+
+include Makefile.univalue.include

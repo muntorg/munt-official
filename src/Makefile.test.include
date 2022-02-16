@@ -97,7 +97,6 @@ TEST_SOURCES =\
   test/txvalidationcache_tests.cpp \
   test/versionbits_tests.cpp \
   test/uint256_tests.cpp \
-  test/univalue_tests.cpp \
   test/util_tests.cpp \
   test/unity_tests.cpp
 
@@ -194,9 +193,6 @@ check-local:
 	@echo "Running test/util/gulden-util-test.py..."
 	$(top_builddir)/test/util/gulden-util-test.py
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C secp256k1 check
-if EMBEDDED_UNIVALUE
-	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C univalue check
-endif
 
 %.json.h: %.json
 	@$(MKDIR_P) $(@D)

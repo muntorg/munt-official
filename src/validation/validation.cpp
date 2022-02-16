@@ -1758,7 +1758,7 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams& chainParams) {
         }
     }
     //fixme: (PHASE5) - Replace this 1000000 constant with a chainparams paramater so we remember to update it.
-    if(!gbMinimalLogging || !warningMessages.empty() || IsArgSet("-testnet") || chainActive.Height() % 1000 == 0 || chainActive.Height() > 1000000)
+    if(!gbMinimalLogging || !warningMessages.empty() || Params().IsTestnet() || chainActive.Height() % 1000 == 0 || chainActive.Height() > 1000000)
     {
         LogPrintf("%s: new best=%s height=%d version=0x%08x versionpow2=0x%08x log2_work=%.8g tx=%lu date='%s' progress=%f cache=%.1fMiB(%utxo)", __func__,
             chainActive.Tip()->GetBlockHashPoW2().ToString(), chainActive.Height(), chainActive.Tip()->nVersion, chainActive.Tip()->nVersionPoW2Witness,

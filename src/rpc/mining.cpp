@@ -535,20 +535,20 @@ static UniValue getmininginfo(const JSONRPCRequest& request)
     LOCK(cs_main);
 
     UniValue obj(UniValue::VOBJ);
-    obj.push_back(Pair("blocks",                           (int)chainActive.Height()));
-    obj.push_back(Pair("currentblocksize",                 (uint64_t)nLastBlockSize));
-    obj.push_back(Pair("currentblockweight",               (uint64_t)nLastBlockWeight));
-    obj.push_back(Pair("currentblocktx",                   (uint64_t)nLastBlockTx));
-    obj.push_back(Pair("difficulty",                       (double)GetDifficulty()));
-    obj.push_back(Pair("errors",                           GetWarnings("statusbar")));
-    obj.push_back(Pair("genproclimit",                     (int)GetArg("-genproclimit", DEFAULT_GENERATE_THREADS)));
-    obj.push_back(Pair("genmemlimit",                      (uint64_t)GetArg("-genmemlimit", DEFAULT_GENERATE_THREADS)));
-    obj.push_back(Pair("networkhashps",                    getnetworkhashps(request)));
-    obj.push_back(Pair("pooledtx",                         (uint64_t)mempool.size()));
-    obj.push_back(Pair("chain",                            Params().NetworkIDString()));
-    obj.push_back(Pair("selected_shavite_implementation",  selectedAlgorithmName(gSelShavite)));
-    obj.push_back(Pair("selected_argon_implementation",    selectedAlgorithmName(gSelArgon)));
-    obj.push_back(Pair("selected_echo_implementation",     selectedAlgorithmName(gSelEcho)));
+    obj.pushKV("blocks",                           (int)chainActive.Height());
+    obj.pushKV("currentblocksize",                 (uint64_t)nLastBlockSize);
+    obj.pushKV("currentblockweight",               (uint64_t)nLastBlockWeight);
+    obj.pushKV("currentblocktx",                   (uint64_t)nLastBlockTx);
+    obj.pushKV("difficulty",                       (double)GetDifficulty());
+    obj.pushKV("errors",                           GetWarnings("statusbar"));
+    obj.pushKV("genproclimit",                     (int)GetArg("-genproclimit", DEFAULT_GENERATE_THREADS));
+    obj.pushKV("genmemlimit",                      (uint64_t)GetArg("-genmemlimit", DEFAULT_GENERATE_THREADS));
+    obj.pushKV("networkhashps",                    getnetworkhashps(request));
+    obj.pushKV("pooledtx",                         (uint64_t)mempool.size());
+    obj.pushKV("chain",                            Params().NetworkIDString());
+    obj.pushKV("selected_shavite_implementation",  selectedAlgorithmName(gSelShavite));
+    obj.pushKV("selected_argon_implementation",    selectedAlgorithmName(gSelArgon));
+    obj.pushKV("selected_echo_implementation",     selectedAlgorithmName(gSelEcho));
     return obj;
 }
 
@@ -719,17 +719,17 @@ static UniValue submitheader(const JSONRPCRequest& request)
     }
 
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair("hash", block.GetHashPoW2().ToString()));
+    result.pushKV("hash", block.GetHashPoW2().ToString());
 
     const CBlockIndex *pindex = NULL;
     CValidationState state;
     if (!ProcessNewBlockHeaders( {block.GetBlockHeader()}, state, Params(), &pindex))
     {
-        result.push_back(Pair("status", "failed"));        
+        result.pushKV("status", "failed");        
     }
     else
     {
-        result.push_back(Pair("status", "success"));
+        result.pushKV("status", "success");
     }
     return result;
 }
@@ -918,25 +918,25 @@ static UniValue estimaterawfee(const JSONRPCRequest& request)
     EstimationResult buckets;
     feeRate = ::feeEstimator.estimateRawFee(nBlocks, threshold, horizon, &buckets);
 
-    result.push_back(Pair("feerate", feeRate == CFeeRate(0) ? -1.0 : ValueFromAmount(feeRate.GetFeePerK())));
-    result.push_back(Pair("decay", buckets.decay));
-    result.push_back(Pair("scale", (int)buckets.scale));
+    result.pushKV("feerate", feeRate == CFeeRate(0) ? -1.0 : ValueFromAmount(feeRate.GetFeePerK()));
+    result.pushKV("decay", buckets.decay);
+    result.pushKV("scale", (int)buckets.scale);
     UniValue passbucket(UniValue::VOBJ);
-    passbucket.push_back(Pair("startrange", round(buckets.pass.start)));
-    passbucket.push_back(Pair("endrange", round(buckets.pass.end)));
-    passbucket.push_back(Pair("withintarget", round(buckets.pass.withinTarget * 100.0) / 100.0));
-    passbucket.push_back(Pair("totalconfirmed", round(buckets.pass.totalConfirmed * 100.0) / 100.0));
-    passbucket.push_back(Pair("inmempool", round(buckets.pass.inMempool * 100.0) / 100.0));
-    passbucket.push_back(Pair("leftmempool", round(buckets.pass.leftMempool * 100.0) / 100.0));
-    result.push_back(Pair("pass", passbucket));
+    passbucket.pushKV("startrange", round(buckets.pass.start));
+    passbucket.pushKV("endrange", round(buckets.pass.end));
+    passbucket.pushKV("withintarget", round(buckets.pass.withinTarget * 100.0) / 100.0);
+    passbucket.pushKV("totalconfirmed", round(buckets.pass.totalConfirmed * 100.0) / 100.0);
+    passbucket.pushKV("inmempool", round(buckets.pass.inMempool * 100.0) / 100.0);
+    passbucket.pushKV("leftmempool", round(buckets.pass.leftMempool * 100.0) / 100.0);
+    result.pushKV("pass", passbucket);
     UniValue failbucket(UniValue::VOBJ);
-    failbucket.push_back(Pair("startrange", round(buckets.fail.start)));
-    failbucket.push_back(Pair("endrange", round(buckets.fail.end)));
-    failbucket.push_back(Pair("withintarget", round(buckets.fail.withinTarget * 100.0) / 100.0));
-    failbucket.push_back(Pair("totalconfirmed", round(buckets.fail.totalConfirmed * 100.0) / 100.0));
-    failbucket.push_back(Pair("inmempool", round(buckets.fail.inMempool * 100.0) / 100.0));
-    failbucket.push_back(Pair("leftmempool", round(buckets.fail.leftMempool * 100.0) / 100.0));
-    result.push_back(Pair("fail", failbucket));
+    failbucket.pushKV("startrange", round(buckets.fail.start));
+    failbucket.pushKV("endrange", round(buckets.fail.end));
+    failbucket.pushKV("withintarget", round(buckets.fail.withinTarget * 100.0) / 100.0);
+    failbucket.pushKV("totalconfirmed", round(buckets.fail.totalConfirmed * 100.0) / 100.0);
+    failbucket.pushKV("inmempool", round(buckets.fail.inMempool * 100.0) / 100.0);
+    failbucket.pushKV("leftmempool", round(buckets.fail.leftMempool * 100.0) / 100.0);
+    result.pushKV("fail", failbucket);
     return result;
 }
 

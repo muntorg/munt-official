@@ -68,10 +68,10 @@ static UniValue gethashps(const JSONRPCRequest& request)
     selectLargesHashUnit(dBestHashPerSecLog, sBestHashPerSecLogLabel);
     
     UniValue rec(UniValue::VOBJ);
-    rec.push_back(Pair("last_reported",   strprintf("%lf %s", dHashPerSecLog, sHashPerSecLogLabel)));
-    rec.push_back(Pair("rolling_average", strprintf("%lf %s", dRollingHashPerSecLog, sRollingHashPerSecLogLabel)));
-    rec.push_back(Pair("best_reported",   strprintf("%lf %s", dBestHashPerSecLog, sBestHashPerSecLogLabel)));
-    rec.push_back(Pair("arena_setup",     strprintf("%lf s", nArenaSetupTime/1000.0)));
+    rec.pushKV("last_reported",   strprintf("%lf %s", dHashPerSecLog, sHashPerSecLogLabel));
+    rec.pushKV("rolling_average", strprintf("%lf %s", dRollingHashPerSecLog, sRollingHashPerSecLogLabel));
+    rec.pushKV("best_reported",   strprintf("%lf %s", dBestHashPerSecLog, sBestHashPerSecLogLabel));
+    rec.pushKV("arena_setup",     strprintf("%lf s", nArenaSetupTime/1000.0));
 
     return rec;
     return strprintf("%lf %s/s (best %lf %s/s)", dHashPerSecLog, sHashPerSecLogLabel, dBestHashPerSecLog, sBestHashPerSecLogLabel);
@@ -428,28 +428,28 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
                 #endif
 
                 UniValue rec(UniValue::VOBJ);
-                rec.push_back(Pair("type", iter.second.out.GetTypeAsString()));
-                rec.push_back(Pair("address", strAddress));
-                rec.push_back(Pair("age", nAge));
-                rec.push_back(Pair("amount", ValueFromAmount(nValue)));
-                rec.push_back(Pair("raw_weight", nRawWeight));
-                rec.push_back(Pair("adjusted_weight", std::min(nRawWeight, witInfo.nMaxIndividualWeight)));
-                rec.push_back(Pair("adjusted_weight_final", nAdjustedWeight));
-                rec.push_back(Pair("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeightRaw)));
-                rec.push_back(Pair("estimated_witness_period", estimatedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeightRaw)));
-                rec.push_back(Pair("last_active_block", nLastActiveBlock));
-                rec.push_back(Pair("lock_from_block", nLockFromBlock));
-                rec.push_back(Pair("lock_until_block", nLockUntilBlock));
-                rec.push_back(Pair("lock_period", nLockPeriodInBlocks));
-                rec.push_back(Pair("lock_period_expired", fLockPeriodExpired));
-                rec.push_back(Pair("eligible_to_witness", fEligible));
-                rec.push_back(Pair("expired_from_inactivity", fExpired));
-                rec.push_back(Pair("fail_count", nFailCount));
-                rec.push_back(Pair("action_nonce", nActionNonce));
+                rec.pushKV("type", iter.second.out.GetTypeAsString());
+                rec.pushKV("address", strAddress);
+                rec.pushKV("age", nAge);
+                rec.pushKV("amount", ValueFromAmount(nValue));
+                rec.pushKV("raw_weight", nRawWeight);
+                rec.pushKV("adjusted_weight", std::min(nRawWeight, witInfo.nMaxIndividualWeight));
+                rec.pushKV("adjusted_weight_final", nAdjustedWeight);
+                rec.pushKV("expected_witness_period", expectedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeightRaw));
+                rec.pushKV("estimated_witness_period", estimatedWitnessBlockPeriod(nRawWeight, witInfo.nTotalWeightRaw));
+                rec.pushKV("last_active_block", nLastActiveBlock);
+                rec.pushKV("lock_from_block", nLockFromBlock);
+                rec.pushKV("lock_until_block", nLockUntilBlock);
+                rec.pushKV("lock_period", nLockPeriodInBlocks);
+                rec.pushKV("lock_period_expired", fLockPeriodExpired);
+                rec.pushKV("eligible_to_witness", fEligible);
+                rec.pushKV("expired_from_inactivity", fExpired);
+                rec.pushKV("fail_count", nFailCount);
+                rec.pushKV("action_nonce", nActionNonce);
                 #ifdef ENABLE_WALLET
-                rec.push_back(Pair("ismine_accountname", accountName));
+                rec.pushKV("ismine_accountname", accountName);
                 #else
-                rec.push_back(Pair("ismine_accountname", ""));
+                rec.pushKV("ismine_accountname", "");
                 #endif
 
                 witnessWeightStats(nRawWeight);
@@ -468,15 +468,15 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
 
         UniValue witnessInfoForBlock(UniValue::VARR);
         UniValue rec(UniValue::VOBJ);
-        rec.push_back(Pair("pow2_phase", nPow2Phase));
-        rec.push_back(Pair("number_of_witnesses_raw", (uint64_t)nNumWitnessAddressesAll));
-        rec.push_back(Pair("number_of_witnesses_total", (uint64_t)witInfo.witnessSelectionPoolUnfiltered.size()));
-        rec.push_back(Pair("number_of_witnesses_eligible", (uint64_t)witInfo.witnessSelectionPoolFiltered.size()));
-        rec.push_back(Pair("total_witness_weight_raw", (uint64_t)witInfo.nTotalWeightRaw));
-        rec.push_back(Pair("total_witness_weight_eligible_raw", (uint64_t)witInfo.nTotalWeightEligibleRaw));
-        rec.push_back(Pair("total_witness_weight_eligible_adjusted", (uint64_t)witInfo.nTotalWeightEligibleAdjusted));
-        rec.push_back(Pair("selected_witness_address", sWitnessAddress));
-        rec.push_back(Pair("selected_witness_index", (uint64_t)witInfo.selectedWitnessIndex));
+        rec.pushKV("pow2_phase", nPow2Phase);
+        rec.pushKV("number_of_witnesses_raw", (uint64_t)nNumWitnessAddressesAll);
+        rec.pushKV("number_of_witnesses_total", (uint64_t)witInfo.witnessSelectionPoolUnfiltered.size());
+        rec.pushKV("number_of_witnesses_eligible", (uint64_t)witInfo.witnessSelectionPoolFiltered.size());
+        rec.pushKV("total_witness_weight_raw", (uint64_t)witInfo.nTotalWeightRaw);
+        rec.pushKV("total_witness_weight_eligible_raw", (uint64_t)witInfo.nTotalWeightEligibleRaw);
+        rec.pushKV("total_witness_weight_eligible_adjusted", (uint64_t)witInfo.nTotalWeightEligibleAdjusted);
+        rec.pushKV("selected_witness_address", sWitnessAddress);
+        rec.pushKV("selected_witness_index", (uint64_t)witInfo.selectedWitnessIndex);
         if (fVerbose)
         {
             UniValue averages(UniValue::VOBJ);
@@ -484,55 +484,55 @@ static UniValue getwitnessinfo(const JSONRPCRequest& request)
                 if (boost::accumulators::count(witnessWeightStats) > 0)
                 {
                     UniValue weight(UniValue::VOBJ);
-                    weight.push_back(Pair("largest", boost::accumulators::max(witnessWeightStats)));
-                    weight.push_back(Pair("smallest", boost::accumulators::min(witnessWeightStats)));
-                    weight.push_back(Pair("mean", boost::accumulators::mean(witnessWeightStats)));
-                    weight.push_back(Pair("median", boost::accumulators::median(witnessWeightStats)));
-                    averages.push_back(Pair("weight", weight));
+                    weight.pushKV("largest", boost::accumulators::max(witnessWeightStats));
+                    weight.pushKV("smallest", boost::accumulators::min(witnessWeightStats));
+                    weight.pushKV("mean", boost::accumulators::mean(witnessWeightStats));
+                    weight.pushKV("median", boost::accumulators::median(witnessWeightStats));
+                    averages.pushKV("weight", weight);
                 }
             }
             {
                 if (boost::accumulators::count(witnessAmountStats) > 0)
                 {
                     UniValue amount(UniValue::VOBJ);
-                    amount.push_back(Pair("largest", ValueFromAmount(boost::accumulators::max(witnessAmountStats))));
-                    amount.push_back(Pair("smallest", ValueFromAmount(boost::accumulators::min(witnessAmountStats))));
-                    amount.push_back(Pair("mean", ValueFromAmount(boost::accumulators::mean(witnessAmountStats))));
-                    amount.push_back(Pair("median", ValueFromAmount(boost::accumulators::median(witnessAmountStats))));
-                    averages.push_back(Pair("amount", amount));
+                    amount.pushKV("largest", ValueFromAmount(boost::accumulators::max(witnessAmountStats)));
+                    amount.pushKV("smallest", ValueFromAmount(boost::accumulators::min(witnessAmountStats)));
+                    amount.pushKV("mean", ValueFromAmount(boost::accumulators::mean(witnessAmountStats)));
+                    amount.pushKV("median", ValueFromAmount(boost::accumulators::median(witnessAmountStats)));
+                    averages.pushKV("amount", amount);
                 }
             }
             {
                 if (boost::accumulators::count(lockPeriodWeightStats) > 0)
                 {
                     UniValue lockPeriod(UniValue::VOBJ);
-                    lockPeriod.push_back(Pair("largest", boost::accumulators::max(lockPeriodWeightStats)));
-                    lockPeriod.push_back(Pair("smallest", boost::accumulators::min(lockPeriodWeightStats)));
-                    lockPeriod.push_back(Pair("mean", boost::accumulators::mean(lockPeriodWeightStats)));
-                    lockPeriod.push_back(Pair("median", boost::accumulators::median(lockPeriodWeightStats)));
-                    averages.push_back(Pair("lock_period", lockPeriod));
+                    lockPeriod.pushKV("largest", boost::accumulators::max(lockPeriodWeightStats));
+                    lockPeriod.pushKV("smallest", boost::accumulators::min(lockPeriodWeightStats));
+                    lockPeriod.pushKV("mean", boost::accumulators::mean(lockPeriodWeightStats));
+                    lockPeriod.pushKV("median", boost::accumulators::median(lockPeriodWeightStats));
+                    averages.pushKV("lock_period", lockPeriod);
                 }
             }
             {
                 if (boost::accumulators::count(ageStats) > 0)
                 {
                     UniValue age(UniValue::VOBJ);
-                    age.push_back(Pair("largest", boost::accumulators::max(ageStats)));
-                    age.push_back(Pair("smallest", boost::accumulators::min(ageStats)));
-                    age.push_back(Pair("mean", boost::accumulators::mean(ageStats)));
-                    age.push_back(Pair("median", boost::accumulators::median(ageStats)));
-                    averages.push_back(Pair("age", age));
+                    age.pushKV("largest", boost::accumulators::max(ageStats));
+                    age.pushKV("smallest", boost::accumulators::min(ageStats));
+                    age.pushKV("mean", boost::accumulators::mean(ageStats));
+                    age.pushKV("median", boost::accumulators::median(ageStats));
+                    averages.pushKV("age", age);
                 }
             }
-            rec.push_back(Pair("witness_statistics", averages));
-            rec.push_back(Pair("witness_address_list", jsonAllWitnessAddresses));
+            rec.pushKV("witness_statistics", averages);
+            rec.pushKV("witness_address_list", jsonAllWitnessAddresses);
         }
         witnessInfoForBlock.push_back(rec);
         if (pTipIndexStart == pTipIndexEnd)
         {
             return witnessInfoForBlock;
         }
-        witnessInfoForBlocks.push_back(Pair(pTipIndex_->GetBlockHashPoW2().ToString(), witnessInfoForBlock));
+        witnessInfoForBlocks.pushKV(pTipIndex_->GetBlockHashPoW2().ToString(), witnessInfoForBlock);
         pTipIndex_ = pTipIndex_->pprev;
     }
     return witnessInfoForBlocks;
@@ -608,13 +608,13 @@ static UniValue getwitnessutxo(const JSONRPCRequest& request)
     for (const auto& item : witnessUTXOset.witnessCandidates)
     {
         UniValue rec(UniValue::VOBJ);   
-        rec.push_back(Pair("block_number", (uint64_t)item.blockNumber));
-        rec.push_back(Pair("transaction_index", (uint64_t)item.transactionIndex));
-        rec.push_back(Pair("transaction_output_index", (uint64_t)item.transactionOutputIndex));
-        rec.push_back(Pair("transaction_lock_until_block", (uint64_t)item.lockUntilBlock));
-        rec.push_back(Pair("transaction_lock_from_block", (uint64_t)item.lockFromBlock));
-        rec.push_back(Pair("value", (uint64_t)item.nValue));
-        rec.push_back(Pair("witnessPubKeyID", item.witnessPubKeyID.ToString()));
+        rec.pushKV("block_number", (uint64_t)item.blockNumber);
+        rec.pushKV("transaction_index", (uint64_t)item.transactionIndex);
+        rec.pushKV("transaction_output_index", (uint64_t)item.transactionOutputIndex);
+        rec.pushKV("transaction_lock_until_block", (uint64_t)item.lockUntilBlock);
+        rec.pushKV("transaction_lock_from_block", (uint64_t)item.lockFromBlock);
+        rec.pushKV("value", (uint64_t)item.nValue);
+        rec.pushKV("witnessPubKeyID", item.witnessPubKeyID.ToString());
         witnessUTXO.push_back(rec);
     }
     return witnessUTXO;
@@ -810,7 +810,7 @@ static UniValue dumpblockgaps(const JSONRPCRequest& request)
         UniValue arr(UniValue::VARR);
         arr.push_back(gapWitness);
         arr.push_back(gapPoW);
-        rec.push_back(Pair(itostr(pBlock->nHeight), arr));
+        rec.pushKV(itostr(pBlock->nHeight), arr);
         jsonGaps.push_back(rec);
         gapStatsPoW(gapPoW);
         gapStatsWitness(gapWitness);
@@ -821,7 +821,7 @@ static UniValue dumpblockgaps(const JSONRPCRequest& request)
         UniValue arr(UniValue::VARR);
         arr.push_back(boost::accumulators::max(gapStatsWitness));
         arr.push_back(boost::accumulators::max(gapStatsPoW));
-        rec.push_back(Pair("max", arr));
+        rec.pushKV("max", arr);
         jsonGaps.push_back(rec);
     }
     {
@@ -829,7 +829,7 @@ static UniValue dumpblockgaps(const JSONRPCRequest& request)
         UniValue arr(UniValue::VARR);
         arr.push_back(boost::accumulators::min(gapStatsWitness));
         arr.push_back(boost::accumulators::min(gapStatsPoW));
-        rec.push_back(Pair("min", arr));
+        rec.pushKV("min", arr);
         jsonGaps.push_back(rec);
     }
     {
@@ -837,7 +837,7 @@ static UniValue dumpblockgaps(const JSONRPCRequest& request)
         UniValue arr(UniValue::VARR);
         arr.push_back(boost::accumulators::mean(gapStatsWitness));
         arr.push_back(boost::accumulators::mean(gapStatsPoW));
-        rec.push_back(Pair("mean", arr));
+        rec.pushKV("mean", arr);
         jsonGaps.push_back(rec);
     }
     {
@@ -845,7 +845,7 @@ static UniValue dumpblockgaps(const JSONRPCRequest& request)
         UniValue arr(UniValue::VARR);
         arr.push_back(boost::accumulators::median(gapStatsWitness));
         arr.push_back(boost::accumulators::median(gapStatsPoW));
-        rec.push_back(Pair("median", arr));
+        rec.pushKV("median", arr);
         jsonGaps.push_back(rec);
     }
     return jsonGaps;
@@ -1342,13 +1342,13 @@ static UniValue getminingrewardaddress(const JSONRPCRequest& request)
             CKeyID keyID = pubKey.GetID();
             strMiningAddress = CNativeAddress(keyID).ToString();
         }
-        result.push_back(Pair("address",strMiningAddress));
-        result.push_back(Pair("is_default", true));
+        result.pushKV("address",strMiningAddress);
+        result.pushKV("is_default", true);
     }
     else
     {
-        result.push_back(Pair("address",strMiningAddress));
-        result.push_back(Pair("is_default", false));
+        result.pushKV("address",strMiningAddress);
+        result.pushKV("is_default", false);
     }
     
     return result;
@@ -1488,8 +1488,8 @@ static UniValue fundwitnessaccount(const JSONRPCRequest& request)
         CAmount fee;
         fundwitnessaccount(pwallet, fundingAccount, targetWitnessAccount, nAmount, nLockPeriodInBlocks, fAllowMultiple, &txid, &fee);
         UniValue result(UniValue::VOBJ);
-        result.push_back(Pair("txid", txid));
-        result.push_back(Pair("fee_amount", ValueFromAmount(fee)));
+        result.pushKV("txid", txid);
+        result.pushKV("fee_amount", ValueFromAmount(fee));
         return result;
     }
     catch (witness_error& e) {
@@ -1574,8 +1574,8 @@ static UniValue extendwitnessaddress(const JSONRPCRequest& request)
         CAmount fee;
         extendwitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet, requestedAmount, requestedLockPeriodInBlocks, &txid, &fee);
         UniValue result(UniValue::VOBJ);
-        result.push_back(Pair("txid", txid));
-        result.push_back(Pair("fee_amount", ValueFromAmount(fee)));
+        result.pushKV("txid", txid);
+        result.pushKV("fee_amount", ValueFromAmount(fee));
         return result;
     }
     catch (witness_error& e) {
@@ -1626,11 +1626,11 @@ static UniValue calculatewitnessweight(const JSONRPCRequest& request)
 
     UniValue result(UniValue::VOBJ);
     uint64_t rawWeight = GetPoW2RawWeightForAmount(requestedAmount, chainActive.Height(), requestedLockPeriodInBlocks);
-    result.push_back(Pair("raw_weight", rawWeight));
+    result.pushKV("raw_weight", rawWeight);
 
     CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
     uint64_t networkWeight = witnessInfo.nTotalWeightEligibleRaw;
-    result.push_back(Pair("adjusted_weight", adjustedWeightForAmount(requestedAmount, chainActive.Height(), requestedLockPeriodInBlocks, networkWeight)));
+    result.pushKV("adjusted_weight", adjustedWeightForAmount(requestedAmount, chainActive.Height(), requestedLockPeriodInBlocks, networkWeight));
 
     const auto optimalAmounts = optimalWitnessDistribution(requestedAmount, requestedLockPeriodInBlocks, networkWeight);    
     uint64_t optimalWeight=0;
@@ -1638,8 +1638,8 @@ static UniValue calculatewitnessweight(const JSONRPCRequest& request)
     {
         optimalWeight += GetPoW2RawWeightForAmount(partAmount,  chainActive.Height(), requestedLockPeriodInBlocks);
     }
-    result.push_back(Pair("optimal_parts", (uint64_t)optimalAmounts.size()));
-    result.push_back(Pair("optimal_weight", (uint64_t)optimalWeight));
+    result.pushKV("optimal_parts", (uint64_t)optimalAmounts.size());
+    result.pushKV("optimal_weight", (uint64_t)optimalWeight);
 
     return result;
 }
@@ -1712,8 +1712,8 @@ static UniValue extendwitnessaccount(const JSONRPCRequest& request)
         CAmount fee;
         extendwitnessaccount(pwallet, fundingAccount, witnessAccount, requestedAmount, requestedLockPeriodInBlocks, &txid, &fee);
         UniValue result(UniValue::VOBJ);
-        result.push_back(Pair("txid", txid));
-        result.push_back(Pair("fee_amount", ValueFromAmount(fee)));
+        result.pushKV("txid", txid);
+        result.pushKV("fee_amount", ValueFromAmount(fee));
         return result;
     }
     catch (witness_error& e) {
@@ -2038,12 +2038,12 @@ static UniValue getaccountbalances(const JSONRPCRequest& request)
     for (const auto& [accountUUID, account] : pwallet->mapAccounts)
     {
         UniValue rec(UniValue::VOBJ);
-        rec.push_back(Pair("UUID", getUUIDAsString(accountUUID)));
-        rec.push_back(Pair("label",account->getLabel()));
+        rec.pushKV("UUID", getUUIDAsString(accountUUID));
+        rec.pushKV("label",account->getLabel());
         CAmount balance = pwallet->GetBalanceForDepth(nMinDepth, account, false, true);
         if (includeWatchOnly)
             balance += pwallet->GetWatchOnlyBalance(nMinDepth, account, true);
-        rec.push_back(Pair("balance", ValueFromAmount(balance)));
+        rec.pushKV("balance", ValueFromAmount(balance));
         allAccounts.push_back(rec);
     }
 
@@ -2324,11 +2324,11 @@ static UniValue listallaccounts(const JSONRPCRequest& request)
             if (!forSeed)
             {
                 UniValue rec(UniValue::VOBJ);
-                rec.push_back(Pair("UUID", getUUIDAsString(accountPair.first)));
-                rec.push_back(Pair("label", accountPair.second->getLabel()));
-                rec.push_back(Pair("state", GetAccountStateString(accountPair.second->m_State)));
-                rec.push_back(Pair("type", GetAccountTypeString(accountPair.second->m_Type)));
-                rec.push_back(Pair("HD_type", "legacy"));
+                rec.pushKV("UUID", getUUIDAsString(accountPair.first));
+                rec.pushKV("label", accountPair.second->getLabel());
+                rec.pushKV("state", GetAccountStateString(accountPair.second->m_State));
+                rec.pushKV("type", GetAccountTypeString(accountPair.second->m_Type));
+                rec.pushKV("HD_type", "legacy");
                 allAccounts.push_back(rec);
             }
             continue;
@@ -2339,12 +2339,12 @@ static UniValue listallaccounts(const JSONRPCRequest& request)
             continue;
 
         UniValue rec(UniValue::VOBJ);
-        rec.push_back(Pair("UUID", getUUIDAsString(accountPair.first)));
-        rec.push_back(Pair("label", accountPair.second->getLabel()));
-        rec.push_back(Pair("state", GetAccountStateString(accountPair.second->m_State)));
-        rec.push_back(Pair("type", GetAccountTypeString(accountPair.second->m_Type)));
-        rec.push_back(Pair("HD_type", "HD"));
-        rec.push_back(Pair("HDindex", (uint64_t) dynamic_cast<CAccountHD*>(accountPair.second)->getIndex()));
+        rec.pushKV("UUID", getUUIDAsString(accountPair.first));
+        rec.pushKV("label", accountPair.second->getLabel());
+        rec.pushKV("state", GetAccountStateString(accountPair.second->m_State));
+        rec.pushKV("type", GetAccountTypeString(accountPair.second->m_Type));
+        rec.pushKV("HD_type", "HD");
+        rec.pushKV("HDindex", (uint64_t) dynamic_cast<CAccountHD*>(accountPair.second)->getIndex());
 
         allAccounts.push_back(rec);
     }
@@ -2454,10 +2454,10 @@ static UniValue listseeds(const JSONRPCRequest& request)
     for (const auto& seedPair : pwallet->mapSeeds)
     {
         UniValue rec(UniValue::VOBJ);
-        rec.push_back(Pair("UUID", getUUIDAsString(seedPair.first)));
-        rec.push_back(Pair("type", StringFromSeedType(seedPair.second)));
+        rec.pushKV("UUID", getUUIDAsString(seedPair.first));
+        rec.pushKV("type", StringFromSeedType(seedPair.second));
         if (seedPair.second->IsReadOnly())
-            rec.push_back(Pair("readonly", "true"));
+            rec.pushKV("readonly", "true");
         AllSeeds.push_back(rec);
     }
 
@@ -2520,8 +2520,8 @@ static UniValue rotatewitnessaddress(const JSONRPCRequest& request)
         CAmount fee;
         rotatewitnessaddresshelper(fundingAccount, unspentWitnessOutputs, pwallet, &txid, &fee);
         UniValue result(UniValue::VOBJ);
-        result.push_back(Pair("txid", txid));
-        result.push_back(Pair("fee_amount", ValueFromAmount(fee)));
+        result.pushKV("txid", txid);
+        result.pushKV("fee_amount", ValueFromAmount(fee));
         return result;
     }
     catch (witness_error& e) {
@@ -2569,14 +2569,14 @@ static UniValue repairwitnessaddress(const JSONRPCRequest& request)
     // NB! Wallet should be locked for this test
     if (!pwallet->IsCrypted())
     {
-        result.push_back(Pair("success", false));
-        result.push_back(Pair("info", "repairwitnessaddress can only be used on encrypted wallets"));
+        result.pushKV("success", false);
+        result.pushKV("info", "repairwitnessaddress can only be used on encrypted wallets");
         return result;
     }
     if (pwallet->IsLocked())
     {
-        result.push_back(Pair("success", false));
-        result.push_back(Pair("info", "repairwitnessaddress can only be used on unlocked wallets"));
+        result.pushKV("success", false);
+        result.pushKV("info", "repairwitnessaddress can only be used on unlocked wallets");
         return result;
     }
 
@@ -2586,16 +2586,16 @@ static UniValue repairwitnessaddress(const JSONRPCRequest& request)
 
     if (!isValid)
     {
-        result.push_back(Pair("success", false));
-        result.push_back(Pair("info", "Not a valid witness address"));
+        result.pushKV("success", false);
+        result.pushKV("info", "Not a valid witness address");
         return result;
     }
 
     const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAddress(witnessAddress);
     if (unspentWitnessOutputs.size() == 0)
     {
-        result.push_back(Pair("success", false));
-        result.push_back(Pair("info", "Not an active witness address"));
+        result.pushKV("success", false);
+        result.pushKV("info", "Not an active witness address");
         return result;
     }
 
@@ -2607,8 +2607,8 @@ static UniValue repairwitnessaddress(const JSONRPCRequest& request)
     CAccount* witnessAccount = pwallet->FindBestWitnessAccountForTransaction(currentWitnessTxOut);
     if (!witnessAccount)
     {
-        result.push_back(Pair("success", false));
-        result.push_back(Pair("info", "Unable to determine account for witness address."));
+        result.pushKV("success", false);
+        result.pushKV("info", "Unable to determine account for witness address.");
         return result;
     }
 
@@ -2621,26 +2621,26 @@ static UniValue repairwitnessaddress(const JSONRPCRequest& request)
     CPubKey witnessPubKey;
     if (!witnessAccount->GetPubKey(currentWitnessDetails.witnessKeyID, witnessPubKey))
     {
-        result.push_back(Pair("validity", true));
-        result.push_back(Pair("info", "Unable to retrieve public witness key"));
+        result.pushKV("validity", true);
+        result.pushKV("info", "Unable to retrieve public witness key");
         return result;
     }
     CKey witnessPrivKey;
     if (!witnessAccount->GetKey(currentWitnessDetails.witnessKeyID, witnessPrivKey))
     {
-        result.push_back(Pair("validity", false));
-        result.push_back(Pair("info", "Unable to generate witness signing key."));
+        result.pushKV("validity", false);
+        result.pushKV("info", "Unable to generate witness signing key.");
         return result;
     }
     
     if (!pwallet->AddKeyPubKey(witnessPrivKey, witnessPrivKey.GetPubKey(), *witnessAccount, KEYCHAIN_WITNESS))
     {
-        result.push_back(Pair("validity", false));
-        result.push_back(Pair("info", "Failed to mark witnessing key for encrypted usage"));
+        result.pushKV("validity", false);
+        result.pushKV("info", "Failed to mark witnessing key for encrypted usage");
     }
 
-    result.push_back(Pair("validity", true));
-    result.push_back(Pair("info", ""));
+    result.pushKV("validity", true);
+    result.pushKV("info", "");
     return result;
 }
 
@@ -2680,14 +2680,14 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
     // NB! Wallet should be locked for this test
     if (!pwallet->IsCrypted())
     {
-        result.push_back(Pair("validity", false));
-        result.push_back(Pair("info", "verifywitnessaddress can only be used on encrypted wallets"));
+        result.pushKV("validity", false);
+        result.pushKV("info", "verifywitnessaddress can only be used on encrypted wallets");
         return result;
     }
     if (!pwallet->IsLocked())
     {
-        result.push_back(Pair("validity", false));
-        result.push_back(Pair("info", "verifywitnessaddress can only be used on locked wallets"));
+        result.pushKV("validity", false);
+        result.pushKV("info", "verifywitnessaddress can only be used on locked wallets");
         return result;
     }
 
@@ -2697,16 +2697,16 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
 
     if (!isValid)
     {
-        result.push_back(Pair("validity", false));
-        result.push_back(Pair("info", "Not a valid witness address"));
+        result.pushKV("validity", false);
+        result.pushKV("info", "Not a valid witness address");
         return result;
     }
 
     const auto& unspentWitnessOutputs = getCurrentOutputsForWitnessAddress(witnessAddress);
     if (unspentWitnessOutputs.size() == 0)
     {
-        result.push_back(Pair("validity", false));
-        result.push_back(Pair("info", "Not an active witness address"));
+        result.pushKV("validity", false);
+        result.pushKV("info", "Not an active witness address");
         return result;
     }
 
@@ -2718,8 +2718,8 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
     CAccount* witnessAccount = pwallet->FindBestWitnessAccountForTransaction(currentWitnessTxOut);
     if (!witnessAccount)
     {
-        result.push_back(Pair("validity", false));
-        result.push_back(Pair("info", "Unable to determine account for witness address."));
+        result.pushKV("validity", false);
+        result.pushKV("info", "Unable to determine account for witness address.");
         return result;
     }
 
@@ -2732,33 +2732,33 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
     CPubKey pubKey;
     if (!witnessAccount->GetPubKey(currentWitnessDetails.witnessKeyID, pubKey))
     {
-        result.push_back(Pair("validity", false));
-        result.push_back(Pair("info", "Unable to retrieve public witness key"));
+        result.pushKV("validity", false);
+        result.pushKV("info", "Unable to retrieve public witness key");
         return result;
     }
     if (!witnessAccount->GetPubKey(currentWitnessDetails.spendingKeyID, pubKey))
     {
-        result.push_back(Pair("validity", false));
-        result.push_back(Pair("info", "Unable to retrieve public spending key"));
+        result.pushKV("validity", false);
+        result.pushKV("info", "Unable to retrieve public spending key");
         return result;
     }
 
     CKey privKey;
     if (!witnessAccount->GetKey(currentWitnessDetails.witnessKeyID, privKey))
     {
-        result.push_back(Pair("validity", false));
-        result.push_back(Pair("info", "Able to retrieve witness signing key; this should not be possible as key should be encrypted."));
+        result.pushKV("validity", false);
+        result.pushKV("info", "Able to retrieve witness signing key; this should not be possible as key should be encrypted.");
         return result;
     }
     if (witnessAccount->GetKey(currentWitnessDetails.spendingKeyID, privKey))
     {
-        result.push_back(Pair("validity", false));
-        result.push_back(Pair("info", "Unable to retrieve spending signing key; key may be incorrectly encrypted."));
+        result.pushKV("validity", false);
+        result.pushKV("info", "Unable to retrieve spending signing key; key may be incorrectly encrypted.");
         return result;
     }
 
-    result.push_back(Pair("validity", true));
-    result.push_back(Pair("info", ""));
+    result.pushKV("validity", true);
+    result.pushKV("info", "");
     return result;
 }
 
@@ -2963,7 +2963,7 @@ static UniValue getlastblocks(const JSONRPCRequest& request)
         CBlockIndex* pIndex = chainActive.Tip();
         for (uint64_t i=0;i<numBlocks;++i)
         {
-            result.push_back(Pair(pIndex->GetBlockHashPoW2().ToString(),pIndex->nHeight));
+            result.pushKV(pIndex->GetBlockHashPoW2().ToString(),pIndex->nHeight);
             pIndex = pIndex->pprev;
         }
     }
@@ -3021,8 +3021,8 @@ static UniValue rotatewitnessaccount(const JSONRPCRequest& request)
         CAmount fee;
         rotatewitnessaccount(pwallet, fundingAccount, witnessAccount, &txid, &fee);
         UniValue result(UniValue::VOBJ);
-        result.push_back(Pair("txid", txid));
-        result.push_back(Pair("fee_amount", ValueFromAmount(fee)));
+        result.pushKV("txid", txid);
+        result.pushKV("fee_amount", ValueFromAmount(fee));
         return result;
     }
     catch (witness_error& e) {
@@ -3110,7 +3110,7 @@ static UniValue renewwitnessaccount(const JSONRPCRequest& request)
     static_cast<const CExtWallet*>(pactiveWallet)->NotifyAccountWarningChanged(pactiveWallet, witnessAccount);
 
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee)));
+    result.pushKV(finalTransactionHash.GetHex(), ValueFromAmount(transactionFee));
     return result;
 }
 
@@ -3187,8 +3187,8 @@ static UniValue splitwitnessaccount(const JSONRPCRequest& request)
         CAmount fee;
         redistributewitnessaccount(pwallet, fundingAccount, witnessAccount, splitAmounts, &txid, &fee);
         UniValue result(UniValue::VOBJ);
-        result.push_back(Pair("txid", txid));
-        result.push_back(Pair("fee_amount", ValueFromAmount(fee)));
+        result.pushKV("txid", txid);
+        result.pushKV("fee_amount", ValueFromAmount(fee));
         return result;
     }
     catch (witness_error& e) {
@@ -3268,8 +3268,8 @@ static UniValue mergewitnessaccount(const JSONRPCRequest& request)
         CAmount fee;
         redistributewitnessaccount(pwallet, fundingAccount, witnessAccount, std::vector({totalAmount}), &txid, &fee);
         UniValue result(UniValue::VOBJ);
-        result.push_back(Pair("txid", txid));
-        result.push_back(Pair("fee_amount", ValueFromAmount(fee)));
+        result.pushKV("txid", txid);
+        result.pushKV("fee_amount", ValueFromAmount(fee));
         return result;
     }
     catch (witness_error& e) {
@@ -3330,7 +3330,7 @@ static UniValue setwitnesscompound(const JSONRPCRequest& request)
     forAccount->setCompounding(amount, &walletdb);
 
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), ValueFromAmount(forAccount->getCompounding())));
+    result.pushKV(getUUIDAsString(forAccount->getUUID()), ValueFromAmount(forAccount->getCompounding()));
     return result;
 }
 
@@ -3425,7 +3425,7 @@ static UniValue setwitnessrewardaddress(const JSONRPCRequest& request)
     witnessScriptsAreDirty = true;
 
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), HexStr(forAccount->getNonCompoundRewardScript())));
+    result.pushKV(getUUIDAsString(forAccount->getUUID()), HexStr(forAccount->getNonCompoundRewardScript()));
     return result;
 }
 
@@ -3510,7 +3510,7 @@ static UniValue setwitnessrewardscript(const JSONRPCRequest& request)
     witnessScriptsAreDirty = true;
 
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), HexStr(forAccount->getNonCompoundRewardScript())));
+    result.pushKV(getUUIDAsString(forAccount->getUUID()), HexStr(forAccount->getNonCompoundRewardScript()));
     return result;
 }
 
@@ -3552,11 +3552,11 @@ static UniValue getwitnessrewardscript(const JSONRPCRequest& request)
     UniValue result(UniValue::VOBJ);
     if (!forAccount->hasNonCompoundRewardScript())
     {
-        result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), ""));
+        result.pushKV(getUUIDAsString(forAccount->getUUID()), "");
     }
     else
     {
-        result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), HexStr(forAccount->getNonCompoundRewardScript())));
+        result.pushKV(getUUIDAsString(forAccount->getUUID()), HexStr(forAccount->getNonCompoundRewardScript()));
     }
     return result;
 }
@@ -3698,7 +3698,7 @@ static UniValue getwitnessrewardtemplate(const JSONRPCRequest& request)
     UniValue result(UniValue::VOBJ);
     if (!forAccount->hasRewardTemplate())
     {
-        result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), ""));
+        result.pushKV(getUUIDAsString(forAccount->getUUID()), "");
     }
     else
     {
@@ -3736,7 +3736,7 @@ static UniValue getwitnessrewardtemplate(const JSONRPCRequest& request)
             templateArray.push_back(destArray);
         }
 
-        result.push_back(Pair(getUUIDAsString(forAccount->getUUID()), templateArray));
+        result.pushKV(getUUIDAsString(forAccount->getUUID()), templateArray);
     }
     return result;
 }

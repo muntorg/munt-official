@@ -54,17 +54,17 @@ void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry)
     TxToUniv(tx, uint256(), entry);
 
     if (!hashBlock.IsNull()) {
-        entry.push_back(Pair("blockhash", hashBlock.GetHex()));
+        entry.pushKV("blockhash", hashBlock.GetHex());
         BlockMap::iterator mi = mapBlockIndex.find(hashBlock);
         if (mi != mapBlockIndex.end() && (*mi).second) {
             CBlockIndex* pindex = (*mi).second;
             if (chainActive.Contains(pindex)) {
-                entry.push_back(Pair("confirmations", 1 + chainActive.Height() - pindex->nHeight));
-                entry.push_back(Pair("time", pindex->GetBlockTimePoW2Witness()));
-                entry.push_back(Pair("blocktime", pindex->GetBlockTimePoW2Witness()));
+                entry.pushKV("confirmations", 1 + chainActive.Height() - pindex->nHeight);
+                entry.pushKV("time", pindex->GetBlockTimePoW2Witness());
+                entry.pushKV("blocktime", pindex->GetBlockTimePoW2Witness());
             }
             else
-                entry.push_back(Pair("confirmations", 0));
+                entry.pushKV("confirmations", 0);
         }
     }
 }
@@ -572,14 +572,14 @@ UniValue decodescript(const JSONRPCRequest& request)
     CTxOutPoW2Witness phase3WitnessInfo;
     if (script.ExtractPoW2WitnessFromScript(phase3WitnessInfo))
     {
-        r.push_back(Pair("type", "pow2_phase3_witness"));
-        r.push_back(Pair("witness_address", CNativeAddress(CPoW2WitnessDestination(phase3WitnessInfo.spendingKeyID, phase3WitnessInfo.witnessKeyID)).ToString()));
-        r.push_back(Pair("spending_key_address", CNativeAddress(phase3WitnessInfo.spendingKeyID).ToString()));
-        r.push_back(Pair("witness_key_address", CNativeAddress(phase3WitnessInfo.witnessKeyID).ToString()));
-        r.push_back(Pair("lock_from_block", i64tostr(phase3WitnessInfo.lockFromBlock)));
-        r.push_back(Pair("lock_until_block", i64tostr(phase3WitnessInfo.lockUntilBlock)));
-        r.push_back(Pair("fail_count", i64tostr(phase3WitnessInfo.failCount)));
-        r.push_back(Pair("action_nonce", i64tostr(phase3WitnessInfo.actionNonce)));
+        r.pushKV("type", "pow2_phase3_witness");
+        r.pushKV("witness_address", CNativeAddress(CPoW2WitnessDestination(phase3WitnessInfo.spendingKeyID, phase3WitnessInfo.witnessKeyID)).ToString());
+        r.pushKV("spending_key_address", CNativeAddress(phase3WitnessInfo.spendingKeyID).ToString());
+        r.pushKV("witness_key_address", CNativeAddress(phase3WitnessInfo.witnessKeyID).ToString());
+        r.pushKV("lock_from_block", i64tostr(phase3WitnessInfo.lockFromBlock));
+        r.pushKV("lock_until_block", i64tostr(phase3WitnessInfo.lockUntilBlock));
+        r.pushKV("fail_count", i64tostr(phase3WitnessInfo.failCount));
+        r.pushKV("action_nonce", i64tostr(phase3WitnessInfo.actionNonce));
         return r;
     }
     
@@ -591,7 +591,7 @@ UniValue decodescript(const JSONRPCRequest& request)
     if (type.isStr() && type.get_str() != "scripthash") {
         // P2SH cannot be wrapped in a P2SH. If this script is already a P2SH,
         // don't return the address for a P2SH of the P2SH.
-        r.push_back(Pair("p2sh", CNativeAddress(CScriptID(script)).ToString()));
+        r.pushKV("p2sh", CNativeAddress(CScriptID(script)).ToString());
     }
 
     return r;
@@ -603,16 +603,16 @@ static void TxInErrorToJSON(const uint64_t nTransactionVersion, const CTxIn& txi
     UniValue entry(UniValue::VOBJ);
     uint256 txHash;
     if (GetTxHash(txin.GetPrevOut(), txHash))
-        entry.push_back(Pair("txid", txHash.ToString()));
-    entry.push_back(Pair("vout", (uint64_t)txin.GetPrevOut().n));
+        entry.pushKV("txid", txHash.ToString());
+    entry.pushKV("vout", (uint64_t)txin.GetPrevOut().n);
     UniValue sigData(UniValue::VARR);
     for (unsigned int i = 0; i < txin.segregatedSignatureData.stack.size(); i++) {
         sigData.push_back(HexStr(txin.segregatedSignatureData.stack[i].begin(), txin.segregatedSignatureData.stack[i].end()));
     }
-    entry.push_back(Pair("sig_data", sigData));
-    entry.push_back(Pair("scriptSig", HexStr(txin.scriptSig.begin(), txin.scriptSig.end())));
-    entry.push_back(Pair("sequence", (uint64_t)txin.GetSequence(nTransactionVersion)));
-    entry.push_back(Pair("error", strMessage));
+    entry.pushKV("sig_data", sigData);
+    entry.pushKV("scriptSig", HexStr(txin.scriptSig.begin(), txin.scriptSig.end()));
+    entry.pushKV("sequence", (uint64_t)txin.GetSequence(nTransactionVersion));
+    entry.pushKV("error", strMessage);
     vErrorsRet.push_back(entry);
 }
 
@@ -935,10 +935,10 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
     bool fComplete = vErrors.empty();
 
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair("hex", EncodeHexTx(mergedTx)));
-    result.push_back(Pair("complete", fComplete));
+    result.pushKV("hex", EncodeHexTx(mergedTx));
+    result.pushKV("complete", fComplete);
     if (!vErrors.empty()) {
-        result.push_back(Pair("errors", vErrors));
+        result.pushKV("errors", vErrors);
     }
 
     return result;

@@ -644,18 +644,18 @@ UniValue checkwalletagainstutxo(const JSONRPCRequest& request)
     UniValue result(UniValue::VOBJ);
     if(!nMismatchSpent && !nOrphansFound)
     {
-        result.push_back(std::pair("wallet check passed", true));
+        result.pushKV("wallet check passed", true);
     }
     else
     {
         if(nMismatchSpent)
         {
-            result.push_back(std::pair("mismatched spent coins", nMismatchSpent));
-            result.push_back(std::pair("amount in question", ValueFromAmount(nBalanceInQuestion)));
+            result.pushKV("mismatched spent coins", nMismatchSpent);
+            result.pushKV("amount in question", ValueFromAmount(nBalanceInQuestion));
         }
         if(nOrphansFound)
         {
-            result.push_back(std::pair("orphans found", nOrphansFound));
+            result.pushKV("orphans found", nOrphansFound);
         }
     }
     return result;
@@ -703,13 +703,13 @@ UniValue removeallorphans(const JSONRPCRequest& request)
     bool success = pwallet->RemoveAllOrphans(numErased, numDetected, strError);
     
     UniValue result(UniValue::VOBJ);
-    result.push_back(std::pair("succeeded", success));
+    result.pushKV("succeeded", success);
     if (!success)
     {
-        result.push_back(std::pair("error_message", strError));
+        result.pushKV("error_message", strError);
     }
-    result.push_back(std::pair("num_erased", numErased));
-    result.push_back(std::pair("num_detected", numDetected));
+    result.pushKV("num_erased", numErased);
+    result.pushKV("num_detected", numDetected);
     
     return result;
 }
@@ -823,7 +823,7 @@ UniValue dumpwallet(const JSONRPCRequest& request)
     file.close();
 
     UniValue reply(UniValue::VOBJ);
-    reply.push_back(Pair("filename", filepath.string()));
+    reply.pushKV("filename", filepath.string());
 
     return reply;
 }

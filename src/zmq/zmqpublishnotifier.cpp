@@ -227,7 +227,7 @@ bool CZMQPublishWalletTransactionNotifier::NotifyWalletTransaction(CWallet* cons
     WalletTxToJSON(wtx, entry);
     UniValue details(UniValue::VARR);
     ListTransactions(pWallet_, wtx, "*", 0, false, details, ISMINE_SPENDABLE);
-    entry.push_back(Pair("details", details));
+    entry.pushKV("details", details);
             
     std::string transactionJSON = entry.write();
     return SendMessage(MSG_WALLETTX, &(*transactionJSON.begin()), transactionJSON.size());
