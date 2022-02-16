@@ -6,9 +6,10 @@
 // Written and placed in public domain by Jeffrey Walton.
 // Based on code from Intel, and by Sean Gulley for the miTLS project.
 
-#ifdef COMPILER_HAS_SSE4_SHANI
-
+#include <compat/sys.h>
 #include <compat/sse.h>
+
+#if defined(COMPILER_HAS_SSE4_SHANI) && !defined(PLATFORM_MOBILE_ANDROID)
 
 namespace {
 

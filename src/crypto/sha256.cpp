@@ -14,15 +14,26 @@
 #include <compat/cpuid.h>
 #include <compat/arch.h>
 #include <compat/sse.h>
+#include <compat/sys.h>
 
-#if defined(COMPILER_HAS_SSE4)
+#if defined(__linux__) && defined(COMPILER_HAS_ARMV8_CRYPTO)
+#include <sys/auxv.h>
+#include <asm/hwcap.h>
+#endif
+
+#if defined(MAC_OSX) && defined(COMPILER_HAS_ARMV8_CRYPTO)
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#endif
+
+#if defined(COMPILER_HAS_SSE4) && !defined(PLATFORM_MOBILE_ANDROID)
 namespace sha256_sse4
 {
 void Transform(uint32_t* s, const unsigned char* chunk, size_t blocks);
 }
 #endif
 
-#if defined(COMPILER_HAS_SSE4_SHANI)
+#if defined(COMPILER_HAS_SSE4_SHANI) && !defined(PLATFORM_MOBILE_ANDROID)
 namespace sha256_x86_shani
 {
 void Transform(uint32_t* s, const unsigned char* chunk, size_t blocks);
@@ -245,7 +256,7 @@ std::string SHA256AutoDetect()
     bool have_avx2 = false;
     bool have_x86_shani = false;
     bool enabled_avx = false;
-    
+
     (void)have_sse4;
     (void)have_avx;
     (void)have_xsave;
@@ -271,7 +282,7 @@ std::string SHA256AutoDetect()
     }
 #endif
 
-#ifdef COMPILER_HAS_SSE4_SHANI
+#if defined(COMPILER_HAS_SSE4_SHANI) && !defined(PLATFORM_MOBILE_ANDROID)
     {
         if (have_x86_shani)
         {
@@ -283,7 +294,7 @@ std::string SHA256AutoDetect()
     }
 #endif
 
-#ifdef COMPILER_HAS_SSE4
+#if defined(COMPILER_HAS_SSE4) && !defined(PLATFORM_MOBILE_ANDROID)
     {
         if (have_sse4)
         {

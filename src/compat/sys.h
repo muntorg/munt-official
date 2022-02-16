@@ -21,7 +21,7 @@
 #endif
 #if defined(__ANDROID__)
     #define PLATFORM_MOBILE
-    #define PLATFORM_MOBILE_IOS
+    #define PLATFORM_MOBILE_ANDROID
 #endif
 
 #ifdef PLATFORM_MOBILE

@@ -63,7 +63,7 @@
 
 std::shared_ptr<ILibraryListener> signalHandler;
 
-CCriticalSection cs_monitoringListeners;
+RecursiveMutex cs_monitoringListeners;
 std::set<std::shared_ptr<MonitorListener> > monitoringListeners;
 
 boost::asio::io_context ioctx;

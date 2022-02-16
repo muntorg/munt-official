@@ -63,7 +63,7 @@ bool CheckProofOfWork(const CBlock* block, const Consensus::Params& params)
             // as for mobile/SPV the witness-header-sync will probably completely skip the pow check in the future.
             uint32_t numVerifyThreads = std::min(defaultSigmaSettings.numVerifyThreads, (uint64_t)std::max(1, std::min(2, (int)std::thread::hardware_concurrency())));
             static sigma_verify_context verify(defaultSigmaSettings, numVerifyThreads);
-            static CCriticalSection csPOW;
+            static RecursiveMutex csPOW;
             LOCK(csPOW);
 
             int verifyLevel = GetRand(verifyFactor);
