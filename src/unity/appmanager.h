@@ -16,6 +16,7 @@
 #include <boost/signals2/signal.hpp>
 #include <boost/thread.hpp>
 #include <condition_variable>
+#include <node/context.h>
 
 
 /** Class encapsulating Gulden startup and shutdown.
@@ -101,7 +102,7 @@ private:
 
     // Passed on to the rest of the app but not used internally by AppLifecycleManager.
     boost::thread_group threadGroup;
-    CScheduler scheduler;
+    node::NodeContext nodeContext;
 };
 
 bool ShutdownRequested();

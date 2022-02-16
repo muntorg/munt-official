@@ -36,8 +36,11 @@ void RPCNotifyBlockChange(bool ibd, const CBlockIndex * pindex)
 {
 }
 
-void ServerShutdown(boost::thread_group& threadGroup)
+void ServerShutdown(boost::thread_group& threadGroup, node::NodeContext& nodeContext)
 {
+    // After everything has been shut down, but before things get flushed, stop the
+    // CScheduler/checkqueue, scheduler and load block thread.
+    if (node.scheduler) node.scheduler->stop();
 }
 
 void InitRPCMining()

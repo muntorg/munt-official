@@ -185,8 +185,8 @@ void CoreInterrupt(boost::thread_group& threadGroup)
     LogPrintf("Core interrupt: done.\n");
 }
 
-extern void ServerShutdown(boost::thread_group& threadGroup);
-void CoreShutdown(boost::thread_group& threadGroup)
+extern void ServerShutdown(boost::thread_group& threadGroup, node::NodeContext& nodeContext);
+void CoreShutdown(boost::thread_group& threadGroup, node::NodeContext& nodeContext)
 {
     LogPrintf("Core shutdown: commence core shutdown\n");
     static RecursiveMutex cs_Shutdown;
@@ -208,7 +208,7 @@ void CoreShutdown(boost::thread_group& threadGroup)
 
 
     LogPrintf("Core shutdown: stop remaining worker threads.\n");
-    ServerShutdown(threadGroup);
+    ServerShutdown(threadGroup, nodeContext);
     threadGroup.join_all();
     MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
 
@@ -1109,7 +1109,7 @@ bool AppInitSanityChecks()
 extern bool InitRPCWarmup(boost::thread_group& threadGroup);
 extern bool InitTor(boost::thread_group& threadGroup, CScheduler& scheduler);
 
-bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
+bool AppInitMain(boost::thread_group& threadGroup, node::NodeContext& node)
 {
     const CChainParams& chainparams = Params();
     // ********************************************************* Step 4a: application initialization
@@ -1156,14 +1156,18 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
             threadGroup.create_thread(&ThreadScriptCheck);
         }
     }
+    
+    assert(!node.scheduler);
+    node.scheduler = std::make_unique<CScheduler>();
+
+    // Start the lightweight task scheduler thread
+    CScheduler::Function serviceLoop = boost::bind(&CScheduler::serviceQueue, node.scheduler.get());
+    threadGroup.create_thread(boost::bind(&TraceThread<CScheduler::Function>, "scheduler", serviceLoop));
 
 #ifdef ENABLE_WALLET
     // InitRPCMining is needed here so getblocktemplate in the GUI debug console works properly.
     InitRPCMining();
 #endif
-    // Start the lightweight task scheduler thread
-    CScheduler::Function serviceLoop = boost::bind(&CScheduler::serviceQueue, &scheduler);
-    threadGroup.create_thread(boost::bind(&TraceThread<CScheduler::Function>, "scheduler", serviceLoop));
 
     /* Start the RPC server already.  It will be started in "warmup" mode
      * and not really process calls already (but it will signify connections
@@ -1725,7 +1729,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     LogPrintf("mapBlockIndex.size() = %u\n",   mapBlockIndex.size());
     LogPrintf("nBestHeight = %d\n",                   chainActive.Height());
     //LogPrintf("setKeyPoolExternal.size() = %u\n",      pwalletMain ? pwalletMain->setKeyPoolExternal.size() : 0);
-    InitTor(threadGroup, scheduler);
+    InitTor(threadGroup, *node.scheduler);
 
     Discover(threadGroup);
 
@@ -1752,7 +1756,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
         connOptions.vSeedNodes = gArgs.GetArgs("-seednode");
     }
 
-    if (!connman.Start(scheduler, strNodeError, connOptions))
+    if (!connman.Start(*node.scheduler, strNodeError, connOptions))
         return InitError(strNodeError);
 
 
@@ -1822,7 +1826,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
 #ifdef ENABLE_WALLET
     for (CWalletRef pwallet : vpwallets) {
-        pwallet->postInitProcess(scheduler);
+        pwallet->postInitProcess(*node.scheduler);
     }
 #endif
 

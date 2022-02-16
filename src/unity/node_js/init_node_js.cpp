@@ -10,6 +10,7 @@
 #ifdef ENABLE_WALLET
 #include "wallet/rpcwallet.h"
 #endif
+#include "node/context.h"
 
 #include "unity/djinni/cpp/legacy_wallet_result.hpp"
 #include "unity/djinni/cpp/i_library_controller.hpp"
@@ -87,9 +88,12 @@ bool InitRPCWarmup(boost::thread_group& threadGroup)
 {
 }*/
 
-void ServerShutdown(boost::thread_group& threadGroup)
+void ServerShutdown(boost::thread_group& threadGroup, node::NodeContext& nodeContext)
 {
     RPCUnsetTimerInterface(timerInterface);
+    // After everything has been shut down, but before things get flushed, stop the
+    // CScheduler/checkqueue, scheduler and load block thread.
+    if (nodeContext.scheduler) nodeContext.scheduler->stop();
     //StopRPC();
 }
 

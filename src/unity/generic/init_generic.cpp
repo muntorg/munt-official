@@ -22,6 +22,7 @@
 #include "util.h"
 #include "utilmoneystr.h"
 #include "validation/validation.h"
+#include "node/context.h"
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
 #endif
@@ -259,7 +260,7 @@ void ServerInterrupt(boost::thread_group& threadGroup)
     InterruptTorControl();
 }
 
-void ServerShutdown(boost::thread_group& threadGroup)
+void ServerShutdown(boost::thread_group& threadGroup, node::NodeContext& nodeContext)
 {
     StopHTTPServer();
     StopHTTPRPC();
@@ -268,6 +269,9 @@ void ServerShutdown(boost::thread_group& threadGroup)
     StopREST();
     MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
     StopTorControl();
+    // After everything has been shut down, but before things get flushed, stop the
+    // CScheduler/checkqueue, scheduler and load block thread.
+    if (nodeContext.scheduler) nodeContext.scheduler->stop();
 }
 
 static void OnRPCStarted()

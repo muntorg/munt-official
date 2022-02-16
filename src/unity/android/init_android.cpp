@@ -7,6 +7,7 @@
 #include <boost/thread.hpp>
 #include "chain.h"
 #include "init.h"
+#include "node/context.h"
 
 #include "unity/compat/android_wallet.h"
 #include "unity/djinni/cpp/legacy_wallet_result.hpp"
@@ -39,8 +40,11 @@ void RPCNotifyBlockChange(bool ibd, const CBlockIndex * pindex)
 {
 }
 
-void ServerShutdown(boost::thread_group& threadGroup)
+void ServerShutdown(boost::thread_group& threadGroup, node::NodeContext& nodeContext)
 {
+    // After everything has been shut down, but before things get flushed, stop the
+    // CScheduler/checkqueue, scheduler and load block thread.
+    if (nodeContext.scheduler) nodeContext.scheduler->stop();
 }
 
 void InitRPCMining()

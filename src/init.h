@@ -22,13 +22,18 @@ static const bool DEFAULT_SPV = false;
 
 namespace boost
 {
-class thread_group;
-} // namespace boost
+    class thread_group;
+}
+
+namespace node
+{
+    struct NodeContext;
+}
 
 /** Interrupt core threads */
 void CoreInterrupt(boost::thread_group& threadGroup);
 /** Stop core threads */
-void CoreShutdown(boost::thread_group& threadGroup);
+void CoreShutdown(boost::thread_group& threadGroup, node::NodeContext& nodeContext);
 //!Initialize the logging infrastructure
 void InitLogging();
 //!Initialize any app specific hardcoded paramaters here (e.g. the android wallet will set -spv)
@@ -59,7 +64,7 @@ bool AppInitSanityChecks();
  * @note This should only be done after daemonization.
  * @pre Parameters should be parsed and config file should be read, AppInitSanityChecks should have been called.
  */
-bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler);
+bool AppInitMain(boost::thread_group& threadGroup, node::NodeContext& node);
 
 /** The help message mode determines what help message to show */
 enum HelpMessageMode {
