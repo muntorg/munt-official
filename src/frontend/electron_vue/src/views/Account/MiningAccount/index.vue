@@ -3,7 +3,7 @@
     <portal to="header-slot">
       <main-header
         :title="account.label"
-        :subtitle="account.balance.toFixed(2)"
+        :subtitle="account.balance.toFixed(2) + ' ' + totalBalanceFiat"
       />
     </portal>
 
@@ -170,6 +170,7 @@ export default {
       stats: "stats",
       settings: "settings"
     }),
+    ...mapState("app", ["rate"]),
     hashesPerSecond() {
       return this.stats ? `${this.stats.hashesPerSecond}/s` : null;
     },
@@ -190,6 +191,10 @@ export default {
     },
     sendButtonVisible() {
       return this.sendButtonDisabled && this.rightSidebar === null;
+    },
+    totalBalanceFiat() {
+      if (!this.rate) return "";
+      return `€ ${(this.account.balance * this.rate).toFixed(2)}`;
     }
   },
   watch: {

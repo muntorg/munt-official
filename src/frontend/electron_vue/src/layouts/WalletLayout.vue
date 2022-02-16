@@ -256,6 +256,10 @@ export default {
     padding: 0 0 0 10px;
     line-height: 22px;
   }
+
+  & .fiat {
+    margin-left: 10px;
+  }
 }
 
 .sidebar-left > .footer {

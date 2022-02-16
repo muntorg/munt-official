@@ -5,7 +5,7 @@
         <main-header
           class="info"
           :title="account.label"
-          :subtitle="account.balance.toFixed(2)"
+          :subtitle="account.balance.toFixed(2) + ' ' + totalBalanceFiat"
         />
         <div class="settings flex-col">
           <span class="button" @click="setRightSidebar('Settings')">
@@ -130,6 +130,7 @@ import Send from "../MiningAccount/Send";
 import RenewAccount from "./RenewAccount";
 import AccountSettings from "../AccountSettings";
 import LinkHoldingAccount from "./LinkHoldingAccount";
+import { mapState } from "vuex";
 
 let timeout;
 
@@ -148,6 +149,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["rate"]),
     accountStatus() {
       return this.getStatistics("account_status");
     },
@@ -206,6 +208,10 @@ export default {
     },
     linkHoldingAccountVisible() {
       return this.rightSidebar !== LinkHoldingAccount;
+    },
+    totalBalanceFiat() {
+      if (!this.rate) return "";
+      return `€ ${(this.account.balance * this.rate).toFixed(2)}`;
     }
   },
   mounted() {

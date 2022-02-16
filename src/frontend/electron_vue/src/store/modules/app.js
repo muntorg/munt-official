@@ -21,7 +21,8 @@ const app = {
     status: AppStatus.start,
     unityVersion: null,
     walletExists: null,
-    walletVersion: null
+    walletVersion: null,
+    rate: null
   },
   mutations: {
     SET_CORE_READY(state) {
@@ -36,6 +37,9 @@ const app = {
     },
     SET_UNITY_VERSION(state, version) {
       state.unityVersion = version;
+    },
+    SET_RATE(state, rate) {
+      state.rate = rate;
     },
     SET_WALLET_EXISTS(state, walletExists) {
       state.walletExists = walletExists;
@@ -61,6 +65,9 @@ const app = {
     },
     SET_UNITY_VERSION({ commit }, version) {
       commit("SET_UNITY_VERSION", version);
+    },
+    SET_RATE({ commit }, rate) {
+      commit("SET_RATE", rate);
     },
     SET_WALLET_EXISTS({ commit }, walletExists) {
       let status = walletExists ? AppStatus.synchronize : AppStatus.setup;

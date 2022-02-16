@@ -126,7 +126,7 @@ export default {
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
-      return `€ ${(this.totalBalance * this.rate).toFixed(2)}`;
+      return `€ ${(this.account.balance * this.rate).toFixed(2)}`;
     }
   },
   methods: {
