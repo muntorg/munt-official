@@ -598,15 +598,15 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
 
             // pack in some essentials
             // use more or less the same output as mentioned in Bip64
-            objGetUTXOResponse.push_back(Pair("chainHeight", chainActive.Height()));
-            objGetUTXOResponse.push_back(Pair("chaintipHash", chainActive.Tip()->GetBlockHashPoW2().GetHex()));
-            objGetUTXOResponse.push_back(Pair("bitmap", bitmapStringRepresentation));
+            objGetUTXOResponse.pushKV("chainHeight", chainActive.Height());
+            objGetUTXOResponse.pushKV("chaintipHash", chainActive.Tip()->GetBlockHashPoW2().GetHex());
+            objGetUTXOResponse.pushKV("bitmap", bitmapStringRepresentation);
 
             UniValue utxos(UniValue::VARR);
             for (const CCoin& coin : outs) {
                 UniValue utxo(UniValue::VOBJ);
-                utxo.push_back(Pair("height", (int32_t)coin.nHeight));
-                utxo.push_back(Pair("value", ValueFromAmount(coin.out.nValue)));
+                utxo.pushKV("height", (int32_t)coin.nHeight);
+                utxo.pushKV("value", ValueFromAmount(coin.out.nValue));
 
                 //fixme: (PHASE4POSTREL) (SEGSIG)
                 if (coin.out.GetType() <= CTxOutType::ScriptLegacyOutput)
@@ -614,11 +614,11 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
                     // include the script in a json output
                     UniValue o(UniValue::VOBJ);
                     ScriptPubKeyToUniv(coin.out.output.scriptPubKey, o, true);
-                    utxo.push_back(Pair("scriptPubKey", o));
+                    utxo.pushKV("scriptPubKey", o);
                     utxos.push_back(utxo);
                 }
             }
-            objGetUTXOResponse.push_back(Pair("utxos", utxos));
+            objGetUTXOResponse.pushKV("utxos", utxos);
 
             // return json string
             std::string strJSON = objGetUTXOResponse.write() + "\n";
