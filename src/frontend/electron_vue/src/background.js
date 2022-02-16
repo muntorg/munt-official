@@ -254,7 +254,7 @@ app.on("ready", async () => {
 
 async function updateRate(seconds) {
   try {
-    const response = await axios.get("https://api.gulden.com/api/v1/ticker");
+    const response = await axios.get("https://api.florin.org/api/v1/ticker");
     const eur = response.data.data.find(item => {
       return item.code === "EUR";
     });
