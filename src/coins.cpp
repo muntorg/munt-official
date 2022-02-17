@@ -451,6 +451,14 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     itUs->second.coin = std::move(it->second.coin);
                     cachedCoinsUsage += itUs->second.coin.DynamicMemoryUsage();
                     itUs->second.flags |= CCoinsCacheEntry::DIRTY;
+
+                    // A "normal" modification could also be changing the canonical outpoint that the cacheCoinRefs is pointing to.
+                    // This happens when a re-org causes an earlier (coinbase) coin that is still in the cache (be it spend and dirty)
+                    // gets re-added. If the re-org had a tx with the same index outpoint that will overwrite the (cacheCoinRefs).
+                    // So when the original is re-added again because of a 2nd re-org the index outpoint has to be updated to match again.
+                    // So it is added to the modificationMap to ensure the cacheCoinRefs is updated
+                     modificationMap.push_back(it->first);
+
                     // NOTE: It is possible the child has a FRESH flag here in
                     // the event the entry we found in the parent is pruned. But
                     // we must not copy that FRESH flag to the parent as that
