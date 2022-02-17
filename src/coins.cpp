@@ -379,6 +379,9 @@ void CCoinsViewCache::SetBestBlock(const uint256 &hashBlockIn)
 
 bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn, bool allowFastPath)
 {
+    // TODO UNHACK remove this (and the whole slowpath), just here to force the fast-path always to create a test build
+    allowFastPath = true;
+
     // It is possible (in fact likely) for the same batch to be both erasing and writing the same entryref e.g. if swapping one block 1963 for a competing block 1963
     // mapCoins is 'randomly' ordered so doing this would create random behaviour and an inconsistent coin database
     // To overcome this we erase first always, and then pool up the inserts to do at the end, where we must still carefully order the inserts as well
