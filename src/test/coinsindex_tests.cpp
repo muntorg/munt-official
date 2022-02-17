@@ -70,6 +70,26 @@ namespace
         CCoinsMap &map() { return cacheCoins; }
         CCoinsRefMap &refmap() { return cacheCoinRefs; }
         size_t &usage() { return cachedCoinsUsage; }
+
+        void printMaps()
+        {
+            BOOST_TEST_MESSAGE("--- map ---");
+            for (auto &[outpoint, cacheEntry] : map())
+            {
+                std::string msg = strprintf("%s Coin: h=%d n=%d a=%d Cache: flags=%d", outpoint.getTransactionHash().ToString(), cacheEntry.coin.nHeight, cacheEntry.coin.nTxIndex, cacheEntry.coin.out.nValue, cacheEntry.flags);
+
+                BOOST_TEST_MESSAGE(msg);
+            }
+
+            BOOST_TEST_MESSAGE("--- canonical <- ref ---");
+            for (auto &[refpoint, canpoint] : refmap())
+            {
+                std::string msg = strprintf("%s <- h=%d n=%d", canpoint.getTransactionHash().ToString(), refpoint.getTransactionBlockNumber(), refpoint.getTransactionIndex());
+
+                BOOST_TEST_MESSAGE(msg);
+            }
+            BOOST_TEST_MESSAGE("\n");
+        }
     };
 
 }
@@ -108,12 +128,12 @@ struct IndexTestingSetup : public TestingSetup
             tx.vin[0] = CTxIn(COutPoint(spendBlockHeight, 0, nIn), CScript(), 0, 0); // index based
 
             // setup outputs
-            tx.vout.resize(2);
+            tx.vout.resize(1);
             tx.vout[0].nValue = 550;
             tx.vout[0].output.scriptPubKey.assign(InsecureRand32() & 0x3F, 0);
 
-            tx.vout[1].nValue = 550;
-            tx.vout[1].output.scriptPubKey.assign(InsecureRand32() & 0x3F, 0);
+            // tx.vout[1].nValue = 550;
+            // tx.vout[1].output.scriptPubKey.assign(InsecureRand32() & 0x3F, 0);
 
             transactions.push_back(tx);
         }
@@ -124,7 +144,8 @@ struct IndexTestingSetup : public TestingSetup
         SimBlock blk;
         blk.height = blockHeight;
         blk.addCoinBaseTx();
-        blk.addSpendCoinBaseTxByIndex(coinBaseToSpendHeight, 0);
+        // to force the index inconsistency the coinbase tx is all that is needed
+        // blk.addSpendCoinBaseTxByIndex(coinBaseToSpendHeight, 0);
         return blk;
     }
 
@@ -136,7 +157,7 @@ struct IndexTestingSetup : public TestingSetup
     vector<SimBlock> blocks;
 
     CCoinsViewDB &base = *pcoinsdbview; // Proper coins view db as the base
-    CCoinsViewCache coinsView = CCoinsViewCache(&base);
+    CCoinsViewCacheTest coinsView = CCoinsViewCacheTest(&base);
 
     const int numGenesisTxOutputs = 2;
 
@@ -347,102 +368,88 @@ struct IndexTestingSetup : public TestingSetup
     }
 };
 
-BOOST_FIXTURE_TEST_SUITE(coinsindex_tests, IndexTestingSetup)
+struct CoinBaseTxConnectDisconnectTest : IndexTestingSetup
+{
+    void executeTest(bool allowFastPath)
+    {
+        std::string msg = allowFastPath ? "====== FAST PATH =====" : "====== SLOW PATH =====";
+        BOOST_TEST_MESSAGE(msg);
+
+        // 2 competing blocks both speding the coinbase tx of block # heightOffset
+        SimBlock blk1a = createBlockSpendingCoinBaseByIndex(heightOffset + 1, heightOffset);
+        SimBlock blk1b = createBlockSpendingCoinBaseByIndex(heightOffset + 1, heightOffset);
+
+        BOOST_TEST_MESSAGE("1. initial");
+        coinsView.printMaps();
+
+        { // connect block 1a
+            CCoinsViewCache view(&coinsView);
+            BOOST_CHECK(SimulatedConnectBlock(blk1a.transactions, blk1a.undos, blk1a.height, view));
+            BOOST_CHECK(view.Flush(allowFastPath));
+        }
+
+        BOOST_TEST_MESSAGE("2. added block a");
+        coinsView.printMaps();
+
+        { // disconnect block 1a
+            CCoinsViewCache view(&coinsView);
+            BOOST_CHECK_EQUAL(SimulatedDisconnectBlock(blk1a.transactions, blk1a.undos, view), DISCONNECT_OK);
+            BOOST_CHECK(view.Flush(allowFastPath));
+        }
+
+        BOOST_TEST_MESSAGE("3. disconnected block a");
+        coinsView.printMaps();
+
+        { // connect block 1b
+            CCoinsViewCache view(&coinsView);
+            BOOST_CHECK(SimulatedConnectBlock(blk1b.transactions, blk1b.undos, blk1b.height, view));
+            BOOST_CHECK(view.Flush(allowFastPath));
+        }
+
+        BOOST_TEST_MESSAGE("4. added block b");
+        coinsView.printMaps();
+
+        { // disconnect block 1b
+            CCoinsViewCache view(&coinsView);
+            BOOST_CHECK_EQUAL(SimulatedDisconnectBlock(blk1b.transactions, blk1b.undos, view), DISCONNECT_OK);
+            BOOST_CHECK(view.Flush(allowFastPath));
+        }
+
+        BOOST_TEST_MESSAGE("5. disconnected block b");
+        coinsView.printMaps();
+
+        { // connect block 1a again!
+            CCoinsViewCache view(&coinsView);
+            BOOST_CHECK(SimulatedConnectBlock(blk1a.transactions, blk1a.undos, blk1a.height, view));
+            BOOST_CHECK(view.Flush(allowFastPath));
+        }
+
+        BOOST_TEST_MESSAGE("6. added block a, again!");
+        coinsView.printMaps();
+
+        Coin coin;
+        COutPoint canonicalOut;
+
+        // get coin from coinbase tx in blk1a by index
+        BOOST_CHECK(coinsView.GetCoin(COutPoint(blk1a.height, 0, 0), coin, &canonicalOut));
+
+        // verify that the tx hash of the canonical outpoint matches the tx hash in blk1a
+        BOOST_CHECK(canonicalOut.isHash && canonicalOut.getTransactionHash() == blk1a.transactions[0].GetHash());
+    }
+};
+
+BOOST_FIXTURE_TEST_SUITE(coinsindex_tests, CoinBaseTxConnectDisconnectTest)
 
 BOOST_AUTO_TEST_CASE(coinbasetx_connect_disconnect_slowpath)
 {
-    bool allowFastPath = false;
-
-    // 2 competing blocks both speding the coinbase tx of block # heightOffset
-    SimBlock blk1a = createBlockSpendingCoinBaseByIndex(heightOffset + 1, heightOffset);
-    SimBlock blk1b = createBlockSpendingCoinBaseByIndex(heightOffset + 1, heightOffset);
-
-    { // connect block 1a
-        CCoinsViewCache view(&coinsView);
-        BOOST_CHECK(SimulatedConnectBlock(blk1a.transactions, blk1a.undos, blk1a.height, view));
-        BOOST_CHECK(view.Flush(allowFastPath));
-    }
-
-    { // disconnect block 1a
-        CCoinsViewCache view(&coinsView);
-        BOOST_CHECK_EQUAL(SimulatedDisconnectBlock(blk1a.transactions, blk1a.undos, view), DISCONNECT_OK);
-        BOOST_CHECK(view.Flush(allowFastPath));
-    }
-
-    { // connect block 1b
-        CCoinsViewCache view(&coinsView);
-        BOOST_CHECK(SimulatedConnectBlock(blk1b.transactions, blk1b.undos, blk1b.height, view));
-        BOOST_CHECK(view.Flush(allowFastPath));
-    }
-
-    { // disconnect block 1b
-        CCoinsViewCache view(&coinsView);
-        BOOST_CHECK_EQUAL(SimulatedDisconnectBlock(blk1b.transactions, blk1b.undos, view), DISCONNECT_OK);
-        BOOST_CHECK(view.Flush(allowFastPath));
-    }
-
-    { // connect block 1a again!
-        CCoinsViewCache view(&coinsView);
-        BOOST_CHECK(SimulatedConnectBlock(blk1a.transactions, blk1a.undos, blk1a.height, view));
-        BOOST_CHECK(view.Flush(allowFastPath));
-    }
-
-    Coin coin;
-    COutPoint canonicalOut;
-
-    // get coin from tx in blk1a by index
-    BOOST_CHECK(coinsView.GetCoin(COutPoint(blk1a.height, 0, 0), coin, &canonicalOut));
-
-    // verify that the tx hash of the canonical outpoint matches the tx hash in blk1a
-    BOOST_CHECK(canonicalOut.isHash && canonicalOut.getTransactionHash() == blk1a.transactions[0].GetHash());
+    bool fastPath = false;
+    executeTest(fastPath);
 }
 
 BOOST_AUTO_TEST_CASE(coinbasetx_connect_disconnect_fastpath)
 {
-    bool allowFastPath = true;
-
-    // 2 competing blocks both speding the coinbase tx of block # heightOffset
-    SimBlock blk1a = createBlockSpendingCoinBaseByIndex(heightOffset + 1, heightOffset);
-    SimBlock blk1b = createBlockSpendingCoinBaseByIndex(heightOffset + 1, heightOffset);
-
-    { // connect block 1a
-        CCoinsViewCache view(&coinsView);
-        BOOST_CHECK(SimulatedConnectBlock(blk1a.transactions, blk1a.undos, blk1a.height, view));
-        BOOST_CHECK(view.Flush(allowFastPath));
-    }
-
-    { // disconnect block 1a
-        CCoinsViewCache view(&coinsView);
-        BOOST_CHECK_EQUAL(SimulatedDisconnectBlock(blk1a.transactions, blk1a.undos, view), DISCONNECT_OK);
-        BOOST_CHECK(view.Flush(allowFastPath));
-    }
-
-    { // connect block 1b
-        CCoinsViewCache view(&coinsView);
-        BOOST_CHECK(SimulatedConnectBlock(blk1b.transactions, blk1b.undos, blk1b.height, view));
-        BOOST_CHECK(view.Flush(allowFastPath));
-    }
-
-    { // disconnect block 1b
-        CCoinsViewCache view(&coinsView);
-        BOOST_CHECK_EQUAL(SimulatedDisconnectBlock(blk1b.transactions, blk1b.undos, view), DISCONNECT_OK);
-        BOOST_CHECK(view.Flush(allowFastPath));
-    }
-
-    { // connect block 1a again!
-        CCoinsViewCache view(&coinsView);
-        BOOST_CHECK(SimulatedConnectBlock(blk1a.transactions, blk1a.undos, blk1a.height, view));
-        BOOST_CHECK(view.Flush(allowFastPath));
-    }
-
-    Coin coin;
-    COutPoint canonicalOut;
-
-    // get coin from tx in blk1a by index
-    BOOST_CHECK(coinsView.GetCoin(COutPoint(blk1a.height, 0, 0), coin, &canonicalOut));
-
-    // verify that the tx hash of the canonical outpoint matches the tx hash in blk1a
-    BOOST_CHECK(canonicalOut.isHash && canonicalOut.getTransactionHash() == blk1a.transactions[0].GetHash());
+    bool fastPath = true;
+    executeTest(true);
 }
 
 BOOST_AUTO_TEST_CASE(add_duplicate_coins)
