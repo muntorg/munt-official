@@ -72,12 +72,15 @@ export default {
       if (event.keyCode === 13) this.createMiningAccount(this.password);
     },
     createMiningAccount(password) {
+      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
       if (LibraryController.UnlockWallet(password) === false) {
         this.isPasswordInvalid = true;
+      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
         return;
       }
       let uuid = AccountsController.CreateAccount("Florin Mining", "Mining");
       LibraryController.LockWallet();
+      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
       this.$router.push({ name: "account", params: { id: uuid } });
     }
   }

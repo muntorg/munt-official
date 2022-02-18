@@ -212,12 +212,17 @@ export default {
       });
     },
     createAndFundHoldingAccount() {
+      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
+
       // wallet needs to be unlocked to make a payment
       if (LibraryController.UnlockWallet(this.computedPassword) === false) {
         this.isPasswordInvalid = true;
       }
 
-      if (this.hasErrors) return;
+      if (this.hasErrors) {
+        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+        return;
+      }
 
       let accountId = AccountsController.CreateAccount(
         this.accountName,
@@ -240,8 +245,10 @@ export default {
       );
 
       if (result.status === "success") {
+        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
         this.$router.push({ name: "account", params: { id: accountId } });
       } else {
+        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
         console.log(result);
         AccountsController.DeleteAccount(accountId); // something went wrong, so delete the account
       }
