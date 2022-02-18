@@ -2658,13 +2658,13 @@ static UniValue verifywitnessaddress(const JSONRPCRequest& request)
     if (!witnessAccount->GetKey(currentWitnessDetails.witnessKeyID, privKey))
     {
         result.push_back(Pair("validity", false));
-        result.push_back(Pair("info", "Able to retrieve witness signing key; this should not be possible as key should be encrypted."));
+        result.push_back(Pair("info", "Unable to retrieve witness signing key; key should be available when wallet is locked. Key may be incorrectly stored."));
         return result;
     }
     if (witnessAccount->GetKey(currentWitnessDetails.spendingKeyID, privKey))
     {
         result.push_back(Pair("validity", false));
-        result.push_back(Pair("info", "Unable to retrieve spending signing key; key may be incorrectly encrypted."));
+        result.push_back(Pair("info", "Able to retrieve spending signing key; this should not be possible as key should be encrypted when wallet is locked."));
         return result;
     }
 
@@ -3817,6 +3817,7 @@ static const CRPCCommand commands[] =
     { "hidden",                 "enablewitnessing",                &enablewitnessing,               true,    {} },
     { "hidden",                 "disablewitnessing",               &disablewitnessing,              true,    {} },
     { "hidden",                 "repairwitnessaddress",            &repairwitnessaddress,           true,    {"witness_address" } },
+    { "hidden",                 "verifywitnessaddress",            &verifywitnessaddress,           true,    {"witness_address" } },
     { "holding",                "createholdingaccount",            &createwitnessaccount,           true,    {"name"} },
     { "holding",                 "calculateholdingweight",         &calculateholdingweight,         true,    { "amount", "time" } },
     { "holding",                "extendholdingaccount",            &extendwitnessaccount,           true,    {"funding_account", "witness_account", "amount", "time" } },
@@ -3846,7 +3847,7 @@ static const CRPCCommand commands[] =
     { "developer",               "dumpfiltercheckpoints",           &dumpfiltercheckpoints,          true,    {} },
     { "developer",               "dumptransactionstats",            &dumptransactionstats,           true,    {"start_height", "count"} },
     { "developer",               "dumpdiffarray",                   &dumpdiffarray,                  true,    {"height"} },
-    { "developer",               "verifywitnessaddress",            &verifywitnessaddress,           true,    {"witness_address" } },
+    { "developer",               "verifyholdingaddress",            &verifywitnessaddress,           true,    {"witness_address" } },
     
     { "support",                 "resetdatadirpartial",             &resetdatadirpartial,            true,    {""} },
     { "support",                 "resetdatadirfull",                &resetdatadirfull,               true,    {""} },
