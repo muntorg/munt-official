@@ -97,4 +97,8 @@ export default {
 .mining-info {
   line-height: 1.2em;
 }
+
+input {
+  background-color: #eee;
+}
 </style>

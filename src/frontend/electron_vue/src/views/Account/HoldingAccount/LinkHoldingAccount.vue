@@ -152,4 +152,8 @@ export default {
     word-wrap: break-word;
   }
 }
+
+input {
+  background-color: #eee;
+}
 </style>

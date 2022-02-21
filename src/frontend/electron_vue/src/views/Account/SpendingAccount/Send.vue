@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import { LibraryController, AccountsController } from "@/unity/Controllers";
 import ConfirmTransactionDialog from "./ConfirmTransactionDialog";
 import EventBus from "@/EventBus";
@@ -80,6 +80,7 @@ export default {
   },
   computed: {
     ...mapState("wallet", ["walletPassword"]),
+    ...mapGetters("wallet", ["account"]),
     computedPassword() {
       return this.walletPassword ? this.walletPassword : this.password || "";
     },
@@ -205,6 +206,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 input {
+  background-color: #eee;
   border: 0;
   margin: 0 0 10px 0;
   font-style: normal;
