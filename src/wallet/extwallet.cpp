@@ -16,6 +16,7 @@
 #include <boost/algorithm/string.hpp> // for split()
 #include <wallet/mnemonic.h>
 #include "util.h"
+#include "util/thread.h"
 #include <validation/validation.h>
 
 bool fShowChildAccountsSeperately = false;

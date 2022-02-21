@@ -39,6 +39,7 @@
 #include "scheduler.h"
 #include "ui_interface.h"
 #include "util.h"
+#include "util/thread.h"
 #include "warnings.h"
 
 #ifdef ENABLE_WALLET

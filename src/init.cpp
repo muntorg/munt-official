@@ -39,6 +39,7 @@
 #include "netbase.h"
 #include "net.h"
 #include "net_processing.h"
+#include "node/context.h"
 #include "policy/feerate.h"
 #include "policy/fees.h"
 #include "policy/policy.h"
@@ -54,6 +55,7 @@
 #include "torcontrol.h"
 #include "ui_interface.h"
 #include "util.h"
+#include "util/thread.h"
 #include "witnessutil.h"
 #include "utilmoneystr.h"
 #ifdef ENABLE_WALLET

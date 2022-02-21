@@ -22,6 +22,7 @@
 #include "util.h"
 #include "util/time.h"
 #include "utilstrencodings.h"
+#include <util/thread.h>
 
 #include <stdio.h>
 

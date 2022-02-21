@@ -27,6 +27,7 @@
 #include "scheduler.h"
 #include "ui_interface.h"
 #include "utilstrencodings.h"
+#include "util/thread.h"
 
 #ifdef WIN32
 #include <string.h>

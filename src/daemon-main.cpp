@@ -23,6 +23,7 @@
 #include "noui.h"
 #include "scheduler.h"
 #include "util.h"
+#include "util/thread.h"
 #include "httpserver.h"
 #include "httprpc.h"
 #include "utilstrencodings.h"

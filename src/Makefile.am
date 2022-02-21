@@ -212,6 +212,7 @@ CORE_H = rpc/accounts.h \
   support/events.h \
   support/lockedpool.h \
   sync.h \
+  util/thread.h \
   threadsafety.h \
   threadinterrupt.h \
   timedata.h \
@@ -220,6 +221,7 @@ CORE_H = rpc/accounts.h \
   txmempool.h \
   ui_interface.h \
   undo.h \
+  logging.h \
   util.h \
   util/time.h \
   util/check.h \
@@ -703,7 +705,9 @@ lib_util_a_SOURCES = \
   randomenv.cpp \
   support/cleanse.cpp \
   sync.cpp \
+  util/thread.cpp \
   threadinterrupt.cpp \
+  logging.cpp \
   util.cpp \
   utilmoneystr.cpp \
   utilstrencodings.cpp \

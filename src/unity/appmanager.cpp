@@ -7,6 +7,7 @@
 #include "appmanager.h"
 #include "chainparams.h"
 #include "util.h"
+#include "util/thread.h"
 #include "witnessutil.h"
 #include "init.h"
 #include "warnings.h"

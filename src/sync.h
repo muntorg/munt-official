@@ -15,7 +15,7 @@
 
 #include "threadsafety.h"
 #include <util/macros.h>
-
+#include "logging.h"
 #include <boost/thread/condition_variable.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/recursive_mutex.hpp>
