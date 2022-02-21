@@ -380,7 +380,7 @@ public:
             if (!(mapValue.empty() && _ssExtra.empty()))
             {
                 CDataStream ss(s.GetType(), s.GetVersion());
-                ss.insert(ss.begin(), '\0');
+                ss.insert(ss.begin(), std::byte('\0'));
                 ss << mapValue;
                 ss.insert(ss.end(), _ssExtra.begin(), _ssExtra.end());
                 strComment.append(ss.str());
@@ -395,9 +395,9 @@ public:
             mapValue.clear();
             if (std::string::npos != nSepPos)
             {
-                CDataStream ss(std::vector<char>(strComment.begin() + nSepPos + 1, strComment.end()), s.GetType(), s.GetVersion());
+                CDataStream ss(AsBytes(Span(&strComment[0] + nSepPos + 1, strComment.length() -  (nSepPos + 1))), s.GetType(), s.GetVersion());
                 ss >> mapValue;
-                _ssExtra = std::vector<char>(ss.begin(), ss.end());
+                _ssExtra = CSerializeData(ss.begin(), ss.end());
             }
             ReadOrderPos(nOrderPos, mapValue);
         }
@@ -408,7 +408,7 @@ public:
     }
 
 private:
-    std::vector<char> _ssExtra;
+    CSerializeData _ssExtra;
 };
 
 struct WalletBalances

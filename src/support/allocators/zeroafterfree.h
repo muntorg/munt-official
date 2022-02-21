@@ -40,7 +40,7 @@ struct zero_after_free_allocator : public std::allocator<T> {
     }
 };
 
-// Byte-vector that clears its contents before deletion.
-typedef std::vector<char, zero_after_free_allocator<char> > CSerializeData;
+/** Byte-vector that clears its contents before deletion. */
+using CSerializeData = std::vector<std::byte, zero_after_free_allocator<std::byte>>;
 
 #endif // CORE_SUPPORT_ALLOCATORS_ZEROAFTERFREE_H

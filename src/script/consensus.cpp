@@ -30,7 +30,26 @@ public:
     m_data(txTo),
     m_remaining(txToLen)
     {}
+   
+    void read(Span<std::byte> dst)
+    {
+        if (dst.size() > m_remaining) {
+            throw std::ios_base::failure(std::string(__func__) + ": end of data");
+        }
 
+        if (dst.data() == nullptr) {
+            throw std::ios_base::failure(std::string(__func__) + ": bad destination buffer");
+        }
+
+        if (m_data == nullptr) {
+            throw std::ios_base::failure(std::string(__func__) + ": bad source buffer");
+        }
+
+        memcpy(dst.data(), m_data, dst.size());
+        m_remaining -= dst.size();
+        m_data += dst.size();
+    }
+    
     void read(char* pch, size_t nSize)
     {
         if (nSize > m_remaining)

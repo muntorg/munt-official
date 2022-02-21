@@ -11,6 +11,7 @@
 
 #include <bitset>
 #include <sstream>
+#include <iterator>
 #include "utilstrencodings.h"
 
 

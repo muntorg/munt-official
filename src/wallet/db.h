@@ -19,6 +19,7 @@
 #include "streams.h"
 #include "sync.h"
 #include "version.h"
+#include <span.h>
 
 #include <map>
 #include <string>
@@ -201,7 +202,7 @@ public:
         if (datValue.get_data() != NULL) {
             // Unserialize value
             try {
-                CDataStream ssValue((char*)datValue.get_data(), (char*)datValue.get_data() + datValue.get_size(), SER_DISK, CLIENT_VERSION);
+                CDataStream ssValue(AsBytes(Span((char*)datValue.get_data(), datValue.get_size())), SER_DISK, CLIENT_VERSION);
                 ssValue >> value;
                 success = true;
             } catch (const std::exception&) {
@@ -319,10 +320,10 @@ public:
         // Convert to streams
         ssKey.SetType(SER_DISK);
         ssKey.clear();
-        ssKey.write((char*)datKey.get_data(), datKey.get_size());
+        ssKey.write(AsWritableBytes(Span{(char*)datKey.get_data(), datKey.get_size()}));
         ssValue.SetType(SER_DISK);
         ssValue.clear();
-        ssValue.write((char*)datValue.get_data(), datValue.get_size());
+        ssValue.write(AsWritableBytes(Span{(char*)datValue.get_data(), datValue.get_size()}));
 
         // Clear and free memory
         memory_cleanse(datKey.get_data(), datKey.get_size());

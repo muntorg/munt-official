@@ -14,6 +14,7 @@
 #include "streams.h"
 #include "tinyformat.h"
 #include "util.h"
+#include <span.h>
 
 
 CBanDB::CBanDB()
@@ -79,7 +80,7 @@ bool CBanDB::Read(banmap_t& banSet)
 
     // read data and checksum from file
     try {
-        filein.read((char *)&vchData[0], dataSize);
+        filein.read(AsWritableBytes(Span{vchData.data(), dataSize}));
         filein >> hashIn;
     }
     catch (const std::exception& e) {
@@ -176,7 +177,7 @@ bool CAddrDB::Read(CAddrMan& addr)
 
     // read data and checksum from file
     try {
-        filein.read((char *)&vchData[0], dataSize);
+        filein.read(AsWritableBytes(Span{vchData.data(), dataSize}));
         filein >> hashIn;
     }
     catch (const std::exception& e) {

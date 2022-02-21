@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2009-2021 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 //
@@ -10,8 +10,8 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#ifndef SERIALIZE_H
-#define SERIALIZE_H
+#ifndef CORE_SERIALIZE_H
+#define CORE_SERIALIZE_H
 
 #include "compat/endian.h"
 
@@ -29,10 +29,18 @@
 #include <vector>
 #include <type_traits>
 
-#include "prevector.h"
+#include <prevector.h>
 #include "support/allocators/secure.h"
+#include <span.h>
 
-static const unsigned int MAX_SIZE = 0x02000000;
+/**
+ * The maximum size of a serialized object in bytes or number of elements
+ * (for eg vectors) when the size is encoded as CompactSize.
+ */
+static constexpr uint64_t MAX_SIZE = 0x02000000;
+
+/** Maximum amount of memory (in bytes) to allocate at once when deserializing vectors. */
+static const unsigned int MAX_VECTOR_ALLOCATE = 5000000;
 
 /**
  * Dummy data type to identify deserializing constructors.
@@ -70,49 +78,70 @@ inline T* NCONST_PTR(const T* val)
 
 /*
  * Lowest-level serialization and conversion.
- * @note Sizes of these types are verified in the tests
  */
 template<typename Stream> inline void ser_writedata8(Stream &s, uint8_t obj)
 {
-    s.write((char*)&obj, 1);
+    s.write(AsBytes(Span{&obj, 1}));
 }
 template<typename Stream> inline void ser_writedata16(Stream &s, uint16_t obj)
 {
     obj = htole16(obj);
-    s.write((char*)&obj, 2);
+    s.write(AsBytes(Span{&obj, 1}));
+}
+template<typename Stream> inline void ser_writedata16be(Stream &s, uint16_t obj)
+{
+    obj = htobe16(obj);
+    s.write(AsBytes(Span{&obj, 1}));
 }
 template<typename Stream> inline void ser_writedata32(Stream &s, uint32_t obj)
 {
     obj = htole32(obj);
-    s.write((char*)&obj, 4);
+    s.write(AsBytes(Span{&obj, 1}));
+}
+template<typename Stream> inline void ser_writedata32be(Stream &s, uint32_t obj)
+{
+    obj = htobe32(obj);
+    s.write(AsBytes(Span{&obj, 1}));
 }
 template<typename Stream> inline void ser_writedata64(Stream &s, uint64_t obj)
 {
     obj = htole64(obj);
-    s.write((char*)&obj, 8);
+    s.write(AsBytes(Span{&obj, 1}));
 }
 template<typename Stream> inline uint8_t ser_readdata8(Stream &s)
 {
     uint8_t obj;
-    s.read((char*)&obj, 1);
+    s.read(AsWritableBytes(Span{&obj, 1}));
     return obj;
 }
 template<typename Stream> inline uint16_t ser_readdata16(Stream &s)
 {
     uint16_t obj;
-    s.read((char*)&obj, 2);
+    s.read(AsWritableBytes(Span{&obj, 1}));
     return le16toh(obj);
+}
+template<typename Stream> inline uint16_t ser_readdata16be(Stream &s)
+{
+    uint16_t obj;
+    s.read(AsWritableBytes(Span{&obj, 1}));
+    return be16toh(obj);
 }
 template<typename Stream> inline uint32_t ser_readdata32(Stream &s)
 {
     uint32_t obj;
-    s.read((char*)&obj, 4);
+    s.read(AsWritableBytes(Span{&obj, 1}));
     return le32toh(obj);
+}
+template<typename Stream> inline uint32_t ser_readdata32be(Stream &s)
+{
+    uint32_t obj;
+    s.read(AsWritableBytes(Span{&obj, 1}));
+    return be32toh(obj);
 }
 template<typename Stream> inline uint64_t ser_readdata64(Stream &s)
 {
     uint64_t obj;
-    s.read((char*)&obj, 8);
+    s.read(AsWritableBytes(Span{&obj, 1}));
     return le64toh(obj);
 }
 inline uint64_t ser_double_to_uint64(double x)
@@ -144,7 +173,7 @@ inline float ser_uint32_to_float(uint32_t y)
 /////////////////////////////////////////////////////////////////
 //
 // Templates for serializing to anything that looks like a stream,
-// i.e. anything that supports .read(char*, size_t) and .write(char*, size_t)
+// i.e. anything that supports .read(Span<std::byte>) and .write(Span<const std::byte>)
 //
 
 class CSizeComputer;
@@ -224,7 +253,7 @@ template<typename Stream> inline void Unserialize(Stream& s, bool& a) { char f=s
 inline unsigned int GetSizeOfCompactSize(uint64_t nSize)
 {
     if (nSize < 253)             return sizeof(unsigned char);
-    else if (nSize <= std::numeric_limits<unsigned short>::max()) return sizeof(unsigned char) + sizeof(unsigned short);
+    else if (nSize <= std::numeric_limits<uint16_t>::max()) return sizeof(unsigned char) + sizeof(uint16_t);
     else if (nSize <= std::numeric_limits<unsigned int>::max())  return sizeof(unsigned char) + sizeof(unsigned int);
     else                         return sizeof(unsigned char) + sizeof(uint64_t);
 }
@@ -238,7 +267,7 @@ void WriteCompactSize(Stream& os, uint64_t nSize)
     {
         ser_writedata8(os, nSize);
     }
-    else if (nSize <= std::numeric_limits<unsigned short>::max())
+    else if (nSize <= std::numeric_limits<uint16_t>::max())
     {
         ser_writedata8(os, 253);
         ser_writedata16(os, nSize);
@@ -256,8 +285,14 @@ void WriteCompactSize(Stream& os, uint64_t nSize)
     return;
 }
 
+/**
+ * Decode a CompactSize-encoded variable-length integer.
+ *
+ * As these are primarily used to encode the size of vector-like serializations, by default a range
+ * check is performed. When used as a generic number encoding, range_check should be set to false.
+ */
 template<typename Stream>
-uint64_t ReadCompactSize(Stream& is)
+uint64_t ReadCompactSize(Stream& is, bool range_check = true)
 {
     uint8_t chSize = ser_readdata8(is);
     uint64_t nSizeRet = 0;
@@ -283,8 +318,9 @@ uint64_t ReadCompactSize(Stream& is)
         if (nSizeRet < 0x100000000ULL)
             throw std::ios_base::failure("non-canonical ReadCompactSize()");
     }
-    if (nSizeRet > (uint64_t)MAX_SIZE)
+    if (range_check && nSizeRet > MAX_SIZE) {
         throw std::ios_base::failure("ReadCompactSize(): size too large");
+    }
     return nSizeRet;
 }
 
@@ -294,16 +330,16 @@ uint64_t ReadCompactSize(Stream& is)
  * sure the encoding is one-to-one, one is subtracted from all but the last digit.
  * Thus, the byte sequence a[] with length len, where all but the last byte
  * has bit 128 set, encodes the number:
- * 
+ *
  *  (a[len-1] & 0x7F) + sum(i=1..len-1, 128^i*((a[len-i-1] & 0x7F)+1))
- * 
+ *
  * Properties:
  * * Very small (0-127: 1 byte, 128-16511: 2 bytes, 16512-2113663: 3 bytes)
  * * Every integer has exactly one encoding
  * * Encoding does not depend on size of original integer type
  * * No redundancy: every (infinite) byte sequence corresponds to a list
  *   of encoded integers.
- * 
+ *
  * 0:         [0x00]  256:        [0x81 0x00]
  * 1:         [0x01]  16383:      [0xFE 0x7F]
  * 127:       [0x7F]  16384:      [0xFF 0x00]
@@ -401,13 +437,13 @@ public:
     template<typename Stream>
     void Serialize(Stream& s) const
     {
-        s.write(pbegin, pend - pbegin);
+        s.write(AsBytes(Span(pbegin, pend)));
     }
 
     template<typename Stream>
     void Unserialize(Stream& s)
     {
-        s.read(pbegin, pend - pbegin);
+        s.read(AsWritableBytes(Span(pbegin, pend)));
     }
 };
 
@@ -470,7 +506,7 @@ public:
         }
         string.resize(size);
         if (size != 0)
-            s.read((char*)&string[0], size);
+            s.read(MakeWritableByteSpan(string));
     }
 
     template<typename Stream>
@@ -668,7 +704,7 @@ void Serialize(Stream& os, const std::basic_string<C>& str)
 {
     WriteCompactSize(os, str.size());
     if (!str.empty())
-        os.write((char*)&str[0], str.size() * sizeof(str[0]));
+        os.write(MakeByteSpan(str));
 }
 
 template<typename Stream, typename C>
@@ -677,7 +713,7 @@ void Unserialize(Stream& is, std::basic_string<C>& str)
     unsigned int nSize = ReadCompactSize(is);
     str.resize(nSize);
     if (nSize != 0)
-        is.read((char*)&str[0], nSize * sizeof(str[0]));
+        is.read(MakeWritableByteSpan(str));
 }
 
 template<typename C, typename T, typename A>
@@ -715,7 +751,7 @@ void Serialize_impl(Stream& os, const prevector<N, T>& v, const unsigned char&)
 {
     WriteCompactSize(os, v.size());
     if (!v.empty())
-        os.write((char*)&v[0], v.size() * sizeof(T));
+        os.write(MakeByteSpan(v));
 }
 
 template<typename Stream, unsigned int N, typename T, typename V>
@@ -743,8 +779,8 @@ void Unserialize_impl(Stream& is, prevector<N, T>& v, const unsigned char&)
     while (i < nSize)
     {
         unsigned int blk = std::min(nSize - i, (unsigned int)(1 + 4999999 / sizeof(T)));
-        v.resize(i + blk);
-        is.read((char*)&v[i], blk * sizeof(T));
+        v.resize_uninitialized(i + blk);
+        is.read(AsWritableBytes(Span{&v[i], blk}));
         i += blk;
     }
 }
@@ -811,7 +847,7 @@ void Serialize(Stream& os, const vectoroverwritewrapper<const std::vector<unsign
     const std::vector<unsigned char>& v = item.vector;
     WriteCompactSize(os, v.size());
     if (!v.empty())
-        os.write((char*)&v[0], v.size() * sizeof(unsigned char));
+        os.write(AsBytes(MakeByteSpan(v)));
 }
 
 template<typename Stream>
@@ -820,7 +856,7 @@ void Serialize(Stream& os, const vectoroverwritewrapper<std::vector<unsigned cha
     const std::vector<unsigned char>& v = item.vector;
     WriteCompactSize(os, v.size());
     if (!v.empty())
-        os.write((char*)&v[0], v.size() * sizeof(unsigned char));
+        os.write(MakeByteSpan(v));
 }
 
 template<typename Stream>
@@ -829,7 +865,7 @@ void Serialize(Stream& os, const vectoroverwritewrapper<std::vector<unsigned cha
     const std::vector<unsigned char>& v = item.vector;
     WriteCompactSize(os, v.size());
     if (!v.empty())
-        os.write((char*)&v[0], v.size() * sizeof(unsigned char));
+        os.write(MakeByteSpan(v));
 }
 
 
@@ -841,7 +877,7 @@ void Serialize(Stream& os, const vectoroverwritewrapper<const std::vector<unsign
     const std::vector<unsigned char, A>& v = item.vector;
     WriteCompactSize(os, v.size());
     if (!v.empty())
-        os.write((char*)&v[0], v.size() * sizeof(unsigned char));
+        os.write(MakeByteSpan(v));
 }
 
 template<typename Stream, typename A>
@@ -850,7 +886,7 @@ void Serialize(Stream& os, const vectoroverwritewrapper<std::vector<unsigned cha
     const std::vector<unsigned char, A>& v = item.vector;
     WriteCompactSize(os, v.size());
     if (!v.empty())
-        os.write((char*)&v[0], v.size() * sizeof(unsigned char));
+        os.write(MakeByteSpan(v));
 }
 
 template<typename Stream, typename A>
@@ -859,7 +895,7 @@ void Serialize(Stream& os, const vectoroverwritewrapper<std::vector<unsigned cha
     const std::vector<unsigned char, A>& v = item.vector;
     WriteCompactSize(os, v.size());
     if (!v.empty())
-        os.write((char*)&v[0], v.size() * sizeof(unsigned char));
+        os.write(MakeByteSpan(v));
 }
 
 
@@ -914,7 +950,7 @@ void Unserialize(Stream& is, vectoroverwritewrapper<std::vector<unsigned char>, 
     {
         unsigned int blk = std::min(nSize - i, (unsigned int)(1 + 4999999 / sizeof(unsigned char)));
         v.resize(i + blk);
-        is.read((char*)&v[i], blk * sizeof(unsigned char));
+        is.read(AsWritableBytes(Span{&v[i], blk}));
         i += blk;
     }
 }
@@ -930,7 +966,7 @@ void Unserialize(Stream& is, vectoroverwritewrapper<std::vector<unsigned char, A
     {
         unsigned int blk = std::min(nSize - i, (unsigned int)(1 + 4999999 / sizeof(unsigned char)));
         v.resize(i + blk);
-        is.read((char*)&v[i], blk * sizeof(unsigned char));
+        is.read(AsWritableBytes(Span{&v[i], blk}));
         i += blk;
     }
 }
@@ -946,7 +982,7 @@ void Unserialize(Stream& is, const vectoroverwritewrapper<std::vector<unsigned c
     {
         unsigned int blk = std::min(nSize - i, (unsigned int)(1 + 4999999 / sizeof(unsigned char)));
         v.resize(i + blk);
-        is.read((char*)&v[i], blk * sizeof(unsigned char));
+        is.read(AsWritableBytes(Span{&v[i], blk}));
         i += blk;
     }
 }
@@ -962,7 +998,7 @@ void Unserialize(Stream& is, const vectoroverwritewrapper<std::vector<unsigned c
     {
         unsigned int blk = std::min(nSize - i, (unsigned int)(1 + 4999999 / sizeof(unsigned char)));
         v.resize(i + blk);
-        is.read((char*)&v[i], blk * sizeof(unsigned char));
+        is.read(AsWritableBytes(Span{&v[i], blk}));
         i += blk;
     }
 }
@@ -978,7 +1014,7 @@ void Unserialize(Stream& is, vectoroverwritewrapper<const std::vector<unsigned c
     {
         unsigned int blk = std::min(nSize - i, (unsigned int)(1 + 4999999 / sizeof(unsigned char)));
         v.resize(i + blk);
-        is.read((char*)&v[i], blk * sizeof(unsigned char));
+        is.read(AsWritableBytes(Span{&v[i], blk}));
         i += blk;
     }
 }
@@ -1124,7 +1160,7 @@ void Unserialize(Stream& is, vectoroverwritewrapper<std::vector<unsigned char>, 
     {
         unsigned int blk = std::min(nSize - i, (unsigned int)(1 + 4999999 / sizeof(unsigned char)));
         v.resize(i + blk);
-        is.read((char*)&v[i], blk * sizeof(unsigned char));
+        is.read(AsWritableBytes(Span{&v[i], blk}));
         i += blk;
     }
 }
@@ -1211,8 +1247,8 @@ template<typename Stream, typename K, typename T, typename Pred, typename A>
 void Serialize(Stream& os, const std::map<K, T, Pred, A>& m)
 {
     WriteCompactSize(os, m.size());
-    for (typename std::map<K, T, Pred, A>::const_iterator mi = m.begin(); mi != m.end(); ++mi)
-        Serialize(os, (*mi));
+    for (const auto& entry : m)
+        Serialize(os, entry);
 }
 
 template<typename Stream, typename K, typename T, typename Pred, typename A>
@@ -1390,6 +1426,11 @@ public:
         this->nSize += _nSize;
     }
 
+    void write(Span<const std::byte> src)
+    {
+        this->nSize += src.size();
+    }
+
     /** Pretend _nSize bytes are written, without specifying them. */
     void seek(size_t _nSize)
     {
@@ -1482,4 +1523,4 @@ size_t GetSerializeSize(const S& s, const T& t)
     return (CSizeComputer(s.GetType(), s.GetVersion()) << t).size();
 }
 
-#endif
+#endif // CORE_SERIALIZE_H

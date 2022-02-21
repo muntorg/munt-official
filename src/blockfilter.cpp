@@ -21,6 +21,7 @@
 #include "checkpoints.h"
 
 #include <limits>
+#include "clientversion.h"
 
 /// SerType used to serialize parameters in GCS filter encoding.
 static constexpr int GCS_SER_TYPE = SER_NETWORK;
@@ -454,8 +455,10 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
     }
     else
     {
-        std::ifstream dataFile(dataFilePath, std::ios::in|std::ios::binary);
-        if (!dataFile.good() || dataFile.peek() == EOF)
+        
+        FILE *file = fsbridge::fopen(dataFilePath, "rb");
+        CAutoFile dataFile(file, SER_DISK, CLIENT_VERSION);            
+        if (dataFile.IsNull() || !dataFile.peek())
         {
             LogPrintf("Failed to read staticfiltercp file [%s]\n", dataFilePath.c_str());
             nSoftBirthDate = nHardBirthDate;
@@ -467,14 +470,7 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
         LogPrintf("Loading staticfiltercp file [%s] [%d] [%d]\n", dataFilePath, nStaticFilterOffset, nStaticFilterLength);
         if (nStaticFilterLength == 0)
         {
-            //fixme: c++17 - use the below rather...
-            //nStaticFilterLength = std::filesystem::file_size(dataFilePath);
-
-            //Seek to end of file to ascertain size and then rewind to start again.
-            dataFile.ignore( std::numeric_limits<std::streamsize>::max() );
-            nStaticFilterLength = dataFile.gcount();
-            dataFile.clear();
-            dataFile.seekg( 0, std::ios_base::beg );
+            nStaticFilterLength = boost::filesystem::file_size(dataFilePath);
         }
 
         uint64_t nStartIndex = Params().IsTestnet() ? 0 : 250000;//Earliest possible recovery phrase (before this we didn't use phrases)
@@ -489,10 +485,10 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
             if (nStartIndex >= nCrossOver)
                 nInterval = nInterval2;
             size_t nDataSize = ReadCompactSize(dataFile);
-            std::vector<unsigned char> data;
-            data.resize(nDataSize);
-            dataFile.read((char*)&data[0], nDataSize);
-            RangedCPBlockFilter rangeFilter(data);
+            std::vector<unsigned char> vchData;
+            vchData.resize(nDataSize);
+            dataFile.read(AsWritableBytes(Span{vchData.data(), nDataSize}));
+            RangedCPBlockFilter rangeFilter(vchData);
             ++nRanges;
             if (rangeFilter.GetFilter().MatchAny(walletAddresses))
             {

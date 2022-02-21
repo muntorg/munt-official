@@ -144,6 +144,10 @@ public:
     void write(const char *pch, size_t size) {
         ctx.Write((const unsigned char*)pch, size);
     }
+    
+    void write(Span<const std::byte> dataSpan) {
+        ctx.Write((const unsigned char*)dataSpan.data(), dataSpan.size_bytes());
+    }
 
     // invalidates the object
     uint256 GetHash() {
@@ -174,6 +178,11 @@ public:
     {
         source->read(pch, nSize);
         this->write(pch, nSize);
+    }
+    
+    void read(Span<std::byte> dataSpan) {
+        source->read(dataSpan);
+        this->write(dataSpan);
     }
 
     void peek(char* pch, size_t nSize)

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2016 The Bitcoin Core developers
+// Copyright (c) 2012-2021 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 //
@@ -26,11 +26,14 @@ protected:
     int intval;
     bool boolval;
     std::string stringval;
-    const char* charstrval;
+    char charstrval[16];
     CTransactionRef txval;
 public:
     CSerializeMethodsTestSingle() = default;
-    CSerializeMethodsTestSingle(int intvalin, bool boolvalin, std::string stringvalin, const char* charstrvalin, CTransaction txvalin) : intval(intvalin), boolval(boolvalin), stringval(std::move(stringvalin)), charstrval(charstrvalin), txval(MakeTransactionRef(txvalin)){}
+    CSerializeMethodsTestSingle(int intvalin, bool boolvalin, std::string stringvalin, const uint8_t* charstrvalin, CTransaction txvalin) : intval(intvalin), boolval(boolvalin), stringval(std::move(stringvalin)), txval(MakeTransactionRef(txvalin))
+    {
+        memcpy(charstrval, charstrvalin, sizeof(charstrval));
+    }
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
@@ -66,7 +69,7 @@ public:
 
 BOOST_AUTO_TEST_CASE(sizes)
 {
-    BOOST_CHECK_EQUAL(sizeof(char), GetSerializeSize(char(0), 0));
+    BOOST_CHECK_EQUAL(sizeof(unsigned char), GetSerializeSize((unsigned char)0, 0));
     BOOST_CHECK_EQUAL(sizeof(int8_t), GetSerializeSize(int8_t(0), 0));
     BOOST_CHECK_EQUAL(sizeof(uint8_t), GetSerializeSize(uint8_t(0), 0));
     BOOST_CHECK_EQUAL(sizeof(int16_t), GetSerializeSize(int16_t(0), 0));
@@ -77,11 +80,11 @@ BOOST_AUTO_TEST_CASE(sizes)
     BOOST_CHECK_EQUAL(sizeof(uint64_t), GetSerializeSize(uint64_t(0), 0));
     BOOST_CHECK_EQUAL(sizeof(float), GetSerializeSize(float(0), 0));
     BOOST_CHECK_EQUAL(sizeof(double), GetSerializeSize(double(0), 0));
-    // Bool is serialized as char
-    BOOST_CHECK_EQUAL(sizeof(char), GetSerializeSize(bool(0), 0));
+    // Bool is serialized as uint8_t
+    BOOST_CHECK_EQUAL(sizeof(uint8_t), GetSerializeSize(bool(0), 0));
 
     // Sanity-check GetSerializeSize and c++ type matching
-    BOOST_CHECK_EQUAL(GetSerializeSize(char(0), 0), 1U);
+    BOOST_CHECK_EQUAL(GetSerializeSize((unsigned char)0, 0), 1U);
     BOOST_CHECK_EQUAL(GetSerializeSize(int8_t(0), 0), 1U);
     BOOST_CHECK_EQUAL(GetSerializeSize(uint8_t(0), 0), 1U);
     BOOST_CHECK_EQUAL(GetSerializeSize(int16_t(0), 0), 2U);
@@ -203,7 +206,7 @@ BOOST_AUTO_TEST_CASE(varints)
     }
 
     for (uint64_t i = 0;  i < 100000000000ULL; i += 999999937) {
-        uint64_t j = -1;
+        uint64_t j = std::numeric_limits<uint64_t>::max();
         ss >> VARINT(j);
         BOOST_CHECK_MESSAGE(i == j, "decoded:" << j << " expected:" << i);
     }
@@ -255,8 +258,8 @@ static bool isCanonicalException(const std::ios_base::failure& ex)
 
     // The string returned by what() can be different for different platforms.
     // Instead of directly comparing the ex.what() with an expected string,
-    // create an instance of exception to see if ex.what() matches 
-    // the expected explanatory string returned by the exception instance. 
+    // create an instance of exception to see if ex.what() matches
+    // the expected explanatory string returned by the exception instance.
     return strcmp(expectedException.what(), ex.what()) == 0;
 }
 
@@ -269,32 +272,32 @@ BOOST_AUTO_TEST_CASE(noncanonical)
     std::vector<char>::size_type n;
 
     // zero encoded with three bytes:
-    ss.write("\xfd\x00\x00", 3);
+    ss.write(MakeByteSpan("\xfd\x00\x00").first(3));
     BOOST_CHECK_EXCEPTION(ReadCompactSize(ss), std::ios_base::failure, isCanonicalException);
 
     // 0xfc encoded with three bytes:
-    ss.write("\xfd\xfc\x00", 3);
+    ss.write(MakeByteSpan("\xfd\xfc\x00").first(3));
     BOOST_CHECK_EXCEPTION(ReadCompactSize(ss), std::ios_base::failure, isCanonicalException);
 
     // 0xfd encoded with three bytes is OK:
-    ss.write("\xfd\xfd\x00", 3);
+    ss.write(MakeByteSpan("\xfd\xfd\x00").first(3));
     n = ReadCompactSize(ss);
     BOOST_CHECK(n == 0xfd);
 
     // zero encoded with five bytes:
-    ss.write("\xfe\x00\x00\x00\x00", 5);
+    ss.write(MakeByteSpan("\xfe\x00\x00\x00\x00").first(5));
     BOOST_CHECK_EXCEPTION(ReadCompactSize(ss), std::ios_base::failure, isCanonicalException);
 
     // 0xffff encoded with five bytes:
-    ss.write("\xfe\xff\xff\x00\x00", 5);
+    ss.write(MakeByteSpan("\xfe\xff\xff\x00\x00").first(5));
     BOOST_CHECK_EXCEPTION(ReadCompactSize(ss), std::ios_base::failure, isCanonicalException);
 
     // zero encoded with nine bytes:
-    ss.write("\xff\x00\x00\x00\x00\x00\x00\x00\x00", 9);
+    ss.write(MakeByteSpan("\xff\x00\x00\x00\x00\x00\x00\x00\x00").first(9));
     BOOST_CHECK_EXCEPTION(ReadCompactSize(ss), std::ios_base::failure, isCanonicalException);
 
     // 0x01ffffff encoded with nine bytes:
-    ss.write("\xff\xff\xff\xff\x01\x00\x00\x00\x00", 9);
+    ss.write(MakeByteSpan("\xff\xff\xff\xff\x01\x00\x00\x00\x00").first(9));
     BOOST_CHECK_EXCEPTION(ReadCompactSize(ss), std::ios_base::failure, isCanonicalException);
 }
 
@@ -307,43 +310,43 @@ BOOST_AUTO_TEST_CASE(insert_delete)
     ss.write("\x00\x01\x02\xff", 4);
     BOOST_CHECK_EQUAL(ss.size(), 4U);
 
-    char c = (char)11;
+    std::byte c = (std::byte)11;
 
     // Inserting at beginning/end/middle:
     ss.insert(ss.begin(), c);
     BOOST_CHECK_EQUAL(ss.size(), 5U);
-    BOOST_CHECK_EQUAL(ss[0], c);
-    BOOST_CHECK_EQUAL(ss[1], 0);
+    BOOST_CHECK_EQUAL((uint8_t)ss[0], (uint8_t)c);
+    BOOST_CHECK_EQUAL((uint8_t)ss[1],(uint8_t)0);
 
     ss.insert(ss.end(), c);
     BOOST_CHECK_EQUAL(ss.size(), 6U);
-    BOOST_CHECK_EQUAL(ss[4], (char)0xff);
-    BOOST_CHECK_EQUAL(ss[5], c);
+    BOOST_CHECK_EQUAL((uint8_t)ss[4], (uint8_t)0xff);
+    BOOST_CHECK_EQUAL((uint8_t)ss[5], (uint8_t)c);
 
     ss.insert(ss.begin()+2, c);
-    BOOST_CHECK_EQUAL(ss.size(), 7U);
-    BOOST_CHECK_EQUAL(ss[2], c);
+    BOOST_CHECK_EQUAL((uint8_t)ss.size(), (uint8_t)7U);
+    BOOST_CHECK_EQUAL((uint8_t)ss[2], (uint8_t)c);
 
     // Delete at beginning/end/middle
     ss.erase(ss.begin());
-    BOOST_CHECK_EQUAL(ss.size(), 6U);
-    BOOST_CHECK_EQUAL(ss[0], 0);
+    BOOST_CHECK_EQUAL((uint8_t)ss.size(), (uint8_t)6U);
+    BOOST_CHECK_EQUAL((uint8_t)ss[0], (uint8_t)0);
 
     ss.erase(ss.begin()+ss.size()-1);
-    BOOST_CHECK_EQUAL(ss.size(), 5U);
-    BOOST_CHECK_EQUAL(ss[4], (char)0xff);
+    BOOST_CHECK_EQUAL((uint8_t)ss.size(), (uint8_t)5U);
+    BOOST_CHECK_EQUAL((uint8_t)ss[4], (uint8_t)0xff);
 
     ss.erase(ss.begin()+1);
-    BOOST_CHECK_EQUAL(ss.size(), 4U);
-    BOOST_CHECK_EQUAL(ss[0], 0);
-    BOOST_CHECK_EQUAL(ss[1], 1);
-    BOOST_CHECK_EQUAL(ss[2], 2);
-    BOOST_CHECK_EQUAL(ss[3], (char)0xff);
+    BOOST_CHECK_EQUAL((uint8_t)ss.size(), (uint8_t)4U);
+    BOOST_CHECK_EQUAL((uint8_t)ss[0], (uint8_t)0);
+    BOOST_CHECK_EQUAL((uint8_t)ss[1], (uint8_t)1);
+    BOOST_CHECK_EQUAL((uint8_t)ss[2], (uint8_t)2);
+    BOOST_CHECK_EQUAL((uint8_t)ss[3], (uint8_t)0xff);
 
     // Make sure GetAndClear does the right thing:
     CSerializeData d;
     ss.GetAndClear(d);
-    BOOST_CHECK_EQUAL(ss.size(), 0U);
+    BOOST_CHECK_EQUAL((uint8_t)ss.size(), (uint8_t)0U);
 }
 
 BOOST_AUTO_TEST_CASE(class_methods)
@@ -351,7 +354,7 @@ BOOST_AUTO_TEST_CASE(class_methods)
     int intval(100);
     bool boolval(true);
     std::string stringval("testing");
-    const char* charstrval("testing charstr");
+    const uint8_t charstrval[16]{"testing charstr"};
     CMutableTransaction txval(TEST_DEFAULT_TX_VERSION);
     CSerializeMethodsTestSingle methodtest1(intval, boolval, stringval, charstrval, txval);
     CSerializeMethodsTestMany methodtest2(intval, boolval, stringval, charstrval, txval);

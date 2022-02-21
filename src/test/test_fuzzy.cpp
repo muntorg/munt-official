@@ -48,20 +48,19 @@ enum TEST_ID {
     TEST_ID_END
 };
 
-bool read_stdin(std::vector<char> &data) {
-    char buffer[1024];
-    ssize_t length=0;
-    while((length = read(STDIN_FILENO, buffer, 1024)) > 0) {
-        data.insert(data.end(), buffer, buffer+length);
-
-        if (data.size() > (1<<20)) return false;
+static bool read_stdin(std::vector<uint8_t>& data)
+{
+    uint8_t buffer[1024];
+    ssize_t length = 0;
+    while ((length = read(STDIN_FILENO, buffer, 1024)) > 0) {
+        data.insert(data.end(), buffer, buffer + length);
     }
-    return length==0;
+    return length == 0;
 }
 
 int do_fuzz()
 {
-    std::vector<char> buffer;
+    std::vector<uint8_t> buffer;
     if (!read_stdin(buffer)) return 0;
 
     if (buffer.size() < sizeof(uint32_t)) return 0;
