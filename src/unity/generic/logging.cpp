@@ -89,8 +89,10 @@ static std::string LogTimestampStr(const std::string &str, std::atomic_bool *fSt
     if (*fStartedNewLine) {
         int64_t nTimeMicros = GetTimeMicros();
         strStamped = FormatISO8601DateTime(nTimeMicros/1000000);
-        if (fLogTimeMicros)
+        if (fLogTimeMicros) {
+            strStamped.pop_back();
             strStamped += strprintf(".%06dZ", nTimeMicros%1000000);
+        }
         std::chrono::seconds mocktime = GetMockTime();
         if (mocktime > 0s) {
             strStamped += " (mocktime: " + FormatISO8601DateTime(count_seconds(mocktime)) + ")";
