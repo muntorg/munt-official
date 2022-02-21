@@ -113,4 +113,8 @@ export default {
   line-height: 18px;
   flex: 1;
 }
+input {
+  background-color: #eee;
+}
+
 </style>

@@ -175,4 +175,7 @@ export default {
 .change-password-view {
   height: 100%;
 }
+input {
+  background-color: #eee;
+}
 </style>

@@ -92,3 +92,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+input {
+  background-color: #eee;
+}
+</style>
