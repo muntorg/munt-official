@@ -18,7 +18,7 @@
       </p>
       <div v-show="isSynchronizing">
         <div class="sync-desc">{{ $t("loader.synchronizing") }}</div>
-        <progress ref="progress" max="100" value="0"></progress>
+        <progress ref="progress" max="130" value="0"></progress>
       </div>
     </div>
   </div>
@@ -31,7 +31,10 @@ import { LibraryController } from "../unity/Controllers";
 import UIConfig from "../../ui-config.json";
 
 let progressTimeout = null;
+// How many times we have received 0 as a response from progress API
 let progressCount = 0;
+// How many times we have polled for progress while the app is still in a loading state and is not yet synchronising
+let preProgressCount = 0;
 
 export default {
   name: "AppLoader",
@@ -106,13 +109,43 @@ export default {
       clearTimeout(progressTimeout);
       if (this.status !== AppStatus.synchronize) return;
       this.progress = LibraryController.GetUnifiedProgress();
-      if (
-        this.progress === 1 ||
-        (this.progress === 0 && progressCount++ === 5) // when progress doesn't update, set status ready after 5 updates to prevent a endless loading screen
-      ) {
-        this.$store.dispatch("app/SET_STATUS", AppStatus.ready);
+
+      // App goes through two basic loading proceeses:
+      // a. Setting up wallet, loading transactions/accounts, starting up of internal services network threads etc.
+      // b. Synchronising with network
+      // While we are in 'a' its not possible to determine progress and we get only a response of 200 from 'GetUnifiedProgress' to indicate this
+      // Once we are in 'b' we get a fraction of between 0..1 expressing the percentage we are in terms of complete.
+      //
+      // To deal with this we do the following:
+      // 1. We make our total progress target "130" instead of "100"
+      // 2. The first 30 of that 130 we proportion to "a" the second 100 we proportion to "b"
+      // 3. While in a we slowly increment over time from 0..30 to show the user progress is taking place
+      // 4. While in b we assume we are already starting from 30 and just add the return value of 'GetUnifiedProgress' on top of that
+      //
+      // Room for improvement:
+      // 1. Instead of starting b from 30 we should determine where 'a' left off (e.g. maybe it was only at 10) and start from there, and drop the progress total to match.
+      // 2. Improve the API call to return an object that properly specifies this instead of the magic "200" number
+      // 3. Fine tune what percentage of the sync we proportion to "a"
+      // 4. Use different proportions if we are performing an initial sync on a new wallet vs catching up on a previously synced wallet
+      // 'b' takes substantially longer on 'b' while if I open/close a recently synced wallet most time will be spent in 'a'
+
+      if (this.progress > 190) {
+        this.progress = (0.3 / 20) * preProgressCount;
+        if (preProgressCount < 20) {
+          preProgressCount++;
+        }
+        progressTimeout = setTimeout(this.updateProgress, 1000);
       } else {
-        progressTimeout = setTimeout(this.updateProgress, 2500);
+        if (
+          this.progress === 1 ||
+          (this.progress === 0 && progressCount++ === 5) // when progress doesn't update, set status ready after 5 updates to prevent a endless loading screen
+        ) {
+          this.progress = 1.3;
+          this.$store.dispatch("app/SET_STATUS", AppStatus.ready);
+        } else {
+          this.progress += 0.3;
+          progressTimeout = setTimeout(this.updateProgress, 2500);
+        }
       }
     }
   }
