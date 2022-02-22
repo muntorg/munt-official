@@ -1153,13 +1153,9 @@ bool AppInitMain(boost::thread_group& threadGroup, node::NodeContext& node)
 
     InitSignatureCache();
 
-    LogPrintf("Using %u threads for script verification\n", nScriptCheckThreads);
-    if (nScriptCheckThreads)
-    {
-        for (int i=0; i<nScriptCheckThreads-1; i++)
-        {
-            threadGroup.create_thread(&ThreadScriptCheck);
-        }
+    LogPrintf("Script verification uses %d additional threads\n", nScriptCheckThreads);
+    if (nScriptCheckThreads >= 1) {
+        StartScriptCheckWorkerThreads(nScriptCheckThreads);
     }
     
     assert(!node.scheduler);

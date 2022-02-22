@@ -1,22 +1,22 @@
-// Copyright (c) 2012-2015 The Bitcoin Core developers
+// Copyright (c) 2012-2021 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef CHECKQUEUE_H
 #define CHECKQUEUE_H
 
-#include "sync.h"
+#include <sync.h>
+#include <tinyformat.h>
+#include <util/syscall_sandbox.h>
+#include <util/threadnames.h>
 
 #include <algorithm>
 #include <vector>
 
-#include <boost/thread/condition_variable.hpp>
-#include <boost/thread/mutex.hpp>
-
 template <typename T>
 class CCheckQueueControl;
 
-/** 
+/**
  * Queue for verifications that have to be performed.
   * The verifications are represented by a type T, which must provide an
   * operator(), returning a bool.
@@ -59,14 +59,14 @@ private:
      */
     unsigned int nTodo GUARDED_BY(m_mutex){0};
 
-    //! Whether we're shutting down.
-    bool fQuit;
-
     //! The maximum number of elements to be processed in one batch
     const unsigned int nBatchSize;
 
+    std::vector<std::thread> m_worker_threads;
+    bool m_request_stop GUARDED_BY(m_mutex){false};
+
     /** Internal function that does bulk of the verification work. */
-    bool Loop(bool fMaster = false)
+    bool Loop(bool fMaster)
     {
         std::condition_variable& cond = fMaster ? m_master_cv : m_worker_cv;
         std::vector<T> vChecks;
@@ -88,13 +88,12 @@ private:
                     nTotal++;
                 }
                 // logically, the do loop starts here
-                while (queue.empty()) {
-                    if ((fMaster || fQuit) && nTodo == 0) {
+                while (queue.empty() && !m_request_stop) {
+                    if (fMaster && nTodo == 0) {
                         nTotal--;
                         bool fRet = fAllOk;
                         // reset the status for new work later
-                        if (fMaster)
-                            fAllOk = true;
+                        fAllOk = true;
                         // return the current status
                         return fRet;
                     }
@@ -102,6 +101,10 @@ private:
                     cond.wait(lock); // wait
                     nIdle--;
                 }
+                if (m_request_stop) {
+                    return false;
+                }
+
                 // Decide how many work units to process now.
                 // * Do not try to do everything at once, but aim for increasingly smaller batches so
                 //   all workers finish approximately simultaneously.
@@ -120,10 +123,8 @@ private:
             }
             // execute work
             for (T& check : vChecks)
-            {
                 if (fOk)
                     fOk = check();
-            }
             vChecks.clear();
         } while (true);
     }
@@ -133,37 +134,74 @@ public:
     Mutex m_control_mutex;
 
     //! Create a new check queue
-    CCheckQueue(unsigned int nBatchSizeIn) : nIdle(0), nTotal(0), fAllOk(true), nTodo(0), fQuit(false), nBatchSize(nBatchSizeIn) {}
-
-    //! Worker thread
-    void Thread()
+    explicit CCheckQueue(unsigned int nBatchSizeIn)
+        : nBatchSize(nBatchSizeIn)
     {
-        Loop();
+    }
+
+    //! Create a pool of new worker threads.
+    void StartWorkerThreads(const int threads_num)
+    {
+        {
+            LOCK(m_mutex);
+            nIdle = 0;
+            nTotal = 0;
+            fAllOk = true;
+        }
+        assert(m_worker_threads.empty());
+        for (int n = 0; n < threads_num; ++n) {
+            m_worker_threads.emplace_back([this, n]() {
+                util::ThreadRename(strprintf("scriptch.%i", n));
+                SetSyscallSandboxPolicy(SyscallSandboxPolicy::VALIDATION_SCRIPT_CHECK);
+                Loop(false /* worker thread */);
+            });
+        }
     }
 
     //! Wait until execution finishes, and return whether all evaluations were successful.
     bool Wait()
     {
-        return Loop(true);
+        return Loop(true /* master thread */);
     }
 
     //! Add a batch of checks to the queue
     void Add(std::vector<T>& vChecks)
     {
-        LOCK(m_mutex);
-        for (T& check : vChecks) {
-            queue.push_back(T());
-            check.swap(queue.back());
+        if (vChecks.empty()) {
+            return;
         }
-        nTodo += vChecks.size();
-        if (vChecks.size() == 1)
+
+        {
+            LOCK(m_mutex);
+            for (T& check : vChecks) {
+                queue.emplace_back();
+                check.swap(queue.back());
+            }
+            nTodo += vChecks.size();
+        }
+
+        if (vChecks.size() == 1) {
             m_worker_cv.notify_one();
-        else if (vChecks.size() > 1)
+        } else {
             m_worker_cv.notify_all();
+        }
+    }
+
+    //! Stop all of the worker threads.
+    void StopWorkerThreads()
+    {
+        WITH_LOCK(m_mutex, m_request_stop = true);
+        m_worker_cv.notify_all();
+        for (std::thread& t : m_worker_threads) {
+            t.join();
+        }
+        m_worker_threads.clear();
+        WITH_LOCK(m_mutex, m_request_stop = false);
     }
 
     ~CCheckQueue()
     {
+        assert(m_worker_threads.empty());
     }
 
 };

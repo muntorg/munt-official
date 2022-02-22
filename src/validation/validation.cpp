@@ -842,10 +842,16 @@ static bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, 
 
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
-void ThreadScriptCheck() {
-    RenameThread(GLOBAL_APPNAME"-scriptch");
-    scriptcheckqueue.Thread();
+void StartScriptCheckWorkerThreads(int threads_num)
+{
+    scriptcheckqueue.StartWorkerThreads(threads_num);
 }
+
+void StopScriptCheckWorkerThreads()
+{
+    scriptcheckqueue.StopWorkerThreads();
+}
+
 
 /**
  * Threshold condition checker that triggers when unknown versionbits are seen on the network.

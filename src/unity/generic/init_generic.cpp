@@ -272,6 +272,7 @@ void ServerShutdown(boost::thread_group& threadGroup, node::NodeContext& nodeCon
     // After everything has been shut down, but before things get flushed, stop the
     // CScheduler/checkqueue, scheduler and load block thread.
     if (nodeContext.scheduler) nodeContext.scheduler->stop();
+    StopScriptCheckWorkerThreads();
 }
 
 static void OnRPCStarted()
