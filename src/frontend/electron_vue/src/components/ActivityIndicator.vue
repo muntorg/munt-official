@@ -24,13 +24,13 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   margin-top: 0;
-  margin-left: 120px;
   align-items: center;
   justify-content: center;
   transition: opacity 0.3s ease;
   z-index: 9998;
 }
 .loader-ring {
+  margin-left: 120px;
   display: inline-block;
   position: relative;
   width: 80px;
@@ -46,7 +46,7 @@ export default {
   border: 8px solid #000;
   border-radius: 50%;
   animation: loader-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #fff transparent transparent transparent;
+  border-color: #000 transparent transparent transparent;
 }
 .loader-ring div:nth-child(1) {
   animation-delay: -0.45s;

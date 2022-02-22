@@ -60,21 +60,21 @@ export default {
   },
   mounted() {
     this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
-    if (!this.activeAccount) {
+    if (this.activeAccount) {
+      setTimeout(() => {
+        this.$router.push({
+          name: "account",
+          params: { id: this.activeAccount }
+        });
+        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+      }, 1000);
+    } else {
       setTimeout(() => {
         this.$router.push({
           name: "account",
           params: { id: this.accounts[0].UUID }
         });
         this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-        this.$router.push({
-          name: "account",
-          params: { id: this.activeAccount }
-        });
       }, 1000);
     }
   },
