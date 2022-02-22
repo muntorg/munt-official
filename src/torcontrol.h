@@ -9,6 +9,7 @@
 #define TORCONTROL_H
 
 #include "scheduler.h"
+#include <boost/thread/thread.hpp>
 
 extern const std::string DEFAULT_TOR_CONTROL;
 static const bool DEFAULT_LISTEN_ONION = true;

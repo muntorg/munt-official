@@ -1166,8 +1166,7 @@ bool AppInitMain(boost::thread_group& threadGroup, node::NodeContext& node)
     node.scheduler = std::make_unique<CScheduler>();
 
     // Start the lightweight task scheduler thread
-    CScheduler::Function serviceLoop = boost::bind(&CScheduler::serviceQueue, node.scheduler.get());
-    threadGroup.create_thread(boost::bind(&TraceThread<CScheduler::Function>, "scheduler", serviceLoop));
+    node.scheduler->m_service_thread = std::thread(&TraceThread<std::function<void()> >, "scheduler", std::function<void()>([&] { node.scheduler->serviceQueue(); }));
 
 #ifdef ENABLE_WALLET
     // InitRPCMining is needed here so getblocktemplate in the GUI debug console works properly.
