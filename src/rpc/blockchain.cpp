@@ -445,6 +445,20 @@ UniValue mempoolToJSON(bool fVerbose)
     }
 }
 
+static UniValue syncwithvalidationinterfacequeue(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() > 0)
+        throw std::runtime_error(
+            "syncwithvalidationinterfacequeue \n"
+            "Waits for the validation interface queue to catch up on everything that was there when we entered this function.\n"
+            + HelpExampleCli("syncwithvalidationinterfacequeue","")
+            + HelpExampleRpc("syncwithvalidationinterfacequeue","")
+        );
+    
+    SyncWithValidationInterfaceQueue();
+    return NullUniValue;
+}
+
 static UniValue getrawmempool(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() > 1)
@@ -2195,6 +2209,7 @@ static const CRPCCommand commands[] =
     { "hidden",             "waitfornewblock",         &waitfornewblock,         true,  {"timeout"} },
     { "hidden",             "waitforblock",            &waitforblock,            true,  {"blockhash","timeout"} },
     { "hidden",             "waitforblockheight",      &waitforblockheight,      true,  {"height","timeout"} },
+    { "hidden",     "syncwithvalidationinterfacequeue", &syncwithvalidationinterfacequeue,          true,  {} },
 };
 
 void RegisterBlockchainRPCCommands(CRPCTable &t)
