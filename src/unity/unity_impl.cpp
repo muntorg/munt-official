@@ -1499,6 +1499,9 @@ void ILibraryController::ResetUnifiedProgress()
 
 float ILibraryController::getUnifiedProgress()
 {
+    if (!g_connman)
+        return 200;
+
     if (!GetBoolArg("-spv", DEFAULT_SPV))
     {
         return lastProgress;
