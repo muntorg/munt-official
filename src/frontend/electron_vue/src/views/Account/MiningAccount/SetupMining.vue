@@ -75,7 +75,7 @@ export default {
       this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
       if (LibraryController.UnlockWallet(password) === false) {
         this.isPasswordInvalid = true;
-      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
         return;
       }
       let uuid = AccountsController.CreateAccount("Florin Mining", "Mining");

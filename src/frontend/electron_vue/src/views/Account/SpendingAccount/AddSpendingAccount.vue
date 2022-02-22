@@ -50,7 +50,7 @@ export default {
     return {
       accountName: "",
       password: "",
-           isPasswordInvalid: false
+      isPasswordInvalid: false
     };
   },
   computed: {
@@ -116,5 +116,4 @@ export default {
 input {
   background-color: #eee;
 }
-
 </style>
