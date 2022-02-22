@@ -363,7 +363,7 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_FrozenCleanup)
         FrozenCleanupCheck::cv.wait(l, [](){return FrozenCleanupCheck::nFrozen == 1;});
         // Try to get control of the queue a bunch of times
         for (auto x = 0; x < 100 && !fails; ++x) {
-            fails = queue->ControlMutex.try_lock();
+            fails = queue->m_control_mutex.try_lock();
         }
         // Unfreeze
         FrozenCleanupCheck::nFrozen = 0;
@@ -425,7 +425,7 @@ BOOST_AUTO_TEST_CASE(test_CheckQueueControl_Locks)
             cv.wait(l, [&](){return has_lock;});
             bool fails = false;
             for (auto x = 0; x < 100 && !fails; ++x) {
-                fails = queue->ControlMutex.try_lock();
+                fails = queue->m_control_mutex.try_lock();
             }
             has_tried = true;
             cv.notify_one();

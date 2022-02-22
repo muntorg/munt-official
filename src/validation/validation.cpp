@@ -106,7 +106,7 @@ CBlockIndex *pindexBestHeader = NULL;
 CPartialChain partialChain;
 CBlockIndex *pindexBestPartial = nullptr;
 Mutex csBestBlock;
-CConditionVariable cvBlockChange;
+std::condition_variable cvBlockChange;
 int nScriptCheckThreads = 0;
 std::atomic_bool fImporting(false);
 bool fReindex = false;

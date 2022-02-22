@@ -236,7 +236,7 @@ extern uint64_t nLastBlockSize;
 extern uint64_t nLastBlockWeight;
 extern const std::string strMessageMagic;
 extern Mutex csBestBlock;
-extern CConditionVariable cvBlockChange;
+extern std::condition_variable cvBlockChange;
 extern std::atomic_bool fImporting;
 extern bool fReindex;
 extern bool fReverseHeaders;
