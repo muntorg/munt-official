@@ -45,6 +45,7 @@
 </template>
 
 <script>
+let initAccountsTimeout = null;
 import { mapState, mapGetters } from "vuex";
 
 export default {
@@ -60,26 +61,11 @@ export default {
   },
   mounted() {
     this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
-    if (this.activeAccount) {
-      setTimeout(() => {
-        this.$router.push({
-          name: "account",
-          params: { id: this.activeAccount }
-        });
-        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        this.$router.push({
-          name: "account",
-          params: { id: this.accounts[0].UUID }
-        });
-        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-      }, 1000);
-    }
+    this.initAccounts();
   },
   computed: {
     ...mapState("wallet", ["activeAccount"]),
+    ...mapState("app", ["coreReady"]),
     ...mapGetters("wallet", ["accounts"]),
     activeCategory() {
       if (this.activeAccount === null) return null;
@@ -100,6 +86,27 @@ export default {
     }
   },
   methods: {
+    initAccounts() {
+      clearTimeout(initAccountsTimeout);
+      if (!this.coreReady) {
+        initAccountsTimeout = setTimeout(this.initAccounts, 1000);
+      } else {
+        if (this.activeAccount) {
+          this.$router.push({
+            name: "account",
+            params: { id: this.activeAccount }
+          });
+          this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+        } else {
+        console.log('bbb');
+          this.$router.push({
+            name: "account",
+            params: { id: this.accounts[0].UUID }
+          });
+          this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+        }
+      }
+    },
     accountClass(accountUUID) {
       return this.$route.name === "account" &&
         accountUUID === this.activeAccount
