@@ -59,7 +59,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import { clipboard, nativeImage } from "electron";
-import { LibraryController, RpcController } from "../../../unity/Controllers";
+import { LibraryController, AccountsController } from "../../../unity/Controllers";
 import VueQrcode from "vue-qrcode";
 export default {
   name: "LinkHoldingAccount",
@@ -92,12 +92,8 @@ export default {
     }
   },
   methods: {
-    getWitnessKey(password) {
-      RpcController.Execute(`walletpassphrase "${password}" 60`);
-      this.witnessKey = RpcController.Execute(
-        `getwitnessaccountkeys ${this.account.UUID}`
-      );
-      this.witnessKey = this.witnessKey.data;
+    getWitnessKey() {
+      this.witnessKey = AccountsController.GetWitnessKeyURI(this.account.UUID)
     },
     copyQr() {
       let img = nativeImage.createFromDataURL(this.$refs.qrcode.$el.src);
@@ -108,9 +104,9 @@ export default {
     },
     unLockAccount() {
       if (LibraryController.UnlockWallet(this.password)) {
+        this.getWitnessKey();
         LibraryController.LockWallet();
         this.$store.dispatch("wallet/SET_WALLET_PASSWORD", this.password);
-        this.getWitnessKey(this.password);
       } else {
         this.isPasswordInvalid = true;
       }
