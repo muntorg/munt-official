@@ -194,6 +194,16 @@ AC_ARG_ENABLE([ccache],
   [use_ccache=$enableval],
   [use_ccache=auto])
 
+dnl Suppress warnings from external headers (e.g. Boost, Qt).
+dnl May be useful if warnings from external headers clutter the build output
+dnl too much, so that it becomes difficult to spot Gulden Core warnings
+dnl or if they cause a build failure with --enable-werror.
+AC_ARG_ENABLE([suppress-external-warnings],
+  [AS_HELP_STRING([--enable-suppress-external-warnings],
+                  [Suppress warnings from external headers (default is no)])],
+  [suppress_external_warnings=$enableval],
+  [suppress_external_warnings=no])
+
 AC_ARG_ENABLE([lcov],
   [AS_HELP_STRING([--enable-lcov],
   [enable lcov testing (default is no)])],
@@ -1066,24 +1076,24 @@ AM_CONDITIONAL([ENABLE_PROPERTY_TESTS], [test x$enable_property_tests = xyes])
 GULDEN_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
 
 AC_MSG_CHECKING([whether to build _DAEMON_NAME])
-AM_CONDITIONAL([BUILD_DAEMON], [test x$build_daemon = xyes])
+AM_CONDITIONAL([BUILD_DAEMON], [test "$build_daemon" = "yes"])
 AC_MSG_RESULT($build_daemon)
 
 AC_MSG_CHECKING([whether to build utils (_CLI_NAME _TX_NAME)])
-AM_CONDITIONAL([BUILD_UTILS], [test x$build_utils = xyes])
+AM_CONDITIONAL([BUILD_UTILS], [test "$build_utils" = "yes"])
 AC_MSG_RESULT($build_utils)
 
 AC_MSG_CHECKING([whether to build node.js libraries])
-AM_CONDITIONAL([BUILD_LIBS_NODE_JS], [test x$build_libs_node_js = xyes])
+AM_CONDITIONAL([BUILD_LIBS_NODE_JS], [test "$build_libs_node_js" = "yes"])
 AC_MSG_RESULT($build_libs_node_js)
 
 
 AC_MSG_CHECKING([whether to build jni libraries])
-AM_CONDITIONAL([BUILD_LIBS_JNI], [test x$build_libs_jni = xyes])
+AM_CONDITIONAL([BUILD_LIBS_JNI], [test "$build_libs_jni" = "yes"])
 AC_MSG_RESULT($build_libs_jni)
 
 AC_MSG_CHECKING([whether to build objc libraries])
-AM_CONDITIONAL([BUILD_LIBS_OBJC], [test x$build_libs_objc = xyes])
+AM_CONDITIONAL([BUILD_LIBS_OBJC], [test "$build_libs_objc" = "yes"])
 AC_MSG_RESULT($build_libs_objc)
 
 AC_LANG_POP
@@ -1147,10 +1157,10 @@ fi
 
 dnl these are only used when qt is enabled
 BUILD_TEST_QT=""
-if test x$gulden_enable_qt != xno; then
+if test "$gulden_enable_qt" != "no"; then
   dnl enable dbus support
   AC_MSG_CHECKING([whether to build GUI with support for D-Bus])
-  if test x$gulden_enable_qt_dbus != xno; then
+  if test "$gulden_enable_qt_dbus" != "no"; then
     AC_DEFINE([USE_DBUS],[1],[Define if dbus support should be compiled in])
   fi
   AC_MSG_RESULT($gulden_enable_qt_dbus)
@@ -1169,20 +1179,18 @@ if test x$gulden_enable_qt != xno; then
 
   dnl enable qr support
   AC_MSG_CHECKING([whether to build GUI with support for QR codes])
-  if test x$have_qrencode = xno; then
-    if test x$use_qr = xyes; then
-     AC_MSG_ERROR("QR support requested but cannot be built. use --without-qrencode")
+  if test "$have_qrencode" = "no"; then
+    if test "$use_qr" = "yes"; then
+      AC_MSG_ERROR([QR support requested but cannot be built. Use --without-qrencode])
     fi
-    AC_MSG_RESULT(no)
+    use_qr=no
   else
-    if test x$use_qr != xno; then
-      AC_MSG_RESULT(yes)
-      AC_DEFINE([USE_QRCODE],[1],[Define if QR support should be compiled in])
+    if test "$use_qr" != "no"; then
+      AC_DEFINE([USE_QRCODE], [1], [Define if QR support should be compiled in])
       use_qr=yes
-    else
-      AC_MSG_RESULT(no)
     fi
   fi
+  AC_MSG_RESULT([$use_qr])
 
   if test "$XGETTEXT" = ""; then
     AC_MSG_WARN([xgettext is required to update qt translations])
