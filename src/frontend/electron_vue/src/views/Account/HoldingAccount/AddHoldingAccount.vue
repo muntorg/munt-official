@@ -252,7 +252,7 @@ export default {
         console.log(result);
         AccountsController.DeleteAccount(accountId); // something went wrong, so delete the account
       }
-
+      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
       LibraryController.LockWallet();
     }
   }
