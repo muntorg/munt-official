@@ -2500,7 +2500,7 @@ void CWallet::GetAllReserveKeys(std::set<CKeyID>& setAddress) const
     }
 }
 
-void CWallet::GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount)
+void CWallet::ScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount)
 {
     //fixme: (PHASE5) - Clean this all up.
     std::shared_ptr<CReserveKeyOrScript> rKey;
@@ -2531,7 +2531,7 @@ void CWallet::GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, C
     }
 }
 
-void CWallet::GetScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount)
+void CWallet::ScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount)
 {
     std::shared_ptr<CReserveKeyOrScript> rKey;
 

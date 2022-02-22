@@ -56,6 +56,7 @@ namespace BCLog {
         IO          = (1 << 24),
         WALLET      = (1 << 25),
         LOCK        = (1 << 26),
+        VALIDATION  = (1 << 27),
         ALL         = ~(uint32_t)0,
     };
 }

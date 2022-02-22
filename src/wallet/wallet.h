@@ -901,8 +901,8 @@ public:
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman) override;
     void SetBestChain(const CBlockLocator& loc) override;
 
-    void GetScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount) override;
-    void GetScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount) override;
+    void ScriptForMining(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount) override;
+    void ScriptForWitnessing(std::shared_ptr<CReserveKeyOrScript> &script, CAccount* forAccount) override;
 
     unsigned int GetKeyPoolSize()
     {
