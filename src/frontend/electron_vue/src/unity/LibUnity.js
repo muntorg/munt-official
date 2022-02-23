@@ -134,16 +134,18 @@ class LibUnity {
     };
 
     this.accountsListener.onActiveAccountChanged = function(accountUUID) {
-      store.dispatch("wallet/SET_ACTIVE_ACCOUNT", accountUUID);
+      store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
 
-      store.dispatch(
-        "wallet/SET_MUTATIONS",
-        libraryController.getMutationHistory()
-      );
+      store.dispatch("wallet/SET_ACTIVE_ACCOUNT", accountUUID);
 
       store.dispatch(
         "wallet/SET_RECEIVE_ADDRESS",
         libraryController.GetReceiveAddress()
+      );
+
+      store.dispatch(
+        "wallet/SET_MUTATIONS",
+        libraryController.getMutationHistory()
       );
     };
 
@@ -288,7 +290,6 @@ class LibUnity {
 
     libraryListener.notifyNewMutation = function(/*mutation, self_committed*/) {
       console.log("received: notifyNewMutation");
-
       store.dispatch(
         "wallet/SET_MUTATIONS",
         libraryController.getMutationHistory()
@@ -1883,6 +1884,7 @@ class LibUnity {
         console.log(
           `IPC: accountsController.setActiveAccountAsync(${data.accountUUID})`
         );
+
         try {
           let result = this.accountsController.setActiveAccount(
             data.accountUUID

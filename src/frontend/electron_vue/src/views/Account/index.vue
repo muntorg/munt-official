@@ -41,15 +41,24 @@ export default {
         switch (this.account.type) {
           case "Desktop":
             this.accountType = SpendingAccount;
+            setTimeout(() => {
+              this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+            }, 500);
             break;
           case "Holding":
             this.accountType = HoldingAccount;
             break;
           case "Mining":
             this.accountType = MiningAccount;
+            setTimeout(() => {
+              this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+            }, 500);
             break;
           default:
             this.accountType = "div";
+            setTimeout(() => {
+              this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+            }, 500);
             break;
         }
       }

@@ -59,7 +59,10 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import { clipboard, nativeImage } from "electron";
-import { LibraryController, AccountsController } from "../../../unity/Controllers";
+import {
+  LibraryController,
+  AccountsController
+} from "../../../unity/Controllers";
 import VueQrcode from "vue-qrcode";
 export default {
   name: "LinkHoldingAccount",
@@ -93,7 +96,7 @@ export default {
   },
   methods: {
     getWitnessKey() {
-      this.witnessKey = AccountsController.GetWitnessKeyURI(this.account.UUID)
+      this.witnessKey = AccountsController.GetWitnessKeyURI(this.account.UUID);
     },
     copyQr() {
       let img = nativeImage.createFromDataURL(this.$refs.qrcode.$el.src);

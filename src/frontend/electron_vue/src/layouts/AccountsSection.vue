@@ -96,14 +96,17 @@ export default {
             name: "account",
             params: { id: this.activeAccount }
           });
-          this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+          setTimeout(() => {
+            this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+          }, 1000);
         } else {
-        console.log('bbb');
           this.$router.push({
             name: "account",
             params: { id: this.accounts[0].UUID }
           });
-          this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+          setTimeout(() => {
+            this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+          }, 1000);
         }
       }
     },

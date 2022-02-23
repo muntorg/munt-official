@@ -102,7 +102,10 @@
     "header": "Settings",
     "change_password": "Change password",
     "view_recovery_phrase": "View recovery phrase",
-    "choose_theme": "Choose theme"
+    "choose_theme": "Choose theme",
+    "choose_language": "Choose Language",
+    "english": "En",
+    "dutch": "Nl"
   },
   "setup": {
     "choose_password": "Choose a password of at least 6 characters",

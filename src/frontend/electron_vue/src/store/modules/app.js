@@ -23,7 +23,8 @@ const app = {
     unityVersion: null,
     walletExists: null,
     walletVersion: null,
-    rate: null
+    rate: null,
+    language: "en"
   },
   mutations: {
     SET_CORE_READY(state) {
@@ -50,6 +51,9 @@ const app = {
     },
     SET_ACTIVITY_INDICATOR(state, activityIndicator) {
       state.activityIndicator = activityIndicator;
+    },
+    SET_LANGUAGE(state, language) {
+      state.language = language;
     }
   },
   actions: {
@@ -75,6 +79,9 @@ const app = {
     },
     SET_ACTIVITY_INDICATOR({ commit }, activityIndicator) {
       commit("SET_ACTIVITY_INDICATOR", activityIndicator);
+    },
+    SET_LANGUAGE({ commit }, language) {
+      commit("SET_LANGUAGE", language);
     },
     SET_WALLET_EXISTS({ commit }, walletExists) {
       let status = walletExists ? AppStatus.synchronize : AppStatus.setup;

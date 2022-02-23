@@ -1,5 +1,5 @@
 <template>
-  <div class="holding-account">
+  <div class="holding-account" v-if="!activityIndicator">
     <portal to="header-slot">
       <section class="header flex-row">
         <main-header
@@ -34,7 +34,6 @@
 
     <app-section class="holding-information">
       <h4>{{ $t("common.information") }}</h4>
-
       <div class="flex-row">
         <div>{{ $t("holding_account.status") }}</div>
         <div>{{ accountStatus }}</div>
@@ -149,7 +148,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("app", ["rate"]),
+    ...mapState("app", ["rate", "activityIndicator"]),
     accountStatus() {
       return this.getStatistics("account_status");
     },
@@ -235,7 +234,12 @@ export default {
   },
   methods: {
     initialize() {
-      this.updateStatistics();
+      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
+      this.updateStatistics().then(() => {
+        setTimeout(() => {
+          this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+        }, 1000);
+      });
       this.isCompounding = WitnessController.IsAccountCompounding(
         this.account.UUID
       );
@@ -244,11 +248,16 @@ export default {
       return this.statistics[which] || null;
     },
     updateStatistics() {
-      clearTimeout(timeout);
-      this.statistics = WitnessController.GetAccountWitnessStatistics(
-        this.account.UUID
-      );
-      timeout = setTimeout(this.updateStatistics, 5000);
+      return new Promise(resolve => {
+        clearTimeout(timeout);
+        this.statistics = WitnessController.GetAccountWitnessStatistics(
+          this.account.UUID
+        );
+        timeout = setTimeout(this.updateStatistics, 5000);
+        if (this.statistics) {
+          resolve();
+        }
+      });
     },
     toggleCompounding() {
       WitnessController.SetAccountCompounding(
