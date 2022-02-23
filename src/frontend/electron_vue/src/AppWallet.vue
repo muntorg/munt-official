@@ -70,10 +70,10 @@ export default {
           routeName = "setup";
           break;
         case AppStatus.synchronize:
-          routeName = "transactions";
+          routeName = "account";
           break;
         case AppStatus.ready:
-          routeName = "transactions";
+          routeName = "account";
           break;
       }
       if (routeName === undefined || this.$route.name === routeName) return;

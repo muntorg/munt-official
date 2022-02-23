@@ -44,9 +44,9 @@ const wallet = {
     },
     SET_ACTIVE_ACCOUNT({ commit }, accountUUID) {
       // clear mutations and receive address
-      commit("SET_MUTATIONS", { mutations: null });
       commit("SET_RECEIVE_ADDRESS", { receiveAddress: "" });
       commit("SET_ACTIVE_ACCOUNT", accountUUID);
+      commit("SET_MUTATIONS", { mutations: null });
     },
     SET_BALANCE({ commit }, new_balance) {
       commit("SET_BALANCE", new_balance);

@@ -1,5 +1,5 @@
 <template>
-  <div class="spending-account">
+  <div class="spending-account" v-if="!activityIndicator">
     <portal to="header-slot">
       <section class="header flex-row">
         <main-header
@@ -103,7 +103,7 @@ export default {
     Transactions
   },
   computed: {
-    ...mapState("app", ["rate"]),
+    ...mapState("app", ["rate", "activityIndicator"]),
     ...mapState("wallet", ["mutations", "walletPassword"]),
     ...mapGetters("wallet", ["totalBalance"]),
     lockIcon() {

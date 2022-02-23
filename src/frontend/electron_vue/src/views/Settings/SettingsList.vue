@@ -15,16 +15,33 @@
         <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
       </router-link>
     </div>
-    <div v-if="UIConfig.hasThemes" class="settings-row flex-row">
-      <div class="flex-1">{{ $t("settings.choose_theme") }}</div>
+    <div>
+      <div v-if="UIConfig.hasThemes" class="settings-row flex-row">
+        <div class="flex-1">{{ $t("settings.choose_theme") }}</div>
+        <div
+          :class="getThemeSelectClassNames('blue')"
+          @click="switchTheme('blue')"
+        ></div>
+        <div
+          :class="getThemeSelectClassNames('orange')"
+          @click="switchTheme('orange')"
+        ></div>
+      </div>
+    </div>
+    <div class="settings-row flex-row">
+      <div class="flex-1">{{ $t("settings.choose_language") }}</div>
       <div
-        :class="getThemeSelectClassNames('blue')"
-        @click="switchTheme('blue')"
-      ></div>
+        :class="`language-select ${this.language === 'en' ? 'selected' : ''}`"
+        @click="changeLanguage('en')"
+      >
+        {{ $t("settings.english") }}
+      </div>
       <div
-        :class="getThemeSelectClassNames('orange')"
-        @click="switchTheme('orange')"
-      ></div>
+        :class="`language-select ${this.language === 'nl' ? 'selected' : ''}`"
+        @click="changeLanguage('nl')"
+      >
+        {{ $t("settings.dutch") }}
+      </div>
     </div>
     <div style="flex: 1" />
     <portal v-if="UIConfig.showSidebar" to="footer-slot">
@@ -48,7 +65,7 @@ import UIConfig from "../../../ui-config.json";
 
 export default {
   computed: {
-    ...mapState("app", ["theme"])
+    ...mapState("app", ["theme", "language"])
   },
   methods: {
     getThemeSelectClassNames(theme) {
@@ -61,6 +78,10 @@ export default {
     },
     switchTheme(theme) {
       this.$store.dispatch("app/SET_THEME", theme);
+    },
+    changeLanguage(language) {
+      this.$store.dispatch("app/SET_LANGUAGE", language);
+      this.$forceUpdate();
     },
     routeTo(route) {
       this.$router.push({ name: route });
@@ -102,6 +123,24 @@ a > .settings-row:hover {
   width: 20px;
   cursor: pointer;
   margin-left: 5px;
+}
+
+.language-select {
+  border: 2px solid #fff;
+  border-radius: 18px;
+  height: 20px;
+  width: 40px;
+  text-align: center;
+  cursor: pointer;
+  margin-left: 15px;
+}
+
+.language-select.en {
+  // background-color: #0039cc;
+}
+
+.language-select.nl {
+  // background-color: #ee6622;
 }
 
 .theme-select.blue {
