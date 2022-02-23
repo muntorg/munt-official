@@ -18,7 +18,7 @@
 #include "script/script_error.h"
 #include "script/sign.h"
 #include "util.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "test/test.h"
 #include "rpc/server.h"
 

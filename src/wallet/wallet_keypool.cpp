@@ -18,7 +18,7 @@
 #include "net.h"
 #include "scheduler.h"
 #include "timedata.h"
-#include "utilmoneystr.h"
+#include "util/moneystr.h"
 #include "init.h"
 #include "key.h"
 #include "keystore.h"

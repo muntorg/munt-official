@@ -40,7 +40,7 @@
 #include "txmempool.h"
 #include "util.h"
 #include "ui_interface.h"
-#include "utilmoneystr.h"
+#include "util/moneystr.h"
 
 #include <assert.h>
 

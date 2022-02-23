@@ -27,7 +27,7 @@
 #include "txdb.h"
 #include "txmempool.h"
 #include "util.h"
-#include "utilmoneystr.h"
+#include "util/moneystr.h"
 #include "chainparams.h"
 #include "witnessutil.h"
 

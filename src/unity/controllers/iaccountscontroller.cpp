@@ -13,7 +13,7 @@
 #include "net_processing.h"
 #include "validation/validation.h"
 #include "ui_interface.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 
 
 #include <wallet/wallet.h>

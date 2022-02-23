@@ -22,7 +22,7 @@
 #include "rpc/server.h"
 #include "timedata.h"
 #include "util.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #ifdef ENABLE_WALLET
 #include "wallet/rpcwallet.h"
 #include "wallet/wallet.h"

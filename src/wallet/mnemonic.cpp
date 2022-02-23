@@ -12,7 +12,7 @@
 #include <bitset>
 #include <sstream>
 #include <iterator>
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 
 
 const char* wordList[] = {

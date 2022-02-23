@@ -23,7 +23,7 @@
 #include "noui.h"
 #include "scheduler.h"
 #include "util.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "net.h"
 #include "wallet/wallet.h"
 #include <unity/appmanager.h>

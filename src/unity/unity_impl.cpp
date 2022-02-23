@@ -20,7 +20,7 @@
 #include "witnessutil.h"
 #include "ui_interface.h"
 #include "unity/appmanager.h"
-#include "utilmoneystr.h"
+#include "util/moneystr.h"
 #include <chain.h>
 #include "consensus/validation.h"
 #include "net.h"

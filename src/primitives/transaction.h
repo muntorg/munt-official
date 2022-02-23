@@ -21,7 +21,7 @@
 //Gulden
 #include "pubkey.h"
 #include "streams.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include <new> // Required for placement 'new'.
 #include <bitset>
 

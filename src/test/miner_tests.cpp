@@ -24,7 +24,7 @@
 #include "txmempool.h"
 #include "uint256.h"
 #include "util.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 
 #ifdef ENABLE_WALLET
 #include <wallet/wallet.h>

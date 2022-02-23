@@ -20,7 +20,7 @@
 #include "validation/validation.h"
 #include <units.h>
 #include "wallet/wallet.h"
-#include "utilmoneystr.h"
+#include "util/moneystr.h"
 #include "GuldenGUI.h"
 
 class CAccount;

@@ -26,7 +26,7 @@
 #include "util/thread.h"
 #include "httpserver.h"
 #include "httprpc.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "net.h"
 #include <unity/appmanager.h>
 

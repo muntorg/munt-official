@@ -10,7 +10,7 @@ BENCH_BINARY = bench/bench_sigma$(EXEEXT)
 bench_bench_sigma_SOURCES = \
   util.cpp \
   bench/bench_sigma.cpp \
-  utilstrencodings.cpp \
+  util/strencodings.cpp \
   support/cleanse.cpp
 
 bench_bench_sigma_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(SSL_CFLAGS) $(EVENT_CLFAGS) $(EVENT_PTHREADS_CFLAGS) -I$(builddir)/bench/

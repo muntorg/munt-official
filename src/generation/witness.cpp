@@ -33,7 +33,7 @@
 #include "util.h"
 #include "util/thread.h"
 #include "util/time.h"
-#include "utilmoneystr.h"
+#include "util/moneystr.h"
 #include "validation/validationinterface.h"
 #include "init.h"
 

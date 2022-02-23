@@ -15,7 +15,7 @@
 #include <util.h>
 
 #include "tinyformat.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 
 //Gulden
 #include <primitives/transaction.h>

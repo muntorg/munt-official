@@ -231,8 +231,8 @@ CORE_H = rpc/accounts.h \
   util/threadnames.h \
   util/getuniquepath.h \
   attributes.h \
-  utilmoneystr.h \
-  utilstrencodings.h \
+  util/moneystr.h \
+  util/strencodings.h \
   validation/validation.h \
   validation/witnessvalidation.h \
   validation/versionbitsvalidation.h \
@@ -709,8 +709,8 @@ lib_util_a_SOURCES = \
   threadinterrupt.cpp \
   logging.cpp \
   util.cpp \
-  utilmoneystr.cpp \
-  utilstrencodings.cpp \
+  util/moneystr.cpp \
+  util/strencodings.cpp \
   util/time.cpp \
   util/syscall_sandbox.cpp \
   util/threadnames.cpp \

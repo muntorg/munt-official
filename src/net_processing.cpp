@@ -36,8 +36,8 @@
 #include "util.h"
 #include "util/thread.h"
 #include "witnessutil.h"
-#include "utilmoneystr.h"
-#include "utilstrencodings.h"
+#include "util/moneystr.h"
+#include "util/strencodings.h"
 #include "validation/validationinterface.h"
 
 #include "alert.h"

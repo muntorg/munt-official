@@ -18,7 +18,7 @@
 #include "coins.h"
 #include "tinyformat.h"
 #include "util.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 
 //fixme: (PHASE5) - we can remove these includes
 #include "witnessutil.h"

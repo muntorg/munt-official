@@ -12,7 +12,7 @@
 #include "random.h"
 #include "sync.h"
 #include "util.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "ui_interface.h"
 #include "crypto/hmac_sha256.h"
 #include <stdio.h>

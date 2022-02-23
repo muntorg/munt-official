@@ -26,7 +26,7 @@
 #include "primitives/transaction.h"
 #include "scheduler.h"
 #include "ui_interface.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "util/thread.h"
 
 #ifdef WIN32

@@ -16,7 +16,7 @@
 
 #include "netaddress.h"
 #include "hash.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "tinyformat.h"
 #include "netbase.h"
 #include "util.h"

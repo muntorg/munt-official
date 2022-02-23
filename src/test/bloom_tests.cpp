@@ -20,7 +20,7 @@
 #include "streams.h"
 #include "uint256.h"
 #include "util.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "test/test.h"
 
 #include <vector>

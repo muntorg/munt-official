@@ -41,7 +41,7 @@
 #include "blockfilter.h"
 #include "primitives/transaction.h"
 
-#include "utilmoneystr.h"
+#include "util/moneystr.h"
 
 #include "net.h"
 

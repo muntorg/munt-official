@@ -20,7 +20,7 @@
 #include "txdb.h"
 #include "ui_interface.h"
 #include "util.h"
-#include "utilmoneystr.h"
+#include "util/moneystr.h"
 #include "validation/validation.h"
 #include "node/context.h"
 #ifdef ENABLE_WALLET

@@ -20,7 +20,7 @@
 #include "fs.h"
 #include "random.h"
 #include "serialize.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "util/time.h"
 
 #include <stdarg.h>

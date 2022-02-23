@@ -11,7 +11,7 @@
 #include "crypto/hmac_sha512.h"
 #include "crypto/scrypt/crypto_scrypt.h"
 #include "random.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "test/test.h"
 
 #include <cryptopp/config.h>

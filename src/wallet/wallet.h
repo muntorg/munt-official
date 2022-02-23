@@ -20,7 +20,7 @@
 #include "streams.h"
 #include "tinyformat.h"
 #include "ui_interface.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "validation/validationinterface.h"
 #include "script/ismine.h"
 #include "script/sign.h"

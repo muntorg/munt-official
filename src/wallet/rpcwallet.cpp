@@ -29,7 +29,7 @@
 #include "timedata.h"
 #include "util.h"
 #include "witnessutil.h"
-#include "utilmoneystr.h"
+#include "util/moneystr.h"
 #include "wallet/coincontrol.h"
 #include "wallet/feebumper.h"
 #include "wallet/wallet.h"

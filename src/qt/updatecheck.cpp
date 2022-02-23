@@ -7,7 +7,7 @@
 #include "hash.h"
 #include "key.h"
 #include "pubkey.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>

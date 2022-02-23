@@ -13,7 +13,7 @@
 #include "script/standard.h"
 #include "uint256.h"
 #include "undo.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "test/test.h"
 #include "validation/validation.h"
 #include "consensus/validation.h"

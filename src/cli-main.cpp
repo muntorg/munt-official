@@ -21,7 +21,7 @@
 #include "rpc/protocol.h"
 #include "util.h"
 #include "util/time.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include <util/thread.h>
 
 #include <stdio.h>

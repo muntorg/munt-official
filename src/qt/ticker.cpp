@@ -5,7 +5,7 @@
 
 #include "clientversion.h"
 #include "ticker.h"
-#include "utilmoneystr.h"
+#include "util/moneystr.h"
 #include "arith_uint256.h"
 #include "units.h"
 

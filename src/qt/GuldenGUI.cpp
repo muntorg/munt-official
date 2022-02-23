@@ -64,7 +64,7 @@
 #include "wallet/wallet.h"
 #include "walletframe.h"
 #include "walletview.h"
-#include "utilmoneystr.h"
+#include "util/moneystr.h"
 #include "passwordmodifydialog.h"
 #include "backupdialog.h"
 #include "welcomedialog.h"

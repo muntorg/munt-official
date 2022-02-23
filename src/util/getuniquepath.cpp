@@ -4,7 +4,7 @@
 
 #include <random.h>
 #include <fs.h>
-#include <utilstrencodings.h>
+#include <util/strencodings.h>
 
 fs::path GetUniquePath(const fs::path& base)
 {

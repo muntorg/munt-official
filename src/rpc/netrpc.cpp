@@ -24,7 +24,7 @@
 #include "timedata.h"
 #include "ui_interface.h"
 #include "util.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "version.h"
 #include "warnings.h"
 

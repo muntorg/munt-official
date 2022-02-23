@@ -10,7 +10,7 @@
 // Distributed under the GULDEN software license, see the accompanying
 // file COPYING
 
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 
 #include "tinyformat.h"
 

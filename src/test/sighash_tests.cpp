@@ -19,7 +19,7 @@
 #include "streams.h"
 #include "test/test.h"
 #include "util.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "version.h"
 
 #include <iostream>

@@ -7,8 +7,8 @@
 #include "clientversion.h"
 #include "primitives/transaction.h"
 #include "sync.h"
-#include "utilstrencodings.h"
-#include "utilmoneystr.h"
+#include "util/strencodings.h"
+#include "util/moneystr.h"
 #include "util/time.h"
 #include "test/test.h"
 

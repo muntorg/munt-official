@@ -9,7 +9,7 @@
 #include "amount.h"
 #include "streams.h"
 #include "tinyformat.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "validation/validationinterface.h"
 #include "generation/witnessrewardtemplate.h"
 #include "script/ismine.h"

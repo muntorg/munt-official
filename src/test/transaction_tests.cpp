@@ -26,7 +26,7 @@
 #include "script/sign.h"
 #include "script/script_error.h"
 #include "script/standard.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 #include "witnessutil.h"
 #include "coins.h"
 

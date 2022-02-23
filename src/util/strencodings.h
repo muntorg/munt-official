@@ -13,8 +13,9 @@
 /**
  * Utilities for converting data from/to strings.
  */
-#ifndef UTILSTRENCODINGS_H
-#define UTILSTRENCODINGS_H
+
+#ifndef UTIL_STRENCODINGS_H
+#define UTIL_STRENCODINGS_H
 
 #include <stdint.h>
 #include <string>
@@ -156,4 +157,4 @@ bool ParseFixedPoint(const std::string &val, int decimals, int64_t *amount_out);
 //! Returns 0 if specifier is invalid.
 uint64_t GetMemLimitInBytesFromFormattedStringSpecifier(std::string formattedLockPeriodSpecifier);
 
-#endif
+#endif //UTIL_STRENCODINGS_H

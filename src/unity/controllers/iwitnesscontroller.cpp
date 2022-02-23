@@ -14,7 +14,7 @@
 #include "validation/validation.h"
 #include "validation/witnessvalidation.h"
 #include "ui_interface.h"
-#include "utilstrencodings.h"
+#include "util/strencodings.h"
 
 
 #include "witnessutil.h"
