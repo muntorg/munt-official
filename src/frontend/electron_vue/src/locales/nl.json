@@ -6,6 +6,10 @@
       "holding": "Holding"
     }
   },
+  "account_settings": {
+    "title": "Account instellingen",
+    "name": "Naam"
+  },
   "add_holding_account": {
     "daily": "per dag",
     "estimated_earnings": "Geschatte opbrengst",
@@ -37,8 +41,8 @@
     "account_name": "Rekeningnaam",
     "amount": "Bedrag",
     "enter_your_password": "Voer jouw wachtwoord in",
-    "information": "Informatie",
     "important": "Belangrijk",
+    "information": "Informatie",
     "months": "Maanden",
     "on": "aan",
     "off": "uit",
@@ -62,7 +66,7 @@
   },
   "loader": {
     "shutdown": "Bezig met afsluiten...",
-    "synchronizing": "Jouw portemonnee is aan het synchroniseren met het Florin netwerk. Dit kan enige tijd duren."
+    "synchronizing": "Jouw portemonnee is nu aan het synchroniseren met het Florin netwerk. Dit kan enige tijd duren."
   },
   "mining": {
     "arena_setup_time": "Arena setup tijd",
@@ -101,7 +105,7 @@
   },
   "setup_mining": {
     "title": "Mining instellen",
-    "information": "Voordat je kunt beginnen met minen van Florin moet een mining rekening worden aangemaakt. Voer je wachtwoord in om je portemonnee te ontgrendelen en een mining rekening aan te maken."
+    "information": "Voordat je kunt beginnen met het minen van Florin moet een mining rekening worden aangemaakt. Voer je wachtwoord in om je portemonnee te ontgrendelen en een mining rekening aan te maken."
   },
   "transaction_details": {
     "title": "Transactie details",
