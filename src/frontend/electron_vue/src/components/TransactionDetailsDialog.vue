@@ -31,7 +31,7 @@ export default {
       return `${this.formatDate(timestamp)} ${this.formatTime(timestamp)}`;
     },
     computedAmount() {
-      return `${(this.mutation.change / 100000000).toFixed(2)} NLG`;
+      return `${(this.mutation.change / 100000000).toFixed(2)} XFL`;
     }
   },
   methods: {

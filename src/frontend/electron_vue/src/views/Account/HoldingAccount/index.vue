@@ -234,12 +234,12 @@ export default {
   },
   methods: {
     initialize() {
-      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
-      this.updateStatistics().then(() => {
-        setTimeout(() => {
-          this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-        }, 1000);
-      });
+      this.updateStatistics();
+
+      setTimeout(() => {
+        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+      }, 1000);
+
       this.isCompounding = WitnessController.IsAccountCompounding(
         this.account.UUID
       );

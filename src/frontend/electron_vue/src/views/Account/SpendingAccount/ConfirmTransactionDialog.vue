@@ -3,7 +3,7 @@
     <div class="tx-amount">{{ computedAmount }}</div>
     <div class="tx-fee">{{ computedFee }}</div>
     <div class="tx-to">
-      <fa-icon :icon="['fal', 'long-arrow-down']" />
+      <fa-icon :icon="['far', 'long-arrow-down']" />
     </div>
     <div class="tx-address">{{ address }}</div>
     <button @click="confirm" class="button">
@@ -34,12 +34,12 @@ export default {
       };
     },
     computedAmount() {
-      return `${this.amount} NLG`;
+      return `${this.amount} XFL`;
     },
     computedFee() {
       let fee =
         LibraryController.FeeForRecipient(this.computedRequest) / 100000000;
-      return `+ ${fee} NLG FEE`;
+      return `+ ${fee} XFL FEE`;
     }
   },
   methods: {
@@ -60,8 +60,8 @@ export default {
       // lock the wallet again
       LibraryController.LockWallet();
 
-      EventBus.$emit("transaction-succeeded");
       EventBus.$emit("close-dialog");
+      EventBus.$emit("close-right-sidebar");
     }
   }
 };
