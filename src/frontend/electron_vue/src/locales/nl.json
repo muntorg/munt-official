@@ -7,8 +7,8 @@
     }
   },
   "account_settings": {
-    "title": "Account settings",
-    "name": "Name"
+    "title": "Account instellingen",
+    "name": "Naam"
   },
   "add_holding_account": {
     "daily": "per dag",
@@ -17,6 +17,9 @@
     "lock_for": "Vastzetten voor",
     "overall": "totaal",
     "title": "Holding rekening aanmaken"
+  },
+  "add_spending_account": {
+    "title": "Spending rekening toevoegen"
   },
   "buttons": {
     "back": "Terug",
@@ -38,11 +41,13 @@
     "send": "Versturen",
     "start": "Start",
     "stop": "Stop",
-    "transactions": "Transactions",
-    "unlock": "Ontgrendelen"
+    "transactions": "Transacties",
+    "unlock": "Ontgrendelen",
+    "done": "Done",
+    "holding_key": "Holding Key"
   },
   "clipboard_field": {
-    "copied_to_clipboard": "Copied to clipboard"
+    "copied_to_clipboard": "Naar klembord gekopieerd"
   },
   "common": {
     "account_name": "Rekeningnaam",
@@ -61,7 +66,7 @@
     "information": "Deze portemonnee staat alleen op jouw apparaat.<br/>Geef nooit iemand anders toegang tot jouw portemonnee.<br/>Bewaar de herstelzin die je te zien krijgt tijdens installatie op een veilige plek.<br/>Herstelzin kwijt of iemand toegang tot je herstelzin = Florin weg."
   },
   "holding_account": {
-    "compound_earnings": "cumulatieve inkomsten",
+    "compound_earnings": "Cumulatieve inkomsten",
     "status": "Status",
     "coins_locked": "Florin vastgezet",
     "coins_earned": "Florin verdiend",
@@ -97,7 +102,10 @@
     "header": "Instellingen",
     "change_password": "Verander wachtwoord",
     "view_recovery_phrase": "Bekijk herstelzin",
-    "choose_theme": "Choose theme"
+    "choose_theme": "Kies thema",
+    "choose_language": "Kies taal",
+    "english": "En",
+    "dutch": "Nl"
   },
   "setup": {
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
@@ -120,7 +128,10 @@
     "information": "Voordat je kunt beginnen met minen van Florin moet een mining rekening worden aangemaakt. Voer je wachtwoord in om je portemonnee te ontgrendelen en een mining rekening aan te maken."
   },
   "transaction_details": {
-    "title": "Transactie details",
+    "title": {
+      "incoming_transaction": "Inkomende transactie",
+      "outgoing_transaction": "Uitgaande transactie"
+    },
     "hash": "Hash"
   },
   "receive_coins": {
@@ -139,5 +150,10 @@
   },
   "renew_holding_account": {
     "funding_account": "Betaal vergoeding van account"
+  },
+  "link_holding_account": {
+    "title": "Link Holding rekening",
+    "information": "Linken van een holding rekening met een andere wallet.",
+    "no_funds": "Holding rekening moet gevuld zijn alvorens het mogelijk is deze te lingen met andere wallets."
   }
 }
