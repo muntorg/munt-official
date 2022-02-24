@@ -25,6 +25,7 @@
 #include "util.h"
 #include "util/strencodings.h"
 #include "net.h"
+#include "util/thread.h"
 #include "wallet/wallet.h"
 #include <unity/appmanager.h>
 
