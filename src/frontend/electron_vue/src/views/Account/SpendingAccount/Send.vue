@@ -40,15 +40,15 @@
       <button @click="clearInput" class="clear" :disabled="disableClearButton">
         {{ $t("buttons.clear") }}
       </button>
+      <button @click="sellCoins" class="sell-coins" :disabled="sellDisabled">
+        {{ $t("buttons.sell_coins") }}
+      </button>
       <button
         @click="showConfirmation"
         class="send-coins"
         :disabled="disableSendButton"
       >
         {{ $t("buttons.send") }}
-      </button>
-      <button @click="sellCoins" class="sell-coins" :disabled="sellDisabled">
-        {{ $t("buttons.sell_coins") }}
       </button>
     </div>
   </div>
@@ -121,10 +121,6 @@ export default {
   },
   mounted() {
     this.$refs.amount.focus();
-    EventBus.$on("transaction-succeeded", this.onTransactionSucceeded);
-  },
-  beforeDestroy() {
-    EventBus.$off("transaction-succeeded", this.onTransactionSucceeded);
   },
   methods: {
     async sellCoins() {
@@ -184,9 +180,6 @@ export default {
         },
         showButtons: false
       });
-    },
-    onTransactionSucceeded() {
-      this.$router.push({ name: "transactions" });
     }
   }
 };
@@ -233,14 +226,17 @@ input {
     color: var(--primary-color);
   }
   & > .send-coins {
-    margin: 0 15px 0 15px;
     min-width: 150px;
     width: calc(100% - 170px - 30px - 30px - 170px);
     margin-bottom: 5px;
   }
   & > .sell-coins {
+    border: 1px solid var(--primary-color);
+    margin: 0 15px 0 15px;
     width: 150px;
+    background-color: #fff;
     margin-bottom: 5px;
+    color: var(--primary-color);
   }
 }
 </style>

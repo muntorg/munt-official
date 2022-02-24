@@ -8,6 +8,7 @@
       <p class="information">{{ $t("link_holding_account.information") }}</p>
       <div>
         <app-form-field
+          style="text-align: left;"
           :title="$t(`common.password`)"
           v-if="walletPassword === null || walletPassword === undefined"
         >
@@ -122,6 +123,11 @@ export default {
 .link-witness-view {
   height: 100%;
   text-align: center;
+
+  .main {
+    flex: 1;
+  }
+
   & .information {
     margin: 0 0 30px 0;
   }
