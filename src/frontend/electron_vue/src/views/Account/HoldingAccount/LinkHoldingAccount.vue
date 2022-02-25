@@ -6,11 +6,10 @@
     <div class="main">
       <h4>{{ $t("link_holding_account.title") }}</h4>
       <p class="information">{{ $t("link_holding_account.information") }}</p>
-      <div>
+      <div v-if="needsUnlock">
         <app-form-field
           style="text-align: left;"
           :title="$t(`common.password`)"
-          v-if="walletPassword === null || walletPassword === undefined"
         >
           <input
             v-model="password"
@@ -20,8 +19,8 @@
           />
         </app-form-field>
       </div>
-      <div>
-        <div v-if="account.balance > 0 && walletPassword">
+      <div v-if="!needsUnlock">
+        <div v-if="account.balance > 0">
           <div class="qr" @click="copyQr">
             <vue-qrcode
               ref="qrcode"
@@ -42,16 +41,13 @@
             <div class="flex-1" />
           </div>
         </div>
-        <div v-if="account.balance === 0 && walletPassword">
+        <div v-if="account.balance === 0">
           <p class="information">{{ $t("link_holding_account.no_funds") }}</p>
         </div>
       </div>
     </div>
     <app-button-section>
-      <button
-        @click="unLockAccount"
-        v-if="walletPassword === null || walletPassword === undefined"
-      >
+      <button @click="unLockAccount" v-if="needsUnlock">
         {{ $t("buttons.next") }}
       </button>
     </app-button-section>
@@ -74,7 +70,8 @@ export default {
     return {
       witnessKey: "",
       isPasswordInvalid: false,
-      password: ""
+      password: "",
+      needsUnlock: true
     };
   },
   computed: {
@@ -91,13 +88,28 @@ export default {
     }
   },
   mounted() {
+    console.log("<<<<1");
+    if (!LibraryController.IsWalletLocked()) {
+      this.getWitnessKey();
+      this.needsUnlock = false;
+      return;
+    }
+
+    if (this.witnessKey !== "") {
+      this.needsUnlock = false;
+      return;
+    }
+
+    this.needsUnlock = true;
     if (this.walletPassword) {
-      this.getWitnessKey(this.walletPassword);
+      this.password = this.walletPassword;
+      this.unLockAccount(this.walletPassword);
     }
   },
   methods: {
     getWitnessKey() {
       this.witnessKey = AccountsController.GetWitnessKeyURI(this.account.UUID);
+      this.needsUnlock = false;
     },
     copyQr() {
       let img = nativeImage.createFromDataURL(this.$refs.qrcode.$el.src);
@@ -109,8 +121,10 @@ export default {
     unLockAccount() {
       if (LibraryController.UnlockWallet(this.password)) {
         this.getWitnessKey();
-        LibraryController.LockWallet();
-        this.$store.dispatch("wallet/SET_WALLET_PASSWORD", this.password);
+        setTimeout(function() {
+          LibraryController.LockWallet();
+        }, 10);
+        this.password = "";
       } else {
         this.isPasswordInvalid = true;
       }
