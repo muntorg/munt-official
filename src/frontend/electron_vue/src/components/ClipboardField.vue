@@ -56,7 +56,7 @@ export default {
   cursor: pointer;
 }
 
-.field:hover {
+.clipboard-field:hover {
   color: var(--primary-color);
   background-color: var(--hover-color);
 }
