@@ -871,6 +871,38 @@ Napi::Value NJSILibraryController::LockWallet(const Napi::CallbackInfo& info) {
         return Napi::Value();
     }
 }
+Napi::Value NJSILibraryController::IsWalletLocked(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 0)
+    {
+        Napi::Error::New(env, "NJSILibraryController::IsWalletLocked needs 0 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+
+    try
+    {
+        auto result = ILibraryController::IsWalletLocked();
+
+        //Wrap result in node object
+        auto arg_0 = Napi::Value::From(env, result);
+
+        return arg_0;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+}
 Napi::Value NJSILibraryController::ChangePassword(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -2014,6 +2046,7 @@ Napi::Object NJSILibraryController::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("GetMnemonicDictionary", &NJSILibraryController::GetMnemonicDictionary),
     InstanceMethod("UnlockWallet", &NJSILibraryController::UnlockWallet),
     InstanceMethod("LockWallet", &NJSILibraryController::LockWallet),
+    InstanceMethod("IsWalletLocked", &NJSILibraryController::IsWalletLocked),
     InstanceMethod("ChangePassword", &NJSILibraryController::ChangePassword),
     InstanceMethod("DoRescan", &NJSILibraryController::DoRescan),
     InstanceMethod("IsValidRecipient", &NJSILibraryController::IsValidRecipient),

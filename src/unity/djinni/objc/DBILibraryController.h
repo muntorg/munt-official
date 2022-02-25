@@ -141,6 +141,8 @@ extern int32_t const DBILibraryControllerVersion;
 /** Forcefully lock wallet again */
 + (BOOL)LockWallet;
 
++ (BOOL)IsWalletLocked;
+
 /** Change the wallet password */
 + (BOOL)ChangePassword:(nonnull NSString *)oldPassword
            newPassword:(nonnull NSString *)newPassword;

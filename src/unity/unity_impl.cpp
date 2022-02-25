@@ -1148,6 +1148,17 @@ bool ILibraryController::LockWallet()
     return dynamic_cast<CExtWallet*>(pactiveWallet)->Lock();
 }
 
+bool ILibraryController::IsWalletLocked()
+{
+    if (!pactiveWallet)
+    {
+        LogPrintf("LockWallet: No active wallet");
+        return false;
+    }
+
+    return dynamic_cast<CExtWallet*>(pactiveWallet)->IsLocked();
+}
+
 bool ILibraryController::ChangePassword(const std::string& oldPassword, const std::string& newPassword)
 {
     if (!pactiveWallet)

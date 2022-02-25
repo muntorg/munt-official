@@ -131,6 +131,8 @@ private:
     /** Forcefully lock wallet again */
     Napi::Value LockWallet(const Napi::CallbackInfo& info);
 
+    Napi::Value IsWalletLocked(const Napi::CallbackInfo& info);
+
     /** Change the wallet password */
     Napi::Value ChangePassword(const Napi::CallbackInfo& info);
 

@@ -211,6 +211,8 @@ i_library_controller = interface +c {
 
     # Forcefully lock wallet again
     static LockWallet(): bool;
+    
+    static IsWalletLocked() : bool;
 
     # Change the wallet password
     static ChangePassword(oldPassword: string, newPassword: string) : bool;
