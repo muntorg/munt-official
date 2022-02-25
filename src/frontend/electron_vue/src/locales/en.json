@@ -104,8 +104,8 @@
     "view_recovery_phrase": "View recovery phrase",
     "choose_theme": "Choose theme",
     "choose_language": "Choose Language",
-    "english": "En",
-    "dutch": "Nl"
+    "english": "EN",
+    "dutch": "NL"
   },
   "setup": {
     "choose_password": "Choose a password of at least 6 characters",
@@ -134,7 +134,6 @@
     },
     "hash": "Hash"
   },
-
   "receive_coins": {
     "address_copied_to_clipboard": "Address copied to clipboard",
     "buy_or_receive_coins": "Buy or receive Florin",

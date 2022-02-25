@@ -19,7 +19,7 @@
     "title": "Holding rekening aanmaken"
   },
   "add_spending_account": {
-    "title": "Spending rekening toevoegen"
+    "title": "Betaalrekening aanmaken"
   },
   "buttons": {
     "back": "Terug",
@@ -35,7 +35,7 @@
     "next": "Volgende",
     "ok": "OK",
     "previous": "Vorige",
-    "ready": "Ready",
+    "ready": "Klaar",
     "receive": "Ontvangen",
     "renew": "Vernieuwen",
     "send": "Versturen",
@@ -43,11 +43,11 @@
     "stop": "Stop",
     "transactions": "Transacties",
     "unlock": "Ontgrendelen",
-    "done": "Done",
+    "done": "Klaar",
     "holding_key": "Holding Key"
   },
   "clipboard_field": {
-    "copied_to_clipboard": "Naar klembord gekopieerd"
+    "copied_to_clipboard": "Gekopieërd naar klembord"
   },
   "common": {
     "account_name": "Rekeningnaam",
@@ -66,7 +66,7 @@
     "information": "Deze portemonnee staat alleen op jouw apparaat.<br/>Geef nooit iemand anders toegang tot jouw portemonnee.<br/>Bewaar de herstelzin die je te zien krijgt tijdens installatie op een veilige plek.<br/>Herstelzin kwijt of iemand toegang tot je herstelzin = Florin weg."
   },
   "holding_account": {
-    "compound_earnings": "Cumulatieve inkomsten",
+    "compound_earnings": "cumulatieve inkomsten",
     "status": "Status",
     "coins_locked": "Florin vastgezet",
     "coins_earned": "Florin verdiend",
@@ -104,8 +104,8 @@
     "view_recovery_phrase": "Bekijk herstelzin",
     "choose_theme": "Kies thema",
     "choose_language": "Kies taal",
-    "english": "En",
-    "dutch": "Nl"
+    "english": "EN",
+    "dutch": "NL"
   },
   "setup": {
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
@@ -135,12 +135,12 @@
     "hash": "Hash"
   },
   "receive_coins": {
-    "address_copied_to_clipboard": "Adres gekopieerd naar klembord",
+    "address_copied_to_clipboard": "Adres gekopieërd naar klembord",
     "buy_or_receive_coins": "Koop of ontvang Florin",
     "click_to_copy_qr": "Klik om QR te kopiëren",
     "information": "Na iedere transactie krijg je een nieuw adres, maar het vorige adres blijft werken.",
     "your_address": "Jouw Florin adres",
-    "qr_copied_to_clipboard": "QR gekopieerd naar klembord"
+    "qr_copied_to_clipboard": "QR gekopieërd naar klembord"
   },
   "send_coins": {
     "enter_label": "Voer label in",
@@ -152,8 +152,8 @@
     "funding_account": "Betaal vergoeding van account"
   },
   "link_holding_account": {
-    "title": "Link Holding rekening",
-    "information": "Linken van een holding rekening met een andere wallet.",
-    "no_funds": "Holding rekening moet gevuld zijn alvorens het mogelijk is deze te lingen met andere wallets."
+    "title": "Holding rekening koppelen",
+    "information": "Koppel een holding rekening met een andere portemonnee.",
+    "no_funds": "De holding rekening moet gevuld zijn voordat deze gekoppeld kan worden met andere portemonnees."
   }
 }
