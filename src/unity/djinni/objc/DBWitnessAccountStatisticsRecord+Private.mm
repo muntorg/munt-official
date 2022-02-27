@@ -13,11 +13,12 @@ auto WitnessAccountStatisticsRecord::toCpp(ObjcType obj) -> CppType
     return {::djinni::String::toCpp(obj.requestStatus),
             ::djinni::String::toCpp(obj.accountStatus),
             ::djinni::I64::toCpp(obj.accountWeight),
+            ::djinni::I64::toCpp(obj.accountWeightAtCreation),
             ::djinni::I64::toCpp(obj.accountParts),
             ::djinni::I64::toCpp(obj.accountAmountLocked),
-            ::djinni::I64::toCpp(obj.accountWeightAtCreation),
+            ::djinni::I64::toCpp(obj.accountAmountLockedAtCreation),
             ::djinni::I64::toCpp(obj.networkTipTotalWeight),
-            ::djinni::I64::toCpp(obj.networkTotalWeightAtAccountCreationTime),
+            ::djinni::I64::toCpp(obj.networkTotalWeightAtCreation),
             ::djinni::I64::toCpp(obj.accountInitialLockPeriodInBlocks),
             ::djinni::I64::toCpp(obj.accountRemainingLockPeriodInBlocks),
             ::djinni::I64::toCpp(obj.accountExpectedWitnessPeriodInBlocks),
@@ -31,11 +32,12 @@ auto WitnessAccountStatisticsRecord::fromCpp(const CppType& cpp) -> ObjcType
     return [[DBWitnessAccountStatisticsRecord alloc] initWithRequestStatus:(::djinni::String::fromCpp(cpp.request_status))
                                                              accountStatus:(::djinni::String::fromCpp(cpp.account_status))
                                                              accountWeight:(::djinni::I64::fromCpp(cpp.account_weight))
+                                                   accountWeightAtCreation:(::djinni::I64::fromCpp(cpp.account_weight_at_creation))
                                                               accountParts:(::djinni::I64::fromCpp(cpp.account_parts))
                                                        accountAmountLocked:(::djinni::I64::fromCpp(cpp.account_amount_locked))
-                                                   accountWeightAtCreation:(::djinni::I64::fromCpp(cpp.account_weight_at_creation))
+                                             accountAmountLockedAtCreation:(::djinni::I64::fromCpp(cpp.account_amount_locked_at_creation))
                                                      networkTipTotalWeight:(::djinni::I64::fromCpp(cpp.network_tip_total_weight))
-                                   networkTotalWeightAtAccountCreationTime:(::djinni::I64::fromCpp(cpp.network_total_weight_at_account_creation_time))
+                                              networkTotalWeightAtCreation:(::djinni::I64::fromCpp(cpp.network_total_weight_at_creation))
                                           accountInitialLockPeriodInBlocks:(::djinni::I64::fromCpp(cpp.account_initial_lock_period_in_blocks))
                                         accountRemainingLockPeriodInBlocks:(::djinni::I64::fromCpp(cpp.account_remaining_lock_period_in_blocks))
                                       accountExpectedWitnessPeriodInBlocks:(::djinni::I64::fromCpp(cpp.account_expected_witness_period_in_blocks))

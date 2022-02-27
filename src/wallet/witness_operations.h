@@ -89,8 +89,10 @@ struct CWitnessAccountStatus
     CAccount* account;
     WitnessStatus status;
     uint64_t networkWeight;
-    uint64_t accountWeight;
-    CAmount accountAmountLocked;
+    uint64_t currentWeight;
+    uint64_t originWeight;
+    CAmount currentAmountLocked;
+    CAmount originAmountLocked;
     bool hasScriptLegacyOutput;
     bool hasUnconfirmedWittnessTx;
     uint64_t nLockFromBlock;

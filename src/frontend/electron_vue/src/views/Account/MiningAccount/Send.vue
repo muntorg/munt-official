@@ -37,6 +37,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import { displayToMonetary } from "../../../util.js";
 import {
   LibraryController,
   AccountsController
@@ -108,7 +109,7 @@ export default {
         address: AccountsController.GetReceiveAddress(this.fundingAccount.UUID),
         label: "",
         desc: "",
-        amount: this.amount * 100000000
+        amount: displayToMonetary(this.amount)
       };
 
       // try to make the payment

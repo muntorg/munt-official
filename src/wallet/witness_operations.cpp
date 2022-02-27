@@ -571,6 +571,80 @@ void EnsureMatchingWitnessCharacteristics(const witnessOutputsInfoVector& unspen
     }
 }
 
+
+CWitnessBundlesRef GetWitnessBundles(const CWalletTx& wtx)
+{
+    CWitnessBundlesRef pWitnessBundles = std::make_shared<CWitnessBundles>();
+    if (wtx.witnessBundles)
+    {
+        pWitnessBundles = wtx.witnessBundles;
+        return pWitnessBundles;
+    }
+    else
+    {
+        bool haveBundles = false;
+        if (wtx.tx->witnessBundles)
+        {
+            pWitnessBundles = wtx.tx->witnessBundles;
+            haveBundles = true;
+        }
+        else
+        {
+            CValidationState state;
+            int nWalletTxBlockHeight = chainActive.Tip()?chainActive.Tip()->nHeight:0;
+            const auto& findIter = mapBlockIndex.find(wtx.hashBlock);
+            if (findIter != mapBlockIndex.end())
+                nWalletTxBlockHeight = findIter->second->nHeight;
+
+            CWitnessBundles bundles;
+            haveBundles = BuildWitnessBundles(*wtx.tx, state, nWalletTxBlockHeight,
+                [&](const COutPoint& outpoint, CTxOut& txOut, int& txHeight) {
+                    CTransactionRef txRef;
+                    int nInputHeight = -1;
+                    LOCK(cs_main);
+                    if (outpoint.isHash) {
+                        const CWalletTx* txPrev = pactiveWallet->GetWalletTx(outpoint.getTransactionHash());
+                        if (!txPrev || txPrev->tx->vout.size() == 0)
+                            return false;
+
+                        const auto& findIter = mapBlockIndex.find(txPrev->hashBlock);
+                        if (findIter != mapBlockIndex.end()) {
+                            nInputHeight = findIter->second->nHeight;
+                        }
+
+                        txRef = txPrev->tx;
+                    }
+                    else
+                    {
+                        nInputHeight = outpoint.getTransactionBlockNumber();
+                        CBlock block;
+                        if (chainActive.Height() >= nInputHeight && ReadBlockFromDisk(block, chainActive[nInputHeight], Params())) {
+                            txRef = block.vtx[outpoint.getTransactionIndex()];
+                        }
+                        else
+                            return false;
+                    }
+                    txOut = txRef->vout[outpoint.n];
+                    txHeight = nInputHeight;
+                    return true;
+                },
+                bundles);
+            pWitnessBundles = std::make_shared<CWitnessBundles>(bundles);
+        }
+
+        if (haveBundles)
+        {
+            CWalletTx& w = REF(wtx);
+            w.witnessBundles = pWitnessBundles;
+            CWalletDB walletdb(*pactiveWallet->dbw);
+            walletdb.WriteTx(w);
+        }
+    }
+
+    return pWitnessBundles;
+}
+    
+    
 CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* account, CGetWitnessInfo* pWitnessInfo)
 {
     WitnessStatus status;
@@ -656,12 +730,61 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
         throw std::runtime_error("Unable to determine witness state.");
     }
 
-    // NOTE: assuming any unconfirmed tx here is a witness; avoid getting the witness bundles and testing those, this will almost always be
-    // correct. Any edge cases where this fails will automatically resolve once the tx confirms.
-    bool hasUnconfirmedWittnessTx = std::any_of(pWallet->mapWallet.begin(), pWallet->mapWallet.end(), [=](const auto& it){
+    CAmount originAmountLocked= 0;
+    uint64_t originWeight = 0;
+    bool hasUnconfirmedWittnessTx = false;
+    for (const auto& it: pWallet->mapWallet)
+    {
         const auto& wtx = it.second;
-        return account->HaveWalletTx(wtx) && wtx.InMempool();
-    });
+
+        // NOTE: assuming any unconfirmed tx here is a witness; avoid getting the witness bundles and testing those, this will almost always be correct. Any edge cases where this fails will automatically resolve once the tx confirms.
+        if (!hasUnconfirmedWittnessTx && account->HaveWalletTx(it.second) && it.second.InMempool())
+        {
+            hasUnconfirmedWittnessTx = true;
+        }
+        
+        // Coinbase can only be generation not lock
+        if (!wtx.IsPoW2WitnessCoinBase())
+        {
+            const auto& bundles = GetWitnessBundles(wtx);
+            if (bundles && bundles->size() > 0)
+            {
+                for (const CWitnessTxBundle& witnessBundle : *bundles)
+                {
+                    switch (witnessBundle.bundleType)
+                    {
+                        case CWitnessTxBundle::WitnessTxType::CreationType:
+                        {
+                            originAmountLocked += std::accumulate(witnessBundle.outputs.begin(), witnessBundle.outputs.end(), CAmount(0), 
+                            [&account](const CAmount acc, const auto& txIter)
+                                {
+                                    const CTxOut& txOut = std::get<0>(txIter);
+                                    if (IsMine(*account, txOut))
+                                    {
+                                        return acc + txOut.nValue;
+                                    }
+                                    return acc;
+                                }
+                            );
+                        }
+                        break;
+                        case CWitnessTxBundle::WitnessTxType::IncreaseType:
+                        {
+                            //fixme: IMPLEMENT
+                        }
+                        break;
+                        case CWitnessTxBundle::WitnessTxType::RearrangeType:
+                        {
+                        //fixme: IMPLEMENT
+                        }
+                        break;
+                        default:
+                        break;
+                    } 
+                }
+            }
+        }
+    }
 
     // hasUnconfirmedWittnessTx -> renewed, extended ...
     if (status == WitnessStatus::Expired && hasUnconfirmedWittnessTx)
@@ -678,7 +801,9 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
         networkWeight,
         //NB! We always want the account weight (even if expired) - otherwise how do we e.g. draw a historical graph of the expected earnings for the expired account?
         std::accumulate(accountItems.begin(), accountItems.end(), uint64_t(0), [](const uint64_t acc, const RouletteItem& ri){ return acc + ri.nWeight; }),
+        originWeight,
         lockedBalance,
+        originAmountLocked,
         hasScriptLegacyOutput,
         hasUnconfirmedWittnessTx,
         nLockFromBlock,

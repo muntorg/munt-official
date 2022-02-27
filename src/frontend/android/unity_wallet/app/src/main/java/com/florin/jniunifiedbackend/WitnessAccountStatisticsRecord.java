@@ -12,15 +12,17 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
 
     /*package*/ final long mAccountWeight;
 
+    /*package*/ final long mAccountWeightAtCreation;
+
     /*package*/ final long mAccountParts;
 
     /*package*/ final long mAccountAmountLocked;
 
-    /*package*/ final long mAccountWeightAtCreation;
+    /*package*/ final long mAccountAmountLockedAtCreation;
 
     /*package*/ final long mNetworkTipTotalWeight;
 
-    /*package*/ final long mNetworkTotalWeightAtAccountCreationTime;
+    /*package*/ final long mNetworkTotalWeightAtCreation;
 
     /*package*/ final long mAccountInitialLockPeriodInBlocks;
 
@@ -38,11 +40,12 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
             String requestStatus,
             String accountStatus,
             long accountWeight,
+            long accountWeightAtCreation,
             long accountParts,
             long accountAmountLocked,
-            long accountWeightAtCreation,
+            long accountAmountLockedAtCreation,
             long networkTipTotalWeight,
-            long networkTotalWeightAtAccountCreationTime,
+            long networkTotalWeightAtCreation,
             long accountInitialLockPeriodInBlocks,
             long accountRemainingLockPeriodInBlocks,
             long accountExpectedWitnessPeriodInBlocks,
@@ -52,11 +55,12 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         this.mRequestStatus = requestStatus;
         this.mAccountStatus = accountStatus;
         this.mAccountWeight = accountWeight;
+        this.mAccountWeightAtCreation = accountWeightAtCreation;
         this.mAccountParts = accountParts;
         this.mAccountAmountLocked = accountAmountLocked;
-        this.mAccountWeightAtCreation = accountWeightAtCreation;
+        this.mAccountAmountLockedAtCreation = accountAmountLockedAtCreation;
         this.mNetworkTipTotalWeight = networkTipTotalWeight;
-        this.mNetworkTotalWeightAtAccountCreationTime = networkTotalWeightAtAccountCreationTime;
+        this.mNetworkTotalWeightAtCreation = networkTotalWeightAtCreation;
         this.mAccountInitialLockPeriodInBlocks = accountInitialLockPeriodInBlocks;
         this.mAccountRemainingLockPeriodInBlocks = accountRemainingLockPeriodInBlocks;
         this.mAccountExpectedWitnessPeriodInBlocks = accountExpectedWitnessPeriodInBlocks;
@@ -80,19 +84,24 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         return mAccountWeight;
     }
 
+    /** Account weight when it was created */
+    public long getAccountWeightAtCreation() {
+        return mAccountWeightAtCreation;
+    }
+
     /** How many parts the account weight is split up into */
     public long getAccountParts() {
         return mAccountParts;
     }
 
-    /** Account amount locked */
+    /** Account amount currently locked */
     public long getAccountAmountLocked() {
         return mAccountAmountLocked;
     }
 
-    /** Account weight when it was created */
-    public long getAccountWeightAtCreation() {
-        return mAccountWeightAtCreation;
+    /** Account amount locked when it was created */
+    public long getAccountAmountLockedAtCreation() {
+        return mAccountAmountLockedAtCreation;
     }
 
     /** Current network weight */
@@ -101,8 +110,8 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
     }
 
     /** Network weight when account was created */
-    public long getNetworkTotalWeightAtAccountCreationTime() {
-        return mNetworkTotalWeightAtAccountCreationTime;
+    public long getNetworkTotalWeightAtCreation() {
+        return mNetworkTotalWeightAtCreation;
     }
 
     /** Account total lock period in blocks (from creation block) */
@@ -141,11 +150,12 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
                 "mRequestStatus=" + mRequestStatus +
                 "," + "mAccountStatus=" + mAccountStatus +
                 "," + "mAccountWeight=" + mAccountWeight +
+                "," + "mAccountWeightAtCreation=" + mAccountWeightAtCreation +
                 "," + "mAccountParts=" + mAccountParts +
                 "," + "mAccountAmountLocked=" + mAccountAmountLocked +
-                "," + "mAccountWeightAtCreation=" + mAccountWeightAtCreation +
+                "," + "mAccountAmountLockedAtCreation=" + mAccountAmountLockedAtCreation +
                 "," + "mNetworkTipTotalWeight=" + mNetworkTipTotalWeight +
-                "," + "mNetworkTotalWeightAtAccountCreationTime=" + mNetworkTotalWeightAtAccountCreationTime +
+                "," + "mNetworkTotalWeightAtCreation=" + mNetworkTotalWeightAtCreation +
                 "," + "mAccountInitialLockPeriodInBlocks=" + mAccountInitialLockPeriodInBlocks +
                 "," + "mAccountRemainingLockPeriodInBlocks=" + mAccountRemainingLockPeriodInBlocks +
                 "," + "mAccountExpectedWitnessPeriodInBlocks=" + mAccountExpectedWitnessPeriodInBlocks +
@@ -173,11 +183,12 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         this.mRequestStatus = in.readString();
         this.mAccountStatus = in.readString();
         this.mAccountWeight = in.readLong();
+        this.mAccountWeightAtCreation = in.readLong();
         this.mAccountParts = in.readLong();
         this.mAccountAmountLocked = in.readLong();
-        this.mAccountWeightAtCreation = in.readLong();
+        this.mAccountAmountLockedAtCreation = in.readLong();
         this.mNetworkTipTotalWeight = in.readLong();
-        this.mNetworkTotalWeightAtAccountCreationTime = in.readLong();
+        this.mNetworkTotalWeightAtCreation = in.readLong();
         this.mAccountInitialLockPeriodInBlocks = in.readLong();
         this.mAccountRemainingLockPeriodInBlocks = in.readLong();
         this.mAccountExpectedWitnessPeriodInBlocks = in.readLong();
@@ -196,11 +207,12 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         out.writeString(this.mRequestStatus);
         out.writeString(this.mAccountStatus);
         out.writeLong(this.mAccountWeight);
+        out.writeLong(this.mAccountWeightAtCreation);
         out.writeLong(this.mAccountParts);
         out.writeLong(this.mAccountAmountLocked);
-        out.writeLong(this.mAccountWeightAtCreation);
+        out.writeLong(this.mAccountAmountLockedAtCreation);
         out.writeLong(this.mNetworkTipTotalWeight);
-        out.writeLong(this.mNetworkTotalWeightAtAccountCreationTime);
+        out.writeLong(this.mNetworkTotalWeightAtCreation);
         out.writeLong(this.mAccountInitialLockPeriodInBlocks);
         out.writeLong(this.mAccountRemainingLockPeriodInBlocks);
         out.writeLong(this.mAccountExpectedWitnessPeriodInBlocks);

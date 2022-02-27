@@ -42,6 +42,7 @@
 
 <script>
 import { BackendUtilities } from "@/unity/Controllers";
+import { formatMoneyForDisplay } from "../../../util.js";
 import { mapState } from "vuex";
 import TransactionDetailsDialog from "../../../components/TransactionDetailsDialog";
 import EventBus from "../../../EventBus";
@@ -122,7 +123,7 @@ export default {
       ).slice(-2)}`;
     },
     formatAmount(amount) {
-      return `${(amount / 100000000).toFixed(2)}`;
+      return `${formatMoneyForDisplay(amount)}`;
     },
     mutationRowClass(txHash) {
       return txHash === this.txHash ? "selected" : "";

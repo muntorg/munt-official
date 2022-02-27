@@ -104,14 +104,8 @@ class LibUnity {
       let currentAccount = accounts.find(x => x.UUID === key);
       let currentBalance = accountBalances[key];
 
-      currentAccount.balance = FormatBalance(
-        currentBalance.availableIncludingLocked +
-          currentBalance.immatureIncludingLocked
-      );
-      currentAccount.spendable = FormatBalance(
-        currentBalance.availableExcludingLocked -
-          currentBalance.immatureExcludingLocked
-      );
+      currentAccount.balance = currentBalance.availableIncludingLocked + currentBalance.immatureIncludingLocked;
+      currentAccount.spendable =  currentBalance.availableExcludingLocked - currentBalance.immatureExcludingLocked;
     });
 
     store.dispatch("wallet/SET_ACCOUNTS", accounts);
@@ -3068,8 +3062,5 @@ function handleError(error) {
   };
 }
 
-function FormatBalance(balance) {
-  return Math.floor(balance / 1000000) / 100;
-}
 
 export default LibUnity;
