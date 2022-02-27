@@ -56,7 +56,6 @@ export default {
   computed: {
     ...mapState("wallet", ["mutations"]),
     hasMutations() {
-      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
       return this.mutations ? this.mutations.length > 0 : false;
     },
     groupedMutations() {

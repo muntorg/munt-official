@@ -4,6 +4,7 @@ import Account from "../views/Account";
 
 import { AccountsController } from "../unity/Controllers";
 import EventBus from "../EventBus";
+import store from "../store";
 
 Vue.use(VueRouter);
 
@@ -96,6 +97,9 @@ router.beforeEach((to, from, next) => {
     case "account":
       if (to.params.id !== undefined) {
         console.log(`account: ${to.params.id}`);
+
+        // set activity indicator to true when switching accounts
+        store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
         // set active account to specified id
         AccountsController.SetActiveAccount(to.params.id);
 

@@ -30,6 +30,12 @@ const wallet = {
     },
     SET_WALLET_PASSWORD(state, password) {
       state.walletPassword = password;
+    },
+    SET_WALLET(state, payload) {
+      // batch update state properties from payload
+      for (const [key, value] of Object.entries(payload)) {
+        state[key] = value;
+      }
     }
   },
   actions: {
@@ -62,6 +68,9 @@ const wallet = {
     },
     SET_WALLET_PASSWORD({ commit }, password) {
       commit("SET_WALLET_PASSWORD", password);
+    },
+    SET_WALLET({ commit }, payload) {
+      commit("SET_WALLET", payload);
     }
   },
   getters: {

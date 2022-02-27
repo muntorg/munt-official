@@ -1,5 +1,5 @@
 <template>
-  <div class="spending-account" v-if="!activityIndicator">
+  <div class="spending-account">
     <portal to="header-slot">
       <section class="header flex-row">
         <main-header

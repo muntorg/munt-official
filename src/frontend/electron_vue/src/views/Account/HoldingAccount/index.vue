@@ -1,5 +1,5 @@
 <template>
-  <div class="holding-account" v-if="!activityIndicator">
+  <div class="holding-account">
     <portal to="header-slot">
       <section class="header flex-row">
         <main-header
@@ -235,10 +235,6 @@ export default {
   methods: {
     initialize() {
       this.updateStatistics();
-
-      setTimeout(() => {
-        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-      }, 1000);
 
       this.isCompounding = WitnessController.IsAccountCompounding(
         this.account.UUID
