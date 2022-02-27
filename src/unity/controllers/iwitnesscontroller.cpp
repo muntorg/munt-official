@@ -298,7 +298,7 @@ WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(c
         case WitnessStatus::Empty: accountStatus = "empty"; break;
         case WitnessStatus::EmptyWithRemainder: accountStatus = "empty_with_remainder"; break;
         case WitnessStatus::Pending: accountStatus = "pending"; break;
-        case WitnessStatus::Witnessing: accountStatus = "witnessing"; break;
+        case WitnessStatus::Witnessing: accountStatus = "active"; break;
         case WitnessStatus::Ended: accountStatus = "ended"; break;
         case WitnessStatus::Expired: accountStatus = "expired"; break;
         case WitnessStatus::Emptying: accountStatus = "emptying"; break;
