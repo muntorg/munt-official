@@ -31,6 +31,8 @@
             :class="accountClass(account.UUID)"
           >
             <router-link
+              :disabled="isActiveAccount(account.UUID)"
+              :event="!isActiveAccount(account.UUID) ? 'click' : ''"
               class="flex-col"
               :to="{ name: 'account', params: { id: account.UUID } }"
             >
@@ -81,6 +83,12 @@ export default {
     }
   },
   methods: {
+    isActiveAccount(accountUUID) {
+      return (
+        this.$route.path.indexOf("/account") == 0 &&
+        accountUUID === this.activeAccount
+      );
+    },
     accountClass(accountUUID) {
       return this.$route.name === "account" &&
         accountUUID === this.activeAccount
