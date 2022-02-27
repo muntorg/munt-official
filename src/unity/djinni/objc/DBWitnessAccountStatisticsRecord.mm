@@ -9,11 +9,12 @@
 - (nonnull instancetype)initWithRequestStatus:(nonnull NSString *)requestStatus
                                 accountStatus:(nonnull NSString *)accountStatus
                                 accountWeight:(int64_t)accountWeight
+                      accountWeightAtCreation:(int64_t)accountWeightAtCreation
                                  accountParts:(int64_t)accountParts
                           accountAmountLocked:(int64_t)accountAmountLocked
-                      accountWeightAtCreation:(int64_t)accountWeightAtCreation
+                accountAmountLockedAtCreation:(int64_t)accountAmountLockedAtCreation
                         networkTipTotalWeight:(int64_t)networkTipTotalWeight
-      networkTotalWeightAtAccountCreationTime:(int64_t)networkTotalWeightAtAccountCreationTime
+                 networkTotalWeightAtCreation:(int64_t)networkTotalWeightAtCreation
              accountInitialLockPeriodInBlocks:(int64_t)accountInitialLockPeriodInBlocks
            accountRemainingLockPeriodInBlocks:(int64_t)accountRemainingLockPeriodInBlocks
          accountExpectedWitnessPeriodInBlocks:(int64_t)accountExpectedWitnessPeriodInBlocks
@@ -25,11 +26,12 @@
         _requestStatus = [requestStatus copy];
         _accountStatus = [accountStatus copy];
         _accountWeight = accountWeight;
+        _accountWeightAtCreation = accountWeightAtCreation;
         _accountParts = accountParts;
         _accountAmountLocked = accountAmountLocked;
-        _accountWeightAtCreation = accountWeightAtCreation;
+        _accountAmountLockedAtCreation = accountAmountLockedAtCreation;
         _networkTipTotalWeight = networkTipTotalWeight;
-        _networkTotalWeightAtAccountCreationTime = networkTotalWeightAtAccountCreationTime;
+        _networkTotalWeightAtCreation = networkTotalWeightAtCreation;
         _accountInitialLockPeriodInBlocks = accountInitialLockPeriodInBlocks;
         _accountRemainingLockPeriodInBlocks = accountRemainingLockPeriodInBlocks;
         _accountExpectedWitnessPeriodInBlocks = accountExpectedWitnessPeriodInBlocks;
@@ -43,11 +45,12 @@
 + (nonnull instancetype)witnessAccountStatisticsRecordWithRequestStatus:(nonnull NSString *)requestStatus
                                                           accountStatus:(nonnull NSString *)accountStatus
                                                           accountWeight:(int64_t)accountWeight
+                                                accountWeightAtCreation:(int64_t)accountWeightAtCreation
                                                            accountParts:(int64_t)accountParts
                                                     accountAmountLocked:(int64_t)accountAmountLocked
-                                                accountWeightAtCreation:(int64_t)accountWeightAtCreation
+                                          accountAmountLockedAtCreation:(int64_t)accountAmountLockedAtCreation
                                                   networkTipTotalWeight:(int64_t)networkTipTotalWeight
-                                networkTotalWeightAtAccountCreationTime:(int64_t)networkTotalWeightAtAccountCreationTime
+                                           networkTotalWeightAtCreation:(int64_t)networkTotalWeightAtCreation
                                        accountInitialLockPeriodInBlocks:(int64_t)accountInitialLockPeriodInBlocks
                                      accountRemainingLockPeriodInBlocks:(int64_t)accountRemainingLockPeriodInBlocks
                                    accountExpectedWitnessPeriodInBlocks:(int64_t)accountExpectedWitnessPeriodInBlocks
@@ -58,11 +61,12 @@
     return [(DBWitnessAccountStatisticsRecord*)[self alloc] initWithRequestStatus:requestStatus
                                                                     accountStatus:accountStatus
                                                                     accountWeight:accountWeight
+                                                          accountWeightAtCreation:accountWeightAtCreation
                                                                      accountParts:accountParts
                                                               accountAmountLocked:accountAmountLocked
-                                                          accountWeightAtCreation:accountWeightAtCreation
+                                                    accountAmountLockedAtCreation:accountAmountLockedAtCreation
                                                             networkTipTotalWeight:networkTipTotalWeight
-                                          networkTotalWeightAtAccountCreationTime:networkTotalWeightAtAccountCreationTime
+                                                     networkTotalWeightAtCreation:networkTotalWeightAtCreation
                                                  accountInitialLockPeriodInBlocks:accountInitialLockPeriodInBlocks
                                                accountRemainingLockPeriodInBlocks:accountRemainingLockPeriodInBlocks
                                              accountExpectedWitnessPeriodInBlocks:accountExpectedWitnessPeriodInBlocks
@@ -73,7 +77,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p requestStatus:%@ accountStatus:%@ accountWeight:%@ accountParts:%@ accountAmountLocked:%@ accountWeightAtCreation:%@ networkTipTotalWeight:%@ networkTotalWeightAtAccountCreationTime:%@ accountInitialLockPeriodInBlocks:%@ accountRemainingLockPeriodInBlocks:%@ accountExpectedWitnessPeriodInBlocks:%@ accountEstimatedWitnessPeriodInBlocks:%@ accountInitialLockCreationBlockHeight:%@ accountIsCompounding:%@>", self.class, (void *)self, self.requestStatus, self.accountStatus, @(self.accountWeight), @(self.accountParts), @(self.accountAmountLocked), @(self.accountWeightAtCreation), @(self.networkTipTotalWeight), @(self.networkTotalWeightAtAccountCreationTime), @(self.accountInitialLockPeriodInBlocks), @(self.accountRemainingLockPeriodInBlocks), @(self.accountExpectedWitnessPeriodInBlocks), @(self.accountEstimatedWitnessPeriodInBlocks), @(self.accountInitialLockCreationBlockHeight), @(self.accountIsCompounding)];
+    return [NSString stringWithFormat:@"<%@ %p requestStatus:%@ accountStatus:%@ accountWeight:%@ accountWeightAtCreation:%@ accountParts:%@ accountAmountLocked:%@ accountAmountLockedAtCreation:%@ networkTipTotalWeight:%@ networkTotalWeightAtCreation:%@ accountInitialLockPeriodInBlocks:%@ accountRemainingLockPeriodInBlocks:%@ accountExpectedWitnessPeriodInBlocks:%@ accountEstimatedWitnessPeriodInBlocks:%@ accountInitialLockCreationBlockHeight:%@ accountIsCompounding:%@>", self.class, (void *)self, self.requestStatus, self.accountStatus, @(self.accountWeight), @(self.accountWeightAtCreation), @(self.accountParts), @(self.accountAmountLocked), @(self.accountAmountLockedAtCreation), @(self.networkTipTotalWeight), @(self.networkTotalWeightAtCreation), @(self.accountInitialLockPeriodInBlocks), @(self.accountRemainingLockPeriodInBlocks), @(self.accountExpectedWitnessPeriodInBlocks), @(self.accountEstimatedWitnessPeriodInBlocks), @(self.accountInitialLockCreationBlockHeight), @(self.accountIsCompounding)];
 }
 
 @end
