@@ -1,4 +1,6 @@
 <template>
+  <div class="modal">
+  <div class="modal-mask-margin"/>
   <div class="modal-mask flex-col">
     <div class="loader-ring">
       <div></div>
@@ -6,6 +8,7 @@
       <div></div>
       <div></div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -16,23 +19,31 @@ export default {
 </script>
 
 <style>
-.modal-mask {
+.modal
+{
+  display: flex;
   position: fixed;
   top: 0;
   left: 0;
+  margin-top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  margin-top: 0;
+}
+.modal-mask-margin {
+  flex: 0 0 var(--sidebar-left-width);
+  height: 100%;
+}
+.modal-mask {
+  float: right;
+  flex: 1;
+  height: 100%;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.3s ease;
   z-index: 9998;
 }
 .loader-ring {
-  margin-left: 120px;
   display: inline-block;
-  position: relative;
+  left: 50%;
   width: 80px;
   height: 80px;
 }
