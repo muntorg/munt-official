@@ -260,7 +260,7 @@ export default {
         this.statistics = WitnessController.GetAccountWitnessStatistics(
           this.account.UUID
         );
-        timeout = setTimeout(this.updateStatistics, 5000);
+        timeout = setTimeout(this.updateStatistics, 2 * 60 * 1000); // update statistics every two minutes
         if (this.statistics) {
           resolve();
         }

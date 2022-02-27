@@ -3,23 +3,23 @@
     <div class="logo-outer flex-col">
       <div class="logo-inner"></div>
     </div>
-    <div class="version-container">
-      <span>Florin </span>
-      <span class="divider">|</span>
-      <span>Unity: {{ unityVersion }}</span>
-      <span class="divider">|</span>
-      <span>Wallet: {{ walletVersion }}</span>
-      <span class="divider">|</span>
-      <span>Electron: {{ electronVersion }}</span>
-    </div>
     <div class="info">
       <p v-show="isShuttingDown">
         {{ $t("loader.shutdown") }}
       </p>
       <div v-show="isSynchronizing">
         <div class="sync-desc">{{ $t("loader.synchronizing") }}</div>
-        <progress ref="progress" max="130" value="0"></progress>
+        <progress ref="progress" max="100" value="0"></progress>
       </div>
+    </div>
+    <div class="version-container">
+      <span>Florin</span>
+      <span class="divider">|</span>
+      <span>Unity: {{ unityVersion }}</span>
+      <span class="divider">|</span>
+      <span>Wallet: {{ walletVersion }}</span>
+      <span class="divider">|</span>
+      <span>Electron: {{ electronVersion }}</span>
     </div>
   </div>
 </template>
@@ -177,8 +177,8 @@ export default {
 }
 
 .logo-inner {
-  width: 68px;
-  height: 68px;
+  width: 78px;
+  height: 78px;
   background: url("../img/logo.svg");
   background-size: cover;
 }
@@ -187,7 +187,6 @@ export default {
   font-size: 0.8em;
   text-transform: uppercase;
   color: #999;
-  margin-bottom: 20px;
 
   & .divider {
     margin: 0 8px;
