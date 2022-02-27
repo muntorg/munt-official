@@ -14,6 +14,7 @@
 
 <script>
 import EventBus from "@/EventBus";
+import { formatMoneyForDisplay, displayToMonetary } from "../../../util.js";
 import { LibraryController } from "@/unity/Controllers";
 
 export default {
@@ -30,7 +31,7 @@ export default {
         address: this.address,
         label: "",
         desc: "",
-        amount: this.amount * 100000000
+        amount: displayToMonetary(this.amount)
       };
     },
     computedAmount() {
@@ -38,7 +39,7 @@ export default {
     },
     computedFee() {
       let fee =
-        LibraryController.FeeForRecipient(this.computedRequest) / 100000000;
+        formatMoneyForDisplay(LibraryController.FeeForRecipient(this.computedRequest));
       return `+ ${fee} XFL FEE`;
     }
   },

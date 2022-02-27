@@ -5,7 +5,7 @@
         <main-header
           class="info"
           :title="account.label"
-          :subtitle="account.balance.toFixed(2) + ' ' + totalBalanceFiat"
+          :subtitle="balanceForDisplay + ' ' + totalBalanceFiat"
         />
         <div
           v-if="!UIConfig.showSidebar"
@@ -71,6 +71,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import { formatMoneyForDisplay } from "../../../util.js";
 import EventBus from "../../../EventBus";
 import WalletPasswordDialog from "../../../components/WalletPasswordDialog";
 
@@ -126,7 +127,13 @@ export default {
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
-      return `€ ${(this.account.balance * this.rate).toFixed(2)}`;
+      return `€ ${(formatMoneyForDisplay(this.account.balance) * this.rate).toFixed(2)}`;
+    },
+    balanceForDisplay()
+    {
+        if (this.account.balance == null)
+          return "";
+        return formatMoneyForDisplay(this.account.balance)
     }
   },
   methods: {

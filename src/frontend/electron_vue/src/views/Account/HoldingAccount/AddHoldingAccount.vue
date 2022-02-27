@@ -46,9 +46,7 @@
             <div class="earnings">{{ $t("add_holding_account.daily") }}</div>
             <div class="flex-1 align-right">
               {{
-                (
-                  this.estimatedWeight.estimated_daily_earnings / 100000000
-                ).toFixed(2)
+                this.formatMoneyForDisplay(this.estimatedWeight.estimated_daily_earnings)
               }}
             </div>
           </div>
@@ -56,9 +54,7 @@
             <div class="earnings">{{ $t("add_holding_account.overall") }}</div>
             <div class="flex-1 align-right">
               {{
-                (
-                  this.estimatedWeight.estimated_lifetime_earnings / 100000000
-                ).toFixed(2)
+              this.formatMoneyForDisplay(this.estimatedWeight.estimated_lifetime_earnings)
               }}
             </div>
           </div>
@@ -115,6 +111,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import { formatMoneyForDisplay, displayToMonetary } from "../../../util.js";
 import {
   WitnessController,
   LibraryController,
@@ -175,7 +172,7 @@ export default {
     },
     estimatedWeight() {
       let estimation = WitnessController.GetEstimatedWeight(
-        this.amount * 100000000,
+        displayToMonetary(this.amount),
         this.lockTimeInBlocks
       );
 
@@ -204,6 +201,10 @@ export default {
   methods: {
     onPasswordKeydown() {
       this.isPasswordInvalid = false;
+    },
+    formatMoneyForDisplay(amount)
+    {
+        formatMoneyForDisplay.formatMoneyForDisplay(amount);
     },
     nextStep() {
       this.current++;
@@ -240,7 +241,7 @@ export default {
       let result = WitnessController.FundWitnessAccount(
         this.fundingAccount.UUID,
         accountId,
-        this.amount * 100000000,
+        displayToMonetary(this.amount),
         finalLockTime
       );
 

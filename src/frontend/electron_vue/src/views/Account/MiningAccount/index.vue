@@ -3,7 +3,7 @@
     <portal to="header-slot">
       <main-header
         :title="account.label"
-        :subtitle="account.balance.toFixed(2) + ' ' + totalBalanceFiat"
+        :subtitle="balanceForDisplay + ' ' + totalBalanceFiat"
       />
     </portal>
 
@@ -120,6 +120,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { formatMoneyForDisplay } from "../../../util.js";
 import { GenerationController } from "../../../unity/Controllers";
 import EventBus from "../../../EventBus";
 
@@ -168,7 +169,17 @@ export default {
     ...mapState("mining", {
       isActive: "active",
       stats: "stats",
-      settings: "settings"
+      settings: "settings",
+      totalBalanceFiat() {
+        if (!this.rate) return "";
+        return `€ ${(formatMoneyForDisplay(this.account.balance) * this.rate).toFixed(2)}`;
+      },
+      balanceForDisplay()
+      {
+        if (this.account.balance == null)
+          return "";
+        return formatMoneyForDisplay(this.account.balance)
+      }
     }),
     ...mapState("app", ["rate"]),
     hashesPerSecond() {
@@ -191,10 +202,6 @@ export default {
     },
     sendButtonVisible() {
       return this.sendButtonDisabled && this.rightSidebar === null;
-    },
-    totalBalanceFiat() {
-      if (!this.rate) return "";
-      return `€ ${(this.account.balance * this.rate).toFixed(2)}`;
     }
   },
   watch: {

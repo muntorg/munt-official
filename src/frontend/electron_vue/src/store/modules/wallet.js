@@ -71,8 +71,7 @@ const wallet = {
       return (
         (balance.availableIncludingLocked +
           balance.unconfirmedIncludingLocked +
-          balance.immatureIncludingLocked) /
-        100000000
+          balance.immatureIncludingLocked)
       );
     },
     accounts: state => {

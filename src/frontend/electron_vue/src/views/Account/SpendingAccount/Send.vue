@@ -56,6 +56,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import { formatMoneyForDisplay } from "../../../util.js";
 import { LibraryController, AccountsController } from "@/unity/Controllers";
 import ConfirmTransactionDialog from "./ConfirmTransactionDialog";
 import EventBus from "@/EventBus";
@@ -154,7 +155,7 @@ export default {
 
       // validate amount
       let accountBalance = AccountsController.GetActiveAccountBalance();
-      if (accountBalance.availableExcludingLocked / 100000000 < this.amount) {
+      if (accountBalance.availableExcludingLocked < displayToMonetary(this.amount)) {
         this.isAmountInvalid = true;
       }
 

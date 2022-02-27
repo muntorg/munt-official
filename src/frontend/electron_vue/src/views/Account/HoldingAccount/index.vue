@@ -5,7 +5,7 @@
         <main-header
           class="info"
           :title="account.label"
-          :subtitle="account.balance.toFixed(2) + ' ' + totalBalanceFiat"
+          :subtitle="balanceForDisplay + ' ' + totalBalanceFiat"
         />
         <div class="settings flex-col">
           <span class="button" @click="setRightSidebar('Settings')">
@@ -124,6 +124,7 @@
 
 <script>
 import { WitnessController } from "../../../unity/Controllers";
+import { formatMoneyForDisplay } from "../../../util.js";
 import EventBus from "../../../EventBus";
 import Send from "../MiningAccount/Send";
 import RenewAccount from "./RenewAccount";
@@ -153,10 +154,10 @@ export default {
       return this.getStatistics("account_status");
     },
     accountAmountLocked() {
-      return this.getStatistics("account_amount_locked") / 100000000;
+      return formatMoneyForDisplay(this.getStatistics("account_amount_locked"));
     },
     accountAmountEarned() {
-      return this.account.balance - this.accountAmountLocked || 0;
+      return formatMoneyForDisplay(this.account.balance - this.getStatistics("account_amount_locked_at_creation"));
     },
     lockedFrom() {
       return this.getStatistics("account_initial_lock_creation_block_height");
@@ -210,7 +211,13 @@ export default {
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
-      return `€ ${(this.account.balance * this.rate).toFixed(2)}`;
+      return `€ ${(formatMoneyForDisplay(this.account.balance) * this.rate).toFixed(2)}`;
+    },
+    balanceForDisplay()
+    {
+        if (this.account.balance == null)
+          return "";
+        return formatMoneyForDisplay(this.account.balance)
     }
   },
   mounted() {
