@@ -38,8 +38,9 @@ export default {
       return `${this.amount} XFL`;
     },
     computedFee() {
-      let fee =
-        formatMoneyForDisplay(LibraryController.FeeForRecipient(this.computedRequest));
+      let fee = formatMoneyForDisplay(
+        LibraryController.FeeForRecipient(this.computedRequest)
+      );
       return `+ ${fee} XFL FEE`;
     }
   },

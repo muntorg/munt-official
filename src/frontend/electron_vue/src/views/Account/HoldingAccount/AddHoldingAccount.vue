@@ -46,7 +46,9 @@
             <div class="earnings">{{ $t("add_holding_account.daily") }}</div>
             <div class="flex-1 align-right">
               {{
-                this.formatMoneyForDisplay(this.estimatedWeight.estimated_daily_earnings)
+                this.formatMoneyForDisplay(
+                  this.estimatedWeight.estimated_daily_earnings
+                )
               }}
             </div>
           </div>
@@ -54,7 +56,9 @@
             <div class="earnings">{{ $t("add_holding_account.overall") }}</div>
             <div class="flex-1 align-right">
               {{
-              this.formatMoneyForDisplay(this.estimatedWeight.estimated_lifetime_earnings)
+                this.formatMoneyForDisplay(
+                  this.estimatedWeight.estimated_lifetime_earnings
+                )
               }}
             </div>
           </div>
@@ -202,9 +206,8 @@ export default {
     onPasswordKeydown() {
       this.isPasswordInvalid = false;
     },
-    formatMoneyForDisplay(amount)
-    {
-        formatMoneyForDisplay.formatMoneyForDisplay(amount);
+    formatMoneyForDisplay(amount) {
+      formatMoneyForDisplay.formatMoneyForDisplay(amount);
     },
     nextStep() {
       this.current++;

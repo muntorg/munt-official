@@ -98,13 +98,13 @@ export default {
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
-      return `€ ${(formatMoneyForDisplay(this.totalBalance) * this.rate).toFixed(2)}`;
+      return `€ ${(
+        formatMoneyForDisplay(this.totalBalance) * this.rate
+      ).toFixed(2)}`;
     },
-    balanceForDisplay()
-    {
-        if (this.totalBalance == null)
-          return "";
-        return formatMoneyForDisplay(this.totalBalance)
+    balanceForDisplay() {
+      if (this.totalBalance == null) return "";
+      return formatMoneyForDisplay(this.totalBalance);
     }
   },
   watch: {

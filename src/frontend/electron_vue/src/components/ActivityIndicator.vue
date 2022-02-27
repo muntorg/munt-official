@@ -1,14 +1,14 @@
 <template>
   <div class="modal">
-  <div class="modal-mask-margin"/>
-  <div class="modal-mask flex-col">
-    <div class="loader-ring">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+    <div class="modal-mask-margin" />
+    <div class="modal-mask flex-col">
+      <div class="loader-ring">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -19,8 +19,7 @@ export default {
 </script>
 
 <style>
-.modal
-{
+.modal {
   display: flex;
   position: fixed;
   top: 0;

@@ -172,13 +172,13 @@ export default {
       settings: "settings",
       totalBalanceFiat() {
         if (!this.rate) return "";
-        return `€ ${(formatMoneyForDisplay(this.account.balance) * this.rate).toFixed(2)}`;
+        return `€ ${(
+          formatMoneyForDisplay(this.account.balance) * this.rate
+        ).toFixed(2)}`;
       },
-      balanceForDisplay()
-      {
-        if (this.account.balance == null)
-          return "";
-        return formatMoneyForDisplay(this.account.balance)
+      balanceForDisplay() {
+        if (this.account.balance == null) return "";
+        return formatMoneyForDisplay(this.account.balance);
       }
     }),
     ...mapState("app", ["rate"]),

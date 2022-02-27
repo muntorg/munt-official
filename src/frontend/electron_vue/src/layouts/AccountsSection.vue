@@ -35,7 +35,9 @@
               :to="{ name: 'account', params: { id: account.UUID } }"
             >
               <span class="ellipsis">{{ account.label }}</span>
-              <span class="balance">{{ displayBalanceForAccount(account) }}</span>
+              <span class="balance">{{
+                displayBalanceForAccount(account)
+              }}</span>
             </router-link>
           </div>
         </div>
@@ -118,7 +120,7 @@ export default {
         : "";
     },
     displayBalanceForAccount(account) {
-      return formatMoneyForDisplay(account.balance)
+      return formatMoneyForDisplay(account.balance);
     },
     getAccountsFor(category) {
       let types;
@@ -144,10 +146,11 @@ export default {
     },
     getBalanceFor(category) {
       let accounts = this.getAccountsFor(category);
-      return formatMoneyForDisplay(accounts
-        .reduce(function(acc, obj) {
+      return formatMoneyForDisplay(
+        accounts.reduce(function(acc, obj) {
           return acc + obj.balance;
-        }, 0));
+        }, 0)
+      );
     },
     showNewAccountFor(category) {
       switch (category) {

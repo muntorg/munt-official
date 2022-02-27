@@ -157,7 +157,10 @@ export default {
       return formatMoneyForDisplay(this.getStatistics("account_amount_locked"));
     },
     accountAmountEarned() {
-      return formatMoneyForDisplay(this.account.balance - this.getStatistics("account_amount_locked_at_creation"));
+      return formatMoneyForDisplay(
+        this.account.balance -
+          this.getStatistics("account_amount_locked_at_creation")
+      );
     },
     lockedFrom() {
       return this.getStatistics("account_initial_lock_creation_block_height");
@@ -211,13 +214,13 @@ export default {
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
-      return `€ ${(formatMoneyForDisplay(this.account.balance) * this.rate).toFixed(2)}`;
+      return `€ ${(
+        formatMoneyForDisplay(this.account.balance) * this.rate
+      ).toFixed(2)}`;
     },
-    balanceForDisplay()
-    {
-        if (this.account.balance == null)
-          return "";
-        return formatMoneyForDisplay(this.account.balance)
+    balanceForDisplay() {
+      if (this.account.balance == null) return "";
+      return formatMoneyForDisplay(this.account.balance);
     }
   },
   mounted() {
