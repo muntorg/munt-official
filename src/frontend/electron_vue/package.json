@@ -21,8 +21,8 @@
     "@fortawesome/fontawesome-pro": "^5.15.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/pro-light-svg-icons": "^5.15.3",
-    "@fortawesome/vue-fontawesome": "^2.0.2",
     "@fortawesome/pro-regular-svg-icons": "^5.15.2",
+    "@fortawesome/vue-fontawesome": "^2.0.2",
     "axios": "^0.21.1",
     "core-js": "^3.9.1",
     "electron-better-ipc": "^1.1.1",
@@ -50,7 +50,7 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "babel-eslint": "^10.1.0",
     "babel-plugin-import": "^1.13.3",
-    "electron": "^12.0.2",
+    "electron": "^17.1.0",
     "electron-builder": "^22.9.1",
     "electron-icon-builder": "^2.0.1",
     "eslint": "^6.7.2",
@@ -82,6 +82,6 @@
     "rules": {}
   },
   "browserslist": [
-    "Electron >= 12.0.0"
+    "Electron >= 17.1.0"
   ]
 }
