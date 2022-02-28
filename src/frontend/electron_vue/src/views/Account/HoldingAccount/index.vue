@@ -157,10 +157,13 @@ export default {
       return formatMoneyForDisplay(this.getStatistics("account_amount_locked"));
     },
     accountAmountEarned() {
-      return formatMoneyForDisplay(
+      let earnings = formatMoneyForDisplay(
         this.account.balance -
           this.getStatistics("account_amount_locked_at_creation")
       );
+      if (earnings < 0)
+          return formatMoneyForDisplay(0);
+      return earnings;
     },
     lockedFrom() {
       return this.getStatistics("account_initial_lock_creation_block_height");
