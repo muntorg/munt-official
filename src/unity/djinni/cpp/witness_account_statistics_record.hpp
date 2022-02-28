@@ -14,16 +14,18 @@ struct WitnessAccountStatisticsRecord final {
     std::string account_status;
     /** Account weight */
     int64_t account_weight;
-    /** How many parts the account weight is split up into */
-    int64_t account_parts;
-    /** Account amount locked */
-    int64_t account_amount_locked;
     /** Account weight when it was created */
     int64_t account_weight_at_creation;
+    /** How many parts the account weight is split up into */
+    int64_t account_parts;
+    /** Account amount currently locked */
+    int64_t account_amount_locked;
+    /** Account amount locked when it was created */
+    int64_t account_amount_locked_at_creation;
     /** Current network weight */
     int64_t network_tip_total_weight;
     /** Network weight when account was created */
-    int64_t network_total_weight_at_account_creation_time;
+    int64_t network_total_weight_at_creation;
     /** Account total lock period in blocks (from creation block) */
     int64_t account_initial_lock_period_in_blocks;
     /** Account remaining lock period in blocks (from chain tip) */
@@ -40,11 +42,12 @@ struct WitnessAccountStatisticsRecord final {
     WitnessAccountStatisticsRecord(std::string request_status_,
                                    std::string account_status_,
                                    int64_t account_weight_,
+                                   int64_t account_weight_at_creation_,
                                    int64_t account_parts_,
                                    int64_t account_amount_locked_,
-                                   int64_t account_weight_at_creation_,
+                                   int64_t account_amount_locked_at_creation_,
                                    int64_t network_tip_total_weight_,
-                                   int64_t network_total_weight_at_account_creation_time_,
+                                   int64_t network_total_weight_at_creation_,
                                    int64_t account_initial_lock_period_in_blocks_,
                                    int64_t account_remaining_lock_period_in_blocks_,
                                    int64_t account_expected_witness_period_in_blocks_,
@@ -54,11 +57,12 @@ struct WitnessAccountStatisticsRecord final {
     : request_status(std::move(request_status_))
     , account_status(std::move(account_status_))
     , account_weight(std::move(account_weight_))
+    , account_weight_at_creation(std::move(account_weight_at_creation_))
     , account_parts(std::move(account_parts_))
     , account_amount_locked(std::move(account_amount_locked_))
-    , account_weight_at_creation(std::move(account_weight_at_creation_))
+    , account_amount_locked_at_creation(std::move(account_amount_locked_at_creation_))
     , network_tip_total_weight(std::move(network_tip_total_weight_))
-    , network_total_weight_at_account_creation_time(std::move(network_total_weight_at_account_creation_time_))
+    , network_total_weight_at_creation(std::move(network_total_weight_at_creation_))
     , account_initial_lock_period_in_blocks(std::move(account_initial_lock_period_in_blocks_))
     , account_remaining_lock_period_in_blocks(std::move(account_remaining_lock_period_in_blocks_))
     , account_expected_witness_period_in_blocks(std::move(account_expected_witness_period_in_blocks_))

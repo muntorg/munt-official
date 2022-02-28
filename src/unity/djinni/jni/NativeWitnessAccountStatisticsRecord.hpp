@@ -25,15 +25,16 @@ private:
     friend ::djinni::JniClass<NativeWitnessAccountStatisticsRecord>;
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/WitnessAccountStatisticsRecord") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;JJJJJJJJJJJZ)V") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;JJJJJJJJJJJJZ)V") };
     const jfieldID field_mRequestStatus { ::djinni::jniGetFieldID(clazz.get(), "mRequestStatus", "Ljava/lang/String;") };
     const jfieldID field_mAccountStatus { ::djinni::jniGetFieldID(clazz.get(), "mAccountStatus", "Ljava/lang/String;") };
     const jfieldID field_mAccountWeight { ::djinni::jniGetFieldID(clazz.get(), "mAccountWeight", "J") };
+    const jfieldID field_mAccountWeightAtCreation { ::djinni::jniGetFieldID(clazz.get(), "mAccountWeightAtCreation", "J") };
     const jfieldID field_mAccountParts { ::djinni::jniGetFieldID(clazz.get(), "mAccountParts", "J") };
     const jfieldID field_mAccountAmountLocked { ::djinni::jniGetFieldID(clazz.get(), "mAccountAmountLocked", "J") };
-    const jfieldID field_mAccountWeightAtCreation { ::djinni::jniGetFieldID(clazz.get(), "mAccountWeightAtCreation", "J") };
+    const jfieldID field_mAccountAmountLockedAtCreation { ::djinni::jniGetFieldID(clazz.get(), "mAccountAmountLockedAtCreation", "J") };
     const jfieldID field_mNetworkTipTotalWeight { ::djinni::jniGetFieldID(clazz.get(), "mNetworkTipTotalWeight", "J") };
-    const jfieldID field_mNetworkTotalWeightAtAccountCreationTime { ::djinni::jniGetFieldID(clazz.get(), "mNetworkTotalWeightAtAccountCreationTime", "J") };
+    const jfieldID field_mNetworkTotalWeightAtCreation { ::djinni::jniGetFieldID(clazz.get(), "mNetworkTotalWeightAtCreation", "J") };
     const jfieldID field_mAccountInitialLockPeriodInBlocks { ::djinni::jniGetFieldID(clazz.get(), "mAccountInitialLockPeriodInBlocks", "J") };
     const jfieldID field_mAccountRemainingLockPeriodInBlocks { ::djinni::jniGetFieldID(clazz.get(), "mAccountRemainingLockPeriodInBlocks", "J") };
     const jfieldID field_mAccountExpectedWitnessPeriodInBlocks { ::djinni::jniGetFieldID(clazz.get(), "mAccountExpectedWitnessPeriodInBlocks", "J") };

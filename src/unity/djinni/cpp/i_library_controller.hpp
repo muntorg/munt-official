@@ -134,6 +134,8 @@ public:
     /** Forcefully lock wallet again */
     static bool LockWallet();
 
+    static bool IsWalletLocked();
+
     /** Change the wallet password */
     static bool ChangePassword(const std::string & oldPassword, const std::string & newPassword);
 
