@@ -191,6 +191,7 @@ export default {
 <style lang="less" scoped>
 .send-view {
   height: 100%;
+  flex: 1;
 
   .main {
     flex: 1;
@@ -230,13 +231,12 @@ input {
   }
   & > .send-coins {
     min-width: 150px;
-    width: calc(100% - 170px - 30px - 30px - 170px);
     margin-bottom: 5px;
   }
   & > .sell-coins {
     border: 1px solid var(--primary-color);
     margin: 0 15px 0 15px;
-    width: 150px;
+    width: calc(100% - 150px - 15px - 15px - 150px);
     background-color: #fff;
     margin-bottom: 5px;
     color: var(--primary-color);
