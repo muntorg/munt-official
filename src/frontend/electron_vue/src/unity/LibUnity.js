@@ -96,7 +96,7 @@ class LibUnity {
     this.walletController.setListener(this.walletListener);
   }
 
-  _updateAccounts() {
+  _updateAccounts(dispatch = true) {
     let accounts = this.accountsController.listAccounts();
     let accountBalances = this.accountsController.getAllAccountBalances();
 
@@ -112,7 +112,10 @@ class LibUnity {
         currentBalance.immatureExcludingLocked;
     });
 
-    store.dispatch("wallet/SET_ACCOUNTS", accounts);
+    if (dispatch) {
+      store.dispatch("wallet/SET_ACCOUNTS", accounts);
+    }
+    return accounts;
   }
 
   _initializeAccountsController() {
@@ -132,19 +135,17 @@ class LibUnity {
     };
 
     this.accountsListener.onActiveAccountChanged = function(accountUUID) {
-      store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
+      // combine all properties into one payload object
+      const receiveAddress = libraryController.GetReceiveAddress();
+      const mutations = libraryController.getMutationHistory();
+      const payload = {
+        activeAccount: accountUUID,
+        receiveAddress,
+        mutations
+      };
 
-      store.dispatch("wallet/SET_ACTIVE_ACCOUNT", accountUUID);
-
-      store.dispatch(
-        "wallet/SET_RECEIVE_ADDRESS",
-        libraryController.GetReceiveAddress()
-      );
-
-      store.dispatch(
-        "wallet/SET_MUTATIONS",
-        libraryController.getMutationHistory()
-      );
+      // and then dispatch one event to update alle properties at once
+      store.dispatch("wallet/SET_WALLET", payload);
     };
 
     this.accountsListener.onAccountAdded = function() {
@@ -231,33 +232,24 @@ class LibUnity {
       );
     console.log("_setStateWhenCoreAndMainWindowReady: start");
 
-    console.log("GetBalance: start");
-    let balance = this.walletController.GetBalance();
-    console.log("GetBalance: end");
+    // combine all properties into one payload object
+    const walletBalance = this.walletController.GetBalance();
+    const accounts = this._updateAccounts(false);
+    const activeAccount = this.accountsController.getActiveAccount();
+    const receiveAddress = this.libraryController.GetReceiveAddress();
+    const mutations = this.libraryController.getMutationHistory();
 
-    store.dispatch("wallet/SET_WALLET_BALANCE", balance);
-
-    console.log("_updateAccounts: start");
-    this._updateAccounts();
-    console.log("_updateAccounts: end");
-
-    console.log("getActiveAccount: start");
-    let activeAccount = this.accountsController.getActiveAccount();
-    console.log("getActiveAccount: end");
-
-    console.log("GetReceiveAddress: start");
-    let receiveAddress = this.libraryController.GetReceiveAddress();
-    console.log("GetReceiveAddress: end");
-
-    console.log("getMutationHistory: start");
-    let mutations = this.libraryController.getMutationHistory();
-    console.log("getMutationHistory: end");
-
-    store.dispatch("wallet/SET_ACTIVE_ACCOUNT", activeAccount);
-    store.dispatch("wallet/SET_RECEIVE_ADDRESS", receiveAddress);
-    store.dispatch("wallet/SET_MUTATIONS", mutations);
+    const payload = {
+      accounts,
+      walletBalance,
+      activeAccount,
+      receiveAddress,
+      mutations
+    };
+    // and then dispatch one event to update alle properties at once
+    store.dispatch("wallet/SET_WALLET", payload);
+    // note: for now also dispatch separate "core ready" event because it is still needed to enable debug dialog
     store.dispatch("app/SET_CORE_READY");
-
     console.log("_setStateWhenCoreAndMainWindowReady: end");
   }
 

@@ -216,48 +216,50 @@ export default {
       });
     },
     createAndFundHoldingAccount() {
-      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
+      let result = null;
+      let uuid = null;
 
-      // wallet needs to be unlocked to make a payment
-      if (LibraryController.UnlockWallet(this.computedPassword) === false) {
-        this.isPasswordInvalid = true;
+      try {
+        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
+
+        // wallet needs to be unlocked to make a payment
+        if (LibraryController.UnlockWallet(this.computedPassword) === false) {
+          this.isPasswordInvalid = true;
+        }
+
+        if (this.hasErrors) return;
+
+        uuid = AccountsController.CreateAccount(this.accountName, "Holding");
+
+        // Always lock for slightly longer than the minimum to allow a bit of time for transaction to enter the chain
+        // If we don't then its possible that the transaction becomes invalid before entering the chain
+        let finalLockTime =
+          this.lockTimeInBlocks + 50 <
+          this.networkLimits.maximum_lock_period_blocks
+            ? this.lockTimeInBlocks + 50
+            : this.lockTimeInBlocks;
+
+        result = WitnessController.FundWitnessAccount(
+          this.fundingAccount.UUID,
+          uuid,
+          this.amount * 100000000,
+          finalLockTime
+        );
+
+        if (result.status !== "success") {
+          AccountsController.DeleteAccount(uuid); // something went wrong, so delete the account
+        }
+
+        LibraryController.LockWallet();
+      } finally {
+        if (result.status === "success") {
+          // route to the holding account when successfully created and funded
+          this.$router.push({ name: "account", params: { id: uuid } });
+        } else {
+          // remove the activity indicator
+          this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+        }
       }
-
-      if (this.hasErrors) {
-        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-        return;
-      }
-
-      let accountId = AccountsController.CreateAccount(
-        this.accountName,
-        "Holding"
-      );
-
-      // Always lock for slightly longer than the minimum to allow a bit of time for transaction to enter the chain
-      // If we don't then its possible that the transaction becomes invalid before entering the chain
-      let finalLockTime =
-        this.lockTimeInBlocks + 50 <
-        this.networkLimits.maximum_lock_period_blocks
-          ? this.lockTimeInBlocks + 50
-          : this.lockTimeInBlocks;
-
-      let result = WitnessController.FundWitnessAccount(
-        this.fundingAccount.UUID,
-        accountId,
-        displayToMonetary(this.amount),
-        finalLockTime
-      );
-
-      if (result.status === "success") {
-        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-        this.$router.push({ name: "account", params: { id: accountId } });
-      } else {
-        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-        console.log(result);
-        AccountsController.DeleteAccount(accountId); // something went wrong, so delete the account
-      }
-      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-      LibraryController.LockWallet();
     }
   }
 };

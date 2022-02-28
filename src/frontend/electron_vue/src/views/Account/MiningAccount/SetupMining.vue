@@ -72,16 +72,30 @@ export default {
       if (event.keyCode === 13) this.createMiningAccount(this.password);
     },
     createMiningAccount(password) {
-      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
-      if (LibraryController.UnlockWallet(password) === false) {
-        this.isPasswordInvalid = true;
-        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-        return;
+      let uuid = null;
+
+      try {
+        // NOTE:
+        // Dont' know if it is actually needed to show the activity indicator when unlockking the wallet and creating the account,
+        // but for now I leave it here.
+        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
+        if (LibraryController.UnlockWallet(password) === false) {
+          this.isPasswordInvalid = true;
+          return;
+        }
+
+        uuid = AccountsController.CreateAccount("Florin Mining", "Mining");
+        LibraryController.LockWallet();
+      } finally {
+        // route to the new account when we have a uuid
+        if (uuid) {
+          // activity indicator is set to true in the router, so no need to remove it here
+          this.$router.push({ name: "account", params: { id: uuid } });
+        } else {
+          // remove the activity indicator
+          this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+        }
       }
-      let uuid = AccountsController.CreateAccount("Florin Mining", "Mining");
-      LibraryController.LockWallet();
-      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-      this.$router.push({ name: "account", params: { id: uuid } });
     }
   }
 };

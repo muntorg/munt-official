@@ -1,78 +1,74 @@
 <template>
-  <div class="modal">
-    <div class="modal-mask-margin" />
-    <div class="modal-mask flex-col">
-      <div class="loader-ring">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-    </div>
+  <div class="modal-mask flex-col">
+    <div class="spinner"></div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
-  name: "ActivityIndicator"
+  name: "ActivityIndicator",
+  data() {
+    return {
+      show: false
+    };
+  },
+  computed: {
+    ...mapState("app", ["activityIndicator"])
+  }
 };
 </script>
 
 <style>
-.modal {
-  display: flex;
+.modal-mask {
   position: fixed;
   top: 0;
-  left: 0;
+  left: var(--sidebar-left-width);
+  width: calc(100% - var(--sidebar-left-width));
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
   margin-top: 0;
-  width: 100%;
-  height: 100%;
-}
-.modal-mask-margin {
-  flex: 0 0 var(--sidebar-left-width);
-  height: 100%;
-}
-.modal-mask {
-  float: right;
-  flex: 1;
-  height: 100%;
   align-items: center;
   justify-content: center;
   z-index: 9998;
 }
-.loader-ring {
+
+.spinner {
+  position: relative;
   display: inline-block;
-  left: 50%;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
+  border-style: solid;
+  border-radius: 100%;
+  border-width: 6px;
+  border-left-color: transparent;
+  color: var(--primary-color);
+  opacity: 0;
+
+  animation-name: rotate, fadeIn;
+  animation-duration: 800ms, 600ms;
+  animation-timing-function: linear, ease;
+  animation-iteration-count: infinite, 1;
+  animation-delay: 400ms;
+  animation-fill-mode: forwards;
 }
-.loader-ring div {
-  box-sizing: border-box;
-  display: block;
-  position: absolute;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
-  border: 8px solid #000;
-  border-radius: 50%;
-  animation: loader-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #000 transparent transparent transparent;
-}
-.loader-ring div:nth-child(1) {
-  animation-delay: -0.45s;
-}
-.loader-ring div:nth-child(2) {
-  animation-delay: -0.3s;
-}
-.loader-ring div:nth-child(3) {
-  animation-delay: -0.15s;
-}
-@keyframes loader-ring {
+
+@keyframes rotate {
   0% {
     transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
 </style>

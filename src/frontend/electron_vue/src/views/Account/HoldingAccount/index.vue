@@ -1,5 +1,5 @@
 <template>
-  <div class="holding-account" v-if="!activityIndicator">
+  <div class="holding-account">
     <portal to="header-slot">
       <section class="header flex-row">
         <main-header
@@ -161,8 +161,7 @@ export default {
         this.account.balance -
           this.getStatistics("account_amount_locked_at_creation")
       );
-      if (earnings < 0)
-          return formatMoneyForDisplay(0);
+      if (earnings < 0) return formatMoneyForDisplay(0);
       return earnings;
     },
     lockedFrom() {
@@ -248,10 +247,6 @@ export default {
   methods: {
     initialize() {
       this.updateStatistics();
-
-      setTimeout(() => {
-        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-      }, 1000);
 
       this.isCompounding = WitnessController.IsAccountCompounding(
         this.account.UUID

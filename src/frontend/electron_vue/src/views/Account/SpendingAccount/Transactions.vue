@@ -57,7 +57,6 @@ export default {
   computed: {
     ...mapState("wallet", ["mutations"]),
     hasMutations() {
-      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
       return this.mutations ? this.mutations.length > 0 : false;
     },
     groupedMutations() {
@@ -114,7 +113,20 @@ export default {
       };
       if (date.getFullYear() === new Date().getFullYear()) delete options.year;
 
-      return date.toLocaleString(this.$i18n.locale, options);
+      // for now determine localization here. replace by global method
+      let language =
+        process.env.VUE_APP_I18N_LOCALE ||
+        window.navigator.language.slice(0, 2);
+      switch (language) {
+        case "nl":
+        case "en":
+          break;
+        default:
+          language = "en";
+          break;
+      }
+
+      return date.toLocaleString(language, options);
     },
     formatTime(timestamp) {
       let date = new Date(timestamp * 1000);

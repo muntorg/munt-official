@@ -124,7 +124,11 @@ export default {
     },
     showMining() {
       if (this.miningAccount) {
-        if (this.$route.path === `/account/${this.miningAccount.UUID}`) return;
+        if (
+          this.$route.path.indexOf("/account") == 0 &&
+          this.miningAccount.UUID === this.activeAccount
+        )
+          return;
         this.$router.push({
           name: "account",
           params: { id: this.miningAccount.UUID }

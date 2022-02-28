@@ -31,6 +31,8 @@
             :class="accountClass(account.UUID)"
           >
             <router-link
+              :disabled="isActiveAccount(account.UUID)"
+              :event="!isActiveAccount(account.UUID) ? 'click' : ''"
               class="flex-col"
               :to="{ name: 'account', params: { id: account.UUID } }"
             >
@@ -47,7 +49,6 @@
 </template>
 
 <script>
-let initAccountsTimeout = null;
 import { mapState, mapGetters } from "vuex";
 import { formatMoneyForDisplay } from "../util.js";
 
@@ -61,10 +62,6 @@ export default {
         holding: false
       }
     };
-  },
-  mounted() {
-    this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
-    this.initAccounts();
   },
   computed: {
     ...mapState("wallet", ["activeAccount"]),
@@ -89,29 +86,11 @@ export default {
     }
   },
   methods: {
-    initAccounts() {
-      clearTimeout(initAccountsTimeout);
-      if (!this.coreReady) {
-        initAccountsTimeout = setTimeout(this.initAccounts, 1000);
-      } else {
-        if (this.activeAccount) {
-          this.$router.push({
-            name: "account",
-            params: { id: this.activeAccount }
-          });
-          setTimeout(() => {
-            this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-          }, 1000);
-        } else {
-          this.$router.push({
-            name: "account",
-            params: { id: this.accounts[0].UUID }
-          });
-          setTimeout(() => {
-            this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-          }, 1000);
-        }
-      }
+    isActiveAccount(accountUUID) {
+      return (
+        this.$route.path.indexOf("/account") == 0 &&
+        accountUUID === this.activeAccount
+      );
     },
     accountClass(accountUUID) {
       return this.$route.name === "account" &&
