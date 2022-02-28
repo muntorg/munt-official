@@ -93,7 +93,7 @@ export default {
       );
     },
     accountClass(accountUUID) {
-      return this.$route.name === "account" &&
+      return this.$route.path.indexOf("/account/") === 0 &&
         accountUUID === this.activeAccount
         ? "active"
         : "";
