@@ -3,6 +3,8 @@ import VueRouter from "vue-router";
 import Account from "../views/Account";
 
 import { AccountsController } from "../unity/Controllers";
+import EventBus from "../EventBus";
+import store from "../store";
 
 Vue.use(VueRouter);
 
@@ -97,10 +99,22 @@ router.beforeEach((to, from, next) => {
     case "account":
       if (to.params.id !== undefined) {
         console.log(`account: ${to.params.id}`);
+
+        // set activity indicator to true when switching accounts
+        store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
         // set active account to specified id
         AccountsController.SetActiveAccount(to.params.id);
+
+        setTimeout(() => {
+          store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+        }, 1000);
+
+        // close the right sidebar when switching accounts
+        EventBus.$emit("close-right-sidebar");
       } else {
         console.log("account: undefined");
+        store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+
       }
       break;
   }

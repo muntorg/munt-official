@@ -17,6 +17,7 @@ const app = {
   namespaced: true,
   state: {
     coreReady: false,
+    activityIndicator: false,
     splashReady: false,
     status: AppStatus.start,
     theme: null,
@@ -52,6 +53,9 @@ const app = {
     SET_WALLET_VERSION(state, version) {
       state.walletVersion = version;
     },
+    SET_ACTIVITY_INDICATOR(state, activityIndicator) {
+      state.activityIndicator = activityIndicator;
+    },
     SET_LANGUAGE(state, language) {
       state.language = language;
     }
@@ -79,6 +83,9 @@ const app = {
     },
     SET_RATE({ commit }, rate) {
       commit("SET_RATE", rate);
+    },
+    SET_ACTIVITY_INDICATOR({ commit }, activityIndicator) {
+      commit("SET_ACTIVITY_INDICATOR", activityIndicator);
     },
     SET_LANGUAGE({ commit }, language) {
       commit("SET_LANGUAGE", language);

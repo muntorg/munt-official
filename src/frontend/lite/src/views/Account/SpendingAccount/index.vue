@@ -104,7 +104,7 @@ export default {
     Transactions
   },
   computed: {
-    ...mapState("app", ["rate"]),
+    ...mapState("app", ["rate", "activityIndicator"]),
     ...mapState("wallet", ["mutations", "walletPassword"]),
     ...mapGetters("wallet", ["totalBalance"]),
     lockIcon() {
@@ -136,6 +136,23 @@ export default {
     }
   },
   methods: {
+    routeTo(route) {
+      if (this.$route.name === route) {
+        return;
+      }
+      if (route === "account") {
+        this.showTransactions();
+      } else {
+        this.hideTransactions();
+      }
+      this.$router.push({ name: route, params: { id: this.account.UUID } });
+    },
+    showTransactions() {
+      this.showTransactionList = true;
+    },
+    hideTransactions() {
+      this.showTransactionList = false;
+    },
     setRightSidebar(name) {
       switch (name) {
         case "Send":

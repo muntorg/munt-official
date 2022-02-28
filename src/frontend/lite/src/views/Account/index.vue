@@ -36,6 +36,8 @@ export default {
       if (this.account) {
         this.accountType = SpendingAccount;
       }
+      // remove the activity indicator at this point
+      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
     }
   }
 };
