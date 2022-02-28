@@ -37,7 +37,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import { displayToMonetary } from "../../../util.js";
+import { displayToMonetary, formatMoneyForDisplay } from "../../../util.js";
 import {
   LibraryController,
   AccountsController
@@ -84,7 +84,7 @@ export default {
       this.fundingAccount = this.fundingAccounts[0];
     }
 
-    this.amount = this.account.spendable.toFixed(2);
+    this.amount = formatMoneyForDisplay(this.account.spendable);
   },
   methods: {
     onPasswordKeydown() {

@@ -98,9 +98,7 @@ export default {
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
-      return `€ ${(
-        formatMoneyForDisplay(this.totalBalance) * this.rate
-      ).toFixed(2)}`;
+      return `€ ${formatMoneyForDisplay(this.totalBalance * this.rate)}`;
     },
     balanceForDisplay() {
       if (this.totalBalance == null) return "";
