@@ -105,16 +105,13 @@ router.beforeEach((to, from, next) => {
         // set active account to specified id
         AccountsController.SetActiveAccount(to.params.id);
 
-        setTimeout(() => {
-          store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-        }, 1000);
+        // IMPORTANT: Do not set activity indicator to false here!
+        // 1. AccountsController.SetActiveAccount tells the backend to change the account (but it isn't changed immediately).
+        // 2. When the account has been changed the onActiveAccountChanged handler in unity/LibUnity.js will update the store with new account data.
+        // 3. After the account in the store has been changed the onAccountChanged handler in views/Account/index.vue will set the activity indicator to false.
 
         // close the right sidebar when switching accounts
         EventBus.$emit("close-right-sidebar");
-      } else {
-        console.log("account: undefined");
-        store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
-
       }
       break;
   }
