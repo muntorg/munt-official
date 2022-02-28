@@ -35,7 +35,7 @@
       @tx-hash="onTxHash"
       :tx-hash="txHash"
     />
-    <div>
+    <div class="spending-account-view">
       <router-view />
     </div>
     <portal to="footer-slot">
@@ -212,6 +212,10 @@ export default {
 .spending-account {
   height: 100%;
   padding: 20px 15px 15px 15px;
+}
+
+.spending-account-view {
+  height: 100%;
 }
 
 .header {
