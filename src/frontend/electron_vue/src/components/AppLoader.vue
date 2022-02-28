@@ -9,7 +9,7 @@
       </p>
       <div v-show="isSynchronizing">
         <div class="sync-desc">{{ $t("loader.synchronizing") }}</div>
-        <progress ref="progress" max="100" value="0"></progress>
+        <progress ref="progress" max="130" value="0"></progress>
       </div>
     </div>
     <div class="version-container">
