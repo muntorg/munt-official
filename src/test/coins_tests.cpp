@@ -973,6 +973,8 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             BOOST_REQUIRE_EQUAL_COLLECTIONS(allCoinsIndexBasedUTXO.begin(), allCoinsIndexBasedUTXO.end(), allCoinsIndexBasedTracked.begin(), allCoinsIndexBasedTracked.end());
             
             std::map<COutPoint, Coin> utxoAllCoinsIndexBasedDirect;
+            // clear to prevent re-use of result of GetAllCoinsIndexBased() above, both GetAllCoinsIndexBased() and GetAllCoinsIndexBasedDirect() just add to the output argument
+            utxoAllCoinsIndexBased.clear();
             stack.back()->GetAllCoinsIndexBasedDirect(utxoAllCoinsIndexBased);
             std::vector<COutPoint> allCoinsIndexBasedUTXODirect;
             for (const auto& [outPoint, coins] : utxoAllCoinsIndexBased)
