@@ -104,14 +104,12 @@ class LibUnity {
       let currentAccount = accounts.find(x => x.UUID === key);
       let currentBalance = accountBalances[key];
 
-      currentAccount.balance = FormatBalance(
+      currentAccount.balance =
         currentBalance.availableIncludingLocked +
-          currentBalance.immatureIncludingLocked
-      );
-      currentAccount.spendable = FormatBalance(
+        currentBalance.immatureIncludingLocked;
+      currentAccount.spendable =
         currentBalance.availableExcludingLocked -
-          currentBalance.immatureExcludingLocked
-      );
+        currentBalance.immatureExcludingLocked;
     });
 
     store.dispatch("wallet/SET_ACCOUNTS", accounts);
@@ -236,7 +234,6 @@ class LibUnity {
     store.dispatch("wallet/SET_RECEIVE_ADDRESS", receiveAddress);
     store.dispatch("wallet/SET_MUTATIONS", mutations);
     store.dispatch("app/SET_CORE_READY");
-
     console.log("_setStateWhenCoreAndMainWindowReady: end");
   }
 
@@ -266,7 +263,6 @@ class LibUnity {
 
     libraryListener.notifyNewMutation = function(/*mutation, self_committed*/) {
       console.log("received: notifyNewMutation");
-
       store.dispatch(
         "wallet/SET_MUTATIONS",
         libraryController.getMutationHistory()
@@ -2465,10 +2461,6 @@ function handleError(error) {
     error: error,
     result: null
   };
-}
-
-function FormatBalance(balance) {
-  return Math.floor(balance / 1000000) / 100;
 }
 
 export default LibUnity;

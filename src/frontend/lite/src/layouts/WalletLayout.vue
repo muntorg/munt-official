@@ -5,7 +5,7 @@
         <div class="logo" />
         <div class="total-balance flex-row">
           <div class="coin">
-            {{ totalBalance == null ? "" : totalBalance.toFixed(2) }}
+            {{ balanceForDisplay }}
           </div>
           <div class="fiat">{{ totalBalanceFiat }}</div>
         </div>
@@ -62,6 +62,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import { formatMoneyForDisplay } from "../util.js";
 import AccountsSection from "./AccountsSection";
 import WalletPasswordDialog from "../components/WalletPasswordDialog";
 import EventBus from "../EventBus";
@@ -97,7 +98,11 @@ export default {
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
-      return `€ ${(this.totalBalance * this.rate).toFixed(2)}`;
+      return `€ ${formatMoneyForDisplay(this.totalBalance * this.rate)}`;
+    },
+    balanceForDisplay() {
+      if (this.totalBalance == null) return "";
+      return formatMoneyForDisplay(this.totalBalance);
     }
   },
   watch: {

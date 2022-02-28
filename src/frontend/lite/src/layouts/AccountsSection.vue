@@ -35,7 +35,9 @@
               :to="{ name: 'account', params: { id: account.UUID } }"
             >
               <span class="ellipsis">{{ account.label }}</span>
-              <span class="balance">{{ account.balance.toFixed(2) }}</span>
+              <span class="balance">{{
+                displayBalanceForAccount(account)
+              }}</span>
             </router-link>
           </div>
         </div>
@@ -46,6 +48,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import { formatMoneyForDisplay } from "../util.js";
 
 export default {
   name: "AccountsSection",
@@ -86,6 +89,9 @@ export default {
         ? "active"
         : "";
     },
+    displayBalanceForAccount(account) {
+      return formatMoneyForDisplay(account.balance);
+    },
     getAccountsFor(category) {
       let types;
       switch (category) {
@@ -110,11 +116,11 @@ export default {
     },
     getBalanceFor(category) {
       let accounts = this.getAccountsFor(category);
-      return accounts
-        .reduce(function(acc, obj) {
+      return formatMoneyForDisplay(
+        accounts.reduce(function(acc, obj) {
           return acc + obj.balance;
         }, 0)
-        .toFixed(2);
+      );
     },
     showNewAccountFor(category) {
       switch (category) {
