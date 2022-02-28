@@ -30,32 +30,34 @@
       </section>
     </portal>
     <transactions
-      v-if="UIConfig.showSidebar"
+      v-if="UIConfig.showSidebar && showTransactionList"
       :mutations="mutations"
       @tx-hash="onTxHash"
       :tx-hash="txHash"
     />
-    <div v-if="!UIConfig.showSidebar">
+    <div>
       <router-view />
     </div>
     <portal to="footer-slot">
       <section class="footer">
-        <span
-          class="button"
-          @click="setRightSidebar('Send')"
-          v-if="showSendButton"
+        <div
+          :class="getButtonClassNames('account')"
+          @click="routeTo('account')"
         >
+          <fa-icon :icon="['far', 'list-ul']" />
+          {{ $t("buttons.transactions") }}
+        </div>
+        <div :class="getButtonClassNames('send')" @click="routeTo('send')">
           <fa-icon :icon="['fal', 'arrow-from-bottom']" />
           {{ $t("buttons.send") }}
-        </span>
-        <span
-          class="button"
-          @click="setRightSidebar('Receive')"
-          v-if="showReceiveButton"
+        </div>
+        <div
+          :class="getButtonClassNames('receive')"
+          @click="routeTo('receive')"
         >
           <fa-icon :icon="['fal', 'arrow-to-bottom']" />
           {{ $t("buttons.receive") }}
-        </span>
+        </div>
       </section>
     </portal>
 
@@ -91,6 +93,7 @@ export default {
     return {
       rightSidebar: null,
       txHash: null,
+      showTransactionList: true,
       UIConfig: UIConfig
     };
   },
@@ -110,6 +113,7 @@ export default {
     lockIcon() {
       return this.walletPassword ? "unlock" : "lock";
     },
+
     showSendButton() {
       return !this.rightSidebar || this.rightSidebar !== Send;
     },
@@ -137,6 +141,23 @@ export default {
     }
   },
   methods: {
+    routeTo(route) {
+      if (this.$route.name === route) {
+        return;
+      }
+      if (route === "account") {
+        this.showTransactions();
+      } else {
+        this.hideTransactions();
+      }
+      this.$router.push({ name: route, params: { id: this.account.UUID } });
+    },
+    showTransactions() {
+      this.showTransactionList = true;
+    },
+    hideTransactions() {
+      this.showTransactionList = false;
+    },
     setRightSidebar(name) {
       switch (name) {
         case "Send":
@@ -177,6 +198,13 @@ export default {
     onTxHash(txHash) {
       this.txHash = txHash;
       this.setRightSidebar("TransactionDetails");
+    },
+    getButtonClassNames(route) {
+      let classNames = ["button"];
+      if (route === this.$route.name) {
+        classNames.push("active");
+      }
+      return classNames;
     }
   }
 };
@@ -187,6 +215,7 @@ export default {
   height: 100%;
   padding: 20px 15px 15px 15px;
 }
+
 .header {
   align-items: center;
 
@@ -219,7 +248,7 @@ export default {
     margin-right: 5px;
   }
 
-  & .button {
+  .button {
     display: inline-block;
     padding: 0 20px 0 20px;
     line-height: 32px;
@@ -232,6 +261,19 @@ export default {
     &:hover {
       background-color: #f5f5f5;
     }
+
+    // & .button.active {
+    //   color: #ff0000;
+    // }
+
+    // & .button:not(.active):hover {
+    //   color: var(--primary-color);
+    //   background-color: var(--hover-color);
+    // }
+  }
+
+  .active {
+    color: #000000;
   }
 }
 </style>

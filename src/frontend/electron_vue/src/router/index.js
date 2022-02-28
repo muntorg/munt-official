@@ -13,7 +13,25 @@ const routes = [
     path: "/account/:id?",
     name: "account",
     props: true,
-    component: Account
+    component: Account,
+    children: [
+      {
+        path: "send",
+        name: "send",
+        component: () =>
+          import(
+            /* webpackChunkName: "account-send" */ "../views/Account/SpendingAccount/Send.vue"
+          )
+      },
+      {
+        path: "receive",
+        name: "receive",
+        component: () =>
+          import(
+            /* webpackChunkName: "account-receive" */ "../views/Account/SpendingAccount/Receive.vue"
+          )
+      }
+    ]
   },
   {
     path: "/setup-mining",
@@ -103,10 +121,16 @@ router.beforeEach((to, from, next) => {
         // set active account to specified id
         AccountsController.SetActiveAccount(to.params.id);
 
+        setTimeout(() => {
+          store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+        }, 1000);
+
         // close the right sidebar when switching accounts
         EventBus.$emit("close-right-sidebar");
       } else {
         console.log("account: undefined");
+        store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+
       }
       break;
   }
