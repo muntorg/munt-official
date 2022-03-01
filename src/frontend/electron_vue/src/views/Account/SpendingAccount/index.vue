@@ -35,7 +35,7 @@
       @tx-hash="onTxHash"
       :tx-hash="txHash"
     />
-    <div class="spending-account-view">
+    <div class="spending-account-view" v-if="!showTransactionList">
       <router-view />
     </div>
     <portal to="footer-slot">
@@ -138,7 +138,15 @@ export default {
       return formatMoneyForDisplay(this.account.balance);
     }
   },
+  watch: {
+    account() {
+      this.initialize();
+    }
+  },
   methods: {
+    initialize() {
+      this.showTransactionList = true;
+    },
     routeTo(route) {
       if (this.$route.name === route) {
         return;

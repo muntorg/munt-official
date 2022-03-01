@@ -269,6 +269,8 @@ export default {
       this.isCompounding = WitnessController.IsAccountCompounding(
         this.account.UUID
       );
+      
+      this.showInfoData = true;
     },
     getStatistics(which) {
       return this.statistics[which] || null;
