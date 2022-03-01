@@ -59,7 +59,8 @@
     "on": "on",
     "off": "off",
     "password": "Password",
-    "receiving_address": "Receiving address"
+    "receiving_address": "Receiving address",
+    "days": "days"
   },
   "new_wallet": {
     "title": "Welcome to your Florin wallet",
@@ -68,8 +69,8 @@
   "holding_account": {
     "compound_earnings": "compound earnings",
     "status": "Status",
-    "coins_locked": "Florin locked",
-    "coins_earned": "Florin earned",
+    "coins_locked": "Initial amount locked",
+    "coins_earned": "Amount earned",
     "locked_from_block": "Locked from block",
     "locked_until_block": "Locked until block",
     "lock_duration": "Lock duration",

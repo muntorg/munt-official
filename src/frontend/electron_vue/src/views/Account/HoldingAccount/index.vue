@@ -45,7 +45,7 @@
 
       <div class="flex-row">
         <div>{{ $t("holding_account.coins_locked") }}</div>
-        <div>{{ accountAmountLocked }}</div>
+        <div>{{ accountAmountLockedAtCreation }}</div>
       </div>
       <div class="flex-row">
         <div>{{ $t("holding_account.coins_earned") }}</div>
@@ -61,24 +61,20 @@
       </div>
       <div class="flex-row">
         <div>{{ $t("holding_account.lock_duration") }}</div>
-        <div>{{ lockDuration }} {{ $t("holding_account.blocks") }}</div>
+        <div>{{ lockDuration }} {{ $t("common.days") }}</div>
       </div>
       <div class="flex-row">
         <div>{{ $t("holding_account.remaining_lock_period") }}</div>
-        <div>{{ remainingLockPeriod }} {{ $t("holding_account.blocks") }}</div>
+        <div>{{ remainingLockPeriod }} {{ $t("common.days") }}</div>
       </div>
 
       <div class="flex-row">
         <div>{{ $t("holding_account.required_earnings_frequency") }}</div>
-        <div>
-          {{ requiredEarningsFrequency }} {{ $t("holding_account.blocks") }}
-        </div>
+        <div>{{ requiredEarningsFrequency }} {{ $t("common.days") }}</div>
       </div>
       <div class="flex-row">
         <div>{{ $t("holding_account.expected_earnings_frequency") }}</div>
-        <div>
-          {{ expectedEarningsFrequency }} {{ $t("holding_account.blocks") }}
-        </div>
+        <div>{{ expectedEarningsFrequency }} {{ $t("common.days") }}</div>
       </div>
 
       <div class="flex-row">
@@ -153,8 +149,10 @@ export default {
     accountStatus() {
       return this.getStatistics("account_status");
     },
-    accountAmountLocked() {
-      return formatMoneyForDisplay(this.getStatistics("account_amount_locked"));
+    accountAmountLockedAtCreation() {
+      return formatMoneyForDisplay(
+        this.getStatistics("account_amount_locked_at_creation")
+      );
     },
     accountAmountEarned() {
       let earnings = formatMoneyForDisplay(
@@ -174,16 +172,24 @@ export default {
       );
     },
     lockDuration() {
-      return this.getStatistics("account_initial_lock_period_in_blocks");
+      return (
+        this.getStatistics("account_initial_lock_period_in_blocks") / 288
+      ).toFixed(2);
     },
     remainingLockPeriod() {
-      return this.getStatistics("account_remaining_lock_period_in_blocks");
+      return (
+        this.getStatistics("account_remaining_lock_period_in_blocks") / 288
+      ).toFixed(2);
     },
     requiredEarningsFrequency() {
-      return this.getStatistics("account_expected_witness_period_in_blocks");
+      return (
+        this.getStatistics("account_expected_witness_period_in_blocks") / 288
+      ).toFixed(2);
     },
     expectedEarningsFrequency() {
-      return this.getStatistics("account_estimated_witness_period_in_blocks");
+      return (
+        this.getStatistics("account_estimated_witness_period_in_blocks") / 288
+      ).toFixed(2);
     },
     accountWeight() {
       return this.getStatistics("account_weight");
