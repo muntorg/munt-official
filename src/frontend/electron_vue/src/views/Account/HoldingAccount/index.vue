@@ -15,7 +15,7 @@
       </section>
     </portal>
 
-    <app-section class="align-right">
+    <app-section v-if="showInfoData" class="align-right">
       {{ $t("holding_account.compound_earnings") }}
       <toggle-button
         :value="isCompounding"
@@ -32,7 +32,7 @@
       />
     </app-section>
 
-    <app-section class="holding-information">
+    <app-section v-if="showInfoData" class="holding-information">
       <h4>{{ $t("common.information") }}</h4>
       <div class="flex-row">
         <div>{{ $t("holding_account.status") }}</div>
@@ -87,21 +87,41 @@
       </div>
     </app-section>
 
+    <div class="holding-account-view">
+      <router-view />
+    </div>
+
     <portal to="footer-slot">
       <section class="footer">
         <span
+          :class="getButtonClassNames('account')"
+          @click="routeTo('account')"
+        >
+          <fa-icon :icon="['fal', 'info-circle']" />
+          {{ $t("buttons.info") }}
+        </span>
+        <span
+          :class="getButtonClassNames('link-holding-account')"
           class="button"
-          @click="showLinkHoldingAccount"
-          v-if="linkHoldingAccountVisible"
+          @click="routeTo('link-holding-account')"
         >
           <fa-icon :icon="['fal', 'key']" />
           {{ $t("buttons.holding_key") }}
         </span>
-        <span class="button" @click="renewAccount" v-if="renewButtonVisible">
+        <span
+          v-if="renewButtonVisible"
+          :class="getButtonClassNames('renew-account')"
+          @click="routeTo('renew-account')"
+          class="button"
+        >
           <fa-icon :icon="['fal', 'redo-alt']" />
           {{ $t("buttons.renew") }}
         </span>
-        <span class="button" @click="emptyAccount" v-if="sendButtonVisible">
+        <span
+          :class="getButtonClassNames('send-holding')"
+          class="button"
+          @click="routeTo('send-holding')"
+        >
           <fa-icon :icon="['fal', 'arrow-from-bottom']" />
           {{ $t("buttons.send") }}
         </span>
@@ -121,11 +141,7 @@
 <script>
 import { WitnessController } from "../../../unity/Controllers";
 import { formatMoneyForDisplay } from "../../../util.js";
-import EventBus from "../../../EventBus";
-import Send from "../MiningAccount/Send";
-import RenewAccount from "./RenewAccount";
 import AccountSettings from "../AccountSettings";
-import LinkHoldingAccount from "./LinkHoldingAccount";
 import { mapState } from "vuex";
 
 let timeout;
@@ -141,7 +157,8 @@ export default {
       rightSectionComponent: null,
       statistics: null,
       isCompounding: false,
-      rightSidebar: null
+      rightSidebar: null,
+      showInfoData: true
     };
   },
   computed: {
@@ -206,19 +223,9 @@ export default {
       }
       return null;
     },
-    sendButtonDisabled() {
-      return this.account.spendable > 0;
-    },
-    sendButtonVisible() {
-      return this.sendButtonDisabled && this.rightSidebar !== Send;
-    },
+
     renewButtonVisible() {
-      return (
-        this.accountStatus === "expired" && this.rightSidebar !== RenewAccount
-      );
-    },
-    linkHoldingAccountVisible() {
-      return this.rightSidebar !== LinkHoldingAccount;
+      return this.accountStatus === "expired";
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
@@ -229,11 +236,7 @@ export default {
       return formatMoneyForDisplay(this.account.balance);
     }
   },
-  mounted() {
-    EventBus.$on("close-right-sidebar", this.closeRightSidebar);
-  },
   beforeDestroy() {
-    EventBus.$off("close-right-sidebar", this.closeRightSidebar);
     clearTimeout(timeout);
   },
   created() {
@@ -242,10 +245,6 @@ export default {
   watch: {
     account() {
       this.initialize();
-    },
-    sendButtonDisabled() {
-      if (this.rightSidebar !== null && this.sendButtonDisabled === false)
-        this.closeRightSidebar();
     }
   },
   methods: {
@@ -278,6 +277,23 @@ export default {
       );
       this.isCompounding = !this.isCompounding;
     },
+    routeTo(route) {
+      if (this.$route.name === route) {
+        return;
+      }
+      if (route === "account") {
+        this.showInfo();
+      } else {
+        this.hideInfo();
+      }
+      this.$router.push({ name: route, params: { id: this.account.UUID } });
+    },
+    showInfo() {
+      this.showInfoData = true;
+    },
+    hideInfo() {
+      this.showInfoData = false;
+    },
     setRightSidebar(name) {
       switch (name) {
         case "Settings":
@@ -285,24 +301,22 @@ export default {
           break;
       }
     },
-    closeRightSidebar() {
-      this.rightSidebar = null;
-      this.txHash = null;
-    },
-    emptyAccount() {
-      this.rightSidebar = Send;
-    },
-    renewAccount() {
-      this.rightSidebar = RenewAccount;
-    },
-    showLinkHoldingAccount() {
-      this.rightSidebar = LinkHoldingAccount;
+
+    getButtonClassNames(route) {
+      let classNames = ["button"];
+      if (route === this.$route.name) {
+        classNames.push("active");
+      }
+      return classNames;
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
+.holding-account-view {
+  height: 100%;
+}
 .header {
   & > .info {
     width: calc(100% - 26px);
@@ -343,7 +357,7 @@ export default {
     margin-right: 5px;
   }
 
-  & .button {
+  .button {
     display: inline-block;
     padding: 0 20px 0 20px;
     line-height: 32px;
@@ -356,6 +370,10 @@ export default {
     &:hover {
       background-color: #f5f5f5;
     }
+  }
+
+  .active {
+    color: #000000;
   }
 }
 </style>

@@ -44,7 +44,8 @@
     "transactions": "Transactions",
     "unlock": "Unlock",
     "done": "Done",
-    "holding_key": "Holding Key"
+    "holding_key": "Holding Key",
+    "info": "Info"
   },
   "clipboard_field": {
     "copied_to_clipboard": "Copied to clipboard"
