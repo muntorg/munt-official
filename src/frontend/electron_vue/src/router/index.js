@@ -30,6 +30,30 @@ const routes = [
           import(
             /* webpackChunkName: "account-receive" */ "../views/Account/SpendingAccount/Receive.vue"
           )
+      },
+      {
+        path: "link-holding-account",
+        name: "link-holding-account",
+        component: () =>
+          import(
+            /* webpackChunkName: "link-holding-account" */ "../views/Account/HoldingAccount/LinkHoldingAccount.vue"
+          )
+      },
+      {
+        path: "send-holding",
+        name: "send-holding",
+        component: () =>
+          import(
+            /* webpackChunkName: "send-holding" */ "../views/Account/MiningAccount/Send.vue"
+          )
+      },
+      {
+        path: "renew-account",
+        name: "renew-account",
+        component: () =>
+          import(
+            /* webpackChunkName: "renew-account" */ "../views/Account/HoldingAccount/RenewAccount.vue"
+          )
       }
     ]
   },

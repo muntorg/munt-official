@@ -88,7 +88,6 @@ export default {
     }
   },
   mounted() {
-    console.log("<<<<1");
     if (!LibraryController.IsWalletLocked()) {
       this.getWitnessKey();
       this.needsUnlock = false;

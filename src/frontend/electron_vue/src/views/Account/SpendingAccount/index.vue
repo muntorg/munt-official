@@ -264,14 +264,6 @@ export default {
       background-color: #f5f5f5;
     }
 
-    // & .button.active {
-    //   color: #ff0000;
-    // }
-
-    // & .button:not(.active):hover {
-    //   color: var(--primary-color);
-    //   background-color: var(--hover-color);
-    // }
   }
 
   .active {
