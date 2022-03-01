@@ -33,11 +33,11 @@ const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
 } else {
-  app.on("second-instance", (event, commandLine, workingDirectory) => {
+  app.on("second-instance", (_event, _commandLine, _workingDirectory) => {
     focusMainWindow();
   });
   // Protocol handler for osx
-  app.on("open-url", (event, url) => {
+  app.on("open-url", (event, _url) => {
     event.preventDefault();
     focusMainWindow();
   });
