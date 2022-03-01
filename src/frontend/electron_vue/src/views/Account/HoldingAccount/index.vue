@@ -32,7 +32,10 @@
       />
     </app-section>
 
-    <app-section v-if="showInfoData && accountIsFunded" class="holding-information">
+    <app-section
+      v-if="showInfoData && accountIsFunded"
+      class="holding-information"
+    >
       <h4>{{ $t("common.information") }}</h4>
       <div class="flex-row">
         <div>{{ $t("holding_account.status") }}</div>
@@ -86,9 +89,12 @@
         <div>{{ networkWeight }}</div>
       </div>
     </app-section>
-    
-    <app-section v-show="showInfoData && !accountIsFunded" class="holding-empty">
-    {{ $t("holding_account.empty") }}
+
+    <app-section
+      v-show="showInfoData && !accountIsFunded"
+      class="holding-empty"
+    >
+      {{ $t("holding_account.empty") }}
     </app-section>
 
     <div class="holding-account-view">
@@ -184,11 +190,10 @@ export default {
       return earnings;
     },
     accountIsFunded() {
-        if (this.getStatistics("account_status") == "empty")
-            return false;
-        if (this.getStatistics("account_status") == "empty_with_remainder")
-            return false;
-        return true;
+      if (this.getStatistics("account_status") == "empty") return false;
+      if (this.getStatistics("account_status") == "empty_with_remainder")
+        return false;
+      return true;
     },
     lockedFrom() {
       return this.getStatistics("account_initial_lock_creation_block_height");
