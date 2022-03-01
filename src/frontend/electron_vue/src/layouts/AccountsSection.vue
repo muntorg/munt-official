@@ -93,10 +93,7 @@ export default {
       );
     },
     accountClass(accountUUID) {
-      return this.$route.path.indexOf("/account/") === 0 &&
-        accountUUID === this.activeAccount
-        ? "active"
-        : "";
+      return this.isActiveAccount(accountUUID) ? "active" : "";
     },
     displayBalanceForAccount(account) {
       return formatMoneyForDisplay(account.balance);
