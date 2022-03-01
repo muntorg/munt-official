@@ -59,7 +59,8 @@
     "on": "aan",
     "off": "uit",
     "password": "Wachtwoord",
-    "receiving_address": "Ontvangstadres"
+    "receiving_address": "Ontvangstadres",
+    "days": "days"
   },
   "new_wallet": {
     "title": "Welkom bij jouw Florin portemonnee",
@@ -68,8 +69,8 @@
   "holding_account": {
     "compound_earnings": "cumulatieve inkomsten",
     "status": "Status",
-    "coins_locked": "Florin vastgezet",
-    "coins_earned": "Florin verdiend",
+    "coins_locked": "Initial amount locked",
+    "coins_earned": "Amount earned",
     "locked_from_block": "Vastgezet vanaf blok",
     "locked_until_block": "Vastgezet tot blok",
     "lock_duration": "Looptijd",
