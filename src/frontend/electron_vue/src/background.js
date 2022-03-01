@@ -26,6 +26,33 @@ let winMain;
 let winDebug;
 let libUnity = new LibUnity({ walletPath });
 
+// Handle URI links (florin: florin://)
+// If we are launching a second instance then terminate and let the first instance handle it instead
+//NB! This must happen before all other app related code (especially libulden init) as otherwise second process can crash
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on("second-instance", (event, commandLine, workingDirectory) => {
+    focusMainWindow();
+  });
+  // Protocol handler for osx
+  app.on("open-url", (event, url) => {
+    event.preventDefault();
+    focusMainWindow();
+  });
+}
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient("florin", process.execPath, [
+      path.resolve(process.argv[1])
+    ]);
+  }
+} else {
+  app.setAsDefaultProtocolClient("florin");
+}
+// End of URI handling
+
 /* TODO: refactor into function and add option to libgulden to remove existing wallet folder */
 if (isDevelopment) {
   let args = process.argv.slice(2);
@@ -287,5 +314,13 @@ if (isDevelopment) {
     process.on("SIGTERM", () => {
       app.quit();
     });
+  }
+}
+
+function focusMainWindow() {
+  if (winMain) {
+    if (winMain.isMinimized()) winMain.restore();
+    else winMain.show();
+    winMain.focus();
   }
 }
