@@ -30,32 +30,34 @@
       </section>
     </portal>
     <transactions
-      v-if="UIConfig.showSidebar"
+      v-if="UIConfig.showSidebar && showTransactionList"
       :mutations="mutations"
       @tx-hash="onTxHash"
       :tx-hash="txHash"
     />
-    <div v-if="!UIConfig.showSidebar">
+    <div class="spending-account-view">
       <router-view />
     </div>
     <portal to="footer-slot">
       <section class="footer">
-        <span
-          class="button"
-          @click="setRightSidebar('Send')"
-          v-if="showSendButton"
+        <div
+          :class="getButtonClassNames('account')"
+          @click="routeTo('account')"
         >
-          <fa-icon :icon="['fas', 'arrow-circle-up']" />
+          <fa-icon :icon="['far', 'list-ul']" />
+          {{ $t("buttons.transactions") }}
+        </div>
+        <div :class="getButtonClassNames('send')" @click="routeTo('send')">
+          <fa-icon :icon="['fal', 'arrow-from-bottom']" />
           {{ $t("buttons.send") }}
-        </span>
-        <span
-          class="button"
-          @click="setRightSidebar('Receive')"
-          v-if="showReceiveButton"
+        </div>
+        <div
+          :class="getButtonClassNames('receive')"
+          @click="routeTo('receive')"
         >
-          <fa-icon :icon="['fas', 'arrow-circle-down']" />
+          <fa-icon :icon="['fal', 'arrow-to-bottom']" />
           {{ $t("buttons.receive") }}
-        </span>
+        </div>
       </section>
     </portal>
 
@@ -91,6 +93,7 @@ export default {
     return {
       rightSidebar: null,
       txHash: null,
+      showTransactionList: true,
       UIConfig: UIConfig
     };
   },
@@ -193,6 +196,13 @@ export default {
     onTxHash(txHash) {
       this.txHash = txHash;
       this.setRightSidebar("TransactionDetails");
+    },
+    getButtonClassNames(route) {
+      let classNames = ["button"];
+      if (route === this.$route.name) {
+        classNames.push("active");
+      }
+      return classNames;
     }
   }
 };
@@ -202,6 +212,10 @@ export default {
 .spending-account {
   height: 100%;
   padding: 20px 15px 15px 15px;
+}
+
+.spending-account-view {
+  height: 100%;
 }
 
 .header {
@@ -236,7 +250,7 @@ export default {
     margin-right: 5px;
   }
 
-  & .button {
+  .button {
     display: inline-block;
     padding: 0 20px 0 20px;
     line-height: 32px;
@@ -249,6 +263,11 @@ export default {
     &:hover {
       background-color: #f5f5f5;
     }
+
+  }
+
+  .active {
+    color: #000000;
   }
 }
 </style>

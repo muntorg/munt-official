@@ -16,14 +16,6 @@ const routes = [
     component: Account,
     children: [
       {
-        path: "",
-        name: "transactions",
-        component: () =>
-          import(
-            /* webpackChunkName: "account-transactions" */ "../views/Account/SpendingAccount/Transactions.vue"
-          )
-      },
-      {
         path: "send",
         name: "send",
         component: () =>
