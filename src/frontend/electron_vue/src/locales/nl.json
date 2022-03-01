@@ -79,7 +79,8 @@
     "required_earnings_frequency": "Benodigde beloningstijd",
     "expected_earnings_frequency": "Verwachte beloningstijd",
     "account_weight": "Gewicht",
-    "network_weight": "Netwerk gewicht"
+    "network_weight": "Netwerk gewicht",
+    "empty": "This holding account is empty"
   },
   "loader": {
     "shutdown": "Bezig met afsluiten...",

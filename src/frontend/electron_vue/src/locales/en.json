@@ -80,7 +80,8 @@
     "required_earnings_frequency": "Required earnings frequency",
     "expected_earnings_frequency": "Expected earnings frequency",
     "account_weight": "Account weight",
-    "network_weight": "Network weight"
+    "network_weight": "Network weight",
+    "empty": "This holding account is empty"
   },
   "loader": {
     "shutdown": "Shutting down...",

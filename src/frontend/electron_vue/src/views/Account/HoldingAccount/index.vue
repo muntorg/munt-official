@@ -15,7 +15,7 @@
       </section>
     </portal>
 
-    <app-section v-if="showInfoData" class="align-right">
+    <app-section v-if="showInfoData && accountIsFunded" class="align-right">
       {{ $t("holding_account.compound_earnings") }}
       <toggle-button
         :value="isCompounding"
@@ -32,7 +32,7 @@
       />
     </app-section>
 
-    <app-section v-if="showInfoData" class="holding-information">
+    <app-section v-if="showInfoData && accountIsFunded" class="holding-information">
       <h4>{{ $t("common.information") }}</h4>
       <div class="flex-row">
         <div>{{ $t("holding_account.status") }}</div>
@@ -85,6 +85,10 @@
         <div>{{ $t("holding_account.network_weight") }}</div>
         <div>{{ networkWeight }}</div>
       </div>
+    </app-section>
+    
+    <app-section v-show="showInfoData && !accountIsFunded" class="holding-empty">
+    {{ $t("holding_account.empty") }}
     </app-section>
 
     <div class="holding-account-view">
@@ -179,6 +183,13 @@ export default {
       if (earnings < 0) return formatMoneyForDisplay(0);
       return earnings;
     },
+    accountIsFunded() {
+        if (this.getStatistics("account_status") == "empty")
+            return false;
+        if (this.getStatistics("account_status") == "empty_with_remainder")
+            return false;
+        return true;
+    },
     lockedFrom() {
       return this.getStatistics("account_initial_lock_creation_block_height");
     },
@@ -223,7 +234,6 @@ export default {
       }
       return null;
     },
-
     renewButtonVisible() {
       return this.accountStatus === "expired";
     },
