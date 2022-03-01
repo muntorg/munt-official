@@ -3,15 +3,6 @@
     <div class="logo-outer flex-col">
       <div class="logo-inner"></div>
     </div>
-    <div class="version-container">
-      <span>Gulden LITE</span>
-      <span class="divider">|</span>
-      <span>Unity: {{ unityVersion }}</span>
-      <span class="divider">|</span>
-      <span>Wallet: {{ walletVersion }}</span>
-      <span class="divider">|</span>
-      <span>Electron: {{ electronVersion }}</span>
-    </div>
     <div class="info">
       <p v-show="isShuttingDown">
         {{ $t("loader.shutdown") }}
@@ -20,6 +11,15 @@
         <div class="sync-desc">{{ $t("loader.synchronizing") }}</div>
         <progress ref="progress" max="130" value="0"></progress>
       </div>
+    </div>
+    <div class="version-container">
+      <span>Gulden LITE</span>
+      <span class="divider">|</span>
+      <span>Unity: {{ unityVersion }}</span>
+      <span class="divider">|</span>
+      <span>Wallet: {{ walletVersion }}</span>
+      <span class="divider">|</span>
+      <span>Electron: {{ electronVersion }}</span>
     </div>
   </div>
 </template>
