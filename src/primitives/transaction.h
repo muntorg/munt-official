@@ -1162,7 +1162,7 @@ struct CWitnessBundles;
 typedef std::shared_ptr<const CWitnessBundles> CWitnessBundlesRef;
 
 //fixme: regtest; when we update all tests to segsig in future we can remove this
-#define CURRENT_TX_VERSION_POW2 (IsArgSet("-regtestlegacy")) ? 1 : CTransaction::SEGSIG_ACTIVATION_VERSION
+#define CURRENT_TX_VERSION_POW2 (Params().IsRegtestLegacy()) ? 1 : CTransaction::SEGSIG_ACTIVATION_VERSION
 
 /** The basic transaction that is broadcasted on the network and contained in
  * blocks.  A transaction can contain multiple inputs and outputs.

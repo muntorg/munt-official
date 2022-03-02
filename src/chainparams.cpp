@@ -63,7 +63,7 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
     return CreateGenesisBlock(ParseHex("4f6e206a616e756172692031737420746865204475746368206c6f73742074686572652062656c6f7665642047756c64656e"), genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
 
-CChainParams::CChainParams(): fIsOfficialTestnetV1(false) {}
+CChainParams::CChainParams(): fIsOfficialTestnetV1(false), fIsTestnet(false), fIsRegtestLegacy(false), fIsRegtest(false) {}
 
 void CChainParams::UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout)
 {
@@ -325,6 +325,8 @@ void GenerateGenesisBlock(CBlock& genesis, std::string seedKey, CKey& genesisWit
 class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
+        fIsTestnet = true;
+
         strNetworkID = "test";
         consensus.BIP34Height = 21111;
         consensus.BIP65Height = 581885; // 00000000007f6655f22f98e72ed80d8b06dc761d5da09df0fa1dc4be4f861eb6
@@ -521,6 +523,7 @@ public:
 class CRegTestLegacyParams : public CChainParams {
 public:
     CRegTestLegacyParams() {
+        fIsRegtestLegacy = true;
         strNetworkID = "regtestlegacy";
         consensus.BIP34Height = 100000000; // BIP34 has not activated on regtest (far in the future so block v1 are not rejected in tests)
         consensus.BIP65Height = 1351; // BIP65 activated on regtest (Used in rpc activation tests)
@@ -602,6 +605,7 @@ public:
 class CRegTestParams : public CChainParams {
 public:
     CRegTestParams() {
+        fIsRegtest = true;
         strNetworkID = "regtest";
         consensus.BIP34Height = 0;
         consensus.BIP65Height = 1351; // BIP65 activated on regtest (Used in rpc activation tests)

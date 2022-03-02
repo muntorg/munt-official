@@ -29,7 +29,6 @@
         </div>
       </section>
     </portal>
-
     <transactions
       v-if="UIConfig.showSidebar && isAccountView"
       :mutations="mutations"

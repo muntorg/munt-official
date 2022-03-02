@@ -1541,7 +1541,7 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
         if (!CheckDiskSpace(48 * 2 * 2 * pcoinsTip->GetCacheSize()))
             return state.Error("out of disk space");
         // Flush the chainstate (which may refer to block index entries).
-        if (!pcoinsTip->Flush(chainActive.Tip() ? (GetAdjustedTime() - chainActive.Tip()->GetBlockTime() > (12 * 60 * 60) ): false))
+        if (!pcoinsTip->Flush())
             return AbortNode(state, "Failed to write to coin database");
         nLastFlush = nNow;
     }
@@ -1674,7 +1674,7 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
         CCoinsViewCache view(pcoinsTip);
         if (DisconnectBlock(block, pindexDelete, view) != DISCONNECT_OK)
             return error("DisconnectTip(): DisconnectBlock %s failed", pindexDelete->GetBlockHashPoW2().ToString());
-        bool flushed = view.Flush(chainActive.Tip() ? (GetAdjustedTime() - chainActive.Tip()->GetBlockTime() > (12 * 60 * 60)) : false);
+        bool flushed = view.Flush();
         assert(flushed);
     }
     LogPrint(BCLog::BENCH, "- Disconnect block: %.2fms\n", (GetTimeMicros() - nStart) * 0.001);
@@ -1824,7 +1824,7 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
         }
         nTime3 = GetTimeMicros(); nTimeConnectTotal += nTime3 - nTime2;
         LogPrint(BCLog::BENCH, "  - Connect total: %.2fms [%.2fs]\n", (nTime3 - nTime2) * 0.001, nTimeConnectTotal * 0.000001);
-        bool flushed = view.Flush(chainActive.Tip() ? (GetAdjustedTime() - chainActive.Tip()->GetBlockTime() > (12 * 60 * 60)) : false);
+        bool flushed = view.Flush();
         assert(flushed);
     }
     int64_t nTime4 = GetTimeMicros(); nTimeFlush += nTime4 - nTime3;
@@ -2720,7 +2720,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
 {
     assert(pindexPrev != NULL);
     
-    bool fTestNet = IsArgSet("-testnet");
+    bool fTestNet = Params().IsTestnet();
 
     //const int nHeight = pindexPrev->nHeight + 1;
     // Check proof of work
@@ -3100,8 +3100,8 @@ static bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CValidation
     // (but if it does not build on our best tip, let the SendMessages loop relay it)
     //fixme: (PHASE5) (HIGH) This will probably increase forks slightly - but we need to keep pushing tip contenders out in case of stalled witness
     // Maybe we could 'delay' such candidates slightly, store them in a cache and then only relay after some time has passed with tip not advancing.
-    static bool fRegTest = GetBoolArg("-regtest", false);
-    static bool fRegTestLegacy = GetBoolArg("-regtestlegacy", false);
+    static bool fRegTest = Params().IsRegtest();
+    static bool fRegTestLegacy = Params().IsRegtestLegacy();
     if (((!IsInitialBlockDownload())||fRegTest||fRegTestLegacy) && (chainActive.Tip() == pindex->pprev || pindex->nHeight >= chainActive.Tip()->nHeight))
         GetMainSignals().NewPoWValidBlock(pindex, pblock);
 
@@ -3636,7 +3636,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams)
     // If we are the ancestor of a checkpoint then reset the failiure flags and try again
     int numReset = 0;
     int64_t lastCheckpointHeight = Checkpoints::LastCheckPointHeight();
-    bool fTestNet = IsArgSet("-testnet");
+    bool fTestNet = Params().IsTestnet();
     if (chainActive.Tip()->nHeight < lastCheckpointHeight)
     {
         for (auto it = mapBlockIndex.begin(); it != mapBlockIndex.end(); ++it)

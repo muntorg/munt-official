@@ -342,6 +342,7 @@ void terminateUnityFrontend()
 #include <boost/chrono/thread_clock.hpp>
 
 static float lastProgress=0;
+bool syncDoneFired = false;
 void handlePostInitMain()
 {
     //fixme: (SIGMA) (PHASE4) Remove this once we have witness-header-sync
@@ -390,22 +391,23 @@ void handlePostInitMain()
         signalHandler->notifyCoreReady();
     }
 
-    
+
     // unified progress notification
     if (!GetBoolArg("-spv", DEFAULT_SPV))
     {
         static bool haveFinishedHeaderSync=false;
         static int totalHeaderCount=0;
         static int startHeight = chainActive.Tip() ? chainActive.Tip()->nHeight : 0;
-        
+
         // If tip is relatively recent set progress to "completed" to begin with
         if (chainActive.Tip() && ((GetTime() - chainActive.Tip()->nTime) < 3600))
         {
             lastProgress = 1.0;
+            syncDoneFired = true;
             signalHandler->notifySyncDone();
         }
-        
-        
+
+
         // Weight a full header sync as 20%, blocks as rest
         uiInterface.NotifyHeaderProgress.connect([=](int currentCount, int probableHeight, int headerTipHeight, int64_t headerTipTime)
         {
@@ -422,6 +424,7 @@ void handlePostInitMain()
                     signalHandler->notifyUnifiedProgress(progress);
                     if (progress == 1)
                     {
+                        syncDoneFired = true;
                         signalHandler->notifySyncDone();
                     }
                     lastProgress = progress;
@@ -435,10 +438,10 @@ void handlePostInitMain()
                 float progress = pNewTip->nHeight==totalHeaderCount?1:((0.20+((((float)pNewTip->nHeight-startHeight)/((float)totalHeaderCount-startHeight))*0.80)));
                 if (lastProgress != 1 && (progress-lastProgress > 0.02 || progress == 1))
                 {
-                    lastProgress = progress;
                     signalHandler->notifyUnifiedProgress(progress);
                     if (progress == 1)
                     {
+                        syncDoneFired = true;
                         signalHandler->notifySyncDone();
                     }
                     lastProgress = progress;
@@ -455,12 +458,13 @@ void handlePostInitMain()
                 signalHandler->notifyUnifiedProgress(progress);
                 if (progress == 1)
                 {
+                    syncDoneFired = true;
                     signalHandler->notifySyncDone();
                 }
                 lastProgress = progress;
             }
         });
-        
+
         // monitoring listeners notifications
         uiInterface.NotifyHeaderProgress.connect([=](int, int, int, int64_t)
         {
@@ -505,7 +509,7 @@ void handlePostInitMain()
         {
             // Don't fire notifyNewMutation or notifyUpdatedTransaction events while in initial sync
             // We only start firing them after 'notifySyncDone' has fired.
-            if (lastProgress < 1)
+            if (syncDoneFired)
             {
                 LOCK2(cs_main, pwallet->cs_wallet);
                 if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
@@ -531,7 +535,7 @@ void handlePostInitMain()
         {
             // Don't fire notifyNewMutation or notifyUpdatedTransaction events while in initial sync
             // We only start firing them after 'notifySyncDone' has fired.
-            if (lastProgress < 1)
+            if (syncDoneFired)
             {
                 LOCK2(cs_main, pwallet->cs_wallet);
                 if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
@@ -945,26 +949,34 @@ void InitAppSpecificConfigParamaters()
         // Turn SPV mode on
         SoftSetArg("-fullsync", "0");
         SoftSetArg("-spv", "1");
-            
+
         #ifdef DJINNI_NODEJS
-        SoftSetArg("-accountpool", "3");
-        SoftSetArg("-accountpoolmobi", "1");
-        SoftSetArg("-accountpoolwitness", "1");
-        SoftSetArg("-keypool", "10");
+            #ifdef SPV_MULTI_ACCOUNT
+                SoftSetArg("-accountpool", "3");
+                SoftSetArg("-accountpoolmobi", "1");
+                SoftSetArg("-accountpoolwitness", "1");
+                SoftSetArg("-accountpoolmining", "1");
+            #else
+                SoftSetArg("-accountpool", "0");
+                SoftSetArg("-accountpoolmobi", "0");
+                SoftSetArg("-accountpoolwitness", "0");
+                SoftSetArg("-accountpoolmining", "0");
+            #endif
+            SoftSetArg("-keypool", "10");
         #else
-        // Minimise lookahead size for performance reasons
-        SoftSetArg("-accountpool", "1");
+            // Minimise lookahead size for performance reasons
+            SoftSetArg("-accountpool", "1");
 
-        // Minimise background threads and memory consumption
-        SoftSetArg("-par", "-100");
-        SoftSetArg("-maxsigcachesize", "0");
-        SoftSetArg("-dbcache", "4");
-        SoftSetArg("-maxmempool", "5");
-        SoftSetArg("-maxconnections", "8");
+            // Minimise background threads and memory consumption
+            SoftSetArg("-par", "-100");
+            SoftSetArg("-maxsigcachesize", "0");
+            SoftSetArg("-dbcache", "4");
+            SoftSetArg("-maxmempool", "5");
+            SoftSetArg("-maxconnections", "8");
 
-        //fixme: (FUT) (UNITY) Reverse headers
-        // Temporarily disable reverse headers for mobile until memory requirements can be reduced.
-        SoftSetArg("-reverseheaders", "false");
+            //fixme: (FUT) (UNITY) Reverse headers
+            // Temporarily disable reverse headers for mobile until memory requirements can be reduced.
+            SoftSetArg("-reverseheaders", "false");
         #endif
     }
     else

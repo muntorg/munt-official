@@ -1,5 +1,5 @@
 <template>
-  <div v-if="UIConfig.showSidebar">
+  <div class="settings-main" v-if="UIConfig.showSidebar">
     <portal to="header-slot">
       <main-header :title="$t('settings.header')" />
     </portal>
@@ -21,3 +21,8 @@ export default {
   }
 };
 </script>
+<style>
+.settings-main {
+  height: 100%;
+}
+</style>

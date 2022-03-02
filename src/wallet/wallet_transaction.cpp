@@ -107,15 +107,18 @@ bool CWallet::SignTransaction(CAccount* fromAccount, CMutableTransaction &tx, Si
         if (accountsToTry.empty())
             return false;
         
+        std::string strAccountsToTry;
         std::vector<CKeyStore*> keystores;
         keystores.reserve(accountsToTry.size());
         for (auto account : accountsToTry)
         {
+            strAccountsToTry += account->getLabel() + " ";
             keystores.push_back(account);
         }
         
         if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, keystores, &txNewConst, nIn, amount, SIGHASH_ALL), *prevout, sigdata, type, txNewConst.nVersion))
         {
+            LogPrintf("CWallet::SignTransaction failed to produce signature [signing accounts: %s] [transaction: %s]\n", strAccountsToTry.c_str(), txNewConst.ToString());
             return false;
         }
         UpdateTransaction(tx, nIn, sigdata);
@@ -911,9 +914,12 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
 
                 if (!ProduceSignature(TransactionSignatureCreator(signingKeyID, accountsToTry, &txNewConst, nIn, coin.txout.nValue, SIGHASH_ALL),  coin.txout, sigdata, Spend, txNewConst.nVersion))
                 {
+                    LogPrintf("CWallet::AddFeeForTransaction ProduceSignature call failed\n");
                     strFailReason = _("Signing transaction failed");
                     return false;
-                } else {
+                }
+                else
+                {
                     UpdateTransaction(txNew, nIn, sigdata);
                 }
 
@@ -1048,12 +1054,12 @@ bool CWallet::PrepareRenewWitnessAccountTransaction(CAccount* funderAccount, CAc
         std::string sFailReason;
         if (!AddFeeForTransaction(funderAccount, tx, changeReserveKey, nFeeOut, true, sFailReason, coinControl))
         {
-            strError = "Unable to add fee";
+            strError = "Unable to add fee: " + sFailReason;
             return false;
         }
         return true;
     }
-    strError = "Unable to add fee";
+    strError = "Unable to locate any expired inputs for account";
     return false;
 }
 
