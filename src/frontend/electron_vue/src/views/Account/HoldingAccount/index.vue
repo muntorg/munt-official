@@ -15,7 +15,7 @@
       </section>
     </portal>
 
-    <app-section v-if="showInfoData && accountIsFunded" class="align-right">
+    <app-section v-if="isAccountView && accountIsFunded" class="align-right">
       {{ $t("holding_account.compound_earnings") }}
       <toggle-button
         :value="isCompounding"
@@ -33,7 +33,7 @@
     </app-section>
 
     <app-section
-      v-if="showInfoData && accountIsFunded"
+      v-if="isAccountView && accountIsFunded"
       class="holding-information"
     >
       <h4>{{ $t("common.information") }}</h4>
@@ -91,15 +91,13 @@
     </app-section>
 
     <app-section
-      v-show="showInfoData && !accountIsFunded"
+      v-show="isAccountView && !accountIsFunded"
       class="holding-empty"
     >
       {{ $t("holding_account.empty") }}
     </app-section>
 
-    <div class="holding-account-view">
-      <router-view />
-    </div>
+    <router-view />
 
     <portal to="footer-slot">
       <section class="footer">
@@ -167,12 +165,14 @@ export default {
       rightSectionComponent: null,
       statistics: null,
       isCompounding: false,
-      rightSidebar: null,
-      showInfoData: true
+      rightSidebar: null
     };
   },
   computed: {
     ...mapState("app", ["rate", "activityIndicator"]),
+    isAccountView() {
+      return this.$route.name === "account";
+    },
     accountStatus() {
       return this.getStatistics("account_status");
     },
@@ -269,8 +269,6 @@ export default {
       this.isCompounding = WitnessController.IsAccountCompounding(
         this.account.UUID
       );
-      
-      this.showInfoData = true;
     },
     getStatistics(which) {
       return this.statistics[which] || null;
@@ -298,18 +296,8 @@ export default {
       if (this.$route.name === route) {
         return;
       }
-      if (route === "account") {
-        this.showInfo();
-      } else {
-        this.hideInfo();
-      }
+
       this.$router.push({ name: route, params: { id: this.account.UUID } });
-    },
-    showInfo() {
-      this.showInfoData = true;
-    },
-    hideInfo() {
-      this.showInfoData = false;
     },
     setRightSidebar(name) {
       switch (name) {
@@ -331,9 +319,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.holding-account-view {
-  height: 100%;
-}
 .header {
   & > .info {
     width: calc(100% - 26px);

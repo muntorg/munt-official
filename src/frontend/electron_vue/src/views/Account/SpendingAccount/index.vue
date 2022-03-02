@@ -29,15 +29,16 @@
         </div>
       </section>
     </portal>
+
     <transactions
-      v-if="UIConfig.showSidebar && showTransactionList"
+      v-if="UIConfig.showSidebar && isAccountView"
       :mutations="mutations"
       @tx-hash="onTxHash"
       :tx-hash="txHash"
     />
-    <div class="spending-account-view" v-if="!showTransactionList">
-      <router-view />
-    </div>
+
+    <router-view />
+
     <portal to="footer-slot">
       <section class="footer">
         <div
@@ -93,7 +94,6 @@ export default {
     return {
       rightSidebar: null,
       txHash: null,
-      showTransactionList: true,
       UIConfig: UIConfig
     };
   },
@@ -113,7 +113,9 @@ export default {
     lockIcon() {
       return this.walletPassword ? "unlock" : "lock";
     },
-
+    isAccountView() {
+      return this.$route.name === "account";
+    },
     showSendButton() {
       return !this.rightSidebar || this.rightSidebar !== Send;
     },
@@ -138,31 +140,12 @@ export default {
       return formatMoneyForDisplay(this.account.balance);
     }
   },
-  watch: {
-    account() {
-      this.initialize();
-    }
-  },
   methods: {
-    initialize() {
-      this.showTransactionList = true;
-    },
     routeTo(route) {
       if (this.$route.name === route) {
         return;
       }
-      if (route === "account") {
-        this.showTransactions();
-      } else {
-        this.hideTransactions();
-      }
       this.$router.push({ name: route, params: { id: this.account.UUID } });
-    },
-    showTransactions() {
-      this.showTransactionList = true;
-    },
-    hideTransactions() {
-      this.showTransactionList = false;
     },
     setRightSidebar(name) {
       switch (name) {
@@ -220,10 +203,6 @@ export default {
 .spending-account {
   height: 100%;
   padding: 20px 15px 15px 15px;
-}
-
-.spending-account-view {
-  height: 100%;
 }
 
 .header {
