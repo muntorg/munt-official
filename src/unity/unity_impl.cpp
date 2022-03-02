@@ -390,22 +390,22 @@ void handlePostInitMain()
         signalHandler->notifyCoreReady();
     }
 
-    
+
     // unified progress notification
     if (!GetBoolArg("-spv", DEFAULT_SPV))
     {
         static bool haveFinishedHeaderSync=false;
         static int totalHeaderCount=0;
         static int startHeight = chainActive.Tip() ? chainActive.Tip()->nHeight : 0;
-        
+
         // If tip is relatively recent set progress to "completed" to begin with
         if (chainActive.Tip() && ((GetTime() - chainActive.Tip()->nTime) < 3600))
         {
             lastProgress = 1.0;
             signalHandler->notifySyncDone();
         }
-        
-        
+
+
         // Weight a full header sync as 20%, blocks as rest
         uiInterface.NotifyHeaderProgress.connect([=](int currentCount, int probableHeight, int headerTipHeight, int64_t headerTipTime)
         {
@@ -435,7 +435,6 @@ void handlePostInitMain()
                 float progress = pNewTip->nHeight==totalHeaderCount?1:((0.20+((((float)pNewTip->nHeight-startHeight)/((float)totalHeaderCount-startHeight))*0.80)));
                 if (lastProgress != 1 && (progress-lastProgress > 0.02 || progress == 1))
                 {
-                    lastProgress = progress;
                     signalHandler->notifyUnifiedProgress(progress);
                     if (progress == 1)
                     {
@@ -460,7 +459,7 @@ void handlePostInitMain()
                 lastProgress = progress;
             }
         });
-        
+
         // monitoring listeners notifications
         uiInterface.NotifyHeaderProgress.connect([=](int, int, int, int64_t)
         {
@@ -505,7 +504,7 @@ void handlePostInitMain()
         {
             // Don't fire notifyNewMutation or notifyUpdatedTransaction events while in initial sync
             // We only start firing them after 'notifySyncDone' has fired.
-            if (lastProgress < 1)
+            if (lastProgress >= 1)
             {
                 LOCK2(cs_main, pwallet->cs_wallet);
                 if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
@@ -531,7 +530,7 @@ void handlePostInitMain()
         {
             // Don't fire notifyNewMutation or notifyUpdatedTransaction events while in initial sync
             // We only start firing them after 'notifySyncDone' has fired.
-            if (lastProgress < 1)
+            if (lastProgress >= 1)
             {
                 LOCK2(cs_main, pwallet->cs_wallet);
                 if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
