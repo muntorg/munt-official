@@ -1,6 +1,6 @@
 {
   "accounts_section": {
-    "accounts": "Rekeningen",
+    "accounts": "Accounts",
     "categories": {
       "spending": "Spending",
       "holding": "Holding"
@@ -13,13 +13,13 @@
   "add_holding_account": {
     "daily": "per dag",
     "estimated_earnings": "Geschatte opbrengst",
-    "funding_account": "Financieringsrekening",
+    "funding_account": "Financieringsaccount",
     "lock_for": "Vastzetten voor",
-    "overall": "totaal",
-    "title": "Holding rekening aanmaken"
+    "overall": "Totaal",
+    "title": "Holding account aanmaken"
   },
   "add_spending_account": {
-    "title": "Betaalrekening aanmaken"
+    "title": "Betaalaccount aanmaken"
   },
   "buttons": {
     "back": "Terug",
@@ -29,7 +29,7 @@
     "clear": "Wissen",
     "confirm": "Bevestig",
     "change_password": "Verander wachtwoord",
-    "create_mining_account": "Mining rekening aanmaken",
+    "create_mining_account": "Mining account aanmaken",
     "finish": "Klaar",
     "lock": "Vastzetten",
     "next": "Volgende",
@@ -44,49 +44,49 @@
     "transactions": "Transacties",
     "unlock": "Ontgrendelen",
     "done": "Klaar",
-    "holding_key": "Holding Key",
+    "holding_key": "Holding key",
     "info": "Info"
   },
   "clipboard_field": {
     "copied_to_clipboard": "Gekopieërd naar klembord"
   },
   "common": {
-    "account_name": "Rekeningnaam",
+    "account_name": "Accountnaam",
     "amount": "Bedrag",
     "enter_your_password": "Voer jouw wachtwoord in",
     "important": "Belangrijk",
     "information": "Informatie",
     "months": "Maanden",
-    "on": "aan",
-    "off": "uit",
+    "on": "Aan",
+    "off": "Uit",
     "password": "Wachtwoord",
     "receiving_address": "Ontvangstadres",
-    "days": "days"
+    "days": "Dagen"
   },
   "new_wallet": {
-    "title": "Welkom bij jouw Florin portemonnee",
-    "information": "Deze portemonnee staat alleen op jouw apparaat.<br/>Geef nooit iemand anders toegang tot jouw portemonnee.<br/>Bewaar de herstelzin die je te zien krijgt tijdens installatie op een veilige plek.<br/>Herstelzin kwijt of iemand toegang tot je herstelzin = Florin weg."
+    "title": "Welkom bij jouw Florin wallet",
+    "information": "Deze wallet staat alleen op jouw apparaat.<br/>Geef nooit iemand anders toegang tot jouw wallet.<br/>Bewaar de herstelzin die je te zien krijgt tijdens installatie op een veilige plek.<br/>Herstelzin kwijt of iemand toegang tot je herstelzin = Florin weg."
   },
   "holding_account": {
-    "compound_earnings": "cumulatieve inkomsten",
+    "compound_earnings": "Cumulatieve inkomsten",
     "status": "Status",
-    "parts": "Parts",
-    "coins_locked": "Initial amount locked",
-    "coins_earned": "Amount earned",
+    "parts": "Delen",
+    "coins_locked": "Primair vastgezette hoeveelheid",
+    "coins_earned": "Hoeveelheid verdiend",
     "locked_from_block": "Vastgezet vanaf blok",
     "locked_until_block": "Vastgezet tot blok",
     "lock_duration": "Looptijd",
-    "blocks": "blokken",
+    "blocks": "Blokken",
     "remaining_lock_period": "Resterende looptijd",
     "required_earnings_frequency": "Benodigde beloningstijd",
     "expected_earnings_frequency": "Verwachte beloningstijd",
     "account_weight": "Gewicht",
     "network_weight": "Netwerk gewicht",
-    "empty": "This holding account is empty"
+    "empty": "Dit holding account is leeg"
   },
   "loader": {
     "shutdown": "Bezig met afsluiten...",
-    "synchronizing": "Jouw portemonnee is aan het synchroniseren met het Florin netwerk. Dit kan enige tijd duren."
+    "synchronizing": "Jouw wallet is aan het synchroniseren met het Florin netwerk. Dit kan enige tijd duren."
   },
   "mining": {
     "arena_setup_time": "Arena setup tijd",
@@ -100,7 +100,7 @@
     "thread": "thread | threads"
   },
   "password_dialog": {
-    "unlock_wallet": "Ontgrendel portemonnee"
+    "unlock_wallet": "Ontgrendel wallet"
   },
   "settings": {
     "header": "Instellingen",
@@ -113,23 +113,23 @@
   },
   "setup": {
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
-    "choose_password_information": "Een wachtwoord is vereist voor het ontgrendelen van jouw portemonnee. Kies een sterk wachtwoord, zodat niemand anders toegang kan krijgen tot jouw Florin.",
-    "create_new": "Ik wil een nieuwe portemonnee starten",
-    "enter_existing_recovery_phrase": "Voer jouw herstelzin in om jouw portemonnee te herstellen.",
+    "choose_password_information": "Een wachtwoord is vereist voor het ontgrendelen van jouw wallet. Kies een sterk wachtwoord, zodat niemand anders toegang kan krijgen tot jouw Florin.",
+    "create_new": "Ik wil een nieuwe wallet starten",
+    "enter_existing_recovery_phrase": "Voer jouw herstelzin in om jouw wallet te herstellen.",
     "enter_recovery_phrase": "Voer herstelzin in",
     "invalid_recovery_phrase": {
       "title": "Ongeldige herstelzin",
       "message": "Deze combinatie vormt geen geldige herstelzin. Corrigeer de fout(en) en probeer het nogmaals."
     },
-    "recover_existing": "Ik wil mijn portemonnee herstellen met mijn herstelzin",
+    "recover_existing": "Ik wil mijn wallet herstellen met mijn herstelzin",
     "repeat_password": "Herhaal wachtwoord",
     "repeat_your_recovery_phrase": "Voer jouw herstelzin in om te controleren dat je deze goed hebt opgeschreven.",
-    "setup_your_wallet": "Installeer jouw Florin portemonnee",
+    "setup_your_wallet": "Installeer jouw Florin wallet",
     "this_is_your_recovery_phrase": "Dit is jouw herstelzin. Bewaar de herstelzin op een veilige plek. Zin kwijt of iemand toegang tot je zin = Florin weg."
   },
   "setup_mining": {
     "title": "Mining instellen",
-    "information": "Voordat je kunt beginnen met minen van Florin moet een mining rekening worden aangemaakt. Voer je wachtwoord in om je portemonnee te ontgrendelen en een mining rekening aan te maken."
+    "information": "Voordat je kunt beginnen met minen van Florin moet een mining account worden aangemaakt. Voer je wachtwoord in om je wallet te ontgrendelen en een mining account aan te maken."
   },
   "transaction_details": {
     "title": {
@@ -156,9 +156,9 @@
     "funding_account": "Betaal vergoeding van account"
   },
   "link_holding_account": {
-    "title": "Your holding key",
-    "information": "This key can be linked with a cloud holding service or with a secondary wallet on another machine to allow the service/wallet to perform holding actions on your behalf.",
-    "warn": "This key can't access locked funds, but keep it safe/secure, it can be used to take your rewards.\nDo not view this key in a public setting where your screen might be viewed or recorded.",
-    "no_funds": "Holding account must be funded with locked funds before it is possible to link it with other wallets."
+    "title": "Jouw holding key",
+    "information": "De holding key kan worden gekoppeld aan een cloud service of een tweede wallet op een ander apparaat waarmee het deze service/wallet toe wordt gestaan namens jou holding acties uit te voeren.",
+    "warn": "De holding geeft geen toegang tot jouw vastgezette Florin, maar bewaar deze zorgvuldig aangezien het wel toegang geeft tot jouw ontvangen beloningen.\nLaat de holding key niet zien in het openbaar waar meegekeken kan worden op uw scherm of waar mogelijk opnames van het scherm kunnen worden gemaakt.",
+    "no_funds": "Holding account moet worden gevuld met vastgezette Florin voordat het mogelijk is om deze te koppelen met andere wallets."
   }
 }
