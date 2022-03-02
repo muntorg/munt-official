@@ -29,7 +29,7 @@
         @keydown="onPasswordKeydown"
       />
     </div>
-    <button @click="trySend" :disabled="disableSendButton">
+    <button @click="showConfirmation" :disabled="disableSendButton">
       {{ $t("buttons.send") }}
     </button>
   </div>
@@ -42,6 +42,7 @@ import {
   LibraryController,
   AccountsController
 } from "../../../unity/Controllers";
+import ConfirmTransactionDialog from "../SpendingAccount/ConfirmTransactionDialog";
 import EventBus from "../../../EventBus";
 
 export default {
@@ -90,11 +91,19 @@ export default {
     onPasswordKeydown() {
       this.isPasswordInvalid = false;
     },
-    trySend() {
+    showConfirmation() {
       /*
        todo:
+        - replace amount input by custom amount input (this one is too basic)
         - improve notifications / messages on success and error
        */
+
+      // validate amount
+      let accountBalance = AccountsController.GetActiveAccountBalance();
+      let amountInvalid = (accountBalance.availableExcludingLocked < displayToMonetary(this.amount))
+      // validate address
+      let address = AccountsController.GetReceiveAddress(this.fundingAccount.UUID);
+      let isAddressInvalid = !LibraryController.IsValidNativeAddress(this.address);
 
       // wallet needs to be unlocked to make a payment
       if (LibraryController.UnlockWallet(this.computedPassword) === false) {
@@ -103,26 +112,16 @@ export default {
 
       if (this.hasErrors) return;
 
-      // create payment request
-      var request = {
-        valid: true,
-        address: AccountsController.GetReceiveAddress(this.fundingAccount.UUID),
-        label: "",
-        desc: "",
-        amount: displayToMonetary(this.amount)
-      };
-
-      // try to make the payment
-      let result = LibraryController.PerformPaymentToRecipient(request, true);
-      if (result === 0) {
-        // payment succeeded
-        EventBus.$emit("close-right-sidebar");
-      } else {
-        // payment failed
-        console.log("someting went wrong, but don't exactly know what.");
-      }
-      // lock the wallet again
-      LibraryController.LockWallet();
+      EventBus.$emit("show-dialog", {
+        title: this.$t("send_coins.confirm_transaction"),
+        component: ConfirmTransactionDialog,
+        componentProps: {
+          amount: this.amount,
+          address: address,
+          password: this.password
+        },
+        showButtons: false
+      });
     }
   }
 };
