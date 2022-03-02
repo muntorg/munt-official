@@ -158,7 +158,9 @@ export default {
       );
     },
     maxAmountForAccount() {
-      return this.fundingAccount ? Math.floor(this.fundingAccount.balance) : 0;
+      return this.fundingAccount
+        ? Math.floor(this.fundingAccount.balance / 100000000) // make sure balance is divided by 100000000
+        : 0;
     },
     lockTimeInBlocks() {
       return (
@@ -207,7 +209,7 @@ export default {
       this.isPasswordInvalid = false;
     },
     formatMoneyForDisplay(amount) {
-      formatMoneyForDisplay.formatMoneyForDisplay(amount);
+      return formatMoneyForDisplay(amount);
     },
     nextStep() {
       this.current++;
