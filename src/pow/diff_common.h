@@ -19,7 +19,7 @@
 #define BIGINT_MULTIPLY(x, y) x * y
 #define BIGINT_DIVIDE(x, y) x / y
 
-#define DIFF_SWITCHOVER(TEST, MAIN) (IsArgSet("-testnet") ? TEST :  MAIN)
+#define DIFF_SWITCHOVER(TEST, MAIN) (Params().IsTestnet() ? TEST :  MAIN)
 extern unsigned int GetNextWorkRequired(const CBlockIndex* indexLast, const CBlockHeader* block, unsigned int nPowTargetSpacing, unsigned int nPowLimit);
 
 #endif

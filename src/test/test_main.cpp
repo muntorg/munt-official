@@ -5,7 +5,7 @@
 
 #include "appname.h"
 
-#define BOOST_TEST_MODULE GLOBAL_APPNAME unit tests
+#define BOOST_TEST_MODULE (GLOBAL_APPNAME " unit tests")
 
 #include "net.h"
 

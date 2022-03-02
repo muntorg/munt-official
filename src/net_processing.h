@@ -31,7 +31,7 @@ static const unsigned int DEFAULT_BLOCK_RECONSTRUCTION_EXTRA_TXN = 100;
  * it which might take considerable time on some platforms. The timeout should be set again as soon as a new header
  * request message is pushed out.
  */
-#define HEADERS_DOWNLOAD_RESPONSE_TIMEOUT (IsArgSet("-regtestlegacy") ? 700 * 1000000 : 7 * 1000000) // 7 seconds
+#define HEADERS_DOWNLOAD_RESPONSE_TIMEOUT (Params().IsRegtestLegacy() ? 700 * 1000000 : 7 * 1000000) // 7 seconds
 
 /** When most recent header is newer, then block download is allowed when using SPV
  * (and automatic block requests is enabled). */

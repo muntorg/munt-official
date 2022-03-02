@@ -949,26 +949,34 @@ void InitAppSpecificConfigParamaters()
         // Turn SPV mode on
         SoftSetArg("-fullsync", "0");
         SoftSetArg("-spv", "1");
-            
+
         #ifdef DJINNI_NODEJS
-        SoftSetArg("-accountpool", "3");
-        SoftSetArg("-accountpoolmobi", "1");
-        SoftSetArg("-accountpoolwitness", "1");
-        SoftSetArg("-keypool", "10");
+            #ifdef SPV_MULTI_ACCOUNT
+                SoftSetArg("-accountpool", "3");
+                SoftSetArg("-accountpoolmobi", "1");
+                SoftSetArg("-accountpoolwitness", "1");
+                SoftSetArg("-accountpoolmining", "1");
+            #else
+                SoftSetArg("-accountpool", "0");
+                SoftSetArg("-accountpoolmobi", "0");
+                SoftSetArg("-accountpoolwitness", "0");
+                SoftSetArg("-accountpoolmining", "0");
+            #endif
+            SoftSetArg("-keypool", "10");
         #else
-        // Minimise lookahead size for performance reasons
-        SoftSetArg("-accountpool", "1");
+            // Minimise lookahead size for performance reasons
+            SoftSetArg("-accountpool", "1");
 
-        // Minimise background threads and memory consumption
-        SoftSetArg("-par", "-100");
-        SoftSetArg("-maxsigcachesize", "0");
-        SoftSetArg("-dbcache", "4");
-        SoftSetArg("-maxmempool", "5");
-        SoftSetArg("-maxconnections", "8");
+            // Minimise background threads and memory consumption
+            SoftSetArg("-par", "-100");
+            SoftSetArg("-maxsigcachesize", "0");
+            SoftSetArg("-dbcache", "4");
+            SoftSetArg("-maxmempool", "5");
+            SoftSetArg("-maxconnections", "8");
 
-        //fixme: (FUT) (UNITY) Reverse headers
-        // Temporarily disable reverse headers for mobile until memory requirements can be reduced.
-        SoftSetArg("-reverseheaders", "false");
+            //fixme: (FUT) (UNITY) Reverse headers
+            // Temporarily disable reverse headers for mobile until memory requirements can be reduced.
+            SoftSetArg("-reverseheaders", "false");
         #endif
     }
     else

@@ -82,7 +82,7 @@ public:
     bool GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet=nullptr) const override;
     bool HaveCoin(const COutPoint &outpoint) const override;
     uint256 GetBestBlock() const override;
-    bool BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock, bool allowFastPath) override;
+    bool BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) override;
     CCoinsViewCursor *Cursor() const override;
 
     //fixme: (PHASE5) We can remove some of these once phase4 is active.
