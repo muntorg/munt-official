@@ -149,6 +149,7 @@
 <script>
 import { WitnessController } from "../../../unity/Controllers";
 import { formatMoneyForDisplay } from "../../../util.js";
+import EventBus from "../../../EventBus";
 import AccountSettings from "../AccountSettings";
 import { mapState } from "vuex";
 
@@ -251,8 +252,12 @@ export default {
       return formatMoneyForDisplay(this.account.balance);
     }
   },
+  mounted() {
+    EventBus.$on("close-right-sidebar", this.closeRightSidebar);
+  },
   beforeDestroy() {
     clearTimeout(timeout);
+    EventBus.$off("close-right-sidebar", this.closeRightSidebar);
   },
   created() {
     this.initialize();
@@ -306,13 +311,15 @@ export default {
           break;
       }
     },
-
     getButtonClassNames(route) {
       let classNames = ["button"];
       if (route === this.$route.name) {
         classNames.push("active");
       }
       return classNames;
+    },
+    closeRightSidebar() {
+      this.rightSidebar = null;
     }
   }
 };
