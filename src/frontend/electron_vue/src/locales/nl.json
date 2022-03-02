@@ -44,7 +44,8 @@
     "transactions": "Transacties",
     "unlock": "Ontgrendelen",
     "done": "Klaar",
-    "holding_key": "Holding Key"
+    "holding_key": "Holding Key",
+    "info": "Info"
   },
   "clipboard_field": {
     "copied_to_clipboard": "Gekopieërd naar klembord"
@@ -69,6 +70,7 @@
   "holding_account": {
     "compound_earnings": "cumulatieve inkomsten",
     "status": "Status",
+    "parts": "Parts",
     "coins_locked": "Initial amount locked",
     "coins_earned": "Amount earned",
     "locked_from_block": "Vastgezet vanaf blok",

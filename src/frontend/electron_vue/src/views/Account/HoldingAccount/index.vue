@@ -42,7 +42,7 @@
         <div>{{ accountStatus }}</div>
       </div>
       <div class="flex-row">
-        <div>{{ "Parts" }}</div>
+        <div>{{ $t("holding_account.parts") }}</div>
         <div>{{ accountParts }}</div>
       </div>
 

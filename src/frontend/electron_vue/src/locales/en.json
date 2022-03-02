@@ -70,6 +70,7 @@
   "holding_account": {
     "compound_earnings": "compound earnings",
     "status": "Status",
+    "parts": "Parts",
     "coins_locked": "Initial amount locked",
     "coins_earned": "Amount earned",
     "locked_from_block": "Locked from block",
