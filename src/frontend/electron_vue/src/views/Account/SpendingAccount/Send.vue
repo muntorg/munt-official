@@ -122,6 +122,10 @@ export default {
   },
   mounted() {
     this.$refs.amount.focus();
+    EventBus.$on("transaction-succeeded", this.onTransactionSucceeded);
+  },
+  beforeDestroy() {
+    EventBus.$off("transaction-succeeded", this.onTransactionSucceeded);
   },
   methods: {
     async sellCoins() {
@@ -183,6 +187,9 @@ export default {
         },
         showButtons: false
       });
+    },
+    onTransactionSucceeded() {
+      this.$router.push({ name: "transactions" });
     }
   }
 };

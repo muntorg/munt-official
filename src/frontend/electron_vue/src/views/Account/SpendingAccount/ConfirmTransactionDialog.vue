@@ -62,8 +62,8 @@ export default {
       // lock the wallet again
       LibraryController.LockWallet();
 
+      EventBus.$emit("transaction-succeeded");
       EventBus.$emit("close-dialog");
-      EventBus.$emit("close-right-sidebar");
     }
   }
 };

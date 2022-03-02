@@ -43,7 +43,7 @@ import {
   AccountsController
 } from "../../../unity/Controllers";
 import ConfirmTransactionDialog from "../SpendingAccount/ConfirmTransactionDialog";
-import EventBus from "../../../EventBus";
+import EventBus from "@/EventBus";
 
 export default {
   name: "Send",
@@ -86,6 +86,11 @@ export default {
     }
 
     this.amount = formatMoneyForDisplay(this.account.spendable);
+
+    EventBus.$on("transaction-succeeded", this.onTransactionSucceeded);
+  },
+  beforeDestroy() {
+    EventBus.$off("transaction-succeeded", this.onTransactionSucceeded);
   },
   methods: {
     onPasswordKeydown() {
@@ -122,6 +127,9 @@ export default {
         },
         showButtons: false
       });
+    },
+    onTransactionSucceeded() {
+      this.$router.push({ name: "account" });
     }
   }
 };
