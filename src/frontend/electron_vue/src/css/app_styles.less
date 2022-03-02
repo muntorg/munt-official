@@ -14,7 +14,7 @@ h2 {
 
 h3 {
   font-weight: 500;
-  font-size: .85em;
+  font-size: 0.85em;
   line-height: 1.2em;
   margin: 0 0 20px 0;
   letter-spacing: -0.01em;
@@ -22,7 +22,7 @@ h3 {
 
 h4 {
   font-weight: 500;
-  font-size: .85em;
+  font-size: 0.85em;
   line-height: 1.2em;
   margin: 0 0 20px 0;
   text-transform: uppercase;
@@ -30,7 +30,7 @@ h4 {
 
 h5 {
   font-weight: 600;
-  font-size: .85em;
+  font-size: 0.85em;
   line-height: 1.2em;
   margin: 0 0 10px 0;
   text-transform: uppercase;
@@ -68,16 +68,22 @@ a:hover {
   color: #000;
 }
 
+img,
+a {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
 .select-all {
   user-select: all;
 }
 
 /* input / select / range */
 input:not([type]),
-input[type=text],
-input[type=password],
-input[type=number],
-input[type=range],
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="range"],
 select {
   width: 100%;
   font-style: normal;
@@ -99,11 +105,11 @@ select {
 
 /* input / select */
 input:not([type]),
-input[type=text],
-input[type=password],
-input[type=number] {
+input[type="text"],
+input[type="password"],
+input[type="number"] {
   padding: 0 10px;
-  
+
   &:focus,
   &.success,
   &:focus.success {
@@ -158,7 +164,7 @@ button {
 }
 
 /* range slider */
-input[type=range] {
+input[type="range"] {
   width: 100%;
 }
 
@@ -201,7 +207,7 @@ input[type=range] {
 
 .scrollable {
   overflow: hidden;
-  
+
   &:hover {
     overflow-y: overlay;
   }
@@ -225,7 +231,7 @@ input[type=range] {
   &.dark {
     &::-webkit-scrollbar-track {
       background: var(--scrollbar-background-color-dark);
-    } 
+    }
     &::-webkit-scrollbar-thumb {
       border: 3px solid var(--scrollbar-background-color-dark);
       background-color: var(--thumb-background-color-dark);

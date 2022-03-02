@@ -6,102 +6,115 @@
         :subtitle="balanceForDisplay + ' ' + totalBalanceFiat"
       />
     </portal>
+    <router-view />
+    <app-section v-if="isMiningView">
+      <app-form-field :title="$t('mining.number_of_threads')">
+        <div class="flex-row">
+          <vue-slider
+            :min="1"
+            :max="availableCores"
+            :value="currentThreadCount"
+            v-model="currentThreadCount"
+            class="slider"
+            :disabled="isActive"
+          />
+          <div class="slider-info">
+            {{ currentThreadCount }}
+            {{ $tc("mining.thread", currentThreadCount) }}
+          </div>
+        </div>
+      </app-form-field>
 
-    <app-form-field :title="$t('mining.number_of_threads')">
-      <div class="flex-row">
-        <vue-slider
-          :min="1"
-          :max="availableCores"
-          :value="currentThreadCount"
-          v-model="currentThreadCount"
-          class="slider"
-          :disabled="isActive"
-        />
-        <div class="slider-info">
-          {{ currentThreadCount }}
-          {{ $tc("mining.thread", currentThreadCount) }}
+      <app-form-field :title="$t('mining.number_of_arena_threads')">
+        <div class="flex-row">
+          <vue-slider
+            :min="1"
+            :max="availableCores"
+            :value="currentArenaThreadCount"
+            v-model="currentArenaThreadCount"
+            class="slider"
+            :disabled="isActive"
+          />
+          <div class="slider-info">
+            {{ currentArenaThreadCount }}
+            {{ $tc("mining.thread", currentArenaThreadCount) }}
+          </div>
         </div>
-      </div>
-    </app-form-field>
+      </app-form-field>
 
-    <app-form-field :title="$t('mining.number_of_arena_threads')">
-      <div class="flex-row">
-        <vue-slider
-          :min="1"
-          :max="availableCores"
-          :value="currentArenaThreadCount"
-          v-model="currentArenaThreadCount"
-          class="slider"
-          :disabled="isActive"
-        />
-        <div class="slider-info">
-          {{ currentArenaThreadCount }}
-          {{ $tc("mining.thread", currentArenaThreadCount) }}
+      <app-form-field :title="$t('mining.memory_to_use')">
+        <div class="flex-row">
+          <vue-slider
+            :min="minimumMemory"
+            :max="maximumMemory"
+            :value="currentMemorySize"
+            v-model="currentMemorySize"
+            class="slider"
+            :disabled="isActive"
+          />
+          <div class="slider-info">{{ currentMemorySize }} Gb</div>
         </div>
-      </div>
-    </app-form-field>
+      </app-form-field>
 
-    <app-form-field :title="$t('mining.memory_to_use')">
-      <div class="flex-row">
-        <vue-slider
-          :min="minimumMemory"
-          :max="maximumMemory"
-          :value="currentMemorySize"
-          v-model="currentMemorySize"
-          class="slider"
-          :disabled="isActive"
-        />
-        <div class="slider-info">{{ currentMemorySize }} Gb</div>
-      </div>
-    </app-form-field>
+      <app-form-field>
+        <div class="flex-row">
+          <div class="flex-1 align-right">
+            <button
+              @click="toggleGeneration"
+              :disabled="generationButtonDisabled"
+            >
+              {{ isActive ? $t("buttons.stop") : $t("buttons.start") }}
+            </button>
+          </div>
+        </div>
+      </app-form-field>
 
-    <app-form-field>
-      <div class="flex-row">
-        <div class="flex-1 align-right">
-          <button
-            @click="toggleGeneration"
-            :disabled="generationButtonDisabled"
-          >
-            {{ isActive ? $t("buttons.stop") : $t("buttons.start") }}
-          </button>
+      <app-form-field
+        class="mining-statistics"
+        :title="$t('mining.statistics')"
+        v-if="isActive"
+      >
+        <div class="flex-row">
+          <div>{{ $t("mining.last_reported_speed") }}</div>
+          <div class="flex-1 align-right">
+            {{ hashesPerSecond }}
+          </div>
         </div>
-      </div>
-    </app-form-field>
-
-    <app-form-field
-      class="mining-statistics"
-      :title="$t('mining.statistics')"
-      v-if="isActive"
-    >
-      <div class="flex-row">
-        <div>{{ $t("mining.last_reported_speed") }}</div>
-        <div class="flex-1 align-right">
-          {{ hashesPerSecond }}
+        <div class="flex-row">
+          <div>{{ $t("mining.moving_average") }}</div>
+          <div class="flex-1 align-right">
+            {{ rollingHashesPerSecond }}
+          </div>
         </div>
-      </div>
-      <div class="flex-row">
-        <div>{{ $t("mining.moving_average") }}</div>
-        <div class="flex-1 align-right">
-          {{ rollingHashesPerSecond }}
+        <div class="flex-row">
+          <div>{{ $t("mining.best_reported_speed") }}</div>
+          <div class="flex-1 align-right">
+            {{ bestHashesPerSecond }}
+          </div>
         </div>
-      </div>
-      <div class="flex-row">
-        <div>{{ $t("mining.best_reported_speed") }}</div>
-        <div class="flex-1 align-right">
-          {{ bestHashesPerSecond }}
+        <div class="flex-row">
+          <div>{{ $t("mining.arena_setup_time") }}</div>
+          <div class="flex-1 align-right">
+            {{ arenaSetupTime }}
+          </div>
         </div>
-      </div>
-      <div class="flex-row">
-        <div>{{ $t("mining.arena_setup_time") }}</div>
-        <div class="flex-1 align-right">
-          {{ arenaSetupTime }}
-        </div>
-      </div>
-    </app-form-field>
+      </app-form-field>
+    </app-section>
 
     <portal to="footer-slot">
       <section class="footer">
-        <span class="button" @click="emptyAccount" v-if="sendButtonVisible">
+        <span
+          :class="getButtonClassNames('account')"
+          @click="routeTo('account')"
+        >
+          <fa-icon :icon="['fal', 'info-circle']" />
+          {{ $t("buttons.info") }}
+        </span>
+        <span
+          :class="getButtonClassNames('send-holding')"
+          class="button"
+          @click="routeTo('send-holding')"
+        >
           <fa-icon :icon="['fal', 'arrow-from-bottom']" />
           {{ $t("buttons.send") }}
         </span>
@@ -143,12 +156,6 @@ export default {
       rightSidebar: null
     };
   },
-  mounted() {
-    EventBus.$on("close-right-sidebar", this.closeRightSidebar);
-  },
-  beforeDestroy() {
-    EventBus.$off("close-right-sidebar", this.closeRightSidebar);
-  },
   created() {
     this.availableCores = GenerationController.GetAvailableCores();
     this.currentThreadCount =
@@ -180,6 +187,9 @@ export default {
       }
     }),
     ...mapState("app", ["rate"]),
+    isMiningView() {
+      return this.$route.name === "account";
+    },
     hashesPerSecond() {
       return this.stats ? `${this.stats.hashesPerSecond}/s` : null;
     },
@@ -194,12 +204,6 @@ export default {
     },
     rightSidebarProps() {
       return null;
-    },
-    sendButtonDisabled() {
-      return this.account.spendable > 0;
-    },
-    sendButtonVisible() {
-      return this.sendButtonDisabled && this.rightSidebar === null;
     }
   },
   watch: {
@@ -217,10 +221,6 @@ export default {
         "mining/SET_ARENA_THREAD_COUNT",
         this.currentArenaThreadCount
       );
-    },
-    sendButtonDisabled() {
-      if (this.rightSidebar !== null && this.sendButtonDisabled === false)
-        this.closeRightSidebar();
     }
   },
   methods: {
@@ -238,6 +238,20 @@ export default {
           // todo: starting failed, notify user
         }
       }
+    },
+    getButtonClassNames(route) {
+      let classNames = ["button"];
+      if (route === this.$route.name) {
+        classNames.push("active");
+      }
+      return classNames;
+    },
+    routeTo(route) {
+      if (this.$route.name === route) {
+        return;
+      }
+
+      this.$router.push({ name: route, params: { id: this.account.UUID } });
     },
     closeRightSidebar() {
       this.rightSidebar = null;
@@ -279,7 +293,7 @@ export default {
     margin-right: 5px;
   }
 
-  & .button {
+  .button {
     display: inline-block;
     padding: 0 20px 0 20px;
     line-height: 32px;
@@ -292,6 +306,10 @@ export default {
     &:hover {
       background-color: #f5f5f5;
     }
+  }
+
+  .active {
+    color: #000000;
   }
 }
 </style>
