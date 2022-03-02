@@ -1,3 +1,22 @@
+2.0.7
+
+UI        - Introduce ability to create additional accounts
+UI        - Introduce "holding key" dialog to get key for holding via gdash cloud or other apps/services
+UI        - Introduce ability to override platform locale in settings
+UI        - Display approximate euro conversion value of account balances based on exchange/market value
+UI        - Various fixes/improvements to info/statistics display of holding accounts; most notably fix the "earnings" display to correctly display earnings
+UI        - Introduce an "activity indicator" that displays when backend is stuck in a long task instead of allowing UI to freeze
+UI        - Improve overall look/feel and consistency
+UI        - Fix/improve stability of loading screen and synchronisation, as well as general app stability
+UI        - Large quantity of small fixes/improvements
+RPC       - Improve/correct verifyholdingaddress RPC behaviour
+RPC       - Enable RPC functionality for electron clients; needs to be turned on via florin.conf not enabled by default
+RPC: Improve checkwalletagainstutxo and removeallorphans commands
+
+
+
+
+
 2.0.6
 
 Massively reduce transaction fees across the network
