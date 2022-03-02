@@ -1,10 +1,11 @@
 <template>
   <div class="link-witness-view flex-col">
-    
     <div class="main">
       <h4>{{ $t("link_holding_account.title") }}</h4>
       <p class="information">{{ $t("link_holding_account.information") }}</p>
-      <p v-if="needsUnlock" class="warn">{{ $t("link_holding_account.warn") }}</p>
+      <p v-if="needsUnlock" class="warn">
+        {{ $t("link_holding_account.warn") }}
+      </p>
       <div v-if="needsUnlock">
         <app-form-field
           style="text-align: left;"
@@ -147,7 +148,7 @@ export default {
   & .warn {
     text-align: justify;
     // Allow \n to be treated as newline
-    white-space: pre-line
+    white-space: pre-line;
   }
   & .qr {
     text-align: center;

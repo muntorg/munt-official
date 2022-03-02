@@ -102,13 +102,10 @@ export default {
         - replace amount input by custom amount input (this one is too basic)
         - improve notifications / messages on success and error
        */
-
-      // validate amount
-      let accountBalance = AccountsController.GetActiveAccountBalance();
-      let amountInvalid = (accountBalance.availableExcludingLocked < displayToMonetary(this.amount))
       // validate address
-      let address = AccountsController.GetReceiveAddress(this.fundingAccount.UUID);
-      let isAddressInvalid = !LibraryController.IsValidNativeAddress(this.address);
+      let address = AccountsController.GetReceiveAddress(
+        this.fundingAccount.UUID
+      );
 
       // wallet needs to be unlocked to make a payment
       if (LibraryController.UnlockWallet(this.computedPassword) === false) {

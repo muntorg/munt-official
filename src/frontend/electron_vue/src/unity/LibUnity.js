@@ -74,26 +74,18 @@ class LibUnity {
   }
 
   _initializeWalletController() {
+    // Note: walletListener is not used right now, so don't listen for events
+    /*
     console.log("_initializeWalletController");
 
+    
     this.walletListener.notifyBalanceChange = function(new_balance) {
       console.log(`walletListener.notifyBalanceChange`);
       store.dispatch("wallet/SET_WALLET_BALANCE", new_balance);
     };
 
-    this.walletListener.notifyNewMutation = function(
-      mutation /*, self_committed*/
-    ) {
-      console.log("walletListener.notifyNewMutation");
-      console.log(mutation);
-    };
-
-    this.walletListener.notifyUpdatedTransaction = function(transaction) {
-      console.log("walletListener.notifyUpdatedTransaction");
-      console.log(transaction);
-    };
-
     this.walletController.setListener(this.walletListener);
+    */
   }
 
   _updateAccounts(dispatch = true) {
@@ -232,22 +224,8 @@ class LibUnity {
       );
     console.log("_setStateWhenCoreAndMainWindowReady: start");
 
-    // combine all properties into one payload object
-    const walletBalance = this.walletController.GetBalance();
-    const accounts = this._updateAccounts(false);
-    const activeAccount = this.accountsController.getActiveAccount();
-    const receiveAddress = this.libraryController.GetReceiveAddress();
-    const mutations = this.libraryController.getMutationHistory();
+    // code to update the store has been moved to notifySyncDone event handler because that's when we need the data
 
-    const payload = {
-      accounts,
-      walletBalance,
-      activeAccount,
-      receiveAddress,
-      mutations
-    };
-    // and then dispatch one event to update alle properties at once
-    store.dispatch("wallet/SET_WALLET", payload);
     // note: for now also dispatch separate "core ready" event because it is still needed to enable debug dialog
     store.dispatch("app/SET_CORE_READY");
     console.log("_setStateWhenCoreAndMainWindowReady: end");
@@ -257,6 +235,9 @@ class LibUnity {
     let self = this;
     let libraryListener = this.libraryListener;
     let libraryController = this.libraryController;
+
+    let walletController = this.walletController;
+    let accountsController = this.accountsController;
 
     libraryListener.notifyCoreReady = function() {
       console.log("received: notifyCoreReady");
@@ -269,9 +250,40 @@ class LibUnity {
       self._setStateWhenCoreAndMainWindowReady();
     };
 
-    libraryListener.logPrint = function(message) {
-      console.log("unity_core: " + message);
+    libraryListener.notifySyncDone = function() {
+      console.log("received: notifySyncDone");
+
+      console.log("get the wallet balance");
+      const walletBalance = walletController.GetBalance();
+      console.log("get the accounts");
+      const accounts = self._updateAccounts(false);
+      console.log("get the active account");
+      const activeAccount = accountsController.getActiveAccount();
+      console.log("get the receive address");
+      const receiveAddress = libraryController.GetReceiveAddress();
+      console.log("get the mutations");
+      const mutations = libraryController.getMutationHistory();
+
+      console.log("combine data and dispatch SET_WALLET to update the store");
+      const payload = {
+        accounts,
+        walletBalance,
+        activeAccount,
+        receiveAddress,
+        mutations
+      };
+
+      // and then dispatch one event to update alle properties at once
+      store.dispatch("wallet/SET_WALLET", payload);
+
+      // dispatch SET_SYNC_DONE to notify wallet is synced and ready for use
+      store.dispatch("app/SET_SYNC_DONE");
     };
+
+    // Note: turned this listener off, only enable it when needed in debug mode
+    // libraryListener.logPrint = function(message) {
+    //   console.log("unity_core: " + message);
+    // };
 
     libraryListener.notifyBalanceChange = function(new_balance) {
       console.log("received: notifyBalanceChange");
@@ -299,6 +311,7 @@ class LibUnity {
         libraryController.getMutationHistory()
       );
     };
+
     libraryListener.notifyInitWithExistingWallet = function() {
       console.log("received: notifyInitWithExistingWallet");
       store.dispatch("app/SET_WALLET_EXISTS", true);
