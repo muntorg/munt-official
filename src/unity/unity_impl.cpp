@@ -342,6 +342,7 @@ void terminateUnityFrontend()
 #include <boost/chrono/thread_clock.hpp>
 
 static float lastProgress=0;
+bool syncDoneFired = false;
 void handlePostInitMain()
 {
     //fixme: (SIGMA) (PHASE4) Remove this once we have witness-header-sync
@@ -402,6 +403,7 @@ void handlePostInitMain()
         if (chainActive.Tip() && ((GetTime() - chainActive.Tip()->nTime) < 3600))
         {
             lastProgress = 1.0;
+            syncDoneFired = true;
             signalHandler->notifySyncDone();
         }
 
@@ -422,6 +424,7 @@ void handlePostInitMain()
                     signalHandler->notifyUnifiedProgress(progress);
                     if (progress == 1)
                     {
+                        syncDoneFired = true;
                         signalHandler->notifySyncDone();
                     }
                     lastProgress = progress;
@@ -438,6 +441,7 @@ void handlePostInitMain()
                     signalHandler->notifyUnifiedProgress(progress);
                     if (progress == 1)
                     {
+                        syncDoneFired = true;
                         signalHandler->notifySyncDone();
                     }
                     lastProgress = progress;
@@ -454,6 +458,7 @@ void handlePostInitMain()
                 signalHandler->notifyUnifiedProgress(progress);
                 if (progress == 1)
                 {
+                    syncDoneFired = true;
                     signalHandler->notifySyncDone();
                 }
                 lastProgress = progress;
@@ -504,7 +509,7 @@ void handlePostInitMain()
         {
             // Don't fire notifyNewMutation or notifyUpdatedTransaction events while in initial sync
             // We only start firing them after 'notifySyncDone' has fired.
-            if (lastProgress >= 1)
+            if (syncDoneFired)
             {
                 LOCK2(cs_main, pwallet->cs_wallet);
                 if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
@@ -530,7 +535,7 @@ void handlePostInitMain()
         {
             // Don't fire notifyNewMutation or notifyUpdatedTransaction events while in initial sync
             // We only start firing them after 'notifySyncDone' has fired.
-            if (lastProgress >= 1)
+            if (syncDoneFired)
             {
                 LOCK2(cs_main, pwallet->cs_wallet);
                 if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())

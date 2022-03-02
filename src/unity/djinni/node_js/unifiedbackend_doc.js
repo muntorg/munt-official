@@ -168,8 +168,17 @@ declare class NJSIWalletListener
      * reached us in another way. In general this will be because we received funds from someone, hower there are
      * also cases where funds is send from our wallet while !self_committed (for example by a linked desktop wallet
      * or another wallet instance using the same keys as ours).
+     *
+     * Note that no notifyNewMutation events will fire until after 'notifySyncDone'
+     * Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
      */
     declare function notifyNewMutation(mutation: MutationRecord, self_committed: boolean);
+    /**
+     * Notification that an existing transaction/mutation  has updated
+     *
+     * Note that no notifyUpdatedTransaction events will fire until after 'notifySyncDone'
+     * Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
+     */
     declare function notifyUpdatedTransaction(transaction: TransactionRecord);
 }
 /** Monitoring events */
