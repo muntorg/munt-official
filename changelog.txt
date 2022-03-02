@@ -11,7 +11,9 @@ UI        - Fix/improve stability of loading screen and synchronisation, as well
 UI        - Large quantity of small fixes/improvements
 RPC       - Improve/correct verifyholdingaddress RPC behaviour
 RPC       - Enable RPC functionality for electron clients; needs to be turned on via florin.conf not enabled by default
-RPC: Improve checkwalletagainstutxo and removeallorphans commands
+RPC       - Improve checkwalletagainstutxo and removeallorphans commands
+RPC       - Fix a bug in 'getwitnessinfo' RPC command when using ranges
+CORE      - Remove some lock contention in core library, this should lead to smoother performance in some instances
 
 
 
