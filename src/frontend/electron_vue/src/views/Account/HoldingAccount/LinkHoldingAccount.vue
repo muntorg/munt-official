@@ -1,11 +1,10 @@
 <template>
   <div class="link-witness-view flex-col">
-    <portal to="header-slot">
-      <main-header :title="$t(`link_holding_account.title`)"></main-header>
-    </portal>
+    
     <div class="main">
       <h4>{{ $t("link_holding_account.title") }}</h4>
       <p class="information">{{ $t("link_holding_account.information") }}</p>
+      <p v-if="needsUnlock" class="warn">{{ $t("link_holding_account.warn") }}</p>
       <div v-if="needsUnlock">
         <app-form-field
           style="text-align: left;"
@@ -143,6 +142,12 @@ export default {
 
   & .information {
     margin: 0 0 30px 0;
+    text-align: justify;
+  }
+  & .warn {
+    text-align: justify;
+    // Allow \n to be treated as newline
+    white-space: pre-line
   }
   & .qr {
     text-align: center;
