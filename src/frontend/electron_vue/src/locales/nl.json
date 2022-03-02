@@ -15,7 +15,7 @@
     "estimated_earnings": "Geschatte opbrengst",
     "funding_account": "Financieringsrekening",
     "lock_for": "Vastzetten voor",
-    "overall": "totaal",
+    "overall": "Totaal",
     "title": "Holding rekening aanmaken"
   },
   "add_spending_account": {
@@ -68,7 +68,7 @@
     "information": "Deze portemonnee staat alleen op jouw apparaat.<br/>Geef nooit iemand anders toegang tot jouw portemonnee.<br/>Bewaar de herstelzin die je te zien krijgt tijdens installatie op een veilige plek.<br/>Herstelzin kwijt of iemand toegang tot je herstelzin = Florin weg."
   },
   "holding_account": {
-    "compound_earnings": "cumulatieve inkomsten",
+    "compound_earnings": "Cumulatieve inkomsten",
     "status": "Status",
     "parts": "Parts",
     "coins_locked": "Initial amount locked",
@@ -76,13 +76,13 @@
     "locked_from_block": "Vastgezet vanaf blok",
     "locked_until_block": "Vastgezet tot blok",
     "lock_duration": "Looptijd",
-    "blocks": "blokken",
+    "blocks": "Blokken",
     "remaining_lock_period": "Resterende looptijd",
     "required_earnings_frequency": "Benodigde beloningstijd",
     "expected_earnings_frequency": "Verwachte beloningstijd",
     "account_weight": "Gewicht",
     "network_weight": "Netwerk gewicht",
-    "empty": "This holding account is empty"
+    "empty": "Deze holding rekening is leeg"
   },
   "loader": {
     "shutdown": "Bezig met afsluiten...",
@@ -156,9 +156,9 @@
     "funding_account": "Betaal vergoeding van account"
   },
   "link_holding_account": {
-    "title": "Your holding key",
-    "information": "This key can be linked with a cloud holding service or with a secondary wallet on another machine to allow the service/wallet to perform holding actions on your behalf.",
-    "warn": "This key can't access locked funds, but keep it safe/secure, it can be used to take your rewards.\nDo not view this key in a public setting where your screen might be viewed or recorded.",
-    "no_funds": "Holding account must be funded with locked funds before it is possible to link it with other wallets."
+    "title": "Jouw holding sleutel",
+    "information": "Deze sleutel kan worden gekoppeld aan een cloud service of een tweede wallet op een ander apparaat waarmee het deze service/wallet toe wordt gestaan namens jou holding acties uit te voeren.",
+    "warn": "Deze sleutel geeft geen toegang tot jouw vastgezette Florin, maar bewaar deze zorgvuldig aangezien het wel toegang geeft tot jouw ontvangen beloningen.\nLaat deze sleutel niet zien in het openbaar waar meegekeken kan worden op uw scherm of waar mogelijk schermopnames worden gemaakt.",
+    "no_funds": "Holding rekening moet worden gevuld met vastgezette Florin voordat het mogelijk is om deze te koppelen met andere portemonnees."
   }
 }
