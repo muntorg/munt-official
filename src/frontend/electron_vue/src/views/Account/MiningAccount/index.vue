@@ -7,6 +7,7 @@
       />
     </portal>
     <router-view />
+
     <app-section v-if="isMiningView">
       <app-form-field :title="$t('mining.number_of_threads')">
         <div class="flex-row">
@@ -56,19 +57,6 @@
         </div>
       </app-form-field>
 
-      <app-form-field>
-        <div class="flex-row">
-          <div class="flex-1 align-right">
-            <button
-              @click="toggleGeneration"
-              :disabled="generationButtonDisabled"
-            >
-              {{ isActive ? $t("buttons.stop") : $t("buttons.start") }}
-            </button>
-          </div>
-        </div>
-      </app-form-field>
-
       <app-form-field
         class="mining-statistics"
         :title="$t('mining.statistics')"
@@ -100,6 +88,14 @@
         </div>
       </app-form-field>
     </app-section>
+
+    <button
+      v-if="isMiningView"
+      @click="toggleGeneration"
+      :disabled="generationButtonDisabled"
+    >
+      {{ isActive ? $t("buttons.stop") : $t("buttons.start") }}
+    </button>
 
     <portal to="footer-slot">
       <section class="footer">
@@ -135,7 +131,6 @@
 import { mapState } from "vuex";
 import { formatMoneyForDisplay } from "../../../util.js";
 import { GenerationController } from "../../../unity/Controllers";
-import EventBus from "../../../EventBus";
 
 import Send from "./Send";
 
@@ -266,7 +261,11 @@ export default {
 
 <style lang="less" scoped>
 .mining-account {
-  width: 100%;
+  height: 100%;
+  padding: 20px 15px 15px 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .slider {
@@ -283,6 +282,21 @@ export default {
   line-height: 20px;
 }
 
+.button {
+  display: inline-block;
+  padding: 0 20px 0 20px;
+  line-height: 32px;
+  font-weight: 500;
+  font-size: 1em;
+  color: var(--primary-color);
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}
+
 // todo: .footer styles below are copy/pasted from SpendingAccount/index.vue, maybe move to parent
 .footer {
   text-align: center;
@@ -291,21 +305,6 @@ export default {
   & svg {
     font-size: 14px;
     margin-right: 5px;
-  }
-
-  .button {
-    display: inline-block;
-    padding: 0 20px 0 20px;
-    line-height: 32px;
-    font-weight: 500;
-    font-size: 1em;
-    color: var(--primary-color);
-    text-align: center;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #f5f5f5;
-    }
   }
 
   .active {

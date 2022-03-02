@@ -326,6 +326,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.holding-account {
+  height: 100%;
+  padding: 20px 15px 15px 15px;
+}
+
 .header {
   & > .info {
     width: calc(100% - 26px);

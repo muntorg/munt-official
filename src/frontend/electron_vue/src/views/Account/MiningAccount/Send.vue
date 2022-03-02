@@ -105,17 +105,23 @@ export default {
 
       // validate amount
       let accountBalance = AccountsController.GetActiveAccountBalance();
-      let amountInvalid = (accountBalance.availableExcludingLocked < displayToMonetary(this.amount))
+      let amountInvalid =
+        accountBalance.availableExcludingLocked <
+        displayToMonetary(this.amount);
       // validate address
-      let address = AccountsController.GetReceiveAddress(this.fundingAccount.UUID);
-      let isAddressInvalid = !LibraryController.IsValidNativeAddress(this.address);
+      let address = AccountsController.GetReceiveAddress(
+        this.fundingAccount.UUID
+      );
+      let addressInvalid = !LibraryController.IsValidNativeAddress(
+        this.address
+      );
 
       // wallet needs to be unlocked to make a payment
       if (LibraryController.UnlockWallet(this.computedPassword) === false) {
         this.isPasswordInvalid = true;
       }
 
-      if (this.hasErrors) return;
+      if (amountInvalid || addressInvalid) return;
 
       EventBus.$emit("show-dialog", {
         title: this.$t("send_coins.confirm_transaction"),
