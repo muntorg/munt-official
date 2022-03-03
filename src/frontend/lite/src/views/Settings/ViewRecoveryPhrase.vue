@@ -1,27 +1,29 @@
 <template>
   <div class="view-recovery-phrase-view">
-    <h2>
-      <span v-if="current === 1">{{ $t("common.enter_your_password") }}</span>
-      <span class="important" v-else>{{ $t("common.important") }}</span>
-    </h2>
+    <div>
+      <h2>
+        <span v-if="current === 1">{{ $t("common.enter_your_password") }}</span>
+        <span class="important" v-else>{{ $t("common.important") }}</span>
+      </h2>
 
-    <!-- step 1: Enter password -->
-    <app-form-field :title="$t('common.password')" v-if="current === 1">
-      <input
-        ref="password"
-        type="password"
-        v-model="password"
-        @keydown="getRecoveryPhraseOnEnter"
-        :class="computedStatus"
-      />
-    </app-form-field>
+      <!-- step 1: Enter password -->
+      <app-form-field :title="$t('common.password')" v-if="current === 1">
+        <input
+          ref="password"
+          type="password"
+          v-model="password"
+          @keydown="getRecoveryPhraseOnEnter"
+          :class="computedStatus"
+        />
+      </app-form-field>
 
-    <!-- step 2: Show recovery phrase -->
-    <div v-else>
-      <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
-      <app-section class="phrase">
-        {{ recoveryPhrase }}
-      </app-section>
+      <!-- step 2: Show recovery phrase -->
+      <div v-else>
+        <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
+        <app-section class="phrase">
+          {{ recoveryPhrase }}
+        </app-section>
+      </div>
     </div>
 
     <div v-if="UIConfig.showSidebar">
@@ -124,7 +126,11 @@ export default {
 
 <style lang="less" scoped>
 .view-recovery-phrase-view {
+  display: flex;
   height: 100%;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }
 
 .phrase {

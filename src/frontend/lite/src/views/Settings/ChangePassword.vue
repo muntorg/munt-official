@@ -173,6 +173,10 @@ export default {
 
 <style lang="less" scoped>
 .change-password-view {
+  display: flex;
   height: 100%;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }
 </style>

@@ -214,10 +214,6 @@ export default {
   padding: 20px 15px 15px 15px;
 }
 
-.spending-account-view {
-  height: 100%;
-}
-
 .header {
   align-items: center;
 
