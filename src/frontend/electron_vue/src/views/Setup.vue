@@ -89,6 +89,7 @@
 import { LibraryController } from "../unity/Controllers";
 import PhraseInput from "../components/PhraseInput";
 import EventBus from "../EventBus.js";
+import AppStatus from "../AppStatus";
 
 export default {
   data() {
@@ -222,7 +223,7 @@ export default {
                 this.password1
               )
             ) {
-              this.$router.push({ name: "account" });
+              this.$store.dispatch("app/SET_STATUS", AppStatus.synchronize);
             }
           } else {
             if (
@@ -231,7 +232,7 @@ export default {
                 this.password1
               )
             ) {
-              this.$router.push({ name: "account" });
+              this.$store.dispatch("app/SET_STATUS", AppStatus.synchronize);
             }
           }
           break;

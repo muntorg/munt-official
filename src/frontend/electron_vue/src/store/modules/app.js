@@ -17,6 +17,7 @@ const app = {
   namespaced: true,
   state: {
     coreReady: false,
+    syncDone: false,
     activityIndicator: false,
     splashReady: false,
     status: AppStatus.start,
@@ -29,6 +30,9 @@ const app = {
   mutations: {
     SET_CORE_READY(state) {
       state.coreReady = true;
+    },
+    SET_SYNC_DONE(state) {
+      state.syncDone = true;
     },
     SET_SPLASH_READY(state) {
       state.splashReady = true;
@@ -64,6 +68,9 @@ const app = {
       );
       commit("SET_CORE_READY");
       EnableDebugWindowOnCoreReady();
+    },
+    SET_SYNC_DONE({ commit }) {
+      commit("SET_SYNC_DONE");
     },
     SET_SPLASH_READY({ commit }) {
       commit("SET_SPLASH_READY");

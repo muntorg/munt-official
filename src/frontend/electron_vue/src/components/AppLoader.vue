@@ -31,8 +31,7 @@ import { LibraryController } from "../unity/Controllers";
 import UIConfig from "../../ui-config.json";
 
 let progressTimeout = null;
-// How many times we have received 0 as a response from progress API
-let progressCount = 0;
+
 // How many times we have polled for progress while the app is still in a loading state and is not yet synchronising
 let preProgressCount = 0;
 
@@ -48,6 +47,7 @@ export default {
   computed: {
     ...mapState("app", [
       "splashReady",
+      "syncDone",
       "status",
       "unityVersion",
       "walletVersion"
@@ -55,7 +55,8 @@ export default {
     showLoader() {
       return (
         this.splashReady === false ||
-        (this.status !== AppStatus.ready && this.status !== AppStatus.setup)
+        (this.status !== AppStatus.setup && this.syncDone === false) ||
+        this.status === AppStatus.shutdown
       );
     },
     isShuttingDown() {
@@ -70,7 +71,9 @@ export default {
       this.onStatusChanged();
     },
     progress() {
-      this.$refs.progress.value = parseInt(this.progress * 100);
+      if (this.$refs.progress) {
+        this.$refs.progress.value = parseInt(this.progress * 100);
+      }
     }
   },
   created() {
@@ -108,9 +111,11 @@ export default {
     updateProgress() {
       clearTimeout(progressTimeout);
       if (this.status !== AppStatus.synchronize) return;
-      this.progress = LibraryController.GetUnifiedProgress();
 
-      // App goes through two basic loading proceeses:
+      const progress = LibraryController.GetUnifiedProgress();
+      console.log(`progress: ${progress}`);
+
+      // App goes through two basic loading processes:
       // a. Setting up wallet, loading transactions/accounts, starting up of internal services network threads etc.
       // b. Synchronising with network
       // While we are in 'a' its not possible to determine progress and we get only a response of 200 from 'GetUnifiedProgress' to indicate this
@@ -129,23 +134,21 @@ export default {
       // 4. Use different proportions if we are performing an initial sync on a new wallet vs catching up on a previously synced wallet
       // 'b' takes substantially longer on 'b' while if I open/close a recently synced wallet most time will be spent in 'a'
 
-      if (this.progress > 190) {
-        this.progress = (0.3 / 20) * preProgressCount;
-        if (preProgressCount < 20) {
-          preProgressCount++;
-        }
-        progressTimeout = setTimeout(this.updateProgress, 1000);
-      } else {
-        if (
-          this.progress === 1 ||
-          (this.progress === 0 && progressCount++ === 5) // when progress doesn't update, set status ready after 5 updates to prevent a endless loading screen
-        ) {
-          this.progress = 1.3;
-          this.$store.dispatch("app/SET_STATUS", AppStatus.ready);
+      if (!this.syncDone) {
+        if (progress > 190) {
+          this.progress = (0.3 / 20) * preProgressCount;
+          if (preProgressCount < 20) {
+            preProgressCount++;
+          }
+          progressTimeout = setTimeout(this.updateProgress, 1000);
         } else {
-          this.progress += 0.3;
+          this.progress = 0.3 + progress;
           progressTimeout = setTimeout(this.updateProgress, 2500);
         }
+      } else {
+        // we always wait for syncDone to be true before continuing
+        this.progress = 1.3;
+        this.$store.dispatch("app/SET_STATUS", AppStatus.ready);
       }
     }
   }
