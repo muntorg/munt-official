@@ -328,7 +328,12 @@ class LibUnity {
       libraryListener = null;
       console.log("received: notifyShutdown");
       self.isTerminated = true;
-      app.quit();
+
+      // We call this inside a timeout because if we don't we get a crash on macOS; its not yet 100% clear why but for now its better to just avoid the crash until we can debug further
+      // TODO: Investigate this further
+      setTimeout(function() {
+        app.quit();
+      }, 1000);
     };
   }
 
