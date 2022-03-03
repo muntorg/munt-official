@@ -113,7 +113,7 @@ export default {
         this.fundingAccount.UUID
       );
       let addressInvalid = !LibraryController.IsValidNativeAddress(
-        this.address
+        address
       );
 
       // wallet needs to be unlocked to make a payment
