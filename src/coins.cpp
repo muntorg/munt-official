@@ -27,7 +27,7 @@
 bool CCoinsView::GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet) const { return false; }
 bool CCoinsView::HaveCoin(const COutPoint &outpoint) const { return false; }
 uint256 CCoinsView::GetBestBlock() const { return uint256(); }
-bool CCoinsView::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) { return false; }
+bool CCoinsView::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock, bool allowFastPath) { return false; }
 CCoinsViewCursor *CCoinsView::Cursor() const { return 0; }
 
 
@@ -36,7 +36,7 @@ bool CCoinsViewBacked::GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint*
 bool CCoinsViewBacked::HaveCoin(const COutPoint &outpoint) const { return base->HaveCoin(outpoint); }
 uint256 CCoinsViewBacked::GetBestBlock() const { return base->GetBestBlock(); }
 void CCoinsViewBacked::SetBackend(CCoinsView &viewIn) { base = &viewIn; }
-bool CCoinsViewBacked::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) { return base->BatchWrite(mapCoins, hashBlock); }
+bool CCoinsViewBacked::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock, bool allowFastPath) { return base->BatchWrite(mapCoins, hashBlock, allowFastPath); }
 CCoinsViewCursor *CCoinsViewBacked::Cursor() const { return base->Cursor(); }
 size_t CCoinsViewBacked::EstimateSize() const { return base->EstimateSize(); }
 
@@ -377,7 +377,7 @@ void CCoinsViewCache::SetBestBlock(const uint256 &hashBlockIn)
     hashBlock = hashBlockIn;
 }
 
-bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn)
+bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn, bool allowFastPath)
 {
     // It is possible (in fact likely) for the same batch to be both erasing and writing the same entryref e.g. if swapping one block 1963 for a competing block 1963
     // mapCoins is 'randomly' ordered so doing this would create random behaviour and an inconsistent coin database
@@ -410,7 +410,10 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     }
                     if (!(entry.coin.nHeight == MEMPOOL_HEIGHT && entry.coin.nTxIndex == MEMPOOL_INDEX))
                     {
-                        modificationMap.push_back(it->first);
+                        if (allowFastPath)
+                        {
+                            modificationMap.push_back(it->first);
+                        }
                     }
                 }
             }
@@ -434,7 +437,10 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     cachedCoinsUsage -= itUs->second.coin.DynamicMemoryUsage();
                     if (!(itUs->second.coin.nHeight == MEMPOOL_HEIGHT && itUs->second.coin.nTxIndex == MEMPOOL_INDEX))
                     {
-                        cacheCoinRefs.erase(COutPoint(itUs->second.coin.nHeight, itUs->second.coin.nTxIndex, itUs->first.n));
+                        if (allowFastPath)
+                        {
+                            cacheCoinRefs.erase(COutPoint(itUs->second.coin.nHeight, itUs->second.coin.nTxIndex, itUs->first.n));
+                        }
                     }
                     cacheCoins.erase(itUs);
                 }
@@ -470,26 +476,46 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
     //Rather than take a risk, we instead favour the simpler more robust code
     //re-visit this in future and establish via more testing that the other code path is fully robust (as well as faster) before re-enabling
     //otherwise consider purging it in future  if not.
-    
-    for (const auto& outPoint : modificationMap)
-    {
-        const auto& iter = cacheCoins.find(outPoint);
-        if (iter != cacheCoins.end())
+    if (allowFastPath)
+    {    
+        for (const auto& outPoint : modificationMap)
         {
-            if (iter->second.coin.IsSpent())
+            const auto& iter = cacheCoins.find(outPoint);
+            if (iter != cacheCoins.end())
             {
-                cacheCoinRefs[COutPoint(iter->second.coin.nHeight, iter->second.coin.nTxIndex, outPoint.n)] = outPoint;
+                if (iter->second.coin.IsSpent())
+                {
+                    cacheCoinRefs[COutPoint(iter->second.coin.nHeight, iter->second.coin.nTxIndex, outPoint.n)] = outPoint;
+                }
+            }
+        }
+        for (const auto& outPoint : modificationMap)
+        {
+            const auto& iter = cacheCoins.find(outPoint);
+            if (iter != cacheCoins.end())
+            {
+                if (!iter->second.coin.IsSpent())
+                {
+                    cacheCoinRefs[COutPoint(iter->second.coin.nHeight, iter->second.coin.nTxIndex, outPoint.n)] = outPoint;
+                }
             }
         }
     }
-    for (const auto& outPoint : modificationMap)
+    else
     {
-        const auto& iter = cacheCoins.find(outPoint);
-        if (iter != cacheCoins.end())
+        cacheCoinRefs.clear();
+        for (const auto& [outPoint, entry] : cacheCoins)
         {
-            if (!iter->second.coin.IsSpent())
+            if (entry.coin.IsSpent())
             {
-                cacheCoinRefs[COutPoint(iter->second.coin.nHeight, iter->second.coin.nTxIndex, outPoint.n)] = outPoint;
+                cacheCoinRefs[COutPoint(entry.coin.nHeight, entry.coin.nTxIndex, outPoint.n)] = outPoint;
+            }
+        }
+        for (const auto& [outPoint, entry] : cacheCoins)
+        {
+            if (!entry.coin.IsSpent())
+            {
+                cacheCoinRefs[COutPoint(entry.coin.nHeight, entry.coin.nTxIndex, outPoint.n)] = outPoint;
             }
         }
     }
@@ -498,12 +524,12 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
     return true;
 }
 
-bool CCoinsViewCache::Flush()
+bool CCoinsViewCache::Flush(bool allowFastPath)
 {
     if (pChainedWitView)
-        pChainedWitView->Flush();
+        pChainedWitView->Flush(allowFastPath);
 
-    bool fOk = base->BatchWrite(cacheCoins, hashBlock);
+    bool fOk = base->BatchWrite(cacheCoins, hashBlock, allowFastPath);
     cacheCoins.clear();
     cacheCoinRefs.clear();
     cachedCoinsUsage = 0;
