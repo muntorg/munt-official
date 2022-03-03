@@ -40,6 +40,40 @@ void NJSILibraryListener::notifyUnifiedProgress(float progress)
     );
 }
 
+void NJSILibraryListener::notifySyncDone_aimpl__()
+{
+    const auto& env = Env();
+    Napi::HandleScope scope(env);
+    //Wrap parameters
+    std::vector<napi_value> args;
+    Napi::Value calling_function_as_value = Value().Get("notifySyncDone");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
+    {
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_notifySyncDone = calling_function.Call(args);
+        if(result_notifySyncDone.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSILibraryListener::notifySyncDone call failed").ThrowAsJavaScriptException();
+            return;
+        }
+    }
+}
+
+void NJSILibraryListener::notifySyncDone()
+{
+    uv_work_t* request = new uv_work_t;
+    request->data = new std::tuple<NJSILibraryListener*>(this);
+
+    uv_queue_work(uv_default_loop(), request, [](uv_work_t*) -> void{}, [](uv_work_t* req, int status) -> void
+    {
+        NJSILibraryListener* pthis = std::get<0>(*((std::tuple<NJSILibraryListener*>*)req->data));
+        pthis->notifySyncDone_aimpl__();
+        delete (std::tuple<NJSILibraryListener*>*)req->data;
+        req->data = nullptr;
+    }
+    );
+}
+
 void NJSILibraryListener::notifyBalanceChange_aimpl__(const BalanceRecord & new_balance)
 {
     const auto& env = Env();

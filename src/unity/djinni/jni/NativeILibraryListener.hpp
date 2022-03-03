@@ -34,6 +34,7 @@ private:
         ~JavaProxy();
 
         void notifyUnifiedProgress(float progress) override;
+        void notifySyncDone() override;
         void notifyBalanceChange(const ::BalanceRecord & new_balance) override;
         void notifyNewMutation(const ::MutationRecord & mutation, bool self_committed) override;
         void notifyUpdatedTransaction(const ::TransactionRecord & transaction) override;
@@ -49,6 +50,7 @@ private:
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/ILibraryListener") };
     const jmethodID method_notifyUnifiedProgress { ::djinni::jniGetMethodID(clazz.get(), "notifyUnifiedProgress", "(F)V") };
+    const jmethodID method_notifySyncDone { ::djinni::jniGetMethodID(clazz.get(), "notifySyncDone", "()V") };
     const jmethodID method_notifyBalanceChange { ::djinni::jniGetMethodID(clazz.get(), "notifyBalanceChange", "(Lcom/gulden/jniunifiedbackend/BalanceRecord;)V") };
     const jmethodID method_notifyNewMutation { ::djinni::jniGetMethodID(clazz.get(), "notifyNewMutation", "(Lcom/gulden/jniunifiedbackend/MutationRecord;Z)V") };
     const jmethodID method_notifyUpdatedTransaction { ::djinni::jniGetMethodID(clazz.get(), "notifyUpdatedTransaction", "(Lcom/gulden/jniunifiedbackend/TransactionRecord;)V") };

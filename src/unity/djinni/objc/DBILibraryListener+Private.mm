@@ -27,6 +27,12 @@ public:
             [djinni_private_get_proxied_objc_object() notifyUnifiedProgress:(::djinni::F32::fromCpp(c_progress))];
         }
     }
+    void notifySyncDone() override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() notifySyncDone];
+        }
+    }
     void notifyBalanceChange(const ::BalanceRecord & c_new_balance) override
     {
         @autoreleasepool {

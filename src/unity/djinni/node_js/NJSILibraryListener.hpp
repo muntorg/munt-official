@@ -31,17 +31,29 @@ public:
      */
     void notifyUnifiedProgress(float progress);
 
+    /** Called once when 'notifyUnifiedProgress' reaches '1' for first time after session start */
+    void notifySyncDone();
+
     void notifyBalanceChange(const BalanceRecord & new_balance);
 
     /**
-     * Notification of new mutations.
+     * Notification of new mutations
      * If self_committed it is due to a call to performPaymentToRecipient, else it is because of a transaction
      * reached us in another way. In general this will be because we received funds from someone, hower there are
      * also cases where funds is send from our wallet while !self_committed (for example by a linked desktop wallet
      * or another wallet instance using the same keys as ours).
+     *
+     * Note that no notifyNewMutation events will fire until after 'notifySyncDone'
+     * Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
      */
     void notifyNewMutation(const MutationRecord & mutation, bool self_committed);
 
+    /**
+     * Notification that an existing transaction/mutation  has updated
+     *
+     * Note that no notifyUpdatedTransaction events will fire until after 'notifySyncDone'
+     * Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
+     */
     void notifyUpdatedTransaction(const TransactionRecord & transaction);
 
     void notifyInitWithExistingWallet();
@@ -62,19 +74,32 @@ private:
     void notifyUnifiedProgress(const Napi::CallbackInfo& info);
     void notifyUnifiedProgress_aimpl__(float progress);
 
+    /** Called once when 'notifyUnifiedProgress' reaches '1' for first time after session start */
+    void notifySyncDone(const Napi::CallbackInfo& info);
+    void notifySyncDone_aimpl__();
+
     void notifyBalanceChange(const Napi::CallbackInfo& info);
     void notifyBalanceChange_aimpl__(const BalanceRecord & new_balance);
 
     /**
-     * Notification of new mutations.
+     * Notification of new mutations
      * If self_committed it is due to a call to performPaymentToRecipient, else it is because of a transaction
      * reached us in another way. In general this will be because we received funds from someone, hower there are
      * also cases where funds is send from our wallet while !self_committed (for example by a linked desktop wallet
      * or another wallet instance using the same keys as ours).
+     *
+     * Note that no notifyNewMutation events will fire until after 'notifySyncDone'
+     * Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
      */
     void notifyNewMutation(const Napi::CallbackInfo& info);
     void notifyNewMutation_aimpl__(const MutationRecord & mutation, bool self_committed);
 
+    /**
+     * Notification that an existing transaction/mutation  has updated
+     *
+     * Note that no notifyUpdatedTransaction events will fire until after 'notifySyncDone'
+     * Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
+     */
     void notifyUpdatedTransaction(const Napi::CallbackInfo& info);
     void notifyUpdatedTransaction_aimpl__(const TransactionRecord & transaction);
 

@@ -322,7 +322,15 @@ i_wallet_listener = interface +j +o +n {
     # reached us in another way. In general this will be because we received funds from someone, hower there are
     # also cases where funds is send from our wallet while !self_committed (for example by a linked desktop wallet
     # or another wallet instance using the same keys as ours).
+    #
+    # Note that no notifyNewMutation events will fire until after 'notifySyncDone'
+    # Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
     notifyNewMutation(mutation : mutation_record, self_committed: bool): &;
+    
+    # Notification that an existing transaction/mutation  has updated
+    #
+    # Note that no notifyUpdatedTransaction events will fire until after 'notifySyncDone'
+    # Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
     notifyUpdatedTransaction(transaction : transaction_record): &;
 }
 
@@ -347,17 +355,33 @@ i_library_listener = interface +j +o +n {
     # Fraction of work done since session start or last progress reset [0..1]
     # Unified progress combines connection state, header and block sync
     notifyUnifiedProgress(progress : f32): &;
+    
+    # Called once when 'notifyUnifiedProgress' reaches '1' for first time after session start
+    notifySyncDone(): &;
+    
     notifyBalanceChange(new_balance : balance_record): &;
-    # Notification of new mutations.
+    # Notification of new mutations
     # If self_committed it is due to a call to performPaymentToRecipient, else it is because of a transaction
     # reached us in another way. In general this will be because we received funds from someone, hower there are
     # also cases where funds is send from our wallet while !self_committed (for example by a linked desktop wallet
     # or another wallet instance using the same keys as ours).
+    #
+    # Note that no notifyNewMutation events will fire until after 'notifySyncDone'
+    # Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
     notifyNewMutation(mutation : mutation_record, self_committed: bool): &;
+
+    # Notification that an existing transaction/mutation  has updated
+    #
+    # Note that no notifyUpdatedTransaction events will fire until after 'notifySyncDone'
+    # Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
     notifyUpdatedTransaction(transaction : transaction_record): &;
+    
     notifyInitWithExistingWallet(): &;
+    
     notifyInitWithoutExistingWallet(): &;
+    
     notifyShutdown(): &;
+    
     notifyCoreReady(): &;
 
     logPrint(str : string): &;
