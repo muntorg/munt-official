@@ -54,7 +54,9 @@
     "on": "on",
     "off": "off",
     "password": "Password",
-    "receiving_address": "Receiving address"
+    "receiving_address": "Receiving address",
+    "days": "days",
+    "ticker_symbol": "NLG"
   },
   "new_wallet": {
     "title": "Welcome to your Gulden wallet",

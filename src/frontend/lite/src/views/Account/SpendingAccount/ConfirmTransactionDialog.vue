@@ -35,13 +35,13 @@ export default {
       };
     },
     computedAmount() {
-      return `${this.amount} NLG`;
+      return `${this.amount} ${this.$t("common.ticker_symbol")}`;
     },
     computedFee() {
       let fee = formatMoneyForDisplay(
         LibraryController.FeeForRecipient(this.computedRequest)
       );
-      return `+ ${fee} NLG FEE`;
+      return `+ ${fee} ${this.$t("common.ticker_symbol")} FEE`;
     }
   },
   methods: {

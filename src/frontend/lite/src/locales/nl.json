@@ -54,7 +54,9 @@
     "on": "aan",
     "off": "uit",
     "password": "Wachtwoord",
-    "receiving_address": "Ontvangstadres"
+    "receiving_address": "Ontvangstadres",
+    "days": "Dagen",
+    "ticker_symbol": "NLG"
   },
   "new_wallet": {
     "title": "Welkom bij jouw Gulden portemonnee",
