@@ -4,7 +4,7 @@
       <div
         class="mutations-list"
         v-for="(mutation, index) in mutations"
-        :key="mutation.timestamp"
+        :key="mutation.txHash"
       >
         <h4 v-if="showDateHeader(index)">
           {{ formatDateHeader(mutation.timestamp) }}
