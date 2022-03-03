@@ -71,8 +71,8 @@
     "compound_earnings": "Cumulatieve inkomsten",
     "status": "Status",
     "parts": "Delen",
-    "coins_locked": "Primair vastgezette hoeveelheid",
-    "coins_earned": "Hoeveelheid verdiend",
+    "coins_locked": "Primair vastgezette aantal",
+    "coins_earned": "Aantal verdiend",
     "locked_from_block": "Vastgezet vanaf blok",
     "locked_until_block": "Vastgezet tot blok",
     "lock_duration": "Looptijd",
@@ -158,7 +158,7 @@
   "link_holding_account": {
     "title": "Jouw holding key",
     "information": "De holding key kan worden gekoppeld aan een cloud service of een tweede wallet op een ander apparaat waarmee het deze service/wallet toe wordt gestaan namens jou holding acties uit te voeren.",
-    "warn": "De holding geeft geen toegang tot jouw vastgezette Florin, maar bewaar deze zorgvuldig aangezien het wel toegang geeft tot jouw ontvangen beloningen.\nLaat de holding key niet zien in het openbaar waar meegekeken kan worden op uw scherm of waar mogelijk opnames van het scherm kunnen worden gemaakt.",
+    "warn": "De holding key geeft geen toegang tot jouw vastgezette Florin, maar bewaar deze zorgvuldig aangezien het wel toegang geeft tot jouw ontvangen beloningen.\nLaat de holding key niet zien in het openbaar waar meegekeken kan worden op jouw scherm of waar mogelijk opnames van het scherm kunnen worden gemaakt.",
     "no_funds": "Holding account moet worden gevuld met vastgezette Florin voordat het mogelijk is om deze te koppelen met andere wallets."
   }
 }
