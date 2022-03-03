@@ -197,6 +197,7 @@ export default {
 <style lang="less" scoped>
 .send-view {
   height: 100%;
+  flex: 1;
 
   .main {
     flex: 1;

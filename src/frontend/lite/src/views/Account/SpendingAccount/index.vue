@@ -35,9 +35,9 @@
       @tx-hash="onTxHash"
       :tx-hash="txHash"
     />
-    <div class="spending-account-view">
-      <router-view />
-    </div>
+
+    <router-view />
+
     <portal to="footer-slot">
       <section class="footer">
         <div
