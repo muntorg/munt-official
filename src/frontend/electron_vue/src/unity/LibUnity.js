@@ -74,18 +74,14 @@ class LibUnity {
   }
 
   _initializeWalletController() {
-    // Note: walletListener is not used right now, so don't listen for events
-    /*
     console.log("_initializeWalletController");
 
-    
     this.walletListener.notifyBalanceChange = function(new_balance) {
       console.log(`walletListener.notifyBalanceChange`);
       store.dispatch("wallet/SET_WALLET_BALANCE", new_balance);
     };
 
     this.walletController.setListener(this.walletListener);
-    */
   }
 
   _updateAccounts(dispatch = true) {
