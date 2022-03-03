@@ -35,13 +35,13 @@ export default {
       };
     },
     computedAmount() {
-      return `${this.amount} XFL`;
+      return `${this.amount} ${this.$t("common.ticker_symbol")}`;
     },
     computedFee() {
       let fee = formatMoneyForDisplay(
         LibraryController.FeeForRecipient(this.computedRequest)
       );
-      return `+ ${fee} XFL FEE`;
+      return `+ ${fee} ${this.$t("common.ticker_symbol")} FEE`;
     }
   },
   methods: {

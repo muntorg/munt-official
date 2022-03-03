@@ -61,7 +61,8 @@
     "off": "Uit",
     "password": "Wachtwoord",
     "receiving_address": "Ontvangstadres",
-    "days": "Dagen"
+    "days": "Dagen",
+    "ticker_symbol": "XFL"
   },
   "new_wallet": {
     "title": "Welkom bij jouw Florin wallet",

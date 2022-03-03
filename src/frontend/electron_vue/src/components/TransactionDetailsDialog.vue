@@ -32,7 +32,7 @@ export default {
       return `${this.formatDate(timestamp)} ${this.formatTime(timestamp)}`;
     },
     computedAmount() {
-      return `${formatMoneyForDisplay(this.mutation.change)} XFL`;
+      return `${formatMoneyForDisplay(this.mutation.change)} ` + this.$t("common.ticker_symbol");
     }
   },
   methods: {

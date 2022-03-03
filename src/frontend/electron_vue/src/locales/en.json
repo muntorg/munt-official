@@ -61,7 +61,8 @@
     "off": "off",
     "password": "Password",
     "receiving_address": "Receiving address",
-    "days": "days"
+    "days": "days",
+    "ticker_symbol": "XFL"
   },
   "new_wallet": {
     "title": "Welcome to your Florin wallet",
