@@ -106,11 +106,11 @@ BlockSubsidy GetBlockSubsidy(uint64_t nHeight)
     static bool fRegTest = Params().IsRegtest();
     static bool fRegTestLegacy = Params().IsRegtestLegacy();
     static bool fTestnet = Params().IsTestnet();
-    if (fTestNet)
+    if (fTestnet)
         return BlockSubsidy(10*COIN, 10*COIN, 0);
 
     if (fRegTestLegacy)
-        return BlockSubsidy(50*COIN, 0, 0); 
+        return BlockSubsidy(50*COIN, 0, 0);
     if (fRegTest)
     {
         if (nHeight == 0)
@@ -129,7 +129,7 @@ BlockSubsidy GetBlockSubsidy(uint64_t nHeight)
             subsidyMining = 994'744'000*COIN;
         else if (nHeight >= 100000)
             subsidyMining = 25*CENT/10;
-    
+
         // Subsidy is cut in half every 400000 blocks (count starts from 100'000); Which will occur approximately every 4 years.
         // Don't ever shift by more than the bit width (64)
         uint64_t halvings = std::max((int64_t)((nHeight + 300000) / 400000)-1, (int64_t)0);
