@@ -3,18 +3,18 @@
     <portal v-if="!UIConfig.showSidebar" to="header-slot">
       <main-header :title="$t('settings.header')" />
     </portal>
-    <div class="settings-row">
-      <router-link :to="{ name: 'view-recovery-phrase' }">
+    <router-link :to="{ name: 'view-recovery-phrase' }">
+      <div class="settings-row">
         {{ $t("settings.view_recovery_phrase") }}
         <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
-      </router-link>
-    </div>
-    <div class="settings-row">
-      <router-link :to="{ name: 'change-password' }">
+      </div>
+    </router-link>
+    <router-link :to="{ name: 'change-password' }">
+      <div class="settings-row">
         {{ $t("settings.change_password") }}
         <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
-      </router-link>
-    </div>
+      </div>
+    </router-link>
     <div>
       <div v-if="UIConfig.hasThemes" class="settings-row flex-row">
         <div class="flex-1">{{ $t("settings.choose_theme") }}</div>
