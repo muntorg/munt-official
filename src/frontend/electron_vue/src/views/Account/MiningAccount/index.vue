@@ -98,23 +98,21 @@
     </button>
 
     <portal to="footer-slot">
-      <section class="footer">
-        <span
-          :class="getButtonClassNames('account')"
-          @click="routeTo('account')"
-        >
-          <fa-icon :icon="['fal', 'info-circle']" />
-          {{ $t("buttons.info") }}
-        </span>
-        <span
-          :class="getButtonClassNames('send-holding')"
-          class="button"
-          @click="routeTo('send-holding')"
-        >
-          <fa-icon :icon="['fal', 'arrow-from-bottom']" />
-          {{ $t("buttons.send") }}
-        </span>
-      </section>
+      <footer-button
+        :icon="['fal', 'info-circle']"
+        routeName="account"
+        @click="routeTo"
+      >
+        {{ $t("buttons.info") }}
+      </footer-button>
+
+      <footer-button
+        :icon="['fal', 'arrow-from-bottom']"
+        routeName="send-holding"
+        @click="routeTo"
+      >
+        {{ $t("buttons.send") }}
+      </footer-button>
     </portal>
 
     <portal to="sidebar-right">
@@ -242,10 +240,7 @@ export default {
       return classNames;
     },
     routeTo(route) {
-      if (this.$route.name === route) {
-        return;
-      }
-
+      if (this.$route.name === route) return;
       this.$router.push({ name: route, params: { id: this.account.UUID } });
     },
     closeRightSidebar() {

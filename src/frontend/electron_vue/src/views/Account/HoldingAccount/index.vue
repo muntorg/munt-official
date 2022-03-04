@@ -100,40 +100,35 @@
     <router-view />
 
     <portal to="footer-slot">
-      <section class="footer">
-        <span
-          :class="getButtonClassNames('account')"
-          @click="routeTo('account')"
-        >
-          <fa-icon :icon="['fal', 'info-circle']" />
-          {{ $t("buttons.info") }}
-        </span>
-        <span
-          :class="getButtonClassNames('link-holding-account')"
-          class="button"
-          @click="routeTo('link-holding-account')"
-        >
-          <fa-icon :icon="['fal', 'key']" />
-          {{ $t("buttons.holding_key") }}
-        </span>
-        <span
-          v-if="renewButtonVisible"
-          :class="getButtonClassNames('renew-account')"
-          @click="routeTo('renew-account')"
-          class="button"
-        >
-          <fa-icon :icon="['fal', 'redo-alt']" />
-          {{ $t("buttons.renew") }}
-        </span>
-        <span
-          :class="getButtonClassNames('send-holding')"
-          class="button"
-          @click="routeTo('send-holding')"
-        >
-          <fa-icon :icon="['fal', 'arrow-from-bottom']" />
-          {{ $t("buttons.send") }}
-        </span>
-      </section>
+      <footer-button
+        :icon="['fal', 'info-circle']"
+        routeName="account"
+        @click="routeTo"
+      >
+        {{ $t("buttons.info") }}
+      </footer-button>
+      <footer-button
+        :icon="['fal', 'key']"
+        routeName="link-holding-account"
+        @click="routeTo"
+      >
+        {{ $t("buttons.holding_key") }}
+      </footer-button>
+      <footer-button
+        v-if="renewButtonVisible"
+        :icon="['fal', 'redo-alt']"
+        routeName="renew-account"
+        @click="routeTo"
+      >
+        {{ $t("buttons.renew") }}
+      </footer-button>
+      <footer-button
+        :icon="['fal', 'arrow-from-bottom']"
+        routeName="send-holding"
+        @click="routeTo"
+      >
+        {{ $t("buttons.send") }}
+      </footer-button>
     </portal>
 
     <portal to="sidebar-right">
@@ -297,13 +292,6 @@ export default {
       );
       this.isCompounding = !this.isCompounding;
     },
-    routeTo(route) {
-      if (this.$route.name === route) {
-        return;
-      }
-
-      this.$router.push({ name: route, params: { id: this.account.UUID } });
-    },
     setRightSidebar(name) {
       switch (name) {
         case "Settings":
@@ -320,6 +308,10 @@ export default {
     },
     closeRightSidebar() {
       this.rightSidebar = null;
+    },
+    routeTo(route) {
+      if (this.$route.name === route) return;
+      this.$router.push({ name: route, params: { id: this.account.UUID } });
     }
   }
 };
@@ -358,36 +350,6 @@ export default {
   }
   & .flex-row :first-child {
     min-width: 220px;
-  }
-}
-
-// todo: .footer styles below are copy/pasted from SpendingAccount/index.vue, maybe move to parent
-.footer {
-  text-align: center;
-  line-height: calc(var(--footer-height) - 1px);
-
-  & svg {
-    font-size: 14px;
-    margin-right: 5px;
-  }
-
-  .button {
-    display: inline-block;
-    padding: 0 20px 0 20px;
-    line-height: 32px;
-    font-weight: 500;
-    font-size: 1em;
-    color: var(--primary-color);
-    text-align: center;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #f5f5f5;
-    }
-  }
-
-  .active {
-    color: #000000;
   }
 }
 </style>

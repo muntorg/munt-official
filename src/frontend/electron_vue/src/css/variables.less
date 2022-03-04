@@ -1,10 +1,10 @@
-@primary-color: #c0aa70; 
+@primary-color: #c0aa70;
+@hover-color: #c0aa7010;
 
 @success-color: @primary-color;
 @error-color: #dd3333;
 @disabled-color: #eee;
 @secondary-color: #000;
-
 
 @success-color--hover: lighten(@success-color, 4%); 
 @error-color--hover: lighten(@error-color, 8%);
@@ -35,7 +35,7 @@
   
   --main-border-color: #ddd;
 
-  --hover-color: #f6f6f6;
+  --hover-color: @hover-color; //#f6f6f6;
 
   --sidebar-right-width: 360px;
   --sidebar-right-background-color: #ffffff;

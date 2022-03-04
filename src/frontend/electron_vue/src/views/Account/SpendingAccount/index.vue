@@ -39,26 +39,27 @@
     <router-view />
 
     <portal to="footer-slot">
-      <section class="footer">
-        <div
-          :class="getButtonClassNames('account')"
-          @click="routeTo('account')"
-        >
-          <fa-icon :icon="['far', 'list-ul']" />
-          {{ $t("buttons.transactions") }}
-        </div>
-        <div :class="getButtonClassNames('send')" @click="routeTo('send')">
-          <fa-icon :icon="['fal', 'arrow-from-bottom']" />
-          {{ $t("buttons.send") }}
-        </div>
-        <div
-          :class="getButtonClassNames('receive')"
-          @click="routeTo('receive')"
-        >
-          <fa-icon :icon="['fal', 'arrow-to-bottom']" />
-          {{ $t("buttons.receive") }}
-        </div>
-      </section>
+      <footer-button
+        :icon="['far', 'list-ul']"
+        routeName="account"
+        @click="routeTo"
+      >
+        {{ $t("buttons.transactions") }}
+      </footer-button>
+      <footer-button
+        :icon="['fal', 'arrow-from-bottom']"
+        routeName="send"
+        @click="routeTo"
+      >
+        {{ $t("buttons.send") }}
+      </footer-button>
+      <footer-button
+        :icon="['fal', 'arrow-to-bottom']"
+        routeName="receive"
+        @click="routeTo"
+      >
+        {{ $t("buttons.receive") }}
+      </footer-button>
     </portal>
 
     <portal to="sidebar-right">
@@ -141,9 +142,7 @@ export default {
   },
   methods: {
     routeTo(route) {
-      if (this.$route.name === route) {
-        return;
-      }
+      if (this.$route.name === route) return;
       this.$router.push({ name: route, params: { id: this.account.UUID } });
     },
     setRightSidebar(name) {
@@ -224,35 +223,6 @@ export default {
         background: #f5f5f5;
       }
     }
-  }
-}
-
-.footer {
-  text-align: center;
-  line-height: calc(var(--footer-height) - 1px);
-
-  & svg {
-    font-size: 14px;
-    margin-right: 5px;
-  }
-
-  .button {
-    display: inline-block;
-    padding: 0 20px 0 20px;
-    line-height: 32px;
-    font-weight: 500;
-    font-size: 1em;
-    color: var(--primary-color);
-    text-align: center;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #f5f5f5;
-    }
-  }
-
-  .active {
-    color: #000000;
   }
 }
 </style>
