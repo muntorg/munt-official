@@ -6,14 +6,14 @@
 
     <section class="content">
       <section class="step-1" v-if="current === 1">
-        <gulden-form-field :title="$t('add_holding_account.funding_account')">
+        <app-form-field :title="$t('add_holding_account.funding_account')">
           <select-list
             :options="fundingAccounts"
             :default="fundingAccount"
             v-model="fundingAccount"
           />
-        </gulden-form-field>
-        <gulden-form-field :title="$t('common.amount')">
+        </app-form-field>
+        <app-form-field :title="$t('common.amount')">
           <input
             type="number"
             min="50"
@@ -21,8 +21,8 @@
             :max="maxAmountForAccount"
             :class="amountClass"
           />
-        </gulden-form-field>
-        <gulden-form-field :title="$t('add_holding_account.lock_for')">
+        </app-form-field>
+        <app-form-field :title="$t('add_holding_account.lock_for')">
           <div class="flex-row">
             <vue-slider
               :min="2"
@@ -36,9 +36,9 @@
               {{ lockTimeInMonths }} {{ $t("common.months") }}
             </div>
           </div>
-        </gulden-form-field>
+        </app-form-field>
 
-        <gulden-form-field
+        <app-form-field
           :title="$t('add_holding_account.estimated_earnings')"
           v-if="isWeightSufficient"
         >
@@ -62,18 +62,18 @@
               }}
             </div>
           </div>
-        </gulden-form-field>
+        </app-form-field>
       </section>
       <section class="step-2" v-else>
-        <gulden-form-field :title="$t('common.account_name')">
+        <app-form-field :title="$t('common.account_name')">
           <input
             type="text"
             v-model="accountName"
             maxlength="30"
             ref="accountName"
           />
-        </gulden-form-field>
-        <gulden-form-field
+        </app-form-field>
+        <app-form-field
           :title="$t('common.password')"
           v-if="walletPassword === null"
         >
@@ -83,12 +83,12 @@
             :class="passwordClass"
             @keydown="onPasswordKeydown"
           />
-        </gulden-form-field>
+        </app-form-field>
       </section>
     </section>
 
     <portal to="footer-slot">
-      <gulden-button-section>
+      <app-button-section>
         <template v-slot:left>
           <button @click="current--" v-if="current !== 1">
             {{ $t("buttons.previous") }}
@@ -108,7 +108,7 @@
         >
           {{ $t("buttons.lock") }}
         </button>
-      </gulden-button-section>
+      </app-button-section>
     </portal>
   </div>
 </template>

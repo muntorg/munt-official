@@ -316,10 +316,6 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
 // rate limited balance change notifier
 static CRateLimit<int>* balanceChangeNotifier=nullptr;
 
-// rate limited new mutations notifier
-static CRateLimit<std::pair<uint256, bool>>* newMutationsNotifier=nullptr;
-
-
 void terminateUnityFrontend()
 {
     if (signalHandler)
@@ -339,6 +335,7 @@ void terminateUnityFrontend()
 #include <boost/chrono/thread_clock.hpp>
 
 static float lastProgress=0;
+bool syncDoneFired = false;
 void handlePostInitMain()
 {
     //fixme: (SIGMA) (PHASE4) Remove this once we have witness-header-sync
@@ -387,21 +384,23 @@ void handlePostInitMain()
         signalHandler->notifyCoreReady();
     }
 
-    
+
     // unified progress notification
     if (!GetBoolArg("-spv", DEFAULT_SPV))
     {
         static bool haveFinishedHeaderSync=false;
         static int totalHeaderCount=0;
         static int startHeight = chainActive.Tip() ? chainActive.Tip()->nHeight : 0;
-        
+
         // If tip is relatively recent set progress to "completed" to begin with
         if (chainActive.Tip() && ((GetTime() - chainActive.Tip()->nTime) < 3600))
         {
             lastProgress = 1.0;
+            syncDoneFired = true;
+            signalHandler->notifySyncDone();
         }
-        
-        
+
+
         // Weight a full header sync as 20%, blocks as rest
         uiInterface.NotifyHeaderProgress.connect([=](int currentCount, int probableHeight, int headerTipHeight, int64_t headerTipTime)
         {
@@ -415,8 +414,13 @@ void handlePostInitMain()
                 float progress = ((((float)currentCount-startHeight)/((float)probableHeight-startHeight))*0.20);
                 if (lastProgress != 1 && (progress-lastProgress > 0.02 || progress == 1))
                 {
-                    lastProgress = progress;
                     signalHandler->notifyUnifiedProgress(progress);
+                    if (progress == 1)
+                    {
+                        syncDoneFired = true;
+                        signalHandler->notifySyncDone();
+                    }
+                    lastProgress = progress;
                 }
             }
         });
@@ -427,8 +431,13 @@ void handlePostInitMain()
                 float progress = pNewTip->nHeight==totalHeaderCount?1:((0.20+((((float)pNewTip->nHeight-startHeight)/((float)totalHeaderCount-startHeight))*0.80)));
                 if (lastProgress != 1 && (progress-lastProgress > 0.02 || progress == 1))
                 {
-                    lastProgress = progress;
                     signalHandler->notifyUnifiedProgress(progress);
+                    if (progress == 1)
+                    {
+                        syncDoneFired = true;
+                        signalHandler->notifySyncDone();
+                    }
+                    lastProgress = progress;
                 }
             }
         });
@@ -440,9 +449,15 @@ void handlePostInitMain()
             if (signalHandler)
             {
                 signalHandler->notifyUnifiedProgress(progress);
+                if (progress == 1)
+                {
+                    syncDoneFired = true;
+                    signalHandler->notifySyncDone();
+                }
+                lastProgress = progress;
             }
         });
-        
+
         // monitoring listeners notifications
         uiInterface.NotifyHeaderProgress.connect([=](int, int, int, int64_t)
         {
@@ -485,47 +500,69 @@ void handlePostInitMain()
         // Fire events for transaction depth changes (up to depth 10 only)
         pactiveWallet->NotifyTransactionDepthChanged.connect( [&](CWallet* pwallet, const uint256& hash)
         {
-            LOCK2(cs_main, pwallet->cs_wallet);
-            if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
+            // Don't fire notifyNewMutation or notifyUpdatedTransaction events while in initial sync
+            // We only start firing them after 'notifySyncDone' has fired.
+            if (syncDoneFired)
             {
-                const CWalletTx& wtx = pwallet->mapWallet[hash];
-                LogPrintf("unity: notify transaction depth changed %s",hash.ToString().c_str());
-                if (signalHandler)
+                LOCK2(cs_main, pwallet->cs_wallet);
+                if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
                 {
-                    std::vector<CAccount*> forAccounts = GetAccountsForAccount(pactiveWallet->activeAccount);
-                    bool anyInputsOrOutputsAreMine = false;
-                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
-                    if (anyInputsOrOutputsAreMine)
-                    {
-                        signalHandler->notifyUpdatedTransaction(walletTransaction);
-                    }
-                }
-            }
-        } );
-        // Fire events for transaction status changes, or new transactions (this won't fire for simple depth changes)
-        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status, bool fSelfComitted) {
-            LOCK2(cs_main, pwallet->cs_wallet);
-            if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
-            {
-                if (status == CT_NEW) {
-                    newMutationsNotifier->trigger(std::make_pair(hash, fSelfComitted));
-                }
-                else if (status == CT_UPDATED && signalHandler)
-                {
-                    LogPrintf("unity: notify tx updated %s",hash.ToString().c_str());
                     const CWalletTx& wtx = pwallet->mapWallet[hash];
-                    std::vector<CAccount*> forAccounts = GetAccountsForAccount(pactiveWallet->activeAccount);
-                    bool anyInputsOrOutputsAreMine = false;
-                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
-                    if (anyInputsOrOutputsAreMine)
+                    LogPrintf("unity: notify transaction depth changed %s",hash.ToString().c_str());
+                    if (signalHandler)
                     {
-                        signalHandler->notifyUpdatedTransaction(walletTransaction);
+                        std::vector<CAccount*> forAccounts = GetAccountsForAccount(pactiveWallet->activeAccount);
+                        bool anyInputsOrOutputsAreMine = false;
+                        TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
+                        if (anyInputsOrOutputsAreMine)
+                        {
+                            signalHandler->notifyUpdatedTransaction(walletTransaction);
+                        }
                     }
                 }
-                //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
-                // else if (status == CT_DELETED)
             }
-            balanceChangeNotifier->trigger(0);
+        });
+
+        // Fire events for transaction status changes, or new transactions (this won't fire for simple depth changes)
+        pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status, bool fSelfComitted)
+        {
+            // Don't fire notifyNewMutation or notifyUpdatedTransaction events while in initial sync
+            // We only start firing them after 'notifySyncDone' has fired.
+            if (syncDoneFired)
+            {
+                LOCK2(cs_main, pwallet->cs_wallet);
+                if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
+                {
+                    if (status == CT_NEW && signalHandler) {
+                        if (pactiveWallet->mapWallet.find(hash) != pactiveWallet->mapWallet.end())
+                        {
+                            const CWalletTx& wtx = pactiveWallet->mapWallet[hash];
+                            std::vector<MutationRecord> mutations;
+                            addMutationsForTransaction(&wtx, mutations, pactiveWallet->activeAccount);
+                            for (auto& m: mutations)
+                            {
+                                LogPrintf("unity: notify new mutation for tx %s", hash.ToString().c_str());
+                                signalHandler->notifyNewMutation(m, fSelfComitted);
+                            }
+                        }                    
+                    }
+                    else if (status == CT_UPDATED && signalHandler)
+                    {
+                        LogPrintf("unity: notify tx updated %s",hash.ToString().c_str());
+                        const CWalletTx& wtx = pwallet->mapWallet[hash];
+                        std::vector<CAccount*> forAccounts = GetAccountsForAccount(pactiveWallet->activeAccount);
+                        bool anyInputsOrOutputsAreMine = false;
+                        TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
+                        if (anyInputsOrOutputsAreMine)
+                        {
+                            signalHandler->notifyUpdatedTransaction(walletTransaction);
+                        }
+                    }
+                    //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
+                    // else if (status == CT_DELETED)
+                }
+                balanceChangeNotifier->trigger(0);
+            }
         });
 
         // Fire once immediately to update with latest on load.
@@ -627,7 +664,7 @@ bool ILibraryController::ContinueWalletFromRecoveryPhrase(const std::string& phr
 
     if (!pactiveWallet)
     {
-        LogPrintf("ContineWalletFromRecoveryPhrase: No active wallet");
+        LogPrintf("ContinueWalletFromRecoveryPhrase: No active wallet");
         return false;
     }
 
@@ -876,28 +913,6 @@ int32_t ILibraryController::InitUnityLib(const std::string& dataDir, const std::
             signalHandler->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
         }
     }, std::chrono::milliseconds(BALANCE_NOTIFY_THRESHOLD_MS));
-
-    newMutationsNotifier = new CRateLimit<std::pair<uint256, bool>>([](const std::pair<uint256, bool>& txInfo)
-    {
-        if (pactiveWallet && signalHandler)
-        {
-            const uint256& txHash = txInfo.first;
-            const bool fSelfComitted = txInfo.second;
-
-            LOCK2(cs_main, pactiveWallet->cs_wallet);
-            if (pactiveWallet->mapWallet.find(txHash) != pactiveWallet->mapWallet.end())
-            {
-                const CWalletTx& wtx = pactiveWallet->mapWallet[txHash];
-                std::vector<MutationRecord> mutations;
-                addMutationsForTransaction(&wtx, mutations, pactiveWallet->activeAccount);
-                for (auto& m: mutations)
-                {
-                    LogPrintf("unity: notify new mutation for tx %s", txHash.ToString().c_str());
-                    signalHandler->notifyNewMutation(m, fSelfComitted);
-                }
-            }
-        }
-    }, std::chrono::milliseconds(NEW_MUTATIONS_NOTIFY_THRESHOLD_MS));
 
     // Force the datadir to specific place on e.g. android devices
     defaultDataDirOverride = dataDir;
@@ -1153,6 +1168,17 @@ bool ILibraryController::LockWallet()
         return true;
 
     return dynamic_cast<CExtWallet*>(pactiveWallet)->Lock();
+}
+
+bool ILibraryController::IsWalletLocked()
+{
+    if (!pactiveWallet)
+    {
+        LogPrintf("LockWallet: No active wallet");
+        return false;
+    }
+
+    return dynamic_cast<CExtWallet*>(pactiveWallet)->IsLocked();
 }
 
 bool ILibraryController::ChangePassword(const std::string& oldPassword, const std::string& newPassword)
@@ -1506,6 +1532,9 @@ void ILibraryController::ResetUnifiedProgress()
 
 float ILibraryController::getUnifiedProgress()
 {
+    if (!g_connman)
+        return 200;
+
     if (!GetBoolArg("-spv", DEFAULT_SPV))
     {
         return lastProgress;

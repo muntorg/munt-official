@@ -7,7 +7,7 @@
       />
     </portal>
 
-    <gulden-form-field :title="$t('mining.number_of_threads')">
+    <app-form-field :title="$t('mining.number_of_threads')">
       <div class="flex-row">
         <vue-slider
           :min="1"
@@ -22,9 +22,26 @@
           {{ $tc("mining.thread", currentThreadCount) }}
         </div>
       </div>
-    </gulden-form-field>
+    </app-form-field>
 
-    <gulden-form-field :title="$t('mining.memory_to_use')">
+    <app-form-field :title="$t('mining.number_of_arena_threads')">
+      <div class="flex-row">
+        <vue-slider
+          :min="1"
+          :max="availableCores"
+          :value="currentArenaThreadCount"
+          v-model="currentArenaThreadCount"
+          class="slider"
+          :disabled="isActive"
+        />
+        <div class="slider-info">
+          {{ currentArenaThreadCount }}
+          {{ $tc("mining.thread", currentArenaThreadCount) }}
+        </div>
+      </div>
+    </app-form-field>
+
+    <app-form-field :title="$t('mining.memory_to_use')">
       <div class="flex-row">
         <vue-slider
           :min="minimumMemory"
@@ -36,9 +53,9 @@
         />
         <div class="slider-info">{{ currentMemorySize }} Gb</div>
       </div>
-    </gulden-form-field>
+    </app-form-field>
 
-    <gulden-form-field>
+    <app-form-field>
       <div class="flex-row">
         <div class="flex-1 align-right">
           <button
@@ -49,9 +66,9 @@
           </button>
         </div>
       </div>
-    </gulden-form-field>
+    </app-form-field>
 
-    <gulden-form-field
+    <app-form-field
       class="mining-statistics"
       :title="$t('mining.statistics')"
       v-if="isActive"
@@ -80,7 +97,7 @@
           {{ arenaSetupTime }}
         </div>
       </div>
-    </gulden-form-field>
+    </app-form-field>
 
     <portal to="footer-slot">
       <section class="footer">
@@ -106,7 +123,7 @@ import { mapState } from "vuex";
 import { GenerationController } from "../../../unity/Controllers";
 import EventBus from "../../../EventBus";
 
-import SendGulden from "./SendGulden";
+import Send from "./Send";
 
 export default {
   name: "MiningAccount",
@@ -117,6 +134,7 @@ export default {
     return {
       currentMemorySize: 2,
       currentThreadCount: 4,
+      currentArenaThreadCount: 4,
       availableCores: 0,
       minimumMemory: 0,
       maximumMemory: 0,
@@ -135,6 +153,11 @@ export default {
     this.currentThreadCount =
       this.settings.threadCount ||
       (this.availableCores < 4 ? 1 : this.availableCores - 2);
+
+    this.currentArenaThreadCount =
+      this.settings.arenaThreadCount ||
+      (this.availableCores < 4 ? 1 : this.availableCores / 2);
+
     this.minimumMemory = 1; // for now just use 1 Gb as a minimum
     this.maximumMemory = Math.floor(
       GenerationController.GetMaximumMemory() / 1024
@@ -179,6 +202,12 @@ export default {
     currentThreadCount() {
       this.$store.dispatch("mining/SET_THREAD_COUNT", this.currentThreadCount);
     },
+    currentArenaThreadCount() {
+      this.$store.dispatch(
+        "mining/SET_ARENA_THREAD_COUNT",
+        this.currentArenaThreadCount
+      );
+    },
     sendButtonDisabled() {
       if (this.rightSidebar !== null && this.sendButtonDisabled === false)
         this.closeRightSidebar();
@@ -192,6 +221,7 @@ export default {
       } else {
         let result = GenerationController.StartGeneration(
           this.currentThreadCount,
+          this.currentArenaThreadCount,
           this.currentMemorySize + "G"
         );
         if (result === false) {
@@ -204,7 +234,7 @@ export default {
       this.txHash = null;
     },
     emptyAccount() {
-      this.rightSidebar = SendGulden;
+      this.rightSidebar = Send;
     }
   }
 };

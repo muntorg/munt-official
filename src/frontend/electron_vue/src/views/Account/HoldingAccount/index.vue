@@ -15,7 +15,7 @@
       </section>
     </portal>
 
-    <gulden-section class="align-right">
+    <app-section class="align-right">
       {{ $t("holding_account.compound_earnings") }}
       <toggle-button
         :value="isCompounding"
@@ -30,9 +30,9 @@
         :width="44"
         @change="toggleCompounding"
       />
-    </gulden-section>
+    </app-section>
 
-    <gulden-section class="holding-information">
+    <app-section class="holding-information">
       <h4>{{ $t("common.information") }}</h4>
 
       <div class="flex-row">
@@ -45,11 +45,11 @@
       </div>
 
       <div class="flex-row">
-        <div>{{ $t("holding_account.gulden_locked") }}</div>
+        <div>{{ $t("holding_account.coins_locked") }}</div>
         <div>{{ accountAmountLocked }}</div>
       </div>
       <div class="flex-row">
-        <div>{{ $t("holding_account.gulden_earned") }}</div>
+        <div>{{ $t("holding_account.coins_earned") }}</div>
         <div>{{ accountAmountEarned }}</div>
       </div>
       <div class="flex-row">
@@ -90,7 +90,7 @@
         <div>{{ $t("holding_account.network_weight") }}</div>
         <div>{{ networkWeight }}</div>
       </div>
-    </gulden-section>
+    </app-section>
 
     <portal to="footer-slot">
       <section class="footer">
@@ -118,7 +118,7 @@
 <script>
 import { WitnessController } from "../../../unity/Controllers";
 import EventBus from "../../../EventBus";
-import SendGulden from "../MiningAccount/SendGulden";
+import Send from "../MiningAccount/Send";
 import RenewAccount from "./RenewAccount";
 import AccountSettings from "../AccountSettings";
 
@@ -188,7 +188,7 @@ export default {
       return this.account.spendable > 0;
     },
     sendButtonVisible() {
-      return this.sendButtonDisabled && this.rightSidebar !== SendGulden;
+      return this.sendButtonDisabled && this.rightSidebar !== Send;
     },
     renewButtonVisible() {
       return (
@@ -251,7 +251,7 @@ export default {
       this.txHash = null;
     },
     emptyAccount() {
-      this.rightSidebar = SendGulden;
+      this.rightSidebar = Send;
     },
     renewAccount() {
       this.rightSidebar = RenewAccount;

@@ -33,12 +33,11 @@ const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
 } else {
-  app.on('second-instance', (event, commandLine, workingDirectory) => {
-      focusMainWindow();
-    }
-  );
+  app.on("second-instance", (_event, _commandLine, _workingDirectory) => {
+    focusMainWindow();
+  });
   // Protocol handler for osx
-  app.on("open-url", (event, url) => {
+  app.on("open-url", (event, _url) => {
     event.preventDefault();
     focusMainWindow();
   });
@@ -89,7 +88,7 @@ function createMainWindow() {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      enableRemoteModule: true
+      contextIsolation: false
     }
   };
   if (os.platform() === "linux") {
@@ -187,7 +186,7 @@ function createDebugWindow() {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      enableRemoteModule: true
+      contextIsolation: false
     }
   };
   if (os.platform() === "linux") {
@@ -272,13 +271,10 @@ app.on("ready", async () => {
     // }
   }
 
-  // on app.ready the app.getLocale method can be called to determine the (display) language
-  store.dispatch("app/SET_LANGUAGE", app.getLocale().slice(0, 2));
-
-  updateRate(60);
-
   store.dispatch("app/SET_WALLET_VERSION", app.getVersion());
   libUnity.Initialize();
+
+  updateRate(60);
 
   createMainWindow();
 });
@@ -322,8 +318,7 @@ if (isDevelopment) {
 }
 
 function focusMainWindow() {
-  if (winMain)
-  {
+  if (winMain) {
     if (winMain.isMinimized()) winMain.restore();
     else winMain.show();
     winMain.focus();

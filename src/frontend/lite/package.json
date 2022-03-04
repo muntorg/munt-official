@@ -18,54 +18,55 @@
   },
   "main": "background.js",
   "dependencies": {
-    "@fortawesome/fontawesome-pro": "^5.13.0",
-    "@fortawesome/fontawesome-svg-core": "^1.2.28",
-    "@fortawesome/free-solid-svg-icons": "^5.15.2",
-    "@fortawesome/pro-light-svg-icons": "^5.13.0",
+    "@fortawesome/fontawesome-pro": "^5.15.3",
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-solid-svg-icons": "^6.0.0",
+    "@fortawesome/pro-light-svg-icons": "^5.15.3",
     "@fortawesome/pro-regular-svg-icons": "^5.15.2",
-    "@fortawesome/vue-fontawesome": "^0.1.10",
+    "@fortawesome/vue-fontawesome": "^2.0.2",
     "asar": "^3.0.3",
     "axios": "^0.21.1",
-    "core-js": "^3.6.5",
+    "core-js": "^3.9.1",
+    "electron-better-ipc": "^1.1.1",
     "electron-context-menu": "^2.0.1",
-    "electron-store": "^6.0.0",
-    "form-data": "^3.0.0",
+    "electron-store": "^7.0.1",
     "lodash.clonedeep": "^4.5.0",
     "portal-vue": "^2.1.7",
     "qrcode": "^1.4.4",
-    "vue": "^2.6.11",
-    "vue-i18n": "^8.17.3",
+    "vue": "^2.6.12",
+    "vue-i18n": "^8.24.2",
     "vue-js-toggle-button": "^1.3.3",
-    "vue-qrcode": "^0.3.3",
-    "vue-router": "^3.2.0",
-    "vue-slider-component": "^3.2.2",
-    "vuex": "^3.4.0",
+    "vue-qrcode": "^0.3.5",
+    "vue-router": "^3.5.1",
+    "vue-slider-component": "^3.2.11",
+    "vuex": "^3.6.2",
     "vuex-electron": "https://github.com/devlz303/vuex-electron.git"
   },
   "devDependencies": {
     "@oshell/vue-cli-plugin-electron-builder-notarize": "^1.0.2",
-    "@vue/cli-plugin-babel": "~4.4.0",
-    "@vue/cli-plugin-eslint": "~4.4.0",
-    "@vue/cli-plugin-router": "~4.4.0",
-    "@vue/cli-plugin-vuex": "~4.4.0",
-    "@vue/cli-service": "~4.4.0",
+    "@vue/cli-plugin-babel": "~4.5.11",
+    "@vue/cli-plugin-eslint": "~4.5.11",
+    "@vue/cli-plugin-router": "~4.5.11",
+    "@vue/cli-plugin-vuex": "~4.5.11",
+    "@vue/cli-service": "~4.5.11",
     "@vue/eslint-config-prettier": "^6.0.0",
     "babel-eslint": "^10.1.0",
-    "babel-plugin-import": "^1.11.0",
-    "cpy-cli": "^3.1.1",
-    "electron": "^9.0.0",
-    "electron-icon-builder": "^1.0.2",
+    "babel-plugin-import": "^1.13.3",
+    "electron": "^17.1.0",
+    "electron-builder": "^22.9.1",
+    "electron-icon-builder": "^2.0.1",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-vue": "^6.2.2",
-    "less": "^3.0.4",
+    "less": "^4.1.1",
     "less-loader": "^5.0.0",
     "native-ext-loader": "^2.3.0",
     "prettier": "^1.19.1",
     "vue-cli-plugin-ant-design": "~1.0.1",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.1",
     "vue-cli-plugin-i18n": "~1.0.1",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.12",
+    "webpack": "^5.28.0"
   },
   "eslintConfig": {
     "root": true,
@@ -80,9 +81,14 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "no-unused-vars": ["warn", {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }]
+    }
   },
   "browserslist": [
-    "Electron >= 9.0.0"
+    "Electron >= 17.1.0"
   ]
 }

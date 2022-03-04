@@ -34,8 +34,17 @@ export default {
   methods: {
     onAccountChanged() {
       if (this.account) {
-        this.accountType = SpendingAccount;
+        switch (this.account.type) {
+          case "Desktop":
+            this.accountType = SpendingAccount;
+            break;
+          default:
+            this.accountType = "div";
+            break;
+        }
       }
+      // remove the activity indicator at this point
+      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
     }
   }
 };

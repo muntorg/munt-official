@@ -35,10 +35,12 @@ static CRateLimit<std::pair<uint256, bool>>* walletNewMutationsNotifier=nullptr;
 // rate limited balance change notifier
 static CRateLimit<int>* walletBalanceChangeNotifier=nullptr;
 
+extern bool syncDoneFired;
+
 void IWalletController::setListener(const std::shared_ptr<IWalletListener>& walletListener_)
 {
     walletListener = walletListener_;
-        
+
     if (pactiveWallet && walletListener)
     {
         walletBalanceChangeNotifier = new CRateLimit<int>([](int)
@@ -50,10 +52,10 @@ void IWalletController::setListener(const std::shared_ptr<IWalletListener>& wall
                 walletListener->notifyBalanceChange(BalanceRecord(balances.availableIncludingLocked, balances.availableExcludingLocked, balances.availableLocked, balances.unconfirmedIncludingLocked, balances.unconfirmedExcludingLocked, balances.unconfirmedLocked, balances.immatureIncludingLocked, balances.immatureExcludingLocked, balances.immatureLocked, balances.totalLocked));
             }
         }, std::chrono::milliseconds(BALANCE_NOTIFY_THRESHOLD_MS));
-        
+
         walletNewMutationsNotifier = new CRateLimit<std::pair<uint256, bool>>([](const std::pair<uint256, bool>& txInfo)
         {
-            if (pactiveWallet && walletListener)
+            if (pactiveWallet && walletListener && syncDoneFired)
             {
                 const uint256& txHash = txInfo.first;
                 const bool fSelfComitted = txInfo.second;
@@ -72,60 +74,66 @@ void IWalletController::setListener(const std::shared_ptr<IWalletListener>& wall
                 }
             }
         }, std::chrono::milliseconds(NEW_MUTATIONS_NOTIFY_THRESHOLD_MS));
-        
+
         // Fire events for transaction depth changes (up to depth 10 only)
         pactiveWallet->NotifyTransactionDepthChanged.connect( [&](CWallet* pwallet, const uint256& hash)
         {
-            DS_LOCK2(cs_main, pwallet->cs_wallet);
-            if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
+            if (syncDoneFired)
             {
-                const CWalletTx& wtx = pwallet->mapWallet[hash];
-                LogPrintf("unity: notify transaction depth changed %s",hash.ToString().c_str());
-                if (walletListener)
+                DS_LOCK2(cs_main, pwallet->cs_wallet);
+                if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
                 {
-                    bool anyInputsOrOutputsAreMine = false;
-                    std::vector<CAccount*> forAccounts;
-                    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+                    const CWalletTx& wtx = pwallet->mapWallet[hash];
+                    LogPrintf("unity: notify transaction depth changed %s",hash.ToString().c_str());
+                    if (walletListener)
                     {
-                        forAccounts.push_back(account);
-                    }
-                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
-                    if (anyInputsOrOutputsAreMine)
-                    {
-                        walletListener->notifyUpdatedTransaction(walletTransaction);
+                        bool anyInputsOrOutputsAreMine = false;
+                        std::vector<CAccount*> forAccounts;
+                        for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+                        {
+                            forAccounts.push_back(account);
+                        }
+                        TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
+                        if (anyInputsOrOutputsAreMine)
+                        {
+                            walletListener->notifyUpdatedTransaction(walletTransaction);
+                        }
                     }
                 }
             }
         } );
         // Fire events for transaction status changes, or new transactions (this won't fire for simple depth changes)
         pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status, bool fSelfComitted) {
-            DS_LOCK2(cs_main, pwallet->cs_wallet);
-            if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
+            if (syncDoneFired)
             {
-                if (status == CT_NEW) {
-                    walletNewMutationsNotifier->trigger(std::make_pair(hash, fSelfComitted));
-                }
-                else if (status == CT_UPDATED && walletListener)
+                DS_LOCK2(cs_main, pwallet->cs_wallet);
+                if (pwallet->mapWallet.find(hash) != pwallet->mapWallet.end())
                 {
-                    LogPrintf("unity: notify tx updated %s",hash.ToString().c_str());
-                    const CWalletTx& wtx = pwallet->mapWallet[hash];
-                    bool anyInputsOrOutputsAreMine = false;
-                    std::vector<CAccount*> forAccounts;
-                    for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
-                    {
-                        forAccounts.push_back(account);
+                    if (status == CT_NEW) {
+                        walletNewMutationsNotifier->trigger(std::make_pair(hash, fSelfComitted));
                     }
-                    TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
-                    if (anyInputsOrOutputsAreMine)
+                    else if (status == CT_UPDATED && walletListener)
                     {
-                        walletListener->notifyUpdatedTransaction(walletTransaction);
+                        LogPrintf("unity: notify tx updated %s",hash.ToString().c_str());
+                        const CWalletTx& wtx = pwallet->mapWallet[hash];
+                        bool anyInputsOrOutputsAreMine = false;
+                        std::vector<CAccount*> forAccounts;
+                        for (const auto& [accountUUID, account] : pactiveWallet->mapAccounts)
+                        {
+                            forAccounts.push_back(account);
+                        }
+                        TransactionRecord walletTransaction = calculateTransactionRecordForWalletTransaction(wtx, forAccounts, anyInputsOrOutputsAreMine);
+                        if (anyInputsOrOutputsAreMine)
+                        {
+                            walletListener->notifyUpdatedTransaction(walletTransaction);
+                        }
                     }
+                    //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
+                    // else if (status == CT_DELETED)
                 }
-                //fixme: (UNITY) - Consider implementing f.e.x if a 0 conf transaction gets deleted...
-                // else if (status == CT_DELETED)
+                walletBalanceChangeNotifier->trigger(0);
             }
-            walletBalanceChangeNotifier->trigger(0);
-        });   
+        });
     }
 }
 

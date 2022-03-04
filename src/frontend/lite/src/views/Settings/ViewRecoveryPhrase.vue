@@ -1,58 +1,84 @@
 <template>
-  <div class="view-recovery-phrase-view flex-col">
-    <h2>
-      <span v-if="current === 1">{{ $t("common.enter_your_password") }}</span>
-      <span class="important" v-else>{{ $t("common.important") }}</span>
-    </h2>
+  <div class="view-recovery-phrase-view">
+    <div>
+      <h2>
+        <span v-if="current === 1">{{ $t("common.enter_your_password") }}</span>
+        <span class="important" v-else>{{ $t("common.important") }}</span>
+      </h2>
 
-    <!-- step 1: Enter password -->
-    <gulden-form-field v-if="current === 1">
-      <input
-        ref="password"
-        type="password"
-        v-model="password"
-        @keydown="getRecoveryPhraseOnEnter"
-        :class="computedStatus"
-      />
-    </gulden-form-field>
+      <!-- step 1: Enter password -->
+      <app-form-field :title="$t('common.password')" v-if="current === 1">
+        <input
+          ref="password"
+          type="password"
+          v-model="password"
+          @keydown="getRecoveryPhraseOnEnter"
+          :class="computedStatus"
+        />
+      </app-form-field>
 
-    <!-- step 2: Show recovery phrase -->
-    <div v-else>
-      <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
-      <gulden-section class="phrase">
-        {{ recoveryPhrase }}
-      </gulden-section>
+      <!-- step 2: Show recovery phrase -->
+      <div v-else>
+        <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
+        <app-section class="phrase">
+          {{ recoveryPhrase }}
+        </app-section>
+      </div>
     </div>
 
-    <div class="flex-1" />
-
-    <gulden-button-section>
-      <template v-slot:right>
-        <button
-          v-if="current === 1"
-          @click="getRecoveryPhrase"
-          :disabled="isNextDisabled"
-        >
-          {{ $t("buttons.next") }}
-        </button>
-        <button v-if="current === 2" @click="ready">
-          {{ $t("buttons.ready") }}
-        </button>
-      </template>
-    </gulden-button-section>
+    <div v-if="UIConfig.showSidebar">
+      <div class="flex-1" />
+      <app-button-section>
+        <template v-slot:left>
+          <button v-if="current === 1" @click="routeTo('settings')">
+            {{ $t("buttons.back") }}
+          </button>
+        </template>
+        <template v-slot:right>
+          <button
+            v-if="current === 1"
+            @click="getRecoveryPhrase"
+            :disabled="isNextDisabled"
+          >
+            {{ $t("buttons.next") }}
+          </button>
+          <button v-if="current === 2" @click="ready">
+            {{ $t("buttons.ready") }}
+          </button>
+        </template>
+      </app-button-section>
+    </div>
+    <div v-else>
+      <portal to="footer-slot">
+        <app-button-section>
+          <button
+            v-if="current === 1"
+            @click="getRecoveryPhrase"
+            :disabled="isNextDisabled"
+          >
+            {{ $t("buttons.next") }}
+          </button>
+          <button v-if="current === 2" @click="ready">
+            {{ $t("buttons.ready") }}
+          </button>
+        </app-button-section>
+      </portal>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import { LibraryController } from "../../unity/Controllers";
+import UIConfig from "../../../ui-config.json";
 
 export default {
   data() {
     return {
       recoveryPhrase: null,
       password: "",
-      isPasswordInvalid: false
+      isPasswordInvalid: false,
+      UIConfig: UIConfig
     };
   },
   mounted() {
@@ -90,6 +116,9 @@ export default {
     },
     ready() {
       this.$router.push({ name: "settings" });
+    },
+    routeTo(route) {
+      this.$router.push({ name: route });
     }
   }
 };
@@ -97,7 +126,11 @@ export default {
 
 <style lang="less" scoped>
 .view-recovery-phrase-view {
+  display: flex;
   height: 100%;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }
 
 .phrase {

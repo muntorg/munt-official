@@ -25,6 +25,13 @@ void NativeILibraryListener::JavaProxy::notifyUnifiedProgress(float c_progress) 
                            ::djinni::get(::djinni::F32::fromCpp(jniEnv, c_progress)));
     ::djinni::jniExceptionCheck(jniEnv);
 }
+void NativeILibraryListener::JavaProxy::notifySyncDone() {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeILibraryListener>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifySyncDone);
+    ::djinni::jniExceptionCheck(jniEnv);
+}
 void NativeILibraryListener::JavaProxy::notifyBalanceChange(const ::BalanceRecord & c_new_balance) {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);

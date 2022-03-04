@@ -1,17 +1,17 @@
 <template>
-  <gulden-section class="gulden-form-field">
+  <app-section class="app-form-field">
     <h4 v-if="hasTitle">{{ title }}</h4>
     <div class="input">
       <slot />
     </div>
-  </gulden-section>
+  </app-section>
 </template>
 
 <script>
-import GuldenSection from "./GuldenSection";
+import AppSection from "./AppSection";
 
 export default {
-  name: "GuldenFormField",
+  name: "AppFormField",
   props: {
     title: {
       type: String,
@@ -19,7 +19,7 @@ export default {
     }
   },
   components: {
-    GuldenSection
+    AppSection
   },
   computed: {
     hasTitle() {

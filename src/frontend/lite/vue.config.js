@@ -10,6 +10,7 @@ module.exports = {
       builderOptions: {
         appId: "com.gulden.lite-desktop-wallet",
         productName: "Gulden-lite",
+        extraFiles: [],
         publish: null,
         afterSign: "./notarize.js",
         protocols: [

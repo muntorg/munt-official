@@ -1,12 +1,12 @@
 <template>
-  <div class="change-password-view flex-col">
+  <div class="change-password-view">
     <h2>
       <span v-if="current === 1">{{ $t("common.enter_your_password") }}</span>
       <span v-else>{{ $t("setup.choose_password") }}</span>
     </h2>
 
     <!-- step 1: Enter old password -->
-    <gulden-form-field v-if="current === 1">
+    <app-form-field v-if="current === 1" :title="$t('common.password')">
       <input
         ref="passwordold"
         type="password"
@@ -14,26 +14,48 @@
         @keydown="validatePasswordOnEnter"
         :class="passwordOldStatus"
       />
-    </gulden-form-field>
+    </app-form-field>
 
     <!-- step 2: enter new password -->
     <div v-else>
-      <gulden-form-field :title="$t('common.password')">
+      <app-form-field :title="$t('common.password')">
         <input ref="password1" type="password" v-model="password1" />
-      </gulden-form-field>
-      <gulden-form-field :title="$t('setup.repeat_password')">
+      </app-form-field>
+      <app-form-field :title="$t('setup.repeat_password')">
         <input
           type="password"
           v-model="password2"
           :class="password2Status"
           @keydown="validatePasswordRepeatOnEnter"
         />
-      </gulden-form-field>
+      </app-form-field>
     </div>
 
     <div class="flex-1" />
-
-    <gulden-button-section>
+    <portal v-if="!UIConfig.showSidebar" to="footer-slot">
+      <app-button-section>
+        <button
+          v-if="current === 1"
+          @click="nextStep"
+          :disabled="isNextDisabled"
+        >
+          {{ $t("buttons.next") }}
+        </button>
+        <button
+          v-if="current === 2"
+          @click="nextStep"
+          :disabled="isNextDisabled"
+        >
+          {{ $t("buttons.change_password") }}
+        </button>
+      </app-button-section>
+    </portal>
+    <app-button-section v-else>
+      <template v-slot:left>
+        <button v-if="current === 1" @click="routeTo('settings')">
+          {{ $t("buttons.back") }}
+        </button>
+      </template>
       <template v-slot:right>
         <button
           v-if="current === 1"
@@ -50,13 +72,14 @@
           {{ $t("buttons.change_password") }}
         </button>
       </template>
-    </gulden-button-section>
+    </app-button-section>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import { LibraryController } from "../../unity/Controllers";
+import UIConfig from "../../../ui-config.json";
 
 export default {
   data() {
@@ -65,7 +88,8 @@ export default {
       passwordold: "",
       password1: "",
       password2: "",
-      isPasswordInvalid: false
+      isPasswordInvalid: false,
+      UIConfig: UIConfig
     };
   },
   computed: {
@@ -139,6 +163,9 @@ export default {
       } else {
         this.isPasswordInvalid = true;
       }
+    },
+    routeTo(route) {
+      this.$router.push({ name: route });
     }
   }
 };
@@ -146,6 +173,10 @@ export default {
 
 <style lang="less" scoped>
 .change-password-view {
+  display: flex;
   height: 100%;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }
 </style>

@@ -1,9 +1,11 @@
 <template>
-  <div class="gulden-button-section flex-row">
+  <div class="app-button-section flex-row">
     <div class="left">
       <slot name="left" />
     </div>
-    <div class="middle"></div>
+    <div class="middle">
+      <slot name="middle" />
+    </div>
     <div class="right">
       <slot />
       <slot name="right" />
@@ -13,18 +15,24 @@
 
 <script>
 export default {
-  name: "GuldenButtonSection"
+  name: "AppButtonSection"
 };
 </script>
 
 <style lang="less" scoped>
-.gulden-button-section {
+.app-button-section {
   width: 100%;
 
   & .left {
     float: left;
     & > button:not(:last-child) {
       margin: 0 20px 0 0;
+    }
+
+    & > button:not([disabled]) {
+      background-color: #fff;
+      border: 1px solid var(--primary-color);
+      color: var(--primary-color);
     }
   }
 

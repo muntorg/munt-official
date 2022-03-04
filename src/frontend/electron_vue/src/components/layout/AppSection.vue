@@ -12,6 +12,6 @@
 
 <script>
 export default {
-  name: "GuldenSection"
+  name: "AppSection"
 };
 </script>

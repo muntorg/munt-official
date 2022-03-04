@@ -42,7 +42,7 @@ export default {
           case "Desktop":
             this.accountType = SpendingAccount;
             break;
-          case "Witness":
+          case "Holding":
             this.accountType = HoldingAccount;
             break;
           case "Mining":

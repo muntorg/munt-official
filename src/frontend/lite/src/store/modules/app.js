@@ -17,24 +17,23 @@ const app = {
   namespaced: true,
   state: {
     coreReady: false,
-    language: null,
-    rate: null,
+    syncDone: false,
+    activityIndicator: false,
     splashReady: false,
     status: AppStatus.start,
     theme: null,
     unityVersion: null,
     walletExists: null,
-    walletVersion: null
+    walletVersion: null,
+    rate: null,
+    language: "en"
   },
   mutations: {
     SET_CORE_READY(state) {
       state.coreReady = true;
     },
-    SET_LANGUAGE(state, language) {
-      state.language = language;
-    },
-    SET_RATE(state, rate) {
-      state.rate = rate;
+    SET_SYNC_DONE(state) {
+      state.syncDone = true;
     },
     SET_SPLASH_READY(state) {
       state.splashReady = true;
@@ -49,11 +48,20 @@ const app = {
     SET_UNITY_VERSION(state, version) {
       state.unityVersion = version;
     },
+    SET_RATE(state, rate) {
+      state.rate = rate;
+    },
     SET_WALLET_EXISTS(state, walletExists) {
       state.walletExists = walletExists;
     },
     SET_WALLET_VERSION(state, version) {
       state.walletVersion = version;
+    },
+    SET_ACTIVITY_INDICATOR(state, activityIndicator) {
+      state.activityIndicator = activityIndicator;
+    },
+    SET_LANGUAGE(state, language) {
+      state.language = language;
     }
   },
   actions: {
@@ -65,11 +73,8 @@ const app = {
       commit("SET_CORE_READY");
       EnableDebugWindowOnCoreReady();
     },
-    SET_LANGUAGE({ commit }, language) {
-      commit("SET_LANGUAGE", language);
-    },
-    SET_RATE({ commit }, rate) {
-      commit("SET_RATE", rate);
+    SET_SYNC_DONE({ commit }) {
+      commit("SET_SYNC_DONE");
     },
     SET_SPLASH_READY({ commit }) {
       commit("SET_SPLASH_READY");
@@ -82,6 +87,15 @@ const app = {
     },
     SET_UNITY_VERSION({ commit }, version) {
       commit("SET_UNITY_VERSION", version);
+    },
+    SET_RATE({ commit }, rate) {
+      commit("SET_RATE", rate);
+    },
+    SET_ACTIVITY_INDICATOR({ commit }, activityIndicator) {
+      commit("SET_ACTIVITY_INDICATOR", activityIndicator);
+    },
+    SET_LANGUAGE({ commit }, language) {
+      commit("SET_LANGUAGE", language);
     },
     SET_WALLET_EXISTS({ commit }, walletExists) {
       let status = walletExists ? AppStatus.synchronize : AppStatus.setup;

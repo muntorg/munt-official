@@ -1,12 +1,12 @@
 <template>
-  <div class="setup-layout">
-    <div class="header">
+  <section class="setup-layout">
+    <section class="header">
       <div class="logo" />
-    </div>
-    <div class="main">
+    </section>
+    <section class="main">
       <router-view />
-    </div>
-  </div>
+    </section>
+  </section>
 </template>
 
 <script>
@@ -25,6 +25,8 @@ export default {
     height: var(--header-height);
     border-bottom: 1px solid #ddd;
     padding: 20px;
+    font-size: 1.1em;
+    line-height: 42px;
 
     & .logo {
       width: 22px;

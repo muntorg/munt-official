@@ -7,11 +7,12 @@
 - (nonnull instancetype)initWithRequestStatus:(nonnull NSString *)requestStatus
                                 accountStatus:(nonnull NSString *)accountStatus
                                 accountWeight:(int64_t)accountWeight
+                      accountWeightAtCreation:(int64_t)accountWeightAtCreation
                                  accountParts:(int64_t)accountParts
                           accountAmountLocked:(int64_t)accountAmountLocked
-                      accountWeightAtCreation:(int64_t)accountWeightAtCreation
+                accountAmountLockedAtCreation:(int64_t)accountAmountLockedAtCreation
                         networkTipTotalWeight:(int64_t)networkTipTotalWeight
-      networkTotalWeightAtAccountCreationTime:(int64_t)networkTotalWeightAtAccountCreationTime
+                 networkTotalWeightAtCreation:(int64_t)networkTotalWeightAtCreation
              accountInitialLockPeriodInBlocks:(int64_t)accountInitialLockPeriodInBlocks
            accountRemainingLockPeriodInBlocks:(int64_t)accountRemainingLockPeriodInBlocks
          accountExpectedWitnessPeriodInBlocks:(int64_t)accountExpectedWitnessPeriodInBlocks
@@ -21,11 +22,12 @@
 + (nonnull instancetype)witnessAccountStatisticsRecordWithRequestStatus:(nonnull NSString *)requestStatus
                                                           accountStatus:(nonnull NSString *)accountStatus
                                                           accountWeight:(int64_t)accountWeight
+                                                accountWeightAtCreation:(int64_t)accountWeightAtCreation
                                                            accountParts:(int64_t)accountParts
                                                     accountAmountLocked:(int64_t)accountAmountLocked
-                                                accountWeightAtCreation:(int64_t)accountWeightAtCreation
+                                          accountAmountLockedAtCreation:(int64_t)accountAmountLockedAtCreation
                                                   networkTipTotalWeight:(int64_t)networkTipTotalWeight
-                                networkTotalWeightAtAccountCreationTime:(int64_t)networkTotalWeightAtAccountCreationTime
+                                           networkTotalWeightAtCreation:(int64_t)networkTotalWeightAtCreation
                                        accountInitialLockPeriodInBlocks:(int64_t)accountInitialLockPeriodInBlocks
                                      accountRemainingLockPeriodInBlocks:(int64_t)accountRemainingLockPeriodInBlocks
                                    accountExpectedWitnessPeriodInBlocks:(int64_t)accountExpectedWitnessPeriodInBlocks
@@ -42,20 +44,23 @@
 /** Account weight */
 @property (nonatomic, readonly) int64_t accountWeight;
 
+/** Account weight when it was created */
+@property (nonatomic, readonly) int64_t accountWeightAtCreation;
+
 /** How many parts the account weight is split up into */
 @property (nonatomic, readonly) int64_t accountParts;
 
-/** Account amount locked */
+/** Account amount currently locked */
 @property (nonatomic, readonly) int64_t accountAmountLocked;
 
-/** Account weight when it was created */
-@property (nonatomic, readonly) int64_t accountWeightAtCreation;
+/** Account amount locked when it was created */
+@property (nonatomic, readonly) int64_t accountAmountLockedAtCreation;
 
 /** Current network weight */
 @property (nonatomic, readonly) int64_t networkTipTotalWeight;
 
 /** Network weight when account was created */
-@property (nonatomic, readonly) int64_t networkTotalWeightAtAccountCreationTime;
+@property (nonatomic, readonly) int64_t networkTotalWeightAtCreation;
 
 /** Account total lock period in blocks (from creation block) */
 @property (nonatomic, readonly) int64_t accountInitialLockPeriodInBlocks;

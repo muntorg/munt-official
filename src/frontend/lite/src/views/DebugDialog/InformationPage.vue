@@ -1,6 +1,6 @@
 <template>
   <div class="information-page">
-    <gulden-section>
+    <app-section>
       <h4>General</h4>
 
       <div class="flex-row">
@@ -23,47 +23,47 @@
         <div>Startup time</div>
         <div class="ellipsis">{{ startupTime }}</div>
       </div>
-    </gulden-section>
+    </app-section>
 
-    <gulden-section>
+    <app-section>
       <h4>Network</h4>
       <div class="flex-row">
         <div>Status</div>
-        <div class="ellipsis">{{ clientInfo.network_status }}</div>
+        <div>{{ clientInfo.network_status }}</div>
       </div>
       <div class="flex-row">
         <div>Connection count</div>
-        <div class="ellipsis">{{ numberOfConnections }}</div>
+        <div>{{ numberOfConnections }}</div>
       </div>
-    </gulden-section>
+    </app-section>
 
-    <gulden-section>
+    <app-section>
       <h4>Block chain</h4>
       <div class="flex-row">
         <div>Number of blocks</div>
-        <div class="ellipsis">{{ clientInfo.chain_tip_height }}</div>
+        <div>{{ clientInfo.chain_tip_height }}</div>
       </div>
       <div class="flex-row">
         <div>Last block time</div>
-        <div class="ellipsis">{{ lastBlockTime }}</div>
+        <div>{{ lastBlockTime }}</div>
       </div>
       <div class="flex-row">
         <div>Last block hash</div>
-        <div class="ellipsis">{{ clientInfo.chain_tip_hash }}</div>
+        <div>{{ clientInfo.chain_tip_hash }}</div>
       </div>
-    </gulden-section>
+    </app-section>
 
-    <gulden-section>
+    <app-section>
       <h4>Memory pool</h4>
       <div class="flex-row">
         <div>Number of transactions</div>
-        <div class="ellipsis">{{ clientInfo.mempool_transaction_count }}</div>
+        <div>{{ clientInfo.mempool_transaction_count }}</div>
       </div>
       <div class="flex-row">
         <div>Memory usage</div>
-        <div class="ellipsis">{{ clientInfo.mempool_memory_size }}</div>
+        <div>{{ clientInfo.mempool_memory_size }}</div>
       </div>
-    </gulden-section>
+    </app-section>
   </div>
 </template>
 
@@ -90,7 +90,8 @@ export default {
       let connections_in = parseInt(this.clientInfo.num_connections_in);
       let connections_out = parseInt(this.clientInfo.num_connections_out);
 
-      return `${connections_in + connections_out}`;
+      return `${connections_in +
+        connections_out} (In: ${connections_in} / Out: ${connections_out})`;
     }
   },
   created() {
@@ -129,11 +130,9 @@ export default {
 .information-page {
   width: 100%;
   height: 100%;
-
   & h4 {
     margin: 0 0 10px 0;
   }
-
   & .flex-row > div {
     font-size: 0.95em;
     line-height: 20px;

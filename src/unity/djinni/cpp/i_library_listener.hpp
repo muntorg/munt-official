@@ -25,17 +25,29 @@ public:
      */
     virtual void notifyUnifiedProgress(float progress) = 0;
 
+    /** Called once when 'notifyUnifiedProgress' reaches '1' for first time after session start */
+    virtual void notifySyncDone() = 0;
+
     virtual void notifyBalanceChange(const BalanceRecord & new_balance) = 0;
 
     /**
-     * Notification of new mutations.
+     * Notification of new mutations
      * If self_committed it is due to a call to performPaymentToRecipient, else it is because of a transaction
      * reached us in another way. In general this will be because we received funds from someone, hower there are
      * also cases where funds is send from our wallet while !self_committed (for example by a linked desktop wallet
      * or another wallet instance using the same keys as ours).
+     *
+     * Note that no notifyNewMutation events will fire until after 'notifySyncDone'
+     * Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
      */
     virtual void notifyNewMutation(const MutationRecord & mutation, bool self_committed) = 0;
 
+    /**
+     * Notification that an existing transaction/mutation  has updated
+     *
+     * Note that no notifyUpdatedTransaction events will fire until after 'notifySyncDone'
+     * Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
+     */
     virtual void notifyUpdatedTransaction(const TransactionRecord & transaction) = 0;
 
     virtual void notifyInitWithExistingWallet() = 0;

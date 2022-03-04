@@ -124,11 +124,11 @@ export default {
         command.selectionStart = command.selectionEnd = command.value.length;
       }, 0);
     },
-    onRpcInputKeyDown() {
+    async onRpcInputKeyDown() {
       this.preventAutocompleteList = false;
       switch (event.keyCode) {
         case 13: {
-          let result = RpcController.Execute(this.command);
+          let result = await RpcController.ExecuteAsync(this.command);
           this.command = "";
 
           this.value.output.push({
@@ -235,10 +235,14 @@ export default {
 
 .output {
   flex: 1;
-  margin-bottom: 10px;
-  border: 1px solid var(--main-border-color);
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
   user-select: text;
-  padding: 10px;
+  padding: 4px;
+
+  & > .info {
+    padding: 8px 0;
+  }
 
   & .help {
     color: var(--primary-color);

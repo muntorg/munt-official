@@ -6,7 +6,7 @@
     </h2>
 
     <!-- step 1: Enter password -->
-    <gulden-form-field :title="$t('common.password')" v-if="current === 1">
+    <app-form-field :title="$t('common.password')" v-if="current === 1">
       <input
         ref="password"
         type="password"
@@ -14,40 +14,69 @@
         @keydown="getRecoveryPhraseOnEnter"
         :class="computedStatus"
       />
-    </gulden-form-field>
+    </app-form-field>
 
     <!-- step 2: Show recovery phrase -->
     <div v-else>
       <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
-      <gulden-section class="phrase">
+      <app-section class="phrase">
         {{ recoveryPhrase }}
-      </gulden-section>
+      </app-section>
     </div>
 
-    <portal to="footer-slot">
-      <gulden-button-section>
-        <button
-          v-if="current === 1"
-          @click="getRecoveryPhrase"
-          :disabled="isNextDisabled"
-        >
-          {{ $t("buttons.next") }}
-        </button>
-      </gulden-button-section>
-    </portal>
+    <div v-if="UIConfig.showSidebar">
+      <div class="flex-1" />
+      <app-button-section>
+        <template v-slot:left>
+          <button v-if="current === 1" @click="routeTo('settings')">
+            {{ $t("buttons.back") }}
+          </button>
+        </template>
+        <template v-slot:right>
+          <button
+            v-if="current === 1"
+            @click="getRecoveryPhrase"
+            :disabled="isNextDisabled"
+          >
+            {{ $t("buttons.next") }}
+          </button>
+          <button v-if="current === 2" @click="ready">
+            {{ $t("buttons.ready") }}
+          </button>
+        </template>
+      </app-button-section>
+    </div>
+    <div v-else>
+      <portal to="footer-slot">
+        <app-button-section>
+          <button
+            v-if="current === 1"
+            @click="getRecoveryPhrase"
+            :disabled="isNextDisabled"
+          >
+            {{ $t("buttons.next") }}
+          </button>
+          <button v-if="current === 2" @click="ready">
+            {{ $t("buttons.ready") }}
+          </button>
+        </app-button-section>
+      </portal>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import { LibraryController } from "../../unity/Controllers";
+import UIConfig from "../../../ui-config.json";
 
 export default {
   data() {
     return {
       recoveryPhrase: null,
       password: "",
-      isPasswordInvalid: false
+      isPasswordInvalid: false,
+      UIConfig: UIConfig
     };
   },
   mounted() {
@@ -77,24 +106,34 @@ export default {
     },
     getRecoveryPhrase() {
       if (LibraryController.UnlockWallet(this.password)) {
-        this.recoveryPhrase = LibraryController.GetRecoveryPhrase();
+        this.recoveryPhrase = LibraryController.GetRecoveryPhrase().phrase;
         LibraryController.LockWallet();
       } else {
         this.isPasswordInvalid = true;
       }
+    },
+    ready() {
+      this.$router.push({ name: "settings" });
+    },
+    routeTo(route) {
+      this.$router.push({ name: route });
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
+.view-recovery-phrase-view {
+  height: 100%;
+}
+
 .phrase {
-  padding: 10px;
+  padding: 15px;
   font-size: 1.05em;
   font-weight: 500;
   text-align: center;
   word-spacing: 4px;
   background-color: #f5f5f5;
-  user-select: all;
+  user-select: none;
 }
 </style>

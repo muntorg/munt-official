@@ -1,38 +1,71 @@
 <template>
   <div class="settings-list-view">
-    <h2>{{ $t("settings.header") }}</h2>
-    <router-link :to="{ name: 'view-recovery-phrase' }">
-      <div class="settings-row">
+    <portal v-if="UIConfig.showSidebar" to="header-slot">
+      <main-header :title="$t('settings.header')" />
+    </portal>
+    <div class="settings-row">
+      <router-link :to="{ name: 'view-recovery-phrase' }">
         {{ $t("settings.view_recovery_phrase") }}
         <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
-      </div>
-    </router-link>
-    <router-link :to="{ name: 'change-password' }">
-      <div class="settings-row">
+      </router-link>
+    </div>
+    <div class="settings-row">
+      <router-link :to="{ name: 'change-password' }">
         {{ $t("settings.change_password") }}
         <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
+      </router-link>
+    </div>
+    <div>
+      <div v-if="UIConfig.hasThemes" class="settings-row flex-row">
+        <div class="flex-1">{{ $t("settings.choose_theme") }}</div>
+        <div
+          :class="getThemeSelectClassNames('blue')"
+          @click="switchTheme('blue')"
+        ></div>
+        <div
+          :class="getThemeSelectClassNames('orange')"
+          @click="switchTheme('orange')"
+        ></div>
       </div>
-    </router-link>
+    </div>
     <div class="settings-row flex-row">
-      <div class="flex-1">{{ $t("settings.choose_theme") }}</div>
+      <div class="flex-1">{{ $t("settings.choose_language") }}</div>
       <div
-        :class="getThemeSelectClassNames('blue')"
-        @click="switchTheme('blue')"
-      ></div>
+        :class="`language-select ${this.language === 'en' ? 'selected' : ''}`"
+        @click="changeLanguage('en')"
+      >
+        {{ $t("settings.english") }}
+      </div>
       <div
-        :class="getThemeSelectClassNames('orange')"
-        @click="switchTheme('orange')"
-      ></div>
+        :class="`language-select ${this.language === 'nl' ? 'selected' : ''}`"
+        @click="changeLanguage('nl')"
+      >
+        {{ $t("settings.dutch") }}
+      </div>
+    </div>
+    <div style="flex: 1" />
+    <portal v-if="!UIConfig.showSidebar" to="footer-slot">
+      <div />
+    </portal>
+    <div v-else style="margin-top: 20px">
+      <app-button-section class="buttons">
+        <template v-slot:left>
+          <button @click="routeTo('transactions')">
+            {{ $t("buttons.back") }}
+          </button>
+        </template>
+      </app-button-section>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import UIConfig from "../../../ui-config.json";
 
 export default {
   computed: {
-    ...mapState("app", ["theme"])
+    ...mapState("app", ["theme", "language"])
   },
   methods: {
     getThemeSelectClassNames(theme) {
@@ -45,12 +78,29 @@ export default {
     },
     switchTheme(theme) {
       this.$store.dispatch("app/SET_THEME", theme);
+    },
+    changeLanguage(language) {
+      this.$store.dispatch("app/SET_LANGUAGE", language);
+      this.$forceUpdate();
+    },
+    routeTo(route) {
+      this.$router.push({ name: route });
     }
+  },
+  data() {
+    return {
+      UIConfig: UIConfig
+    };
   }
 };
 </script>
 
 <style lang="less" scoped>
+.settings-list-view {
+  display: flex;
+  flex-direction: column;
+}
+
 .settings-row {
   margin: 0 -10px;
   padding: 10px;
@@ -73,6 +123,24 @@ a > .settings-row:hover {
   width: 20px;
   cursor: pointer;
   margin-left: 5px;
+}
+
+.language-select {
+  border: 2px solid #fff;
+  border-radius: 18px;
+  height: 20px;
+  width: 40px;
+  text-align: center;
+  cursor: pointer;
+  margin-left: 15px;
+}
+
+.language-select.en {
+  // background-color: #0039cc;
+}
+
+.language-select.nl {
+  // background-color: #ee6622;
 }
 
 .theme-select.blue {

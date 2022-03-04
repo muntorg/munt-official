@@ -3,8 +3,12 @@
     "accounts": "Rekeningen",
     "categories": {
       "spending": "Spending",
-      "holding": "Holding"
+      "holding": "Witness"
     }
+  },
+  "account_settings": {
+    "title": "Account settings",
+    "name": "Name"
   },
   "add_holding_account": {
     "daily": "per dag",
@@ -12,10 +16,15 @@
     "funding_account": "Financieringsrekening",
     "lock_for": "Vastzetten voor",
     "overall": "totaal",
-    "title": "Holding rekening aanmaken"
+    "title": "Witness rekening aanmaken"
   },
   "buttons": {
     "back": "Terug",
+    "buy_coins": "Koop Gulden",
+    "sell_coins": "Verkoop Gulden",
+    "buy_your_first_coins": "Koop jouw eerste Gulden",
+    "clear": "Wissen",
+    "confirm": "Bevestig",
     "change_password": "Verander wachtwoord",
     "create_mining_account": "Mining rekening aanmaken",
     "finish": "Klaar",
@@ -23,30 +32,39 @@
     "next": "Volgende",
     "ok": "OK",
     "previous": "Vorige",
+    "ready": "Ready",
     "receive": "Ontvangen",
     "renew": "Vernieuwen",
     "send": "Versturen",
     "start": "Start",
     "stop": "Stop",
+    "transactions": "Transactions",
     "unlock": "Ontgrendelen"
+  },
+  "clipboard_field": {
+    "copied_to_clipboard": "Copied to clipboard"
   },
   "common": {
     "account_name": "Rekeningnaam",
     "amount": "Bedrag",
     "enter_your_password": "Voer jouw wachtwoord in",
-    "information": "Informatie",
     "important": "Belangrijk",
+    "information": "Informatie",
     "months": "Maanden",
     "on": "aan",
     "off": "uit",
     "password": "Wachtwoord",
     "receiving_address": "Ontvangstadres"
   },
+  "new_wallet": {
+    "title": "Welkom bij jouw Gulden portemonnee",
+    "information": "Deze portemonnee staat alleen op jouw apparaat.<br/>Geef nooit iemand anders toegang tot jouw portemonnee.<br/>Bewaar de herstelzin die je te zien krijgt tijdens installatie op een veilige plek.<br/>Herstelzin kwijt of iemand toegang tot je herstelzin = Gulden weg."
+  },
   "holding_account": {
     "compound_earnings": "cumulatieve inkomsten",
     "status": "Status",
-    "gulden_locked": "Gulden vastgezet",
-    "gulden_earned": "Gulden verdiend",
+    "coins_locked": "Gulden vastgezet",
+    "coins_earned": "Gulden verdiend",
     "locked_from_block": "Vastgezet vanaf blok",
     "locked_until_block": "Vastgezet tot blok",
     "lock_duration": "Looptijd",
@@ -68,8 +86,9 @@
     "memory_to_use": "Geheugengebruik",
     "moving_average": "Voortschrijdend gemiddelde",
     "number_of_threads": "Aantal threads",
+    "number_of_arena_threads": "Aantal arena setup threads",
     "statistics": "Statistieken",
-    "thread" : "thread | threads"
+    "thread": "thread | threads"
   },
   "password_dialog": {
     "unlock_wallet": "Ontgrendel portemonnee"
@@ -77,7 +96,8 @@
   "settings": {
     "header": "Instellingen",
     "change_password": "Verander wachtwoord",
-    "view_recovery_phrase": "Bekijk herstelzin"
+    "view_recovery_phrase": "Bekijk herstelzin",
+    "choose_theme": "Choose theme"
   },
   "setup": {
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
@@ -92,7 +112,7 @@
     "recover_existing": "Ik wil mijn portemonnee herstellen met mijn herstelzin",
     "repeat_password": "Herhaal wachtwoord",
     "repeat_your_recovery_phrase": "Voer jouw herstelzin in om te controleren dat je deze goed hebt opgeschreven.",
-    "setup_gulden_wallet": "Installeer jouw Gulden portemonnee",
+    "setup_your_wallet": "Installeer jouw Gulden portemonnee",
     "this_is_your_recovery_phrase": "Dit is jouw herstelzin. Bewaar de herstelzin op een veilige plek. Zin kwijt of iemand toegang tot je zin = Gulden weg."
   },
   "setup_mining": {
@@ -103,13 +123,18 @@
     "title": "Transactie details",
     "hash": "Hash"
   },
-  "receive_gulden": {
-    "buy_or_receive_gulden": "Koop of ontvang Gulden",
-    "your_address": "Jouw adres"
+  "receive_coins": {
+    "address_copied_to_clipboard": "Adres gekopieerd naar klembord",
+    "buy_or_receive_coins": "Koop of ontvang Gulden",
+    "click_to_copy_qr": "Klik om QR te kopiëren",
+    "information": "Na iedere transactie krijg je een nieuw adres, maar het vorige adres blijft werken.",
+    "your_address": "Jouw Gulden adres",
+    "qr_copied_to_clipboard": "QR gekopieerd naar klembord"
   },
-  "send_gulden": {
+  "send_coins": {
     "enter_label": "Voer label in",
-    "enter_gulden_address": "Voer Gulden adres in",
+    "enter_coins_address": "Voer Gulden adres in",
+    "confirm_transaction": "Bevestig transactie",
     "target_account": "Verstuur naar account"
   },
   "renew_holding_account": {
