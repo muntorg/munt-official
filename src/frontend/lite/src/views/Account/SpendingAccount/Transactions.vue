@@ -2,15 +2,15 @@
   <div class="transactions-view">
     <div v-if="hasMutations">
       <div
-        class="mutation-group"
-        v-for="group in groupedMutations"
-        :key="group.idx"
+        class="mutations-list"
+        v-for="(mutation, index) in mutations"
+        :key="mutation.txHash"
       >
-        <h4>{{ formatDate(group.date) }}</h4>
+        <h4 v-if="showDateHeader(index)">
+          {{ formatDateHeader(mutation.timestamp) }}
+        </h4>
         <div
           class="mutation-row flex-row"
-          v-for="mutation in group.mutations"
-          :key="mutation.txHash"
           @click="showTransactionDetails(mutation)"
           :class="mutationRowClass(mutation.txHash)"
         >
@@ -58,36 +58,6 @@ export default {
     ...mapState("wallet", ["mutations"]),
     hasMutations() {
       return this.mutations ? this.mutations.length > 0 : false;
-    },
-    groupedMutations() {
-      if (this.mutations === null) return [];
-      let groupedMutations = [];
-      let currentGroup = null;
-
-      for (let i = 0; i < this.mutations.length; i++) {
-        let mutation = this.mutations[i];
-        let date = new Date(mutation.timestamp * 1000);
-        let dateStart = new Date(
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate()
-        );
-
-        if (
-          currentGroup === null ||
-          currentGroup.date.toString() !== dateStart.toString()
-        ) {
-          currentGroup = {
-            idx: groupedMutations.length,
-            date: dateStart,
-            mutations: []
-          };
-
-          groupedMutations.push(currentGroup);
-        }
-        currentGroup.mutations.push(mutation);
-      }
-      return groupedMutations;
     }
   },
   methods: {
@@ -104,8 +74,21 @@ export default {
           return "ban";
       }
     },
-    formatDate(d) {
-      let date = new Date(d);
+    showDateHeader(index) {
+      // only show a date header if the current date is different than previous date
+      if (index === 0) return true; // always show the date if it's the first item
+
+      const current = new Date(this.mutations[index].timestamp * 1000);
+      const previous = new Date(this.mutations[index - 1].timestamp * 1000);
+
+      if (current.getDate() !== previous.getDate()) return true;
+      if (current.getMonth() !== previous.getMonth()) return true;
+      if (current.getFullYear() !== previous.getFullYear()) return true;
+
+      return false;
+    },
+    formatDateHeader(timestamp) {
+      let date = new Date(timestamp * 1000);
       let options = {
         year: "numeric",
         month: "long",
@@ -161,6 +144,10 @@ export default {
 <style lang="less" scoped>
 .transactions-view {
   height: 100%;
+}
+
+.mutations-list:not(:first-child) > h4 {
+  margin-top: 30px;
 }
 
 .mutation-group {
