@@ -40,15 +40,15 @@
       <button @click="clearInput" class="clear" :disabled="disableClearButton">
         {{ $t("buttons.clear") }}
       </button>
+      <button @click="sellCoins" class="sell-coins" :disabled="sellDisabled">
+        {{ $t("buttons.sell_coins") }}
+      </button>
       <button
         @click="showConfirmation"
         class="send-coins"
         :disabled="disableSendButton"
       >
         {{ $t("buttons.send") }}
-      </button>
-      <button @click="sellCoins" class="sell-coins" :disabled="sellDisabled">
-        {{ $t("buttons.sell_coins") }}
       </button>
     </div>
   </div>
