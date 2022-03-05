@@ -36,7 +36,7 @@
       v-if="isAccountView && accountIsFunded"
       class="holding-information"
     >
-      <h4>{{ $t("common.information") }}</h4>
+      <h5>{{ $t("common.information") }}</h5>
       <div class="flex-row">
         <div>{{ $t("holding_account.status") }}</div>
         <div>{{ accountStatus }}</div>
