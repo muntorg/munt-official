@@ -1,7 +1,8 @@
 <template>
   <div :class="getClass(isActive)" @click="$emit('click', routeName)">
-    <fa-icon v-if="icon" :icon="icon" />
+    <fa-icon class="left" v-if="showIcon('left')" :icon="icon" />
     <slot></slot>
+    <fa-icon class="right" v-if="showIcon('right')" :icon="icon" />
   </div>
 </template>
 
@@ -19,6 +20,13 @@ export default {
     icon: {
       type: Array,
       value: () => []
+    },
+    iconPosition: {
+      type: String,
+      default: "left",
+      validator: value => {
+        return ["left", "right"].includes(value);
+      }
     }
   },
   computed: {
@@ -29,6 +37,10 @@ export default {
   methods: {
     getClass(isActive) {
       return `footer-button ${isActive ? "active" : ""}`;
+    },
+    showIcon(position) {
+      if (!this.icon) return false;
+      return this.iconPosition === position;
     }
   }
 };
@@ -47,7 +59,14 @@ export default {
 
   & svg {
     font-size: 14px;
+  }
+
+  & svg.left {
     margin-right: 5px;
+  }
+
+  & svg.right {
+    margin-left: 5px;
   }
 
   &.active {
