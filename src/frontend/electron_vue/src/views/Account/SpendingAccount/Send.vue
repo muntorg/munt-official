@@ -205,10 +205,6 @@ export default {
   }
 }
 
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
-
 .buttons {
   display: flex;
   flex-direction: row;

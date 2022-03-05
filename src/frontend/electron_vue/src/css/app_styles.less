@@ -125,6 +125,11 @@ input[type="number"] {
   }
 }
 
+/* remove up/down buttons for number input */
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
 /* button */
 button {
   padding: 0 20px 0 20px;
