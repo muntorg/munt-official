@@ -36,12 +36,14 @@
         @keydown="onPasswordKeydown"
       />
     </div>
-    <div class="buttons">
-      <button @click="clearInput" class="clear" :disabled="disableClearButton">
+    <div class="flex-row">
+      <button
+        @click="clearInput"
+        outlined
+        class="clear"
+        :disabled="disableClearButton"
+      >
         {{ $t("buttons.clear") }}
-      </button>
-      <button @click="sellCoins" class="sell-coins" :disabled="sellDisabled">
-        {{ $t("buttons.sell_coins") }}
       </button>
       <button
         @click="showConfirmation"
@@ -49,6 +51,9 @@
         :disabled="disableSendButton"
       >
         {{ $t("buttons.send") }}
+      </button>
+      <button @click="sellCoins" class="sell-coins" :disabled="sellDisabled">
+        {{ $t("buttons.sell_coins") }}
       </button>
     </div>
   </div>
@@ -205,36 +210,16 @@ export default {
   }
 }
 
-.buttons {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
+.clear {
+  width: 150px;
+}
 
-  & > .clear {
-    width: 150px;
-    height: 40px;
-    margin-bottom: 5px;
-  }
-  & > .clear:not([disabled]) {
-    height: 40px;
-    line-height: 39px;
-    background-color: #fff;
-    border: 1px solid var(--primary-color);
-    color: var(--primary-color);
-  }
-  & > .send-coins {
-    min-width: 150px;
-    margin-bottom: 5px;
-  }
-  & > .sell-coins {
-    border: 1px solid var(--primary-color);
-    margin: 0 15px 0 15px;
-    width: calc(100% - 150px - 15px - 15px - 150px);
-    background-color: #fff;
-    margin-bottom: 5px;
-    color: var(--primary-color);
-  }
+.send-coins {
+  margin: 0 30px;
+  flex: 1;
+}
+
+.sell-coins {
+  width: 150px;
 }
 </style>

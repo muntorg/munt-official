@@ -169,6 +169,17 @@ button {
   }
 }
 
+button[outlined] {
+  height: 40px;
+}
+
+button[outlined]:not([disabled]) {
+  line-height: 39px;
+  background-color: #fff;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
 /* range slider */
 input[type="range"] {
   width: 100%;
