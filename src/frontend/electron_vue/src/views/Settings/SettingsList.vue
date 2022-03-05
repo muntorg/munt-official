@@ -28,7 +28,7 @@
         ></div>
       </div>
     </div>
-    <div class="settings-row flex-row">
+    <div class="settings-row-no-hover flex-row">
       <div class="flex-1">{{ $t("settings.choose_language") }}</div>
       <div
         :class="`language-select ${this.language === 'en' ? 'selected' : ''}`"
@@ -106,7 +106,12 @@ export default {
   padding: 10px;
 }
 
-a > .settings-row:hover {
+.settings-row-no-hover {
+  margin: 0 -10px;
+  padding: 10px;
+}
+
+.settings-row:hover {
   color: var(--primary-color);
   background-color: var(--hover-color);
   cursor: pointer;
@@ -135,12 +140,10 @@ a > .settings-row:hover {
   margin-left: 15px;
 }
 
-.language-select.en {
-  // background-color: #0039cc;
-}
-
-.language-select.nl {
-  // background-color: #ee6622;
+.language-select:hover {
+  color: var(--primary-color);
+  background-color: var(--hover-color);
+  cursor: pointer;
 }
 
 .theme-select.blue {
