@@ -6,6 +6,7 @@
         :subtitle="balanceForDisplay + ' ' + totalBalanceFiat"
       />
     </portal>
+
     <router-view />
 
     <app-section v-if="isMiningView">
@@ -249,8 +250,6 @@ export default {
 
 <style lang="less" scoped>
 .mining-account {
-  height: 100%;
-  padding: 20px 15px 15px 15px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

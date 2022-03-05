@@ -230,7 +230,11 @@ export default {
       height: calc(
         100% - var(--header-height-main) - var(--footer-height-main)
       );
-      padding: 20px;
+      padding: 40px 30px 30px 30px;
+
+      & > * {
+        height: 100%;
+      }
     }
 
     & > .footer {

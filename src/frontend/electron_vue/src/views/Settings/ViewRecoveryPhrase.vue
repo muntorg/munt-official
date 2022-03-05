@@ -7,7 +7,7 @@
       </h2>
 
       <!-- step 1: Enter password -->
-      <app-form-field :title="$t('common.password')" v-if="current === 1">
+      <app-form-field v-if="current === 1">
         <input
           ref="password"
           type="password"

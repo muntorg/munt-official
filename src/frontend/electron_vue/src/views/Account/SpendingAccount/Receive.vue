@@ -84,6 +84,7 @@ export default {
 .receive-view {
   height: 100%;
   text-align: center;
+
   & .information {
     margin: 0 0 30px 0;
   }

@@ -44,9 +44,7 @@
       </div>
     </div>
     <div style="flex: 1" />
-    <portal v-if="UIConfig.showSidebar" to="footer-slot">
-      <div />
-    </portal>
+    <portal v-if="UIConfig.showSidebar" to="footer-slot"></portal>
     <div v-else style="margin-top: 20px">
       <app-button-section class="buttons">
         <template v-slot:left>

@@ -37,22 +37,17 @@
       />
     </div>
     <div class="flex-row">
-      <button
-        @click="clearInput"
-        outlined
-        class="clear"
-        :disabled="disableClearButton"
-      >
+      <button @click="clearInput" outlined :disabled="disableClearButton">
         {{ $t("buttons.clear") }}
       </button>
       <button
+        class="stretch"
         @click="showConfirmation"
-        class="send-coins"
         :disabled="disableSendButton"
       >
         {{ $t("buttons.send") }}
       </button>
-      <button @click="sellCoins" class="sell-coins" :disabled="sellDisabled">
+      <button @click="sellCoins" :disabled="sellDisabled">
         {{ $t("buttons.sell_coins") }}
       </button>
     </div>
@@ -210,16 +205,12 @@ export default {
   }
 }
 
-.clear {
+button {
   width: 150px;
 }
 
-.send-coins {
+.stretch {
   margin: 0 30px;
   flex: 1;
-}
-
-.sell-coins {
-  width: 150px;
 }
 </style>

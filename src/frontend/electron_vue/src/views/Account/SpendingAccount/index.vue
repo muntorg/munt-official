@@ -198,11 +198,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.spending-account {
-  height: 100%;
-  padding: 20px 15px 15px 15px;
-}
-
 .header {
   align-items: center;
 

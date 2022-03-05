@@ -5,13 +5,7 @@
     </portal>
 
     <div class="main">
-      <input
-        class="amount"
-        v-model="amount"
-        ref="amount"
-        type="text"
-        readonly
-      />
+      <input v-model="amount" ref="amount" type="number" readonly />
       <app-form-field :title="$t('send_coins.target_account')">
         <select-list
           :options="fundingAccounts"
@@ -146,10 +140,6 @@ export default {
   .main {
     flex: 1;
   }
-}
-
-.amount {
-  cursor: default;
 }
 
 button {

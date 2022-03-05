@@ -130,6 +130,11 @@ input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
+/* show default cursor for readonly number input (maybe for all readonly inputs?)*/
+input[type="number"][readonly] {
+  cursor: default;
+}
+
 /* button */
 button {
   padding: 0 20px 0 20px;
