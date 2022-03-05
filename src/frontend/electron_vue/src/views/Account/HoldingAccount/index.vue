@@ -36,7 +36,7 @@
       v-if="isAccountView && accountIsFunded"
       class="holding-information"
     >
-      <h4>{{ $t("common.information") }}</h4>
+      <h5>{{ $t("common.information") }}</h5>
       <div class="flex-row">
         <div>{{ $t("holding_account.status") }}</div>
         <div>{{ accountStatus }}</div>
@@ -377,7 +377,7 @@ export default {
     line-height: 32px;
     font-weight: 500;
     font-size: 1em;
-    color: var(--primary-color);
+    color: #000000;
     text-align: center;
     cursor: pointer;
 
@@ -387,7 +387,7 @@ export default {
   }
 
   .active {
-    color: #000000;
+    color: var(--primary-color);
   }
 }
 </style>

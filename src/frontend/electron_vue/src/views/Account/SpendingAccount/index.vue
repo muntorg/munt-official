@@ -242,7 +242,7 @@ export default {
     line-height: 32px;
     font-weight: 500;
     font-size: 1em;
-    color: var(--primary-color);
+    color: #000000;
     text-align: center;
     cursor: pointer;
 
@@ -252,7 +252,7 @@ export default {
   }
 
   .active {
-    color: #000000;
+    color: var(--primary-color);
   }
 }
 </style>

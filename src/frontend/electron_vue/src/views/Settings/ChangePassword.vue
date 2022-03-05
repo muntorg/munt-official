@@ -19,7 +19,12 @@
     <!-- step 2: enter new password -->
     <div v-else>
       <app-form-field :title="$t('common.password')">
-        <input ref="password1" type="password" v-model="password1" />
+        <input
+          ref="password1"
+          type="password"
+          v-model="password1"
+          :class="password2Status"
+        />
       </app-form-field>
       <app-form-field :title="$t('setup.repeat_password')">
         <input
@@ -95,12 +100,12 @@ export default {
   computed: {
     ...mapState("wallet", ["walletPassword"]),
     passwordOldStatus() {
-      return this.isPasswordInvalid ? "error" : "";
+      return this.isPasswordInvalid ? "error" : "input";
     },
     password2Status() {
-      if (this.password2.length === 0) return "";
+      if (this.password2.length === 0) return "input";
       if (this.password2.length > this.password1.length) return "error";
-      return this.password1.indexOf(this.password2) === 0 ? "" : "error";
+      return this.password1.indexOf(this.password2) === 0 ? "input" : "error";
     },
     passwordsValidated() {
       if (this.password1 === null || this.password1.length < 6) return false;
@@ -179,7 +184,11 @@ export default {
   flex-wrap: nowrap;
   justify-content: space-between;
 }
-input {
+.input {
   background-color: #eee;
+  border: 0;
+  margin: 0 0 10px 0;
+  font-style: normal;
+  font-size: 14px;
 }
 </style>
