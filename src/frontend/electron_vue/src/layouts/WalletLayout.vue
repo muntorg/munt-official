@@ -223,7 +223,7 @@ export default {
     & > .header {
       height: var(--header-height);
       border-bottom: 1px solid var(--main-border-color);
-      padding: 0 20px;
+      padding: 0 30px;
     }
 
     & > .content {
