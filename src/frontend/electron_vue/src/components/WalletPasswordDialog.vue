@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     computedStatus() {
-      return this.isPasswordInvalid ? "error" : "input";
+      return this.isPasswordInvalid ? "error" : "";
     },
     isButtonDisabled() {
       return this.password.trim().length === 0;
@@ -65,12 +65,3 @@ export default {
   }
 };
 </script>
-<style scoped>
-.input {
-  background-color: #eee;
-  border: 0;
-  margin: 0 0 10px 0;
-  font-style: normal;
-  font-size: 14px;
-}
-</style>

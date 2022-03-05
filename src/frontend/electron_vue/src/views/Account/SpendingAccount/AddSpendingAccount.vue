@@ -99,21 +99,3 @@ export default {
   }
 };
 </script>
-
-<style lang="less" scoped>
-.earnings {
-  line-height: 1.2em;
-}
-.lock-time-slider {
-  width: calc(100% - 100px) !important;
-  display: inline-block;
-}
-.lock-time-info {
-  text-align: right;
-  line-height: 18px;
-  flex: 1;
-}
-input {
-  background-color: #eee;
-}
-</style>

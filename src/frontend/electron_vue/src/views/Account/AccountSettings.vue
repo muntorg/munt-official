@@ -48,8 +48,4 @@ export default {
     flex: 1;
   }
 }
-
-input {
-  background-color: #eee;
-}
 </style>

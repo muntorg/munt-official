@@ -209,14 +209,6 @@ input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-input {
-  background-color: #eee;
-  border: 0;
-  margin: 0 0 10px 0;
-  font-style: normal;
-  font-size: 14px;
-}
-
 .buttons {
   display: flex;
   flex-direction: row;

@@ -122,14 +122,6 @@ export default {
   }
 }
 
-input {
-  background-color: #eee;
-  border: 0;
-  margin: 0 0 10px 0;
-  font-style: normal;
-  font-size: 14px;
-}
-
 button {
   width: 100%;
 }

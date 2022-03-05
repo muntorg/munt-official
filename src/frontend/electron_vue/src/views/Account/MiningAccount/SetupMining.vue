@@ -100,19 +100,8 @@ export default {
   }
 };
 </script>
-
 <style lang="less" scoped>
-.title {
-  font-size: 1.1em;
-  font-weight: 500;
-  line-height: var(--header-height);
-}
-
 .mining-info {
   line-height: 1.2em;
-}
-
-input {
-  background-color: #eee;
 }
 </style>

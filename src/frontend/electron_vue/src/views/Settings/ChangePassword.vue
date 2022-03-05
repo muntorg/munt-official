@@ -100,12 +100,12 @@ export default {
   computed: {
     ...mapState("wallet", ["walletPassword"]),
     passwordOldStatus() {
-      return this.isPasswordInvalid ? "error" : "input";
+      return this.isPasswordInvalid ? "error" : "";
     },
     password2Status() {
-      if (this.password2.length === 0) return "input";
+      if (this.password2.length === 0) return "";
       if (this.password2.length > this.password1.length) return "error";
-      return this.password1.indexOf(this.password2) === 0 ? "input" : "error";
+      return this.password1.indexOf(this.password2) === 0 ? "" : "error";
     },
     passwordsValidated() {
       if (this.password1 === null || this.password1.length < 6) return false;
@@ -183,12 +183,5 @@ export default {
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: space-between;
-}
-.input {
-  background-color: #eee;
-  border: 0;
-  margin: 0 0 10px 0;
-  font-style: normal;
-  font-size: 14px;
 }
 </style>

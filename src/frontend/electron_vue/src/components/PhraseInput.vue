@@ -174,11 +174,5 @@ export default {
 .word-input {
   width: calc(25% - 10px);
   margin: 5px;
-  background-color: #eee;
-
-  &.success,
-  &.success:focus {
-    border-color: #ccc;
-  }
 }
 </style>

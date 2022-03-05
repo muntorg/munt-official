@@ -112,9 +112,7 @@ export default {
       let address = AccountsController.GetReceiveAddress(
         this.fundingAccount.UUID
       );
-      let addressInvalid = !LibraryController.IsValidNativeAddress(
-        address
-      );
+      let addressInvalid = !LibraryController.IsValidNativeAddress(address);
 
       // wallet needs to be unlocked to make a payment
       if (LibraryController.UnlockWallet(this.computedPassword) === false) {
@@ -148,14 +146,6 @@ export default {
   .main {
     flex: 1;
   }
-}
-
-input {
-  background-color: #eee;
-  border: 0;
-  margin: 0 0 10px 0;
-  font-style: normal;
-  font-size: 14px;
 }
 
 .amount {
