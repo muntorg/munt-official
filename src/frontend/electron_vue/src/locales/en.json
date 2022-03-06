@@ -25,7 +25,7 @@
     "back": "Back",
     "buy_coins": "Buy Florin",
     "sell_coins": "Sell Florin",
-    "buy_your_first_coins": "Buy your first Florin",
+    "buy_your_first_coins": "Buy Florin",
     "clear": "Clear",
     "confirm": "Confirm",
     "change_password": "Change password",
@@ -114,7 +114,7 @@
   },
   "setup": {
     "choose_password": "Choose a password of at least 6 characters",
-    "choose_password_information": "You will need your password to unlock your wallet. Make sure it is not easy to guess because anyone who knows your password can access your funds.",
+    "choose_password_information": "You will need your password to unlock your wallet.",
     "create_new": "I want to create a new wallet",
     "enter_existing_recovery_phrase": "Enter your recovery phrase in the boxes below to restore your wallet.",
     "enter_recovery_phrase": "Enter recovery phrase",
@@ -158,8 +158,8 @@
   },
   "link_holding_account": {
     "title": "Your holding key",
-    "information": "This key can be linked with a cloud holding service or with a secondary wallet on another machine to allow the service/wallet to perform holding actions on your behalf.",
-    "warn": "This key can't access locked funds, but keep it safe/secure, it can be used to take your rewards.\nDo not view this key in a public setting where your screen might be viewed or recorded.",
+    "information": "Use your holding key only for trusted cloud holding services. Your holding key provides access to your rewards, so never show it to people.",
+    "warn": "Use your holding key only for trusted cloud holding services. Your holding key provides access to your rewards, so never show it to people.",
     "no_funds": "Holding account must be funded with locked funds before it is possible to link it with other wallets."
   }
 }
