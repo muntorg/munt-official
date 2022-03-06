@@ -5,7 +5,9 @@
     </portal>
 
     <div class="main">
-      <input v-model="amount" ref="amount" type="text" readonly />
+      <app-form-field>
+        <input v-model="amount" ref="amount" type="text" readonly />
+      </app-form-field>
       <app-form-field :title="$t('send_coins.target_account')">
         <select-list
           :options="fundingAccounts"
@@ -13,15 +15,16 @@
           v-model="fundingAccount"
         />
       </app-form-field>
-
-      <input
-        v-model="password"
-        type="password"
-        v-show="walletPassword === null"
-        :placeholder="$t('common.enter_your_password')"
-        :class="passwordClass"
-        @keydown="onPasswordKeydown"
-      />
+      <app-form-field>
+        <input
+          v-model="password"
+          type="password"
+          v-show="walletPassword === null"
+          :placeholder="$t('common.enter_your_password')"
+          :class="passwordClass"
+          @keydown="onPasswordKeydown"
+        />
+      </app-form-field>
     </div>
     <button @click="showConfirmation" :disabled="disableSendButton">
       {{ $t("buttons.send") }}

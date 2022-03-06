@@ -1,9 +1,7 @@
 <template>
   <app-section class="app-form-field">
     <h4 v-if="hasTitle">{{ title }}</h4>
-    <div class="input">
-      <slot />
-    </div>
+    <slot></slot>
   </app-section>
 </template>
 
