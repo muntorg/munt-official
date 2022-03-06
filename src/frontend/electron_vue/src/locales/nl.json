@@ -25,7 +25,7 @@
     "back": "Terug",
     "buy_coins": "Koop Florin",
     "sell_coins": "Verkoop Florin",
-    "buy_your_first_coins": "Koop jouw eerste Florin",
+    "buy_your_first_coins": "Koop Florin",
     "clear": "Wissen",
     "confirm": "Bevestig",
     "change_password": "Verander wachtwoord",
@@ -114,7 +114,7 @@
   },
   "setup": {
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
-    "choose_password_information": "Een wachtwoord is vereist voor het ontgrendelen van jouw wallet. Kies een sterk wachtwoord, zodat niemand anders toegang kan krijgen tot jouw Florin.",
+    "choose_password_information": "Een wachtwoord is vereist voor het ontgrendelen van jouw wallet.",
     "create_new": "Ik wil een nieuwe wallet starten",
     "enter_existing_recovery_phrase": "Voer jouw herstelzin in om jouw wallet te herstellen.",
     "enter_recovery_phrase": "Voer herstelzin in",
