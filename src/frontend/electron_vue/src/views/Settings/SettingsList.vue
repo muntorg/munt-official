@@ -129,9 +129,9 @@ export default {
 }
 
 .language-select {
-  border: 2px solid #fff;
+  font-size: 12px;
   border-radius: 18px;
-  height: 20px;
+  line-height: 20px;
   width: 40px;
   text-align: center;
   cursor: pointer;
@@ -139,8 +139,6 @@ export default {
 }
 
 .language-select:hover {
-  color: var(--primary-color);
-  background-color: var(--hover-color);
   cursor: pointer;
 }
 
