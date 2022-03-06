@@ -1,34 +1,9 @@
 <template>
   <div class="spending-account">
     <portal to="header-slot">
-      <section class="header flex-row">
-        <main-header
-          class="info"
-          :title="account.label"
-          :subtitle="balanceForDisplay + ' ' + totalBalanceFiat"
-        />
-        <div
-          v-if="!UIConfig.showSidebar"
-          style="margin-right: 10px"
-          class="button"
-          @click="showSettings"
-        >
-          <fa-icon :icon="['fal', 'cog']" />
-        </div>
-        <div
-          v-if="!UIConfig.showSidebar"
-          class="button"
-          @click="changeLockSettings"
-        >
-          <fa-icon :icon="['fal', lockIcon]" />
-        </div>
-        <div v-if="UIConfig.showSidebar" class="settings flex-col">
-          <span class="button" @click="setRightSidebar('Settings')">
-            <fa-icon :icon="['fal', 'cog']" />
-          </span>
-        </div>
-      </section>
+      <account-header :account="account"></account-header>
     </portal>
+
     <transactions
       v-if="UIConfig.showSidebar && isAccountView"
       :mutations="mutations"
@@ -94,7 +69,8 @@ export default {
     return {
       rightSidebar: null,
       txHash: null,
-      UIConfig: UIConfig
+      UIConfig: UIConfig,
+      isA: true
     };
   },
   mounted() {
@@ -141,6 +117,9 @@ export default {
     }
   },
   methods: {
+    toggleButton() {
+      this.isA = !this.isA;
+    },
     routeTo(route) {
       if (this.$route.name === route) return;
       this.$router.push({ name: route, params: { id: this.account.UUID } });
@@ -196,28 +175,3 @@ export default {
   }
 };
 </script>
-
-<style lang="less" scoped>
-.header {
-  align-items: center;
-
-  & > .info {
-    width: calc(100% - 26px);
-    padding-right: 10px;
-  }
-
-  & > .settings {
-    font-size: 16px;
-    padding: calc((var(--header-height) - 40px) / 2) 0;
-
-    & span {
-      padding: 10px;
-      cursor: pointer;
-
-      &:hover {
-        background: #f5f5f5;
-      }
-    }
-  }
-}
-</style>

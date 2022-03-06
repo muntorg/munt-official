@@ -1,18 +1,7 @@
 <template>
   <div class="holding-account">
     <portal to="header-slot">
-      <section class="header flex-row">
-        <main-header
-          class="info"
-          :title="account.label"
-          :subtitle="balanceForDisplay + ' ' + totalBalanceFiat"
-        />
-        <div class="settings flex-col">
-          <span class="button" @click="setRightSidebar('Settings')">
-            <fa-icon :icon="['fal', 'cog']" />
-          </span>
-        </div>
-      </section>
+      <account-header :account="account"></account-header>
     </portal>
 
     <app-section v-if="isAccountView && accountIsFunded" class="align-right">
@@ -318,27 +307,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.header {
-  & > .info {
-    width: calc(100% - 26px);
-    padding-right: 10px;
-  }
-
-  & > .settings {
-    font-size: 16px;
-    padding: calc((var(--header-height) - 40px) / 2) 0;
-
-    & span {
-      padding: 10px;
-      cursor: pointer;
-
-      &:hover {
-        background: #f5f5f5;
-      }
-    }
-  }
-}
-
 .holding-information {
   & .flex-row > div {
     line-height: 18px;

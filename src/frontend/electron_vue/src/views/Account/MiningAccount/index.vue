@@ -1,10 +1,7 @@
 <template>
   <div class="mining-account">
     <portal to="header-slot">
-      <main-header
-        :title="account.label"
-        :subtitle="balanceForDisplay + ' ' + totalBalanceFiat"
-      />
+      <account-header :account="account"></account-header>
     </portal>
 
     <router-view />
