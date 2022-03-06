@@ -25,9 +25,12 @@
         </div>
       </div>
     </div>
-    <div v-else class="new-wallet flex-col">
-      <h2>{{ $t("new_wallet.title") }}</h2>
-      <p v-html="$t('new_wallet.information')" class="information"></p>
+
+    <content-wrapper
+      v-else
+      heading="new_wallet.title"
+      content="new_wallet.information"
+    >
       <div class="flex-1" />
       <app-button-section>
         <template v-slot:middle>
@@ -36,7 +39,7 @@
           </button>
         </template>
       </app-button-section>
-    </div>
+    </content-wrapper>
   </div>
 </template>
 

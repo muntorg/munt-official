@@ -1,23 +1,20 @@
 <template>
   <div class="change-password-view">
-    <h2>
-      <span v-if="current === 1">{{ $t("common.enter_your_password") }}</span>
-      <span v-else>{{ $t("setup.choose_password") }}</span>
-    </h2>
-
-    <!-- step 1: Enter old password -->
-    <app-form-field v-if="current === 1">
-      <input
-        ref="passwordold"
-        type="password"
-        v-model="passwordold"
-        @keydown="validatePasswordOnEnter"
-        :class="passwordOldStatus"
-      />
-    </app-form-field>
+    <!-- step 1:  Enter old password -->
+    <content-wrapper v-if="current === 1" heading="common.enter_your_password">
+      <app-form-field>
+        <input
+          ref="password"
+          type="password"
+          v-model="passwordold"
+          @keydown="validatePasswordOnEnter"
+          :class="passwordOldStatus"
+        />
+      </app-form-field>
+    </content-wrapper>
 
     <!-- step 2: enter new password -->
-    <div v-else>
+    <content-wrapper v-else heading="setup.choose_password">
       <app-form-field :title="$t('common.password')">
         <input
           ref="password1"
@@ -34,7 +31,7 @@
           @keydown="validatePasswordRepeatOnEnter"
         />
       </app-form-field>
-    </div>
+    </content-wrapper>
 
     <div class="flex-1" />
     <portal v-if="!UIConfig.showSidebar" to="footer-slot">

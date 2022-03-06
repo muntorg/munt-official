@@ -1,12 +1,12 @@
 <template>
   <div class="link-witness-view flex-col">
     <div class="main">
-      <h4>{{ $t("link_holding_account.title") }}</h4>
-      <p class="information">{{ $t("link_holding_account.information") }}</p>
-      <p v-if="needsUnlock" class="warn">
-        {{ $t("link_holding_account.warn") }}
-      </p>
-      <div v-if="needsUnlock">
+      <content-wrapper
+        heading="link_holding_account.title"
+        content="link_holding_account.information"
+      >
+      </content-wrapper>
+      <content-wrapper v-if="needsUnlock" content="link_holding_account.warn">
         <app-form-field
           style="text-align: left;"
           :title="$t(`common.password`)"
@@ -18,8 +18,8 @@
             @keydown="onPasswordKeydown"
           />
         </app-form-field>
-      </div>
-      <div v-if="!needsUnlock">
+      </content-wrapper>
+      <div v-else>
         <div v-if="account.balance > 0">
           <div class="qr" @click="copyQr">
             <vue-qrcode
@@ -135,21 +135,11 @@ export default {
 <style lang="less" scoped>
 .link-witness-view {
   height: 100%;
-  text-align: center;
 
   .main {
     flex: 1;
   }
 
-  & .information {
-    margin: 0 0 30px 0;
-    text-align: justify;
-  }
-  & .warn {
-    text-align: justify;
-    // Allow \n to be treated as newline
-    white-space: pre-line;
-  }
   & .qr {
     text-align: center;
     cursor: pointer;

@@ -66,7 +66,7 @@
   },
   "new_wallet": {
     "title": "Welcome to your Florin wallet",
-    "information": "This wallet is only stored on your device.<br />Never give anyone else access to your wallet.<br />Keep the backup phrase you see at installation in a safe place.<br />Lose phrase or someone else with access to the phrase = lose Florin."
+    "information": "This wallet is only stored on your device.\nNever give anyone else access to your wallet.\nKeep the backup phrase you see at installation in a safe place.\nLose phrase or someone else with access to the phrase = lose Florin."
   },
   "holding_account": {
     "compound_earnings": "compound earnings",
