@@ -95,9 +95,13 @@ class LibUnity {
       currentAccount.balance =
         currentBalance.availableIncludingLocked +
         currentBalance.immatureIncludingLocked;
-      currentAccount.spendable =
+
+      // make sure spendable is always 0 or more
+      currentAccount.spendable = Math.max(
         currentBalance.availableExcludingLocked -
-        currentBalance.immatureExcludingLocked;
+          currentBalance.immatureExcludingLocked,
+        0
+      );
     });
 
     if (dispatch) {
