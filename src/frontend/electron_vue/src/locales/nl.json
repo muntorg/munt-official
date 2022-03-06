@@ -158,8 +158,8 @@
   },
   "link_holding_account": {
     "title": "Jouw holding key",
-    "information": "De holding key kan worden gekoppeld aan een cloud service of een tweede wallet op een ander apparaat waarmee het deze service/wallet toe wordt gestaan namens jou holding acties uit te voeren.",
-    "warn": "De holding key geeft geen toegang tot jouw vastgezette Florin, maar bewaar deze zorgvuldig aangezien het wel toegang geeft tot jouw ontvangen beloningen.\nLaat de holding key niet zien in het openbaar waar meegekeken kan worden op jouw scherm of waar mogelijk opnames van het scherm kunnen worden gemaakt.",
+    "information": "Gebruik je holding key alleen voor vertrouwde cloud holding services. Jouw holding key geeft toegang tot jouw beloningen, laat deze dus nooit aan mensen zien.",
+    "warn": "Gebruik je holding key alleen voor vertrouwde cloud holding services. Jouw holding key geeft toegang tot jouw beloningen, laat deze dus nooit aan mensen zien.",
     "no_funds": "Holding account moet worden gevuld met vastgezette Florin voordat het mogelijk is om deze te koppelen met andere wallets."
   }
 }
