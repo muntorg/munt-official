@@ -158,8 +158,7 @@
   },
   "link_holding_account": {
     "title": "Your holding key",
-    "information": "Use your holding key only for trusted cloud holding services. Your holding key provides access to your rewards, so never show it to people.",
-    "warn": "Use your holding key only for trusted cloud holding services. Your holding key provides access to your rewards, so never show it to people.",
+    "information": "Use your holding key only for trusted cloud holding services. Your holding key provides access to your rewards, so never show it to other people.",
     "no_funds": "Holding account must be funded with locked funds before it is possible to link it with other wallets."
   }
 }
