@@ -9,14 +9,7 @@
     <app-section v-if="isMiningView">
       <app-form-field :title="$t('mining.number_of_threads')">
         <div class="flex-row">
-          <vue-slider
-            :min="1"
-            :max="availableCores"
-            :value="currentThreadCount"
-            v-model="currentThreadCount"
-            class="slider"
-            :disabled="isActive"
-          />
+          <vue-slider :min="1" :max="availableCores" :value="currentThreadCount" v-model="currentThreadCount" class="slider" :disabled="isActive" />
           <div class="slider-info">
             {{ currentThreadCount }}
             {{ $tc("mining.thread", currentThreadCount) }}
@@ -26,14 +19,7 @@
 
       <app-form-field :title="$t('mining.number_of_arena_threads')">
         <div class="flex-row">
-          <vue-slider
-            :min="1"
-            :max="availableCores"
-            :value="currentArenaThreadCount"
-            v-model="currentArenaThreadCount"
-            class="slider"
-            :disabled="isActive"
-          />
+          <vue-slider :min="1" :max="availableCores" :value="currentArenaThreadCount" v-model="currentArenaThreadCount" class="slider" :disabled="isActive" />
           <div class="slider-info">
             {{ currentArenaThreadCount }}
             {{ $tc("mining.thread", currentArenaThreadCount) }}
@@ -43,23 +29,12 @@
 
       <app-form-field :title="$t('mining.memory_to_use')">
         <div class="flex-row">
-          <vue-slider
-            :min="minimumMemory"
-            :max="maximumMemory"
-            :value="currentMemorySize"
-            v-model="currentMemorySize"
-            class="slider"
-            :disabled="isActive"
-          />
+          <vue-slider :min="minimumMemory" :max="maximumMemory" :value="currentMemorySize" v-model="currentMemorySize" class="slider" :disabled="isActive" />
           <div class="slider-info">{{ currentMemorySize }} Gb</div>
         </div>
       </app-form-field>
 
-      <app-form-field
-        class="mining-statistics"
-        :title="$t('mining.statistics')"
-        v-if="isActive"
-      >
+      <app-form-field class="mining-statistics" :title="$t('mining.statistics')" v-if="isActive">
         <div class="flex-row">
           <div>{{ $t("mining.last_reported_speed") }}</div>
           <div class="flex-1 align-right">
@@ -87,38 +62,22 @@
       </app-form-field>
     </app-section>
 
-    <button
-      v-if="isMiningView"
-      @click="toggleGeneration"
-      :disabled="generationButtonDisabled"
-    >
+    <button v-if="isMiningView" @click="toggleGeneration" :disabled="generationButtonDisabled">
       {{ isActive ? $t("buttons.stop") : $t("buttons.start") }}
     </button>
 
     <portal to="footer-slot">
-      <footer-button
-        :icon="['fal', 'info-circle']"
-        routeName="account"
-        @click="routeTo"
-      >
+      <footer-button :icon="['fal', 'info-circle']" routeName="account" @click="routeTo">
         {{ $t("buttons.info") }}
       </footer-button>
 
-      <footer-button
-        :icon="['fal', 'arrow-from-bottom']"
-        routeName="send-holding"
-        @click="routeTo"
-      >
+      <footer-button :icon="['fal', 'arrow-from-bottom']" routeName="send-holding" @click="routeTo">
         {{ $t("buttons.send") }}
       </footer-button>
     </portal>
 
     <portal to="sidebar-right">
-      <component
-        v-if="rightSidebar"
-        :is="rightSidebar"
-        v-bind="rightSidebarProps"
-      />
+      <component v-if="rightSidebar" :is="rightSidebar" v-bind="rightSidebarProps" />
     </portal>
   </div>
 </template>
@@ -149,18 +108,12 @@ export default {
   },
   created() {
     this.availableCores = GenerationController.GetAvailableCores();
-    this.currentThreadCount =
-      this.settings.threadCount ||
-      (this.availableCores < 4 ? 1 : this.availableCores - 2);
+    this.currentThreadCount = this.settings.threadCount || (this.availableCores < 4 ? 1 : this.availableCores - 2);
 
-    this.currentArenaThreadCount =
-      this.settings.arenaThreadCount ||
-      (this.availableCores < 4 ? 1 : this.availableCores / 2);
+    this.currentArenaThreadCount = this.settings.arenaThreadCount || (this.availableCores < 4 ? 1 : this.availableCores / 2);
 
     this.minimumMemory = 1; // for now just use 1 Gb as a minimum
-    this.maximumMemory = Math.floor(
-      GenerationController.GetMaximumMemory() / 1024
-    );
+    this.maximumMemory = Math.floor(GenerationController.GetMaximumMemory() / 1024);
     this.currentMemorySize = this.settings.memorySize || this.maximumMemory;
   },
   computed: {
@@ -208,10 +161,7 @@ export default {
       this.$store.dispatch("mining/SET_THREAD_COUNT", this.currentThreadCount);
     },
     currentArenaThreadCount() {
-      this.$store.dispatch(
-        "mining/SET_ARENA_THREAD_COUNT",
-        this.currentArenaThreadCount
-      );
+      this.$store.dispatch("mining/SET_ARENA_THREAD_COUNT", this.currentArenaThreadCount);
     }
   },
   methods: {
@@ -220,11 +170,7 @@ export default {
       if (this.isActive) {
         GenerationController.StopGeneration();
       } else {
-        let result = GenerationController.StartGeneration(
-          this.currentThreadCount,
-          this.currentArenaThreadCount,
-          this.currentMemorySize + "G"
-        );
+        let result = GenerationController.StartGeneration(this.currentThreadCount, this.currentArenaThreadCount, this.currentMemorySize + "G");
         if (result === false) {
           // todo: starting failed, notify user
         }

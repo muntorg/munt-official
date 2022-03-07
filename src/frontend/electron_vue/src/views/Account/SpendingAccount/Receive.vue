@@ -5,30 +5,15 @@
     </portal>
 
     <div class="main">
-      <content-wrapper
-        heading="receive_coins.your_address"
-        content="receive_coins.information"
-      >
-      </content-wrapper>
+      <content-wrapper heading="receive_coins.your_address" content="receive_coins.information"> </content-wrapper>
 
       <div class="qr" @click="copyQr">
-        <vue-qrcode
-          ref="qrcode"
-          class="qrcode"
-          :width="280"
-          :margin="0"
-          :value="receiveAddress"
-          :color="{ dark: '#000000', light: '#ffffff' }"
-        />
+        <vue-qrcode ref="qrcode" class="qrcode" :width="280" :margin="0" :value="receiveAddress" :color="{ dark: '#000000', light: '#ffffff' }" />
       </div>
     </div>
     <div class="address-row flex-row">
       <div class="flex-1" />
-      <clipboard-field
-        class="address"
-        :value="receiveAddress"
-        confirmation="receive_coins.address_copied_to_clipboard"
-      ></clipboard-field>
+      <clipboard-field class="address" :value="receiveAddress" confirmation="receive_coins.address_copied_to_clipboard"></clipboard-field>
       <div class="flex-1" />
     </div>
     <div class="flex-1" />

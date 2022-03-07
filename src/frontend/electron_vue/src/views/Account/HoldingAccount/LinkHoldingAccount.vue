@@ -1,43 +1,20 @@
 <template>
   <div class="link-witness-view flex-col">
     <div class="main">
-      <content-wrapper
-        v-if="needsUnlock"
-        heading="link_holding_account.title"
-        content="link_holding_account.information"
-      >
-        <app-form-field
-          style="text-align: left;"
-          :title="$t(`common.password`)"
-        >
-          <input
-            v-model="password"
-            type="password"
-            :class="passwordClass"
-            @keydown="onPasswordKeydown"
-          />
+      <content-wrapper v-if="needsUnlock" heading="link_holding_account.title" content="link_holding_account.information">
+        <app-form-field style="text-align: left;" :title="$t(`common.password`)">
+          <input v-model="password" type="password" :class="passwordClass" @keydown="onPasswordKeydown" />
         </app-form-field>
       </content-wrapper>
 
       <content-wrapper v-else heading="link_holding_account.title">
         <div v-if="account.balance > 0">
           <div class="qr" @click="copyQr">
-            <vue-qrcode
-              ref="qrcode"
-              class="qrcode"
-              :width="280"
-              :margin="0"
-              :value="witnessKey"
-              :color="{ dark: `#000000`, light: `#FFFFFF` }"
-            />
+            <vue-qrcode ref="qrcode" class="qrcode" :width="280" :margin="0" :value="witnessKey" :color="{ dark: `#000000`, light: `#FFFFFF` }" />
           </div>
           <div class="address-row flex-row">
             <div class="flex-1" />
-            <clipboard-field
-              class="address"
-              :value="witnessKey"
-              confirmation="receive_coins.address_copied_to_clipboard"
-            ></clipboard-field>
+            <clipboard-field class="address" :value="witnessKey" confirmation="receive_coins.address_copied_to_clipboard"></clipboard-field>
             <div class="flex-1" />
           </div>
         </div>
@@ -56,10 +33,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import { clipboard, nativeImage } from "electron";
-import {
-  LibraryController,
-  AccountsController
-} from "../../../unity/Controllers";
+import { LibraryController, AccountsController } from "../../../unity/Controllers";
 import VueQrcode from "vue-qrcode";
 export default {
   name: "LinkHoldingAccount",

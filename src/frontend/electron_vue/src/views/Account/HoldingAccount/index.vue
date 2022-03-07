@@ -21,10 +21,7 @@
       />
     </app-section>
 
-    <app-section
-      v-if="isAccountView && accountIsFunded"
-      class="holding-information"
-    >
+    <app-section v-if="isAccountView && accountIsFunded" class="holding-information">
       <h5>{{ $t("common.information") }}</h5>
       <div class="flex-row">
         <div>{{ $t("holding_account.status") }}</div>
@@ -79,53 +76,29 @@
       </div>
     </app-section>
 
-    <app-section
-      v-show="isAccountView && !accountIsFunded"
-      class="holding-empty"
-    >
+    <app-section v-show="isAccountView && !accountIsFunded" class="holding-empty">
       {{ $t("holding_account.empty") }}
     </app-section>
 
     <router-view />
 
     <portal to="footer-slot">
-      <footer-button
-        :icon="['fal', 'info-circle']"
-        routeName="account"
-        @click="routeTo"
-      >
+      <footer-button :icon="['fal', 'info-circle']" routeName="account" @click="routeTo">
         {{ $t("buttons.info") }}
       </footer-button>
-      <footer-button
-        :icon="['fal', 'key']"
-        routeName="link-holding-account"
-        @click="routeTo"
-      >
+      <footer-button :icon="['fal', 'key']" routeName="link-holding-account" @click="routeTo">
         {{ $t("buttons.holding_key") }}
       </footer-button>
-      <footer-button
-        v-if="renewButtonVisible"
-        :icon="['fal', 'redo-alt']"
-        routeName="renew-account"
-        @click="routeTo"
-      >
+      <footer-button v-if="renewButtonVisible" :icon="['fal', 'redo-alt']" routeName="renew-account" @click="routeTo">
         {{ $t("buttons.renew") }}
       </footer-button>
-      <footer-button
-        :icon="['fal', 'arrow-from-bottom']"
-        routeName="send-holding"
-        @click="routeTo"
-      >
+      <footer-button :icon="['fal', 'arrow-from-bottom']" routeName="send-holding" @click="routeTo">
         {{ $t("buttons.send") }}
       </footer-button>
     </portal>
 
     <portal to="sidebar-right">
-      <component
-        v-if="rightSidebar"
-        :is="rightSidebar"
-        v-bind="rightSidebarProps"
-      />
+      <component v-if="rightSidebar" :is="rightSidebar" v-bind="rightSidebarProps" />
     </portal>
   </div>
 </template>
@@ -162,52 +135,35 @@ export default {
       return this.getStatistics("account_status");
     },
     accountAmountLockedAtCreation() {
-      return formatMoneyForDisplay(
-        this.getStatistics("account_amount_locked_at_creation")
-      );
+      return formatMoneyForDisplay(this.getStatistics("account_amount_locked_at_creation"));
     },
     accountAmountEarned() {
-      let earnings = formatMoneyForDisplay(
-        this.account.balance -
-          this.getStatistics("account_amount_locked_at_creation")
-      );
+      let earnings = formatMoneyForDisplay(this.account.balance - this.getStatistics("account_amount_locked_at_creation"));
       if (earnings < 0) return formatMoneyForDisplay(0);
       return earnings;
     },
     accountIsFunded() {
       if (this.getStatistics("account_status") == "empty") return false;
-      if (this.getStatistics("account_status") == "empty_with_remainder")
-        return false;
+      if (this.getStatistics("account_status") == "empty_with_remainder") return false;
       return true;
     },
     lockedFrom() {
       return this.getStatistics("account_initial_lock_creation_block_height");
     },
     lockedUntil() {
-      return (
-        this.getStatistics("account_initial_lock_creation_block_height") +
-        this.getStatistics("account_initial_lock_period_in_blocks")
-      );
+      return this.getStatistics("account_initial_lock_creation_block_height") + this.getStatistics("account_initial_lock_period_in_blocks");
     },
     lockDuration() {
-      return (
-        this.getStatistics("account_initial_lock_period_in_blocks") / 288
-      ).toFixed(2);
+      return (this.getStatistics("account_initial_lock_period_in_blocks") / 288).toFixed(2);
     },
     remainingLockPeriod() {
-      return (
-        this.getStatistics("account_remaining_lock_period_in_blocks") / 288
-      ).toFixed(2);
+      return (this.getStatistics("account_remaining_lock_period_in_blocks") / 288).toFixed(2);
     },
     requiredEarningsFrequency() {
-      return (
-        this.getStatistics("account_expected_witness_period_in_blocks") / 288
-      ).toFixed(2);
+      return (this.getStatistics("account_expected_witness_period_in_blocks") / 288).toFixed(2);
     },
     expectedEarningsFrequency() {
-      return (
-        this.getStatistics("account_estimated_witness_period_in_blocks") / 288
-      ).toFixed(2);
+      return (this.getStatistics("account_estimated_witness_period_in_blocks") / 288).toFixed(2);
     },
     accountWeight() {
       return this.getStatistics("account_weight");
@@ -255,9 +211,7 @@ export default {
     initialize() {
       this.updateStatistics();
 
-      this.isCompounding = WitnessController.IsAccountCompounding(
-        this.account.UUID
-      );
+      this.isCompounding = WitnessController.IsAccountCompounding(this.account.UUID);
     },
     getStatistics(which) {
       return this.statistics[which] || null;
@@ -265,9 +219,7 @@ export default {
     updateStatistics() {
       return new Promise(resolve => {
         clearTimeout(timeout);
-        this.statistics = WitnessController.GetAccountWitnessStatistics(
-          this.account.UUID
-        );
+        this.statistics = WitnessController.GetAccountWitnessStatistics(this.account.UUID);
         timeout = setTimeout(this.updateStatistics, 2 * 60 * 1000); // update statistics every two minutes
         if (this.statistics) {
           resolve();
@@ -275,10 +227,7 @@ export default {
       });
     },
     toggleCompounding() {
-      WitnessController.SetAccountCompounding(
-        this.account.UUID,
-        !this.isCompounding
-      );
+      WitnessController.SetAccountCompounding(this.account.UUID, !this.isCompounding);
       this.isCompounding = !this.isCompounding;
     },
     setRightSidebar(name) {

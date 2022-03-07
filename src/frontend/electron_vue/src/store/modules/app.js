@@ -5,9 +5,7 @@ function EnableDebugWindowOnCoreReady() {
   try {
     let menu = Menu.getApplicationMenu();
     if (menu === null) return;
-    menu.items
-      .find(x => x.label === "Help")
-      .submenu.items.find(x => x.label === "Debug window").enabled = true;
+    menu.items.find(x => x.label === "Help").submenu.items.find(x => x.label === "Debug window").enabled = true;
   } catch (e) {
     console.error(e);
   }
@@ -62,10 +60,7 @@ const app = {
   },
   actions: {
     SET_CORE_READY({ commit, state }) {
-      commit(
-        "SET_STATUS",
-        state.progress === 1 ? AppStatus.ready : AppStatus.synchronize
-      );
+      commit("SET_STATUS", state.progress === 1 ? AppStatus.ready : AppStatus.synchronize);
       commit("SET_CORE_READY");
       EnableDebugWindowOnCoreReady();
     },

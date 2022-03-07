@@ -11,11 +11,7 @@
       </div>
       <div class="content">
         {{ message }}
-        <component
-          v-if="component"
-          :is="component"
-          v-bind="componentProps"
-        ></component>
+        <component v-if="component" :is="component" v-bind="componentProps"></component>
       </div>
       <app-button-section class="buttons" v-if="showButtons">
         <template v-slot:right>
@@ -45,9 +41,7 @@ export default {
       return this.value.title || "title";
     },
     showButtons() {
-      return typeof this.value.showButtons === "boolean"
-        ? this.value.showButtons
-        : true;
+      return typeof this.value.showButtons === "boolean" ? this.value.showButtons : true;
     },
     type() {
       return this.value.type;

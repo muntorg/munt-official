@@ -9,11 +9,7 @@
         <input v-model="amount" ref="amount" type="text" readonly />
       </app-form-field>
       <app-form-field :title="$t('send_coins.target_account')">
-        <select-list
-          :options="fundingAccounts"
-          :default="fundingAccount"
-          v-model="fundingAccount"
-        />
+        <select-list :options="fundingAccounts" :default="fundingAccount" v-model="fundingAccount" />
       </app-form-field>
       <app-form-field>
         <input
@@ -35,10 +31,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import { displayToMonetary, formatMoneyForDisplay } from "../../../util.js";
-import {
-  LibraryController,
-  AccountsController
-} from "../../../unity/Controllers";
+import { LibraryController, AccountsController } from "../../../unity/Controllers";
 import ConfirmTransactionDialog from "../SpendingAccount/ConfirmTransactionDialog";
 import EventBus from "@/EventBus";
 
@@ -63,9 +56,7 @@ export default {
       return this.isPasswordInvalid ? "error" : "";
     },
     fundingAccounts() {
-      return this.accounts.filter(
-        x => x.state === "Normal" && ["Desktop"].indexOf(x.type) !== -1
-      );
+      return this.accounts.filter(x => x.state === "Normal" && ["Desktop"].indexOf(x.type) !== -1);
     },
     hasErrors() {
       return this.isPasswordInvalid;
@@ -102,13 +93,9 @@ export default {
 
       // validate amount
       let accountBalance = AccountsController.GetActiveAccountBalance();
-      let amountInvalid =
-        accountBalance.availableExcludingLocked <
-        displayToMonetary(this.amount);
+      let amountInvalid = accountBalance.availableExcludingLocked < displayToMonetary(this.amount);
       // validate address
-      let address = AccountsController.GetReceiveAddress(
-        this.fundingAccount.UUID
-      );
+      let address = AccountsController.GetReceiveAddress(this.fundingAccount.UUID);
       let addressInvalid = !LibraryController.IsValidNativeAddress(address);
 
       // wallet needs to be unlocked to make a payment

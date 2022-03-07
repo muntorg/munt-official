@@ -89,6 +89,9 @@
       ]
     }
   },
+  "prettier": {
+      "printWidth": 160
+  },
   "browserslist": [
     "Electron >= 17.1.0"
   ]
