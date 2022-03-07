@@ -14,13 +14,12 @@
         </app-form-field>
       </section>
     </section>
-    <portal to="footer-slot">
-      <app-button-section>
-        <button @click="addSpendingAccount" :disabled="accountName.length < 3">
-          {{ $t("buttons.done") }}
-        </button>
-      </app-button-section>
-    </portal>
+    <div class="flex-1"></div>
+    <app-button-section>
+      <button @click="addSpendingAccount" :disabled="accountName.length < 3">
+        {{ $t("buttons.done") }}
+      </button>
+    </app-button-section>
   </div>
 </template>
 
@@ -83,3 +82,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.add-spending-account {
+  display: flex;
+  flex-direction: column;
+}
+</style>

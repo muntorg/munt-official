@@ -44,21 +44,21 @@
       </section>
     </section>
 
-    <portal to="footer-slot">
-      <app-button-section>
-        <template v-slot:left>
-          <button @click="current--" v-if="current !== 1">
-            {{ $t("buttons.previous") }}
-          </button>
-        </template>
-        <button @click="nextStep" :disabled="!isWeightSufficient" v-if="current === 1">
-          {{ $t("buttons.next") }}
+    <div class="flex-1"></div>
+
+    <app-button-section>
+      <template v-slot:left>
+        <button @click="current--" v-if="current !== 1">
+          {{ $t("buttons.previous") }}
         </button>
-        <button @click="createAndFundHoldingAccount" :disabled="disableLockButton" v-else>
-          {{ $t("buttons.lock") }}
-        </button>
-      </app-button-section>
-    </portal>
+      </template>
+      <button @click="nextStep" :disabled="!isWeightSufficient" v-if="current === 1">
+        {{ $t("buttons.next") }}
+      </button>
+      <button @click="createAndFundHoldingAccount" :disabled="disableLockButton" v-else>
+        {{ $t("buttons.lock") }}
+      </button>
+    </app-button-section>
   </div>
 </template>
 
@@ -187,6 +187,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.add-holding-account {
+  display: flex;
+  flex-direction: column;
+}
 .earnings {
   line-height: 1.2em;
 }
