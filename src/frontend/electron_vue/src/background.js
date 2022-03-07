@@ -44,9 +44,7 @@ if (!gotTheLock) {
 }
 if (process.defaultApp) {
   if (process.argv.length >= 2) {
-    app.setAsDefaultProtocolClient("florin", process.execPath, [
-      path.resolve(process.argv[1])
-    ]);
+    app.setAsDefaultProtocolClient("florin", process.execPath, [path.resolve(process.argv[1])]);
   }
 } else {
   app.setAsDefaultProtocolClient("florin");
@@ -71,9 +69,7 @@ if (isDevelopment) {
 }
 
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([
-  { scheme: "app", privileges: { secure: true, standard: true } }
-]);
+protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
 function createMainWindow() {
   console.log("createMainWindow");
@@ -196,9 +192,7 @@ function createDebugWindow() {
   }
   winDebug = new BrowserWindow(options);
 
-  let url = process.env.WEBPACK_DEV_SERVER_URL
-    ? `${process.env.WEBPACK_DEV_SERVER_URL}#/debug`
-    : `app://./index.html#/debug`;
+  let url = process.env.WEBPACK_DEV_SERVER_URL ? `${process.env.WEBPACK_DEV_SERVER_URL}#/debug` : `app://./index.html#/debug`;
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -282,9 +276,7 @@ app.on("ready", async () => {
 async function updateRate(seconds) {
   try {
     // use blockhut api instead of https://api.florin.org/api/v1/ticker
-    const response = await axios.get(
-      "https://blockhut.com/florin/xfleuro.json"
-    );
+    const response = await axios.get("https://blockhut.com/florin/xfleuro.json");
 
     store.dispatch("app/SET_RATE", response.data.eurxfl);
   } catch (error) {
