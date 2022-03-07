@@ -90,8 +90,7 @@ export default {
       let connections_in = parseInt(this.clientInfo.num_connections_in);
       let connections_out = parseInt(this.clientInfo.num_connections_out);
 
-      return `${connections_in +
-        connections_out} (In: ${connections_in} / Out: ${connections_out})`;
+      return `${connections_in + connections_out} (In: ${connections_in} / Out: ${connections_out})`;
     }
   },
   created() {
@@ -101,10 +100,7 @@ export default {
   beforeDestroy() {
     this.enableTimeout = false;
     clearTimeout(timeout);
-    document.removeEventListener(
-      "webkitvisibilitychange",
-      this.visibilityChange
-    );
+    document.removeEventListener("webkitvisibilitychange", this.visibilityChange);
   },
   methods: {
     updateClientInfo() {

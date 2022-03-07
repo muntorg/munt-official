@@ -77,11 +77,7 @@ const wallet = {
     totalBalance: state => {
       let balance = state.walletBalance;
       if (balance === undefined || balance === null) return null;
-      return (
-        balance.availableIncludingLocked +
-        balance.unconfirmedIncludingLocked +
-        balance.immatureIncludingLocked
-      );
+      return balance.availableIncludingLocked + balance.unconfirmedIncludingLocked + balance.immatureIncludingLocked;
     },
     accounts: state => {
       return state.accounts

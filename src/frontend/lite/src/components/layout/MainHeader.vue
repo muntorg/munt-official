@@ -56,8 +56,7 @@ export default {
   min-width: 22px;
   height: 22px;
   min-height: 22px;
-  background: url("../../img/logo.svg"),
-    linear-gradient(transparent, transparent);
+  background: url("../../img/logo.svg"), linear-gradient(transparent, transparent);
   background-size: cover;
   margin-right: 10px;
 }

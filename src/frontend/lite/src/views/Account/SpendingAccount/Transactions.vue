@@ -1,19 +1,11 @@
 <template>
   <div class="transactions-view">
     <div v-if="hasMutations">
-      <div
-        class="mutations-list"
-        v-for="(mutation, index) in mutations"
-        :key="mutation.txHash"
-      >
+      <div class="mutations-list" v-for="(mutation, index) in mutations" :key="mutation.txHash">
         <h4 v-if="showDateHeader(index)">
           {{ formatDateHeader(mutation.timestamp) }}
         </h4>
-        <div
-          class="mutation-row flex-row"
-          @click="showTransactionDetails(mutation)"
-          :class="mutationRowClass(mutation.txHash)"
-        >
+        <div class="mutation-row flex-row" @click="showTransactionDetails(mutation)" :class="mutationRowClass(mutation.txHash)">
           <div class="icon">
             <fa-icon :icon="['fal', mutationIcon(mutation)]" />
           </div>
@@ -99,9 +91,7 @@ export default {
     },
     formatTime(timestamp) {
       let date = new Date(timestamp * 1000);
-      return `${("0" + date.getHours()).slice(-2)}:${(
-        "0" + date.getMinutes()
-      ).slice(-2)}`;
+      return `${("0" + date.getHours()).slice(-2)}:${("0" + date.getMinutes()).slice(-2)}`;
     },
     formatAmount(amount) {
       return `${formatMoneyForDisplay(amount)}`;
@@ -111,13 +101,7 @@ export default {
     },
     showTransactionDetails(mutation) {
       EventBus.$emit("show-dialog", {
-        title: this.$t(
-          `transaction_details.title.${
-            mutation.change > 0
-              ? "incoming_transaction"
-              : "outgoing_transaction"
-          }`
-        ),
+        title: this.$t(`transaction_details.title.${mutation.change > 0 ? "incoming_transaction" : "outgoing_transaction"}`),
         component: TransactionDetailsDialog,
         componentProps: {
           mutation: mutation

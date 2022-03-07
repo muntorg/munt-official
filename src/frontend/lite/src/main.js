@@ -39,10 +39,7 @@ import {
 
 import { faListUl, faLongArrowDown } from "@fortawesome/pro-regular-svg-icons";
 
-import {
-  faArrowCircleDown,
-  faArrowCircleUp
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowCircleDown, faArrowCircleUp } from "@fortawesome/free-solid-svg-icons";
 
 library.add([
   faAngleDoubleLeft,

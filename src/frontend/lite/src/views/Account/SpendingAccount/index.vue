@@ -2,24 +2,11 @@
   <div class="spending-account">
     <portal to="header-slot">
       <section class="header flex-row">
-        <main-header
-          class="info"
-          :title="account.label"
-          :subtitle="balanceForDisplay + ' ' + totalBalanceFiat"
-        />
-        <div
-          v-if="UIConfig.showSidebar"
-          style="margin-right: 10px"
-          class="button"
-          @click="showSettings"
-        >
+        <main-header class="info" :title="account.label" :subtitle="balanceForDisplay + ' ' + totalBalanceFiat" />
+        <div v-if="UIConfig.showSidebar" style="margin-right: 10px" class="button" @click="showSettings">
           <fa-icon :icon="['fal', 'cog']" />
         </div>
-        <div
-          v-if="UIConfig.showSidebar"
-          class="button"
-          @click="changeLockSettings"
-        >
+        <div v-if="UIConfig.showSidebar" class="button" @click="changeLockSettings">
           <fa-icon :icon="['fal', lockIcon]" />
         </div>
         <div v-if="!UIConfig.showSidebar" class="settings flex-col">
@@ -29,21 +16,13 @@
         </div>
       </section>
     </portal>
-    <transactions
-      v-if="UIConfig.showSidebar && showTransactionList"
-      :mutations="mutations"
-      @tx-hash="onTxHash"
-      :tx-hash="txHash"
-    />
+    <transactions v-if="UIConfig.showSidebar && showTransactionList" :mutations="mutations" @tx-hash="onTxHash" :tx-hash="txHash" />
 
     <router-view />
 
     <portal to="footer-slot">
       <section class="footer">
-        <div
-          :class="getButtonClassNames('account')"
-          @click="routeTo('account')"
-        >
+        <div :class="getButtonClassNames('account')" @click="routeTo('account')">
           <fa-icon :icon="['far', 'list-ul']" />
           {{ $t("buttons.transactions") }}
         </div>
@@ -51,10 +30,7 @@
           <fa-icon :icon="['fal', 'arrow-from-bottom']" />
           {{ $t("buttons.send") }}
         </div>
-        <div
-          :class="getButtonClassNames('receive')"
-          @click="routeTo('receive')"
-        >
+        <div :class="getButtonClassNames('receive')" @click="routeTo('receive')">
           <fa-icon :icon="['fal', 'arrow-to-bottom']" />
           {{ $t("buttons.receive") }}
         </div>
@@ -62,11 +38,7 @@
     </portal>
 
     <portal to="sidebar-right">
-      <component
-        v-if="rightSidebar"
-        :is="rightSidebar"
-        v-bind="rightSidebarProps"
-      />
+      <component v-if="rightSidebar" :is="rightSidebar" v-bind="rightSidebarProps" />
     </portal>
   </div>
 </template>

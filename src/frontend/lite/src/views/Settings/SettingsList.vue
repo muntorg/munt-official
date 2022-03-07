@@ -18,28 +18,16 @@
     <div>
       <div v-if="UIConfig.hasThemes" class="settings-row flex-row">
         <div class="flex-1">{{ $t("settings.choose_theme") }}</div>
-        <div
-          :class="getThemeSelectClassNames('blue')"
-          @click="switchTheme('blue')"
-        ></div>
-        <div
-          :class="getThemeSelectClassNames('orange')"
-          @click="switchTheme('orange')"
-        ></div>
+        <div :class="getThemeSelectClassNames('blue')" @click="switchTheme('blue')"></div>
+        <div :class="getThemeSelectClassNames('orange')" @click="switchTheme('orange')"></div>
       </div>
     </div>
     <div class="settings-row flex-row">
       <div class="flex-1">{{ $t("settings.choose_language") }}</div>
-      <div
-        :class="`language-select ${this.language === 'en' ? 'selected' : ''}`"
-        @click="changeLanguage('en')"
-      >
+      <div :class="`language-select ${this.language === 'en' ? 'selected' : ''}`" @click="changeLanguage('en')">
         {{ $t("settings.english") }}
       </div>
-      <div
-        :class="`language-select ${this.language === 'nl' ? 'selected' : ''}`"
-        @click="changeLanguage('nl')"
-      >
+      <div :class="`language-select ${this.language === 'nl' ? 'selected' : ''}`" @click="changeLanguage('nl')">
         {{ $t("settings.dutch") }}
       </div>
     </div>
@@ -70,10 +58,8 @@ export default {
   methods: {
     getThemeSelectClassNames(theme) {
       const classNames = ["theme-select", theme];
-      if (theme === "blue" && this.theme !== "orange")
-        classNames.push("selected");
-      else if (theme === "orange" && this.theme === "orange")
-        classNames.push("selected");
+      if (theme === "blue" && this.theme !== "orange") classNames.push("selected");
+      else if (theme === "orange" && this.theme === "orange") classNames.push("selected");
       return classNames.join(" ");
     },
     switchTheme(theme) {
