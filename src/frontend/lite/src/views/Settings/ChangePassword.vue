@@ -7,13 +7,7 @@
 
     <!-- step 1: Enter old password -->
     <app-form-field v-if="current === 1" :title="$t('common.password')">
-      <input
-        ref="passwordold"
-        type="password"
-        v-model="passwordold"
-        @keydown="validatePasswordOnEnter"
-        :class="passwordOldStatus"
-      />
+      <input ref="passwordold" type="password" v-model="passwordold" @keydown="validatePasswordOnEnter" :class="passwordOldStatus" />
     </app-form-field>
 
     <!-- step 2: enter new password -->
@@ -22,30 +16,17 @@
         <input ref="password1" type="password" v-model="password1" />
       </app-form-field>
       <app-form-field :title="$t('setup.repeat_password')">
-        <input
-          type="password"
-          v-model="password2"
-          :class="password2Status"
-          @keydown="validatePasswordRepeatOnEnter"
-        />
+        <input type="password" v-model="password2" :class="password2Status" @keydown="validatePasswordRepeatOnEnter" />
       </app-form-field>
     </div>
 
     <div class="flex-1" />
     <portal v-if="!UIConfig.showSidebar" to="footer-slot">
       <app-button-section>
-        <button
-          v-if="current === 1"
-          @click="nextStep"
-          :disabled="isNextDisabled"
-        >
+        <button v-if="current === 1" @click="nextStep" :disabled="isNextDisabled">
           {{ $t("buttons.next") }}
         </button>
-        <button
-          v-if="current === 2"
-          @click="nextStep"
-          :disabled="isNextDisabled"
-        >
+        <button v-if="current === 2" @click="nextStep" :disabled="isNextDisabled">
           {{ $t("buttons.change_password") }}
         </button>
       </app-button-section>
@@ -57,18 +38,10 @@
         </button>
       </template>
       <template v-slot:right>
-        <button
-          v-if="current === 1"
-          @click="nextStep"
-          :disabled="isNextDisabled"
-        >
+        <button v-if="current === 1" @click="nextStep" :disabled="isNextDisabled">
           {{ $t("buttons.next") }}
         </button>
-        <button
-          v-if="current === 2"
-          @click="nextStep"
-          :disabled="isNextDisabled"
-        >
+        <button v-if="current === 2" @click="nextStep" :disabled="isNextDisabled">
           {{ $t("buttons.change_password") }}
         </button>
       </template>
@@ -104,11 +77,7 @@ export default {
     },
     passwordsValidated() {
       if (this.password1 === null || this.password1.length < 6) return false;
-      if (
-        this.password2 === null ||
-        this.password2.length < this.password1.length
-      )
-        return false;
+      if (this.password2 === null || this.password2.length < this.password1.length) return false;
 
       return this.password1 === this.password2;
     },
@@ -132,14 +101,9 @@ export default {
           this.validatePassword();
           break;
         case 2:
-          if (
-            LibraryController.ChangePassword(this.passwordold, this.password2)
-          ) {
+          if (LibraryController.ChangePassword(this.passwordold, this.password2)) {
             if (this.walletPassword) {
-              this.$store.dispatch(
-                "wallet/SET_WALLET_PASSWORD",
-                this.password2
-              );
+              this.$store.dispatch("wallet/SET_WALLET_PASSWORD", this.password2);
             }
             this.$router.push({ name: "transactions" });
           }

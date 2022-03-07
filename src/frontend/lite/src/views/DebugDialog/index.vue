@@ -1,24 +1,13 @@
 <template>
   <div class="app-debug">
     <div class="topbar flex-row">
-      <div
-        v-for="(tab, index) in tabs"
-        :key="index"
-        :class="getTabClass(index)"
-        @click="setTab(index)"
-      >
+      <div v-for="(tab, index) in tabs" :key="index" :class="getTabClass(index)" @click="setTab(index)">
         {{ tab.title }}
       </div>
     </div>
     <div class="main">
       <information-page v-if="current === 0" />
-      <debug-console
-        v-if="current === 1"
-        :value="console"
-        :output="console.output"
-        :commands="console.commands"
-        @clear-output="clearOutput"
-      />
+      <debug-console v-if="current === 1" :value="console" :output="console.output" :commands="console.commands" @clear-output="clearOutput" />
     </div>
   </div>
 </template>

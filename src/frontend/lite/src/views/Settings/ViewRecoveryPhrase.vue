@@ -8,13 +8,7 @@
 
       <!-- step 1: Enter password -->
       <app-form-field :title="$t('common.password')" v-if="current === 1">
-        <input
-          ref="password"
-          type="password"
-          v-model="password"
-          @keydown="getRecoveryPhraseOnEnter"
-          :class="computedStatus"
-        />
+        <input ref="password" type="password" v-model="password" @keydown="getRecoveryPhraseOnEnter" :class="computedStatus" />
       </app-form-field>
 
       <!-- step 2: Show recovery phrase -->
@@ -35,11 +29,7 @@
           </button>
         </template>
         <template v-slot:right>
-          <button
-            v-if="current === 1"
-            @click="getRecoveryPhrase"
-            :disabled="isNextDisabled"
-          >
+          <button v-if="current === 1" @click="getRecoveryPhrase" :disabled="isNextDisabled">
             {{ $t("buttons.next") }}
           </button>
           <button v-if="current === 2" @click="ready">
@@ -51,11 +41,7 @@
     <div v-else>
       <portal to="footer-slot">
         <app-button-section>
-          <button
-            v-if="current === 1"
-            @click="getRecoveryPhrase"
-            :disabled="isNextDisabled"
-          >
+          <button v-if="current === 1" @click="getRecoveryPhrase" :disabled="isNextDisabled">
             {{ $t("buttons.next") }}
           </button>
           <button v-if="current === 2" @click="ready">

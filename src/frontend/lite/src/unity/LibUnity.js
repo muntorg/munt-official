@@ -20,12 +20,8 @@ class LibUnity {
     this.isMainWindowReady = false;
 
     this.options = {
-      useTestnet: process.env.UNITY_USE_TESTNET
-        ? process.env.UNITY_USE_TESTNET
-        : false,
-      extraArgs: process.env.UNITY_EXTRA_ARGS
-        ? process.env.UNITY_EXTRA_ARGS
-        : "",
+      useTestnet: process.env.UNITY_USE_TESTNET ? process.env.UNITY_USE_TESTNET : false,
+      extraArgs: process.env.UNITY_EXTRA_ARGS ? process.env.UNITY_EXTRA_ARGS : "",
       ...options
     };
 
@@ -42,10 +38,7 @@ class LibUnity {
 
     let buildInfo = this.libraryController.BuildInfo();
 
-    store.dispatch(
-      "app/SET_UNITY_VERSION",
-      buildInfo.substr(1, buildInfo.indexOf("-") - 1)
-    );
+    store.dispatch("app/SET_UNITY_VERSION", buildInfo.substr(1, buildInfo.indexOf("-") - 1));
   }
 
   SetMainWindowReady() {
@@ -92,12 +85,8 @@ class LibUnity {
       let currentAccount = accounts.find(x => x.UUID === key);
       let currentBalance = accountBalances[key];
 
-      currentAccount.balance =
-        currentBalance.availableIncludingLocked +
-        currentBalance.immatureIncludingLocked;
-      currentAccount.spendable =
-        currentBalance.availableExcludingLocked -
-        currentBalance.immatureExcludingLocked;
+      currentAccount.balance = currentBalance.availableIncludingLocked + currentBalance.immatureIncludingLocked;
+      currentAccount.spendable = currentBalance.availableExcludingLocked - currentBalance.immatureExcludingLocked;
     });
 
     if (dispatch) {
@@ -112,10 +101,7 @@ class LibUnity {
     let self = this;
     let libraryController = this.libraryController;
 
-    this.accountsListener.onAccountNameChanged = function(
-      accountUUID,
-      newAccountName
-    ) {
+    this.accountsListener.onAccountNameChanged = function(accountUUID, newAccountName) {
       store.dispatch("wallet/SET_ACCOUNT_NAME", {
         accountUUID,
         newAccountName
@@ -159,19 +145,13 @@ class LibUnity {
     var staticFilterOffset = 0;
     var staticFilterLength = 0;
     if (isDevelopment) {
-      staticFilterPath = path.join(
-        app.getAppPath(),
-        "../../../data/staticfiltercp"
-      );
+      staticFilterPath = path.join(app.getAppPath(), "../../../data/staticfiltercp");
     } else {
       staticFilterPath = app.getAppPath();
       if (staticFilterPath.endsWith(".asar")) {
         const filesystem = disk.readFilesystemSync(staticFilterPath);
         const fileInfo = filesystem.getFile("staticfiltercp", true);
-        staticFilterOffset =
-          parseInt(fileInfo.offset) +
-          parseInt(8) +
-          parseInt(filesystem.headerSize);
+        staticFilterOffset = parseInt(fileInfo.offset) + parseInt(8) + parseInt(filesystem.headerSize);
         staticFilterLength = parseInt(fileInfo.size);
       } else {
         staticFilterPath = path.join(staticFilterPath, "staticfiltercp");
@@ -194,9 +174,7 @@ class LibUnity {
 
   _setStateWhenCoreAndMainWindowReady() {
     if (!this.isCoreReady || !this.isMainWindowReady)
-      return console.log(
-        `isCoreReady: ${this.isCoreReady}, isMainWindowReady: ${this.isMainWindowReady} -> return`
-      );
+      return console.log(`isCoreReady: ${this.isCoreReady}, isMainWindowReady: ${this.isMainWindowReady} -> return`);
     console.log("_setStateWhenCoreAndMainWindowReady: start");
 
     // code to update the store has been moved to notifySyncDone event handler because that's when we need the data
@@ -266,24 +244,15 @@ class LibUnity {
 
     libraryListener.notifyNewMutation = function(/*mutation, self_committed*/) {
       console.log("received: notifyNewMutation");
-      store.dispatch(
-        "wallet/SET_MUTATIONS",
-        libraryController.getMutationHistory()
-      );
-      store.dispatch(
-        "wallet/SET_RECEIVE_ADDRESS",
-        libraryController.GetReceiveAddress()
-      );
+      store.dispatch("wallet/SET_MUTATIONS", libraryController.getMutationHistory());
+      store.dispatch("wallet/SET_RECEIVE_ADDRESS", libraryController.GetReceiveAddress());
 
       self._updateAccounts();
     };
 
     libraryListener.notifyUpdatedTransaction = function(/*transaction*/) {
       console.log("received: notifyUpdatedTransaction");
-      store.dispatch(
-        "wallet/SET_MUTATIONS",
-        libraryController.getMutationHistory()
-      );
+      store.dispatch("wallet/SET_MUTATIONS", libraryController.getMutationHistory());
     };
 
     libraryListener.notifyInitWithExistingWallet = function() {
@@ -399,65 +368,44 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.InitWalletFromRecoveryPhraseAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.InitWalletFromRecoveryPhraseAsync(${data.phrase}, ${data.password})`
-        );
-        try {
-          let result = this.libraryController.InitWalletFromRecoveryPhrase(
-            data.phrase,
-            data.password
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.InitWalletFromRecoveryPhraseAsync", async data => {
+      console.log(`IPC: libraryController.InitWalletFromRecoveryPhraseAsync(${data.phrase}, ${data.password})`);
+      try {
+        let result = this.libraryController.InitWalletFromRecoveryPhrase(data.phrase, data.password);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
-    ipc.on(
-      "NJSILibraryController.InitWalletFromRecoveryPhrase",
-      (event, phrase, password) => {
-        console.log(
-          `IPC: libraryController.InitWalletFromRecoveryPhrase(${phrase}, ${password})`
-        );
-        try {
-          let result = this.libraryController.InitWalletFromRecoveryPhrase(
-            phrase,
-            password
-          );
-          event.returnValue = {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          event.returnValue = handleError(e);
-        }
+    ipc.on("NJSILibraryController.InitWalletFromRecoveryPhrase", (event, phrase, password) => {
+      console.log(`IPC: libraryController.InitWalletFromRecoveryPhrase(${phrase}, ${password})`);
+      try {
+        let result = this.libraryController.InitWalletFromRecoveryPhrase(phrase, password);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
-    );
+    });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.IsValidLinkURIAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.IsValidLinkURIAsync(${data.phrase})`
-        );
-        try {
-          let result = this.libraryController.IsValidLinkURI(data.phrase);
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.IsValidLinkURIAsync", async data => {
+      console.log(`IPC: libraryController.IsValidLinkURIAsync(${data.phrase})`);
+      try {
+        let result = this.libraryController.IsValidLinkURI(data.phrase);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.IsValidLinkURI", (event, phrase) => {
       console.log(`IPC: libraryController.IsValidLinkURI(${phrase})`);
@@ -472,65 +420,44 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.ReplaceWalletLinkedFromURIAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.ReplaceWalletLinkedFromURIAsync(${data.linked_uri}, ${data.password})`
-        );
-        try {
-          let result = this.libraryController.ReplaceWalletLinkedFromURI(
-            data.linked_uri,
-            data.password
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.ReplaceWalletLinkedFromURIAsync", async data => {
+      console.log(`IPC: libraryController.ReplaceWalletLinkedFromURIAsync(${data.linked_uri}, ${data.password})`);
+      try {
+        let result = this.libraryController.ReplaceWalletLinkedFromURI(data.linked_uri, data.password);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
-    ipc.on(
-      "NJSILibraryController.ReplaceWalletLinkedFromURI",
-      (event, linked_uri, password) => {
-        console.log(
-          `IPC: libraryController.ReplaceWalletLinkedFromURI(${linked_uri}, ${password})`
-        );
-        try {
-          let result = this.libraryController.ReplaceWalletLinkedFromURI(
-            linked_uri,
-            password
-          );
-          event.returnValue = {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          event.returnValue = handleError(e);
-        }
+    ipc.on("NJSILibraryController.ReplaceWalletLinkedFromURI", (event, linked_uri, password) => {
+      console.log(`IPC: libraryController.ReplaceWalletLinkedFromURI(${linked_uri}, ${password})`);
+      try {
+        let result = this.libraryController.ReplaceWalletLinkedFromURI(linked_uri, password);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
-    );
+    });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.EraseWalletSeedsAndAccountsAsync",
-      async () => {
-        console.log(
-          `IPC: libraryController.EraseWalletSeedsAndAccountsAsync()`
-        );
-        try {
-          let result = this.libraryController.EraseWalletSeedsAndAccounts();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.EraseWalletSeedsAndAccountsAsync", async () => {
+      console.log(`IPC: libraryController.EraseWalletSeedsAndAccountsAsync()`);
+      try {
+        let result = this.libraryController.EraseWalletSeedsAndAccounts();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.EraseWalletSeedsAndAccounts", event => {
       console.log(`IPC: libraryController.EraseWalletSeedsAndAccounts()`);
@@ -545,25 +472,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.IsValidRecoveryPhraseAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.IsValidRecoveryPhraseAsync(${data.phrase})`
-        );
-        try {
-          let result = this.libraryController.IsValidRecoveryPhrase(
-            data.phrase
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.IsValidRecoveryPhraseAsync", async data => {
+      console.log(`IPC: libraryController.IsValidRecoveryPhraseAsync(${data.phrase})`);
+      try {
+        let result = this.libraryController.IsValidRecoveryPhrase(data.phrase);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.IsValidRecoveryPhrase", (event, phrase) => {
       console.log(`IPC: libraryController.IsValidRecoveryPhrase(${phrase})`);
@@ -578,21 +498,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.GenerateRecoveryMnemonicAsync",
-      async () => {
-        console.log(`IPC: libraryController.GenerateRecoveryMnemonicAsync()`);
-        try {
-          let result = this.libraryController.GenerateRecoveryMnemonic();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.GenerateRecoveryMnemonicAsync", async () => {
+      console.log(`IPC: libraryController.GenerateRecoveryMnemonicAsync()`);
+      try {
+        let result = this.libraryController.GenerateRecoveryMnemonic();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.GenerateRecoveryMnemonic", event => {
       console.log(`IPC: libraryController.GenerateRecoveryMnemonic()`);
@@ -607,21 +524,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.GenerateGenesisKeysAsync",
-      async () => {
-        console.log(`IPC: libraryController.GenerateGenesisKeysAsync()`);
-        try {
-          let result = this.libraryController.GenerateGenesisKeys();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.GenerateGenesisKeysAsync", async () => {
+      console.log(`IPC: libraryController.GenerateGenesisKeysAsync()`);
+      try {
+        let result = this.libraryController.GenerateGenesisKeys();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.GenerateGenesisKeys", event => {
       console.log(`IPC: libraryController.GenerateGenesisKeys()`);
@@ -636,63 +550,44 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.ComposeRecoveryPhraseAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.ComposeRecoveryPhraseAsync(${data.mnemonic}, ${data.birthTime})`
-        );
-        try {
-          let result = this.libraryController.ComposeRecoveryPhrase(
-            data.mnemonic,
-            data.birthTime
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.ComposeRecoveryPhraseAsync", async data => {
+      console.log(`IPC: libraryController.ComposeRecoveryPhraseAsync(${data.mnemonic}, ${data.birthTime})`);
+      try {
+        let result = this.libraryController.ComposeRecoveryPhrase(data.mnemonic, data.birthTime);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
-    ipc.on(
-      "NJSILibraryController.ComposeRecoveryPhrase",
-      (event, mnemonic, birthTime) => {
-        console.log(
-          `IPC: libraryController.ComposeRecoveryPhrase(${mnemonic}, ${birthTime})`
-        );
-        try {
-          let result = this.libraryController.ComposeRecoveryPhrase(
-            mnemonic,
-            birthTime
-          );
-          event.returnValue = {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          event.returnValue = handleError(e);
-        }
+    ipc.on("NJSILibraryController.ComposeRecoveryPhrase", (event, mnemonic, birthTime) => {
+      console.log(`IPC: libraryController.ComposeRecoveryPhrase(${mnemonic}, ${birthTime})`);
+      try {
+        let result = this.libraryController.ComposeRecoveryPhrase(mnemonic, birthTime);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
-    );
+    });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.TerminateUnityLibAsync",
-      async () => {
-        console.log(`IPC: libraryController.TerminateUnityLibAsync()`);
-        try {
-          let result = this.libraryController.TerminateUnityLib();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.TerminateUnityLibAsync", async () => {
+      console.log(`IPC: libraryController.TerminateUnityLibAsync()`);
+      try {
+        let result = this.libraryController.TerminateUnityLib();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.TerminateUnityLib", event => {
       console.log(`IPC: libraryController.TerminateUnityLib()`);
@@ -707,63 +602,44 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.QRImageFromStringAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.QRImageFromStringAsync(${data.qr_string}, ${data.width_hint})`
-        );
-        try {
-          let result = this.libraryController.QRImageFromString(
-            data.qr_string,
-            data.width_hint
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.QRImageFromStringAsync", async data => {
+      console.log(`IPC: libraryController.QRImageFromStringAsync(${data.qr_string}, ${data.width_hint})`);
+      try {
+        let result = this.libraryController.QRImageFromString(data.qr_string, data.width_hint);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
-    ipc.on(
-      "NJSILibraryController.QRImageFromString",
-      (event, qr_string, width_hint) => {
-        console.log(
-          `IPC: libraryController.QRImageFromString(${qr_string}, ${width_hint})`
-        );
-        try {
-          let result = this.libraryController.QRImageFromString(
-            qr_string,
-            width_hint
-          );
-          event.returnValue = {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          event.returnValue = handleError(e);
-        }
+    ipc.on("NJSILibraryController.QRImageFromString", (event, qr_string, width_hint) => {
+      console.log(`IPC: libraryController.QRImageFromString(${qr_string}, ${width_hint})`);
+      try {
+        let result = this.libraryController.QRImageFromString(qr_string, width_hint);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
-    );
+    });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.GetReceiveAddressAsync",
-      async () => {
-        console.log(`IPC: libraryController.GetReceiveAddressAsync()`);
-        try {
-          let result = this.libraryController.GetReceiveAddress();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.GetReceiveAddressAsync", async () => {
+      console.log(`IPC: libraryController.GetReceiveAddressAsync()`);
+      try {
+        let result = this.libraryController.GetReceiveAddress();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.GetReceiveAddress", event => {
       console.log(`IPC: libraryController.GetReceiveAddress()`);
@@ -778,21 +654,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.GetRecoveryPhraseAsync",
-      async () => {
-        console.log(`IPC: libraryController.GetRecoveryPhraseAsync()`);
-        try {
-          let result = this.libraryController.GetRecoveryPhrase();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.GetRecoveryPhraseAsync", async () => {
+      console.log(`IPC: libraryController.GetRecoveryPhraseAsync()`);
+      try {
+        let result = this.libraryController.GetRecoveryPhrase();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.GetRecoveryPhrase", event => {
       console.log(`IPC: libraryController.GetRecoveryPhrase()`);
@@ -807,21 +680,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.IsMnemonicWalletAsync",
-      async () => {
-        console.log(`IPC: libraryController.IsMnemonicWalletAsync()`);
-        try {
-          let result = this.libraryController.IsMnemonicWallet();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.IsMnemonicWalletAsync", async () => {
+      console.log(`IPC: libraryController.IsMnemonicWalletAsync()`);
+      try {
+        let result = this.libraryController.IsMnemonicWallet();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.IsMnemonicWallet", event => {
       console.log(`IPC: libraryController.IsMnemonicWallet()`);
@@ -836,23 +706,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.IsMnemonicCorrectAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.IsMnemonicCorrectAsync(${data.phrase})`
-        );
-        try {
-          let result = this.libraryController.IsMnemonicCorrect(data.phrase);
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.IsMnemonicCorrectAsync", async data => {
+      console.log(`IPC: libraryController.IsMnemonicCorrectAsync(${data.phrase})`);
+      try {
+        let result = this.libraryController.IsMnemonicCorrect(data.phrase);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.IsMnemonicCorrect", (event, phrase) => {
       console.log(`IPC: libraryController.IsMnemonicCorrect(${phrase})`);
@@ -867,21 +732,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.GetMnemonicDictionaryAsync",
-      async () => {
-        console.log(`IPC: libraryController.GetMnemonicDictionaryAsync()`);
-        try {
-          let result = this.libraryController.GetMnemonicDictionary();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.GetMnemonicDictionaryAsync", async () => {
+      console.log(`IPC: libraryController.GetMnemonicDictionaryAsync()`);
+      try {
+        let result = this.libraryController.GetMnemonicDictionary();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.GetMnemonicDictionary", event => {
       console.log(`IPC: libraryController.GetMnemonicDictionary()`);
@@ -896,23 +758,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.UnlockWalletAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.UnlockWalletAsync(${data.password})`
-        );
-        try {
-          let result = this.libraryController.UnlockWallet(data.password);
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.UnlockWalletAsync", async data => {
+      console.log(`IPC: libraryController.UnlockWalletAsync(${data.password})`);
+      try {
+        let result = this.libraryController.UnlockWallet(data.password);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.UnlockWallet", (event, password) => {
       console.log(`IPC: libraryController.UnlockWallet(${password})`);
@@ -953,21 +810,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.IsWalletLockedAsync",
-      async () => {
-        console.log(`IPC: libraryController.IsWalletLockedAsync()`);
-        try {
-          let result = this.libraryController.IsWalletLocked();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.IsWalletLockedAsync", async () => {
+      console.log(`IPC: libraryController.IsWalletLockedAsync()`);
+      try {
+        let result = this.libraryController.IsWalletLocked();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.IsWalletLocked", event => {
       console.log(`IPC: libraryController.IsWalletLocked()`);
@@ -982,47 +836,31 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.ChangePasswordAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.ChangePasswordAsync(${data.oldPassword}, ${data.newPassword})`
-        );
-        try {
-          let result = this.libraryController.ChangePassword(
-            data.oldPassword,
-            data.newPassword
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.ChangePasswordAsync", async data => {
+      console.log(`IPC: libraryController.ChangePasswordAsync(${data.oldPassword}, ${data.newPassword})`);
+      try {
+        let result = this.libraryController.ChangePassword(data.oldPassword, data.newPassword);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
-    ipc.on(
-      "NJSILibraryController.ChangePassword",
-      (event, oldPassword, newPassword) => {
-        console.log(
-          `IPC: libraryController.ChangePassword(${oldPassword}, ${newPassword})`
-        );
-        try {
-          let result = this.libraryController.ChangePassword(
-            oldPassword,
-            newPassword
-          );
-          event.returnValue = {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          event.returnValue = handleError(e);
-        }
+    ipc.on("NJSILibraryController.ChangePassword", (event, oldPassword, newPassword) => {
+      console.log(`IPC: libraryController.ChangePassword(${oldPassword}, ${newPassword})`);
+      try {
+        let result = this.libraryController.ChangePassword(oldPassword, newPassword);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
-    );
+    });
 
     ipc.answerRenderer("NJSILibraryController.DoRescanAsync", async () => {
       console.log(`IPC: libraryController.DoRescanAsync()`);
@@ -1050,23 +888,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.IsValidRecipientAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.IsValidRecipientAsync(${data.request})`
-        );
-        try {
-          let result = this.libraryController.IsValidRecipient(data.request);
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.IsValidRecipientAsync", async data => {
+      console.log(`IPC: libraryController.IsValidRecipientAsync(${data.request})`);
+      try {
+        let result = this.libraryController.IsValidRecipient(data.request);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.IsValidRecipient", (event, request) => {
       console.log(`IPC: libraryController.IsValidRecipient(${request})`);
@@ -1081,25 +914,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.IsValidNativeAddressAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.IsValidNativeAddressAsync(${data.address})`
-        );
-        try {
-          let result = this.libraryController.IsValidNativeAddress(
-            data.address
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.IsValidNativeAddressAsync", async data => {
+      console.log(`IPC: libraryController.IsValidNativeAddressAsync(${data.address})`);
+      try {
+        let result = this.libraryController.IsValidNativeAddress(data.address);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.IsValidNativeAddress", (event, address) => {
       console.log(`IPC: libraryController.IsValidNativeAddress(${address})`);
@@ -1114,25 +940,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.IsValidBitcoinAddressAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.IsValidBitcoinAddressAsync(${data.address})`
-        );
-        try {
-          let result = this.libraryController.IsValidBitcoinAddress(
-            data.address
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.IsValidBitcoinAddressAsync", async data => {
+      console.log(`IPC: libraryController.IsValidBitcoinAddressAsync(${data.address})`);
+      try {
+        let result = this.libraryController.IsValidBitcoinAddress(data.address);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.IsValidBitcoinAddress", (event, address) => {
       console.log(`IPC: libraryController.IsValidBitcoinAddress(${address})`);
@@ -1147,23 +966,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.feeForRecipientAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.feeForRecipientAsync(${data.request})`
-        );
-        try {
-          let result = this.libraryController.feeForRecipient(data.request);
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.feeForRecipientAsync", async data => {
+      console.log(`IPC: libraryController.feeForRecipientAsync(${data.request})`);
+      try {
+        let result = this.libraryController.feeForRecipient(data.request);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.feeForRecipient", (event, request) => {
       console.log(`IPC: libraryController.feeForRecipient(${request})`);
@@ -1178,65 +992,44 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.performPaymentToRecipientAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.performPaymentToRecipientAsync(${data.request}, ${data.substract_fee})`
-        );
-        try {
-          let result = this.libraryController.performPaymentToRecipient(
-            data.request,
-            data.substract_fee
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.performPaymentToRecipientAsync", async data => {
+      console.log(`IPC: libraryController.performPaymentToRecipientAsync(${data.request}, ${data.substract_fee})`);
+      try {
+        let result = this.libraryController.performPaymentToRecipient(data.request, data.substract_fee);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
-    ipc.on(
-      "NJSILibraryController.performPaymentToRecipient",
-      (event, request, substract_fee) => {
-        console.log(
-          `IPC: libraryController.performPaymentToRecipient(${request}, ${substract_fee})`
-        );
-        try {
-          let result = this.libraryController.performPaymentToRecipient(
-            request,
-            substract_fee
-          );
-          event.returnValue = {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          event.returnValue = handleError(e);
-        }
+    ipc.on("NJSILibraryController.performPaymentToRecipient", (event, request, substract_fee) => {
+      console.log(`IPC: libraryController.performPaymentToRecipient(${request}, ${substract_fee})`);
+      try {
+        let result = this.libraryController.performPaymentToRecipient(request, substract_fee);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
-    );
+    });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.getTransactionAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.getTransactionAsync(${data.txHash})`
-        );
-        try {
-          let result = this.libraryController.getTransaction(data.txHash);
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.getTransactionAsync", async data => {
+      console.log(`IPC: libraryController.getTransactionAsync(${data.txHash})`);
+      try {
+        let result = this.libraryController.getTransaction(data.txHash);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.getTransaction", (event, txHash) => {
       console.log(`IPC: libraryController.getTransaction(${txHash})`);
@@ -1251,23 +1044,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.resendTransactionAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.resendTransactionAsync(${data.txHash})`
-        );
-        try {
-          let result = this.libraryController.resendTransaction(data.txHash);
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.resendTransactionAsync", async data => {
+      console.log(`IPC: libraryController.resendTransactionAsync(${data.txHash})`);
+      try {
+        let result = this.libraryController.resendTransaction(data.txHash);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.resendTransaction", (event, txHash) => {
       console.log(`IPC: libraryController.resendTransaction(${txHash})`);
@@ -1282,21 +1070,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.getAddressBookRecordsAsync",
-      async () => {
-        console.log(`IPC: libraryController.getAddressBookRecordsAsync()`);
-        try {
-          let result = this.libraryController.getAddressBookRecords();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.getAddressBookRecordsAsync", async () => {
+      console.log(`IPC: libraryController.getAddressBookRecordsAsync()`);
+      try {
+        let result = this.libraryController.getAddressBookRecords();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.getAddressBookRecords", event => {
       console.log(`IPC: libraryController.getAddressBookRecords()`);
@@ -1311,25 +1096,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.addAddressBookRecordAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.addAddressBookRecordAsync(${data.address})`
-        );
-        try {
-          let result = this.libraryController.addAddressBookRecord(
-            data.address
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.addAddressBookRecordAsync", async data => {
+      console.log(`IPC: libraryController.addAddressBookRecordAsync(${data.address})`);
+      try {
+        let result = this.libraryController.addAddressBookRecord(data.address);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.addAddressBookRecord", (event, address) => {
       console.log(`IPC: libraryController.addAddressBookRecord(${address})`);
@@ -1344,59 +1122,44 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.deleteAddressBookRecordAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.deleteAddressBookRecordAsync(${data.address})`
-        );
-        try {
-          let result = this.libraryController.deleteAddressBookRecord(
-            data.address
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.deleteAddressBookRecordAsync", async data => {
+      console.log(`IPC: libraryController.deleteAddressBookRecordAsync(${data.address})`);
+      try {
+        let result = this.libraryController.deleteAddressBookRecord(data.address);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
-    ipc.on(
-      "NJSILibraryController.deleteAddressBookRecord",
-      (event, address) => {
-        console.log(
-          `IPC: libraryController.deleteAddressBookRecord(${address})`
-        );
-        try {
-          let result = this.libraryController.deleteAddressBookRecord(address);
-          event.returnValue = {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          event.returnValue = handleError(e);
-        }
+    ipc.on("NJSILibraryController.deleteAddressBookRecord", (event, address) => {
+      console.log(`IPC: libraryController.deleteAddressBookRecord(${address})`);
+      try {
+        let result = this.libraryController.deleteAddressBookRecord(address);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
-    );
+    });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.ResetUnifiedProgressAsync",
-      async () => {
-        console.log(`IPC: libraryController.ResetUnifiedProgressAsync()`);
-        try {
-          let result = this.libraryController.ResetUnifiedProgress();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.ResetUnifiedProgressAsync", async () => {
+      console.log(`IPC: libraryController.ResetUnifiedProgressAsync()`);
+      try {
+        let result = this.libraryController.ResetUnifiedProgress();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.ResetUnifiedProgress", event => {
       console.log(`IPC: libraryController.ResetUnifiedProgress()`);
@@ -1411,21 +1174,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.getLastSPVBlockInfosAsync",
-      async () => {
-        console.log(`IPC: libraryController.getLastSPVBlockInfosAsync()`);
-        try {
-          let result = this.libraryController.getLastSPVBlockInfos();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.getLastSPVBlockInfosAsync", async () => {
+      console.log(`IPC: libraryController.getLastSPVBlockInfosAsync()`);
+      try {
+        let result = this.libraryController.getLastSPVBlockInfos();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.getLastSPVBlockInfos", event => {
       console.log(`IPC: libraryController.getLastSPVBlockInfos()`);
@@ -1440,21 +1200,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.getUnifiedProgressAsync",
-      async () => {
-        console.log(`IPC: libraryController.getUnifiedProgressAsync()`);
-        try {
-          let result = this.libraryController.getUnifiedProgress();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.getUnifiedProgressAsync", async () => {
+      console.log(`IPC: libraryController.getUnifiedProgressAsync()`);
+      try {
+        let result = this.libraryController.getUnifiedProgress();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.getUnifiedProgress", event => {
       console.log(`IPC: libraryController.getUnifiedProgress()`);
@@ -1469,21 +1226,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.getMonitoringStatsAsync",
-      async () => {
-        console.log(`IPC: libraryController.getMonitoringStatsAsync()`);
-        try {
-          let result = this.libraryController.getMonitoringStats();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.getMonitoringStatsAsync", async () => {
+      console.log(`IPC: libraryController.getMonitoringStatsAsync()`);
+      try {
+        let result = this.libraryController.getMonitoringStats();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSILibraryController.getMonitoringStats", event => {
       console.log(`IPC: libraryController.getMonitoringStats()`);
@@ -1498,83 +1252,57 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.RegisterMonitorListenerAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.RegisterMonitorListenerAsync(${data.listener})`
-        );
-        try {
-          let result = this.libraryController.RegisterMonitorListener(
-            data.listener
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.RegisterMonitorListenerAsync", async data => {
+      console.log(`IPC: libraryController.RegisterMonitorListenerAsync(${data.listener})`);
+      try {
+        let result = this.libraryController.RegisterMonitorListener(data.listener);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
-    ipc.on(
-      "NJSILibraryController.RegisterMonitorListener",
-      (event, listener) => {
-        console.log(
-          `IPC: libraryController.RegisterMonitorListener(${listener})`
-        );
-        try {
-          let result = this.libraryController.RegisterMonitorListener(listener);
-          event.returnValue = {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          event.returnValue = handleError(e);
-        }
+    ipc.on("NJSILibraryController.RegisterMonitorListener", (event, listener) => {
+      console.log(`IPC: libraryController.RegisterMonitorListener(${listener})`);
+      try {
+        let result = this.libraryController.RegisterMonitorListener(listener);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
-    );
+    });
 
-    ipc.answerRenderer(
-      "NJSILibraryController.UnregisterMonitorListenerAsync",
-      async data => {
-        console.log(
-          `IPC: libraryController.UnregisterMonitorListenerAsync(${data.listener})`
-        );
-        try {
-          let result = this.libraryController.UnregisterMonitorListener(
-            data.listener
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSILibraryController.UnregisterMonitorListenerAsync", async data => {
+      console.log(`IPC: libraryController.UnregisterMonitorListenerAsync(${data.listener})`);
+      try {
+        let result = this.libraryController.UnregisterMonitorListener(data.listener);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
-    ipc.on(
-      "NJSILibraryController.UnregisterMonitorListener",
-      (event, listener) => {
-        console.log(
-          `IPC: libraryController.UnregisterMonitorListener(${listener})`
-        );
-        try {
-          let result = this.libraryController.UnregisterMonitorListener(
-            listener
-          );
-          event.returnValue = {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          event.returnValue = handleError(e);
-        }
+    ipc.on("NJSILibraryController.UnregisterMonitorListener", (event, listener) => {
+      console.log(`IPC: libraryController.UnregisterMonitorListener(${listener})`);
+      try {
+        let result = this.libraryController.UnregisterMonitorListener(listener);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
-    );
+    });
 
     ipc.answerRenderer("NJSILibraryController.getClientInfoAsync", async () => {
       console.log(`IPC: libraryController.getClientInfoAsync()`);
@@ -1603,21 +1331,18 @@ class LibUnity {
     });
 
     // Register NJSIWalletController ipc handlers
-    ipc.answerRenderer(
-      "NJSIWalletController.HaveUnconfirmedFundsAsync",
-      async () => {
-        console.log(`IPC: walletController.HaveUnconfirmedFundsAsync()`);
-        try {
-          let result = this.walletController.HaveUnconfirmedFunds();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIWalletController.HaveUnconfirmedFundsAsync", async () => {
+      console.log(`IPC: walletController.HaveUnconfirmedFundsAsync()`);
+      try {
+        let result = this.walletController.HaveUnconfirmedFunds();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIWalletController.HaveUnconfirmedFunds", event => {
       console.log(`IPC: walletController.HaveUnconfirmedFunds()`);
@@ -1632,21 +1357,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIWalletController.GetBalanceSimpleAsync",
-      async () => {
-        console.log(`IPC: walletController.GetBalanceSimpleAsync()`);
-        try {
-          let result = this.walletController.GetBalanceSimple();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIWalletController.GetBalanceSimpleAsync", async () => {
+      console.log(`IPC: walletController.GetBalanceSimpleAsync()`);
+      try {
+        let result = this.walletController.GetBalanceSimple();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIWalletController.GetBalanceSimple", event => {
       console.log(`IPC: walletController.GetBalanceSimple()`);
@@ -1687,23 +1409,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIWalletController.AbandonTransactionAsync",
-      async data => {
-        console.log(
-          `IPC: walletController.AbandonTransactionAsync(${data.txHash})`
-        );
-        try {
-          let result = this.walletController.AbandonTransaction(data.txHash);
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIWalletController.AbandonTransactionAsync", async data => {
+      console.log(`IPC: walletController.AbandonTransactionAsync(${data.txHash})`);
+      try {
+        let result = this.walletController.AbandonTransaction(data.txHash);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIWalletController.AbandonTransaction", (event, txHash) => {
       console.log(`IPC: walletController.AbandonTransaction(${txHash})`);
@@ -1745,21 +1462,18 @@ class LibUnity {
     });
 
     // Register NJSIRpcController ipc handlers
-    ipc.answerRenderer(
-      "NJSIRpcController.getAutocompleteListAsync",
-      async () => {
-        console.log(`IPC: rpcController.getAutocompleteListAsync()`);
-        try {
-          let result = this.rpcController.getAutocompleteList();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIRpcController.getAutocompleteListAsync", async () => {
+      console.log(`IPC: rpcController.getAutocompleteListAsync()`);
+      try {
+        let result = this.rpcController.getAutocompleteList();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIRpcController.getAutocompleteList", event => {
       console.log(`IPC: rpcController.getAutocompleteList()`);
@@ -1775,21 +1489,18 @@ class LibUnity {
     });
 
     // Register NJSIP2pNetworkController ipc handlers
-    ipc.answerRenderer(
-      "NJSIP2pNetworkController.disableNetworkAsync",
-      async () => {
-        console.log(`IPC: p2pNetworkController.disableNetworkAsync()`);
-        try {
-          let result = this.p2pNetworkController.disableNetwork();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIP2pNetworkController.disableNetworkAsync", async () => {
+      console.log(`IPC: p2pNetworkController.disableNetworkAsync()`);
+      try {
+        let result = this.p2pNetworkController.disableNetwork();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIP2pNetworkController.disableNetwork", event => {
       console.log(`IPC: p2pNetworkController.disableNetwork()`);
@@ -1804,21 +1515,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIP2pNetworkController.enableNetworkAsync",
-      async () => {
-        console.log(`IPC: p2pNetworkController.enableNetworkAsync()`);
-        try {
-          let result = this.p2pNetworkController.enableNetwork();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIP2pNetworkController.enableNetworkAsync", async () => {
+      console.log(`IPC: p2pNetworkController.enableNetworkAsync()`);
+      try {
+        let result = this.p2pNetworkController.enableNetwork();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIP2pNetworkController.enableNetwork", event => {
       console.log(`IPC: p2pNetworkController.enableNetwork()`);
@@ -1833,21 +1541,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIP2pNetworkController.getPeerInfoAsync",
-      async () => {
-        console.log(`IPC: p2pNetworkController.getPeerInfoAsync()`);
-        try {
-          let result = this.p2pNetworkController.getPeerInfo();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIP2pNetworkController.getPeerInfoAsync", async () => {
+      console.log(`IPC: p2pNetworkController.getPeerInfoAsync()`);
+      try {
+        let result = this.p2pNetworkController.getPeerInfo();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIP2pNetworkController.getPeerInfo", event => {
       console.log(`IPC: p2pNetworkController.getPeerInfo()`);
@@ -1889,25 +1594,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.setActiveAccountAsync",
-      async data => {
-        console.log(
-          `IPC: accountsController.setActiveAccountAsync(${data.accountUUID})`
-        );
-        try {
-          let result = this.accountsController.setActiveAccount(
-            data.accountUUID
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.setActiveAccountAsync", async data => {
+      console.log(`IPC: accountsController.setActiveAccountAsync(${data.accountUUID})`);
+      try {
+        let result = this.accountsController.setActiveAccount(data.accountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIAccountsController.setActiveAccount", (event, accountUUID) => {
       console.log(`IPC: accountsController.setActiveAccount(${accountUUID})`);
@@ -1922,21 +1620,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.getActiveAccountAsync",
-      async () => {
-        console.log(`IPC: accountsController.getActiveAccountAsync()`);
-        try {
-          let result = this.accountsController.getActiveAccount();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.getActiveAccountAsync", async () => {
+      console.log(`IPC: accountsController.getActiveAccountAsync()`);
+      try {
+        let result = this.accountsController.getActiveAccount();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIAccountsController.getActiveAccount", event => {
       console.log(`IPC: accountsController.getActiveAccount()`);
@@ -1951,65 +1646,44 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.createAccountAsync",
-      async data => {
-        console.log(
-          `IPC: accountsController.createAccountAsync(${data.accountName}, ${data.accountType})`
-        );
-        try {
-          let result = this.accountsController.createAccount(
-            data.accountName,
-            data.accountType
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.createAccountAsync", async data => {
+      console.log(`IPC: accountsController.createAccountAsync(${data.accountName}, ${data.accountType})`);
+      try {
+        let result = this.accountsController.createAccount(data.accountName, data.accountType);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
-    ipc.on(
-      "NJSIAccountsController.createAccount",
-      (event, accountName, accountType) => {
-        console.log(
-          `IPC: accountsController.createAccount(${accountName}, ${accountType})`
-        );
-        try {
-          let result = this.accountsController.createAccount(
-            accountName,
-            accountType
-          );
-          event.returnValue = {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          event.returnValue = handleError(e);
-        }
+    ipc.on("NJSIAccountsController.createAccount", (event, accountName, accountType) => {
+      console.log(`IPC: accountsController.createAccount(${accountName}, ${accountType})`);
+      try {
+        let result = this.accountsController.createAccount(accountName, accountType);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
-    );
+    });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.getAccountNameAsync",
-      async data => {
-        console.log(
-          `IPC: accountsController.getAccountNameAsync(${data.accountUUID})`
-        );
-        try {
-          let result = this.accountsController.getAccountName(data.accountUUID);
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.getAccountNameAsync", async data => {
+      console.log(`IPC: accountsController.getAccountNameAsync(${data.accountUUID})`);
+      try {
+        let result = this.accountsController.getAccountName(data.accountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIAccountsController.getAccountName", (event, accountUUID) => {
       console.log(`IPC: accountsController.getAccountName(${accountUUID})`);
@@ -2024,65 +1698,44 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.renameAccountAsync",
-      async data => {
-        console.log(
-          `IPC: accountsController.renameAccountAsync(${data.accountUUID}, ${data.newAccountName})`
-        );
-        try {
-          let result = this.accountsController.renameAccount(
-            data.accountUUID,
-            data.newAccountName
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.renameAccountAsync", async data => {
+      console.log(`IPC: accountsController.renameAccountAsync(${data.accountUUID}, ${data.newAccountName})`);
+      try {
+        let result = this.accountsController.renameAccount(data.accountUUID, data.newAccountName);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
-    ipc.on(
-      "NJSIAccountsController.renameAccount",
-      (event, accountUUID, newAccountName) => {
-        console.log(
-          `IPC: accountsController.renameAccount(${accountUUID}, ${newAccountName})`
-        );
-        try {
-          let result = this.accountsController.renameAccount(
-            accountUUID,
-            newAccountName
-          );
-          event.returnValue = {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          event.returnValue = handleError(e);
-        }
+    ipc.on("NJSIAccountsController.renameAccount", (event, accountUUID, newAccountName) => {
+      console.log(`IPC: accountsController.renameAccount(${accountUUID}, ${newAccountName})`);
+      try {
+        let result = this.accountsController.renameAccount(accountUUID, newAccountName);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
-    );
+    });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.deleteAccountAsync",
-      async data => {
-        console.log(
-          `IPC: accountsController.deleteAccountAsync(${data.accountUUID})`
-        );
-        try {
-          let result = this.accountsController.deleteAccount(data.accountUUID);
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.deleteAccountAsync", async data => {
+      console.log(`IPC: accountsController.deleteAccountAsync(${data.accountUUID})`);
+      try {
+        let result = this.accountsController.deleteAccount(data.accountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIAccountsController.deleteAccount", (event, accountUUID) => {
       console.log(`IPC: accountsController.deleteAccount(${accountUUID})`);
@@ -2097,23 +1750,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.purgeAccountAsync",
-      async data => {
-        console.log(
-          `IPC: accountsController.purgeAccountAsync(${data.accountUUID})`
-        );
-        try {
-          let result = this.accountsController.purgeAccount(data.accountUUID);
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.purgeAccountAsync", async data => {
+      console.log(`IPC: accountsController.purgeAccountAsync(${data.accountUUID})`);
+      try {
+        let result = this.accountsController.purgeAccount(data.accountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIAccountsController.purgeAccount", (event, accountUUID) => {
       console.log(`IPC: accountsController.purgeAccount(${accountUUID})`);
@@ -2128,25 +1776,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.getAccountLinkURIAsync",
-      async data => {
-        console.log(
-          `IPC: accountsController.getAccountLinkURIAsync(${data.accountUUID})`
-        );
-        try {
-          let result = this.accountsController.getAccountLinkURI(
-            data.accountUUID
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.getAccountLinkURIAsync", async data => {
+      console.log(`IPC: accountsController.getAccountLinkURIAsync(${data.accountUUID})`);
+      try {
+        let result = this.accountsController.getAccountLinkURI(data.accountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIAccountsController.getAccountLinkURI", (event, accountUUID) => {
       console.log(`IPC: accountsController.getAccountLinkURI(${accountUUID})`);
@@ -2161,25 +1802,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.getWitnessKeyURIAsync",
-      async data => {
-        console.log(
-          `IPC: accountsController.getWitnessKeyURIAsync(${data.accountUUID})`
-        );
-        try {
-          let result = this.accountsController.getWitnessKeyURI(
-            data.accountUUID
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.getWitnessKeyURIAsync", async data => {
+      console.log(`IPC: accountsController.getWitnessKeyURIAsync(${data.accountUUID})`);
+      try {
+        let result = this.accountsController.getWitnessKeyURI(data.accountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIAccountsController.getWitnessKeyURI", (event, accountUUID) => {
       console.log(`IPC: accountsController.getWitnessKeyURI(${accountUUID})`);
@@ -2194,67 +1828,44 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.createAccountFromWitnessKeyURIAsync",
-      async data => {
-        console.log(
-          `IPC: accountsController.createAccountFromWitnessKeyURIAsync(${data.witnessKeyURI}, ${data.newAccountName})`
-        );
-        try {
-          let result = this.accountsController.createAccountFromWitnessKeyURI(
-            data.witnessKeyURI,
-            data.newAccountName
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.createAccountFromWitnessKeyURIAsync", async data => {
+      console.log(`IPC: accountsController.createAccountFromWitnessKeyURIAsync(${data.witnessKeyURI}, ${data.newAccountName})`);
+      try {
+        let result = this.accountsController.createAccountFromWitnessKeyURI(data.witnessKeyURI, data.newAccountName);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
-    ipc.on(
-      "NJSIAccountsController.createAccountFromWitnessKeyURI",
-      (event, witnessKeyURI, newAccountName) => {
-        console.log(
-          `IPC: accountsController.createAccountFromWitnessKeyURI(${witnessKeyURI}, ${newAccountName})`
-        );
-        try {
-          let result = this.accountsController.createAccountFromWitnessKeyURI(
-            witnessKeyURI,
-            newAccountName
-          );
-          event.returnValue = {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          event.returnValue = handleError(e);
-        }
+    ipc.on("NJSIAccountsController.createAccountFromWitnessKeyURI", (event, witnessKeyURI, newAccountName) => {
+      console.log(`IPC: accountsController.createAccountFromWitnessKeyURI(${witnessKeyURI}, ${newAccountName})`);
+      try {
+        let result = this.accountsController.createAccountFromWitnessKeyURI(witnessKeyURI, newAccountName);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
-    );
+    });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.getReceiveAddressAsync",
-      async data => {
-        console.log(
-          `IPC: accountsController.getReceiveAddressAsync(${data.accountUUID})`
-        );
-        try {
-          let result = this.accountsController.getReceiveAddress(
-            data.accountUUID
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.getReceiveAddressAsync", async data => {
+      console.log(`IPC: accountsController.getReceiveAddressAsync(${data.accountUUID})`);
+      try {
+        let result = this.accountsController.getReceiveAddress(data.accountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIAccountsController.getReceiveAddress", (event, accountUUID) => {
       console.log(`IPC: accountsController.getReceiveAddress(${accountUUID})`);
@@ -2269,99 +1880,70 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.getTransactionHistoryAsync",
-      async data => {
-        console.log(
-          `IPC: accountsController.getTransactionHistoryAsync(${data.accountUUID})`
-        );
-        try {
-          let result = this.accountsController.getTransactionHistory(
-            data.accountUUID
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.getTransactionHistoryAsync", async data => {
+      console.log(`IPC: accountsController.getTransactionHistoryAsync(${data.accountUUID})`);
+      try {
+        let result = this.accountsController.getTransactionHistory(data.accountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
-    ipc.on(
-      "NJSIAccountsController.getTransactionHistory",
-      (event, accountUUID) => {
-        console.log(
-          `IPC: accountsController.getTransactionHistory(${accountUUID})`
-        );
-        try {
-          let result = this.accountsController.getTransactionHistory(
-            accountUUID
-          );
-          event.returnValue = {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          event.returnValue = handleError(e);
-        }
+    ipc.on("NJSIAccountsController.getTransactionHistory", (event, accountUUID) => {
+      console.log(`IPC: accountsController.getTransactionHistory(${accountUUID})`);
+      try {
+        let result = this.accountsController.getTransactionHistory(accountUUID);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
-    );
+    });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.getMutationHistoryAsync",
-      async data => {
-        console.log(
-          `IPC: accountsController.getMutationHistoryAsync(${data.accountUUID})`
-        );
-        try {
-          let result = this.accountsController.getMutationHistory(
-            data.accountUUID
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.getMutationHistoryAsync", async data => {
+      console.log(`IPC: accountsController.getMutationHistoryAsync(${data.accountUUID})`);
+      try {
+        let result = this.accountsController.getMutationHistory(data.accountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
-    ipc.on(
-      "NJSIAccountsController.getMutationHistory",
-      (event, accountUUID) => {
-        console.log(
-          `IPC: accountsController.getMutationHistory(${accountUUID})`
-        );
-        try {
-          let result = this.accountsController.getMutationHistory(accountUUID);
-          event.returnValue = {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          event.returnValue = handleError(e);
-        }
+    ipc.on("NJSIAccountsController.getMutationHistory", (event, accountUUID) => {
+      console.log(`IPC: accountsController.getMutationHistory(${accountUUID})`);
+      try {
+        let result = this.accountsController.getMutationHistory(accountUUID);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
-    );
+    });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.getActiveAccountBalanceAsync",
-      async () => {
-        console.log(`IPC: accountsController.getActiveAccountBalanceAsync()`);
-        try {
-          let result = this.accountsController.getActiveAccountBalance();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.getActiveAccountBalanceAsync", async () => {
+      console.log(`IPC: accountsController.getActiveAccountBalanceAsync()`);
+      try {
+        let result = this.accountsController.getActiveAccountBalance();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIAccountsController.getActiveAccountBalance", event => {
       console.log(`IPC: accountsController.getActiveAccountBalance()`);
@@ -2376,25 +1958,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.getAccountBalanceAsync",
-      async data => {
-        console.log(
-          `IPC: accountsController.getAccountBalanceAsync(${data.accountUUID})`
-        );
-        try {
-          let result = this.accountsController.getAccountBalance(
-            data.accountUUID
-          );
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.getAccountBalanceAsync", async data => {
+      console.log(`IPC: accountsController.getAccountBalanceAsync(${data.accountUUID})`);
+      try {
+        let result = this.accountsController.getAccountBalance(data.accountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIAccountsController.getAccountBalance", (event, accountUUID) => {
       console.log(`IPC: accountsController.getAccountBalance(${accountUUID})`);
@@ -2409,21 +1984,18 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer(
-      "NJSIAccountsController.getAllAccountBalancesAsync",
-      async () => {
-        console.log(`IPC: accountsController.getAllAccountBalancesAsync()`);
-        try {
-          let result = this.accountsController.getAllAccountBalances();
-          return {
-            success: true,
-            result: result
-          };
-        } catch (e) {
-          return handleError(e);
-        }
+    ipc.answerRenderer("NJSIAccountsController.getAllAccountBalancesAsync", async () => {
+      console.log(`IPC: accountsController.getAllAccountBalancesAsync()`);
+      try {
+        let result = this.accountsController.getAllAccountBalances();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
       }
-    );
+    });
 
     ipc.on("NJSIAccountsController.getAllAccountBalances", event => {
       console.log(`IPC: accountsController.getAllAccountBalances()`);
@@ -2448,13 +2020,9 @@ class LibUnity {
         formData.append("wallettype", "lite");
         formData.append("uuid", this.walletController.GetUUID());
 
-        let response = await axios.post(
-          "https://www.blockhut.com/buysession.php",
-          formData,
-          {
-            headers: formData.getHeaders()
-          }
-        );
+        let response = await axios.post("https://www.blockhut.com/buysession.php", formData, {
+          headers: formData.getHeaders()
+        });
 
         event.returnValue = {
           success: response.data.status_message === "OK",
@@ -2474,13 +2042,9 @@ class LibUnity {
         formData.append("wallettype", "lite");
         formData.append("uuid", this.walletController.GetUUID());
 
-        let response = await axios.post(
-          "https://www.blockhut.com/buysession.php",
-          formData,
-          {
-            headers: formData.getHeaders()
-          }
-        );
+        let response = await axios.post("https://www.blockhut.com/buysession.php", formData, {
+          headers: formData.getHeaders()
+        });
 
         event.returnValue = {
           success: response.data.status_message === "OK",

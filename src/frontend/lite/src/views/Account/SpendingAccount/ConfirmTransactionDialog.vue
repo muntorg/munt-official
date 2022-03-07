@@ -38,9 +38,7 @@ export default {
       return `${this.amount} ${this.$t("common.ticker_symbol")}`;
     },
     computedFee() {
-      let fee = formatMoneyForDisplay(
-        LibraryController.FeeForRecipient(this.computedRequest)
-      );
+      let fee = formatMoneyForDisplay(LibraryController.FeeForRecipient(this.computedRequest));
       return `+ ${fee} ${this.$t("common.ticker_symbol")} FEE`;
     }
   },
@@ -49,10 +47,7 @@ export default {
       LibraryController.UnlockWallet(this.password);
 
       // try to make the payment
-      let result = LibraryController.PerformPaymentToRecipient(
-        this.computedRequest,
-        false
-      );
+      let result = LibraryController.PerformPaymentToRecipient(this.computedRequest, false);
 
       if (result !== 0) {
         // payment failed, log an error. have to make this more robust

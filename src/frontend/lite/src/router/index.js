@@ -18,66 +18,48 @@ const routes = [
       {
         path: "send",
         name: "send",
-        component: () =>
-          import(
-            /* webpackChunkName: "account-send" */ "../views/Account/SpendingAccount/Send.vue"
-          )
+        component: () => import(/* webpackChunkName: "account-send" */ "../views/Account/SpendingAccount/Send.vue")
       },
       {
         path: "receive",
         name: "receive",
-        component: () =>
-          import(
-            /* webpackChunkName: "account-receive" */ "../views/Account/SpendingAccount/Receive.vue"
-          )
+        component: () => import(/* webpackChunkName: "account-receive" */ "../views/Account/SpendingAccount/Receive.vue")
       }
     ]
   },
   {
     path: "/setup",
     name: "setup",
-    component: () =>
-      import(/* webpackChunkName: "setup" */ "../views/Setup.vue"),
+    component: () => import(/* webpackChunkName: "setup" */ "../views/Setup.vue"),
     meta: {
       layout: "setup-layout"
     }
   },
   {
     path: "/settings",
-    component: () =>
-      import(/* webpackChunkName: "settings" */ "../views/Settings"),
+    component: () => import(/* webpackChunkName: "settings" */ "../views/Settings"),
     children: [
       {
         path: "",
         name: "settings",
-        component: () =>
-          import(
-            /* webpackChunkName: "settings-list" */ "../views/Settings/SettingsList.vue"
-          )
+        component: () => import(/* webpackChunkName: "settings-list" */ "../views/Settings/SettingsList.vue")
       },
       {
         path: "view-recovery-phrase",
         name: "view-recovery-phrase",
-        component: () =>
-          import(
-            /* webpackChunkName: "view-recovery-phrase" */ "../views/Settings/ViewRecoveryPhrase.vue"
-          )
+        component: () => import(/* webpackChunkName: "view-recovery-phrase" */ "../views/Settings/ViewRecoveryPhrase.vue")
       },
       {
         path: "change-password",
         name: "change-password",
-        component: () =>
-          import(
-            /* webpackChunkName: "change-password" */ "../views/Settings/ChangePassword.vue"
-          )
+        component: () => import(/* webpackChunkName: "change-password" */ "../views/Settings/ChangePassword.vue")
       }
     ]
   },
   {
     path: "/debug",
     name: "debug",
-    component: () =>
-      import(/* webpackChunkName: "debug-dialog" */ "../views/DebugDialog")
+    component: () => import(/* webpackChunkName: "debug-dialog" */ "../views/DebugDialog")
   }
 ];
 

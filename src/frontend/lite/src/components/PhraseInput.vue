@@ -98,11 +98,7 @@ export default {
 
       if (this.isExactMatch(index)) {
         let nextIndex;
-        for (
-          nextIndex = index + 1;
-          nextIndex <= this.inputs.length;
-          nextIndex++
-        ) {
+        for (nextIndex = index + 1; nextIndex <= this.inputs.length; nextIndex++) {
           if (this.inputs[nextIndex] === undefined) break;
           if (this.isMatch(nextIndex) === false) break;
         }
@@ -148,15 +144,11 @@ export default {
         return this.getValidWords(index).length === 0;
       } else {
         let word = this.words[index];
-        return inputWord.length > word.length
-          ? true
-          : word.indexOf(inputWord) !== 0;
+        return inputWord.length > word.length ? true : word.indexOf(inputWord) !== 0;
       }
     },
     getValidWords(index) {
-      return this.validate.words.filter(
-        x => x.indexOf(this.inputs[index]) === 0
-      );
+      return this.validate.words.filter(x => x.indexOf(this.inputs[index]) === 0);
     },
     validatePraseOnEnter(event) {
       if (event.keyCode === 13) this.$emit("enter");

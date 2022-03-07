@@ -51,10 +51,7 @@ export default {
       return this.$route.meta.layout || WalletLayout;
     },
     showLoader() {
-      return (
-        this.splashReady === false ||
-        (this.status !== AppStatus.ready && this.status !== AppStatus.setup)
-      );
+      return this.splashReady === false || (this.status !== AppStatus.ready && this.status !== AppStatus.setup);
     }
   },
   watch: {

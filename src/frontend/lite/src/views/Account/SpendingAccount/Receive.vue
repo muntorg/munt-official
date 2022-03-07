@@ -8,23 +8,12 @@
       <h4>{{ $t("receive_coins.your_address") }}</h4>
       <p class="information">{{ $t("receive_coins.information") }}</p>
       <div class="qr" @click="copyQr">
-        <vue-qrcode
-          ref="qrcode"
-          class="qrcode"
-          :width="280"
-          :margin="0"
-          :value="receiveAddress"
-          :color="{ dark: '#000000', light: '#ffffff' }"
-        />
+        <vue-qrcode ref="qrcode" class="qrcode" :width="280" :margin="0" :value="receiveAddress" :color="{ dark: '#000000', light: '#ffffff' }" />
       </div>
     </div>
     <div class="address-row flex-row">
       <div class="flex-1" />
-      <clipboard-field
-        class="address"
-        :value="receiveAddress"
-        confirmation="receive_coins.address_copied_to_clipboard"
-      ></clipboard-field>
+      <clipboard-field class="address" :value="receiveAddress" confirmation="receive_coins.address_copied_to_clipboard"></clipboard-field>
       <div class="flex-1" />
     </div>
     <div class="flex-1" />
