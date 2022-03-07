@@ -473,7 +473,7 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
     
     for (const auto& outPoint : modificationMap)
     {
-        const auto& iter = cacheCoins.find(outPoint);
+        const auto iter = cacheCoins.find(outPoint);
         if (iter != cacheCoins.end())
         {
             if (iter->second.coin.IsSpent())
@@ -484,7 +484,7 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
     }
     for (const auto& outPoint : modificationMap)
     {
-        const auto& iter = cacheCoins.find(outPoint);
+        const auto iter = cacheCoins.find(outPoint);
         if (iter != cacheCoins.end())
         {
             if (!iter->second.coin.IsSpent())
