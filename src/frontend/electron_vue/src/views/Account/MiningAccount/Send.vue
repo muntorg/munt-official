@@ -8,7 +8,7 @@
       <app-form-field>
         <input v-model="amount" ref="amount" type="text" readonly />
       </app-form-field>
-      <app-form-field :title="$t('send_coins.target_account')">
+      <app-form-field title="send_coins.target_account">
         <select-list :options="fundingAccounts" :default="fundingAccount" v-model="fundingAccount" />
       </app-form-field>
       <app-form-field>

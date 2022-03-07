@@ -6,20 +6,20 @@
 
     <section class="content">
       <section class="step-1" v-if="current === 1">
-        <app-form-field :title="$t('add_holding_account.funding_account')">
+        <app-form-field title="add_holding_account.funding_account">
           <select-list :options="fundingAccounts" :default="fundingAccount" v-model="fundingAccount" />
         </app-form-field>
-        <app-form-field :title="$t('common.amount')">
+        <app-form-field title="common.amount">
           <input type="number" min="50" v-model="amount" :max="maxAmountForAccount" :class="amountClass" />
         </app-form-field>
-        <app-form-field :title="$t('add_holding_account.lock_for')">
+        <app-form-field title="add_holding_account.lock_for">
           <div class="flex-row">
             <vue-slider :min="2" :max="36" class="lock-time-slider" :class="lockTimeClass" :value="lockTimeInMonths" v-model="lockTimeInMonths" />
             <div class="lock-time-info">{{ lockTimeInMonths }} {{ $t("common.months") }}</div>
           </div>
         </app-form-field>
 
-        <app-form-field :title="$t('add_holding_account.estimated_earnings')" v-if="isWeightSufficient">
+        <app-form-field title="add_holding_account.estimated_earnings" v-if="isWeightSufficient">
           <div class="flex-row">
             <div class="earnings">{{ $t("add_holding_account.daily") }}</div>
             <div class="flex-1 align-right">
@@ -35,10 +35,10 @@
         </app-form-field>
       </section>
       <section class="step-2" v-else>
-        <app-form-field :title="$t('common.account_name')">
+        <app-form-field title="common.account_name">
           <input type="text" v-model="accountName" maxlength="30" ref="accountName" />
         </app-form-field>
-        <app-form-field :title="$t('common.password')" v-if="walletPassword === null">
+        <app-form-field title="common.password" v-if="walletPassword === null">
           <input v-model="password" type="password" :class="passwordClass" @keydown="onPasswordKeydown" />
         </app-form-field>
       </section>

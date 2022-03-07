@@ -8,11 +8,11 @@
     </content-wrapper>
 
     <!-- step 2: enter new password -->
-    <content-wrapper v-else heading="setup.choose_password">
-      <app-form-field :title="$t('common.password')">
+    <content-wrapper v-else content="setup.choose_password">
+      <app-form-field title="common.password">
         <input ref="password1" type="password" v-model="password1" :class="password2Status" />
       </app-form-field>
-      <app-form-field :title="$t('setup.repeat_password')">
+      <app-form-field title="setup.repeat_password">
         <input type="password" v-model="password2" :class="password2Status" @keydown="validatePasswordRepeatOnEnter" />
       </app-form-field>
     </content-wrapper>

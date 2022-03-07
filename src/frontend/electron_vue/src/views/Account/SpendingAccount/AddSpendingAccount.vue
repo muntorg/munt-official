@@ -1,15 +1,15 @@
 <template>
   <div class="add-spending-account">
     <portal to="header-slot">
-      <main-header :title="$t('add_spending_account.title')"></main-header>
+      <main-header title="add_spending_account.title"></main-header>
     </portal>
 
     <section class="content">
       <section>
-        <app-form-field :title="$t('common.account_name')">
+        <app-form-field title="common.account_name">
           <input type="text" v-model="accountName" maxlength="30" ref="accountName" />
         </app-form-field>
-        <app-form-field :title="$t('common.password')" v-if="walletPassword === null">
+        <app-form-field title="common.password" v-if="walletPassword === null">
           <input v-model="password" type="password" :class="passwordClass" @keydown="onPasswordKeydown" />
         </app-form-field>
       </section>

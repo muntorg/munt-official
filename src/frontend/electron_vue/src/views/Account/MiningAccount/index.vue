@@ -7,7 +7,7 @@
     <router-view />
 
     <app-section v-if="isMiningView">
-      <app-form-field :title="$t('mining.number_of_threads')">
+      <app-form-field title="mining.number_of_threads">
         <div class="flex-row">
           <vue-slider :min="1" :max="availableCores" :value="currentThreadCount" v-model="currentThreadCount" class="slider" :disabled="isActive" />
           <div class="slider-info">
@@ -17,7 +17,7 @@
         </div>
       </app-form-field>
 
-      <app-form-field :title="$t('mining.number_of_arena_threads')">
+      <app-form-field title="mining.number_of_arena_threads">
         <div class="flex-row">
           <vue-slider :min="1" :max="availableCores" :value="currentArenaThreadCount" v-model="currentArenaThreadCount" class="slider" :disabled="isActive" />
           <div class="slider-info">
@@ -27,14 +27,14 @@
         </div>
       </app-form-field>
 
-      <app-form-field :title="$t('mining.memory_to_use')">
+      <app-form-field title="mining.memory_to_use">
         <div class="flex-row">
           <vue-slider :min="minimumMemory" :max="maximumMemory" :value="currentMemorySize" v-model="currentMemorySize" class="slider" :disabled="isActive" />
           <div class="slider-info">{{ currentMemorySize }} Gb</div>
         </div>
       </app-form-field>
 
-      <app-form-field class="mining-statistics" :title="$t('mining.statistics')" v-if="isActive">
+      <app-form-field class="mining-statistics" title="mining.statistics" v-if="isActive">
         <div class="flex-row">
           <div>{{ $t("mining.last_reported_speed") }}</div>
           <div class="flex-1 align-right">
@@ -67,13 +67,8 @@
     </button>
 
     <portal to="footer-slot">
-      <footer-button :icon="['fal', 'info-circle']" routeName="account" @click="routeTo">
-        {{ $t("buttons.info") }}
-      </footer-button>
-
-      <footer-button :icon="['fal', 'arrow-from-bottom']" routeName="send-holding" @click="routeTo">
-        {{ $t("buttons.send") }}
-      </footer-button>
+      <footer-button title="buttons.info" :icon="['fal', 'info-circle']" routeName="account" @click="routeTo" />
+      <footer-button title="buttons.send" :icon="['fal', 'arrow-from-bottom']" routeName="send-holding" @click="routeTo" />
     </portal>
 
     <portal to="sidebar-right">

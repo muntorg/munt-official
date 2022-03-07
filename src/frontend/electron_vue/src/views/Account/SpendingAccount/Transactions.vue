@@ -1,6 +1,6 @@
 <template>
   <div class="transactions-view">
-    <div v-if="hasMutations">
+    <div v-if="hasMutations" class="flex">
       <div class="mutations-list" v-for="(mutation, index) in mutations" :key="mutation.txHash">
         <h4 v-if="showDateHeader(index)">
           {{ formatDateHeader(mutation.timestamp) }}
@@ -18,8 +18,8 @@
       </div>
     </div>
 
-    <content-wrapper v-else heading="new_wallet.title" content="new_wallet.information">
-      <div class="flex-1" />
+    <content-wrapper class="flex" v-else heading="new_wallet.title" content="new_wallet.information">
+      <div class="flex-1"></div>
       <app-button-section>
         <template v-slot:middle>
           <button @click="buyCoins" class="buy-coins" :disabled="buyDisabled">
@@ -127,6 +127,12 @@ export default {
 <style lang="less" scoped>
 .transactions-view {
   height: 100%;
+}
+
+.flex {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .mutations-list:not(:first-child) > h4 {

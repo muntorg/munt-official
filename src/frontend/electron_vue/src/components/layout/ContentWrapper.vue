@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h2 v-if="heading" :class="headingStyle">{{ computedHeading }}</h2>
+    <h2 v-if="heading" :class="headingStyle">{{ $t(heading) }}</h2>
     <p v-if="content">
-      {{ computedContent }}
+      {{ $t(content) }}
     </p>
     <slot></slot>
   </div>
@@ -26,14 +26,6 @@ export default {
     content: {
       type: String,
       default: null
-    }
-  },
-  computed: {
-    computedHeading() {
-      return this.$t(this.heading);
-    },
-    computedContent() {
-      return this.$t(this.content);
     }
   }
 };

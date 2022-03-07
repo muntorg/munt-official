@@ -1,6 +1,7 @@
 <template>
   <div :class="getClass(isActive)" @click="$emit('click', routeName)">
     <fa-icon class="left" v-if="showIcon('left')" :icon="icon" />
+    {{ $t(this.title) }}
     <slot></slot>
     <fa-icon class="right" v-if="showIcon('right')" :icon="icon" />
   </div>
@@ -12,6 +13,10 @@ export default {
   props: {
     routeName: {
       type: String
+    },
+    title: {
+      type: String,
+      default: null
     },
     params: {
       type: Object,
@@ -49,7 +54,7 @@ export default {
 <style lang="less" scoped>
 .footer-button {
   display: inline-block;
-  padding: 0 30px;
+  padding: 0 20px;
   font-weight: 600;
   font-size: 0.85em;
   text-transform: uppercase;

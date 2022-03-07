@@ -1,14 +1,12 @@
 <template>
   <div class="wallet-password-dialog">
-    <app-form-field :title="$t('common.password')">
+    <app-form-field title="common.password">
       <input ref="password" type="password" v-model="password" @keydown="validatePasswordOnEnter" :class="computedStatus" />
     </app-form-field>
     <app-button-section class="buttons">
-      <template v-slot:right>
-        <button @click="validatePassword" :disabled="isButtonDisabled">
-          {{ $t("buttons.unlock") }}
-        </button>
-      </template>
+      <button slot="right" @click="validatePassword" :disabled="isButtonDisabled">
+        {{ $t("buttons.unlock") }}
+      </button>
     </app-button-section>
   </div>
 </template>

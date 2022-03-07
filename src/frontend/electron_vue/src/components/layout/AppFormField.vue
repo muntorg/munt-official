@@ -1,6 +1,6 @@
 <template>
   <app-section class="app-form-field">
-    <h2 v-if="hasTitle">{{ title }}</h2>
+    <h2 v-if="hasTitle">{{ $t(title) }}</h2>
     <slot></slot>
   </app-section>
 </template>

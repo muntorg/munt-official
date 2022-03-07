@@ -9,15 +9,9 @@
     <router-view />
 
     <portal to="footer-slot">
-      <footer-button :icon="['far', 'list-ul']" routeName="account" @click="routeTo">
-        {{ $t("buttons.transactions") }}
-      </footer-button>
-      <footer-button :icon="['fal', 'arrow-from-bottom']" routeName="send" @click="routeTo">
-        {{ $t("buttons.send") }}
-      </footer-button>
-      <footer-button :icon="['fal', 'arrow-to-bottom']" routeName="receive" @click="routeTo">
-        {{ $t("buttons.receive") }}
-      </footer-button>
+      <footer-button title="buttons.transactions" :icon="['far', 'list-ul']" routeName="account" @click="routeTo" />
+      <footer-button title="buttons.send" :icon="['fal', 'arrow-from-bottom']" routeName="send" @click="routeTo" />
+      <footer-button title="buttons.receive" :icon="['fal', 'arrow-to-bottom']" routeName="receive" @click="routeTo" />
     </portal>
 
     <portal to="sidebar-right">

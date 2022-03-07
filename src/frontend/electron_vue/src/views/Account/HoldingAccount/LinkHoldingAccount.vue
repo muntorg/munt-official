@@ -2,7 +2,7 @@
   <div class="link-witness-view flex-col">
     <div class="main">
       <content-wrapper v-if="needsUnlock" heading="link_holding_account.title" content="link_holding_account.information">
-        <app-form-field style="text-align: left;" :title="$t(`common.password`)">
+        <app-form-field style="text-align: left;" title="common.password">
           <input v-model="password" type="password" :class="passwordClass" @keydown="onPasswordKeydown" />
         </app-form-field>
       </content-wrapper>

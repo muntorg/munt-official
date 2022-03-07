@@ -83,18 +83,10 @@
     <router-view />
 
     <portal to="footer-slot">
-      <footer-button :icon="['fal', 'info-circle']" routeName="account" @click="routeTo">
-        {{ $t("buttons.info") }}
-      </footer-button>
-      <footer-button :icon="['fal', 'key']" routeName="link-holding-account" @click="routeTo">
-        {{ $t("buttons.holding_key") }}
-      </footer-button>
-      <footer-button v-if="renewButtonVisible" :icon="['fal', 'redo-alt']" routeName="renew-account" @click="routeTo">
-        {{ $t("buttons.renew") }}
-      </footer-button>
-      <footer-button :icon="['fal', 'arrow-from-bottom']" routeName="send-holding" @click="routeTo">
-        {{ $t("buttons.send") }}
-      </footer-button>
+      <footer-button title="buttons.info" :icon="['fal', 'info-circle']" routeName="account" @click="routeTo" />
+      <footer-button title="buttons.holding_key" :icon="['fal', 'key']" routeName="link-holding-account" @click="routeTo" />
+      <footer-button v-if="renewButtonVisible" title="buttons.renew" :icon="['fal', 'redo-alt']" routeName="renew-account" @click="routeTo" />
+      <footer-button title="buttons.send" :icon="['fal', 'arrow-from-bottom']" routeName="send-holding" @click="routeTo" />
     </portal>
 
     <portal to="sidebar-right">

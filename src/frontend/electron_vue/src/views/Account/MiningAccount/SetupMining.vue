@@ -1,13 +1,15 @@
 <template>
   <div class="setup-mining">
     <portal to="header-slot">
-      <main-header :title="$t('setup_mining.title')"></main-header>
+      <main-header title="setup_mining.title"></main-header>
     </portal>
 
-    <content-wrapper content="setup_mining.information"></content-wrapper>
-    <app-form-field :title="$t('common.password')">
-      <input type="password" v-model="password" :class="computedStatus" @keydown="createMiningAccountOnEnter" />
-    </app-form-field>
+    <content-wrapper content="setup_mining.information">
+      <app-form-field title="common.password">
+        <input type="password" v-model="password" :class="computedStatus" @keydown="createMiningAccountOnEnter" />
+      </app-form-field>
+    </content-wrapper>
+
     <div class="flex-1"></div>
     <app-button-section>
       <button @click="createMiningAccount(password)" :disabled="!isEnableMiningButtonEnabled">
