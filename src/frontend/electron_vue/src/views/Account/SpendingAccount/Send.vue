@@ -158,7 +158,8 @@ export default {
         componentProps: {
           amount: this.amount,
           address: this.address,
-          password: this.password
+          password: this.password,
+          subtractFee: false
         },
         showButtons: false
       });

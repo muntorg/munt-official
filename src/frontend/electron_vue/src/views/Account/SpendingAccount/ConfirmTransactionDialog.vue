@@ -22,7 +22,8 @@ export default {
   props: {
     amount: null,
     address: null,
-    password: null
+    password: null,
+    subtractFee: null
   },
   computed: {
     computedRequest() {
@@ -47,7 +48,7 @@ export default {
       LibraryController.UnlockWallet(this.password);
 
       // try to make the payment
-      let result = LibraryController.PerformPaymentToRecipient(this.computedRequest, false);
+      let result = LibraryController.PerformPaymentToRecipient(this.computedRequest, this.subtractFee);
 
       if (result !== 0) {
         // payment failed, log an error. have to make this more robust
