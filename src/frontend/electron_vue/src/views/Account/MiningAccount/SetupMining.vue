@@ -4,28 +4,33 @@
       <main-header :title="$t('setup_mining.title')"></main-header>
     </portal>
 
-    <app-section>
-      <div class="mining-info">
-        {{ $t("setup_mining.information") }}
-      </div>
-    </app-section>
+    <content-wrapper content="setup_mining.information"></content-wrapper>
     <app-form-field :title="$t('common.password')">
-      <input type="password" v-model="password" :class="computedStatus" @keydown="createMiningAccountOnEnter" />
+      <input
+        type="password"
+        v-model="password"
+        :class="computedStatus"
+        @keydown="createMiningAccountOnEnter"
+      />
     </app-form-field>
-
-    <portal to="footer-slot">
-      <app-button-section>
-        <button @click="createMiningAccount(password)" :disabled="!isEnableMiningButtonEnabled">
-          {{ $t("buttons.create_mining_account") }}
-        </button>
-      </app-button-section>
-    </portal>
+    <div class="flex-1"></div>
+    <app-button-section>
+      <button
+        @click="createMiningAccount(password)"
+        :disabled="!isEnableMiningButtonEnabled"
+      >
+        {{ $t("buttons.create_mining_account") }}
+      </button>
+    </app-button-section>
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import { LibraryController, AccountsController } from "../../../unity/Controllers";
+import {
+  LibraryController,
+  AccountsController
+} from "../../../unity/Controllers";
 
 export default {
   name: "SetupMining",
@@ -90,7 +95,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.mining-info {
-  line-height: 1.2em;
+.setup-mining {
+  display: flex;
+  flex-direction: column;
 }
 </style>
