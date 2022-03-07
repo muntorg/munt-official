@@ -14,13 +14,7 @@
       </div>
     </div>
     <div v-else class="flex flex-row">
-      <input
-        class="flex-1"
-        ref="accountNameInput"
-        type="text"
-        v-model="newAccountName"
-        @keydown="onKeydown"
-      />
+      <input class="flex-1" ref="accountNameInput" type="text" v-model="newAccountName" @keydown="onKeydown" />
     </div>
   </div>
 </template>
@@ -89,10 +83,7 @@ export default {
     },
     changeAccountName() {
       if (this.newAccountName !== this.account.label) {
-        AccountsController.RenameAccount(
-          this.account.UUID,
-          this.newAccountName
-        );
+        AccountsController.RenameAccount(this.account.UUID, this.newAccountName);
       }
       this.editMode = false;
     }
