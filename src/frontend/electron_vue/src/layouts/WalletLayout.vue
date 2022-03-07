@@ -251,6 +251,7 @@ export default {
 
   & .fiat {
     margin-left: 10px;
+    color: #999;
   }
 }
 
@@ -295,6 +296,18 @@ export default {
   }
 }
 
+@media (max-width: 800px) {
+  .wallet-layout {
+    & > .sidebar-left {
+      width: var(--sidebar-left-width-small);
+    }
+
+    & > .main {
+      width: calc(100% - var(--sidebar-left-width-small) - var(--sidebar-right-width));
+    }
+  }
+}
+
 @media (max-width: 900px) {
   .wallet-layout:not(.no-sidebar-right) {
     & > .main {
@@ -302,7 +315,7 @@ export default {
     }
 
     & > .sidebar-right {
-      width: calc(100% - var(--sidebar-left-width));
+      width: calc(100% - var(--sidebar-left-width-small));
     }
   }
 }
