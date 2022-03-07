@@ -1,12 +1,12 @@
 <template>
   <div class="account-header">
-    <div v-if="!editMode">
+    <div v-if="!editMode" class="display-mode" @click="editName">
       <div class="flex flex-row">
         <div class="name ellipsis flex-1">
           {{ name }}
         </div>
         <div class="icon-bar">
-          <fa-icon :icon="['fal', 'fa-pen']" @click="editName" />
+          <fa-icon :icon="['fal', 'fa-pen']" />
         </div>
       </div>
       <div class="balance ellipsis">
@@ -14,7 +14,13 @@
       </div>
     </div>
     <div v-else class="flex flex-row">
-      <input class="flex-1" ref="accountNameInput" type="text" v-model="newAccountName" @keydown="onKeydown" />
+      <input
+        class="flex-1"
+        ref="accountNameInput"
+        type="text"
+        v-model="newAccountName"
+        @keydown="onKeydown"
+      />
     </div>
   </div>
 </template>
@@ -83,7 +89,10 @@ export default {
     },
     changeAccountName() {
       if (this.newAccountName !== this.account.label) {
-        AccountsController.RenameAccount(this.account.UUID, this.newAccountName);
+        AccountsController.RenameAccount(
+          this.account.UUID,
+          this.newAccountName
+        );
       }
       this.editMode = false;
     }
@@ -97,6 +106,10 @@ export default {
   height: var(--header-height);
   line-height: 20px;
   padding: calc((var(--header-height) - 40px) / 2) 0;
+}
+
+.display-mode {
+  cursor: pointer;
 }
 
 .name {
