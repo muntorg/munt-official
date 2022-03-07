@@ -21,14 +21,16 @@ if (process.type !== "renderer") {
     ignoredPaths: [
       // only store the paths listed below
       "mining.settings",
-      "app.language"
+      "app.language",
+      "app.decimals"
     ],
     ignoredCommits: [
       // only update persisted state on commits listed below
       "mining/SET_MEMORY_SIZE",
       "mining/SET_THREAD_COUNT",
       "mining/SET_ARENA_THREAD_COUNT",
-      "app/SET_LANGUAGE"
+      "app/SET_LANGUAGE",
+      "app/SET_DECIMALS"
     ]
   });
 }

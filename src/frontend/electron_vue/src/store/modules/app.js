@@ -23,7 +23,8 @@ const app = {
     walletExists: null,
     walletVersion: null,
     rate: null,
-    language: "en"
+    language: "en",
+    decimals: 2
   },
   mutations: {
     SET_CORE_READY(state) {
@@ -56,6 +57,9 @@ const app = {
     },
     SET_LANGUAGE(state, language) {
       state.language = language;
+    },
+    SET_DECIMALS(state, decimal) {
+      state.decimals = decimal;
     }
   },
   actions: {
@@ -84,6 +88,9 @@ const app = {
     },
     SET_LANGUAGE({ commit }, language) {
       commit("SET_LANGUAGE", language);
+    },
+    SET_DECIMALS({ commit }, decimal) {
+      commit("SET_DECIMALS", decimal);
     },
     SET_WALLET_EXISTS({ commit }, walletExists) {
       let status = walletExists ? AppStatus.synchronize : AppStatus.setup;
