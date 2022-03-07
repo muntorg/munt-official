@@ -4,16 +4,10 @@ const path = require("path");
 const { notarize } = require("electron-notarize");
 
 const getAuthInfo = () => {
-  const {
-    APPLE_ID: appleId,
-    APPLE_ID_PASSWORD: appleIdPassword,
-    APP_ID: appId
-  } = process.env;
+  const { APPLE_ID: appleId, APPLE_ID_PASSWORD: appleIdPassword, APP_ID: appId } = process.env;
 
   if (!appleId || !appleIdPassword) {
-    throw new Error(
-      "One of APPLE_ID and APPLE_ID_PASSWORD environment variables is missing for notarization."
-    );
+    throw new Error("One of APPLE_ID and APPLE_ID_PASSWORD environment variables is missing for notarization.");
   }
   if (!appId) {
     throw new Error("Unable to determine appID");
@@ -40,10 +34,7 @@ module.exports = async params => {
   }
 
   let appId = authInfo.appId;
-  const appPath = path.join(
-    params.appOutDir,
-    `${params.packager.appInfo.productFilename}.app`
-  );
+  const appPath = path.join(params.appOutDir, `${params.packager.appInfo.productFilename}.app`);
 
   const notarizeOptions = { appBundleId: appId, appPath };
   notarizeOptions.appleId = authInfo.appleId;

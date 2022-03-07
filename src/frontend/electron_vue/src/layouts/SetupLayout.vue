@@ -31,8 +31,7 @@ export default {
     & .logo {
       width: 22px;
       height: 22px;
-      background: url("../img/logo-start.svg"),
-        linear-gradient(transparent, transparent);
+      background: url("../img/logo-start.svg"), linear-gradient(transparent, transparent);
       background-size: cover;
     }
   }

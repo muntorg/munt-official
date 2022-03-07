@@ -4,45 +4,24 @@
       <account-header :account="account"></account-header>
     </portal>
 
-    <transactions
-      v-if="UIConfig.showSidebar && isAccountView"
-      :mutations="mutations"
-      @tx-hash="onTxHash"
-      :tx-hash="txHash"
-    />
+    <transactions v-if="UIConfig.showSidebar && isAccountView" :mutations="mutations" @tx-hash="onTxHash" :tx-hash="txHash" />
 
     <router-view />
 
     <portal to="footer-slot">
-      <footer-button
-        :icon="['far', 'list-ul']"
-        routeName="account"
-        @click="routeTo"
-      >
+      <footer-button :icon="['far', 'list-ul']" routeName="account" @click="routeTo">
         {{ $t("buttons.transactions") }}
       </footer-button>
-      <footer-button
-        :icon="['fal', 'arrow-from-bottom']"
-        routeName="send"
-        @click="routeTo"
-      >
+      <footer-button :icon="['fal', 'arrow-from-bottom']" routeName="send" @click="routeTo">
         {{ $t("buttons.send") }}
       </footer-button>
-      <footer-button
-        :icon="['fal', 'arrow-to-bottom']"
-        routeName="receive"
-        @click="routeTo"
-      >
+      <footer-button :icon="['fal', 'arrow-to-bottom']" routeName="receive" @click="routeTo">
         {{ $t("buttons.receive") }}
       </footer-button>
     </portal>
 
     <portal to="sidebar-right">
-      <component
-        v-if="rightSidebar"
-        :is="rightSidebar"
-        v-bind="rightSidebarProps"
-      />
+      <component v-if="rightSidebar" :is="rightSidebar" v-bind="rightSidebarProps" />
     </portal>
   </div>
 </template>

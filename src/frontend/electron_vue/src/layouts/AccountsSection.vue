@@ -24,12 +24,7 @@
           <div class="balance">0</div>
         </div>
         <div v-if="opened[category]">
-          <div
-            v-for="account in getAccountsFor(category)"
-            :key="account.UUID"
-            class="account"
-            :class="accountClass(account.UUID)"
-          >
+          <div v-for="account in getAccountsFor(category)" :key="account.UUID" class="account" :class="accountClass(account.UUID)">
             <router-link
               :disabled="isActiveAccount(account.UUID)"
               :event="!isActiveAccount(account.UUID) ? 'click' : ''"
@@ -37,9 +32,7 @@
               :to="{ name: 'account', params: { id: account.UUID } }"
             >
               <span class="ellipsis">{{ account.label }}</span>
-              <span class="balance">{{
-                displayBalanceForAccount(account)
-              }}</span>
+              <span class="balance">{{ displayBalanceForAccount(account) }}</span>
             </router-link>
           </div>
         </div>
@@ -87,10 +80,7 @@ export default {
   },
   methods: {
     isActiveAccount(accountUUID) {
-      return (
-        this.$route.path.indexOf("/account") == 0 &&
-        accountUUID === this.activeAccount
-      );
+      return this.$route.path.indexOf("/account") == 0 && accountUUID === this.activeAccount;
     },
     accountClass(accountUUID) {
       return this.isActiveAccount(accountUUID) ? "active" : "";
@@ -109,9 +99,7 @@ export default {
           break;
       }
       if (types === undefined) return [];
-      return this.accounts.filter(
-        x => x.state === "Normal" && types.indexOf(x.type) !== -1
-      );
+      return this.accounts.filter(x => x.state === "Normal" && types.indexOf(x.type) !== -1);
     },
     getCategoryToggleIcon(category) {
       return this.opened[category] ? "chevron-down" : "chevron-right";

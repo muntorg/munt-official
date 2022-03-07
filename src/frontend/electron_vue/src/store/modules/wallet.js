@@ -77,11 +77,7 @@ const wallet = {
     totalBalance: state => {
       let balance = state.walletBalance;
       if (balance === undefined || balance === null) return null;
-      return (
-        balance.availableIncludingLocked +
-        balance.unconfirmedIncludingLocked +
-        balance.immatureIncludingLocked
-      );
+      return balance.availableIncludingLocked + balance.unconfirmedIncludingLocked + balance.immatureIncludingLocked;
     },
     accounts: state => {
       return state.accounts
@@ -103,9 +99,7 @@ const wallet = {
       return state.accounts.find(x => x.UUID === state.activeAccount);
     },
     miningAccount: state => {
-      return state.accounts.find(
-        x => x.type === "Mining" && x.state === "Normal"
-      ); // this will retrieve the first account of type Mining
+      return state.accounts.find(x => x.type === "Mining" && x.state === "Normal"); // this will retrieve the first account of type Mining
     }
   }
 };

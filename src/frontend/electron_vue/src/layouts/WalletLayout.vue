@@ -25,21 +25,11 @@
       </section>
     </section>
     <section class="main">
-      <portal-target
-        ref="headerSlot"
-        name="header-slot"
-        class="header"
-        @change="headerSlotChanged"
-      ></portal-target>
+      <portal-target ref="headerSlot" name="header-slot" class="header" @change="headerSlotChanged"></portal-target>
       <section class="content scrollable">
         <router-view />
       </section>
-      <portal-target
-        ref="footerSlot"
-        name="footer-slot"
-        class="footer"
-        @change="footerSlotChanged"
-      ></portal-target>
+      <portal-target ref="footerSlot" name="footer-slot" class="footer" @change="footerSlotChanged"></portal-target>
     </section>
     <section class="sidebar-right">
       <section class="header flex-row">
@@ -50,12 +40,7 @@
           <fa-icon :icon="['fal', 'times']" />
         </div>
       </section>
-      <portal-target
-        class="component"
-        ref="sidebarRight"
-        name="sidebar-right"
-        @change="sidebarRightSlotChanged"
-      />
+      <portal-target class="component" ref="sidebarRight" name="sidebar-right" @change="sidebarRightSlotChanged" />
     </section>
   </section>
 </template>
@@ -122,11 +107,7 @@ export default {
     },
     showMining() {
       if (this.miningAccount) {
-        if (
-          this.$route.path.indexOf("/account") == 0 &&
-          this.miningAccount.UUID === this.activeAccount
-        )
-          return;
+        if (this.$route.path.indexOf("/account") == 0 && this.miningAccount.UUID === this.activeAccount) return;
         this.$router.push({
           name: "account",
           params: { id: this.miningAccount.UUID }
@@ -227,9 +208,7 @@ export default {
     }
 
     & > .content {
-      height: calc(
-        100% - var(--header-height-main) - var(--footer-height-main)
-      );
+      height: calc(100% - var(--header-height-main) - var(--footer-height-main));
       padding: 40px 30px 30px 30px;
 
       & > * {
@@ -261,8 +240,7 @@ export default {
     min-width: 22px;
     height: 22px;
     min-height: 22px;
-    background: url("../img/logo.svg"),
-      linear-gradient(transparent, transparent);
+    background: url("../img/logo.svg"), linear-gradient(transparent, transparent);
     background-size: cover;
   }
 

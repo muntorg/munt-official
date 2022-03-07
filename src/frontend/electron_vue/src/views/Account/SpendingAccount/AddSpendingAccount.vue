@@ -7,23 +7,10 @@
     <section class="content">
       <section>
         <app-form-field :title="$t('common.account_name')">
-          <input
-            type="text"
-            v-model="accountName"
-            maxlength="30"
-            ref="accountName"
-          />
+          <input type="text" v-model="accountName" maxlength="30" ref="accountName" />
         </app-form-field>
-        <app-form-field
-          :title="$t('common.password')"
-          v-if="walletPassword === null"
-        >
-          <input
-            v-model="password"
-            type="password"
-            :class="passwordClass"
-            @keydown="onPasswordKeydown"
-          />
+        <app-form-field :title="$t('common.password')" v-if="walletPassword === null">
+          <input v-model="password" type="password" :class="passwordClass" @keydown="onPasswordKeydown" />
         </app-form-field>
       </section>
     </section>
@@ -39,10 +26,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import {
-  AccountsController,
-  LibraryController
-} from "../../../unity/Controllers";
+import { AccountsController, LibraryController } from "../../../unity/Controllers";
 
 export default {
   name: "AddSpendingAccount",

@@ -18,114 +18,78 @@ const routes = [
       {
         path: "send",
         name: "send",
-        component: () =>
-          import(
-            /* webpackChunkName: "account-send" */ "../views/Account/SpendingAccount/Send.vue"
-          )
+        component: () => import(/* webpackChunkName: "account-send" */ "../views/Account/SpendingAccount/Send.vue")
       },
       {
         path: "receive",
         name: "receive",
-        component: () =>
-          import(
-            /* webpackChunkName: "account-receive" */ "../views/Account/SpendingAccount/Receive.vue"
-          )
+        component: () => import(/* webpackChunkName: "account-receive" */ "../views/Account/SpendingAccount/Receive.vue")
       },
       {
         path: "link-holding-account",
         name: "link-holding-account",
-        component: () =>
-          import(
-            /* webpackChunkName: "link-holding-account" */ "../views/Account/HoldingAccount/LinkHoldingAccount.vue"
-          )
+        component: () => import(/* webpackChunkName: "link-holding-account" */ "../views/Account/HoldingAccount/LinkHoldingAccount.vue")
       },
       {
         path: "send-holding",
         name: "send-holding",
-        component: () =>
-          import(
-            /* webpackChunkName: "send-holding" */ "../views/Account/MiningAccount/Send.vue"
-          )
+        component: () => import(/* webpackChunkName: "send-holding" */ "../views/Account/MiningAccount/Send.vue")
       },
       {
         path: "renew-account",
         name: "renew-account",
-        component: () =>
-          import(
-            /* webpackChunkName: "renew-account" */ "../views/Account/HoldingAccount/RenewAccount.vue"
-          )
+        component: () => import(/* webpackChunkName: "renew-account" */ "../views/Account/HoldingAccount/RenewAccount.vue")
       }
     ]
   },
   {
     path: "/setup-mining",
     name: "setup-mining",
-    component: () =>
-      import(
-        /* webpackChunkName: "setup-mining" */ "../views/Account/MiningAccount/SetupMining.vue"
-      )
+    component: () => import(/* webpackChunkName: "setup-mining" */ "../views/Account/MiningAccount/SetupMining.vue")
   },
   {
     path: "/add-holding-account",
     name: "add-holding-account",
-    component: () =>
-      import(
-        /* webpackChunkName: "add-holding-account" */ "../views/Account/HoldingAccount/AddHoldingAccount.vue"
-      )
+    component: () => import(/* webpackChunkName: "add-holding-account" */ "../views/Account/HoldingAccount/AddHoldingAccount.vue")
   },
   {
     path: "/add-spending-account",
     name: "add-spending-account",
-    component: () =>
-      import(
-        /* webpackChunkName: "add-holding-account" */ "../views/Account/SpendingAccount/AddSpendingAccount.vue"
-      )
+    component: () => import(/* webpackChunkName: "add-holding-account" */ "../views/Account/SpendingAccount/AddSpendingAccount.vue")
   },
   {
     path: "/setup",
     name: "setup",
-    component: () =>
-      import(/* webpackChunkName: "setup" */ "../views/Setup.vue"),
+    component: () => import(/* webpackChunkName: "setup" */ "../views/Setup.vue"),
     meta: {
       layout: "setup-layout"
     }
   },
   {
     path: "/settings",
-    component: () =>
-      import(/* webpackChunkName: "settings" */ "../views/Settings"),
+    component: () => import(/* webpackChunkName: "settings" */ "../views/Settings"),
     children: [
       {
         path: "",
         name: "settings",
-        component: () =>
-          import(
-            /* webpackChunkName: "settings-list" */ "../views/Settings/SettingsList.vue"
-          )
+        component: () => import(/* webpackChunkName: "settings-list" */ "../views/Settings/SettingsList.vue")
       },
       {
         path: "view-recovery-phrase",
         name: "view-recovery-phrase",
-        component: () =>
-          import(
-            /* webpackChunkName: "view-recovery-phrase" */ "../views/Settings/ViewRecoveryPhrase.vue"
-          )
+        component: () => import(/* webpackChunkName: "view-recovery-phrase" */ "../views/Settings/ViewRecoveryPhrase.vue")
       },
       {
         path: "change-password",
         name: "change-password",
-        component: () =>
-          import(
-            /* webpackChunkName: "change-password" */ "../views/Settings/ChangePassword.vue"
-          )
+        component: () => import(/* webpackChunkName: "change-password" */ "../views/Settings/ChangePassword.vue")
       }
     ]
   },
   {
     path: "/debug",
     name: "debug",
-    component: () =>
-      import(/* webpackChunkName: "debug-dialog" */ "../views/DebugDialog")
+    component: () => import(/* webpackChunkName: "debug-dialog" */ "../views/DebugDialog")
   }
 ];
 

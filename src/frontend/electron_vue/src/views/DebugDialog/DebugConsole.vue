@@ -1,23 +1,11 @@
 <template>
   <div class="debug-console flex-col">
     <div class="output-buttons">
-      <fa-icon
-        :icon="['fal', 'search-minus']"
-        class="button"
-        @click="decreaseFontSize"
-      />
-      <fa-icon
-        :icon="['fal', 'search-plus']"
-        class="button"
-        @click="increaseFontSize"
-      />
+      <fa-icon :icon="['fal', 'search-minus']" class="button" @click="decreaseFontSize" />
+      <fa-icon :icon="['fal', 'search-plus']" class="button" @click="increaseFontSize" />
       <fa-icon :icon="['fal', 'eraser']" class="button" @click="clearOutput" />
     </div>
-    <div
-      ref="output"
-      class="output scrollable scrollable-x"
-      :style="outputStyle"
-    >
+    <div ref="output" class="output scrollable scrollable-x" :style="outputStyle">
       <div class="info">
         Use up and down arrows to navigate history. Type
         <span class="help">help</span> for an overview of available commands.
@@ -36,20 +24,9 @@
       </div>
     </div>
     <div class="input">
-      <input
-        ref="command"
-        type="text"
-        spellcheck="false"
-        v-model="command"
-        @keydown="onRpcInputKeyDown"
-        list="commands"
-      />
+      <input ref="command" type="text" spellcheck="false" v-model="command" @keydown="onRpcInputKeyDown" list="commands" />
       <datalist id="commands">
-        <option
-          v-for="item in filteredAutocompleteList"
-          :key="item"
-          :value="item"
-        />
+        <option v-for="item in filteredAutocompleteList" :key="item" :value="item" />
       </datalist>
     </div>
   </div>

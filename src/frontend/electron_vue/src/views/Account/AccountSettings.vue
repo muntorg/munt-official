@@ -30,10 +30,7 @@ export default {
   watch: {
     newAccountName() {
       if (this.newAccountName && this.newAccountName !== this.account.label) {
-        AccountsController.RenameAccount(
-          this.account.UUID,
-          this.newAccountName
-        );
+        AccountsController.RenameAccount(this.account.UUID, this.newAccountName);
       }
     }
   }

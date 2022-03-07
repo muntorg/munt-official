@@ -49,12 +49,7 @@
           <input ref="password" type="password" v-model="password1" />
         </app-form-field>
         <app-form-field :title="$t('setup.repeat_password')">
-          <input
-            type="password"
-            v-model="password2"
-            :class="password2Status"
-            @keydown="validatePasswordsOnEnter"
-          />
+          <input type="password" v-model="password2" :class="password2Status" @keydown="validatePasswordsOnEnter" />
         </app-form-field>
       </div>
     </div>
@@ -73,11 +68,7 @@
             {{ $t("buttons.finish") }}
           </span>
         </button>
-        <button
-          @click="nextStep"
-          v-show="showValidateButton"
-          :disabled="!isValidateButtonEnabled"
-        >
+        <button @click="nextStep" v-show="showValidateButton" :disabled="!isValidateButtonEnabled">
           {{ $t("buttons.next") }}
         </button>
       </template>
@@ -126,11 +117,7 @@ export default {
     },
     passwordsValidated() {
       if (this.password1 === null || this.password1.length < 6) return false;
-      if (
-        this.password2 === null ||
-        this.password2.length < this.password1.length
-      )
-        return false;
+      if (this.password2 === null || this.password2.length < this.password1.length) return false;
 
       return this.password1 === this.password2;
     },
@@ -156,9 +143,7 @@ export default {
       return false;
     },
     isValidateButtonEnabled() {
-      return (
-        this.possiblePhrase !== null && this.isRecoveryPhraseInvalid !== true
-      );
+      return this.possiblePhrase !== null && this.isRecoveryPhraseInvalid !== true;
     },
     validateButtonClass() {
       return this.isRecoveryPhraseInvalid ? "error" : "";
@@ -217,21 +202,11 @@ export default {
           break;
         case 4:
           if (this.isRecovery) {
-            if (
-              LibraryController.InitWalletFromRecoveryPhrase(
-                this.recoveryPhrase,
-                this.password1
-              )
-            ) {
+            if (LibraryController.InitWalletFromRecoveryPhrase(this.recoveryPhrase, this.password1)) {
               this.$store.dispatch("app/SET_STATUS", AppStatus.synchronize);
             }
           } else {
-            if (
-              LibraryController.InitWalletFromRecoveryPhrase(
-                this.generatedRecoveryPhrase,
-                this.password1
-              )
-            ) {
+            if (LibraryController.InitWalletFromRecoveryPhrase(this.generatedRecoveryPhrase, this.password1)) {
               this.$store.dispatch("app/SET_STATUS", AppStatus.synchronize);
             }
           }

@@ -2,28 +2,14 @@
   <div class="view-recovery-phrase-view">
     <div>
       <!-- step 1: Enter password -->
-      <content-wrapper
-        v-if="current === 1"
-        heading="common.enter_your_password"
-      >
+      <content-wrapper v-if="current === 1" heading="common.enter_your_password">
         <app-form-field>
-          <input
-            ref="password"
-            type="password"
-            v-model="password"
-            @keydown="getRecoveryPhraseOnEnter"
-            :class="computedStatus"
-          />
+          <input ref="password" type="password" v-model="password" @keydown="getRecoveryPhraseOnEnter" :class="computedStatus" />
         </app-form-field>
       </content-wrapper>
 
       <!-- step 2: Show recovery phrase -->
-      <content-wrapper
-        v-else
-        heading="common.important"
-        heading-style="warning"
-        content="setup.this_is_your_recovery_phrase"
-      >
+      <content-wrapper v-else heading="common.important" heading-style="warning" content="setup.this_is_your_recovery_phrase">
         <app-section class="phrase">
           {{ recoveryPhrase }}
         </app-section>
@@ -39,11 +25,7 @@
           </button>
         </template>
         <template v-slot:right>
-          <button
-            v-if="current === 1"
-            @click="getRecoveryPhrase"
-            :disabled="isNextDisabled"
-          >
+          <button v-if="current === 1" @click="getRecoveryPhrase" :disabled="isNextDisabled">
             {{ $t("buttons.next") }}
           </button>
           <button v-if="current === 2" @click="ready">
@@ -55,11 +37,7 @@
     <div v-else>
       <portal to="footer-slot">
         <app-button-section>
-          <button
-            v-if="current === 1"
-            @click="getRecoveryPhrase"
-            :disabled="isNextDisabled"
-          >
+          <button v-if="current === 1" @click="getRecoveryPhrase" :disabled="isNextDisabled">
             {{ $t("buttons.next") }}
           </button>
           <button v-if="current === 2" @click="ready">

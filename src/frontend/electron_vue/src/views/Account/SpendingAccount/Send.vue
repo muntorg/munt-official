@@ -15,18 +15,8 @@
         :max="maxAmount"
         @change="isAmountInvalid = false"
       />
-      <input
-        v-model="address"
-        type="text"
-        :placeholder="$t('send_coins.enter_coins_address')"
-        :class="addressClass"
-        @keydown="isAddressInvalid = false"
-      />
-      <input
-        v-model="label"
-        type="text"
-        :placeholder="$t('send_coins.enter_label')"
-      />
+      <input v-model="address" type="text" :placeholder="$t('send_coins.enter_coins_address')" :class="addressClass" @keydown="isAddressInvalid = false" />
+      <input v-model="label" type="text" :placeholder="$t('send_coins.enter_label')" />
       <input
         v-model="password"
         type="password"
@@ -40,11 +30,7 @@
       <button @click="clearInput" outlined :disabled="disableClearButton">
         {{ $t("buttons.clear") }}
       </button>
-      <button
-        class="stretch"
-        @click="showConfirmation"
-        :disabled="disableSendButton"
-      >
+      <button class="stretch" @click="showConfirmation" :disabled="disableSendButton">
         {{ $t("buttons.send") }}
       </button>
       <button @click="sellCoins" :disabled="sellDisabled">
@@ -95,9 +81,7 @@ export default {
       return this.isPasswordInvalid ? "error" : "";
     },
     hasErrors() {
-      return (
-        this.isAmountInvalid || this.isAddressInvalid || this.isPasswordInvalid
-      );
+      return this.isAmountInvalid || this.isAddressInvalid || this.isPasswordInvalid;
     },
     disableClearButton() {
       if (this.amount !== null && !isNaN(parseFloat(this.amount))) return false;
@@ -107,18 +91,13 @@ export default {
     },
     disableSendButton() {
       if (isNaN(parseFloat(this.amount))) return true;
-      if (this.address === null || this.address.trim().length === 0)
-        return true;
+      if (this.address === null || this.address.trim().length === 0) return true;
       if (this.computedPassword.trim().length === 0) return true;
       return false;
     }
   },
   created() {
-    this.maxAmount =
-      Math.floor(
-        AccountsController.GetActiveAccountBalance().availableExcludingLocked /
-          1000000
-      ) / 100;
+    this.maxAmount = Math.floor(AccountsController.GetActiveAccountBalance().availableExcludingLocked / 1000000) / 100;
   },
   mounted() {
     this.$refs.amount.focus();
@@ -159,16 +138,12 @@ export default {
 
       // validate amount
       let accountBalance = AccountsController.GetActiveAccountBalance();
-      if (
-        accountBalance.availableExcludingLocked < displayToMonetary(this.amount)
-      ) {
+      if (accountBalance.availableExcludingLocked < displayToMonetary(this.amount)) {
         this.isAmountInvalid = true;
       }
 
       // validate address
-      this.isAddressInvalid = !LibraryController.IsValidNativeAddress(
-        this.address
-      );
+      this.isAddressInvalid = !LibraryController.IsValidNativeAddress(this.address);
 
       // wallet needs to be unlocked to make a payment
       if (LibraryController.UnlockWallet(this.computedPassword) === false) {

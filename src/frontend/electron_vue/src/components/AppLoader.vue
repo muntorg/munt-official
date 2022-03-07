@@ -45,19 +45,9 @@ export default {
     };
   },
   computed: {
-    ...mapState("app", [
-      "splashReady",
-      "syncDone",
-      "status",
-      "unityVersion",
-      "walletVersion"
-    ]),
+    ...mapState("app", ["splashReady", "syncDone", "status", "unityVersion", "walletVersion"]),
     showLoader() {
-      return (
-        this.splashReady === false ||
-        (this.status !== AppStatus.setup && this.syncDone === false) ||
-        this.status === AppStatus.shutdown
-      );
+      return this.splashReady === false || (this.status !== AppStatus.setup && this.syncDone === false) || this.status === AppStatus.shutdown;
     },
     isShuttingDown() {
       return this.status === AppStatus.shutdown;
