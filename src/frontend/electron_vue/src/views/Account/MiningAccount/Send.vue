@@ -111,7 +111,8 @@ export default {
         componentProps: {
           amount: this.amount,
           address: address,
-          password: this.password
+          password: this.password,
+          subtractFee: true
         },
         showButtons: false
       });
