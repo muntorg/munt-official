@@ -296,7 +296,7 @@ export default {
   }
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1000px) {
   .wallet-layout {
     & > .sidebar-left {
       width: var(--sidebar-left-width-small);
@@ -308,7 +308,7 @@ export default {
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .wallet-layout:not(.no-sidebar-right) {
     & > .main {
       display: none;
