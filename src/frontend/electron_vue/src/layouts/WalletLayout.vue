@@ -296,6 +296,18 @@ export default {
   }
 }
 
+@media (max-width: 960px) {
+  .wallet-layout {
+    & > .sidebar-left {
+      width: var(--sidebar-left-width-small);
+    }
+
+    & > .main {
+      width: calc(100% - var(--sidebar-left-width-small) - var(--sidebar-right-width));
+    }
+  }
+}
+
 @media (max-width: 900px) {
   .wallet-layout:not(.no-sidebar-right) {
     & > .main {

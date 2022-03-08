@@ -5,18 +5,8 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {
-  name: "ActivityIndicator",
-  data() {
-    return {
-      show: false
-    };
-  },
-  computed: {
-    ...mapState("app", ["activityIndicator"])
-  }
+  name: "ActivityIndicator"
 };
 </script>
 
@@ -69,6 +59,13 @@ export default {
   }
   100% {
     opacity: 1;
+  }
+}
+
+@media (max-width: 960px) {
+  .modal-mask {
+    left: var(--sidebar-left-width-small);
+    width: calc(100% - var(--sidebar-left-width-small));
   }
 }
 </style>
