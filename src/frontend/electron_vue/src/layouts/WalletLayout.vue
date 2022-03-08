@@ -83,7 +83,7 @@ export default {
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
-      return `€ ${formatMoneyForDisplay(this.totalBalance * this.rate)}`;
+      return `€ ${formatMoneyForDisplay(this.totalBalance * this.rate, true)}`;
     },
     balanceForDisplay() {
       if (this.totalBalance == null) return "";

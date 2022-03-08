@@ -31,6 +31,18 @@
         {{ $t("settings.dutch") }}
       </div>
     </div>
+    <div class="settings-row-no-hover flex-row">
+      <div class="flex-1">{{ $t("settings.choose_decimal_places") }}</div>
+      <div :class="`decimal-select ${this.decimals === 2 ? 'selected' : ''}`" @click="changeDecimals(2)">
+        2
+      </div>
+      <div :class="`decimal-select ${this.decimals === 3 ? 'selected' : ''}`" @click="changeDecimals(3)">
+        3
+      </div>
+      <div :class="`decimal-select ${this.decimals === 4 ? 'selected' : ''}`" @click="changeDecimals(4)">
+        4
+      </div>
+    </div>
     <div style="flex: 1" />
     <portal v-if="UIConfig.showSidebar" to="footer-slot"></portal>
     <div v-else style="margin-top: 20px">
@@ -51,7 +63,7 @@ import UIConfig from "../../../ui-config.json";
 
 export default {
   computed: {
-    ...mapState("app", ["theme", "language"])
+    ...mapState("app", ["theme", "language", "decimals"])
   },
   methods: {
     getThemeSelectClassNames(theme) {
@@ -65,6 +77,10 @@ export default {
     },
     changeLanguage(language) {
       this.$store.dispatch("app/SET_LANGUAGE", language);
+      this.$forceUpdate();
+    },
+    changeDecimals(decimal) {
+      this.$store.dispatch("app/SET_DECIMALS", decimal);
       this.$forceUpdate();
     },
     routeTo(route) {
@@ -126,6 +142,16 @@ export default {
 
 .language-select:hover {
   cursor: pointer;
+}
+
+.decimal-select {
+  font-size: 12px;
+  border-radius: 18px;
+  line-height: 20px;
+  width: 40px;
+  text-align: center;
+  cursor: pointer;
+  margin-left: 15px;
 }
 
 .theme-select.blue {
