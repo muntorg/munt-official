@@ -54,7 +54,7 @@ export default {
 <style lang="less" scoped>
 .footer-button {
   display: inline-block;
-  padding: 0 15px;
+  padding: 0 20px;
   font-weight: 600;
   font-size: 0.85em;
   text-transform: uppercase;
