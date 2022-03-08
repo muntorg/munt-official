@@ -15,14 +15,14 @@
         }"
         :sync="true"
         :speed="0"
-        :height="16"
-        :width="44"
+        :height="20"
+        :width="54"
         @change="toggleCompounding"
       />
     </app-section>
 
     <app-section v-if="isAccountView && accountIsFunded" class="holding-information">
-      <h5>{{ $t("common.information") }}</h5>
+      <h2>{{ $t("common.information") }}</h2>
       <div class="flex-row">
         <div>{{ $t("holding_account.status") }}</div>
         <div>{{ accountStatus }}</div>
