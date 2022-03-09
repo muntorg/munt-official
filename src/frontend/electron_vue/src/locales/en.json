@@ -93,12 +93,15 @@
     "arena_setup_time": "Arena setup time",
     "best_reported_speed": "Best reported speed",
     "last_reported_speed": "Last reported speed",
-    "memory_to_use": "Memory to use",
+    "memory_to_use": "Memory usage",
     "moving_average": "Moving average",
     "number_of_threads": "Number of threads",
     "number_of_arena_threads": "Number of arena setup threads",
     "statistics": "Statistics",
-    "thread": "thread | threads"
+    "thread": "thread | threads",
+    "settings": "Settings",
+    "current_of_max": "{current} of {max}",
+    "warning_performance": "Warning: performance is degraded due to reduced memory"
   },
   "password_dialog": {
     "unlock_wallet": "Unlock wallet"

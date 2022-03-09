@@ -7,59 +7,87 @@
     <router-view />
 
     <app-section v-if="isMiningView">
-      <app-form-field title="mining.number_of_threads">
-        <div class="flex-row">
-          <vue-slider :min="1" :max="availableCores" :value="currentThreadCount" v-model="currentThreadCount" class="slider" :disabled="isActive" />
-          <div class="slider-info">
-            {{ currentThreadCount }}
-            {{ $tc("mining.thread", currentThreadCount) }}
+      <div v-if="!isActive">
+        <app-form-field title="mining.number_of_threads">
+          <div class="flex-row">
+            <vue-slider :min="1" :max="availableCores" :value="currentThreadCount" v-model="currentThreadCount" class="slider" :disabled="isActive" />
+            <div class="slider-info">
+              {{ currentThreadCount }}
+              {{ $tc("mining.thread", currentThreadCount) }}
+            </div>
           </div>
-        </div>
-      </app-form-field>
+        </app-form-field>
 
-      <app-form-field title="mining.number_of_arena_threads">
-        <div class="flex-row">
-          <vue-slider :min="1" :max="availableCores" :value="currentArenaThreadCount" v-model="currentArenaThreadCount" class="slider" :disabled="isActive" />
-          <div class="slider-info">
-            {{ currentArenaThreadCount }}
-            {{ $tc("mining.thread", currentArenaThreadCount) }}
+        <app-form-field title="mining.number_of_arena_threads">
+          <div class="flex-row">
+            <vue-slider :min="1" :max="availableCores" :value="currentArenaThreadCount" v-model="currentArenaThreadCount" class="slider" :disabled="isActive" />
+            <div class="slider-info">
+              {{ currentArenaThreadCount }}
+              {{ $tc("mining.thread", currentArenaThreadCount) }}
+            </div>
           </div>
-        </div>
-      </app-form-field>
+        </app-form-field>
 
-      <app-form-field title="mining.memory_to_use">
-        <div class="flex-row">
-          <vue-slider :min="minimumMemory" :max="maximumMemory" :value="currentMemorySize" v-model="currentMemorySize" class="slider" :disabled="isActive" />
-          <div class="slider-info">{{ currentMemorySize }} Gb</div>
-        </div>
-      </app-form-field>
+        <app-form-field title="mining.memory_to_use">
+          <div class="flex-row">
+            <vue-slider :min="minimumMemory" :max="maximumMemory" :value="currentMemorySize" v-model="currentMemorySize" class="slider" :disabled="isActive" />
+            <div class="slider-info">{{ currentMemorySize }} Gb</div>
+          </div>
+        </app-form-field>
+      </div>
+      <div v-else>
+        <app-form-field class="mining-statistics" title="mining.settings">
+          <div class="flex-row">
+            <div>{{ $t("mining.number_of_threads") }}</div>
+            <div class="flex-1 align-right">
+              {{ $t("mining.current_of_max", { current: currentThreadCount, max: availableCores }) }} {{ $tc("mining.thread", availableCores) }}
+            </div>
+          </div>
+          <div class="flex-row">
+            <div>{{ $t("mining.number_of_arena_threads") }}</div>
+            <div class="flex-1 align-right">
+              {{ $t("mining.current_of_max", { current: currentArenaThreadCount, max: availableCores }) }} {{ $tc("mining.thread", availableCores) }}
+            </div>
+          </div>
+          <div class="flex-row">
+            <div>{{ $t("mining.memory_to_use") }}</div>
+            <div class="flex-1 align-right">{{ $t("mining.current_of_max", { current: currentMemorySize, max: maximumMemory }) }} Gb</div>
+          </div>
+        </app-form-field>
 
-      <app-form-field class="mining-statistics" title="mining.statistics" v-if="isActive">
-        <div class="flex-row">
-          <div>{{ $t("mining.last_reported_speed") }}</div>
-          <div class="flex-1 align-right">
-            {{ hashesPerSecond }}
+        <content-wrapper v-if="currentMemorySize < maximumMemory">
+          <p class="warning">
+            {{ $t("mining.warning_performance") }}
+          </p>
+        </content-wrapper>
+
+        <app-form-field class="mining-statistics" title="mining.statistics">
+          <div class="flex-row">
+            <div>{{ $t("mining.last_reported_speed") }}</div>
+            <div class="flex-1 align-right">
+              {{ hashesPerSecond }}
+            </div>
           </div>
-        </div>
-        <div class="flex-row">
-          <div>{{ $t("mining.moving_average") }}</div>
-          <div class="flex-1 align-right">
-            {{ rollingHashesPerSecond }}
+          <div class="flex-row">
+            <div>{{ $t("mining.moving_average") }}</div>
+            <div class="flex-1 align-right">
+              {{ rollingHashesPerSecond }}
+            </div>
           </div>
-        </div>
-        <div class="flex-row">
-          <div>{{ $t("mining.best_reported_speed") }}</div>
-          <div class="flex-1 align-right">
-            {{ bestHashesPerSecond }}
+          <div class="flex-row">
+            <div>{{ $t("mining.best_reported_speed") }}</div>
+            <div class="flex-1 align-right">
+              {{ bestHashesPerSecond }}
+            </div>
           </div>
-        </div>
-        <div class="flex-row">
-          <div>{{ $t("mining.arena_setup_time") }}</div>
-          <div class="flex-1 align-right">
-            {{ arenaSetupTime }}
+          <div class="flex-row">
+            <div>{{ $t("mining.arena_setup_time") }}</div>
+            <div class="flex-1 align-right">
+              {{ arenaSetupTime }}
+            </div>
           </div>
-        </div>
-      </app-form-field>
+        </app-form-field>
+      </div>
     </app-section>
 
     <button v-if="isMiningView" @click="toggleGeneration" :disabled="generationButtonDisabled">
@@ -207,5 +235,9 @@ export default {
 
 .mining-statistics .flex-row {
   line-height: 20px;
+}
+
+.warning {
+  color: var(--error-color);
 }
 </style>
