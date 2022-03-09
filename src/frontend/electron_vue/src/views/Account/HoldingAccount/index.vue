@@ -85,6 +85,7 @@
     <portal to="footer-slot">
       <footer-button title="buttons.info" :icon="['fal', 'info-circle']" routeName="account" @click="routeTo" />
       <footer-button title="buttons.holding_key" :icon="['fal', 'key']" routeName="link-holding-account" @click="routeTo" />
+      <footer-button title="buttons.transactions" :icon="['far', 'list-ul']" routeName="transactions" @click="routeTo" />
       <footer-button v-if="renewButtonVisible" title="buttons.renew" :icon="['fal', 'redo-alt']" routeName="renew-account" @click="routeTo" />
       <footer-button title="buttons.send" :icon="['fal', 'arrow-from-bottom']" routeName="send-holding" @click="routeTo" />
     </portal>
@@ -177,10 +178,7 @@ export default {
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
-      return `€ ${formatMoneyForDisplay(
-        this.account.balance * this.rate,
-        true
-      )}`;
+      return `€ ${formatMoneyForDisplay(this.account.balance * this.rate, true)}`;
     },
     balanceForDisplay() {
       if (this.account.balance == null) return "";
