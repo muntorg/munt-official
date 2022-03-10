@@ -341,6 +341,20 @@ void CCoinsViewCache::AddCoin(const COutPoint &outpoint, Coin&& coin, bool possi
     // Ensure consistency
     validateInsert(outpoint, coin.nHeight, coin.nTxIndex, outpoint.n);
 
+    // If there is already an existing entry the indexed outpoint map needs to be kept in sync
+    if (cacheCoins.count(outpoint) > 0)
+    {
+        auto coin_entry = cacheCoins[outpoint];
+        auto refIter = cacheCoinRefs.find(COutPoint(coin_entry.coin.nHeight, coin_entry.coin.nTxIndex, outpoint.n));
+
+        // If the existing indexed outpoint is associated with this coin_entry the old entry is erased so there
+        // will be no stale entry left if its index changes
+        if (refIter != cacheCoinRefs.end() && refIter->second.getTransactionHash() == outpoint.getTransactionHash())
+        {
+            cacheCoinRefs.erase(refIter);
+        }
+    }
+
     if (!(coin.nHeight == MEMPOOL_HEIGHT && coin.nTxIndex == MEMPOOL_INDEX))
     {
         cacheCoinRefs[(COutPoint(coin.nHeight, coin.nTxIndex, outpoint.n))] = outpoint;
