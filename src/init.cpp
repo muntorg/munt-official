@@ -1817,6 +1817,9 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     // ********************************************************* Step 12: finished
 
     SetRPCWarmupFinished();
+
+    pcoinsTip->SanityCheckCoinCache();
+    
     uiInterface.InitMessage(_("Done loading"));
 
 #ifdef ENABLE_WALLET

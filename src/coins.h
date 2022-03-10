@@ -455,25 +455,7 @@ public:
         }
     }
     
-    void SanityCheckCoinCache() const override
-    {
-        std::map<COutPoint, Coin> allCoinsIndexBased;
-        GetAllCoinsIndexBasedDirect(allCoinsIndexBased);
-        
-        std::map<COutPoint, Coin> allCoinsIndexBasedComp;
-        for (auto [indexBased, hashBased] : cacheCoinRefs)
-        {
-            auto findIter = cacheCoins.find(hashBased);
-            assert(findIter != cacheCoins.end());
-            if (!findIter->second.coin.out.IsNull())
-            {
-                allCoinsIndexBasedComp[indexBased] = findIter->second.coin;
-            }
-        }
-        
-	if (!std::equal(std::begin(allCoinsIndexBased),std::end(allCoinsIndexBased),std::begin(allCoinsIndexBasedComp),std::end(allCoinsIndexBasedComp)))
-        	assert(0);
-    }
+    void SanityCheckCoinCache() const override;
 
 private:
     CCoinsMap::iterator FetchCoin(const COutPoint &outpoint, CCoinsRefMap::iterator* pRefIterReturn=nullptr) const;

@@ -1525,8 +1525,6 @@ void FindFilesToPruneExplicit(std::set<int>& setFilesToPrune, unsigned int nPrun
  */
 bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, FlushStateMode mode, int nManualPruneHeight, bool fFlushPartialSync) {
     
-    pcoinsTip->SanityCheckCoinCache();
-    
     int64_t nMempoolUsage = mempool.DynamicMemoryUsage();
     LOCK2(cs_main, cs_LastBlockFile);
     static int64_t nLastWrite = 0;
@@ -1933,6 +1931,9 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
     int64_t nTime3;
     LogPrint(BCLog::BENCH, "  - Load block from disk: %.2fms [%.2fs]\n", (nTime2 - nTime1) * 0.001, nTimeReadFromDisk * 0.000001);
     {
+        LogPrintf("SANITYCHECK: pcoinsTip pre-ConnectTip height=%d\n", chainActive.Height());
+        pcoinsTip->SanityCheckCoinCache();
+
         CCoinsViewCache view(pcoinsTip);
         bool fJustCheck = false;
         bool fValidateWitness = true;
@@ -1955,8 +1956,18 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
         }
         nTime3 = GetTimeMicros(); nTimeConnectTotal += nTime3 - nTime2;
         LogPrint(BCLog::BENCH, "  - Connect total: %.2fms [%.2fs]\n", (nTime3 - nTime2) * 0.001, nTimeConnectTotal * 0.000001);
+
+        LogPrintf("SANITYCHECK: view block processed\n");
+        view.SanityCheckCoinCache();
+
         bool flushed = view.Flush();
         assert(flushed);
+
+        LogPrintf("SANITYCHECK: of view flushed\n");
+        view.SanityCheckCoinCache();
+
+        LogPrintf("SANITYCHECK: of pcoinsTip post-ConnectTip\n");
+        pcoinsTip->SanityCheckCoinCache();
     }
     int64_t nTime4 = GetTimeMicros(); nTimeFlush += nTime4 - nTime3;
     LogPrint(BCLog::BENCH, "  - Flush: %.2fms [%.2fs]\n", (nTime4 - nTime3) * 0.001, nTimeFlush * 0.000001);

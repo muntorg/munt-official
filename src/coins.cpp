@@ -110,13 +110,11 @@ void CCoinsViewCache::validateInsert(const COutPoint &outpoint, uint64_t block, 
             // Unless the other one is spent and marked dirty, in which case thats fine
             if (!transactionHashesMatch && !(it->second.flags&CCoinsCacheEntry::DIRTY&&it->second.coin.IsSpent()))
             {
-                #if 0
                 std::string warning = strprintf("Warning: outpoint mismatch.\nPlease notify the developers with this information to assist them.\n\n"
                                                 "cohash:[%s]\nophash:[%s]\nblock:[%d] txidx:[%d] outidx:[%d] flags:[%d] spent:[%s] lookupishash: [%s]",
                                                 canonicalOutPoint.getTransactionHash().ToString(), outpoint.getTransactionHash().ToString(), 
                                                 block, txIndex, voutIndex, it->second.flags, (it->second.coin.IsSpent()?"yes":"no"), (outpoint.isHash?"yes":"no"));
-                uiInterface.NotifyUIAlertChanged(warning);
-                #endif
+                throw std::logic_error(warning);
             }
             
             // Block and index should match up
@@ -223,6 +221,89 @@ CCoinsMap::iterator CCoinsViewCache::FetchCoin(const COutPoint &outpoint, CCoins
     }
     cachedCoinsUsage += retIter->second.coin.DynamicMemoryUsage();
     return retIter;
+}
+
+void CCoinsViewCache::SanityCheckCoinCache() const
+{
+
+    std::map<COutPoint, Coin> allCoinsIndexBased;
+    GetAllCoinsIndexBasedDirect(allCoinsIndexBased);
+
+    std::map<COutPoint, Coin> allCoinsIndexBasedComp;
+    for (auto [indexBased, hashBased] : cacheCoinRefs)
+    {
+        auto findIter = cacheCoins.find(hashBased);
+        assert(findIter != cacheCoins.end());
+        if (!findIter->second.coin.out.IsNull())
+        {
+            allCoinsIndexBasedComp[indexBased] = findIter->second.coin;
+        }
+    }
+
+    if (!std::equal(std::begin(allCoinsIndexBased), std::end(allCoinsIndexBased), std::begin(allCoinsIndexBasedComp), std::end(allCoinsIndexBasedComp)))
+    {
+        LogPrintf("SanityCheckCoinCache() fail.\n");
+        LogPrintf("Hashed size: %d Indexed size: %d\n", cacheCoins.size(), cacheCoinRefs.size());
+        LogPrintf("Non-null Hashed size: %d Non-null Indexed size: %d\n", allCoinsIndexBased.size(), allCoinsIndexBasedComp.size());
+
+        LogPrintf("> Non-null hashed missing from indexed:\n");
+        for (auto [hashBased, coin_entry]: cacheCoins)
+        {
+            if (!coin_entry.coin.IsSpent())
+            {
+                COutPoint indexBased(coin_entry.coin.nHeight, coin_entry.coin.nTxIndex, hashBased.n);
+                if (cacheCoinRefs.count(indexBased) == 0)
+                {
+                    LogPrintf("%s block=%d nTx=%d n=%d\n",
+                        hashBased.getTransactionHash().ToString(),
+                        indexBased.getTransactionBlockNumber(),
+                        indexBased.getTransactionIndex(),
+                        hashBased.n
+                        );
+                }
+            }
+        }
+        LogPrintf("< done.\n");
+
+        LogPrintf("> Indexed missing or mismatched from hashed:\n");
+        for (auto [indexBased, hashBased] : cacheCoinRefs)
+        {
+            if (cacheCoins.count(hashBased) == 0) 
+            {
+                    LogPrintf("%s block=%d nTx=%d n=%d\n",
+                        hashBased.getTransactionHash().ToString(),
+                        indexBased.getTransactionBlockNumber(),
+                        indexBased.getTransactionIndex(),
+                        hashBased.n
+                        );
+            }
+            else
+            {
+                auto coin_entry = cacheCoins[hashBased];
+                if (indexBased.getTransactionBlockNumber() != coin_entry.coin.nHeight
+                    || indexBased.getTransactionIndex() != coin_entry.coin.nTxIndex
+                    || indexBased.n != hashBased.n)
+                {
+                    LogPrintf("MISMATCHED %s\n",
+                        hashBased.getTransactionHash().ToString());
+                    LogPrintf("    indexed block=%d nTx=%d n=%d\n",
+                        indexBased.getTransactionBlockNumber(),
+                        indexBased.getTransactionIndex(),
+                        indexBased.n
+                        );
+                    LogPrintf("    hashed  block=%d nTx=%d n=%d\n",
+                        coin_entry.coin.nHeight,
+                        coin_entry.coin.nTxIndex,
+                        hashBased.n
+                        );
+                }
+            }
+        }
+        LogPrintf("< done.\n");
+
+        // and finaly crash
+        assert(0);
+    }
 }
 
 bool CCoinsViewCache::GetCoin(const COutPoint &outpoint, Coin &coin, COutPoint* pOutpointRet) const
