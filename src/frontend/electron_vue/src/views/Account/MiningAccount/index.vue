@@ -40,26 +40,30 @@
           <div class="flex-row">
             <div>{{ $t("mining.number_of_threads") }}</div>
             <div class="flex-1 align-right">
-              {{ $t("mining.current_of_max", { current: currentThreadCount, max: availableCores }) }} {{ $tc("mining.thread", availableCores) }}
+              {{ $t("mining.current_of_max", { current: currentThreadCount, max: availableCores }) }}
             </div>
           </div>
           <div class="flex-row">
             <div>{{ $t("mining.number_of_arena_threads") }}</div>
             <div class="flex-1 align-right">
-              {{ $t("mining.current_of_max", { current: currentArenaThreadCount, max: availableCores }) }} {{ $tc("mining.thread", availableCores) }}
+              {{ $t("mining.current_of_max", { current: currentArenaThreadCount, max: availableCores }) }}
             </div>
           </div>
           <div class="flex-row">
-            <div>{{ $t("mining.memory_to_use") }}</div>
-            <div class="flex-1 align-right">{{ $t("mining.current_of_max", { current: currentMemorySize, max: maximumMemory }) }} Gb</div>
+            <div>
+              {{ $t("mining.memory_to_use") }}
+              <fa-icon
+                v-if="currentMemorySize < maximumMemory"
+                class="warning"
+                :title="$t('mining.warning_performance')"
+                :icon="['fal', 'fa-exclamation-triangle']"
+              ></fa-icon>
+            </div>
+            <div class="flex-1 align-right">
+              <span> {{ currentMemorySize }} Gb</span>
+            </div>
           </div>
         </app-form-field>
-
-        <content-wrapper v-if="currentMemorySize < maximumMemory">
-          <p class="warning">
-            {{ $t("mining.warning_performance") }}
-          </p>
-        </content-wrapper>
 
         <app-form-field class="mining-statistics" title="mining.statistics">
           <div class="flex-row">
@@ -159,16 +163,16 @@ export default {
       return this.$route.name === "account";
     },
     hashesPerSecond() {
-      return this.stats ? `${this.stats.hashesPerSecond}/s` : null;
+      return this.formatStats(this.stats, "hashesPerSecond");
     },
     rollingHashesPerSecond() {
-      return this.stats ? `${this.stats.rollingHashesPerSecond}/s` : null;
+      return this.formatStats(this.stats, "rollingHashesPerSecond");
     },
     bestHashesPerSecond() {
-      return this.stats ? `${this.stats.bestHashesPerSecond}/s` : null;
+      return this.formatStats(this.stats, "bestHashesPerSecond");
     },
     arenaSetupTime() {
-      return this.stats ? `${this.stats.arenaSetupTime}s` : null;
+      return this.formatStats(this.stats, "arenaSetupTime", " s");
     },
     rightSidebarProps() {
       return null;
@@ -210,6 +214,12 @@ export default {
     },
     emptyAccount() {
       this.rightSidebar = Send;
+    },
+    formatStats(stats, which, postfix = "/s") {
+      if (!stats) return null;
+      const current = stats[which];
+      const result = /[a-z]/i.exec(current);
+      return result === null ? `${current}${postfix}` : `${current.substr(0, result.index)} ${current.substr(result.index)}${postfix}`;
     }
   }
 };

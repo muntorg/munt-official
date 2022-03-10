@@ -101,7 +101,7 @@
     "thread": "thread | threads",
     "settings": "Settings",
     "current_of_max": "{current} of {max}",
-    "warning_performance": "Warning: performance is degraded due to reduced memory"
+    "warning_performance": "Performance is degraded due to reduced memory usage"
   },
   "password_dialog": {
     "unlock_wallet": "Unlock wallet"

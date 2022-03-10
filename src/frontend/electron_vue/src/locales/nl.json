@@ -101,7 +101,7 @@
     "thread": "thread | threads",
     "settings": "Instellingen",
     "current_of_max": "{current} van {max}",
-    "warning_performance": "Let op: prestaties zijn verminderd door lager geheugengebruik"
+    "warning_performance": "Prestaties zijn verminderd door lager geheugengebruik"
   },
   "password_dialog": {
     "unlock_wallet": "Ontgrendel wallet"
