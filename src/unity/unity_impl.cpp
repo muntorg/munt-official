@@ -170,10 +170,19 @@ void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord
         if (subtracted - fee == added)
         {
             // amount received
-            mutations.push_back(MutationRecord(added - change, time, hash, recipientAddresses, status, depth));
+            bool receivedZero = (added - change == 0);
+            if (!receivedZero)
+            {
+                mutations.push_back(MutationRecord(added - change, time, hash, recipientAddresses, status, depth));
+            }
 
             // amount send including fee
-            mutations.push_back(MutationRecord(change - subtracted, time, hash, recipientAddresses, status, depth));
+            // If we didn't add a transaction for received then add one here (even if zero) as it may be a special data transaction or something similar.
+            bool sendZero = (change - subtracted == 0);
+            if (!sendZero || receivedZero)
+            {
+                mutations.push_back(MutationRecord(change - subtracted, time, hash, recipientAddresses, status, depth));
+            }
         }
         else
         {
