@@ -85,6 +85,19 @@ public:
     , nHeight(0)
     , nTxIndex(0)
     { }
+    
+    bool operator==(const Coin& otherCoin) const
+    {
+        if (out != otherCoin.out)
+            return false;
+        if (nHeight != otherCoin.nHeight)
+            return false;
+        if (nTxIndex != otherCoin.nTxIndex)
+            return false;
+        return true;
+        //unsigned int fCoinBase : 1;
+        //unsigned int fSegSig : 1;
+    }
 
     bool IsCoinBase() const {
         return fCoinBase;
@@ -252,6 +265,7 @@ public:
     virtual void GetAllCoins(std::map<COutPoint, Coin>&) const {};
     virtual void GetAllCoinsIndexBased(std::map<COutPoint, Coin>&) const {};
     virtual void GetAllCoinsIndexBasedDirect(std::map<COutPoint, Coin>& allCoins) const {};
+    virtual void SanityCheckCoinCache() const {};
     /*virtual int GetDepth() const
     {
         return 0;
@@ -289,6 +303,10 @@ public:
     void GetAllCoinsIndexBasedDirect(std::map<COutPoint, Coin>& allCoins) const override
     {
         base->GetAllCoinsIndexBasedDirect(allCoins);
+    }
+    void SanityCheckCoinCache() const override
+    {
+        base->SanityCheckCoinCache();
     }
 };
 
@@ -436,6 +454,8 @@ public:
             }
         }
     }
+    
+    void SanityCheckCoinCache() const override;
 
 private:
     CCoinsMap::iterator FetchCoin(const COutPoint &outpoint, CCoinsRefMap::iterator* pRefIterReturn=nullptr) const;
