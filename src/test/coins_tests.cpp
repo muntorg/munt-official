@@ -613,7 +613,7 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
         blockUndo[blockCount-1].push_back(undo);
     }
     
-    //#define DO_RECONNECT_TESTS
+    #define DO_RECONNECT_TESTS
     #ifdef DO_RECONNECT_TESTS
     bool lastActionWasDisconnect=false;
     #endif
@@ -974,7 +974,8 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             
             std::map<COutPoint, Coin> utxoAllCoinsIndexBasedDirect;
             // clear to prevent re-use of result of GetAllCoinsIndexBased() above, both GetAllCoinsIndexBased() and GetAllCoinsIndexBasedDirect() just add to the output argument
-            utxoAllCoinsIndexBased.clear();
+            // update 2022-03-10 disabled again, we now know in what way the GetAllCoinsIndexBased() is flawed adn want use this test besides it
+            // utxoAllCoinsIndexBased.clear();
             stack.back()->GetAllCoinsIndexBasedDirect(utxoAllCoinsIndexBased);
             std::vector<COutPoint> allCoinsIndexBasedUTXODirect;
             for (const auto& [outPoint, coins] : utxoAllCoinsIndexBased)
