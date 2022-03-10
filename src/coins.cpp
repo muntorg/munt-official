@@ -529,12 +529,26 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
                     cachedCoinsUsage -= itUs->second.coin.DynamicMemoryUsage();
                     if (!(itUs->second.coin.nHeight == MEMPOOL_HEIGHT && itUs->second.coin.nTxIndex == MEMPOOL_INDEX))
                     {
-                        cacheCoinRefs.erase(COutPoint(itUs->second.coin.nHeight, itUs->second.coin.nTxIndex, itUs->first.n));
+                        // delete index, but only if it correspends
+                        if (itUs->second.coin.nHeight == it->second.coin.nHeight
+                            && itUs->second.coin.nTxIndex == it->second.coin.nTxIndex
+                            && itUs->first.n == it->first.n)
+                        {
+                            cacheCoinRefs.erase(COutPoint(itUs->second.coin.nHeight, itUs->second.coin.nTxIndex, itUs->first.n));
+                        }
                     }
                     cacheCoins.erase(itUs);
                 }
                 else
                 {
+                    // if there is already an indexed entry that is ours then delete it as we might be moving to another index
+                    // if it is not ours then leave it
+                    auto indexed = COutPoint(itUs->second.coin.nHeight, itUs->second.coin.nTxIndex, itUs->first.n);
+                    if (cacheCoinRefs[indexed].getTransactionHash() == it->first.getTransactionHash())
+                    {
+                        cacheCoinRefs.erase(indexed);
+                    }
+
                     // A normal modification.
                     cachedCoinsUsage -= itUs->second.coin.DynamicMemoryUsage();
                     itUs->second.coin = std::move(it->second.coin);
@@ -573,6 +587,14 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
         {
             if (iter->second.coin.IsSpent())
             {
+                // if there is an existing index entry which points to another coin that is NOT spent then leave it
+                // otherwise update/create an index entry for the (now) spent coin
+                auto indexedOut = COutPoint(iter->second.coin.nHeight, iter->second.coin.nTxIndex, outPoint.n);
+                const auto iterRefs = cacheCoinRefs.find(indexedOut);
+                if (iterRefs != cacheCoinRefs.end() && !cacheCoins[iterRefs->second].coin.IsSpent())
+                {
+                    continue;
+                }
                 cacheCoinRefs[COutPoint(iter->second.coin.nHeight, iter->second.coin.nTxIndex, outPoint.n)] = outPoint;
             }
         }
