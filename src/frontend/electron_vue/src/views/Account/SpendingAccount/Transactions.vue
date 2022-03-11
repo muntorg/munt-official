@@ -165,7 +165,8 @@ h4 {
 
   & > .tx-details {
     font-size: 0.85em;
-    width: 200px;
+    width: 100%;
+    margin-right: 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
