@@ -9,6 +9,10 @@ UI        - Introduce an "activity indicator" that displays when backend is stuc
 UI        - Improve overall look/feel and consistency
 UI        - Fix/improve stability of loading screen and synchronisation, as well as general app stability
 UI        - Large quantity of small fixes/improvements
+UI        - Improve mining view
+UI        - Configurable decimal place display
+UI        - Show transactions for mining/holding accounts
+UI        - Improve send dialog behaviour for mining/holding accounts
 RPC       - Improve/correct verifyholdingaddress RPC behaviour
 RPC       - Enable RPC functionality for electron clients; needs to be turned on via florin.conf not enabled by default
 RPC       - Improve checkwalletagainstutxo and removeallorphans commands
