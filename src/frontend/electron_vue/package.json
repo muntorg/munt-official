@@ -2,7 +2,7 @@
   "name": "Florin",
   "description": "Florin currency",
   "author": "Centure.com BV",
-  "version": "2.0.5",
+  "version": "2.0.7",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

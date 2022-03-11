@@ -1,5 +1,5 @@
 ---
-name: "Florin-osx-2.0.5"
+name: "Florin-osx-2.0.7"
 enable_cache: true
 distro: "ubuntu"
 suites:
