@@ -122,7 +122,7 @@ std::string getRecipientAddressesForWalletTransaction(CAccount* forAccount, CWal
         {
             isMine = true;
         }
-        if ((isSentByUs && !isMine) || (!isSentByUs && isMine))
+        if ((isSentByUs && !isMine) || (!isSentByUs && isMine) || (wtx->tx->IsPoW2WitnessCoinBase() && isMine))
         {
             CNativeAddress addr;
             CTxDestination dest;
@@ -150,7 +150,7 @@ void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord
 
     int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, forAccount, true);
     int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, forAccount, true) +
-                    wtx->GetImmatureCredit(false, forAccount, true);
+                    wtx->GetImmatureCreditIncludingLockedWitnesses(false, forAccount, true);
 
     uint64_t time = wtx->nTimeSmart;
     std::string hash = wtx->GetHash().ToString();
