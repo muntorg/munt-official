@@ -575,7 +575,7 @@ sigma_context::sigma_context(sigma_settings settings_, uint64_t allocateArenaSiz
     
     // Node/electron addons have issues with large memory (>2gb) allocations, due to chrome overriding malloc and doing various custom things with it
     // Work around this by bypassing malloc and doing a direct mmap instead
-    #if defined(__linux) && defined(DJINNI_NODEJS)
+    #if (defined(__linux__)||defined(__APPLE__)) && defined(DJINNI_NODEJS)
     arena = (uint8_t*)mmap(0, (allocatedArenaSizeKb*1024), PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS,-1, 0);
     if (arena)
     {
@@ -997,7 +997,7 @@ void sigma_context::benchmarkMining(CBlockHeader& headerData, std::atomic<uint64
 
 sigma_context::~sigma_context()
 {
-    #if defined(__linux) && defined(DJINNI_NODEJS)
+    #if (defined(__linux__)||defined(__APPLE__)) && defined(DJINNI_NODEJS)
     (uint8_t*)munmap(arena, (allocatedArenaSizeKb*1024));
     #else
     free(arena);
