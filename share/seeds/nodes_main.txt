@@ -1,7 +1,7 @@
 # List of fixed seed nodes for main network
 
 # IPv4 nodes (generated using contrib/seeds/makeseeds.py)
-83.161.66.135
+86.85.144.196
 178.62.195.19
 45.32.253.142
 199.247.1.84
