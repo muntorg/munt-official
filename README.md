@@ -96,8 +96,8 @@ For those who really need too or are technically inclined it is of course possib
 |:-----------|:---------|:---------|
 |Consensus algorithm:|PoW² SIGMA/Witness|PoW² SIGMA/Witness|
 |Recommended transaction confirmations:|2|2|
-|Block reward SIGMA:|50 NLG|1000 NLG|
-|Block reward witness:|30 NLG|20 NLG|
+|Block reward SIGMA:|75 (10|65) NLG|1000 NLG|
+|Block reward witness:|15 NLG|20 NLG|
 |Block interval target:|150 seconds (2.5 minutes)|Configurable|
 |Difficulty adjustment period:|Every block|Every block|
 |Difficulty adjustment algorithm:|Delta|Delta|
