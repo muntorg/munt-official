@@ -1,3 +1,21 @@
+2.4.9
+
+RPC       - Add a 'loaded' paramater to results of 'getmempoolinfo' command
+RPC       - Improve/fix 'fundrawtransaction' command that failed in some instances
+RPC       - Improve/fix help text for several commands
+CORE      - Various performance improvements, removal of lock contention in some instances 
+CORE      - Various improvements to mutexes to make it easier to spot issues as well as for better performance
+CORE      - Introduce optimised sha256 implementations to take advantage of available CPU features (SSE4, neon etc.) when available/possible
+CORE      - Improved debug logging in various places throghout the program
+LITE      - Fix issue that was preventing lite wallet from functioning on testnet
+LITE      - Fix a crash on macOS at program exit
+LITE      - Fix/improve behaviour of loading/synchronisation screen and make it smoother
+LITE      - Native M1/arm64 builds macOS
+QA        - Introduction of more unit and functional tests
+
+
+
+
 2.4.8
 
 Final maintanence release ahead of upcoming 2.5 series of builds; 2.5 will fully activate witness sync and drop the deprecated Qt UI in favour of the electron one
