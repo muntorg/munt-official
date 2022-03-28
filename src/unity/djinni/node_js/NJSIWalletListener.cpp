@@ -201,6 +201,150 @@ void NJSIWalletListener::notifyUpdatedTransaction(const TransactionRecord & tran
     );
 }
 
+void NJSIWalletListener::notifyWalletUnlocked_aimpl__()
+{
+    const auto& env = Env();
+    Napi::HandleScope scope(env);
+    //Wrap parameters
+    std::vector<napi_value> args;
+    Napi::Value calling_function_as_value = Value().Get("notifyWalletUnlocked");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
+    {
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_notifyWalletUnlocked = calling_function.Call(args);
+        if(result_notifyWalletUnlocked.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSIWalletListener::notifyWalletUnlocked call failed").ThrowAsJavaScriptException();
+            return;
+        }
+    }
+}
+
+void NJSIWalletListener::notifyWalletUnlocked()
+{
+    uv_work_t* request = new uv_work_t;
+    request->data = new std::tuple<NJSIWalletListener*>(this);
+
+    uv_queue_work(uv_default_loop(), request, [](uv_work_t*) -> void{}, [](uv_work_t* req, int status) -> void
+    {
+        NJSIWalletListener* pthis = std::get<0>(*((std::tuple<NJSIWalletListener*>*)req->data));
+        pthis->notifyWalletUnlocked_aimpl__();
+        delete (std::tuple<NJSIWalletListener*>*)req->data;
+        req->data = nullptr;
+    }
+    );
+}
+
+void NJSIWalletListener::notifyWalletLocked_aimpl__()
+{
+    const auto& env = Env();
+    Napi::HandleScope scope(env);
+    //Wrap parameters
+    std::vector<napi_value> args;
+    Napi::Value calling_function_as_value = Value().Get("notifyWalletLocked");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
+    {
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_notifyWalletLocked = calling_function.Call(args);
+        if(result_notifyWalletLocked.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSIWalletListener::notifyWalletLocked call failed").ThrowAsJavaScriptException();
+            return;
+        }
+    }
+}
+
+void NJSIWalletListener::notifyWalletLocked()
+{
+    uv_work_t* request = new uv_work_t;
+    request->data = new std::tuple<NJSIWalletListener*>(this);
+
+    uv_queue_work(uv_default_loop(), request, [](uv_work_t*) -> void{}, [](uv_work_t* req, int status) -> void
+    {
+        NJSIWalletListener* pthis = std::get<0>(*((std::tuple<NJSIWalletListener*>*)req->data));
+        pthis->notifyWalletLocked_aimpl__();
+        delete (std::tuple<NJSIWalletListener*>*)req->data;
+        req->data = nullptr;
+    }
+    );
+}
+
+void NJSIWalletListener::notifyCoreWantsUnlock_aimpl__(const std::string & reason)
+{
+    const auto& env = Env();
+    Napi::HandleScope scope(env);
+    //Wrap parameters
+    std::vector<napi_value> args;
+    auto arg_0 = Napi::String::New(env, reason);
+    args.push_back(arg_0);
+    Napi::Value calling_function_as_value = Value().Get("notifyCoreWantsUnlock");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
+    {
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_notifyCoreWantsUnlock = calling_function.Call(args);
+        if(result_notifyCoreWantsUnlock.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSIWalletListener::notifyCoreWantsUnlock call failed").ThrowAsJavaScriptException();
+            return;
+        }
+    }
+}
+
+void NJSIWalletListener::notifyCoreWantsUnlock(const std::string & reason)
+{
+    uv_work_t* request = new uv_work_t;
+    request->data = new std::tuple<NJSIWalletListener*, std::string>(this, reason);
+
+    uv_queue_work(uv_default_loop(), request, [](uv_work_t*) -> void{}, [](uv_work_t* req, int status) -> void
+    {
+        NJSIWalletListener* pthis = std::get<0>(*((std::tuple<NJSIWalletListener*, std::string>*)req->data));
+        pthis->notifyCoreWantsUnlock_aimpl__(std::get<1>(*((std::tuple<NJSIWalletListener*, std::string>*)req->data)));
+        delete (std::tuple<NJSIWalletListener*, std::string>*)req->data;
+        req->data = nullptr;
+    }
+    );
+}
+
+void NJSIWalletListener::notifyCoreInfo_aimpl__(const std::string & type, const std::string & caption, const std::string & message)
+{
+    const auto& env = Env();
+    Napi::HandleScope scope(env);
+    //Wrap parameters
+    std::vector<napi_value> args;
+    auto arg_0 = Napi::String::New(env, type);
+    args.push_back(arg_0);
+    auto arg_1 = Napi::String::New(env, caption);
+    args.push_back(arg_1);
+    auto arg_2 = Napi::String::New(env, message);
+    args.push_back(arg_2);
+    Napi::Value calling_function_as_value = Value().Get("notifyCoreInfo");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
+    {
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_notifyCoreInfo = calling_function.Call(args);
+        if(result_notifyCoreInfo.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSIWalletListener::notifyCoreInfo call failed").ThrowAsJavaScriptException();
+            return;
+        }
+    }
+}
+
+void NJSIWalletListener::notifyCoreInfo(const std::string & type, const std::string & caption, const std::string & message)
+{
+    uv_work_t* request = new uv_work_t;
+    request->data = new std::tuple<NJSIWalletListener*, std::string, std::string, std::string>(this, type, caption, message);
+
+    uv_queue_work(uv_default_loop(), request, [](uv_work_t*) -> void{}, [](uv_work_t* req, int status) -> void
+    {
+        NJSIWalletListener* pthis = std::get<0>(*((std::tuple<NJSIWalletListener*, std::string, std::string, std::string>*)req->data));
+        pthis->notifyCoreInfo_aimpl__(std::get<1>(*((std::tuple<NJSIWalletListener*, std::string, std::string, std::string>*)req->data)), std::get<2>(*((std::tuple<NJSIWalletListener*, std::string, std::string, std::string>*)req->data)), std::get<3>(*((std::tuple<NJSIWalletListener*, std::string, std::string, std::string>*)req->data)));
+        delete (std::tuple<NJSIWalletListener*, std::string, std::string, std::string>*)req->data;
+        req->data = nullptr;
+    }
+    );
+}
+
 Napi::FunctionReference NJSIWalletListener::constructor;
 
 Napi::Object NJSIWalletListener::Init(Napi::Env env, Napi::Object exports) {

@@ -20,7 +20,6 @@
 #include "compat.h"
 #include "fs.h"
 #include "init.h"
-#include "noui.h"
 #include "scheduler.h"
 #include "util.h"
 #include "utilstrencodings.h"
@@ -67,6 +66,38 @@ static bool handlePreInitMain()
 
 extern void handleInitWithExistingWallet();
 extern void handleInitWithoutExistingWallet();
+extern bool unityMessageBox(const std::string& message, const std::string& caption, unsigned int style);
+
+static bool unityThreadSafeQuestion(const std::string& /* ignored interactive message */, const std::string& message, const std::string& caption, unsigned int style)
+{
+    //fixme: (UNITY) (HIGH)
+    //Implement...
+    return false;
+}
+
+//fixme: See if we can remove this, looks like it may no longer be used.
+static void unityInitMessage(const std::string& message)
+{
+    LogPrintf("init message: %s\n", message);
+}
+
+#ifdef ENABLE_WALLET
+extern void NotifyRequestUnlockS(CWallet* wallet, std::string reason);
+extern void NotifyRequestUnlockWithCallbackS(CWallet* wallet, std::string reason, std::function<void (void)> successCallback);
+#endif
+
+void connectUIInterface()
+{
+    // Connect signal handlers
+    uiInterface.ThreadSafeMessageBox.connect(unityMessageBox);
+    uiInterface.ThreadSafeQuestion.connect(unityThreadSafeQuestion);
+    uiInterface.InitMessage.connect(unityInitMessage);
+
+    #ifdef ENABLE_WALLET
+    uiInterface.RequestUnlock.connect(boost::bind(NotifyRequestUnlockS, _1, _2));
+    uiInterface.RequestUnlockWithCallback.connect(boost::bind(NotifyRequestUnlockWithCallbackS, _1, _2, _3));
+    #endif
+}
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -77,7 +108,7 @@ int InitUnity()
     SetupEnvironment();
 
     // Connect signal handlers
-    noui_connect();
+    connectUIInterface();
 
     AppLifecycleManager appManager; 
     appManager.signalAppInitializeResult.connect(boost::bind(handleAppInitResult, _1));

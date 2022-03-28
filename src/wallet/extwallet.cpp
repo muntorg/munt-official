@@ -1321,7 +1321,7 @@ bool CExtWallet::LoadHDKey(int64_t HDKeyIndex, int64_t keyChain, const CPubKey &
 }
 
 
-bool CExtWallet::Lock() const
+bool CExtWallet::Lock()
 {
     LOCK(cs_wallet);
 
@@ -1334,9 +1334,11 @@ bool CExtWallet::Lock() const
     }
 }
 
-bool CExtWallet::LockHard() const
+bool CExtWallet::LockHard()
 {
     AssertLockHeld(cs_wallet);
+
+    static_cast<CWallet*>(this)->nRelockTime = 0;
 
     bool ret = true;
     for (const auto& [accountUUID, forAccount] : mapAccounts)

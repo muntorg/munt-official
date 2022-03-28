@@ -34,7 +34,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
 
     /*package*/ final long mAccountInitialLockCreationBlockHeight;
 
-    /*package*/ final boolean mAccountIsCompounding;
+    /*package*/ final int mCompoundingPercent;
 
     public WitnessAccountStatisticsRecord(
             String requestStatus,
@@ -51,7 +51,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
             long accountExpectedWitnessPeriodInBlocks,
             long accountEstimatedWitnessPeriodInBlocks,
             long accountInitialLockCreationBlockHeight,
-            boolean accountIsCompounding) {
+            int compoundingPercent) {
         this.mRequestStatus = requestStatus;
         this.mAccountStatus = accountStatus;
         this.mAccountWeight = accountWeight;
@@ -66,7 +66,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         this.mAccountExpectedWitnessPeriodInBlocks = accountExpectedWitnessPeriodInBlocks;
         this.mAccountEstimatedWitnessPeriodInBlocks = accountEstimatedWitnessPeriodInBlocks;
         this.mAccountInitialLockCreationBlockHeight = accountInitialLockCreationBlockHeight;
-        this.mAccountIsCompounding = accountIsCompounding;
+        this.mCompoundingPercent = compoundingPercent;
     }
 
     /** Success if request succeeded, otherwise an error message */
@@ -139,9 +139,9 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         return mAccountInitialLockCreationBlockHeight;
     }
 
-    /** Is this account currently set to compound */
-    public boolean getAccountIsCompounding() {
-        return mAccountIsCompounding;
+    /** How much of the reward that this account earns is set to be compound */
+    public int getCompoundingPercent() {
+        return mCompoundingPercent;
     }
 
     @Override
@@ -161,7 +161,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
                 "," + "mAccountExpectedWitnessPeriodInBlocks=" + mAccountExpectedWitnessPeriodInBlocks +
                 "," + "mAccountEstimatedWitnessPeriodInBlocks=" + mAccountEstimatedWitnessPeriodInBlocks +
                 "," + "mAccountInitialLockCreationBlockHeight=" + mAccountInitialLockCreationBlockHeight +
-                "," + "mAccountIsCompounding=" + mAccountIsCompounding +
+                "," + "mCompoundingPercent=" + mCompoundingPercent +
         "}";
     }
 
@@ -194,7 +194,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         this.mAccountExpectedWitnessPeriodInBlocks = in.readLong();
         this.mAccountEstimatedWitnessPeriodInBlocks = in.readLong();
         this.mAccountInitialLockCreationBlockHeight = in.readLong();
-        this.mAccountIsCompounding = in.readByte() != 0;
+        this.mCompoundingPercent = in.readInt();
     }
 
     @Override
@@ -218,7 +218,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         out.writeLong(this.mAccountExpectedWitnessPeriodInBlocks);
         out.writeLong(this.mAccountEstimatedWitnessPeriodInBlocks);
         out.writeLong(this.mAccountInitialLockCreationBlockHeight);
-        out.writeByte(this.mAccountIsCompounding ? (byte)1 : 0);
+        out.writeInt(this.mCompoundingPercent);
     }
 
 }

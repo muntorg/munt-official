@@ -16,6 +16,7 @@
 #import "DBTransactionRecord+Private.h"
 #import "DBUriRecipient+Private.h"
 #import "DBUriRecord+Private.h"
+#import "DBWalletLockStatus+Private.h"
 #import "DJICppWrapperCache+Private.h"
 #import "DJIError.h"
 #import "DJIMarshal+Private.h"
@@ -250,9 +251,11 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (BOOL)UnlockWallet:(nonnull NSString *)password {
++ (BOOL)UnlockWallet:(nonnull NSString *)password
+    timeoutInSeconds:(int64_t)timeoutInSeconds {
     try {
-        auto objcpp_result_ = ::ILibraryController::UnlockWallet(::djinni::String::toCpp(password));
+        auto objcpp_result_ = ::ILibraryController::UnlockWallet(::djinni::String::toCpp(password),
+                                                                 ::djinni::I64::toCpp(timeoutInSeconds));
         return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
@@ -264,10 +267,10 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (BOOL)IsWalletLocked {
++ (nonnull DBWalletLockStatus *)GetWalletLockStatus {
     try {
-        auto objcpp_result_ = ::ILibraryController::IsWalletLocked();
-        return ::djinni::Bool::fromCpp(objcpp_result_);
+        auto objcpp_result_ = ::ILibraryController::GetWalletLockStatus();
+        return ::djinni_generated::WalletLockStatus::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

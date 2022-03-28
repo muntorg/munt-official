@@ -5,9 +5,9 @@
         {{ tab.title }}
       </div>
     </div>
-    <div class="main">
+    <div class="main scrollable">
       <information-page v-if="current === 0" />
-      <debug-console v-if="current === 1" :value="console" :output="console.output" :commands="console.commands" @clear-output="clearOutput" />
+      <debug-console :show="current === 1" />
     </div>
   </div>
 </template>
@@ -27,12 +27,7 @@ export default {
         {
           title: "Console"
         }
-      ],
-      console: {
-        output: [],
-        commands: [],
-        idx: 0
-      }
+      ]
     };
   },
   components: {
@@ -45,9 +40,6 @@ export default {
     },
     setTab(index) {
       this.current = index;
-    },
-    clearOutput() {
-      this.console.output = [];
     }
   }
 };

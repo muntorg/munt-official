@@ -79,17 +79,24 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
 }
 
 + (void)setAccountCompounding:(nonnull NSString *)witnessAccountUUID
-               shouldCompound:(BOOL)shouldCompound {
+            percentToCompount:(int32_t)percentToCompount {
     try {
         ::IWitnessController::setAccountCompounding(::djinni::String::toCpp(witnessAccountUUID),
-                                                    ::djinni::Bool::toCpp(shouldCompound));
+                                                    ::djinni::I32::toCpp(percentToCompount));
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (BOOL)isAccountCompounding:(nonnull NSString *)witnessAccountUUID {
++ (int32_t)isAccountCompounding:(nonnull NSString *)witnessAccountUUID {
     try {
         auto objcpp_result_ = ::IWitnessController::isAccountCompounding(::djinni::String::toCpp(witnessAccountUUID));
-        return ::djinni::Bool::fromCpp(objcpp_result_);
+        return ::djinni::I32::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull NSString *)getWitnessAddress:(nonnull NSString *)witnessAccountUUID {
+    try {
+        auto objcpp_result_ = ::IWitnessController::getWitnessAddress(::djinni::String::toCpp(witnessAccountUUID));
+        return ::djinni::String::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

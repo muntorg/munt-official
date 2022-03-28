@@ -72,21 +72,30 @@ CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_00024CppProxy_setAccountCompounding(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID, jboolean j_shouldCompound)
+CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_00024CppProxy_setAccountCompounding(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID, jint j_percentToCompount)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         ::IWitnessController::setAccountCompounding(::djinni::String::toCpp(jniEnv, j_witnessAccountUUID),
-                                                    ::djinni::Bool::toCpp(jniEnv, j_shouldCompound));
+                                                    ::djinni::I32::toCpp(jniEnv, j_percentToCompount));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_00024CppProxy_isAccountCompounding(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID)
+CJNIEXPORT jint JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_00024CppProxy_isAccountCompounding(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::IWitnessController::isAccountCompounding(::djinni::String::toCpp(jniEnv, j_witnessAccountUUID));
-        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+        return ::djinni::release(::djinni::I32::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_00024CppProxy_getWitnessAddress(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IWitnessController::getWitnessAddress(::djinni::String::toCpp(jniEnv, j_witnessAccountUUID));
+        return ::djinni::release(::djinni::String::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 

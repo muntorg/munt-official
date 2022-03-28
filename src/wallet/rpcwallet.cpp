@@ -2233,21 +2233,6 @@ UniValue keypoolrefill(const JSONRPCRequest& request)
 }
 
 
-static void LockWallet(CWallet* pWallet)
-{
-    //NB!! It is highly important that this runs in a thread
-    //RPCRunLater calls this in the -main- http thread which blocks all RPC and can cause to RPC freezing for long periods of ti me in certain instances.
-    //fixme (FUT) (PERFORMANCE) - It would be better if we could feed this directly to an existing worker thread instead of constantly creating new threads, thread creation is expensive.
-    std::thread(
-        [=] 
-        {
-            DS_LOCK2(cs_main, pWallet->cs_wallet);
-            pWallet->nRelockTime = 0;
-            pWallet->Lock();
-        }
-    ).detach();
-}
-
 UniValue walletpassphrase(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -2291,9 +2276,10 @@ UniValue walletpassphrase(const JSONRPCRequest& request)
     // Alternately, find a way to make request.params[0] mlock()'d to begin with.
     strWalletPass = request.params[0].get_str().c_str();
 
+    int64_t nSleepTime = request.params[1].get_int64();
     if (strWalletPass.length() > 0)
     {
-        if (!pwallet->Unlock(strWalletPass)) {
+        if (!pwallet->UnlockWithTimeout(strWalletPass, nSleepTime)) {
             throw JSONRPCError(RPC_WALLET_PASSPHRASE_INCORRECT, "Error: The wallet passphrase entered was incorrect.");
         }
     }
@@ -2303,10 +2289,6 @@ UniValue walletpassphrase(const JSONRPCRequest& request)
             "Stores the wallet decryption key in memory for <timeout> seconds.");
 
     pwallet->TopUpKeyPool();
-
-    int64_t nSleepTime = request.params[1].get_int64();
-    pwallet->nRelockTime = GetTime() + nSleepTime;
-    RPCRunLater(strprintf("lockwallet(%s)", pwallet->GetName()), boost::bind(LockWallet, pwallet), nSleepTime);
 
     return NullUniValue;
 }
@@ -2397,7 +2379,6 @@ UniValue walletlock(const JSONRPCRequest& request)
     }
 
     pwallet->Lock();
-    pwallet->nRelockTime = 0;
 
     return NullUniValue;
 }

@@ -1193,6 +1193,31 @@ uint64_t combinedWeight(const std::vector<CAmount> amounts, uint64_t height, uin
     });
 }
 
+std::string witnessAddressForAccount(CWallet* pWallet, CAccount* account)
+{
+    LOCK2(cs_main, pWallet->cs_wallet);
+
+    if (chainActive.Tip())
+    {
+        std::map<COutPoint, Coin> allWitnessCoins;
+        if (getAllUnspentWitnessCoins(chainActive, Params(), chainActive.Tip(), allWitnessCoins))
+        {
+            for (const auto& [witnessOutPoint, witnessCoin] : allWitnessCoins)
+            {
+                (unused)witnessOutPoint;
+                CTxOutPoW2Witness witnessDetails;
+                GetPow2WitnessOutput(witnessCoin.out, witnessDetails);
+                if (account->HaveKey(witnessDetails.witnessKeyID))
+                {
+                    return CNativeAddress(CPoW2WitnessDestination(witnessDetails.spendingKeyID, witnessDetails.witnessKeyID)).ToString();
+                }
+            }
+        }
+    }
+
+    return "";
+}
+
 std::string witnessKeysLinkUrlForAccount(CWallet* pWallet, CAccount* account)
 {
     std::set<CKeyID> keys;

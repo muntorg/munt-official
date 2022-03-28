@@ -145,7 +145,7 @@ export default {
       this.isAddressInvalid = !LibraryController.IsValidNativeAddress(this.address);
 
       // wallet needs to be unlocked to make a payment
-      if (LibraryController.UnlockWallet(this.computedPassword) === false) {
+      if (LibraryController.UnlockWallet(this.computedPassword, 120) === false) {
         this.isPasswordInvalid = true;
       }
 
@@ -157,7 +157,8 @@ export default {
         componentProps: {
           amount: this.amount,
           address: this.address,
-          password: this.password
+          password: this.password,
+          subtractFee: false
         },
         showButtons: false
       });

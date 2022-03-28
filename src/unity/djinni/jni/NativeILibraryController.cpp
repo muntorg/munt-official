@@ -16,6 +16,7 @@
 #include "NativeTransactionRecord.hpp"
 #include "NativeUriRecipient.hpp"
 #include "NativeUriRecord.hpp"
+#include "NativeWalletLockStatus.hpp"
 
 namespace djinni_generated {
 
@@ -261,11 +262,12 @@ CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController_00024CppProxy_UnlockWallet(JNIEnv* jniEnv, jobject /*this*/, jstring j_password)
+CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController_00024CppProxy_UnlockWallet(JNIEnv* jniEnv, jobject /*this*/, jstring j_password, jlong j_timeoutInSeconds)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
-        auto r = ::ILibraryController::UnlockWallet(::djinni::String::toCpp(jniEnv, j_password));
+        auto r = ::ILibraryController::UnlockWallet(::djinni::String::toCpp(jniEnv, j_password),
+                                                    ::djinni::I64::toCpp(jniEnv, j_timeoutInSeconds));
         return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
@@ -279,12 +281,12 @@ CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController_00024CppProxy_IsWalletLocked(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_ILibraryController_00024CppProxy_GetWalletLockStatus(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
-        auto r = ::ILibraryController::IsWalletLocked();
-        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+        auto r = ::ILibraryController::GetWalletLockStatus();
+        return ::djinni::release(::djinni_generated::NativeWalletLockStatus::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 

@@ -1170,7 +1170,15 @@ void CAccount::setLabel(const std::string& label, CWalletDB* Db)
 
 CAmount CAccount::getCompounding() const
 {
-    return compoundEarnings;
+    // If compound earnings percent is set in any way then it overrides this, in which case we always set 0.
+    if (compoundEarningsPercent == std::numeric_limits<int32_t>::max())
+    {
+        return compoundEarnings;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 void CAccount::setCompounding(CAmount compoundAmount_, CWalletDB* Db)
@@ -1183,7 +1191,40 @@ void CAccount::setCompounding(CAmount compoundAmount_, CWalletDB* Db)
     if (Db)
     {
         Db->EraseAccountCompoundingSettings(getUUIDAsString(getUUID()));
-        Db->WriteAccountCompoundingSettings(getUUIDAsString(getUUID()), compoundEarnings);
+        if (compoundEarnings > 0)
+        {
+            Db->WriteAccountCompoundingSettings(getUUIDAsString(getUUID()), compoundEarnings);
+        }
+    }
+}
+
+
+int32_t CAccount::getCompoundingPercent() const
+{
+    return compoundEarningsPercent;
+}
+
+void CAccount::setCompoundingPercent(int32_t compoundPercent_, CWalletDB* Db)
+{
+    if (pactiveWallet)
+    {
+        dynamic_cast<CExtWallet*>(pactiveWallet)->NotifyAccountCompoundingChanged(pactiveWallet, this);
+    }
+    if (Db)
+    {
+        Db->EraseAccountCompoundingSettings(getUUIDAsString(getUUID()));
+    }
+    if (compoundPercent_ == 0)
+    {
+        compoundEarningsPercent = std::numeric_limits<int32_t>::max();
+    }
+    else
+    {
+        compoundEarningsPercent = compoundPercent_;
+        if (Db)
+        {
+            Db->WriteAccountCompoundingSettings(getUUIDAsString(getUUID()), compoundEarningsPercent);
+        }
     }
 }
 

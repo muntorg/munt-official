@@ -10,6 +10,7 @@
 /** Interface to receive wallet level events */
 @protocol DBIWalletListener
 
+/** Notification of change in overall wallet balance */
 - (void)notifyBalanceChange:(nonnull DBBalanceRecord *)newBalance;
 
 /**
@@ -32,5 +33,19 @@
  * Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
  */
 - (void)notifyUpdatedTransaction:(nonnull DBTransactionRecord *)transaction;
+
+/** Wallet unlocked */
+- (void)notifyWalletUnlocked;
+
+/** Wallet locked */
+- (void)notifyWalletLocked;
+
+/** Core wants the wallet to unlock; UI should respond to this by calling 'UnlockWallet' */
+- (void)notifyCoreWantsUnlock:(nonnull NSString *)reason;
+
+/** Core wants display info to the user, type can be one of "MSG_ERROR", "MSG_WARNING", "MSG_INFORMATION"; caption is the suggested caption and message the suggested message to display */
+- (void)notifyCoreInfo:(nonnull NSString *)type
+               caption:(nonnull NSString *)caption
+               message:(nonnull NSString *)message;
 
 @end

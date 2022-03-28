@@ -36,6 +36,10 @@ private:
         void notifyBalanceChange(const ::BalanceRecord & new_balance) override;
         void notifyNewMutation(const ::MutationRecord & mutation, bool self_committed) override;
         void notifyUpdatedTransaction(const ::TransactionRecord & transaction) override;
+        void notifyWalletUnlocked() override;
+        void notifyWalletLocked() override;
+        void notifyCoreWantsUnlock(const std::string & reason) override;
+        void notifyCoreInfo(const std::string & type, const std::string & caption, const std::string & message) override;
 
     private:
         friend ::djinni::JniInterface<::IWalletListener, ::djinni_generated::NativeIWalletListener>;
@@ -45,6 +49,10 @@ private:
     const jmethodID method_notifyBalanceChange { ::djinni::jniGetMethodID(clazz.get(), "notifyBalanceChange", "(Lcom/gulden/jniunifiedbackend/BalanceRecord;)V") };
     const jmethodID method_notifyNewMutation { ::djinni::jniGetMethodID(clazz.get(), "notifyNewMutation", "(Lcom/gulden/jniunifiedbackend/MutationRecord;Z)V") };
     const jmethodID method_notifyUpdatedTransaction { ::djinni::jniGetMethodID(clazz.get(), "notifyUpdatedTransaction", "(Lcom/gulden/jniunifiedbackend/TransactionRecord;)V") };
+    const jmethodID method_notifyWalletUnlocked { ::djinni::jniGetMethodID(clazz.get(), "notifyWalletUnlocked", "()V") };
+    const jmethodID method_notifyWalletLocked { ::djinni::jniGetMethodID(clazz.get(), "notifyWalletLocked", "()V") };
+    const jmethodID method_notifyCoreWantsUnlock { ::djinni::jniGetMethodID(clazz.get(), "notifyCoreWantsUnlock", "(Ljava/lang/String;)V") };
+    const jmethodID method_notifyCoreInfo { ::djinni::jniGetMethodID(clazz.get(), "notifyCoreInfo", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V") };
 };
 
 }  // namespace djinni_generated

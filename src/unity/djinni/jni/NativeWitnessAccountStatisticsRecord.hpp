@@ -25,7 +25,7 @@ private:
     friend ::djinni::JniClass<NativeWitnessAccountStatisticsRecord>;
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/WitnessAccountStatisticsRecord") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;JJJJJJJJJJJJZ)V") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;JJJJJJJJJJJJI)V") };
     const jfieldID field_mRequestStatus { ::djinni::jniGetFieldID(clazz.get(), "mRequestStatus", "Ljava/lang/String;") };
     const jfieldID field_mAccountStatus { ::djinni::jniGetFieldID(clazz.get(), "mAccountStatus", "Ljava/lang/String;") };
     const jfieldID field_mAccountWeight { ::djinni::jniGetFieldID(clazz.get(), "mAccountWeight", "J") };
@@ -40,7 +40,7 @@ private:
     const jfieldID field_mAccountExpectedWitnessPeriodInBlocks { ::djinni::jniGetFieldID(clazz.get(), "mAccountExpectedWitnessPeriodInBlocks", "J") };
     const jfieldID field_mAccountEstimatedWitnessPeriodInBlocks { ::djinni::jniGetFieldID(clazz.get(), "mAccountEstimatedWitnessPeriodInBlocks", "J") };
     const jfieldID field_mAccountInitialLockCreationBlockHeight { ::djinni::jniGetFieldID(clazz.get(), "mAccountInitialLockCreationBlockHeight", "J") };
-    const jfieldID field_mAccountIsCompounding { ::djinni::jniGetFieldID(clazz.get(), "mAccountIsCompounding", "Z") };
+    const jfieldID field_mCompoundingPercent { ::djinni::jniGetFieldID(clazz.get(), "mCompoundingPercent", "I") };
 };
 
 }  // namespace djinni_generated

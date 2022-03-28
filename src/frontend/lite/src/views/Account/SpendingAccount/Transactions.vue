@@ -1,6 +1,6 @@
 <template>
   <div class="transactions-view">
-    <div v-if="hasMutations">
+    <div v-if="hasMutations" class="flex">
       <div class="mutations-list" v-for="(mutation, index) in mutations" :key="mutation.txHash">
         <h4 v-if="showDateHeader(index)">
           {{ formatDateHeader(mutation.timestamp) }}
@@ -17,10 +17,9 @@
         </div>
       </div>
     </div>
-    <div v-else class="new-wallet flex-col">
-      <h2>{{ $t("new_wallet.title") }}</h2>
-      <p v-html="$t('new_wallet.information')" class="information"></p>
-      <div class="flex-1" />
+
+    <content-wrapper class="flex" v-else heading="new_wallet.title" content="new_wallet.information">
+      <div class="flex-1"></div>
       <app-button-section>
         <template v-slot:middle>
           <button @click="buyCoins" class="buy-coins" :disabled="buyDisabled">
@@ -28,7 +27,7 @@
           </button>
         </template>
       </app-button-section>
-    </div>
+    </content-wrapper>
   </div>
 </template>
 
@@ -130,6 +129,12 @@ export default {
   height: 100%;
 }
 
+.flex {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .mutations-list:not(:first-child) > h4 {
   margin-top: 30px;
 }
@@ -160,6 +165,11 @@ h4 {
 
   & > .tx-details {
     font-size: 0.85em;
+    width: 100%;
+    margin-right: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   & .amount {

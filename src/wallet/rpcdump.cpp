@@ -719,7 +719,7 @@ UniValue removeallorphans(const JSONRPCRequest& request)
     uint64_t numErased;
     uint64_t numDetected;
     std::string strError;
-    bool success = pwallet->RemoveAllOrphans(numErased, numDetected, strError);
+    bool success = (pwallet->RemoveAllOrphans(numErased, numDetected, strError) == DB_LOAD_OK);
     
     UniValue result(UniValue::VOBJ);
     result.push_back(std::pair("succeeded", success));

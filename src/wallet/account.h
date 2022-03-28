@@ -374,8 +374,17 @@ public:
     //! If compoundAmount is positive - rewards up to amount compoundAmount are compounded and the remainder not.
     //! If compoundAmount is negative - the first compoundAmount earnings are not compounded and the remainder is.
     //! If the amount to be compounded exceeds network rules it will be truncated to the network maximum and the remainder will go to a non-compound output.
+    //! If both this and compounding percent are set then compounding percent will override this
     void setCompounding(CAmount compoundAmount, CWalletDB* Db);
     CAmount getCompounding() const;
+    
+    //! Sets whether a witness account should compound earnings as a percentage or not.
+    //! 0 sets compounding off.
+    //! If compoundAmount is non zero - then this percentage of the rewards are compounded and the remainder not.
+    //! If the amount to be compounded exceeds network rules it will be truncated to the network maximum and the remainder will go to a non-compound output.
+    //! If both this and compounding are set then this will override compounding percent
+    void setCompoundingPercent(int32_t compoundPercent, CWalletDB* Db);
+    int32_t getCompoundingPercent() const;
 
     //! Sets a script that should be used to handle the portion of witnessing rewards not compounded via 'setCompounding'.
     //! See 'setCompounding' for a description on how to control which rewards go where.
@@ -414,6 +423,7 @@ protected:
     boost::uuids::uuid parentUUID;
     std::string accountLabel;
     CAmount compoundEarnings = 0;
+    int32_t compoundEarningsPercent = std::numeric_limits<int32_t>::max();
     CScript nonCompoundRewardScript;
     CWitnessRewardTemplate rewardTemplate;
     uint64_t earliestPossibleCreationTime;

@@ -30,6 +30,7 @@ struct QrCodeRecord;
 struct TransactionRecord;
 struct UriRecipient;
 struct UriRecord;
+struct WalletLockStatus;
 
 /**
  * The library controller is used to Init/Terminate the library, and other similar tasks.
@@ -128,13 +129,13 @@ public:
      */
     static std::vector<std::string> GetMnemonicDictionary();
 
-    /** Unlock wallet */
-    static bool UnlockWallet(const std::string & password);
+    /** Unlock wallet; wallet will automatically relock after "timeout_in_seconds" */
+    static bool UnlockWallet(const std::string & password, int64_t timeout_in_seconds);
 
     /** Forcefully lock wallet again */
     static bool LockWallet();
 
-    static bool IsWalletLocked();
+    static WalletLockStatus GetWalletLockStatus();
 
     /** Change the wallet password */
     static bool ChangePassword(const std::string & oldPassword, const std::string & newPassword);

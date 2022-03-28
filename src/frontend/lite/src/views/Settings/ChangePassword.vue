@@ -1,24 +1,21 @@
 <template>
   <div class="change-password-view">
-    <h2>
-      <span v-if="current === 1">{{ $t("common.enter_your_password") }}</span>
-      <span v-else>{{ $t("setup.choose_password") }}</span>
-    </h2>
-
-    <!-- step 1: Enter old password -->
-    <app-form-field v-if="current === 1" :title="$t('common.password')">
-      <input ref="passwordold" type="password" v-model="passwordold" @keydown="validatePasswordOnEnter" :class="passwordOldStatus" />
-    </app-form-field>
+    <!-- step 1:  Enter old password -->
+    <content-wrapper v-if="current === 1" heading="common.enter_your_password">
+      <app-form-field>
+        <input ref="password" type="password" v-model="passwordold" @keydown="validatePasswordOnEnter" :class="passwordOldStatus" />
+      </app-form-field>
+    </content-wrapper>
 
     <!-- step 2: enter new password -->
-    <div v-else>
-      <app-form-field :title="$t('common.password')">
-        <input ref="password1" type="password" v-model="password1" />
+    <content-wrapper v-else content="setup.choose_password">
+      <app-form-field title="common.password">
+        <input ref="password1" type="password" v-model="password1" :class="password2Status" />
       </app-form-field>
-      <app-form-field :title="$t('setup.repeat_password')">
+      <app-form-field title="setup.repeat_password">
         <input type="password" v-model="password2" :class="password2Status" @keydown="validatePasswordRepeatOnEnter" />
       </app-form-field>
-    </div>
+    </content-wrapper>
 
     <div class="flex-1" />
     <portal v-if="!UIConfig.showSidebar" to="footer-slot">
@@ -118,7 +115,7 @@ export default {
       if (event.keyCode === 13 && this.passwordsValidated) this.nextStep();
     },
     validatePassword() {
-      if (LibraryController.UnlockWallet(this.passwordold)) {
+      if (LibraryController.UnlockWallet(this.passwordold, 120)) {
         LibraryController.LockWallet();
         this.current++;
         this.$nextTick(() => {

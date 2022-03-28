@@ -13,5 +13,6 @@
 #include "transaction_record.hpp"
 #include "uri_recipient.hpp"
 #include "uri_record.hpp"
+#include "wallet_lock_status.hpp"
 
 int32_t constexpr ILibraryController::VERSION;

@@ -1,23 +1,19 @@
 <template>
   <div class="view-recovery-phrase-view">
     <div>
-      <h2>
-        <span v-if="current === 1">{{ $t("common.enter_your_password") }}</span>
-        <span class="important" v-else>{{ $t("common.important") }}</span>
-      </h2>
-
       <!-- step 1: Enter password -->
-      <app-form-field :title="$t('common.password')" v-if="current === 1">
-        <input ref="password" type="password" v-model="password" @keydown="getRecoveryPhraseOnEnter" :class="computedStatus" />
-      </app-form-field>
+      <content-wrapper v-if="current === 1" heading="common.enter_your_password">
+        <app-form-field>
+          <input ref="password" type="password" v-model="password" @keydown="getRecoveryPhraseOnEnter" :class="computedStatus" />
+        </app-form-field>
+      </content-wrapper>
 
       <!-- step 2: Show recovery phrase -->
-      <div v-else>
-        <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
+      <content-wrapper v-else heading="common.important" heading-style="warning" content="setup.this_is_your_recovery_phrase">
         <app-section class="phrase">
           {{ recoveryPhrase }}
         </app-section>
-      </div>
+      </content-wrapper>
     </div>
 
     <div v-if="UIConfig.showSidebar">
@@ -93,7 +89,7 @@ export default {
       if (event.keyCode === 13) this.getRecoveryPhrase();
     },
     getRecoveryPhrase() {
-      if (LibraryController.UnlockWallet(this.password)) {
+      if (LibraryController.UnlockWallet(this.password, 120)) {
         this.recoveryPhrase = LibraryController.GetRecoveryPhrase().phrase;
         LibraryController.LockWallet();
       } else {

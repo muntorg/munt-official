@@ -47,6 +47,7 @@
 #include "monitor_listener.hpp"
 #include "payment_result_status.hpp"
 #include "mnemonic_record.hpp"
+#include "wallet_lock_status.hpp"
 #ifdef __ANDROID__
 #include "djinni_support.hpp"
 #endif
@@ -122,7 +123,7 @@ std::string getRecipientAddressesForWalletTransaction(CAccount* forAccount, CWal
         {
             isMine = true;
         }
-        if ((isSentByUs && !isMine) || (!isSentByUs && isMine))
+        if ((isSentByUs && !isMine) || (!isSentByUs && isMine) || (wtx->tx->IsPoW2WitnessCoinBase() && isMine))
         {
             CNativeAddress addr;
             CTxDestination dest;
@@ -150,7 +151,7 @@ void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord
 
     int64_t subtracted = wtx->GetDebit(ISMINE_SPENDABLE, forAccount, true);
     int64_t added = wtx->GetCredit(ISMINE_SPENDABLE, forAccount, true) +
-                    wtx->GetImmatureCredit(false, forAccount, true);
+                    wtx->GetImmatureCreditIncludingLockedWitnesses(false, forAccount, true);
 
     uint64_t time = wtx->nTimeSmart;
     std::string hash = wtx->GetHash().ToString();
@@ -170,10 +171,19 @@ void addMutationsForTransaction(const CWalletTx* wtx, std::vector<MutationRecord
         if (subtracted - fee == added)
         {
             // amount received
-            mutations.push_back(MutationRecord(added - change, time, hash, recipientAddresses, status, depth));
+            bool receivedZero = (added - change == 0);
+            if (!receivedZero)
+            {
+                mutations.push_back(MutationRecord(added - change, time, hash, recipientAddresses, status, depth));
+            }
 
             // amount send including fee
-            mutations.push_back(MutationRecord(change - subtracted, time, hash, recipientAddresses, status, depth));
+            // If we didn't add a transaction for received then add one here (even if zero) as it may be a special data transaction or something similar.
+            bool sendZero = (change - subtracted == 0);
+            if (!sendZero || receivedZero)
+            {
+                mutations.push_back(MutationRecord(change - subtracted, time, hash, recipientAddresses, status, depth));
+            }
         }
         else
         {
@@ -972,6 +982,15 @@ void InitAppSpecificConfigParamaters()
             SoftSetArg("-reverseheaders", "false");
         #endif
     }
+    else
+    {
+        #ifdef DJINNI_NODEJS
+        SoftSetArg("-accountpool", "3");
+        SoftSetArg("-accountpoolmobi", "1");
+        SoftSetArg("-accountpoolwitness", "2");
+        SoftSetArg("-keypool", "20");
+        #endif
+    }
     
     SoftSetArg("-spvstaticfilterfile", staticFilterPath_);
     SoftSetArg("-spvstaticfilterfileoffset", i64tostr(staticFilterOffset_));
@@ -1138,8 +1157,7 @@ std::vector<std::string> ILibraryController::GetMnemonicDictionary()
 }
 
 
-//fixme: (UNITY) HIGH - take a timeout value and always lock again after timeout
-bool ILibraryController::UnlockWallet(const std::string& password)
+bool ILibraryController::UnlockWallet(const std::string& password, int64_t lockTimeoutSeconds)
 {
     if (!pactiveWallet)
     {
@@ -1153,7 +1171,7 @@ bool ILibraryController::UnlockWallet(const std::string& password)
         return false;
     }
 
-    return pactiveWallet->Unlock(password.c_str());
+    return pactiveWallet->UnlockWithTimeout(password.c_str(), lockTimeoutSeconds);
 }
 
 bool ILibraryController::LockWallet()
@@ -1170,15 +1188,19 @@ bool ILibraryController::LockWallet()
     return dynamic_cast<CExtWallet*>(pactiveWallet)->Lock();
 }
 
-bool ILibraryController::IsWalletLocked()
+WalletLockStatus ILibraryController::GetWalletLockStatus()
 {
+    WalletLockStatus status(false, 0);
     if (!pactiveWallet)
     {
-        LogPrintf("LockWallet: No active wallet");
-        return false;
+        LogPrintf("WalletLockStatus: No active wallet");
+        return status;
     }
 
-    return dynamic_cast<CExtWallet*>(pactiveWallet)->IsLocked();
+    status.locked = dynamic_cast<CExtWallet*>(pactiveWallet)->IsLocked();
+    status.lock_timeout = pactiveWallet->nRelockTime;
+    
+    return status;
 }
 
 bool ILibraryController::ChangePassword(const std::string& oldPassword, const std::string& newPassword)

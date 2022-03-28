@@ -32,9 +32,12 @@
 
 /** Turn compounding on/off */
 + (void)setAccountCompounding:(nonnull NSString *)witnessAccountUUID
-               shouldCompound:(BOOL)shouldCompound;
+            percentToCompount:(int32_t)percentToCompount;
 
-/** Check state of compounding */
-+ (BOOL)isAccountCompounding:(nonnull NSString *)witnessAccountUUID;
+/** Check state of compounding; returns a percentage between 1 and 100, or 0 if not compounding */
++ (int32_t)isAccountCompounding:(nonnull NSString *)witnessAccountUUID;
+
+/** Get the witness address of the account */
++ (nonnull NSString *)getWitnessAddress:(nonnull NSString *)witnessAccountUUID;
 
 @end

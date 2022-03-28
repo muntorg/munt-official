@@ -36,8 +36,8 @@ struct WitnessAccountStatisticsRecord final {
     int64_t account_estimated_witness_period_in_blocks;
     /** Height at which the account lock first entered the chain */
     int64_t account_initial_lock_creation_block_height;
-    /** Is this account currently set to compound */
-    bool account_is_compounding;
+    /** How much of the reward that this account earns is set to be compound */
+    int32_t compounding_percent;
 
     WitnessAccountStatisticsRecord(std::string request_status_,
                                    std::string account_status_,
@@ -53,7 +53,7 @@ struct WitnessAccountStatisticsRecord final {
                                    int64_t account_expected_witness_period_in_blocks_,
                                    int64_t account_estimated_witness_period_in_blocks_,
                                    int64_t account_initial_lock_creation_block_height_,
-                                   bool account_is_compounding_)
+                                   int32_t compounding_percent_)
     : request_status(std::move(request_status_))
     , account_status(std::move(account_status_))
     , account_weight(std::move(account_weight_))
@@ -68,6 +68,6 @@ struct WitnessAccountStatisticsRecord final {
     , account_expected_witness_period_in_blocks(std::move(account_expected_witness_period_in_blocks_))
     , account_estimated_witness_period_in_blocks(std::move(account_estimated_witness_period_in_blocks_))
     , account_initial_lock_creation_block_height(std::move(account_initial_lock_creation_block_height_))
-    , account_is_compounding(std::move(account_is_compounding_))
+    , compounding_percent(std::move(compounding_percent_))
     {}
 };

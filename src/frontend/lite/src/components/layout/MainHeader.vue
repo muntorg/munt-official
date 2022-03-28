@@ -3,10 +3,10 @@
     <div v-if="UIConfig.showHeaderLogo" class="logo" />
     <div>
       <div class="title ellipsis">
-        {{ title }}
+        {{ $t(title) }}
       </div>
       <div class="subtitle ellipsis" v-if="hasSubtitle">
-        {{ subtitle }}
+        {{ $t(subtitle) }}
       </div>
     </div>
   </div>
@@ -18,12 +18,18 @@ import UIConfig from "../../../ui-config.json";
 export default {
   name: "MainHeader",
   props: {
-    title: null,
-    subtitle: undefined
+    title: {
+      type: String,
+      default: null
+    },
+    subtitle: {
+      type: String,
+      default: null
+    }
   },
   computed: {
     hasSubtitle() {
-      return this.subtitle !== undefined;
+      return this.subtitle && this.subtitle.trim().length > 0;
     },
     mainHeaderClass() {
       return this.hasSubtitle ? "" : "no-subtitle";

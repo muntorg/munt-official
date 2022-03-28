@@ -10,6 +10,7 @@
 #include "mutation_record.hpp"
 #include "output_record.hpp"
 #include "transaction_record.hpp"
+#include <string>
 
 #include <napi.h>
 #include <uv.h>
@@ -24,6 +25,7 @@ public:
     static Napi::Object Init(Napi::Env env, Napi::Object exports);
     NJSIWalletListener(const Napi::CallbackInfo& info) : Napi::ObjectWrap<NJSIWalletListener>(info){};
 
+    /** Notification of change in overall wallet balance */
     void notifyBalanceChange(const BalanceRecord & new_balance);
 
     /**
@@ -46,7 +48,20 @@ public:
      */
     void notifyUpdatedTransaction(const TransactionRecord & transaction);
 
+    /** Wallet unlocked */
+    void notifyWalletUnlocked();
+
+    /** Wallet locked */
+    void notifyWalletLocked();
+
+    /** Core wants the wallet to unlock; UI should respond to this by calling 'UnlockWallet' */
+    void notifyCoreWantsUnlock(const std::string & reason);
+
+    /** Core wants display info to the user, type can be one of "MSG_ERROR", "MSG_WARNING", "MSG_INFORMATION"; caption is the suggested caption and message the suggested message to display */
+    void notifyCoreInfo(const std::string & type, const std::string & caption, const std::string & message);
+
 private:
+    /** Notification of change in overall wallet balance */
     void notifyBalanceChange(const Napi::CallbackInfo& info);
     void notifyBalanceChange_aimpl__(const BalanceRecord & new_balance);
 
@@ -71,6 +86,22 @@ private:
      */
     void notifyUpdatedTransaction(const Napi::CallbackInfo& info);
     void notifyUpdatedTransaction_aimpl__(const TransactionRecord & transaction);
+
+    /** Wallet unlocked */
+    void notifyWalletUnlocked(const Napi::CallbackInfo& info);
+    void notifyWalletUnlocked_aimpl__();
+
+    /** Wallet locked */
+    void notifyWalletLocked(const Napi::CallbackInfo& info);
+    void notifyWalletLocked_aimpl__();
+
+    /** Core wants the wallet to unlock; UI should respond to this by calling 'UnlockWallet' */
+    void notifyCoreWantsUnlock(const Napi::CallbackInfo& info);
+    void notifyCoreWantsUnlock_aimpl__(const std::string & reason);
+
+    /** Core wants display info to the user, type can be one of "MSG_ERROR", "MSG_WARNING", "MSG_INFORMATION"; caption is the suggested caption and message the suggested message to display */
+    void notifyCoreInfo(const Napi::CallbackInfo& info);
+    void notifyCoreInfo_aimpl__(const std::string & type, const std::string & caption, const std::string & message);
 
 };
 #endif //DJINNI_GENERATED_NJSIWALLETLISTENER_HPP

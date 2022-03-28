@@ -125,6 +125,11 @@ mnemonic_record = record {
     birth_number : i64;
 }
 
+wallet_lock_status = record {
+    locked : bool;
+    lock_timeout : i64;
+}
+
 # The library controller is used to Init/Terminate the library, and other similar tasks.
 # It is also home to various generic utility functions that don't (yet) have a place in more specific controllers
 # Specific functionality should go in specific controllers; account related functionality -> accounts_controller, network related functionality -> network_controller and so on
@@ -206,13 +211,13 @@ i_library_controller = interface +c {
     # This function should only be used for input validation/auto-completion
     static GetMnemonicDictionary(): list<string>;
 
-    # Unlock wallet
-    static UnlockWallet(password: string): bool;
+    # Unlock wallet; wallet will automatically relock after "timeout_in_seconds"
+    static UnlockWallet(password: string, timeout_in_seconds: i64): bool;
 
     # Forcefully lock wallet again
     static LockWallet(): bool;
     
-    static IsWalletLocked() : bool;
+    static GetWalletLockStatus() : wallet_lock_status;
 
     # Change the wallet password
     static ChangePassword(oldPassword: string, newPassword: string) : bool;
@@ -316,7 +321,9 @@ i_wallet_controller = interface +c {
 
 # Interface to receive wallet level events
 i_wallet_listener = interface +j +o +n {
+    # Notification of change in overall wallet balance
     notifyBalanceChange(new_balance : balance_record): &;
+    
     # Notification of new mutations.
     # If self_committed it is due to a call to performPaymentToRecipient, else it is because of a transaction
     # reached us in another way. In general this will be because we received funds from someone, hower there are
@@ -332,6 +339,18 @@ i_wallet_listener = interface +j +o +n {
     # Note that no notifyUpdatedTransaction events will fire until after 'notifySyncDone'
     # Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
     notifyUpdatedTransaction(transaction : transaction_record): &;
+    
+    # Wallet unlocked
+    notifyWalletUnlocked(): &;
+    
+    # Wallet locked
+    notifyWalletLocked(): &;
+    
+    # Core wants the wallet to unlock; UI should respond to this by calling 'UnlockWallet'
+    notifyCoreWantsUnlock(reason : string): &;
+    
+    # Core wants display info to the user, type can be one of "MSG_ERROR", "MSG_WARNING", "MSG_INFORMATION"; caption is the suggested caption and message the suggested message to display
+    notifyCoreInfo(type : string, caption : string, message : string): &;
 }
 
 # monitoring stats
@@ -570,8 +589,8 @@ witness_account_statistics_record = record {
     # Height at which the account lock first entered the chain
     account_initial_lock_creation_block_height : i64;
 
-    # Is this account currently set to compound
-    account_is_compounding : bool;
+    # How much of the reward that this account earns is set to be compound
+    compounding_percent : i32;
 } deriving(parcelable)
 
 # C++ interface to control witness accounts
@@ -592,10 +611,13 @@ i_witness_controller = interface +c {
     static getAccountWitnessStatistics(witnessAccountUUID : string) : witness_account_statistics_record;
     
     # Turn compounding on/off
-    static setAccountCompounding(witnessAccountUUID : string, should_compound : bool);
+    static setAccountCompounding(witnessAccountUUID : string, percent_to_compount : i32);
     
-    # Check state of compounding
-    static isAccountCompounding(witnessAccountUUID : string) : bool;
+    # Check state of compounding; returns a percentage between 1 and 100, or 0 if not compounding
+    static isAccountCompounding(witnessAccountUUID : string) : i32;
+    
+    # Get the witness address of the account
+    static getWitnessAddress(witnessAccountUUID : string): string;
 }
 
 # C++ interface to control generation of blocks (proof of work)
