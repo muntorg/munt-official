@@ -1,4 +1,4 @@
-packages:=boost openssl
+packages:=boost openssl qrencode protobuf
 
 ifneq ($(host_os),ios)
 ifneq ($(host_flavor),android)
