@@ -287,6 +287,9 @@ void CoreShutdown(boost::thread_group& threadGroup, node::NodeContext& nodeConte
     }
     #endif
 
+    UnregisterAllValidationInterfaces();
+    GetMainSignals().UnregisterBackgroundSignalScheduler();
+
     LogPrintf("Core shutdown: unregister validation interfaces.\n");
     #ifndef WIN32
     try
@@ -1157,12 +1160,14 @@ bool AppInitMain(boost::thread_group& threadGroup, node::NodeContext& node)
     if (nScriptCheckThreads >= 1) {
         StartScriptCheckWorkerThreads(nScriptCheckThreads);
     }
-    
+
     assert(!node.scheduler);
     node.scheduler = std::make_unique<CScheduler>();
 
     // Start the lightweight task scheduler thread
     node.scheduler->m_service_thread = std::thread(&TraceThread<std::function<void()> >, "scheduler", std::function<void()>([&] { node.scheduler->serviceQueue(); }));
+
+    GetMainSignals().RegisterBackgroundSignalScheduler(*node.scheduler);
 
 #ifdef ENABLE_WALLET
     // InitRPCMining is needed here so getblocktemplate in the GUI debug console works properly.
