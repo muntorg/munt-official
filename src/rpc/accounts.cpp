@@ -1883,10 +1883,10 @@ static UniValue getlinkedaccount(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
             "getlinkedaccount \"account\" \n"
-            "\nImport a linked account from an \"encoded_key_uri\"\n"
+            "\nExport an \"encoded_key_uri\" for an account, import into another wallet using 'importlinkedaccount'\n"
             "1. \"account\"       (string) Name to assign to the new account.\n"
             "\nResult:\n"
-            "\nReturn the encoded_key_uri of the account which can then be imported into another wallet via 'importlinkedaccount'.\n"
+            "\nReturn the encoded_key_uri of the account\n"
             "\nExamples:\n"
             + HelpExampleCli("getlinkedaccount \"Linked account\" \"", "")
             + HelpExampleRpc("getlinkedaccount \"Linked account\" \"", ""));
