@@ -290,7 +290,7 @@ WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(c
     WitnessInfoForAccount infoForAccount;
     if (!GetWitnessInfoForAccount(witnessAccount, infoForAccount))
     {
-        return WitnessAccountStatisticsRecord("failed to get witness info for account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
+        return WitnessAccountStatisticsRecord("failed to get witness info for account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
     }
     std::string accountStatus;
     switch (infoForAccount.accountStatus.status)

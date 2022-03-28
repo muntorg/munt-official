@@ -368,7 +368,7 @@ void WitnessDialog::extendClicked()
         const auto accountStatus = GetWitnessAccountStatus(pactiveWallet, witnessAccount);
         uint64_t durationRemaining = GetPoW2RemainingLockLengthInBlocks(accountStatus.nLockUntilBlock, chainActive.Tip()->nHeight);
 
-        pushDialog(new FundWitnessDialog(lockedAmount, durationRemaining, accountStatus.accountWeight + 1, model, platformStyle, this));
+        pushDialog(new FundWitnessDialog(lockedAmount, durationRemaining, accountStatus.currentWeight + 1, model, platformStyle, this));
     } catch (std::runtime_error& e) {
         GUI::createDialog(this, e.what(), tr("Okay"), QString(""), 400, 180)->exec();
     }
@@ -504,13 +504,13 @@ WitnessInfoForAccount WitnessDialog::GetWitnessInfoForAccount(CAccount* forAccou
     infoForAccount.accountStatus = accountStatus;
 
     infoForAccount.nTotalNetworkWeightTip = accountStatus.networkWeight;
-    infoForAccount.nOurWeight = accountStatus.accountWeight;
+    infoForAccount.nOurWeight = accountStatus.currentWeight;
 
     // the lock period could have been different initially if it was extended, this is not accounted for
     infoForAccount.nOriginLength = accountStatus.nLockPeriodInBlocks;
 
     // if the witness was extended or rearranged the initial weight will have been different, this is not accounted for
-    infoForAccount.nOriginWeight = accountStatus.accountWeight;
+    infoForAccount.nOriginWeight = accountStatus.originWeight;
 
     LOCK(cs_main);
     infoForAccount.nOriginBlock = accountStatus.nLockFromBlock;
