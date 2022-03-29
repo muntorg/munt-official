@@ -37,6 +37,59 @@ static CRateLimit<int>* walletBalanceChangeNotifier=nullptr;
 
 extern bool syncDoneFired;
 
+#ifdef ENABLE_WALLET
+void NotifyRequestUnlockS(CWallet* wallet, std::string reason)
+{
+    if (walletListener)
+    {
+        walletListener->notifyCoreWantsUnlock(reason);
+    }
+}
+
+void NotifyRequestUnlockWithCallbackS(CWallet* wallet, std::string reason, std::function<void (void)> successCallback)
+{
+    if (walletListener)
+    {
+        walletListener->notifyCoreWantsUnlock(reason);
+    }
+    //fixme: (UNITY) (HIGH)
+    //Need to be able to get a response here and deal with the callback, or else fix the code that relies on this
+    //successCallback();
+}
+#endif
+
+bool unityMessageBox(const std::string& message, const std::string& caption, unsigned int style)
+{
+    bool fSecure = style & CClientUIInterface::SECURE;
+    style &= ~CClientUIInterface::SECURE;
+    
+    std::string strType;
+    switch (style)
+    {
+        case CClientUIInterface::MSG_ERROR:
+            strType = "MSG_ERROR";
+            break;
+        case CClientUIInterface::MSG_WARNING:
+            strType = "MSG_WARNING";
+            break;
+        case CClientUIInterface::MSG_INFORMATION:
+            strType = "MSG_INFORMATION";
+            break;
+        default:
+            break;
+    }
+
+    if (!fSecure)
+        LogPrintf("%s: %s\n", strType, caption, message);
+    
+    if (walletListener)
+    {
+        walletListener->notifyCoreInfo(strType, caption, message);
+    }
+    
+    return false;
+}
+
 void IWalletController::setListener(const std::shared_ptr<IWalletListener>& walletListener_)
 {
     walletListener = walletListener_;
@@ -75,6 +128,19 @@ void IWalletController::setListener(const std::shared_ptr<IWalletListener>& wall
             }
         }, std::chrono::milliseconds(NEW_MUTATIONS_NOTIFY_THRESHOLD_MS));
 
+        // Fire events for lock status changes
+        pactiveWallet->NotifyLockingChanged.connect( [&](const bool isLocked)
+        {
+            if (isLocked)
+            {
+                walletListener->notifyWalletLocked();
+            }
+            else
+            {
+                walletListener->notifyWalletUnlocked();
+            }
+        } );
+
         // Fire events for transaction depth changes (up to depth 10 only)
         pactiveWallet->NotifyTransactionDepthChanged.connect( [&](CWallet* pwallet, const uint256& hash)
         {
@@ -102,6 +168,7 @@ void IWalletController::setListener(const std::shared_ptr<IWalletListener>& wall
                 }
             }
         } );
+
         // Fire events for transaction status changes, or new transactions (this won't fire for simple depth changes)
         pactiveWallet->NotifyTransactionChanged.connect( [&](CWallet* pwallet, const uint256& hash, ChangeType status, bool fSelfComitted) {
             if (syncDoneFired)

@@ -32,8 +32,11 @@ public:
     static WitnessAccountStatisticsRecord getAccountWitnessStatistics(const std::string & witnessAccountUUID);
 
     /** Turn compounding on/off */
-    static void setAccountCompounding(const std::string & witnessAccountUUID, bool should_compound);
+    static void setAccountCompounding(const std::string & witnessAccountUUID, int32_t percent_to_compount);
 
-    /** Check state of compounding */
-    static bool isAccountCompounding(const std::string & witnessAccountUUID);
+    /** Check state of compounding; returns a percentage between 1 and 100, or 0 if not compounding */
+    static int32_t isAccountCompounding(const std::string & witnessAccountUUID);
+
+    /** Get the witness address of the account */
+    static std::string getWitnessAddress(const std::string & witnessAccountUUID);
 };

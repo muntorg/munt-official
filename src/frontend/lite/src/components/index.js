@@ -1,8 +1,8 @@
 import Vue from "vue";
 
 import ClipboardField from "./ClipboardField";
-import AppButtonSection from "./layout/AppButtonSection";
 import MainHeader from "./layout/MainHeader";
+import AppButtonSection from "./layout/AppButtonSection";
 import AppFormField from "./layout/AppFormField";
 import AppSection from "./layout/AppSection";
 import SelectList from "./SelectList";

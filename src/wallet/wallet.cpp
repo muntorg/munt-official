@@ -363,6 +363,33 @@ bool CWallet::Unlock(const SecureString& strWalletPassphrase)
     return false;
 }
 
+bool CWallet::UnlockWithTimeout(const SecureString& strWalletPassphrase, int64_t lockTimeoutSeconds)
+{
+    bool ret = Unlock(strWalletPassphrase);
+    
+    // Schedule the lock `lockTimeoutSeconds` from now
+    if (ret && schedulerForLock)
+    {
+        nRelockTime = GetTime() + lockTimeoutSeconds;
+        
+        // Keep the time we are requesting here as a value copy in the lambda in addition to being stored as a member variable...
+        // Why? So that we can check that it hasn't changed before calling the lock
+        // Otherwise this sequence of events is an issue:
+        // 1. Unlock with timeout of 300.
+        // 2. Call lock after 250 seconds.
+        // 3. Unlock again with a timeout of 300.
+        // 4. We are now expecting to be locked for 300 seconds but instead of 50 seconds the first lambda executes and kills our lock.
+        int64_t nOriginalRelockTime = nRelockTime;
+        schedulerForLock->schedule( [this, nOriginalRelockTime](){
+            if (this->nRelockTime == nOriginalRelockTime)
+            {
+                Lock();
+            }
+        },  boost::chrono::system_clock::time_point(boost::chrono::seconds(nRelockTime)));
+    }
+    return ret;
+}
+    
 bool CWallet::ChangeWalletPassphrase(const SecureString& strOldWalletPassphrase, const SecureString& strNewWalletPassphrase)
 {
     bool fWasLocked = IsLocked();

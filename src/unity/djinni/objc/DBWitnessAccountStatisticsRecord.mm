@@ -20,7 +20,7 @@
          accountExpectedWitnessPeriodInBlocks:(int64_t)accountExpectedWitnessPeriodInBlocks
         accountEstimatedWitnessPeriodInBlocks:(int64_t)accountEstimatedWitnessPeriodInBlocks
         accountInitialLockCreationBlockHeight:(int64_t)accountInitialLockCreationBlockHeight
-                         accountIsCompounding:(BOOL)accountIsCompounding
+                           compoundingPercent:(int32_t)compoundingPercent
 {
     if (self = [super init]) {
         _requestStatus = [requestStatus copy];
@@ -37,7 +37,7 @@
         _accountExpectedWitnessPeriodInBlocks = accountExpectedWitnessPeriodInBlocks;
         _accountEstimatedWitnessPeriodInBlocks = accountEstimatedWitnessPeriodInBlocks;
         _accountInitialLockCreationBlockHeight = accountInitialLockCreationBlockHeight;
-        _accountIsCompounding = accountIsCompounding;
+        _compoundingPercent = compoundingPercent;
     }
     return self;
 }
@@ -56,7 +56,7 @@
                                    accountExpectedWitnessPeriodInBlocks:(int64_t)accountExpectedWitnessPeriodInBlocks
                                   accountEstimatedWitnessPeriodInBlocks:(int64_t)accountEstimatedWitnessPeriodInBlocks
                                   accountInitialLockCreationBlockHeight:(int64_t)accountInitialLockCreationBlockHeight
-                                                   accountIsCompounding:(BOOL)accountIsCompounding
+                                                     compoundingPercent:(int32_t)compoundingPercent
 {
     return [(DBWitnessAccountStatisticsRecord*)[self alloc] initWithRequestStatus:requestStatus
                                                                     accountStatus:accountStatus
@@ -72,12 +72,12 @@
                                              accountExpectedWitnessPeriodInBlocks:accountExpectedWitnessPeriodInBlocks
                                             accountEstimatedWitnessPeriodInBlocks:accountEstimatedWitnessPeriodInBlocks
                                             accountInitialLockCreationBlockHeight:accountInitialLockCreationBlockHeight
-                                                             accountIsCompounding:accountIsCompounding];
+                                                               compoundingPercent:compoundingPercent];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p requestStatus:%@ accountStatus:%@ accountWeight:%@ accountWeightAtCreation:%@ accountParts:%@ accountAmountLocked:%@ accountAmountLockedAtCreation:%@ networkTipTotalWeight:%@ networkTotalWeightAtCreation:%@ accountInitialLockPeriodInBlocks:%@ accountRemainingLockPeriodInBlocks:%@ accountExpectedWitnessPeriodInBlocks:%@ accountEstimatedWitnessPeriodInBlocks:%@ accountInitialLockCreationBlockHeight:%@ accountIsCompounding:%@>", self.class, (void *)self, self.requestStatus, self.accountStatus, @(self.accountWeight), @(self.accountWeightAtCreation), @(self.accountParts), @(self.accountAmountLocked), @(self.accountAmountLockedAtCreation), @(self.networkTipTotalWeight), @(self.networkTotalWeightAtCreation), @(self.accountInitialLockPeriodInBlocks), @(self.accountRemainingLockPeriodInBlocks), @(self.accountExpectedWitnessPeriodInBlocks), @(self.accountEstimatedWitnessPeriodInBlocks), @(self.accountInitialLockCreationBlockHeight), @(self.accountIsCompounding)];
+    return [NSString stringWithFormat:@"<%@ %p requestStatus:%@ accountStatus:%@ accountWeight:%@ accountWeightAtCreation:%@ accountParts:%@ accountAmountLocked:%@ accountAmountLockedAtCreation:%@ networkTipTotalWeight:%@ networkTotalWeightAtCreation:%@ accountInitialLockPeriodInBlocks:%@ accountRemainingLockPeriodInBlocks:%@ accountExpectedWitnessPeriodInBlocks:%@ accountEstimatedWitnessPeriodInBlocks:%@ accountInitialLockCreationBlockHeight:%@ compoundingPercent:%@>", self.class, (void *)self, self.requestStatus, self.accountStatus, @(self.accountWeight), @(self.accountWeightAtCreation), @(self.accountParts), @(self.accountAmountLocked), @(self.accountAmountLockedAtCreation), @(self.networkTipTotalWeight), @(self.networkTotalWeightAtCreation), @(self.accountInitialLockPeriodInBlocks), @(self.accountRemainingLockPeriodInBlocks), @(self.accountExpectedWitnessPeriodInBlocks), @(self.accountEstimatedWitnessPeriodInBlocks), @(self.accountInitialLockCreationBlockHeight), @(self.compoundingPercent)];
 }
 
 @end

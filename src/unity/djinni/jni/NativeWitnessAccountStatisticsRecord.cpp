@@ -27,7 +27,7 @@ auto NativeWitnessAccountStatisticsRecord::fromCpp(JNIEnv* jniEnv, const CppType
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_expected_witness_period_in_blocks)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_estimated_witness_period_in_blocks)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_initial_lock_creation_block_height)),
-                                                           ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.account_is_compounding)))};
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.compounding_percent)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
 }
@@ -50,7 +50,7 @@ auto NativeWitnessAccountStatisticsRecord::toCpp(JNIEnv* jniEnv, JniType j) -> C
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountExpectedWitnessPeriodInBlocks)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountEstimatedWitnessPeriodInBlocks)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountInitialLockCreationBlockHeight)),
-            ::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_mAccountIsCompounding))};
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mCompoundingPercent))};
 }
 
 }  // namespace djinni_generated

@@ -40,6 +40,32 @@ public:
             [djinni_private_get_proxied_objc_object() notifyUpdatedTransaction:(::djinni_generated::TransactionRecord::fromCpp(c_transaction))];
         }
     }
+    void notifyWalletUnlocked() override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() notifyWalletUnlocked];
+        }
+    }
+    void notifyWalletLocked() override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() notifyWalletLocked];
+        }
+    }
+    void notifyCoreWantsUnlock(const std::string & c_reason) override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() notifyCoreWantsUnlock:(::djinni::String::fromCpp(c_reason))];
+        }
+    }
+    void notifyCoreInfo(const std::string & c_type, const std::string & c_caption, const std::string & c_message) override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() notifyCoreInfo:(::djinni::String::fromCpp(c_type))
+                                                             caption:(::djinni::String::fromCpp(c_caption))
+                                                             message:(::djinni::String::fromCpp(c_message))];
+        }
+    }
 };
 
 }  // namespace djinni_generated

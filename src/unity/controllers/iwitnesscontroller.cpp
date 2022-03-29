@@ -323,7 +323,7 @@ WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(c
 }
 
 
-void IWitnessController::setAccountCompounding(const std::string& witnessAccountUUID, bool shouldCompound)
+void IWitnessController::setAccountCompounding(const std::string& witnessAccountUUID, int32_t percentToCompound)
 {
     if (pactiveWallet)
     {
@@ -335,19 +335,17 @@ void IWitnessController::setAccountCompounding(const std::string& witnessAccount
             CAccount* witnessAccount = findIter->second;
             
             CWalletDB db(*pactiveWallet->dbw);
-            if (!shouldCompound)
+            if (percentToCompound > 0)
             {
+                // erase any regular compounding setting
                 witnessAccount->setCompounding(0, &db);
             }
-            else
-            {
-                witnessAccount->setCompounding(MAX_MONEY, &db); // Attempt to compound as much as the network will allow.
-            }
+            witnessAccount->setCompoundingPercent(percentToCompound, &db);
         }
     }
 }
 
-bool IWitnessController::isAccountCompounding(const std::string& witnessAccountUUID)
+int32_t IWitnessController::isAccountCompounding(const std::string& witnessAccountUUID)
 {
     if (pactiveWallet)
     {
@@ -359,9 +357,30 @@ bool IWitnessController::isAccountCompounding(const std::string& witnessAccountU
             CAccount* witnessAccount = findIter->second;
             if (witnessAccount->getCompounding() != 0)
             {
-                return true;
+                return 100;
+            }
+            else
+            {
+                return witnessAccount->getCompoundingPercent();
             }
         }
     }
-    return false;
+    return 0;
+}
+
+std::string IWitnessController::getWitnessAddress(const std::string& witnessAccountUUID)
+{
+    if (pactiveWallet)
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+    
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(witnessAccountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            CAccount* witnessAccount = findIter->second;
+            
+            return witnessAddressForAccount(pactiveWallet, witnessAccount);
+        }
+    }
+    return "";
 }

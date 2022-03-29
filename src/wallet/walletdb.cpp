@@ -346,6 +346,16 @@ bool CWalletDB::EraseAccountCompoundingSettings(const std::string& strUUID)
     return EraseIC(std::pair(std::string("acc_compound"), strUUID));
 }
 
+bool CWalletDB::WriteAccountCompoundingPercentSettings(const std::string& strUUID, const int32_t compoundPercent)
+{
+    return WriteIC(std::pair(std::string("acc_compound_percent"), strUUID), compoundPercent);
+}
+
+bool CWalletDB::EraseAccountCompoundingPercentSettings(const std::string& strUUID)
+{
+    return EraseIC(std::pair(std::string("acc_compound_percent"), strUUID));
+}
+
 bool CWalletDB::WriteAccountNonCompoundWitnessEarningsScript(const std::string& strUUID, const CScript& earningsScript)
 {
     return WriteIC(std::pair(std::string("acc_non_compound_wit_earn_script"), strUUID), *(const CScriptBase*)(&earningsScript));
@@ -900,6 +910,25 @@ bool ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue, CW
             if (findIter != pwallet->mapAccounts.end())
             {
                 findIter->second->setCompounding(compoundAmount, nullptr);
+            }
+            else
+            {
+                strErr = "Error reading compound status for account";
+                return false;
+            }
+        }
+        else if (strType == "acc_compound_percent")
+        {
+            std::string accountUUID;
+            int32_t compoundPercent;
+
+            ssKey >> accountUUID;
+            ssValue >> compoundPercent;
+
+            auto findIter = pwallet->mapAccounts.find(getUUIDFromString(accountUUID));
+            if (findIter != pwallet->mapAccounts.end())
+            {
+                findIter->second->setCompoundingPercent(compoundPercent, nullptr);
             }
             else
             {

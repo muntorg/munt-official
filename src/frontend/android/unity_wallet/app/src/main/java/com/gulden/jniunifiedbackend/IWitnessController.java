@@ -44,16 +44,22 @@ public abstract class IWitnessController {
     }
 
     /** Turn compounding on/off */
-    public static void setAccountCompounding(String witnessAccountUUID, boolean shouldCompound)
+    public static void setAccountCompounding(String witnessAccountUUID, int percentToCompount)
     {
         CppProxy.setAccountCompounding(witnessAccountUUID,
-                                       shouldCompound);
+                                       percentToCompount);
     }
 
-    /** Check state of compounding */
-    public static boolean isAccountCompounding(String witnessAccountUUID)
+    /** Check state of compounding; returns a percentage between 1 and 100, or 0 if not compounding */
+    public static int isAccountCompounding(String witnessAccountUUID)
     {
         return CppProxy.isAccountCompounding(witnessAccountUUID);
+    }
+
+    /** Get the witness address of the account */
+    public static String getWitnessAddress(String witnessAccountUUID)
+    {
+        return CppProxy.getWitnessAddress(witnessAccountUUID);
     }
 
     private static final class CppProxy extends IWitnessController
@@ -89,8 +95,10 @@ public abstract class IWitnessController {
 
         public static native WitnessAccountStatisticsRecord getAccountWitnessStatistics(String witnessAccountUUID);
 
-        public static native void setAccountCompounding(String witnessAccountUUID, boolean shouldCompound);
+        public static native void setAccountCompounding(String witnessAccountUUID, int percentToCompount);
 
-        public static native boolean isAccountCompounding(String witnessAccountUUID);
+        public static native int isAccountCompounding(String witnessAccountUUID);
+
+        public static native String getWitnessAddress(String witnessAccountUUID);
     }
 }

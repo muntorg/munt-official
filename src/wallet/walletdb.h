@@ -211,6 +211,8 @@ public:
     //! Write the account compounding amount settings; used only by witness accounts, controls whether the account should compound earnings or pay them to an external address.
     bool WriteAccountCompoundingSettings(const std::string& strUUID, const CAmount compoundAmount);
     bool EraseAccountCompoundingSettings(const std::string& strUUID);
+    bool WriteAccountCompoundingPercentSettings(const std::string& strUUID, const int32_t compoundPercent);
+    bool EraseAccountCompoundingPercentSettings(const std::string& strUUID);
 
     //! Write the account compounding script settings; used only by witness accounts, controls where the account should pay any non-compounding earnings it has to pay out.
     bool WriteAccountNonCompoundWitnessEarningsScript(const std::string& strUUID, const CScript& earningsScript);

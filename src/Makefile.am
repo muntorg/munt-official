@@ -785,7 +785,9 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/i_wallet_listener.hpp \
   unity/djinni/cpp/i_generation_controller.hpp \
   unity/djinni/cpp/i_generation_listener.hpp \
-  unity/djinni/cpp/uri_record.hpp
+  unity/djinni/cpp/uri_record.hpp \
+  unity/djinni/cpp/wallet_lock_status.hpp
+
 
 DJINNI_NODE_JS_GEN = \
   unity/djinni/node_js/unifiedbackend.cpp \
@@ -872,6 +874,8 @@ lib_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeILibraryController.cpp \
   unity/djinni/jni/NativeIWalletController.hpp \
   unity/djinni/jni/NativeIWalletController.cpp \
+  unity/djinni/jni/NativeWalletLockStatus.hpp \
+  unity/djinni/jni/NativeWalletLockStatus.cpp \
   unity/djinni/jni/NativeIWalletListener.hpp \
   unity/djinni/jni/NativeIWalletListener.cpp \
   unity/djinni/jni/NativeILibraryListener.hpp \

@@ -19,11 +19,7 @@ class LibraryController {
   }
 
   static async IsValidLinkURIAsync(phrase) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.IsValidLinkURIAsync", {
-        phrase
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.IsValidLinkURIAsync", { phrase }));
   }
 
   static IsValidLinkURI(phrase) {
@@ -47,11 +43,7 @@ class LibraryController {
   }
 
   static async IsValidRecoveryPhraseAsync(phrase) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.IsValidRecoveryPhraseAsync", {
-        phrase
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.IsValidRecoveryPhraseAsync", { phrase }));
   }
 
   static IsValidRecoveryPhrase(phrase) {
@@ -75,12 +67,7 @@ class LibraryController {
   }
 
   static async ComposeRecoveryPhraseAsync(mnemonic, birthTime) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.ComposeRecoveryPhraseAsync", {
-        mnemonic,
-        birthTime
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.ComposeRecoveryPhraseAsync", { mnemonic, birthTime }));
   }
 
   static ComposeRecoveryPhrase(mnemonic, birthTime) {
@@ -96,12 +83,7 @@ class LibraryController {
   }
 
   static async QRImageFromStringAsync(qr_string, width_hint) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.QRImageFromStringAsync", {
-        qr_string,
-        width_hint
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.QRImageFromStringAsync", { qr_string, width_hint }));
   }
 
   static QRImageFromString(qr_string, width_hint) {
@@ -133,11 +115,7 @@ class LibraryController {
   }
 
   static async IsMnemonicCorrectAsync(phrase) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.IsMnemonicCorrectAsync", {
-        phrase
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.IsMnemonicCorrectAsync", { phrase }));
   }
 
   static IsMnemonicCorrect(phrase) {
@@ -152,16 +130,12 @@ class LibraryController {
     return handleError(ipc.sendSync("NJSILibraryController.GetMnemonicDictionary"));
   }
 
-  static async UnlockWalletAsync(password) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.UnlockWalletAsync", {
-        password
-      })
-    );
+  static async UnlockWalletAsync(password, timeout_in_seconds) {
+    return handleError(await ipc.callMain("NJSILibraryController.UnlockWalletAsync", { password, timeout_in_seconds }));
   }
 
-  static UnlockWallet(password) {
-    return handleError(ipc.sendSync("NJSILibraryController.UnlockWallet", password));
+  static UnlockWallet(password, timeout_in_seconds) {
+    return handleError(ipc.sendSync("NJSILibraryController.UnlockWallet", password, timeout_in_seconds));
   }
 
   static async LockWalletAsync() {
@@ -172,21 +146,16 @@ class LibraryController {
     return handleError(ipc.sendSync("NJSILibraryController.LockWallet"));
   }
 
-  static async IsWalletLockedAsync() {
-    return handleError(await ipc.callMain("NJSILibraryController.IsWalletLockedAsync"));
+  static async GetWalletLockStatusAsync() {
+    return handleError(await ipc.callMain("NJSILibraryController.GetWalletLockStatusAsync"));
   }
 
-  static IsWalletLocked() {
-    return handleError(ipc.sendSync("NJSILibraryController.IsWalletLocked"));
+  static GetWalletLockStatus() {
+    return handleError(ipc.sendSync("NJSILibraryController.GetWalletLockStatus"));
   }
 
   static async ChangePasswordAsync(oldPassword, newPassword) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.ChangePasswordAsync", {
-        oldPassword,
-        newPassword
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.ChangePasswordAsync", { oldPassword, newPassword }));
   }
 
   static ChangePassword(oldPassword, newPassword) {
@@ -202,11 +171,7 @@ class LibraryController {
   }
 
   static async IsValidRecipientAsync(request) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.IsValidRecipientAsync", {
-        request
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.IsValidRecipientAsync", { request }));
   }
 
   static IsValidRecipient(request) {
@@ -214,11 +179,7 @@ class LibraryController {
   }
 
   static async IsValidNativeAddressAsync(address) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.IsValidNativeAddressAsync", {
-        address
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.IsValidNativeAddressAsync", { address }));
   }
 
   static IsValidNativeAddress(address) {
@@ -226,11 +187,7 @@ class LibraryController {
   }
 
   static async IsValidBitcoinAddressAsync(address) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.IsValidBitcoinAddressAsync", {
-        address
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.IsValidBitcoinAddressAsync", { address }));
   }
 
   static IsValidBitcoinAddress(address) {
@@ -238,11 +195,7 @@ class LibraryController {
   }
 
   static async FeeForRecipientAsync(request) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.feeForRecipientAsync", {
-        request
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.feeForRecipientAsync", { request }));
   }
 
   static FeeForRecipient(request) {
@@ -258,11 +211,7 @@ class LibraryController {
   }
 
   static async GetTransactionAsync(txHash) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.getTransactionAsync", {
-        txHash
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.getTransactionAsync", { txHash }));
   }
 
   static GetTransaction(txHash) {
@@ -270,11 +219,7 @@ class LibraryController {
   }
 
   static async ResendTransactionAsync(txHash) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.resendTransactionAsync", {
-        txHash
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.resendTransactionAsync", { txHash }));
   }
 
   static ResendTransaction(txHash) {
@@ -290,11 +235,7 @@ class LibraryController {
   }
 
   static async AddAddressBookRecordAsync(address) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.addAddressBookRecordAsync", {
-        address
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.addAddressBookRecordAsync", { address }));
   }
 
   static AddAddressBookRecord(address) {
@@ -302,11 +243,7 @@ class LibraryController {
   }
 
   static async DeleteAddressBookRecordAsync(address) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.deleteAddressBookRecordAsync", {
-        address
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.deleteAddressBookRecordAsync", { address }));
   }
 
   static DeleteAddressBookRecord(address) {
@@ -346,11 +283,7 @@ class LibraryController {
   }
 
   static async RegisterMonitorListenerAsync(listener) {
-    return handleError(
-      await ipc.callMain("NJSILibraryController.RegisterMonitorListenerAsync", {
-        listener
-      })
-    );
+    return handleError(await ipc.callMain("NJSILibraryController.RegisterMonitorListenerAsync", { listener }));
   }
 
   static RegisterMonitorListener(listener) {
@@ -400,11 +333,7 @@ class WalletController {
   }
 
   static async AbandonTransactionAsync(txHash) {
-    return handleError(
-      await ipc.callMain("NJSIWalletController.AbandonTransactionAsync", {
-        txHash
-      })
-    );
+    return handleError(await ipc.callMain("NJSIWalletController.AbandonTransactionAsync", { txHash }));
   }
 
   static AbandonTransaction(txHash) {
@@ -473,11 +402,7 @@ class AccountsController {
   }
 
   static async SetActiveAccountAsync(accountUUID) {
-    return handleError(
-      await ipc.callMain("NJSIAccountsController.setActiveAccountAsync", {
-        accountUUID
-      })
-    );
+    return handleError(await ipc.callMain("NJSIAccountsController.setActiveAccountAsync", { accountUUID }));
   }
 
   static SetActiveAccount(accountUUID) {
@@ -493,12 +418,7 @@ class AccountsController {
   }
 
   static async CreateAccountAsync(accountName, accountType) {
-    return handleError(
-      await ipc.callMain("NJSIAccountsController.createAccountAsync", {
-        accountName,
-        accountType
-      })
-    );
+    return handleError(await ipc.callMain("NJSIAccountsController.createAccountAsync", { accountName, accountType }));
   }
 
   static CreateAccount(accountName, accountType) {
@@ -506,11 +426,7 @@ class AccountsController {
   }
 
   static async GetAccountNameAsync(accountUUID) {
-    return handleError(
-      await ipc.callMain("NJSIAccountsController.getAccountNameAsync", {
-        accountUUID
-      })
-    );
+    return handleError(await ipc.callMain("NJSIAccountsController.getAccountNameAsync", { accountUUID }));
   }
 
   static GetAccountName(accountUUID) {
@@ -518,12 +434,7 @@ class AccountsController {
   }
 
   static async RenameAccountAsync(accountUUID, newAccountName) {
-    return handleError(
-      await ipc.callMain("NJSIAccountsController.renameAccountAsync", {
-        accountUUID,
-        newAccountName
-      })
-    );
+    return handleError(await ipc.callMain("NJSIAccountsController.renameAccountAsync", { accountUUID, newAccountName }));
   }
 
   static RenameAccount(accountUUID, newAccountName) {
@@ -531,11 +442,7 @@ class AccountsController {
   }
 
   static async DeleteAccountAsync(accountUUID) {
-    return handleError(
-      await ipc.callMain("NJSIAccountsController.deleteAccountAsync", {
-        accountUUID
-      })
-    );
+    return handleError(await ipc.callMain("NJSIAccountsController.deleteAccountAsync", { accountUUID }));
   }
 
   static DeleteAccount(accountUUID) {
@@ -543,11 +450,7 @@ class AccountsController {
   }
 
   static async PurgeAccountAsync(accountUUID) {
-    return handleError(
-      await ipc.callMain("NJSIAccountsController.purgeAccountAsync", {
-        accountUUID
-      })
-    );
+    return handleError(await ipc.callMain("NJSIAccountsController.purgeAccountAsync", { accountUUID }));
   }
 
   static PurgeAccount(accountUUID) {
@@ -555,11 +458,7 @@ class AccountsController {
   }
 
   static async GetAccountLinkURIAsync(accountUUID) {
-    return handleError(
-      await ipc.callMain("NJSIAccountsController.getAccountLinkURIAsync", {
-        accountUUID
-      })
-    );
+    return handleError(await ipc.callMain("NJSIAccountsController.getAccountLinkURIAsync", { accountUUID }));
   }
 
   static GetAccountLinkURI(accountUUID) {
@@ -567,11 +466,7 @@ class AccountsController {
   }
 
   static async GetWitnessKeyURIAsync(accountUUID) {
-    return handleError(
-      await ipc.callMain("NJSIAccountsController.getWitnessKeyURIAsync", {
-        accountUUID
-      })
-    );
+    return handleError(await ipc.callMain("NJSIAccountsController.getWitnessKeyURIAsync", { accountUUID }));
   }
 
   static GetWitnessKeyURI(accountUUID) {
@@ -587,11 +482,7 @@ class AccountsController {
   }
 
   static async GetReceiveAddressAsync(accountUUID) {
-    return handleError(
-      await ipc.callMain("NJSIAccountsController.getReceiveAddressAsync", {
-        accountUUID
-      })
-    );
+    return handleError(await ipc.callMain("NJSIAccountsController.getReceiveAddressAsync", { accountUUID }));
   }
 
   static GetReceiveAddress(accountUUID) {
@@ -599,11 +490,7 @@ class AccountsController {
   }
 
   static async GetTransactionHistoryAsync(accountUUID) {
-    return handleError(
-      await ipc.callMain("NJSIAccountsController.getTransactionHistoryAsync", {
-        accountUUID
-      })
-    );
+    return handleError(await ipc.callMain("NJSIAccountsController.getTransactionHistoryAsync", { accountUUID }));
   }
 
   static GetTransactionHistory(accountUUID) {
@@ -611,11 +498,7 @@ class AccountsController {
   }
 
   static async GetMutationHistoryAsync(accountUUID) {
-    return handleError(
-      await ipc.callMain("NJSIAccountsController.getMutationHistoryAsync", {
-        accountUUID
-      })
-    );
+    return handleError(await ipc.callMain("NJSIAccountsController.getMutationHistoryAsync", { accountUUID }));
   }
 
   static GetMutationHistory(accountUUID) {
@@ -631,11 +514,7 @@ class AccountsController {
   }
 
   static async GetAccountBalanceAsync(accountUUID) {
-    return handleError(
-      await ipc.callMain("NJSIAccountsController.getAccountBalanceAsync", {
-        accountUUID
-      })
-    );
+    return handleError(await ipc.callMain("NJSIAccountsController.getAccountBalanceAsync", { accountUUID }));
   }
 
   static GetAccountBalance(accountUUID) {

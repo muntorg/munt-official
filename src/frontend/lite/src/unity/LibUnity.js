@@ -86,7 +86,9 @@ class LibUnity {
       let currentBalance = accountBalances[key];
 
       currentAccount.balance = currentBalance.availableIncludingLocked + currentBalance.immatureIncludingLocked;
-      currentAccount.spendable = currentBalance.availableExcludingLocked - currentBalance.immatureExcludingLocked;
+
+      // make sure spendable is always 0 or more
+      currentAccount.spendable = Math.max(currentBalance.availableExcludingLocked, 0);
     });
 
     if (dispatch) {
@@ -759,9 +761,9 @@ class LibUnity {
     });
 
     ipc.answerRenderer("NJSILibraryController.UnlockWalletAsync", async data => {
-      console.log(`IPC: libraryController.UnlockWalletAsync(${data.password})`);
+      console.log(`IPC: libraryController.UnlockWalletAsync(${data.password}, ${data.timeout_in_seconds})`);
       try {
-        let result = this.libraryController.UnlockWallet(data.password);
+        let result = this.libraryController.UnlockWallet(data.password, data.timeout_in_seconds);
         return {
           success: true,
           result: result
@@ -771,10 +773,10 @@ class LibUnity {
       }
     });
 
-    ipc.on("NJSILibraryController.UnlockWallet", (event, password) => {
-      console.log(`IPC: libraryController.UnlockWallet(${password})`);
+    ipc.on("NJSILibraryController.UnlockWallet", (event, password, timeout_in_seconds) => {
+      console.log(`IPC: libraryController.UnlockWallet(${password}, ${timeout_in_seconds})`);
       try {
-        let result = this.libraryController.UnlockWallet(password);
+        let result = this.libraryController.UnlockWallet(password, timeout_in_seconds);
         event.returnValue = {
           success: true,
           result: result
@@ -810,10 +812,10 @@ class LibUnity {
       }
     });
 
-    ipc.answerRenderer("NJSILibraryController.IsWalletLockedAsync", async () => {
-      console.log(`IPC: libraryController.IsWalletLockedAsync()`);
+    ipc.answerRenderer("NJSILibraryController.GetWalletLockStatusAsync", async () => {
+      console.log(`IPC: libraryController.GetWalletLockStatusAsync()`);
       try {
-        let result = this.libraryController.IsWalletLocked();
+        let result = this.libraryController.GetWalletLockStatus();
         return {
           success: true,
           result: result
@@ -823,10 +825,10 @@ class LibUnity {
       }
     });
 
-    ipc.on("NJSILibraryController.IsWalletLocked", event => {
-      console.log(`IPC: libraryController.IsWalletLocked()`);
+    ipc.on("NJSILibraryController.GetWalletLockStatus", event => {
+      console.log(`IPC: libraryController.GetWalletLockStatus()`);
       try {
-        let result = this.libraryController.IsWalletLocked();
+        let result = this.libraryController.GetWalletLockStatus();
         event.returnValue = {
           success: true,
           result: result

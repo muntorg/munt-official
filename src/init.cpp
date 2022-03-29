@@ -1649,14 +1649,6 @@ bool AppInitMain(boost::thread_group& threadGroup, node::NodeContext& node)
         }
     }
 
-    // As LoadBlockIndex can take several minutes, it's possible the user
-    // requested to kill the GUI during the last operation. If so, exit.
-    // As the program has not fully started yet, Shutdown() is possibly overkill.
-    if (ShutdownRequested())
-    {
-        LogPrintf("Shutdown requested. Exiting.\n");
-        return false;
-    }
     LogPrintf(" block index %15dms\n", GetTimeMillis() - nStart);
 
     fs::path est_path = GetDataDir() / FEE_ESTIMATES_FILENAME;
@@ -1673,6 +1665,21 @@ bool AppInitMain(boost::thread_group& threadGroup, node::NodeContext& node)
 #else
     LogPrintf("No wallet support compiled in!\n");
 #endif
+    
+    // NB! While ideally we would want to poll for this ahead of calling InitLoadWallet()
+    // Doing so sometimes leads to DBEnv corruption if closing the software really quickly
+    // By only exiting after InitLoadWallet everything is seemingly flushed and avoids this.
+    // In future we should look into better solutions so that we can close faster here.
+    //
+    // As LoadBlockIndex can take several minutes, it's possible the user
+    // requested to kill the GUI during the last operation. If so, exit.
+    // As the program has not fully started yet, Shutdown() is possibly overkill.
+    if (ShutdownRequested())
+    {
+        LogPrintf("Shutdown requested. Exiting.\n");
+        return false;
+    }
+
 
     StartPoW2WitnessThread(threadGroup);
 

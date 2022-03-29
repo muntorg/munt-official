@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <string>
+
 struct BalanceRecord;
 struct MutationRecord;
 struct TransactionRecord;
@@ -17,6 +19,7 @@ class IWalletListener {
 public:
     virtual ~IWalletListener() {}
 
+    /** Notification of change in overall wallet balance */
     virtual void notifyBalanceChange(const BalanceRecord & new_balance) = 0;
 
     /**
@@ -38,5 +41,17 @@ public:
      * Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
      */
     virtual void notifyUpdatedTransaction(const TransactionRecord & transaction) = 0;
+
+    /** Wallet unlocked */
+    virtual void notifyWalletUnlocked() = 0;
+
+    /** Wallet locked */
+    virtual void notifyWalletLocked() = 0;
+
+    /** Core wants the wallet to unlock; UI should respond to this by calling 'UnlockWallet' */
+    virtual void notifyCoreWantsUnlock(const std::string & reason) = 0;
+
+    /** Core wants display info to the user, type can be one of "MSG_ERROR", "MSG_WARNING", "MSG_INFORMATION"; caption is the suggested caption and message the suggested message to display */
+    virtual void notifyCoreInfo(const std::string & type, const std::string & caption, const std::string & message) = 0;
 };
 #endif

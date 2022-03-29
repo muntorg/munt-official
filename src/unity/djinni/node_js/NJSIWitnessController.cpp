@@ -223,8 +223,8 @@ Napi::Value NJSIWitnessController::getAccountWitnessStatistics(const Napi::Callb
         arg_1.Set("account_estimated_witness_period_in_blocks", arg_1_13);
         auto arg_1_14 = Napi::Value::From(env, result.account_initial_lock_creation_block_height);
         arg_1.Set("account_initial_lock_creation_block_height", arg_1_14);
-        auto arg_1_15 = Napi::Value::From(env, result.account_is_compounding);
-        arg_1.Set("account_is_compounding", arg_1_15);
+        auto arg_1_15 = Napi::Value::From(env, result.compounding_percent);
+        arg_1.Set("compounding_percent", arg_1_15);
 
 
         return arg_1;
@@ -252,7 +252,7 @@ void NJSIWitnessController::setAccountCompounding(const Napi::CallbackInfo& info
 
     //Check if parameters have correct types
     std::string arg_0 = info[0].As<Napi::String>();
-    auto arg_1 = info[1].ToBoolean().Value();
+    auto arg_1 = info[1].ToNumber().Int32Value();
     try
     {
         IWitnessController::setAccountCompounding(arg_0,arg_1);
@@ -301,6 +301,39 @@ Napi::Value NJSIWitnessController::isAccountCompounding(const Napi::CallbackInfo
         return Napi::Value();
     }
 }
+Napi::Value NJSIWitnessController::getWitnessAddress(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 1)
+    {
+        Napi::Error::New(env, "NJSIWitnessController::getWitnessAddress needs 1 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+
+    try
+    {
+        auto result = IWitnessController::getWitnessAddress(arg_0);
+
+        //Wrap result in node object
+        auto arg_1 = Napi::String::New(env, result);
+
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+}
 
 Napi::FunctionReference NJSIWitnessController::constructor;
 
@@ -315,6 +348,7 @@ Napi::Object NJSIWitnessController::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("getAccountWitnessStatistics", &NJSIWitnessController::getAccountWitnessStatistics),
     InstanceMethod("setAccountCompounding", &NJSIWitnessController::setAccountCompounding),
     InstanceMethod("isAccountCompounding", &NJSIWitnessController::isAccountCompounding),
+    InstanceMethod("getWitnessAddress", &NJSIWitnessController::getWitnessAddress),
     });
     // Create a peristent reference to the class constructor. This will allow a function called on a class prototype and a function called on instance of a class to be distinguished from each other.
     constructor = Napi::Persistent(func);

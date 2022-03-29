@@ -53,6 +53,7 @@ export default {
   },
   computed: {
     ...mapState("wallet", ["activeAccount"]),
+    ...mapState("app", ["coreReady"]),
     ...mapGetters("wallet", ["accounts"]),
     activeCategory() {
       if (this.activeAccount === null) return null;

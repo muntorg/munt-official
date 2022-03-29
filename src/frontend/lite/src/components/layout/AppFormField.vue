@@ -1,9 +1,7 @@
 <template>
   <app-section class="app-form-field">
-    <h4 v-if="hasTitle">{{ title }}</h4>
-    <div class="input">
-      <slot />
-    </div>
+    <h2 v-if="hasTitle">{{ $t(title) }}</h2>
+    <slot></slot>
   </app-section>
 </template>
 
@@ -28,9 +26,3 @@ export default {
   }
 };
 </script>
-
-<style lang="less" scoped>
-h4 {
-  margin-bottom: 10px;
-}
-</style>

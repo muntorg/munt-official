@@ -12,6 +12,7 @@
 #import "DBTransactionRecord.h"
 #import "DBUriRecipient.h"
 #import "DBUriRecord.h"
+#import "DBWalletLockStatus.h"
 #import <Foundation/Foundation.h>
 @protocol DBILibraryListener;
 @protocol DBMonitorListener;
@@ -135,13 +136,14 @@ extern int32_t const DBILibraryControllerVersion;
  */
 + (nonnull NSArray<NSString *> *)GetMnemonicDictionary;
 
-/** Unlock wallet */
-+ (BOOL)UnlockWallet:(nonnull NSString *)password;
+/** Unlock wallet; wallet will automatically relock after "timeoutInSeconds" */
++ (BOOL)UnlockWallet:(nonnull NSString *)password
+    timeoutInSeconds:(int64_t)timeoutInSeconds;
 
 /** Forcefully lock wallet again */
 + (BOOL)LockWallet;
 
-+ (BOOL)IsWalletLocked;
++ (nonnull DBWalletLockStatus *)GetWalletLockStatus;
 
 /** Change the wallet password */
 + (BOOL)ChangePassword:(nonnull NSString *)oldPassword

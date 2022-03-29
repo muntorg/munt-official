@@ -20,6 +20,7 @@
 #include "transaction_record.hpp"
 #include "uri_recipient.hpp"
 #include "uri_record.hpp"
+#include "wallet_lock_status.hpp"
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -125,13 +126,13 @@ private:
      */
     Napi::Value GetMnemonicDictionary(const Napi::CallbackInfo& info);
 
-    /** Unlock wallet */
+    /** Unlock wallet; wallet will automatically relock after "timeout_in_seconds" */
     Napi::Value UnlockWallet(const Napi::CallbackInfo& info);
 
     /** Forcefully lock wallet again */
     Napi::Value LockWallet(const Napi::CallbackInfo& info);
 
-    Napi::Value IsWalletLocked(const Napi::CallbackInfo& info);
+    Napi::Value GetWalletLockStatus(const Napi::CallbackInfo& info);
 
     /** Change the wallet password */
     Napi::Value ChangePassword(const Napi::CallbackInfo& info);

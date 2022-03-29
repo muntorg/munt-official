@@ -70,11 +70,11 @@ declare class NJSILibraryController
      * This function should only be used for input validation/auto-completion
      */
     static declare function GetMnemonicDictionary(): Array<string>;
-    /** Unlock wallet */
-    static declare function UnlockWallet(password: string): boolean;
+    /** Unlock wallet; wallet will automatically relock after "timeout_in_seconds" */
+    static declare function UnlockWallet(password: string, timeout_in_seconds: number): boolean;
     /** Forcefully lock wallet again */
     static declare function LockWallet(): boolean;
-    static declare function IsWalletLocked(): boolean;
+    static declare function GetWalletLockStatus(): WalletLockStatus;
     /** Change the wallet password */
     static declare function ChangePassword(oldPassword: string, newPassword: string): boolean;
     /** Rescan blockchain for wallet transactions */
@@ -161,6 +161,7 @@ declare class NJSIWalletController
 /** Interface to receive wallet level events */
 declare class NJSIWalletListener
 {
+    /** Notification of change in overall wallet balance */
     declare function notifyBalanceChange(new_balance: BalanceRecord);
     /**
      * Notification of new mutations.
@@ -180,6 +181,14 @@ declare class NJSIWalletListener
      * Therefore it is necessary to first fetch the full mutation history before starting to listen for this event.
      */
     declare function notifyUpdatedTransaction(transaction: TransactionRecord);
+    /** Wallet unlocked */
+    declare function notifyWalletUnlocked();
+    /** Wallet locked */
+    declare function notifyWalletLocked();
+    /** Core wants the wallet to unlock; UI should respond to this by calling 'UnlockWallet' */
+    declare function notifyCoreWantsUnlock(reason: string);
+    /** Core wants display info to the user, type can be one of "MSG_ERROR", "MSG_WARNING", "MSG_INFORMATION"; caption is the suggested caption and message the suggested message to display */
+    declare function notifyCoreInfo(type: string, caption: string, message: string);
 }
 /** Monitoring events */
 declare class NJSMonitorListener
@@ -351,9 +360,11 @@ declare class NJSIWitnessController
     /** Get information on account weight and other witness statistics for account */
     static declare function getAccountWitnessStatistics(witnessAccountUUID: string): WitnessAccountStatisticsRecord;
     /** Turn compounding on/off */
-    static declare function setAccountCompounding(witnessAccountUUID: string, should_compound: boolean);
-    /** Check state of compounding */
-    static declare function isAccountCompounding(witnessAccountUUID: string): boolean;
+    static declare function setAccountCompounding(witnessAccountUUID: string, percent_to_compount: number);
+    /** Check state of compounding; returns a percentage between 1 and 100, or 0 if not compounding */
+    static declare function isAccountCompounding(witnessAccountUUID: string): number;
+    /** Get the witness address of the account */
+    static declare function getWitnessAddress(witnessAccountUUID: string): string;
 }
 /** C++ interface to control generation of blocks (proof of work) */
 declare class NJSIGenerationController

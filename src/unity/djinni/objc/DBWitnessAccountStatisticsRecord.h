@@ -18,7 +18,7 @@
          accountExpectedWitnessPeriodInBlocks:(int64_t)accountExpectedWitnessPeriodInBlocks
         accountEstimatedWitnessPeriodInBlocks:(int64_t)accountEstimatedWitnessPeriodInBlocks
         accountInitialLockCreationBlockHeight:(int64_t)accountInitialLockCreationBlockHeight
-                         accountIsCompounding:(BOOL)accountIsCompounding;
+                           compoundingPercent:(int32_t)compoundingPercent;
 + (nonnull instancetype)witnessAccountStatisticsRecordWithRequestStatus:(nonnull NSString *)requestStatus
                                                           accountStatus:(nonnull NSString *)accountStatus
                                                           accountWeight:(int64_t)accountWeight
@@ -33,7 +33,7 @@
                                    accountExpectedWitnessPeriodInBlocks:(int64_t)accountExpectedWitnessPeriodInBlocks
                                   accountEstimatedWitnessPeriodInBlocks:(int64_t)accountEstimatedWitnessPeriodInBlocks
                                   accountInitialLockCreationBlockHeight:(int64_t)accountInitialLockCreationBlockHeight
-                                                   accountIsCompounding:(BOOL)accountIsCompounding;
+                                                     compoundingPercent:(int32_t)compoundingPercent;
 
 /** Success if request succeeded, otherwise an error message */
 @property (nonatomic, readonly, nonnull) NSString * requestStatus;
@@ -77,7 +77,7 @@
 /** Height at which the account lock first entered the chain */
 @property (nonatomic, readonly) int64_t accountInitialLockCreationBlockHeight;
 
-/** Is this account currently set to compound */
-@property (nonatomic, readonly) BOOL accountIsCompounding;
+/** How much of the reward that this account earns is set to be compound */
+@property (nonatomic, readonly) int32_t compoundingPercent;
 
 @end

@@ -2,34 +2,30 @@
   <div class="setup-view flex-col">
     <div class="steps-container">
       <!-- step 1: choose setup type -->
-      <app-section v-if="current === 1">
-        <h2>{{ $t("setup.setup_your_wallet") }}</h2>
-        <app-section>
-          <div class="settings-row" @click="setupWallet(false)">
-            {{ $t("setup.create_new") }}
-            <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
-          </div>
-          <div class="settings-row" @click="setupWallet(true)">
-            {{ $t("setup.recover_existing") }}
-            <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
-          </div>
-        </app-section>
-      </app-section>
+      <content-wrapper heading="setup.setup_your_wallet" v-if="current === 1">
+        <div class="settings-row" @click="setupWallet(false)">
+          {{ $t("setup.create_new") }}
+          <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
+        </div>
+        <div class="settings-row" @click="setupWallet(true)">
+          {{ $t("setup.recover_existing") }}
+          <fa-icon :icon="['fal', 'chevron-right']" class="arrow" />
+        </div>
+      </content-wrapper>
 
       <!-- step 2: show recovery phrase -->
-      <app-section v-else-if="current === 2">
-        <h2 class="important">{{ $t("common.important") }}</h2>
-        <p>{{ $t("setup.this_is_your_recovery_phrase") }}</p>
+      <content-wrapper heading="common.important" headingStyle="warning" content="setup.this_is_your_recovery_phrase" v-else-if="current === 2">
         <app-section class="phrase">
           {{ recoveryPhrase }}
         </app-section>
-      </app-section>
+      </content-wrapper>
 
       <!-- step 3: enter/repeat recovery phrase -->
-      <app-section v-else-if="current === 3">
-        <h2>{{ $t("setup.enter_recovery_phrase") }}</h2>
-        <p v-if="!isRecovery">{{ $t("setup.repeat_your_recovery_phrase") }}</p>
-        <p v-else>{{ $t("setup.enter_existing_recovery_phrase") }}</p>
+      <content-wrapper
+        heading="setup.enter_recovery_phrase"
+        :content="isRecovery ? 'setup.this_is_your_recovery_phrase' : 'setup.enter_existing_recovery_phrase'"
+        v-else-if="current === 3"
+      >
         <phrase-input
           ref="phraseinput"
           :validate="validate"
@@ -39,22 +35,21 @@
           @possible-phrase="onPossiblePhrase"
           @enter="validatePhraseOnEnter"
         />
-      </app-section>
+      </content-wrapper>
 
       <!-- step 4: enter a password -->
-      <div v-else-if="current === 4">
-        <h2>{{ $t("setup.choose_password") }}</h2>
-        <p>{{ $t("setup.choose_password_information") }}</p>
-        <app-form-field :title="$t('common.password')">
+      <content-wrapper heading="setup.choose_password" content="setup.choose_password_information" v-else-if="current === 4">
+        <app-form-field title="common.password">
           <input ref="password" type="password" v-model="password1" />
         </app-form-field>
-        <app-form-field :title="$t('setup.repeat_password')">
+        <app-form-field title="setup.repeat_password">
           <input type="password" v-model="password2" :class="password2Status" @keydown="validatePasswordsOnEnter" />
         </app-form-field>
-      </div>
+      </content-wrapper>
     </div>
+
     <app-button-section class="steps-buttons">
-      <template v-slot:left>
+      <template slot:left>
         <button v-if="showPreviousButton" @click="previousStep">
           {{ $t("buttons.previous") }}
         </button>
@@ -81,6 +76,7 @@ import { LibraryController } from "../unity/Controllers";
 import PhraseInput from "../components/PhraseInput";
 import EventBus from "../EventBus.js";
 import AppStatus from "../AppStatus";
+import ContentWrapper from "../components/layout/ContentWrapper.vue";
 
 export default {
   data() {
@@ -97,7 +93,8 @@ export default {
     };
   },
   components: {
-    PhraseInput
+    PhraseInput,
+    ContentWrapper
   },
   computed: {
     validate() {

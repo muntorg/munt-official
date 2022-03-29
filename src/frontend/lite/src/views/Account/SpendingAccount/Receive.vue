@@ -5,8 +5,8 @@
     </portal>
 
     <div class="main">
-      <h4>{{ $t("receive_coins.your_address") }}</h4>
-      <p class="information">{{ $t("receive_coins.information") }}</p>
+      <content-wrapper heading="receive_coins.your_address" content="receive_coins.information"> </content-wrapper>
+
       <div class="qr" @click="copyQr">
         <vue-qrcode ref="qrcode" class="qrcode" :width="280" :margin="0" :value="receiveAddress" :color="{ dark: '#000000', light: '#ffffff' }" />
       </div>
@@ -33,11 +33,13 @@ import VueQrcode from "vue-qrcode";
 import { clipboard, nativeImage } from "electron";
 import { BackendUtilities } from "@/unity/Controllers";
 import UIConfig from "../../../../ui-config.json";
+import ContentWrapper from "../../../components/layout/ContentWrapper.vue";
 
 export default {
   name: "Receive",
   components: {
-    VueQrcode
+    VueQrcode,
+    ContentWrapper
   },
   data() {
     return {
@@ -73,6 +75,7 @@ export default {
 .receive-view {
   height: 100%;
   text-align: center;
+
   & .information {
     margin: 0 0 30px 0;
   }

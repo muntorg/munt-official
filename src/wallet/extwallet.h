@@ -72,12 +72,12 @@ public:
      * open unlock sessions.
      * @return succesfully locked wallet. This value seems of little use as it will always return true if locking is delayed.
      */
-    bool Lock() const;
+    bool Lock();
 
     /**
      * Actual lock operation, unconditionally locking the wallet, ie. not depending on unlock sessions or anything.
      */
-    bool LockHard() const;
+    bool LockHard();
 
 
     bool UnlockWithMasterKey(const CKeyingMaterial& vMasterKeyIn) const

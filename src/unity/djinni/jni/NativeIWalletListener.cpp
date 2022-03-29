@@ -42,5 +42,37 @@ void NativeIWalletListener::JavaProxy::notifyUpdatedTransaction(const ::Transact
                            ::djinni::get(::djinni_generated::NativeTransactionRecord::fromCpp(jniEnv, c_transaction)));
     ::djinni::jniExceptionCheck(jniEnv);
 }
+void NativeIWalletListener::JavaProxy::notifyWalletUnlocked() {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeIWalletListener>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyWalletUnlocked);
+    ::djinni::jniExceptionCheck(jniEnv);
+}
+void NativeIWalletListener::JavaProxy::notifyWalletLocked() {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeIWalletListener>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyWalletLocked);
+    ::djinni::jniExceptionCheck(jniEnv);
+}
+void NativeIWalletListener::JavaProxy::notifyCoreWantsUnlock(const std::string & c_reason) {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeIWalletListener>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyCoreWantsUnlock,
+                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c_reason)));
+    ::djinni::jniExceptionCheck(jniEnv);
+}
+void NativeIWalletListener::JavaProxy::notifyCoreInfo(const std::string & c_type, const std::string & c_caption, const std::string & c_message) {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeIWalletListener>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyCoreInfo,
+                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c_type)),
+                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c_caption)),
+                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c_message)));
+    ::djinni::jniExceptionCheck(jniEnv);
+}
 
 }  // namespace djinni_generated
