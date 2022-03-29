@@ -366,12 +366,12 @@ bool CWallet::Unlock(const SecureString& strWalletPassphrase)
 bool CWallet::UnlockWithTimeout(const SecureString& strWalletPassphrase, int64_t lockTimeoutSeconds)
 {
     bool ret = Unlock(strWalletPassphrase);
-    
+
     // Schedule the lock `lockTimeoutSeconds` from now
     if (ret && schedulerForLock)
     {
         nRelockTime = GetTime() + lockTimeoutSeconds;
-        
+
         // Keep the time we are requesting here as a value copy in the lambda in addition to being stored as a member variable...
         // Why? So that we can check that it hasn't changed before calling the lock
         // Otherwise this sequence of events is an issue:
@@ -385,11 +385,11 @@ bool CWallet::UnlockWithTimeout(const SecureString& strWalletPassphrase, int64_t
             {
                 Lock();
             }
-        },  boost::chrono::system_clock::time_point(boost::chrono::seconds(nRelockTime)));
+        },  std::chrono::system_clock::time_point(std::chrono::seconds(nRelockTime)));
     }
     return ret;
 }
-    
+
 bool CWallet::ChangeWalletPassphrase(const SecureString& strOldWalletPassphrase, const SecureString& strNewWalletPassphrase)
 {
     bool fWasLocked = IsLocked();
@@ -407,7 +407,7 @@ bool CWallet::ChangeWalletPassphrase(const SecureString& strOldWalletPassphrase,
             std::vector<unsigned char> cryptedKeyCopy = pMasterKey.second.vchCryptedKey;
             if (!crypter.Decrypt(pMasterKey.second.vchCryptedKey, _vMasterKey))
                 return false;
-            
+
             //fixme: (PHASE5) Remove - Temporary fix for a very small limited subset of wallets that got exposed to a password change bug.
             //We can just leave this fix in for a while and then remove it.
             bool unlocked = false;
