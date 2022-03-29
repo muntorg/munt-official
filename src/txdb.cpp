@@ -341,6 +341,13 @@ void CCoinsViewDB::GetAllCoinsIndexBasedDirect(std::map<COutPoint, Coin>& allCoi
     }
 }
 
+void CCoinsViewDB::SanityCheckCoinCache() const
+{
+    assert(0);
+}
+
+
+
 CBlockTreeDB::CBlockTreeDB(size_t nCacheSize, bool fMemory, bool fWipe) : CDBWrapper(GetDataDir() / "blocks" / "index", nCacheSize, fMemory, fWipe) {
 }
 

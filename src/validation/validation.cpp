@@ -1530,6 +1530,7 @@ void FindFilesToPruneExplicit(std::set<int>& setFilesToPrune, unsigned int nPrun
  * or always and in all cases if we're in prune mode and are deleting files.
  */
 bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, FlushStateMode mode, int nManualPruneHeight, bool fFlushPartialSync) {
+    
     int64_t nMempoolUsage = mempool.DynamicMemoryUsage();
     LOCK2(cs_main, cs_LastBlockFile);
     static int64_t nLastWrite = 0;
@@ -1671,6 +1672,9 @@ bool FlushStateToDisk(const CChainParams& chainparams, CValidationState &state, 
         // overwrite one. Still, use a conservative safety factor of 2.
         if (!CheckDiskSpace(48 * 2 * 2 * pcoinsTip->GetCacheSize()))
             return state.Error("out of disk space");
+        
+        
+        LogPrintf("Flush coins tip\n");
         // Flush the chainstate (which may refer to block index entries).
         if (!pcoinsTip->Flush())
             return AbortNode(state, "Failed to write to coin database");
