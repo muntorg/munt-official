@@ -80,7 +80,7 @@ bool unityMessageBox(const std::string& message, const std::string& caption, uns
     }
 
     if (!fSecure)
-        LogPrintf("%s: %s\n", strType, caption, message);
+        LogPrintf("unityMessageBox: %s %s %s\n", strType, caption, message);
     
     if (walletListener)
     {
