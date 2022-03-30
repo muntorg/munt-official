@@ -99,7 +99,11 @@
     "header": "Instellingen",
     "change_password": "Verander wachtwoord",
     "view_recovery_phrase": "Bekijk herstelzin",
-    "choose_theme": "Choose theme"
+    "choose_theme": "Kies thema",
+    "choose_language": "Kies taal",
+    "choose_decimal_places": "Kies aantal decimalen",
+    "english": "EN",
+    "dutch": "NL"
   },
   "setup": {
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
