@@ -99,7 +99,11 @@
     "header": "Settings",
     "change_password": "Change password",
     "view_recovery_phrase": "View recovery phrase",
-    "choose_theme": "Choose theme"
+    "choose_theme": "Choose theme",
+    "choose_language": "Choose Language",
+    "choose_decimal_places": "Choose Decimal Places",
+    "english": "EN",
+    "dutch": "NL"
   },
   "setup": {
     "choose_password": "Choose a password of at least 6 characters",
