@@ -5,23 +5,25 @@
 
       <div class="flex-row">
         <div>Client version</div>
-        <div class="ellipsis">{{ clientInfo.client_version }}</div>
+        <div>{{ clientInfo.client_version }}</div>
       </div>
       <div class="flex-row">
         <div>Useragent</div>
-        <div class="ellipsis">{{ clientInfo.user_agent }}</div>
+        <div>{{ clientInfo.user_agent }}</div>
       </div>
       <div class="flex-row">
         <div>Data dir</div>
-        <div class="ellipsis">{{ clientInfo.datadir_path }}</div>
+        <div class="selectable">{{ clientInfo.datadir_path }}</div>
       </div>
       <div class="flex-row">
         <div>Log file</div>
-        <div class="ellipsis">{{ clientInfo.logfile_path }}</div>
+        <div class="selectable">
+          {{ clientInfo.logfile_path }}
+        </div>
       </div>
       <div class="flex-row">
         <div>Startup time</div>
-        <div class="ellipsis">{{ startupTime }}</div>
+        <div>{{ startupTime }}</div>
       </div>
     </app-section>
 
@@ -81,16 +83,17 @@ export default {
   name: "InformationPage",
   computed: {
     startupTime() {
-      return new Date(this.clientInfo.startup_timestamp * 1000);
+      return this.formatDate(this.clientInfo.startup_timestamp);
     },
     lastBlockTime() {
-      return new Date(this.clientInfo.chain_tip_time * 1000);
+      return this.formatDate(this.clientInfo.chain_tip_time);
     },
     numberOfConnections() {
       let connections_in = parseInt(this.clientInfo.num_connections_in);
       let connections_out = parseInt(this.clientInfo.num_connections_out);
 
-      return `${connections_in + connections_out} (In: ${connections_in} / Out: ${connections_out})`;
+      return `${connections_in +
+        connections_out} (In: ${connections_in} / Out: ${connections_out})`;
     }
   },
   created() {
@@ -100,7 +103,10 @@ export default {
   beforeDestroy() {
     this.enableTimeout = false;
     clearTimeout(timeout);
-    document.removeEventListener("webkitvisibilitychange", this.visibilityChange);
+    document.removeEventListener(
+      "webkitvisibilitychange",
+      this.visibilityChange
+    );
   },
   methods: {
     updateClientInfo() {
@@ -117,6 +123,18 @@ export default {
         this.enableTimeout = true;
         this.updateClientInfo();
       }
+    },
+    formatDate(timestamp) {
+      const date = new Date(timestamp * 1000);
+      return date.toLocaleString(this.$i18n.locale, {
+        weekday: "short",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
     }
   }
 };
@@ -126,15 +144,29 @@ export default {
 .information-page {
   width: 100%;
   height: 100%;
+
   & h4 {
-    margin: 0 0 10px 0;
+    margin-bottom: 5px;
   }
+  & h4:not(:first) {
+    margin-top: 5px;
+  }
+
   & .flex-row > div {
-    font-size: 0.95em;
+    font-size: 0.85rem;
     line-height: 20px;
   }
   & .flex-row :first-child {
-    min-width: 180px;
+    flex: 0 0 180px;
   }
+  & .flex-row :last-child {
+    flex: 1;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+}
+
+.selectable {
+  user-select: all;
 }
 </style>
