@@ -142,7 +142,6 @@ static bool AppInitServers(boost::thread_group& threadGroup)
 
 bool InitRPCWarmup(boost::thread_group& threadGroup)
 {
-    MilliSleep(20000);
     if (GetBoolArg("-server", false))
     {
         uiInterface.InitMessage.connect(SetRPCWarmupStatus);
