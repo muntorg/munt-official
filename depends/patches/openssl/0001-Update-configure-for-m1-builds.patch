@@ -1,0 +1,48 @@
+diff --git a/Configure b/Configure
+index 541be9e..b05be44 100755
+--- a/Configure
++++ b/Configure
+@@ -584,6 +584,7 @@ my %table=(
+ "darwin64-x86_64-cc","cc:-arch x86_64 -O3 -DL_ENDIAN -Wall::-D_REENTRANT:MACOSX:-Wl,-search_paths_first%:SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL:".eval{my $asm=$x86_64_asm;$asm=~s/rc4\-[^:]+//;$asm}.":macosx:dlfcn:darwin-shared:-fPIC -fno-common:-arch x86_64 -dynamiclib:.\$(SHLIB_MAJOR).\$(SHLIB_MINOR).dylib",
+ "debug-darwin-ppc-cc","cc:-DBN_DEBUG -DREF_CHECK -DCONF_DEBUG -DCRYPTO_MDEBUG -DB_ENDIAN -g -Wall -O::-D_REENTRANT:MACOSX::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${ppc32_asm}:osx32:dlfcn:darwin-shared:-fPIC:-dynamiclib:.\$(SHLIB_MAJOR).\$(SHLIB_MINOR).dylib",
+ # iPhoneOS/iOS
++"darwin64-arm64-cc", "cc:-arch arm64 -O3 -DL_ENDIAN -Wall::-D_REENTRANT:MACOSX: -Wl,-search_paths_first%:SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL:${no_asm}:macosx:dlfcn:darwin-shared:-fPIC -fno-common:-arch arm64 -dynamiclib:.\$(SHLIB_MAJOR).\$(SHLIB_MINOR).dylib",
+ "iphoneos-cross","llvm-gcc:-O3 -isysroot \$(CROSS_TOP)/SDKs/\$(CROSS_SDK) -fomit-frame-pointer -fno-common::-D_REENTRANT:iOS:-Wl,-search_paths_first%:BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}:dlfcn:darwin-shared:-fPIC -fno-common:-dynamiclib:.\$(SHLIB_MAJOR).\$(SHLIB_MINOR).dylib",
+ 
+ ##### A/UX
+diff --git a/config b/config
+index 41fa2a6..04e123c 100755
+--- a/config
++++ b/config
+@@ -274,6 +274,9 @@ case "${SYSTEM}:${RELEASE}:${VERSION}:${MACHINE}" in
+ 
+     Darwin:*)
+ 	case "$MACHINE" in
++		arm*)
++		echo "arm-apple-darwin${VERSION}"
++		;;
+ 	    Power*)
+ 		echo "ppc-apple-darwin${VERSION}"
+ 		;;
+@@ -551,6 +554,21 @@ case "$GUESSOS" in
+ 	else
+ 	    OUT="darwin-ppc-cc"
+ 	fi ;;
++  arm-apple-darwin*)
++	ISA64=`(sysctl -n hw.optional.arm64) 2>/dev/null`
++	if [ "$ISA64" = "1" -a -z "$KERNEL_BITS" ]; then
++	    echo "WARNING! If you wish to build M1 ARM 64-bit library, then you have to"
++	    echo "         invoke './Configure darwin64-arm64-cc' *manually*."
++	    if [ "$TEST" = "false" -a -t 1 ]; then
++	      echo "         You have about 5 seconds to press Ctrl-C to abort."
++	      (trap "stty `stty -g`" 2 0; stty -icanon min 0 time 50; read waste) <&1
++	    fi
++	fi
++	if [ "$ISA64" = "1" -a "$KERNEL_BITS" = "64" ]; then
++	    OUT="darwin64-arm64-cc"
++	else
++	    OUT="darwin-arm64-cc"
++	fi ;;
+   i?86-apple-darwin*)
+ 	ISA64=`(sysctl -n hw.optional.x86_64) 2>/dev/null`
+ 	if [ "$ISA64" = "1" -a -z "$KERNEL_BITS" ]; then

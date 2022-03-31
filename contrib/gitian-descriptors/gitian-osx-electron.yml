@@ -38,14 +38,14 @@ remotes:
 - "url": https://github.com/gulden/gulden-official.git
   "dir": "Gulden"
 files:
-- "MacOSX10.11.sdk.tar.gz"
+- "MacOSX12.0.sdk.tar.gz"
 - "iojs-v8.2.3.tar.gz"
 - "node-addon-api-2.0.0.tgz"
 script: |
   set -e -o pipefail
 
   WRAP_DIR=$HOME/wrapped
-  HOSTS="x86_64-apple-darwin14"
+  HOSTS="x86_64-apple-darwin14 arm64-apple-darwin21.1.0"
   CONFIGFLAGS="--enable-reduce-exports --disable-gui-tests GENISOIMAGE=$WRAP_DIR/genisoimage --disable-bench --disable-tests --disable-man --enable-zmq --without-utils  --without-daemon --with-node-js-libs --with-qrencode --with-gui=no"
   FAKETIME_HOST_PROGS=""
   FAKETIME_PROGS="ar ranlib date dmg genisoimage"
@@ -109,8 +109,8 @@ script: |
 
   mkdir -p ${BASEPREFIX}/SDKs
   export SDK_PATH=${BASEPREFIX}/SDKs
-  export OSX_SDK_VERSION=10.11
-  tar -C ${BASEPREFIX}/SDKs -xf ${BUILD_DIR}/MacOSX10.11.sdk.tar.gz
+  export OSX_SDK_VERSION=12.0
+  tar -C ${BASEPREFIX}/SDKs -xf ${BUILD_DIR}/MacOSX12.0.sdk.tar.gz
 
   # Build dependencies for each host
   ORIGWRAPPATH="$PATH"
@@ -127,6 +127,17 @@ script: |
 
   # Create the release tarball using (arbitrarily) the first host
   ./autogen.sh
+
+  # Temporary fix/workaround for macOS m1/arm64 build issues; autogen.sh gives us an outdated config.sub/config.guess that doesn't know what to do with our host
+  # So we overwrite it with the newer one from depends directory
+  # In future we should just get on a new autotools etc. though
+  cp depends/config.sub build-aux/
+  cp depends/config.guess build-aux/
+  cp depends/config.sub src/secp256k1/build-aux/
+  cp depends/config.guess src/secp256k1/build-aux/
+  cp depends/config.sub src/univalue/build-aux/
+  cp depends/config.guess src/univalue/build-aux/
+
   CONFIG_SITE=${BASEPREFIX}/`echo "${HOSTS}" | awk '{print $1;}'`/share/config.site ./configure --prefix=/
   make dist
   SOURCEDIST=`echo Gulden-*.tar.gz`
@@ -190,4 +201,5 @@ script: |
     rm -rf release/lib
     
     cd ../../
+
   done

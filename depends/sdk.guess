@@ -8,13 +8,13 @@ if [ -d "$1/SDKs" ]; then
   exit 0
 fi
 
-if [ -d "/Library/Developer/CommandLineTools/SDKs/" ]; then
-   echo "/Library/Developer/CommandLineTools/SDKs/"
+if [ -d "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/" ]; then
+   echo "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/"
    exit 0
 fi
 
-if [ -d "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/" ]; then
-   echo "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/"
+if [ -d "/Library/Developer/CommandLineTools/SDKs/" ]; then
+   echo "/Library/Developer/CommandLineTools/SDKs/"
    exit 0
 fi
 

@@ -3,6 +3,7 @@ $(package)_version=1.0.1k
 $(package)_download_path=https://www.openssl.org/source/old/1.0.1
 $(package)_file_name=$(package)-$($(package)_version).tar.gz
 $(package)_sha256_hash=8f9faeaebad088e772f4ef5e38252d472be4d878c6b3a2718c10a4fcebe7a41c
+$(package)_patches=0001-Update-configure-for-m1-builds.patch
 
 define $(package)_set_vars
 $(package)_config_env=AR="$($(package)_ar)" RANLIB="$($(package)_ranlib)" CC="$($(package)_cc)"
@@ -55,22 +56,24 @@ $(package)_config_opts_powerpc_linux=linux-generic32
 $(package)_config_opts_riscv32_linux=linux-generic32
 $(package)_config_opts_riscv64_linux=linux-generic64
 $(package)_config_opts_x86_64_darwin=darwin64-x86_64-cc
+$(package)_config_opts_aarch64_darwin=darwin64-arm64-cc
 $(package)_config_opts_x86_64_mingw32=mingw64
 $(package)_config_opts_x86_64_mingw64=mingw64
-$(package)_config_opts_i686_mingw32=mingw64
+$(package)_config_opts_i686_mingw32=mingw
 $(package)_config_opts_x86_64_ios=darwin64-x86_64-cc
 $(package)_config_opts_aarch64_ios=iphoneos-cross-arm64
 $(package)_config_env_aarch64_ios=CROSS_TOP="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer" CROSS_SDK="iPhoneOS12.0.sdk"
 endef
 
 define $(package)_preprocess_cmds
+  patch -p1 < $($(package)_patch_dir)/0001-Update-configure-for-m1-builds.patch && \
   sed -i.old "/define DATE/d" util/mkbuildinf.pl && \
   sed -i.old "s|engines apps test|engines|" Makefile.org && \
   LC_ALL=C sed -i.old "s|# iPhoneOS/iOS|\"iphoneos-cross-arm64\", \"$(package)_cc:-O3 -fomit-frame-pointer -fno-common -fembed-bitcode::-D_REENTRANT:iOS:-Wl,-search_paths_first%:SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}:::-fPIC -fno-common::\",|" Configure
 endef
 
 define $(package)_config_cmds
-  ./Configure $($(package)_config_opts)
+  $($(package)_config_env) ./Configure $($(package)_config_opts)
 endef
 
 define $(package)_build_cmds

@@ -26,6 +26,7 @@ define $(package)_config_cmds
     sed -Ei.old "s|AR = libtool|AR = $($(package)_libtool)|" GNUmakefile && \
     sed -Ei.old "s|CC=gcc|CC=$($(package)_cxx)|" GNUmakefile && \
     sed -Ei.old "s|CC=clang|CC=$($(package)_cxx)|" GNUmakefile && \
+    sed -i.old 's|ifeq ($$$$(IS_ARM32),1)|ifeq ($$$$(IS_ARM32)$$$$(IS_ARMV8),10)|' GNUmakefile &&\
     sed -Ei.old "s|// [#]define CRYPTOPP_NO_CXX17|#define CRYPTOPP_NO_CXX17|" config.h && \
     sed -Ei.old "s|[#] define CRYPTOPP_UNCAUGHT_EXCEPTION_AVAILABLE|//# define CRYPTOPP_UNCAUGHT_EXCEPTION_AVAILABLE|" config.h
 endef
