@@ -490,13 +490,7 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
         CCoinsMap::iterator itOld = it++;
         mapCoins.erase(itOld);
     }
-    
-    //fixme: (MED) The commented out loop below (and two corresponding commented out line above) are technically more efficient than the code we have here (below)
-    //However is having robustness issues, while I think we have resolved all issues now
-    //Rather than take a risk, we instead favour the simpler more robust code
-    //re-visit this in future and establish via more testing that the other code path is fully robust (as well as faster) before re-enabling
-    //otherwise consider purging it in future  if not.
-    
+       
     for (const auto& outPoint : modificationMap)
     {
         const auto iter = cacheCoins.find(outPoint);
