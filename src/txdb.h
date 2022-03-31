@@ -122,15 +122,9 @@ public:
     uint32_t nCurrentVersion=4;
     uint32_t nPreviousVersion=1;
 
-    /*int GetDepth() const override
-    {
-        return 0;
-    }*/
-
     void GetAllCoins(std::map<COutPoint, Coin>& allCoins) const override;
     void GetAllCoinsIndexBased(std::map<COutPoint, Coin>& allCoins) const override;
     void GetAllCoinsIndexBasedDirect(std::map<COutPoint, Coin>& allCoins) const override;
-    void SanityCheckCoinCache() const override;
 };
 
 /** CWitViewDB backed by the witness database (witstate/) */
