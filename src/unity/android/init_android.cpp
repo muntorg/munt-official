@@ -23,11 +23,11 @@ void InitRegisterRPC()
 {
 }
 
-void ServerInterrupt(boost::thread_group& threadGroup)
+void ServerInterrupt()
 {
 }
 
-bool InitRPCWarmup(boost::thread_group& threadGroup)
+bool InitRPCWarmup()
 {
     return true;
 }
@@ -40,7 +40,7 @@ void RPCNotifyBlockChange(bool ibd, const CBlockIndex * pindex)
 {
 }
 
-void ServerShutdown(boost::thread_group& threadGroup, node::NodeContext& nodeContext)
+void ServerShutdown(node::NodeContext& nodeContext)
 {
     // After everything has been shut down, but before things get flushed, stop the
     // CScheduler/checkqueue, scheduler and load block thread.
@@ -51,7 +51,7 @@ void InitRPCMining()
 {
 }
 
-bool InitTor(boost::thread_group& threadGroup, CScheduler& scheduler)
+bool InitTor()
 {
     return true;
 }

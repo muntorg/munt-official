@@ -32,6 +32,7 @@
 #include "txmempool.h"
 #include "util.h"
 #include "util/thread.h"
+#include "util/threadnames.h"
 #include "util/time.h"
 #include "util/moneystr.h"
 #include "validation/validationinterface.h"
@@ -637,7 +638,7 @@ bool witnessingEnabled = true;
 void static GuldenWitness()
 {
     LogPrintf("Witness thread started\n");
-    RenameThread(GLOBAL_APPNAME"-witness");
+    util::ThreadRename(GLOBAL_APPNAME"-witness");
     
     // Don't even try witness if we have no wallet (-disablewallet)
     if (!pactiveWallet)
@@ -834,6 +835,6 @@ void static GuldenWitness()
 void StartPoW2WitnessThread(boost::thread_group& threadGroup)
 {
     #ifdef ENABLE_WALLET
-    threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "pow2_witness", &GuldenWitness));
+    threadGroup.create_thread(boost::bind(&util::TraceThread, "pow2_witness", &GuldenWitness));
     #endif
 }

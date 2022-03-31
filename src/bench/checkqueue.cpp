@@ -30,10 +30,8 @@ static void CCheckQueueSpeed(benchmark::State& state)
         void swap(FakeJobNoWork& x){};
     };
     CCheckQueue<FakeJobNoWork> queue {QUEUE_BATCH_SIZE};
-    boost::thread_group tg;
-    for (auto x = 0; x < std::max(MIN_CORES, GetNumCores()); ++x) {
-       tg.create_thread([&]{queue.Thread();});
-    }
+    // The main thread should be counted to prevent thread oversubscription, and
+    // to decrease the variance of benchmark results.
     while (state.KeepRunning()) {
         CCheckQueueControl<FakeJobNoWork> control(&queue);
 
@@ -54,8 +52,7 @@ static void CCheckQueueSpeed(benchmark::State& state)
         // it is done explicitly here for clarity
         control.Wait();
     }
-    tg.interrupt_all();
-    tg.join_all();
+    queue.StopWorkerThreads();
 }
 
 // This Benchmark tests the CheckQueue with a slightly realistic workload,
@@ -77,10 +74,11 @@ static void CCheckQueueSpeedPrevectorJob(benchmark::State& state)
         void swap(PrevectorJob& x){p.swap(x.p);};
     };
     CCheckQueue<PrevectorJob> queue {QUEUE_BATCH_SIZE};
-    boost::thread_group tg;
-    for (auto x = 0; x < std::max(MIN_CORES, GetNumCores()); ++x) {
-       tg.create_thread([&]{queue.Thread();});
-    }
+
+    // The main thread should be counted to prevent thread oversubscription, and
+    // to decrease the variance of benchmark results.
+    queue.StartWorkerThreads(std::max(MIN_CORES, GetNumCores()-1));
+
     while (state.KeepRunning()) {
         // Make insecure_rand here so that each iteration is identical.
         FastRandomContext insecure_rand(true);
@@ -96,8 +94,7 @@ static void CCheckQueueSpeedPrevectorJob(benchmark::State& state)
         // it is done explicitly here for clarity
         control.Wait();
     }
-    tg.interrupt_all();
-    tg.join_all();
+    queue.StopWorkerThreads();
 }
 BENCHMARK(CCheckQueueSpeed);
 BENCHMARK(CCheckQueueSpeedPrevectorJob);

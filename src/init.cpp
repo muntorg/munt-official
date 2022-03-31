@@ -56,6 +56,7 @@
 #include "ui_interface.h"
 #include "util.h"
 #include "util/thread.h"
+#include "util/threadnames.h"
 #include "witnessutil.h"
 #include "util/moneystr.h"
 #ifdef ENABLE_WALLET
@@ -175,19 +176,19 @@ static std::unique_ptr<ECCVerifyHandle> globalVerifyHandle;
 
 static CCoinsViewErrorCatcher *ppow2witcatcher = NULL;
 
-extern void ServerInterrupt(boost::thread_group& threadGroup);
+extern void ServerInterrupt();
 void CoreInterrupt(boost::thread_group& threadGroup)
 {
     LogPrintf("Core interrupt: commence core interrupt\n");
     PoWGenerateBlocks(false, 0, 0, 0, Params());
     if (g_connman)
         g_connman->Interrupt();
-    ServerInterrupt(threadGroup);
+    ServerInterrupt();
     threadGroup.interrupt_all();
     LogPrintf("Core interrupt: done.\n");
 }
 
-extern void ServerShutdown(boost::thread_group& threadGroup, node::NodeContext& nodeContext);
+extern void ServerShutdown(node::NodeContext& nodeContext);
 void CoreShutdown(boost::thread_group& threadGroup, node::NodeContext& nodeContext)
 {
     LogPrintf("Core shutdown: commence core shutdown\n");
@@ -210,7 +211,7 @@ void CoreShutdown(boost::thread_group& threadGroup, node::NodeContext& nodeConte
 
 
     LogPrintf("Core shutdown: stop remaining worker threads.\n");
-    ServerShutdown(threadGroup, nodeContext);
+    ServerShutdown(nodeContext);
     threadGroup.join_all();
     MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
 
@@ -420,7 +421,7 @@ static void BlockNotifyCallback(bool initialSync, const CBlockIndex *pBlockIndex
     std::string strCmd = GetArg("-blocknotify", "");
 
     boost::replace_all(strCmd, "%s", pBlockIndex->GetBlockHashPoW2().GetHex());
-    boost::thread t(runCommand, strCmd); // thread runs free
+    std::thread(runCommand, strCmd).detach();
 }
 
 static bool fHaveGenesis = false;
@@ -496,7 +497,7 @@ static void CleanupBlockRevFiles()
 static void ThreadImport(std::vector<fs::path> vImportFiles)
 {
     const CChainParams& chainparams = Params();
-    RenameThread(GLOBAL_APPNAME"-loadblk");
+    util::ThreadRename(GLOBAL_APPNAME"-loadblk");
 
     {
     CImportingNow imp;
@@ -1111,8 +1112,8 @@ bool AppInitSanityChecks()
     return LockDataDirectory(true);
 }
 
-extern bool InitRPCWarmup(boost::thread_group& threadGroup);
-extern bool InitTor(boost::thread_group& threadGroup, CScheduler& scheduler);
+extern bool InitRPCWarmup();
+extern bool InitTor();
 
 bool AppInitMain(boost::thread_group& threadGroup, node::NodeContext& node)
 {
@@ -1165,7 +1166,7 @@ bool AppInitMain(boost::thread_group& threadGroup, node::NodeContext& node)
     node.scheduler = std::make_unique<CScheduler>();
 
     // Start the lightweight task scheduler thread
-    node.scheduler->m_service_thread = std::thread(&TraceThread<std::function<void()> >, "scheduler", std::function<void()>([&] { node.scheduler->serviceQueue(); }));
+    node.scheduler->m_service_thread = std::thread(&util::TraceThread, "scheduler", std::function<void()>([&] { node.scheduler->serviceQueue(); }));
 
     GetMainSignals().RegisterBackgroundSignalScheduler(*node.scheduler);
 
@@ -1179,7 +1180,7 @@ bool AppInitMain(boost::thread_group& threadGroup, node::NodeContext& node)
      * that the server is there and will be ready later).  Warmup mode will
      * be disabled when initialisation is finished.
      */
-    if (!InitRPCWarmup(threadGroup))
+    if (!InitRPCWarmup())
         return false;
 
     int64_t nStart;
@@ -1750,9 +1751,9 @@ bool AppInitMain(boost::thread_group& threadGroup, node::NodeContext& node)
     LogPrintf("mapBlockIndex.size() = %u\n",   mapBlockIndex.size());
     LogPrintf("nBestHeight = %d\n",                   chainActive.Height());
     //LogPrintf("setKeyPoolExternal.size() = %u\n",      pwalletMain ? pwalletMain->setKeyPoolExternal.size() : 0);
-    InitTor(threadGroup, *node.scheduler);
+    InitTor();
 
-    Discover(threadGroup);
+    Discover();
 
     // Map ports with UPnP
     MapPort(GetBoolArg("-upnp", DEFAULT_UPNP));

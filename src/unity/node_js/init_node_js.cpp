@@ -78,7 +78,7 @@ void InitRegisterRPC()
     RPCSetTimerInterface(timerInterface);
 }
 
-void ServerInterrupt(boost::thread_group& threadGroup)
+void ServerInterrupt()
 {
     InterruptHTTPServer();
     InterruptHTTPRPC();
@@ -87,7 +87,7 @@ void ServerInterrupt(boost::thread_group& threadGroup)
     InterruptTorControl();
 }
 
-void ServerShutdown(boost::thread_group& threadGroup, node::NodeContext& nodeContext)
+void ServerShutdown(node::NodeContext& nodeContext)
 {
     RPCUnsetTimerInterface(timerInterface);
     StopHTTPServer();
@@ -122,7 +122,7 @@ static void OnRPCPreCommand(const CRPCCommand& cmd)
         throw JSONRPCError(RPC_FORBIDDEN_BY_SAFE_MODE, std::string("Safe mode: ") + strWarning);
 }
 
-static bool AppInitServers(boost::thread_group& threadGroup)
+static bool AppInitServers()
 {
     RPCServer::OnStarted(&OnRPCStarted);
     RPCServer::OnStopped(&OnRPCStopped);
@@ -140,21 +140,21 @@ static bool AppInitServers(boost::thread_group& threadGroup)
     return true;
 }
 
-bool InitRPCWarmup(boost::thread_group& threadGroup)
+bool InitRPCWarmup()
 {
     if (GetBoolArg("-server", false))
     {
         uiInterface.InitMessage.connect(SetRPCWarmupStatus);
-        if (!AppInitServers(threadGroup))
+        if (!AppInitServers())
             return InitError("Unable to start HTTP server. See debug log for details.");
     }
     return true;
 }
 
-bool InitTor(boost::thread_group& threadGroup, CScheduler& scheduler)
+bool InitTor()
 {
     if (GetBoolArg("-listenonion", DEFAULT_LISTEN_ONION))
-        StartTorControl(threadGroup, scheduler);
+        StartTorControl();
     return true;
 }
 

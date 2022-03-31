@@ -8,6 +8,7 @@
 #include "chainparams.h"
 #include "util.h"
 #include "util/thread.h"
+#include "util/threadnames.h"
 #include "witnessutil.h"
 #include "init.h"
 #include "warnings.h"
@@ -223,7 +224,7 @@ void AppLifecycleManager::shutdownThread()
 
     std::thread([=]
     {
-        RenameThread(GLOBAL_APPNAME"-shutdown");
+        util::ThreadRename(GLOBAL_APPNAME"-shutdown");
 
         // Block until we are signalled to commence
         #ifdef WIN32

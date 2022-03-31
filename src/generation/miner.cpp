@@ -37,6 +37,7 @@
 #include "txmempool.h"
 #include "util.h"
 #include "util/thread.h"
+#include "util/threadnames.h"
 #include "util/time.h"
 #include "util/moneystr.h"
 #include "validation/validationinterface.h"
@@ -1072,7 +1073,7 @@ inline void clearHashesPerSecondStatistics()
 void static PoWGenerate(const CChainParams& chainparams, CAccount* forAccount, uint64_t nThreads, uint64_t nArenaThreads, uint64_t nMemoryKb)
 {
     LogPrintf("PoWGenerate thread started\n");
-    RenameThread(GLOBAL_APPNAME"-generate");
+    util::ThreadRename(GLOBAL_APPNAME"-generate");
 
     int64_t nUpdateTimeStart = GetTimeMillis();
 

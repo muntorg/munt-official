@@ -42,10 +42,10 @@
 
 #include <univalue.h>
 
-#include <boost/thread/thread.hpp> // boost::thread::interrupt
-
 #include <mutex>
 #include <condition_variable>
+
+#include <boost/thread.hpp>
 
 struct CUpdatedBlock
 {

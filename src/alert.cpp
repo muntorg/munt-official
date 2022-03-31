@@ -25,10 +25,11 @@
 #include <stdint.h>
 #include <algorithm>
 #include <map>
+#include <thread>
 
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/replace.hpp>
-#include <boost/thread.hpp>
+
 
 std::map<uint256, CAlert> mapAlerts;
 RecursiveMutex cs_mapAlerts;
@@ -276,7 +277,7 @@ void CAlert::Notify(const std::string& strMessage, bool fThread, bool fUI)
     if (notifyCallback)
     {
         if (fThread)
-            boost::thread t(runCommand, strCmd); // thread runs free
+            std::thread t(runCommand, strCmd); // thread runs free
         else
             runCommand(strCmd);
     }

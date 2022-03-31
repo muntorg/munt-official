@@ -45,10 +45,10 @@
 #include <assert.h>
 
 #include <boost/algorithm/string/replace.hpp>
-#include <boost/thread.hpp>
 #include <algorithm>
 #include <random>
 #include <fstream>
+#include <thread>
 
 //Gulden specific includes
 #include "init.h"
@@ -1087,7 +1087,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose, bool fSelf
     if ( !strCmd.empty())
     {
         boost::replace_all(strCmd, "%s", wtxIn.GetHash().GetHex());
-        boost::thread t(runCommand, strCmd); // thread runs free
+        std::thread(runCommand, strCmd).detach();
     }
 
     return true;

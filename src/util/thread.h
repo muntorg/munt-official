@@ -10,38 +10,15 @@
 #include <appname.h>
 #include <tinyformat.h>
 #include "logging.h"
-#include <boost/thread/thread.hpp>
-
-void RenameThread(const char* name);
 
 void PrintExceptionContinue(const std::exception *pex, const char* pszThread);
 
+namespace util {
 /**
  * A wrapper for do-something-once thread functions.
  */
-template <typename Callable> void TraceThread(const char* name,  Callable func)
-{
-    std::string s = strprintf(GLOBAL_APPNAME "-%s", name);
-    RenameThread(s.c_str());
-    try
-    {
-        LogPrintf("%s thread start\n", name);
-        func();
-        LogPrintf("%s thread exit\n", name);
-    }
-    catch (const boost::thread_interrupted&)
-    {
-        LogPrintf("%s thread interrupt\n", name);
-        throw;
-    }
-    catch (const std::exception& e) {
-        PrintExceptionContinue(&e, name);
-        throw;
-    }
-    catch (...) {
-        PrintExceptionContinue(NULL, name);
-        throw;
-    }
-}
+void TraceThread(const char* thread_name, std::function<void()> thread_func);
+
+} // namespace util
 
 #endif // CORE_UTIL_THREAD_H

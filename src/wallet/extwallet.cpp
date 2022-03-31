@@ -246,7 +246,7 @@ static void ThreadShadowPoolManager()
 
 void StartShadowPoolManagerThread(boost::thread_group& threadGroup)
 {
-    threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "shadowpoolmanager", &ThreadShadowPoolManager));
+    threadGroup.create_thread(boost::bind(&util::TraceThread, "shadowpoolmanager", &ThreadShadowPoolManager));
 }
 
 std::string accountNameForAddress(const CWallet &wallet, const CTxDestination& dest)

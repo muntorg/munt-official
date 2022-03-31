@@ -23,6 +23,7 @@
 #include "util/time.h"
 #include "util/strencodings.h"
 #include <util/thread.h>
+#include <boost/thread.hpp>
 
 #include <stdio.h>
 

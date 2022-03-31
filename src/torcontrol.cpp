@@ -15,6 +15,7 @@
 #include <deque>
 #include <set>
 #include <stdlib.h>
+#include <thread>
 
 #include <boost/bind.hpp>
 #include <boost/signals2/signal.hpp>
@@ -736,7 +737,7 @@ void TorController::reconnect_cb(evutil_socket_t fd, short what, void *arg)
 
 /****** Thread ********/
 static struct event_base *gBase;
-static boost::thread torControlThread;
+static std::thread torControlThread;
 
 static void TorControlThread()
 {
@@ -745,7 +746,7 @@ static void TorControlThread()
     event_base_dispatch(gBase);
 }
 
-void StartTorControl(boost::thread_group& threadGroup, CScheduler& scheduler)
+void StartTorControl()
 {
     assert(!gBase);
 #ifdef WIN32
@@ -759,7 +760,9 @@ void StartTorControl(boost::thread_group& threadGroup, CScheduler& scheduler)
         return;
     }
 
-    torControlThread = boost::thread(boost::bind(&TraceThread<void (*)()>, "torcontrol", &TorControlThread));
+    torControlThread = std::thread(&util::TraceThread, "torcontrol", [] {
+        TorControlThread();
+    });
 }
 
 void InterruptTorControl()
