@@ -217,7 +217,8 @@ define $(package)_preprocess_cmds
   fi && \
   sed -i.old "s|CONFIG.*=.*build_all||" qwt/qwtbuild.pri && \
   echo "unix|mingw {QWT_CONFIG     += QwtPkgConfig }" >> qwt/qwtconfig.pri && \
-  echo "unix|mingw {QMAKE_PKGCONFIG_VERSION = $($(package)_qwt_version) }" >> qwt/qwtconfig.pri
+  echo "unix|mingw {QMAKE_PKGCONFIG_VERSION = $($(package)_qwt_version) }" >> qwt/qwtconfig.pri && \
+  sed -i.old "s/QT_BEGIN_NAMESPACE/#include <limits>\nQT_BEGIN_NAMESPACE/g" qtbase/src/corelib/tools/qbytearraymatcher.h
 endef
 #sed qttools/src/linguist/shared/formats.pri -i -re 's/QT \*= xml//' && \
 #sed qttools/src/linguist/shared/formats.pri -i -re 's/    .*xliff.cpp/    /' && \
