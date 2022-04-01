@@ -29,6 +29,8 @@
 #include "util/strencodings.h"
 #include "util/thread.h"
 
+#include <boost/thread.hpp>
+
 #ifdef WIN32
 #include <string.h>
 #else
