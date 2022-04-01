@@ -4,7 +4,7 @@ enable_cache: true
 distro: "ubuntu"
 sudo: true
 suites:
-- "bionic"
+- "jammy"
 architectures:
 - "amd64"
 packages:

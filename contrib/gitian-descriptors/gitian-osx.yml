@@ -3,7 +3,7 @@ name: "Gulden-osx-2.4.0"
 enable_cache: true
 distro: "ubuntu"
 suites:
-- "bionic"
+- "jammy"
 architectures:
 - "amd64"
 packages:
