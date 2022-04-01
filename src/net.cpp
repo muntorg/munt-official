@@ -1324,7 +1324,7 @@ void MapPort(bool fUseUPnP)
             upnp_thread->join();
             delete upnp_thread;
         }
-        upnp_thread = new boost::thread(boost::bind(&TraceThread<void (*)()>, "upnp", &ThreadMapPort));
+        upnp_thread = new boost::thread(&util::TraceThread, "upnp", std::function<void()>(&ThreadMapPort));
     }
     else if (upnp_thread) {
         upnp_thread->interrupt();
