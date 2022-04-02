@@ -48,7 +48,7 @@ Notificator::Notificator(const QString &_programName, QSystemTrayIcon *_trayIcon
     mode(None),
     trayIcon(_trayIcon)
 #ifdef USE_DBUS
-    ,interface(0)
+    ,dbusInterface(0)
 #endif
 {
     if(_trayIcon && _trayIcon->supportsMessages())
@@ -56,9 +56,9 @@ Notificator::Notificator(const QString &_programName, QSystemTrayIcon *_trayIcon
         mode = QSystemTray;
     }
 #ifdef USE_DBUS
-    interface = new QDBusInterface("org.freedesktop.Notifications",
+    dbusInterface = new QDBusInterface("org.freedesktop.Notifications",
         "/org/freedesktop/Notifications", "org.freedesktop.Notifications");
-    if(interface->isValid())
+    if(dbusInterface->isValid())
     {
         mode = Freedesktop;
     }
@@ -95,7 +95,7 @@ Notificator::Notificator(const QString &_programName, QSystemTrayIcon *_trayIcon
 Notificator::~Notificator()
 {
 #ifdef USE_DBUS
-    delete interface;
+    delete dbusInterface;
 #endif
 }
 
@@ -236,7 +236,7 @@ void Notificator::notifyDBus(Class cls, const QString &title, const QString &tex
     args.append(millisTimeout);
 
     // "Fire and forget"
-    interface->callWithArgumentList(QDBus::NoBlock, "Notify", args);
+    dbusInterface->callWithArgumentList(QDBus::NoBlock, "Notify", args);
 }
 #endif
 

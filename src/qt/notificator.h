@@ -68,7 +68,7 @@ private:
     Mode mode;
     QSystemTrayIcon *trayIcon;
 #ifdef USE_DBUS
-    QDBusInterface *interface;
+    QDBusInterface *dbusInterface;
 
     void notifyDBus(Class cls, const QString &title, const QString &text, const QIcon &icon, int millisTimeout);
 #endif
