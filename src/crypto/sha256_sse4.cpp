@@ -10,7 +10,7 @@
 
 #include <compat/sys.h>
 
-#if defined(COMPILER_HAS_SSE4) && !defined(PLATFORM_MOBILE_ANDROID)
+#if defined(ARCH_X86_64) && defined(COMPILER_HAS_SSE4) && !defined(PLATFORM_MOBILE_ANDROID)
 
 namespace sha256_sse4
 {

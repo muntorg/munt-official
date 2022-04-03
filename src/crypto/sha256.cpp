@@ -26,7 +26,7 @@
 #include <sys/sysctl.h>
 #endif
 
-#if defined(COMPILER_HAS_SSE4) && !defined(PLATFORM_MOBILE_ANDROID)
+#if defined(ARCH_X86_64) && defined(COMPILER_HAS_SSE4) && !defined(PLATFORM_MOBILE_ANDROID)
 namespace sha256_sse4
 {
 void Transform(uint32_t* s, const unsigned char* chunk, size_t blocks);
@@ -294,7 +294,7 @@ std::string SHA256AutoDetect()
     }
 #endif
 
-#if defined(COMPILER_HAS_SSE4) && !defined(PLATFORM_MOBILE_ANDROID)
+#if defined(ARCH_X86_64) && defined(COMPILER_HAS_SSE4) && !defined(PLATFORM_MOBILE_ANDROID)
     {
         if (have_sse4)
         {
