@@ -38,7 +38,7 @@ remotes:
 - "url": https://github.com/Gulden/gulden-official.git
   "dir": "Gulden"
 files:
-- "MacOSX10.11.sdk.tar.gz"
+- "MacOSX12.0.sdk.tar.gz"
 script: |
   set -e -o pipefail
 
@@ -102,8 +102,8 @@ script: |
 
   mkdir -p ${BASEPREFIX}/SDKs
   export SDK_PATH=${BASEPREFIX}/SDKs
-  export OSX_SDK_VERSION=10.11
-  tar -C ${BASEPREFIX}/SDKs -xf ${BUILD_DIR}/MacOSX10.11.sdk.tar.gz
+  export OSX_SDK_VERSION=12.0
+  tar -C ${BASEPREFIX}/SDKs -xf ${BUILD_DIR}/MacOSX12.0.sdk.tar.gz
 
   # Build dependencies for each host
   ORIGWRAPPATH="$PATH"
