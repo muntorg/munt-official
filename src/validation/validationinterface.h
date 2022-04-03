@@ -17,6 +17,8 @@
 #include "config/build-config.h"
 #endif
 
+#include "validation/validation.h" // For cs_main
+
 #include <boost/signals2/signal.hpp>
 #include <memory>
 
