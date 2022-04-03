@@ -824,7 +824,7 @@ fi
 if test "$use_boost" = "yes"; then
 
 dnl Minimum required Boost version
-define(MINIMUM_REQUIRED_BOOST, 1.66.0)
+define(MINIMUM_REQUIRED_BOOST, 1.77.0)
 
 dnl Check for boost libs
 AX_BOOST_BASE([MINIMUM_REQUIRED_BOOST])

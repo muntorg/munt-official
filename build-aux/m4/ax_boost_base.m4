@@ -33,7 +33,7 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 44
+#serial 49
 
 # example boost program (need to pass version)
 m4_define([_AX_BOOST_BASE_PROGRAM],
@@ -113,7 +113,8 @@ AC_DEFUN([_AX_BOOST_BASE_RUNDETECT],[
     dnl are found, e.g. when only header-only libraries are installed!
     AS_CASE([${host_cpu}],
       [x86_64],[libsubdirs="lib64 libx32 lib lib64"],
-      [ppc64|s390x|sparc64|aarch64|ppc64le|riscv64],[libsubdirs="lib64 lib lib64"],
+      [mips*64*],[libsubdirs="lib64 lib32 lib lib64"],
+      [ppc64|powerpc64|s390x|sparc64|aarch64|ppc64le|powerpc64le|riscv64|e2k],[libsubdirs="lib64 lib lib64"],
       [libsubdirs="lib"]
     )
 
@@ -122,6 +123,7 @@ AC_DEFUN([_AX_BOOST_BASE_RUNDETECT],[
     dnl are almost assuredly the ones desired.
     AS_CASE([${host_cpu}],
       [i?86],[multiarch_libsubdir="lib/i386-${host_os}"],
+      [armv7l],[multiarch_libsubdir="lib/arm-${host_os}"],
       [multiarch_libsubdir="lib/${host_cpu}-${host_os}"]
     )
 
@@ -135,7 +137,7 @@ AC_DEFUN([_AX_BOOST_BASE_RUNDETECT],[
            BOOST_CPPFLAGS="-I$_AX_BOOST_BASE_boost_path/include"
            for _AX_BOOST_BASE_boost_path_tmp in $multiarch_libsubdir $libsubdirs; do
                 AC_MSG_CHECKING([for boostlib >= $1 ($WANT_BOOST_VERSION) lib path in "$_AX_BOOST_BASE_boost_path/$_AX_BOOST_BASE_boost_path_tmp"])
-                AS_IF([test -d "$_AX_BOOST_BASE_boost_path/$_AX_BOOST_BASE_boost_path_tmp" && test -r "$_AX_BOOST_BASE_boost_path/$_AX_BOOST_BASE_boost_path_tmp" && ls "$_AX_BOOST_BASE_boost_path/$_AX_BOOST_BASE_boost_path_tmp/libboost_"* >/dev/null 2>&1],[
+                AS_IF([test -d "$_AX_BOOST_BASE_boost_path/$_AX_BOOST_BASE_boost_path_tmp" && test -r "$_AX_BOOST_BASE_boost_path/$_AX_BOOST_BASE_boost_path_tmp" ],[
                         AC_MSG_RESULT([yes])
                         BOOST_LDFLAGS="-L$_AX_BOOST_BASE_boost_path/$_AX_BOOST_BASE_boost_path_tmp";
                         break;
@@ -283,8 +285,7 @@ AC_DEFUN([_AX_BOOST_BASE_RUNDETECT],[
 
     if test "x$succeeded" != "xyes" ; then
         if test "x$_version" = "x0" ; then
-            AC_MSG_NOTICE([[We could not detect the boost libraries (version $1 or higher). If you have a staged boost library (still not installed) please specify \$BOOST_ROOT in your environment and do not give a PATH to --with-boost option.  If you are sure you have boost installed, then check your version number looking in <boost/version.hpp>. See 
-http://randspringer.de/boost for more documentation.]])
+            AC_MSG_NOTICE([[We could not detect the boost libraries (version $1 or higher). If you have a staged boost library (still not installed) please specify \$BOOST_ROOT in your environment and do not give a PATH to --with-boost option.  If you are sure you have boost installed, then check your version number looking in <boost/version.hpp>. See http://randspringer.de/boost for more documentation.]])
         else
             AC_MSG_NOTICE([Your boost libraries seems to old (version $_version).])
         fi
