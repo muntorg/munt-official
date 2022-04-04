@@ -31,7 +31,7 @@ packages:
 - "flex"
 - "libssl-dev"
 remotes:
-- "url": https://github.com/Gulden/gulden-official.git
+- "url": https://github.com/gulden/gulden-official.git
   "dir": "Gulden"
 files:
 - "osslsigncode-2.0.tar.gz" #Optional; Only needed for official builds.

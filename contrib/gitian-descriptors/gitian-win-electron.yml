@@ -73,7 +73,6 @@ script: |
 
   function create_per-host_faketime_wrappers {
   for i in $HOSTS; do
-    sudo cp /usr/${i}/bin/dlltool /bin/${i}-dlltool
     for prog in ${FAKETIME_HOST_PROGS}; do
         echo '#!/usr/bin/env bash' > ${WRAP_DIR}/${i}-${prog}
         echo "REAL=\`which -a ${i}-${prog} | grep -v ${WRAP_DIR}/${i}-${prog} | head -1\`" >> ${WRAP_DIR}/${i}-${prog}
