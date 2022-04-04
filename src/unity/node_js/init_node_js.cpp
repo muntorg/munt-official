@@ -163,6 +163,7 @@ bool ILibraryController::InitWalletFromAndroidLegacyProtoWallet(const std::strin
     // only exists here to keep the compiler happy, never call this on nodejs
     LogPrintf("DO NOT call ILibraryController::InitWalletFromAndroidLegacyProtoWallet on nodejs\n");
     assert(false);
+    return false;
 }
 
 LegacyWalletResult ILibraryController::isValidAndroidLegacyProtoWallet(const std::string& walletFile, const std::string& oldPassword)
