@@ -70,7 +70,7 @@ bool CBanDB::Read(banmap_t& banSet)
 
     // use file size to size memory buffer
     uint64_t fileSize = fs::file_size(pathBanlist);
-    uint64_t dataSize = 0;
+    size_t dataSize = 0;
     // Don't try to resize to a negative number if file is small
     if (fileSize >= sizeof(uint256))
         dataSize = fileSize - sizeof(uint256);
@@ -167,7 +167,7 @@ bool CAddrDB::Read(CAddrMan& addr)
 
     // use file size to size memory buffer
     uint64_t fileSize = fs::file_size(pathAddr);
-    uint64_t dataSize = 0;
+    size_t dataSize = 0;
     // Don't try to resize to a negative number if file is small
     if (fileSize >= sizeof(uint256))
         dataSize = fileSize - sizeof(uint256);

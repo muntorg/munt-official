@@ -22,29 +22,19 @@ $(package)_cross_target_x86_64_ios=x86_64
 $(package)_cross_target=$($(package)_cross_target_$(host_arch)_$(host_os))
 
 ifeq ($(host_flavor),android)
-$(package)_env_arch_arm=AOSP_LD_SYSROOT="$(NDK_ROOT)/platforms/android-21/arch-arm"
-$(package)_env_arch_arm+=AOSP_FLAGS="-march=armv7-a -mthumb -mfpu=vfpv3-d16 -mfloat-abi=softfp -DCRYPTOPP_DISABLE_ASM -Wl,--fix-cortex-a8 -funwind-tables -fexceptions -frtti"
+$(package)_env_arch_arm=AOSP_FLAGS="-march=armv7-a -mthumb -mfpu=vfpv3-d16 -mfloat-abi=softfp -DCRYPTOPP_DISABLE_ASM -Wl,--fix-cortex-a8 -funwind-tables -fexceptions -frtti"
 $(package)_env_arch_arm+=AOSP_STL_LIB="$(NDK_ROOT)/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a/libc++_static.a"
-$(package)_env_arch_arm+=AOSP_SYS_ARCH_INC="$(NDK_ROOT)/sysroot/usr/include/arm-linux-androideabi"
 
-$(package)_env_arch_aarch64=AOSP_LD_SYSROOT="$(NDK_ROOT)/platforms/android-21/arch-arm64"
-$(package)_env_arch_aarch64+=AOSP_FLAGS="-funwind-tables -fexceptions -frtti"
+$(package)_env_arch_aarch64=AOSP_FLAGS="-funwind-tables -fexceptions -frtti"
 $(package)_env_arch_aarch64+=AOSP_STL_LIB="$(NDK_ROOT)/sources/cxx-stl/llvm-libc++/libs/arm64-v8a/libc++_static.a"
-$(package)_env_arch_aarch64+=AOSP_SYS_ARCH_INC="$(NDK_ROOT)/sysroot/usr/include/aarch64-linux-android"
 
-$(package)_env_arch_x86_64=AOSP_LD_SYSROOT="$(NDK_ROOT)/platforms/android-21/arch-x86_64"
-$(package)_env_arch_x86_64+=AOSP_FLAGS="-DCRYPTOPP_DISABLE_ASM"
+$(package)_env_arch_x86_64=AOSP_FLAGS="-DCRYPTOPP_DISABLE_ASM"
 $(package)_env_arch_x86_64+=AOSP_STL_LIB="$(NDK_ROOT)/sources/cxx-stl/llvm-libc++/libs/x86_64/libc++_static.a"
-$(package)_env_arch_x86_64+=AOSP_SYS_ARCH_INC="$(NDK_ROOT)/sysroot/usr/include/x86_64-linux-android"
 
-$(package)_env_arch_i686=AOSP_LD_SYSROOT="$(NDK_ROOT)/platforms/android-21/arch-x86"
-$(package)_env_arch_i686+=AOSP_FLAGS="-DCRYPTOPP_DISABLE_ASM"
+$(package)_env_arch_i686=AOSP_FLAGS="-DCRYPTOPP_DISABLE_ASM"
 $(package)_env_arch_i686+=AOSP_STL_LIB="$(NDK_ROOT)/sources/cxx-stl/llvm-libc++/libs/x86/libc++_static.a"
-$(package)_env_arch_i686+=AOSP_SYS_ARCH_INC="$(NDK_ROOT)/sysroot/usr/include/i686-linux-android"
 
 $(package)_env=IS_ANDROID=1
-$(package)_env+=AOSP_SYSROOT="$(NDK_ROOT)/sysroot"
-$(package)_env+=AOSP_STL_INC="$(NDK_ROOT)/sources/cxx-stl/llvm-libc++/include"
 $(package)_env+=$($(package)_env_arch_$(host_arch))
 endif
 

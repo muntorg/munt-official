@@ -84,15 +84,15 @@ fi
 for i in "${NDK_TARGETS[@]}"
 do
   source ${i}
-  export AR=${TOOLS}/$target_host-ar
-  export AS=${TOOLS}/$target_host-clang
+  export AR=${TOOLS}/llvm-ar
+  export AS=${TOOLS}/$target_host-as
   export CC=${TOOLS}/${clang_prefix}${ANDROID_LEVEL}-clang
   export CXX=${TOOLS}/${clang_prefix}${ANDROID_LEVEL}-clang++
-  export LD=${TOOLS}/$target_host-ld
-  export STRIP=${TOOLS}/$target_host-strip
-  export RANLIB=${TOOLS}/$target_host-ranlib
+  export LD=${TOOLS}/llvm-ld
+  export STRIP=${TOOLS}/llvm-strip
+  export RANLIB=${TOOLS}/llvm-ranlib
   export LIBTOOL=libtool
-  export CXXFLAGS="-O3 -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer ${march_flags} -DEXPERIMENTAL_AUTO_CPP_THREAD_ATTACH"
+  export CXXFLAGS="-O3 -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer ${march_flags} -DEXPERIMENTAL_AUTO_CPP_THREAD_ATTACH ${target_opt_cflags}"
   #visibility=hidden
   export CFLAGS=${CXXFLAGS}
   export LDFLAGS="-fPIC -Bsymbolic -Wl,--no-undefined -Wl,--gc-sections"
@@ -102,7 +102,6 @@ do
     cd depends
     make HOST=$target_host NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES='qrencode protobufunity' -j ${NUM_PROCS}
     cd ..
-    ${RANLIB} depends/$target_host/lib/*.a
   else
     echo Skipping depends
   fi

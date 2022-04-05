@@ -4,4 +4,4 @@ target_bits=64
 jni_lib=arm64-v8a
 lib_dir=sysroot/usr/lib
 march_flags="-O3"
-target_opt_cflags=-DCRYPTOPP_ARM_ACLE_AVAILABLE
+target_opt_cflags="-DCRYPTOPP_ARM_ACLE_AVAILABLE -D__ARM_FEATURE_CRC32"
