@@ -235,21 +235,9 @@ script: |
     # Strip in place
     find release -name '*.exe' -o -name '*.node' | xargs --max-procs 32 -i sh -c "${i}-objcopy --only-keep-debug {} {}.dbg ; ${i}-strip -s {} ; ${i}-objcopy --add-gnu-debuglink={}.dbg {}; (true)"
 
-    # Sign executables
-    if [ -f "${BUILD_DIR}/codesign/codesign.spc" ]; then
-        find release -name "*.exe" | xargs --max-procs 32 -i sh -c "(${BUILD_DIR}/osslsigncode-2.0/osslsigncode -spc \"${BUILD_DIR}/codesign/codesign.spc\" -key \"${BUILD_DIR}/codesign/codesign.key\" -n \"Gulden\" -i \"https://www.Gulden.com\" -in \"{}\" -out \"{}s\") && (mv {}s {})"
-    fi
-
     #Move lib results to outdir
     mkdir $OUTDIR/libs || true
     mv -f release/libgulden_win_${i}.node $OUTDIR/libs/libgulden_win_${i}.node
     mv -f release/libgulden_win_${i}.node.dbg $OUTDIR/libs/libgulden_win_${i}.node.dbg
-
-    # Tarball of signed executables and debug info - direct to build host
-    cd release
-    find . -not -name '*.dbg' -type f  | sort | zip -X@ ${OUTDIR}/${DISTNAME}-${i}.zip
-    find . -name '*.dbg' -type f | sort | zip -X@ ${OUTDIR}/${DISTNAME}-${i}-debug.zip
-    find . -name '*.dbg' -type f | xargs rm -rf
-    cd ..
 
   done
