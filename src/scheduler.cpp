@@ -22,6 +22,12 @@ CScheduler::~CScheduler()
     if (stopWhenEmpty) assert(taskQueue.empty());
 }
 
+void CScheduler::stop()
+{
+    WITH_LOCK(newTaskMutex, stopRequested = true);
+    newTaskScheduled.notify_all();
+    if (m_service_thread.joinable()) m_service_thread.join();
+}
 
 void CScheduler::serviceQueue()
 {

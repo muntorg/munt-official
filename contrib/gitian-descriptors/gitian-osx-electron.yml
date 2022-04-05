@@ -46,7 +46,7 @@ script: |
 
   WRAP_DIR=$HOME/wrapped
   HOSTS="x86_64-apple-darwin14 arm64-apple-darwin21.1.0"
-  CONFIGFLAGS="--enable-reduce-exports --disable-gui-tests GENISOIMAGE=$WRAP_DIR/genisoimage --disable-bench --disable-tests --disable-man --enable-zmq --without-utils  --without-daemon --with-node-js-libs --with-qrencode --with-gui=no"
+  CONFIGFLAGS="--enable-reduce-exports --disable-gui-tests GENISOIMAGE=$WRAP_DIR/genisoimage --disable-bench --disable-tests --disable-man --enable-zmq --with-utils=no  --with-daemon=no --with-node-js-libs --with-qrencode --with-gui=no"
   FAKETIME_HOST_PROGS=""
   FAKETIME_PROGS="ar ranlib date dmg genisoimage"
   HOST_CFLAGS="-O2 -g"

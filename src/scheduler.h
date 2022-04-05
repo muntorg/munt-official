@@ -70,12 +70,8 @@ public:
     void serviceQueue();
 
     /** Tell any threads running serviceQueue to stop as soon as the current task is done */
-    void stop()
-    {
-        WITH_LOCK(newTaskMutex, stopRequested = true);
-        newTaskScheduled.notify_all();
-        if (m_service_thread.joinable()) m_service_thread.join();
-    }
+    void stop();
+
     /** Tell any threads running serviceQueue to stop when there is no work left to be done */
     void StopWhenDrained()
     {

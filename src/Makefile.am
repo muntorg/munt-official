@@ -828,6 +828,8 @@ lib_unity_node_js_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 lib_unity_node_js_la_SOURCES = \
   controllers/rpccontroller.cpp \
   controllers/rpccontroller.h \
+  core_read.cpp \
+  core_write.cpp \
   unity/libinit.cpp \
   unity/libinit.h \
   unity/node_js/logging_node_js.cpp \
@@ -1087,6 +1089,8 @@ GuldenD_LDADD = \
   $(LIBUNIVALUE) \
   $(LIB_UTIL) \
   $(LIB_GENERIC) \
+  $(LIB_SERVER) \
+  $(LIB_RPC) \
   $(LIB_ZMQ) \
   $(LIB_CONSENSUS) \
   $(LIB_CRYPTO_ALL) \
