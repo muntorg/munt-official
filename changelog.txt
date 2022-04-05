@@ -1,5 +1,8 @@
 2.4.9
 
+This build aims to be the final 2.4.x series release after issues were found that prevented 2.4.8 from being so.
+As such it will likely represent the final Qt UI release with 2.5 series of builds replacing Qt with the electron UI.
+
 CORE      - Implement several important fixes to the fast path of the "index based" portion of the coin cache, these issues would  have resulted in nodes temporarily falling out of sync (until restarted) in some instances had the fast path been turned on however it has been off until now
 CORE      - Turn on the fast path for "index based" portion of the coin caches, this should drastically improve node performance in some instances
 CORE      - Introduce optimised sha256 implementations to take advantage of available CPU features (SSE4, neon etc.) when available/possible
@@ -7,8 +10,12 @@ CORE      - Various performance improvements, removal of lock contention in some
 CORE      - Various improvements to mutexes to make it easier to spot issues as well as for better performance
 CORE      - Improved debug logging in various places throghout the program
 CORE      - Update linux builds to GCC 11
-CORE      - Update macOS builds to clang 14
-CORE      - Update libraries (boost 1.77.0; zmq 4.3.4)
+CORE      - Update macOS builds to clang 14 (sdk 12)
+CORE      - Update android builds to clang 12 (ndk r23b)
+CORE      - Update windows builds to GCC 10
+CORE      - With all compilers updated we are now able to target C++20
+CORE      - Update libraries (boost 1.77.0; zmq 4.3.4; univalue 1.0.4; leveldb 1.22+)
+CORE      - Flush chainstate more frequently to prevent nodes having to resync if they terminate uncleanly after a full sync etc.
 LITE      - Fix issue that was preventing lite wallet from functioning on testnet
 LITE      - Fix a crash on macOS at program exit
 LITE      - Fix/improve behaviour of loading/synchronisation screen and make it smoother
@@ -18,12 +25,14 @@ RPC       - Improve/fix 'fundrawtransaction' command that failed in some instanc
 RPC       - Improve/fix help text for several commands
 QA        - Introduction of more unit and functional tests
 
+Dozens of other stability, code quality, build system, testing etc. related fixes and improvements.
+
 
 
 
 2.4.8
 
-Final maintanence release ahead of upcoming 2.5 series of builds; 2.5 will fully activate witness sync and drop the deprecated Qt UI in favour of the electron one
+Final maintanence release ahead of upcoming 2.5 series of builds; 2.5 will fully activate witness sync and drop the deprecated Qt UI in favour of the electron one (Edit: This ended up not being the case)
 
 
 
