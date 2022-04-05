@@ -3,5 +3,5 @@ target_host=i686-linux-android
 target_bits=32
 jni_lib=x86
 lib_dir=sysroot/usr/lib
-march_flags="-march=i686 -mtune=intel -mssse3 -mfpmath=sse -m32"
+march_flags="-march=i686 -mtune=i686 -mssse3 -mfpmath=sse -m32"
 target_opt_cflags=

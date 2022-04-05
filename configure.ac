@@ -469,6 +469,9 @@ case $host in
      ;;
    *android*)
      dnl make sure android stays above linux for hosts like *linux-android*
+     dnl libtool insists on inserting -nostdlib and other things which break our build, the below works around this
+     archive_cmds_CXX="\$CC -shared \$libobjs \$deplibs \$compiler_flags -o \$output_objdir/\$soname"
+     postdeps_CXX=
      ;;
    *linux*)
      TARGET_OS=linux

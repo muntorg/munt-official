@@ -92,7 +92,7 @@ do
   export STRIP=${TOOLS}/llvm-strip
   export RANLIB=${TOOLS}/llvm-ranlib
   export LIBTOOL=libtool
-  export CXXFLAGS="-O3 -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer ${march_flags} -DEXPERIMENTAL_AUTO_CPP_THREAD_ATTACH ${target_opt_cflags}"
+  export CXXFLAGS="-O3 -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer ${march_flags} -DANDROID_STL=c++_shared -DEXPERIMENTAL_AUTO_CPP_THREAD_ATTACH ${target_opt_cflags}"
   #visibility=hidden
   export CFLAGS=${CXXFLAGS}
   export LDFLAGS="-fPIC -Bsymbolic -Wl,--no-undefined -Wl,--gc-sections"
