@@ -22,47 +22,9 @@
 /** WWW-Authenticate to present with 401 Unauthorized response */
 static const char* WWW_AUTH_HEADER_DATA = "Basic realm=\"jsonrpc\"";
 
-/** Simple one-shot callback timer to be used by the RPC mechanism to e.g.
- * re-lock the wallet.
- */
-class HTTPRPCTimer : public RPCTimerBase
-{
-public:
-    HTTPRPCTimer(struct event_base* eventBase, std::function<void(void)>& func, int64_t millis) :
-        ev(eventBase, false, func)
-    {
-        struct timeval tv;
-        tv.tv_sec = millis/1000;
-        tv.tv_usec = (millis%1000)*1000;
-        ev.trigger(&tv);
-    }
-private:
-    HTTPEvent ev;
-};
-
-class HTTPRPCTimerInterface : public RPCTimerInterface
-{
-public:
-    HTTPRPCTimerInterface(struct event_base* _base) : base(_base)
-    {
-    }
-    const char* Name()
-    {
-        return "HTTP";
-    }
-    RPCTimerBase* NewTimer(std::function<void(void)>& func, int64_t millis)
-    {
-        return new HTTPRPCTimer(base, func, millis);
-    }
-private:
-    struct event_base* base;
-};
-
-
 /* Pre-base64-encoded authentication token */
 static std::string strRPCUserColonPass;
-/* Stored RPC timer interface (for unregistration) */
-static HTTPRPCTimerInterface* httpRPCTimerInterface = 0;
+
 
 static void JSONErrorReply(HTTPRequest* req, const UniValue& objError, const UniValue& id)
 {
@@ -238,8 +200,6 @@ bool StartHTTPRPC()
     RegisterHTTPHandler("/", true, HTTPReq_JSONRPC);
 
     assert(EventBase());
-    httpRPCTimerInterface = new HTTPRPCTimerInterface(EventBase());
-    RPCSetTimerInterface(httpRPCTimerInterface);
     return true;
 }
 
@@ -252,9 +212,4 @@ void StopHTTPRPC()
 {
     LogPrint(BCLog::RPC, "Stopping HTTP RPC server\n");
     UnregisterHTTPHandler("/", true);
-    if (httpRPCTimerInterface) {
-        RPCUnsetTimerInterface(httpRPCTimerInterface);
-        delete httpRPCTimerInterface;
-        httpRPCTimerInterface = 0;
-    }
 }

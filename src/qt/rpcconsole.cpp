@@ -86,40 +86,6 @@ Q_SIGNALS:
     void reply(int category, const QString &command);
 };
 
-/** Class for handling RPC timers
- * (used for e.g. re-locking the wallet after a timeout)
- */
-class QtRPCTimerBase: public QObject, public RPCTimerBase
-{
-    Q_OBJECT
-public:
-    QtRPCTimerBase(std::function<void(void)>& _func, int64_t millis):
-        func(_func)
-    {
-        timer.setSingleShot(true);
-        connect(&timer, SIGNAL(timeout()), this, SLOT(timeout()));
-        timer.start(millis);
-    }
-    ~QtRPCTimerBase() {}
-private Q_SLOTS:
-    void timeout() { func(); }
-private:
-    QTimer timer;
-    std::function<void(void)> func;
-};
-
-class QtRPCTimerInterface: public RPCTimerInterface
-{
-public:
-    ~QtRPCTimerInterface() {}
-    const char *Name() { return "Qt"; }
-    RPCTimerBase* NewTimer(std::function<void(void)>& func, int64_t millis)
-    {
-        return new QtRPCTimerBase(func, millis);
-    }
-};
-
-
 #include "rpcconsole.moc"
 
 /**
@@ -463,11 +429,6 @@ RPCConsole::RPCConsole(const QStyle *_platformStyle, QWidget *parent) :
     ui->label_berkeleyDBVersion->hide();
     ui->berkeleyDBVersion->hide();
 #endif
-    // Register RPC timer interface
-    rpcTimerInterface = new QtRPCTimerInterface();
-    // avoid accidentally overwriting an existing, non QTThread
-    // based timer interface
-    RPCSetTimerInterfaceIfUnset(rpcTimerInterface);
 
     setTrafficGraphRange(INITIAL_TRAFFIC_GRAPH_MINS);
 
@@ -482,8 +443,6 @@ RPCConsole::RPCConsole(const QStyle *_platformStyle, QWidget *parent) :
 RPCConsole::~RPCConsole()
 {
     GUIUtil::saveWindowGeometry("nRPCConsoleWindow", this);
-    RPCUnsetTimerInterface(rpcTimerInterface);
-    delete rpcTimerInterface;
     delete ui;
 }
 

@@ -16,7 +16,6 @@
 #include "unity/djinni/cpp/legacy_wallet_result.hpp"
 #include "unity/djinni/cpp/i_library_controller.hpp"
 
-#include <boost/thread.hpp>
 #include <thread>
 #include <torcontrol.h>
 #include <rpc/server.h>
@@ -27,45 +26,11 @@
 #include "validation/validation.h"
 
 
-class NodeRPCTimer : public RPCTimerBase
-{
-public:
-    NodeRPCTimer(std::function<void(void)>& func, int64_t millis)
-    {
-        std::thread([=]()
-        {
-            MilliSleep(millis);
-            func();
-        }).detach();
-    }
-private:
-};
-
-class NodeRPCTimerInterface : public RPCTimerInterface
-{
-public:
-    NodeRPCTimerInterface()
-    {
-    }
-    const char* Name()
-    {
-        return "Node";
-    }
-    RPCTimerBase* NewTimer(std::function<void(void)>& func, int64_t millis)
-    {
-        return new NodeRPCTimer(func, millis);
-    }
-private:
-};
-
-
 extern std::string HelpMessage(HelpMessageMode mode)
 {
     return "";
 }
 
-
-NodeRPCTimerInterface* timerInterface = nullptr;
 
 void InitRegisterRPC()
 {
@@ -73,9 +38,6 @@ void InitRegisterRPC()
     #ifdef ENABLE_WALLET
         RegisterWalletRPCCommands(tableRPC);
     #endif
-        
-    timerInterface = new NodeRPCTimerInterface();
-    RPCSetTimerInterface(timerInterface);
 }
 
 void ServerInterrupt()
@@ -89,15 +51,17 @@ void ServerInterrupt()
 
 void ServerShutdown(node::NodeContext& nodeContext)
 {
-    RPCUnsetTimerInterface(timerInterface);
     StopHTTPServer();
     StopHTTPRPC();
     MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
-    if (nodeContext.scheduler) nodeContext.scheduler->stop();
     StopRPC();
     StopREST();
     MilliSleep(20); //Allow other threads (UI etc. a chance to cleanup as well)
     StopTorControl();
+    // After everything has been shut down, but before things get flushed, stop the
+    // CScheduler/checkqueue, scheduler and load block thread.
+    if (nodeContext.scheduler) nodeContext.scheduler->stop();
+    StopScriptCheckWorkerThreads();
 }
 
 static void OnRPCStarted()

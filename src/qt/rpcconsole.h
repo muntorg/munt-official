@@ -23,7 +23,6 @@
 
 class ClientModel;
 class QStyle;
-class RPCTimerInterface;
 
 namespace Ui {
     class RPCConsole;
@@ -156,7 +155,6 @@ private:
     QString cmdBeforeBrowsing;
     QList<NodeId> cachedNodeids;
     const QStyle *platformStyle;
-    RPCTimerInterface *rpcTimerInterface;
     QMenu *peersTableContextMenu;
     QMenu *banTableContextMenu;
     int consoleFontSize;

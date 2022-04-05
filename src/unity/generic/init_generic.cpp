@@ -251,6 +251,7 @@ void InitRegisterRPC()
         RegisterWalletRPCCommands(tableRPC);
     #endif
 }
+
 void ServerInterrupt()
 {
     InterruptHTTPServer();
