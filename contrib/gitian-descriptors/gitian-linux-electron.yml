@@ -140,7 +140,7 @@ script: |
     if [ -d "$EXTRA_INCLUDES" ]; then
       export HOST_ID_SALT="$EXTRA_INCLUDES"
     fi
-    make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}" GITIAN_BUILD="1" NO_UPNP=1 EXTRA_PACKAGES='qrencode'
+    make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}" GITIAN_BUILD="1" NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES='qrencode'
     unset HOST_ID_SALT
   done
 

@@ -116,7 +116,7 @@ script: |
   ORIGWRAPPATH="$PATH"
   for i in $HOSTS; do
     export PATH=${BASEPREFIX}/${i}/native/bin:${ORIGWRAPPATH}
-    make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}" GITIAN_BUILD="1" NO_UPNP=1 EXTRA_PACKAGES='qrencode'
+    make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}" GITIAN_BUILD="1" NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES='qrencode'
   done
 
   # Faketime for binaries

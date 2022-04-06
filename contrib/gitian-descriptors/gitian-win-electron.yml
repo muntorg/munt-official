@@ -159,7 +159,7 @@ script: |
     ${i}-dlltool -d ${BASEPREFIX}/../developer-tools/node/node.def -y libnode.a
     cd ..
     make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}" GITIAN_BUILD="1"
-    make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}" GITIAN_BUILD="1" NO_UPNP=1 EXTRA_PACKAGES='qrencode'
+    make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}" GITIAN_BUILD="1" NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES='qrencode'
   done
 
   # Faketime for binaries
