@@ -31,6 +31,8 @@ LIB_CONSENSUS=lib_consensus.a
 LIB_CLI=lib_cli.a
 LIB_UTIL=lib_util.a
 LIB_GENERIC=lib_generic.a
+LIB_GENERIC_INIT=lib_generic_init.a
+LIB_GENERIC_INIT_NODE=lib_generic_init_node.a
 LIB_CRYPTO_SSE3=crypto/lib_crypto_sse3.a
 LIB_CRYPTO_SSE3_AES=crypto/lib_crypto_sse3_aes.a
 LIB_CRYPTO_SSE4=crypto/lib_crypto_sse4.a
@@ -85,6 +87,8 @@ EXTRA_LIBRARIES += \
   $(LIB_ANDROID_COMPAT) \
   $(LIB_UTIL) \
   $(LIB_GENERIC) \
+  $(LIB_GENERIC_INIT) \
+  $(LIB_GENERIC_INIT_NODE) \
   $(LIB_COMMON) \
   $(LIB_CONSENSUS) \
   $(LIB_SERVER) \
@@ -721,9 +725,22 @@ lib_generic_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
 lib_generic_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 lib_generic_a_SOURCES = \
   unity/generic/logging.cpp \
-  unity/generic/init_generic.cpp \
   core_read.cpp \
   core_write.cpp \
+  $(CORE_H)
+  
+# generic_init: anything that includes 'generic' library must also include either this or 'generic_init_node' or provide its own init functions depending on if initialisation of http/rpc etc. is required
+lib_generic_init_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+lib_generic_init_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_generic_init_a_SOURCES = \
+  unity/generic/init_generic.cpp \
+  $(CORE_H)
+  
+# generic_init: anything that includes 'generic' library must also include either this or 'generic_init_server' or provide its own init functions depending on if initialisation of http/rpc etc. is required
+lib_generic_init_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+lib_generic_init_node_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+lib_generic_init_node_a_SOURCES = \
+  unity/generic/init_generic_node.cpp \
   $(CORE_H)
 
 if GLIBC_BACK_COMPAT
@@ -1089,6 +1106,8 @@ GuldenD_LDADD = \
   $(LIBUNIVALUE) \
   $(LIB_UTIL) \
   $(LIB_GENERIC) \
+  $(LIB_GENERIC_INIT) \
+  $(LIB_GENERIC_INIT_NODE) \
   $(LIB_SERVER) \
   $(LIB_RPC) \
   $(LIB_ZMQ) \
@@ -1118,6 +1137,7 @@ Gulden_cli_LDADD = \
   $(LIBUNIVALUE) \
   $(LIB_UTIL) \
   $(LIB_GENERIC) \
+  $(LIB_GENERIC_INIT) \
   $(LIB_CRYPTO_ALL)
 
 Gulden_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
@@ -1140,6 +1160,7 @@ Gulden_tx_LDADD = \
   $(LIB_COMMON) \
   $(LIB_UTIL) \
   $(LIB_GENERIC) \
+  $(LIB_GENERIC_INIT) \
   $(LIB_CONSENSUS) \
   $(LIB_CRYPTO_ALL) \
   $(LIB_COMMON) \
