@@ -23,7 +23,7 @@
     "@fortawesome/pro-light-svg-icons": "^5.15.3",
     "@fortawesome/vue-fontawesome": "^2.0.2",
     "@fortawesome/pro-regular-svg-icons": "^5.15.2",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "core-js": "^3.9.1",
     "electron-better-ipc": "^1.1.1",
     "electron-context-menu": "^2.0.1",
