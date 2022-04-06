@@ -20,8 +20,8 @@
     <div>
       <div v-if="hasThemes" class="settings-row-no-hover flex-row">
         <div class="flex-1">{{ $t("settings.choose_theme") }}</div>
-        <div v-for="theme in themes" :key="theme.name">
-          <div :class="getThemeSelectClassNames(theme.name)" :style="getThemeStyle(theme.color)" @click="switchTheme(theme.name)"></div>
+        <div v-for="(theme, index) in themes" :key="theme.name">
+          <div :class="getThemeSelectClassNames(theme.name, index)" :style="getThemeStyle(theme.color)" @click="switchTheme(theme.name)"></div>
         </div>
       </div>
     </div>
@@ -67,9 +67,9 @@ export default {
     }
   },
   methods: {
-    getThemeSelectClassNames(theme) {
+    getThemeSelectClassNames(theme, index) {
       const classNames = ["theme-select"];
-      if (theme === this.theme) classNames.push("selected");
+      if (theme === this.theme || (!this.theme && index === 0)) classNames.push("selected");
       return classNames.join(" ");
     },
     getThemeStyle(color) {
