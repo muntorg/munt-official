@@ -1,10 +1,7 @@
 var fs = require("fs");
 var path = require("path");
 
-let inputFile = path.join(
-  __dirname,
-  "../../../unity/djinni/node_js/unifiedbackend_doc.js"
-);
+let inputFile = path.join(__dirname, "../../../unity/djinni/node_js/unifiedbackend_doc.js");
 
 let controllerFile = path.join(__dirname, "/../src/unity/Controllers.js");
 let libUnityFile = path.join(__dirname, "/../src/unity/LibUnity.js");
@@ -51,6 +48,13 @@ let controllers = [
   {
     className: "NJSIAccountsController",
     exclude: ["setListener"]
+  },
+  {
+    className: "NJSIWitnessController"
+  },
+  {
+    className: "NJSIGenerationController",
+    exclude: ["setListener"]
   }
 ];
 
@@ -95,10 +99,7 @@ function getFunctionsFor(controller) {
     }
     if (skip) continue;
 
-    let args = line.substr(
-      openingBracketIdx + 1,
-      closingBracketIdx - openingBracketIdx - 1
-    );
+    let args = line.substr(openingBracketIdx + 1, closingBracketIdx - openingBracketIdx - 1);
 
     if (args.length > 0) {
       let argsSplit = args.split(", ");
@@ -128,18 +129,14 @@ function getControllerCode() {
       if (j > 0) code.push(``);
       code.push(`static async ${f.name}Async(${f.args}) {`);
       code.push(
-        `return handleError(await ipc.callMain("${controller.className}.${
-          f.name
-        }Async"${f.args.length > 0 ? ", {" + f.args + "}" : ""})
+        `return handleError(await ipc.callMain("${controller.className}.${f.name}Async"${f.args.length > 0 ? ", {" + f.args + "}" : ""})
         );`
       );
       code.push(`}`);
       code.push(``);
       code.push(`static ${f.name}(${f.args}) {`);
       code.push(
-        `return handleError(ipc.sendSync("${controller.className}.${f.name}"${
-          f.args.length > 0 ? ", " + f.args : ""
-        })
+        `return handleError(ipc.sendSync("${controller.className}.${f.name}"${f.args.length > 0 ? ", " + f.args : ""})
         );`
       );
       code.push(`}`);
@@ -149,19 +146,11 @@ function getControllerCode() {
       let f = controller.functions[j];
       if (j > 0) code.push(``);
       code.push(`static async ${PascalCase(f.name)}Async(${f.args}) {`);
-      code.push(
-        `return handleError(await ipc.callMain("${controller.className}.${
-          f.name
-        }Async"${f.args.length > 0 ? ", {" + f.args + "}" : ""}));`
-      );
+      code.push(`return handleError(await ipc.callMain("${controller.className}.${f.name}Async"${f.args.length > 0 ? ", {" + f.args + "}" : ""}));`);
       code.push(`}`);
       code.push(``);
       code.push(`static ${PascalCase(f.name)}(${f.args}) {`);
-      code.push(
-        `return handleError(ipc.sendSync("${controller.className}.${f.name}"${
-          f.args.length > 0 ? ", " + f.args : ""
-        }));`
-      );
+      code.push(`return handleError(ipc.sendSync("${controller.className}.${f.name}"${f.args.length > 0 ? ", " + f.args : ""}));`);
       code.push(`}`);
     }
 
@@ -172,11 +161,7 @@ function getControllerCode() {
   code.push(`export {`);
 
   for (let i = 0; i < controllers.length; i++) {
-    code.push(
-      `${controllers[i].className.replace("NJSI", "")}${
-        i + 1 < controllers.length ? "," : ""
-      }`
-    );
+    code.push(`${controllers[i].className.replace("NJSI", "")}${i + 1 < controllers.length ? "," : ""}`);
   }
 
   code.push(`}`);
@@ -199,11 +184,7 @@ function getLibUnityCode() {
     for (let j = 0; j < controller.functions.length; j++) {
       let f = controller.functions[j];
       if (j > 0) code.push(``);
-      code.push(
-        `ipc.answerRenderer("${controller.className}.${f.name}Async", async ${
-          f.args.length > 0 ? "data" : "()"
-        } => {`
-      );
+      code.push(`ipc.answerRenderer("${controller.className}.${f.name}Async", async ${f.args.length > 0 ? "data" : "()"} => {`);
 
       let args = f.args.length > 0 ? f.args.split(", ") : [];
       let consoleArgs = "";
@@ -218,11 +199,7 @@ function getLibUnityCode() {
         console.log(\`IPC: ${className}.${f.name}Async(${consoleArgs})\`);
         try {
           let result = this.${className}.${f.name}(
-            ${
-              f.args.length > 0
-                ? "data." + f.args.split(", ").join(", data.")
-                : ""
-            }
+            ${f.args.length > 0 ? "data." + f.args.split(", ").join(", data.") : ""}
           );
           return {
             success: true,
@@ -235,11 +212,7 @@ function getLibUnityCode() {
       `);
       code.push(`});`);
       code.push(``);
-      code.push(
-        `ipc.on("${controller.className}.${f.name}", ${
-          f.args.length > 0 ? "(event, " + f.args + ")" : "event"
-        } => {`
-      );
+      code.push(`ipc.on("${controller.className}.${f.name}", ${f.args.length > 0 ? "(event, " + f.args + ")" : "event"} => {`);
 
       args = f.args.length > 0 ? f.args.split(", ") : [];
       consoleArgs = "";
@@ -278,10 +251,7 @@ replace += "/* inject:generated-code */\r\n";
 replace += getControllerCode().join("\r\n");
 replace += "/* inject:generated-code */";
 
-let result = controllerData.replace(
-  /\/\* inject:generated-code \*\/(.)+\/\* inject:generated-code \*\//s,
-  replace
-);
+let result = controllerData.replace(/\/\* inject:generated-code \*\/(.)+\/\* inject:generated-code \*\//s, replace);
 fs.writeFileSync(controllerFile, result, "utf-8");
 
 let libUnityData = fs.readFileSync(libUnityFile, "utf-8");
@@ -290,10 +260,7 @@ replace += "/* inject:generated-code */\r\n";
 replace += getLibUnityCode().join("\r\n");
 replace += "/* inject:generated-code */";
 
-result = libUnityData.replace(
-  /\/\* inject:generated-code \*\/(.)+\/\* inject:generated-code \*\//s,
-  replace
-);
+result = libUnityData.replace(/\/\* inject:generated-code \*\/(.)+\/\* inject:generated-code \*\//s, replace);
 fs.writeFileSync(libUnityFile, result, "utf-8");
 
 function PascalCase(line) {

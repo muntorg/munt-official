@@ -24,9 +24,44 @@ const routes = [
         path: "receive",
         name: "receive",
         component: () => import(/* webpackChunkName: "account-receive" */ "../views/Account/SpendingAccount/Receive.vue")
+      },
+      // {
+      //   path: "link-saving-account",
+      //   name: "link-saving-account",
+      //   component: () => import(/* webpackChunkName: "link-saving-account" */ "../views/Account/SavingAccount/LinkSavingAccount.vue")
+      // },
+      // {
+      //   path: "send-saving",
+      //   name: "send-saving",
+      //   component: () => import(/* webpackChunkName: "send-saving" */ "../views/Account/MiningAccount/Send.vue")
+      // },
+      // {
+      //   path: "renew-account",
+      //   name: "renew-account",
+      //   component: () => import(/* webpackChunkName: "renew-account" */ "../views/Account/SavingAccount/RenewAccount.vue")
+      // },
+      {
+        path: "transactions",
+        name: "transactions",
+        component: () => import(/* webpackChunkName: "transactions" */ "../views/Account/SpendingAccount/Transactions.vue")
       }
     ]
   },
+  // {
+  //   path: "/setup-mining",
+  //   name: "setup-mining",
+  //   component: () => import(/* webpackChunkName: "setup-mining" */ "../views/Account/MiningAccount/SetupMining.vue")
+  // },
+  // {
+  //   path: "/add-saving-account",
+  //   name: "add-saving-account",
+  //   component: () => import(/* webpackChunkName: "add-saving-account" */ "../views/Account/SavingAccount/AddSavingAccount.vue")
+  // },
+  // {
+  //   path: "/add-spending-account",
+  //   name: "add-spending-account",
+  //   component: () => import(/* webpackChunkName: "add-saving-account" */ "../views/Account/SpendingAccount/AddSpendingAccount.vue")
+  // },
   {
     path: "/setup",
     name: "setup",

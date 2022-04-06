@@ -1,31 +1,24 @@
 <template>
-  <div class="debug-console flex-col">
+  <div class="debug-console flex-col" v-if="show">
     <div class="output-buttons">
       <fa-icon :icon="['fal', 'search-minus']" class="button" @click="decreaseFontSize" />
       <fa-icon :icon="['fal', 'search-plus']" class="button" @click="increaseFontSize" />
       <fa-icon :icon="['fal', 'eraser']" class="button" @click="clearOutput" />
     </div>
-    <div ref="output" class="output scrollable scrollable-x" :style="outputStyle">
-      <div class="info">
-        Use up and down arrows to navigate history. Type
-        <span class="help">help</span> for an overview of available commands.
+
+    <div ref="output" class="output scrollable" :style="outputStyle">
+      <div class="row">
+        <div class="info">Use up and down arrows to navigate history. Type <span class="help">help</span> for an overview of available commands.</div>
       </div>
-
-      <div v-for="(item, index) in output" :key="index">
-        <div v-if="item.type === 'command'">
-          <fa-icon class="icon" :icon="['fal', 'angle-double-left']" />
-          {{ item.data }}
-        </div>
-
-        <pre v-else :style="outputStyle"
-          >{{ item.data }}
-          </pre
-        >
+      <div class="row" v-for="(item, index) in output" :key="index">
+        <fa-icon class="icon" :icon="getIcon(item.type)" />
+        <pre class="data" :style="outputStyle">{{ item.data }}</pre>
       </div>
     </div>
+
     <div class="input">
-      <input ref="command" type="text" spellcheck="false" v-model="command" @keydown="onRpcInputKeyDown" list="commands" />
-      <datalist id="commands">
+      <input ref="command" type="text" spellcheck="false" v-model="command" @keydown="onRpcInputKeyDown" list="history" />
+      <datalist id="history">
         <option v-for="item in filteredAutocompleteList" :key="item" :value="item" />
       </datalist>
     </div>
@@ -35,111 +28,107 @@
 <script>
 import { RpcController } from "../../unity/Controllers";
 
-var updateFilterTimeout = null;
-
 export default {
   name: "DebugConsole",
   data() {
     return {
       command: "",
       fontSize: 0.8,
-      autocompleteList: [],
-      filteredAutocompleteList: [],
-      preventAutocompleteList: false
+      history: [],
+      output: [],
+      index: 0,
+      autocomplete: {
+        all: [],
+        command: null,
+        filtered: [],
+        disabled: false
+      }
     };
   },
   props: {
-    value: {
-      type: Object,
-      default: () => {
-        return {
-          output: [],
-          commands: [],
-          idx: 0
-        };
-      }
+    show: {
+      type: Boolean
     }
   },
   computed: {
-    output() {
-      return this.value.output;
-    },
-    commands() {
-      return this.value.commands;
-    },
-    idx() {
-      return this.value.idx;
-    },
     outputStyle() {
       return `font-size: ${this.fontSize}rem;`;
+    },
+    filteredAutocompleteList() {
+      return this.autocomplete.filtered.slice(0, 20);
     }
   },
   created() {
-    this.autocompleteList = RpcController.GetAutocompleteList();
-  },
-  mounted() {
-    this.scrollToBottom();
-    this.focusCommand();
+    this.autocomplete.all = RpcController.GetAutocompleteList();
   },
   watch: {
+    output: {
+      immediate: true,
+      handler() {
+        this.focusCommand();
+      }
+    },
+    show: {
+      immediate: true,
+      handler() {
+        if (this.show) {
+          this.focusCommand();
+        }
+      }
+    },
     command() {
       this.filterAutocompleteList();
     }
   },
   methods: {
-    formatData(input) {
-      let split = input.split("\n");
-      let output = "";
-      for (var i = 0; i < split.length; i++) {
-        output += `${split[i]}<br />`;
-      }
-      return output;
-    },
     moveToEnd() {
       let command = this.$refs.command;
       setTimeout(function() {
         command.selectionStart = command.selectionEnd = command.value.length;
       }, 0);
     },
-    async onRpcInputKeyDown() {
-      this.preventAutocompleteList = false;
-      switch (event.keyCode) {
+    getIcon(type) {
+      return ["fal", `angle-double-${type === "command" ? "left" : "right"}`];
+    },
+    async onRpcInputKeyDown(e) {
+      this.autocomplete.disabled = false;
+      switch (e.keyCode) {
         case 13: {
           let result = await RpcController.ExecuteAsync(this.command);
           this.command = "";
 
-          this.value.output.push({
+          this.output.push({
             type: "command",
             data: result.command
           });
-          this.value.output.push({ type: "result", ...result });
+          this.output.push({ type: "result", ...result });
 
           this.scrollToBottom();
 
-          let index = this.commands.indexOf(result.command);
+          let index = this.history.indexOf(result.command);
           if (index !== -1) {
-            this.value.commands.splice(index, 1);
+            this.history.splice(index, 1);
           }
-          this.value.commands.push(result.command);
-          this.value.idx = this.commands.length;
+          this.history.push(result.command);
+          this.index = this.history.length;
           return;
         }
         case 38: // arrow up
-          if (this.idx > 0) this.value.idx--;
-          if (this.commands.length > 0) {
-            this.preventAutocompleteList = true;
-            this.command = this.commands[this.idx];
+          if (this.index > 0) this.index--;
+          if (this.history.length > 0) {
+            this.autocomplete.disabled = true;
+            this.command = this.history[this.index];
             this.moveToEnd();
-            event.preventDefault();
+            e.preventDefault();
           }
           break;
         case 40: // arrow down
-          if (this.idx < this.commands.length) this.value.idx++;
-          if (this.idx < this.commands.length && this.commands.length > 0) {
-            this.preventAutocompleteList = true;
-            this.command = this.commands[this.idx];
+          if (this.index < this.history.length) this.index++;
+          if (this.index < this.history.length && this.history.length > 0) {
+            this.autocomplete.disabled = true;
+            this.command = this.history[this.index];
             this.moveToEnd();
-            event.preventDefault();
+            e.preventDefault();
           } else {
             this.command = "";
           }
@@ -147,8 +136,7 @@ export default {
       }
     },
     clearOutput() {
-      this.$emit("clear-output");
-      this.focusCommand();
+      this.output = [];
     },
     focusCommand() {
       this.$nextTick(() => {
@@ -168,27 +156,17 @@ export default {
       if (this.fontSize <= 0.6) return;
       this.fontSize -= 0.05;
     },
-    filterAutocompleteList(delay = true) {
-      clearTimeout(updateFilterTimeout);
+    filterAutocompleteList() {
+      if (this.autocomplete.disabled) return;
 
-      if (this.preventAutocompleteList) return;
-      if (delay) {
-        updateFilterTimeout = setTimeout(() => {
-          this.filterAutocompleteList(false);
-        }, 500);
-        return;
+      let filteredList = [];
+      const command = this.command && this.command.trim().length > 0 ? this.command.trim() : null;
+      if (command) {
+        filteredList = command.startsWith(this.autocomplete.command) ? this.autocomplete.filtered : this.autocomplete.all;
       }
 
-      let filteredAutocompleteList = [];
-
-      if (this.command && this.command.length > 0) {
-        filteredAutocompleteList = this.autocompleteList.filter(item => {
-          return item.startsWith(this.command);
-        });
-        if (filteredAutocompleteList.length > 20) filteredAutocompleteList = [];
-      }
-
-      this.filteredAutocompleteList = filteredAutocompleteList;
+      this.autocomplete.filtered = filteredList.filter(x => x.startsWith(command));
+      this.autocomplete.command = command;
     }
   }
 };
@@ -217,10 +195,6 @@ export default {
   user-select: text;
   padding: 4px;
 
-  & > .info {
-    padding: 8px 0;
-  }
-
   & .help {
     color: var(--primary-color);
   }
@@ -229,18 +203,30 @@ export default {
     user-select: text;
   }
 
-  //font-size: 0.8rem;
-
   & .error {
     color: var(--error-color);
   }
 }
 
-.input > input::-webkit-calendar-picker-indicator {
-  display: none;
+.row {
+  display: flex;
+  flex-direction: row;
+  padding-top: 5px;
+
+  & > * {
+    padding-right: 5px;
+  }
+
+  & > .icon {
+    flex: 0 0 20px;
+  }
+}
+
+.row:last-of-type {
+  margin-bottom: 10px;
 }
 
 pre {
-  overflow-wrap: break-word;
+  white-space: pre-wrap;
 }
 </style>

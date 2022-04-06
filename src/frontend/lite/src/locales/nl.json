@@ -3,26 +3,29 @@
     "accounts": "Rekeningen",
     "categories": {
       "spending": "Spending",
-      "holding": "Holding"
+      "saving": "Witness"
     }
   },
   "account_settings": {
-    "title": "Account settings",
-    "name": "Name"
+    "title": "Rekening instellingen",
+    "name": "Naam"
   },
-  "add_holding_account": {
+  "add_saving_account": {
     "daily": "per dag",
     "estimated_earnings": "Geschatte opbrengst",
     "funding_account": "Financieringsrekening",
     "lock_for": "Vastzetten voor",
     "overall": "totaal",
-    "title": "Holding rekening aanmaken"
+    "title": "Witness rekening aanmaken"
+  },
+  "add_spending_account": {
+    "title": "Betaalrekening aanmaken"
   },
   "buttons": {
     "back": "Terug",
-    "buy_coins": "Koop Gulden",
-    "sell_coins": "Verkoop Gulden",
-    "buy_your_first_coins": "Koop jouw eerste Gulden",
+    "buy": "Koop",
+    "sell": "Verkoop",
+    "buy_your_first_coins": "Koop Gulden",
     "clear": "Wissen",
     "confirm": "Bevestig",
     "change_password": "Verander wachtwoord",
@@ -38,8 +41,11 @@
     "send": "Versturen",
     "start": "Start",
     "stop": "Stop",
-    "transactions": "Transactions",
-    "unlock": "Ontgrendelen"
+    "transactions": "Transacties",
+    "unlock": "Ontgrendelen",
+    "done": "Klaar",
+    "saving_key": "Witness key",
+    "info": "Info"
   },
   "clipboard_field": {
     "copied_to_clipboard": "Copied to clipboard"
@@ -60,13 +66,14 @@
   },
   "new_wallet": {
     "title": "Welkom bij jouw Gulden portemonnee",
-    "information": "Deze portemonnee staat alleen op jouw apparaat.<br/>Geef nooit iemand anders toegang tot jouw portemonnee.<br/>Bewaar de herstelzin die je te zien krijgt tijdens installatie op een veilige plek.<br/>Herstelzin kwijt of iemand toegang tot je herstelzin = Gulden weg."
+    "information": "Deze portemonnee staat alleen op jouw apparaat.\nGeef nooit iemand anders toegang tot jouw portemonnee.\nBewaar de herstelzin die je te zien krijgt tijdens installatie op een veilige plek.\nHerstelzin kwijt of iemand toegang tot je herstelzin = Gulden weg."
   },
-  "holding_account": {
+  "saving_account": {
     "compound_earnings": "cumulatieve inkomsten",
     "status": "Status",
-    "coins_locked": "Gulden vastgezet",
-    "coins_earned": "Gulden verdiend",
+    "parts": "Delen",
+    "coins_locked": "Primair vastgezette aantal",
+    "coins_earned": "Aantal verdiend",
     "locked_from_block": "Vastgezet vanaf blok",
     "locked_until_block": "Vastgezet tot blok",
     "lock_duration": "Looptijd",
@@ -75,7 +82,8 @@
     "required_earnings_frequency": "Benodigde beloningstijd",
     "expected_earnings_frequency": "Verwachte beloningstijd",
     "account_weight": "Gewicht",
-    "network_weight": "Netwerk gewicht"
+    "network_weight": "Netwerk gewicht",
+    "empty": "Deze witness rekening is leeg"
   },
   "loader": {
     "shutdown": "Bezig met afsluiten...",
@@ -90,7 +98,11 @@
     "number_of_threads": "Aantal threads",
     "number_of_arena_threads": "Aantal arena setup threads",
     "statistics": "Statistieken",
-    "thread": "thread | threads"
+    "thread": "thread | threads",
+    "settings": "Instellingen",
+    "current_of_max": "{current} van {max}",
+    "warning_performance": "Prestaties zijn verminderd door lager geheugengebruik",
+    "address": "Mining adres"
   },
   "password_dialog": {
     "unlock_wallet": "Ontgrendel portemonnee"
@@ -99,7 +111,11 @@
     "header": "Instellingen",
     "change_password": "Verander wachtwoord",
     "view_recovery_phrase": "Bekijk herstelzin",
-    "choose_theme": "Choose theme"
+    "choose_theme": "Thema",
+    "choose_language": "Taal",
+    "choose_decimal_places": "Aantal decimalen",
+    "english": "EN",
+    "dutch": "NL"
   },
   "setup": {
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
@@ -116,6 +132,10 @@
     "repeat_your_recovery_phrase": "Voer jouw herstelzin in om te controleren dat je deze goed hebt opgeschreven.",
     "setup_your_wallet": "Installeer jouw Gulden portemonnee",
     "this_is_your_recovery_phrase": "Dit is jouw herstelzin. Bewaar de herstelzin op een veilige plek. Zin kwijt of iemand toegang tot je zin = Gulden weg."
+  },
+  "setup_mining": {
+    "title": "Mining instellen",
+    "information": "Voordat je kunt beginnen met minen van Gulden moet een mining rekening worden aangemaakt. Voer je wachtwoord in om je wallet te ontgrendelen en een mining account aan te maken."
   },
   "transaction_details": {
     "title": {
@@ -134,8 +154,17 @@
   },
   "send_coins": {
     "enter_label": "Voer label in",
-    "confirm_transaction": "Bevestig transactie",
     "enter_coins_address": "Voer Gulden adres in",
-    "target_account": "Verstuur naar account"
+    "confirm_transaction": "Bevestig transactie",
+    "target_account": "Verstuur naar rekening",
+    "fee_will_be_subtracted": "De transactie fee wordt van het bedrag afgehaald"
+  },
+  "renew_saving_account": {
+    "funding_account": "Betaal vergoeding van rekening"
+  },
+  "link_saving_account": {
+    "title": "Jouw witness key",
+    "information": "Gebruik je witness key alleen voor vertrouwde cloud holding services. Jouw witness key geeft toegang tot jouw beloningen, laat deze dus nooit aan andere mensen zien.",
+    "no_funds": "Witness rekening moet worden gevuld met vastgezette Gulden voordat het mogelijk is om deze te koppelen met andere wallets."
   }
 }

@@ -20,48 +20,76 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faAngleDoubleLeft,
+  faAngleDoubleRight,
+  faArrowFromBottom,
+  faArrowLeft,
+  faArrowToBottom,
   faBan,
   faChevronDown,
   faChevronRight,
   faCog,
   faCopy,
+  faCreditCard,
   faEraser,
+  faGem,
   faHourglassStart,
   faLock,
+  faLongArrowLeft,
+  faLongArrowRight,
+  faPen,
+  faPlus,
   faSearchMinus,
   faSearchPlus,
   faShield,
   faShieldCheck,
   faTimes,
+  faUniversity,
   faUnlock,
-  faRedoAlt
+  faUserCircle,
+  faRedoAlt,
+  faKey,
+  faInfoCircle,
+  faExclamationTriangle,
+  faUndo
 } from "@fortawesome/pro-light-svg-icons";
 
 import { faListUl, faLongArrowDown } from "@fortawesome/pro-regular-svg-icons";
 
-import { faArrowCircleDown, faArrowCircleUp } from "@fortawesome/free-solid-svg-icons";
-
 library.add([
   faAngleDoubleLeft,
-  faArrowCircleDown,
-  faArrowCircleUp,
+  faAngleDoubleRight,
+  faArrowFromBottom,
+  faArrowLeft,
+  faArrowToBottom,
   faBan,
   faChevronDown,
   faChevronRight,
   faCog,
   faCopy,
+  faCreditCard,
   faEraser,
+  faGem,
   faHourglassStart,
-  faListUl,
   faLock,
-  faLongArrowDown,
+  faLongArrowLeft,
+  faLongArrowRight,
+  faPen,
+  faPlus,
   faSearchMinus,
   faSearchPlus,
   faShield,
   faShieldCheck,
   faTimes,
+  faUniversity,
   faUnlock,
-  faRedoAlt
+  faUserCircle,
+  faRedoAlt,
+  faKey,
+  faLongArrowDown,
+  faListUl,
+  faInfoCircle,
+  faExclamationTriangle,
+  faUndo
 ]);
 
 Vue.component("fa-icon", FontAwesomeIcon);

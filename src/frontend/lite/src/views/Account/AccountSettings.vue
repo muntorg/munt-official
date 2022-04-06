@@ -1,9 +1,5 @@
 <template>
   <div class="account-settings flex-col">
-    <portal to="sidebar-right-title">
-      {{ $t("account_settings.title") }}
-    </portal>
-
     <div class="main">
       <h5>{{ $t("account_settings.name") }}</h5>
       <input type="text" v-model="newAccountName" />
@@ -44,9 +40,5 @@ export default {
   .main {
     flex: 1;
   }
-}
-
-input {
-  background-color: #eee;
 }
 </style>
