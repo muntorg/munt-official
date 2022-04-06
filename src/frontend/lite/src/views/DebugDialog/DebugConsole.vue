@@ -1,25 +1,14 @@
 <template>
   <div class="debug-console flex-col" v-if="show">
     <div class="output-buttons">
-      <fa-icon
-        :icon="['fal', 'search-minus']"
-        class="button"
-        @click="decreaseFontSize"
-      />
-      <fa-icon
-        :icon="['fal', 'search-plus']"
-        class="button"
-        @click="increaseFontSize"
-      />
+      <fa-icon :icon="['fal', 'search-minus']" class="button" @click="decreaseFontSize" />
+      <fa-icon :icon="['fal', 'search-plus']" class="button" @click="increaseFontSize" />
       <fa-icon :icon="['fal', 'eraser']" class="button" @click="clearOutput" />
     </div>
 
     <div ref="output" class="output scrollable" :style="outputStyle">
       <div class="row">
-        <div class="info">
-          Use up and down arrows to navigate history. Type
-          <span class="help">help</span> for an overview of available commands.
-        </div>
+        <div class="info">Use up and down arrows to navigate history. Type <span class="help">help</span> for an overview of available commands.</div>
       </div>
       <div class="row" v-for="(item, index) in output" :key="index">
         <fa-icon class="icon" :icon="getIcon(item.type)" />
@@ -28,20 +17,9 @@
     </div>
 
     <div class="input">
-      <input
-        ref="command"
-        type="text"
-        spellcheck="false"
-        v-model="command"
-        @keydown="onRpcInputKeyDown"
-        list="history"
-      />
+      <input ref="command" type="text" spellcheck="false" v-model="command" @keydown="onRpcInputKeyDown" list="history" />
       <datalist id="history">
-        <option
-          v-for="item in filteredAutocompleteList"
-          :key="item"
-          :value="item"
-        />
+        <option v-for="item in filteredAutocompleteList" :key="item" :value="item" />
       </datalist>
     </div>
   </div>
@@ -182,19 +160,12 @@ export default {
       if (this.autocomplete.disabled) return;
 
       let filteredList = [];
-      const command =
-        this.command && this.command.trim().length > 0
-          ? this.command.trim()
-          : null;
+      const command = this.command && this.command.trim().length > 0 ? this.command.trim() : null;
       if (command) {
-        filteredList = command.startsWith(this.autocomplete.command)
-          ? this.autocomplete.filtered
-          : this.autocomplete.all;
+        filteredList = command.startsWith(this.autocomplete.command) ? this.autocomplete.filtered : this.autocomplete.all;
       }
 
-      this.autocomplete.filtered = filteredList.filter(x =>
-        x.startsWith(command)
-      );
+      this.autocomplete.filtered = filteredList.filter(x => x.startsWith(command));
       this.autocomplete.command = command;
     }
   }

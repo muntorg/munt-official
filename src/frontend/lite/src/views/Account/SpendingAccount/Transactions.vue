@@ -111,11 +111,8 @@ export default {
     async buyCoins() {
       try {
         this.buyDisabled = true;
-        let url = await BackendUtilities.GetBuySessionUrl();
-        if (!url) {
-          url = "https://gulden.com/buy";
-        }
-        window.open(url, "buy-gulden");
+        const url = await BackendUtilities.GetBuySessionUrl();
+        window.open(url, "buy-coins");
       } finally {
         this.buyDisabled = false;
       }

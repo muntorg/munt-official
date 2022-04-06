@@ -86,6 +86,7 @@ class LibUnity {
       let currentBalance = accountBalances[key];
 
       currentAccount.balance = currentBalance.availableIncludingLocked + currentBalance.immatureIncludingLocked;
+      currentAccount.allBalances = currentBalance;
 
       // make sure spendable is always 0 or more
       currentAccount.spendable = Math.max(currentBalance.availableExcludingLocked, 0);
@@ -2011,6 +2012,433 @@ class LibUnity {
         event.returnValue = handleError(e);
       }
     });
+
+    // Register NJSIWitnessController ipc handlers
+    ipc.answerRenderer("NJSIWitnessController.getNetworkLimitsAsync", async () => {
+      console.log(`IPC: witnessController.getNetworkLimitsAsync()`);
+      try {
+        let result = this.witnessController.getNetworkLimits();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIWitnessController.getNetworkLimits", event => {
+      console.log(`IPC: witnessController.getNetworkLimits()`);
+      try {
+        let result = this.witnessController.getNetworkLimits();
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIWitnessController.getEstimatedWeightAsync", async data => {
+      console.log(`IPC: witnessController.getEstimatedWeightAsync(${data.amount_to_lock}, ${data.lock_period_in_blocks})`);
+      try {
+        let result = this.witnessController.getEstimatedWeight(data.amount_to_lock, data.lock_period_in_blocks);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIWitnessController.getEstimatedWeight", (event, amount_to_lock, lock_period_in_blocks) => {
+      console.log(`IPC: witnessController.getEstimatedWeight(${amount_to_lock}, ${lock_period_in_blocks})`);
+      try {
+        let result = this.witnessController.getEstimatedWeight(amount_to_lock, lock_period_in_blocks);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIWitnessController.fundWitnessAccountAsync", async data => {
+      console.log(
+        `IPC: witnessController.fundWitnessAccountAsync(${data.funding_account_UUID}, ${data.witness_account_UUID}, ${data.funding_amount}, ${data.requestedLockPeriodInBlocks})`
+      );
+      try {
+        let result = this.witnessController.fundWitnessAccount(
+          data.funding_account_UUID,
+          data.witness_account_UUID,
+          data.funding_amount,
+          data.requestedLockPeriodInBlocks
+        );
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIWitnessController.fundWitnessAccount", (event, funding_account_UUID, witness_account_UUID, funding_amount, requestedLockPeriodInBlocks) => {
+      console.log(
+        `IPC: witnessController.fundWitnessAccount(${funding_account_UUID}, ${witness_account_UUID}, ${funding_amount}, ${requestedLockPeriodInBlocks})`
+      );
+      try {
+        let result = this.witnessController.fundWitnessAccount(funding_account_UUID, witness_account_UUID, funding_amount, requestedLockPeriodInBlocks);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIWitnessController.renewWitnessAccountAsync", async data => {
+      console.log(`IPC: witnessController.renewWitnessAccountAsync(${data.funding_account_UUID}, ${data.witness_account_UUID})`);
+      try {
+        let result = this.witnessController.renewWitnessAccount(data.funding_account_UUID, data.witness_account_UUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIWitnessController.renewWitnessAccount", (event, funding_account_UUID, witness_account_UUID) => {
+      console.log(`IPC: witnessController.renewWitnessAccount(${funding_account_UUID}, ${witness_account_UUID})`);
+      try {
+        let result = this.witnessController.renewWitnessAccount(funding_account_UUID, witness_account_UUID);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIWitnessController.getAccountWitnessStatisticsAsync", async data => {
+      console.log(`IPC: witnessController.getAccountWitnessStatisticsAsync(${data.witnessAccountUUID})`);
+      try {
+        let result = this.witnessController.getAccountWitnessStatistics(data.witnessAccountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIWitnessController.getAccountWitnessStatistics", (event, witnessAccountUUID) => {
+      console.log(`IPC: witnessController.getAccountWitnessStatistics(${witnessAccountUUID})`);
+      try {
+        let result = this.witnessController.getAccountWitnessStatistics(witnessAccountUUID);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIWitnessController.setAccountCompoundingAsync", async data => {
+      console.log(`IPC: witnessController.setAccountCompoundingAsync(${data.witnessAccountUUID}, ${data.percent_to_compount})`);
+      try {
+        let result = this.witnessController.setAccountCompounding(data.witnessAccountUUID, data.percent_to_compount);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIWitnessController.setAccountCompounding", (event, witnessAccountUUID, percent_to_compount) => {
+      console.log(`IPC: witnessController.setAccountCompounding(${witnessAccountUUID}, ${percent_to_compount})`);
+      try {
+        let result = this.witnessController.setAccountCompounding(witnessAccountUUID, percent_to_compount);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIWitnessController.isAccountCompoundingAsync", async data => {
+      console.log(`IPC: witnessController.isAccountCompoundingAsync(${data.witnessAccountUUID})`);
+      try {
+        let result = this.witnessController.isAccountCompounding(data.witnessAccountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIWitnessController.isAccountCompounding", (event, witnessAccountUUID) => {
+      console.log(`IPC: witnessController.isAccountCompounding(${witnessAccountUUID})`);
+      try {
+        let result = this.witnessController.isAccountCompounding(witnessAccountUUID);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIWitnessController.getWitnessAddressAsync", async data => {
+      console.log(`IPC: witnessController.getWitnessAddressAsync(${data.witnessAccountUUID})`);
+      try {
+        let result = this.witnessController.getWitnessAddress(data.witnessAccountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIWitnessController.getWitnessAddress", (event, witnessAccountUUID) => {
+      console.log(`IPC: witnessController.getWitnessAddress(${witnessAccountUUID})`);
+      try {
+        let result = this.witnessController.getWitnessAddress(witnessAccountUUID);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    // Register NJSIGenerationController ipc handlers
+    ipc.answerRenderer("NJSIGenerationController.startGenerationAsync", async data => {
+      console.log(`IPC: generationController.startGenerationAsync(${data.numThreads}, ${data.numArenaThreads}, ${data.memoryLimit})`);
+      try {
+        let result = this.generationController.startGeneration(data.numThreads, data.numArenaThreads, data.memoryLimit);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIGenerationController.startGeneration", (event, numThreads, numArenaThreads, memoryLimit) => {
+      console.log(`IPC: generationController.startGeneration(${numThreads}, ${numArenaThreads}, ${memoryLimit})`);
+      try {
+        let result = this.generationController.startGeneration(numThreads, numArenaThreads, memoryLimit);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIGenerationController.stopGenerationAsync", async () => {
+      console.log(`IPC: generationController.stopGenerationAsync()`);
+      try {
+        let result = this.generationController.stopGeneration();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIGenerationController.stopGeneration", event => {
+      console.log(`IPC: generationController.stopGeneration()`);
+      try {
+        let result = this.generationController.stopGeneration();
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIGenerationController.getGenerationAddressAsync", async () => {
+      console.log(`IPC: generationController.getGenerationAddressAsync()`);
+      try {
+        let result = this.generationController.getGenerationAddress();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIGenerationController.getGenerationAddress", event => {
+      console.log(`IPC: generationController.getGenerationAddress()`);
+      try {
+        let result = this.generationController.getGenerationAddress();
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIGenerationController.getGenerationOverrideAddressAsync", async () => {
+      console.log(`IPC: generationController.getGenerationOverrideAddressAsync()`);
+      try {
+        let result = this.generationController.getGenerationOverrideAddress();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIGenerationController.getGenerationOverrideAddress", event => {
+      console.log(`IPC: generationController.getGenerationOverrideAddress()`);
+      try {
+        let result = this.generationController.getGenerationOverrideAddress();
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIGenerationController.setGenerationOverrideAddressAsync", async data => {
+      console.log(`IPC: generationController.setGenerationOverrideAddressAsync(${data.overrideAddress})`);
+      try {
+        let result = this.generationController.setGenerationOverrideAddress(data.overrideAddress);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIGenerationController.setGenerationOverrideAddress", (event, overrideAddress) => {
+      console.log(`IPC: generationController.setGenerationOverrideAddress(${overrideAddress})`);
+      try {
+        let result = this.generationController.setGenerationOverrideAddress(overrideAddress);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIGenerationController.getAvailableCoresAsync", async () => {
+      console.log(`IPC: generationController.getAvailableCoresAsync()`);
+      try {
+        let result = this.generationController.getAvailableCores();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIGenerationController.getAvailableCores", event => {
+      console.log(`IPC: generationController.getAvailableCores()`);
+      try {
+        let result = this.generationController.getAvailableCores();
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIGenerationController.getMinimumMemoryAsync", async () => {
+      console.log(`IPC: generationController.getMinimumMemoryAsync()`);
+      try {
+        let result = this.generationController.getMinimumMemory();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIGenerationController.getMinimumMemory", event => {
+      console.log(`IPC: generationController.getMinimumMemory()`);
+      try {
+        let result = this.generationController.getMinimumMemory();
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIGenerationController.getMaximumMemoryAsync", async () => {
+      console.log(`IPC: generationController.getMaximumMemoryAsync()`);
+      try {
+        let result = this.generationController.getMaximumMemory();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIGenerationController.getMaximumMemory", event => {
+      console.log(`IPC: generationController.getMaximumMemory()`);
+      try {
+        let result = this.generationController.getMaximumMemory();
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
     /* inject:generated-code */
 
     ipc.on("BackendUtilities.GetBuySessionUrl", async event => {
@@ -2031,7 +2459,10 @@ class LibUnity {
           result: `https://blockhut.com/buy.php?sessionid=${response.data.sessionid}`
         };
       } catch (e) {
-        event.returnValue = handleError(e);
+        event.returnValue = {
+          success: true,
+          result: "https://gulden.com/buy"
+        };
       }
     });
 
@@ -2053,7 +2484,10 @@ class LibUnity {
           result: `https://blockhut.com/sell.php?sessionid=${response.data.sessionid}`
         };
       } catch (e) {
-        event.returnValue = handleError(e);
+        event.returnValue = {
+          success: true,
+          result: "https://gulden.com/sell"
+        };
       }
     });
   }

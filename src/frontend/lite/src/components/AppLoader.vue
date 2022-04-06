@@ -28,7 +28,6 @@
 import { mapState } from "vuex";
 import AppStatus from "../AppStatus";
 import { LibraryController } from "../unity/Controllers";
-import UIConfig from "../../ui-config.json";
 
 let progressTimeout = null;
 
@@ -40,8 +39,7 @@ export default {
   data() {
     return {
       electronVersion: process.versions.electron,
-      progress: 0,
-      UIConfig: UIConfig
+      progress: 0
     };
   },
   computed: {
@@ -76,27 +74,21 @@ export default {
   },
   methods: {
     onStatusChanged() {
-      if (this.UIConfig.showSidebar) {
-        let routeName;
-        switch (this.status) {
-          case AppStatus.setup:
-            routeName = "setup";
-            break;
-          case AppStatus.synchronize:
-            routeName = "account";
-            this.updateProgress();
-            break;
-          case AppStatus.ready:
-            routeName = "account";
-            break;
-        }
-        if (routeName === undefined || this.$route.name === routeName) return;
-        this.$router.push({ name: routeName });
-      } else {
-        if (this.status === AppStatus.synchronize) {
+      let routeName;
+      switch (this.status) {
+        case AppStatus.setup:
+          routeName = "setup";
+          break;
+        case AppStatus.synchronize:
+          routeName = "account";
           this.updateProgress();
-        }
+          break;
+        case AppStatus.ready:
+          routeName = "account";
+          break;
       }
+      if (routeName === undefined || this.$route.name === routeName) return;
+      this.$router.push({ name: routeName });
     },
     updateProgress() {
       clearTimeout(progressTimeout);

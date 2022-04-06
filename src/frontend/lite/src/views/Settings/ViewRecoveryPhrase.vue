@@ -16,51 +16,35 @@
       </content-wrapper>
     </div>
 
-    <div v-if="UIConfig.showSidebar">
-      <div class="flex-1" />
-      <app-button-section>
-        <template v-slot:left>
-          <button v-if="current === 1" @click="routeTo('settings')">
-            {{ $t("buttons.back") }}
-          </button>
-        </template>
-        <template v-slot:right>
-          <button v-if="current === 1" @click="getRecoveryPhrase" :disabled="isNextDisabled">
-            {{ $t("buttons.next") }}
-          </button>
-          <button v-if="current === 2" @click="ready">
-            {{ $t("buttons.ready") }}
-          </button>
-        </template>
-      </app-button-section>
-    </div>
-    <div v-else>
-      <portal to="footer-slot">
-        <app-button-section>
-          <button v-if="current === 1" @click="getRecoveryPhrase" :disabled="isNextDisabled">
-            {{ $t("buttons.next") }}
-          </button>
-          <button v-if="current === 2" @click="ready">
-            {{ $t("buttons.ready") }}
-          </button>
-        </app-button-section>
-      </portal>
-    </div>
+    <div class="flex-1" />
+    <app-button-section>
+      <template v-slot:left>
+        <button v-if="current === 1" @click="routeTo('settings')">
+          {{ $t("buttons.back") }}
+        </button>
+      </template>
+      <template v-slot:right>
+        <button v-if="current === 1" @click="getRecoveryPhrase" :disabled="isNextDisabled">
+          {{ $t("buttons.next") }}
+        </button>
+        <button v-if="current === 2" @click="ready">
+          {{ $t("buttons.ready") }}
+        </button>
+      </template>
+    </app-button-section>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import { LibraryController } from "../../unity/Controllers";
-import UIConfig from "../../../ui-config.json";
 
 export default {
   data() {
     return {
       recoveryPhrase: null,
       password: "",
-      isPasswordInvalid: false,
-      UIConfig: UIConfig
+      isPasswordInvalid: false
     };
   },
   mounted() {

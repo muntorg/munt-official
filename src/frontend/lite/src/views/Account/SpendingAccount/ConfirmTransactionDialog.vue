@@ -2,6 +2,7 @@
   <div class="confirm-transaction-dialog">
     <div class="tx-amount">{{ computedAmount }}</div>
     <div class="tx-fee">{{ computedFee }}</div>
+    <div class="tx-fee-message" v-if="subtractFee">{{ $t("send_coins.fee_will_be_subtracted") }}</div>
     <div class="tx-to">
       <fa-icon :icon="['far', 'long-arrow-down']" />
     </div>
@@ -14,7 +15,7 @@
 
 <script>
 import EventBus from "@/EventBus";
-import { formatMoneyForDisplay, displayToMonetary } from "../../../util.js";
+import { formatMoneyForDisplay } from "../../../util.js";
 import { LibraryController } from "@/unity/Controllers";
 
 export default {
@@ -32,19 +33,27 @@ export default {
         address: this.address,
         label: "",
         desc: "",
-        amount: displayToMonetary(this.amount)
+        amount: this.amount
       };
     },
     computedAmount() {
-      return `${this.amount} ${this.$t("common.ticker_symbol")}`;
+      return `${formatMoneyForDisplay(this.amount, false, 8)} ${this.$t("common.ticker_symbol")}`;
     },
     computedFee() {
-      let fee = formatMoneyForDisplay(LibraryController.FeeForRecipient(this.computedRequest));
-      return `+ ${fee} ${this.$t("common.ticker_symbol")} FEE`;
+      return `${formatMoneyForDisplay(this.fee, false, 8)} ${this.$t("common.ticker_symbol")} FEE`;
+    }
+  },
+  watch: {
+    amount: {
+      immediate: true,
+      handler() {
+        this.fee = LibraryController.FeeForRecipient(this.computedRequest);
+      }
     }
   },
   methods: {
     confirm() {
+      // at this point the password should already be validated
       LibraryController.UnlockWallet(this.password, 120);
 
       // try to make the payment
@@ -80,6 +89,10 @@ export default {
 }
 .tx-fee {
   font-size: 0.9em;
+}
+.tx-fee-message {
+  font-size: 0.9em;
+  margin-top: 5px;
 }
 .tx-to {
   margin: 20px 0 10px 0;

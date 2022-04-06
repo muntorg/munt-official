@@ -13,7 +13,7 @@
             </div>
             <div class="balance">{{ getBalanceFor(category) }}</div>
           </div>
-          <div class="add" v-if="category !== 'spending'">
+          <div class="add">
             <div class="button" @click="addAccountFor(category)">
               <fa-icon :icon="['fal', 'plus']" />
             </div>
@@ -25,7 +25,12 @@
         </div>
         <div v-if="opened[category]">
           <div v-for="account in getAccountsFor(category)" :key="account.UUID" class="account" :class="accountClass(account.UUID)">
-            <router-link class="flex-col" :to="{ name: 'account', params: { id: account.UUID } }">
+            <router-link
+              :disabled="isActiveAccount(account.UUID)"
+              :event="!isActiveAccount(account.UUID) ? 'click' : ''"
+              class="flex-col"
+              :to="{ name: 'account', params: { id: account.UUID } }"
+            >
               <span class="ellipsis">{{ account.label }}</span>
               <span class="balance">{{ displayBalanceForAccount(account) }}</span>
             </router-link>
@@ -39,15 +44,21 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import { formatMoneyForDisplay } from "../util.js";
+import UIConfig from "../../ui-config.json";
 
 export default {
   name: "AccountsSection",
   data() {
+    const categories = ["spending"];
+    if (!UIConfig.isSPV) {
+      categories.push("saving");
+    }
+
     return {
-      categories: ["spending", "witness"],
+      categories,
       opened: {
         spending: false,
-        witness: false
+        saving: false
       }
     };
   },
@@ -62,8 +73,9 @@ export default {
       switch (account.type) {
         case "Desktop":
           return "spending";
+        case "Holding":
         case "Witness":
-          return "witness";
+          return "saving";
       }
       return null;
     }
@@ -74,8 +86,11 @@ export default {
     }
   },
   methods: {
+    isActiveAccount(accountUUID) {
+      return this.$route.path.indexOf("/account") == 0 && accountUUID === this.activeAccount;
+    },
     accountClass(accountUUID) {
-      return this.$route.name === "account" && accountUUID === this.activeAccount ? "active" : "";
+      return this.isActiveAccount(accountUUID) ? "active" : "";
     },
     displayBalanceForAccount(account) {
       return formatMoneyForDisplay(account.balance);
@@ -86,8 +101,8 @@ export default {
         case "spending":
           types = ["Desktop"];
           break;
-        case "witness":
-          types = ["Witness"];
+        case "saving":
+          types = ["Witness", "Holding"];
           break;
       }
       if (types === undefined) return [];
@@ -110,16 +125,21 @@ export default {
     },
     showNewAccountFor(category) {
       switch (category) {
-        case "witness":
-          return this.$route.name === "add-witness-account";
+        case "saving":
+          return this.$route.name === "add-saving-account";
+        case "spending":
+          return this.$route.name === "add-spending-account";
         default:
           return false;
       }
     },
     addAccountFor(category) {
       switch (category) {
-        case "witness":
-          this.$router.push({ name: "add-witness-account" });
+        case "saving":
+          this.$router.push({ name: "add-saving-account" });
+          break;
+        case "spending":
+          this.$router.push({ name: "add-spending-account" });
           break;
         default:
           console.log(`add account for ${category} not implemented yet`);
@@ -217,7 +237,7 @@ export default {
   line-height: 16px;
 
   &:hover {
-    background-color: #222;
+    background-color: var(--account-background-color--hover);
   }
 
   & a {
@@ -227,7 +247,7 @@ export default {
 
   &.active {
     color: #fff;
-    background-color: #c0aa70;
+    background-color: var(--account-background-color--active);
 
     & a {
       color: #fff;

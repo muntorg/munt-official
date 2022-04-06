@@ -530,7 +530,148 @@ class AccountsController {
   }
 }
 
-export { LibraryController, WalletController, RpcController, P2pNetworkController, AccountsController };
+class WitnessController {
+  static async GetNetworkLimitsAsync() {
+    return handleError(await ipc.callMain("NJSIWitnessController.getNetworkLimitsAsync"));
+  }
+
+  static GetNetworkLimits() {
+    return handleError(ipc.sendSync("NJSIWitnessController.getNetworkLimits"));
+  }
+
+  static async GetEstimatedWeightAsync(amount_to_lock, lock_period_in_blocks) {
+    return handleError(await ipc.callMain("NJSIWitnessController.getEstimatedWeightAsync", { amount_to_lock, lock_period_in_blocks }));
+  }
+
+  static GetEstimatedWeight(amount_to_lock, lock_period_in_blocks) {
+    return handleError(ipc.sendSync("NJSIWitnessController.getEstimatedWeight", amount_to_lock, lock_period_in_blocks));
+  }
+
+  static async FundWitnessAccountAsync(funding_account_UUID, witness_account_UUID, funding_amount, requestedLockPeriodInBlocks) {
+    return handleError(
+      await ipc.callMain("NJSIWitnessController.fundWitnessAccountAsync", {
+        funding_account_UUID,
+        witness_account_UUID,
+        funding_amount,
+        requestedLockPeriodInBlocks
+      })
+    );
+  }
+
+  static FundWitnessAccount(funding_account_UUID, witness_account_UUID, funding_amount, requestedLockPeriodInBlocks) {
+    return handleError(
+      ipc.sendSync("NJSIWitnessController.fundWitnessAccount", funding_account_UUID, witness_account_UUID, funding_amount, requestedLockPeriodInBlocks)
+    );
+  }
+
+  static async RenewWitnessAccountAsync(funding_account_UUID, witness_account_UUID) {
+    return handleError(await ipc.callMain("NJSIWitnessController.renewWitnessAccountAsync", { funding_account_UUID, witness_account_UUID }));
+  }
+
+  static RenewWitnessAccount(funding_account_UUID, witness_account_UUID) {
+    return handleError(ipc.sendSync("NJSIWitnessController.renewWitnessAccount", funding_account_UUID, witness_account_UUID));
+  }
+
+  static async GetAccountWitnessStatisticsAsync(witnessAccountUUID) {
+    return handleError(await ipc.callMain("NJSIWitnessController.getAccountWitnessStatisticsAsync", { witnessAccountUUID }));
+  }
+
+  static GetAccountWitnessStatistics(witnessAccountUUID) {
+    return handleError(ipc.sendSync("NJSIWitnessController.getAccountWitnessStatistics", witnessAccountUUID));
+  }
+
+  static async SetAccountCompoundingAsync(witnessAccountUUID, percent_to_compount) {
+    return handleError(await ipc.callMain("NJSIWitnessController.setAccountCompoundingAsync", { witnessAccountUUID, percent_to_compount }));
+  }
+
+  static SetAccountCompounding(witnessAccountUUID, percent_to_compount) {
+    return handleError(ipc.sendSync("NJSIWitnessController.setAccountCompounding", witnessAccountUUID, percent_to_compount));
+  }
+
+  static async IsAccountCompoundingAsync(witnessAccountUUID) {
+    return handleError(await ipc.callMain("NJSIWitnessController.isAccountCompoundingAsync", { witnessAccountUUID }));
+  }
+
+  static IsAccountCompounding(witnessAccountUUID) {
+    return handleError(ipc.sendSync("NJSIWitnessController.isAccountCompounding", witnessAccountUUID));
+  }
+
+  static async GetWitnessAddressAsync(witnessAccountUUID) {
+    return handleError(await ipc.callMain("NJSIWitnessController.getWitnessAddressAsync", { witnessAccountUUID }));
+  }
+
+  static GetWitnessAddress(witnessAccountUUID) {
+    return handleError(ipc.sendSync("NJSIWitnessController.getWitnessAddress", witnessAccountUUID));
+  }
+}
+
+class GenerationController {
+  static async StartGenerationAsync(numThreads, numArenaThreads, memoryLimit) {
+    return handleError(await ipc.callMain("NJSIGenerationController.startGenerationAsync", { numThreads, numArenaThreads, memoryLimit }));
+  }
+
+  static StartGeneration(numThreads, numArenaThreads, memoryLimit) {
+    return handleError(ipc.sendSync("NJSIGenerationController.startGeneration", numThreads, numArenaThreads, memoryLimit));
+  }
+
+  static async StopGenerationAsync() {
+    return handleError(await ipc.callMain("NJSIGenerationController.stopGenerationAsync"));
+  }
+
+  static StopGeneration() {
+    return handleError(ipc.sendSync("NJSIGenerationController.stopGeneration"));
+  }
+
+  static async GetGenerationAddressAsync() {
+    return handleError(await ipc.callMain("NJSIGenerationController.getGenerationAddressAsync"));
+  }
+
+  static GetGenerationAddress() {
+    return handleError(ipc.sendSync("NJSIGenerationController.getGenerationAddress"));
+  }
+
+  static async GetGenerationOverrideAddressAsync() {
+    return handleError(await ipc.callMain("NJSIGenerationController.getGenerationOverrideAddressAsync"));
+  }
+
+  static GetGenerationOverrideAddress() {
+    return handleError(ipc.sendSync("NJSIGenerationController.getGenerationOverrideAddress"));
+  }
+
+  static async SetGenerationOverrideAddressAsync(overrideAddress) {
+    return handleError(await ipc.callMain("NJSIGenerationController.setGenerationOverrideAddressAsync", { overrideAddress }));
+  }
+
+  static SetGenerationOverrideAddress(overrideAddress) {
+    return handleError(ipc.sendSync("NJSIGenerationController.setGenerationOverrideAddress", overrideAddress));
+  }
+
+  static async GetAvailableCoresAsync() {
+    return handleError(await ipc.callMain("NJSIGenerationController.getAvailableCoresAsync"));
+  }
+
+  static GetAvailableCores() {
+    return handleError(ipc.sendSync("NJSIGenerationController.getAvailableCores"));
+  }
+
+  static async GetMinimumMemoryAsync() {
+    return handleError(await ipc.callMain("NJSIGenerationController.getMinimumMemoryAsync"));
+  }
+
+  static GetMinimumMemory() {
+    return handleError(ipc.sendSync("NJSIGenerationController.getMinimumMemory"));
+  }
+
+  static async GetMaximumMemoryAsync() {
+    return handleError(await ipc.callMain("NJSIGenerationController.getMaximumMemoryAsync"));
+  }
+
+  static GetMaximumMemory() {
+    return handleError(ipc.sendSync("NJSIGenerationController.getMaximumMemory"));
+  }
+}
+
+export { LibraryController, WalletController, RpcController, P2pNetworkController, AccountsController, WitnessController, GenerationController };
 /* inject:generated-code */
 
 class BackendUtilities {

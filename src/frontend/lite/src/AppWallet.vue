@@ -1,6 +1,6 @@
 <template>
   <div class="app-wallet">
-    <app-loader v-if="showLoader" />
+    <app-loader />
     <modal-dialog v-model="modal" />
     <activity-indicator v-if="activityIndicator" />
     <component :is="layout">
@@ -46,12 +46,9 @@ export default {
     EventBus.$off("show-dialog", this.showModal);
   },
   computed: {
-    ...mapState("app", ["splashReady", "status", "activityIndicator"]),
+    ...mapState("app", ["status", "activityIndicator"]),
     layout() {
       return this.$route.meta.layout || WalletLayout;
-    },
-    showLoader() {
-      return this.splashReady === false || (this.status !== AppStatus.ready && this.status !== AppStatus.setup);
     }
   },
   watch: {
