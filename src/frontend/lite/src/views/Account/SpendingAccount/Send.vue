@@ -139,6 +139,8 @@ export default {
       // if useMax is checked, use the maxAmount and subtract the fee from the amount
       let amount = this.useMax ? this.maxAmount : displayToMonetary(this.amount);
 
+      if (amount == 0) return;
+
       // validate address
       this.isAddressInvalid = !LibraryController.IsValidNativeAddress(this.address);
 
