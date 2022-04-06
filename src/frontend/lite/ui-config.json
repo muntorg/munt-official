@@ -1,5 +1,8 @@
 {
-  "showSidebar": true,
-  "showHeaderLogo": true,
-  "hasThemes": true
+  "isSingleAccount": true,
+  "isSPV": true,
+  "themes": [
+    { "name": "blue", "color": "#0039cc" },
+    { "name": "orange", "color": "#ee6622" }
+  ]
 }

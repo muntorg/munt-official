@@ -141,7 +141,6 @@ button {
   font-style: normal;
   font-weight: 600;
   font-size: 0.75em;
-  min-width: 100px;
   line-height: 40px;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -247,10 +246,20 @@ input[type="range"] {
   }
 
   &::-webkit-scrollbar-thumb {
-    border: 2px solid var(--scrollbar-background-color);
+    border: 2px solid rgba(0, 0, 0, 0);
     background-clip: padding-box;
     background-color: var(--thumb-background-color);
     border-radius: 14px;
+  }
+
+  &.dark {
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--thumb-background-color-dark);
+    }
   }
 }
 

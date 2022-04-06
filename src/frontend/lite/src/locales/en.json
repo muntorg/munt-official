@@ -3,26 +3,29 @@
     "accounts": "Accounts",
     "categories": {
       "spending": "Spending",
-      "holding": "Holding"
+      "saving": "Witness"
     }
   },
   "account_settings": {
     "title": "Account settings",
     "name": "Name"
   },
-  "add_holding_account": {
+  "add_saving_account": {
     "daily": "daily",
     "estimated_earnings": "Estimated earnings",
     "funding_account": "Funding account",
     "lock_for": "Lock for",
     "overall": "overall",
-    "title": "Add holding account"
+    "title": "Add witness account"
+  },
+  "add_spending_account": {
+    "title": "Add spending account"
   },
   "buttons": {
     "back": "Back",
-    "buy_coins": "Buy Gulden",
-    "sell_coins": "Sell Gulden",
-    "buy_your_first_coins": "Buy your first Gulden",
+    "buy": "Buy",
+    "sell": "Sell",
+    "buy_your_first_coins": "Buy Gulden",
     "clear": "Clear",
     "confirm": "Confirm",
     "change_password": "Change password",
@@ -39,7 +42,10 @@
     "start": "Start",
     "stop": "Stop",
     "transactions": "Transactions",
-    "unlock": "Unlock"
+    "unlock": "Unlock",
+    "done": "Done",
+    "saving_key": "Witness Key",
+    "info": "Info"
   },
   "clipboard_field": {
     "copied_to_clipboard": "Copied to clipboard"
@@ -60,13 +66,14 @@
   },
   "new_wallet": {
     "title": "Welcome to your Gulden wallet",
-    "information": "This wallet is only stored on your device.<br />Never give anyone else access to your wallet.<br />Keep the backup phrase you see at installation in a safe place.<br />Lose phrase or someone else with access to the phrase = lose Gulden."
+    "information": "This wallet is only stored on your device.\nNever give anyone else access to your wallet.\nKeep the backup phrase you see at installation in a safe place.\nLose phrase or someone else with access to the phrase = lose Gulden."
   },
-  "holding_account": {
+  "saving_account": {
     "compound_earnings": "compound earnings",
     "status": "Status",
-    "coins_locked": "Gulden locked",
-    "coins_earned": "Gulden earned",
+    "parts": "Parts",
+    "coins_locked": "Initial amount locked",
+    "coins_earned": "Amount earned",
     "locked_from_block": "Locked from block",
     "locked_until_block": "Locked until block",
     "lock_duration": "Lock duration",
@@ -75,7 +82,8 @@
     "required_earnings_frequency": "Required earnings frequency",
     "expected_earnings_frequency": "Expected earnings frequency",
     "account_weight": "Account weight",
-    "network_weight": "Network weight"
+    "network_weight": "Network weight",
+    "empty": "This witness account is empty"
   },
   "loader": {
     "shutdown": "Shutting down...",
@@ -85,12 +93,16 @@
     "arena_setup_time": "Arena setup time",
     "best_reported_speed": "Best reported speed",
     "last_reported_speed": "Last reported speed",
-    "memory_to_use": "Memory to use",
+    "memory_to_use": "Memory usage",
     "moving_average": "Moving average",
     "number_of_threads": "Number of threads",
     "number_of_arena_threads": "Number of arena setup threads",
     "statistics": "Statistics",
-    "thread": "thread | threads"
+    "thread": "thread | threads",
+    "settings": "Settings",
+    "current_of_max": "{current} of {max}",
+    "warning_performance": "Performance is degraded due to reduced memory usage",
+    "address": "My Mining Address"
   },
   "password_dialog": {
     "unlock_wallet": "Unlock wallet"
@@ -99,9 +111,9 @@
     "header": "Settings",
     "change_password": "Change password",
     "view_recovery_phrase": "View recovery phrase",
-    "choose_theme": "Choose theme",
-    "choose_language": "Choose Language",
-    "choose_decimal_places": "Choose Decimal Places",
+    "choose_theme": "Theme",
+    "choose_language": "Language",
+    "choose_decimal_places": "Decimal places",
     "english": "EN",
     "dutch": "NL"
   },
@@ -121,6 +133,10 @@
     "setup_your_wallet": "Make a choice",
     "this_is_your_recovery_phrase": "This is your recovery phrase. Keep your backup phrase in a safe place. Lose phrase or someone else with access to the phrase = lose Gulden."
   },
+  "setup_mining": {
+    "title": "Setup mining",
+    "information": "Before you can start mining Gulden a mining account needs to be created. Enter your password to unlock your wallet and create a mining account."
+  },
   "transaction_details": {
     "title": {
       "incoming_transaction": "Incoming transaction",
@@ -138,8 +154,17 @@
   },
   "send_coins": {
     "enter_label": "Enter label",
-    "confirm_transaction": "Confirm transaction",
     "enter_coins_address": "Enter Gulden address",
-    "target_account": "Send to account"
+    "confirm_transaction": "Confirm transaction",
+    "target_account": "Send to account",
+    "fee_will_be_subtracted": "fee will be subtracted from the amount"
+  },
+  "renew_saving_account": {
+    "funding_account": "Pay renewal fee from account"
+  },
+  "link_saving_account": {
+    "title": "Your witness key",
+    "information": "Use your witness key only for trusted cloud holding services. Your witness key provides access to your rewards, so never show it to other people.",
+    "no_funds": "Witness account must be funded with locked funds before it is possible to link it with other wallets."
   }
 }

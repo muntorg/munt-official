@@ -20,13 +20,15 @@ if (process.type !== "renderer") {
     invertIgnored: true, // use invertIgnored because we only want to store the paths in the ignoredPaths list and only persist on specific commits
     ignoredPaths: [
       // only store the paths listed below
-      "app.theme",
+      "mining.settings",
       "app.language",
       "app.decimals"
     ],
     ignoredCommits: [
       // only update persisted state on commits listed below
-      "app/SET_THEME",
+      "mining/SET_MEMORY_SIZE",
+      "mining/SET_THREAD_COUNT",
+      "mining/SET_ARENA_THREAD_COUNT",
       "app/SET_LANGUAGE",
       "app/SET_DECIMALS"
     ]
