@@ -1,5 +1,16 @@
 packages:=boost openssl qrencode protobuf
 
+qrencode_linux_packages = qrencode
+qrencode_android_packages = qrencode
+qrencode_darwin_packages = qrencode
+qrencode_mingw32_packages = qrencode
+
+qt_linux_packages:=qt expat dbus libxcb xcb_proto libXau xproto freetype fontconfig libX11 xextproto libXext xtrans
+qt_darwin_packages=qt
+qt_mingw32_packages=qt
+qt_native_packages = native_protobuf
+qt_packages = qrencode protobuf zlib
+
 ifneq ($(host_os),ios)
 ifneq ($(host_flavor),android)
 packages += libevent zeromq libcryptopp
@@ -11,24 +22,23 @@ ifeq ($(host_flavor),android)
 packages += libcryptoppunity
 endif
 
-qt_native_packages = native_protobuf
-qt_packages = qrencode protobuf zlib
 
-qt_linux_packages:=qt expat dbus libxcb xcb_proto libXau xproto freetype fontconfig libX11 xextproto libXext xtrans
+bdb_packages=bdb
 
-rapidcheck_packages = rapidcheck
-
-qt_darwin_packages=qt
-qt_mingw32_packages=qt
-
-wallet_packages=bdb
+zmq_packages=zeromq
 
 upnp_packages=miniupnpc
+natpmp_packages=libnatpmp
 
-darwin_native_packages = native_biplist native_ds_store native_mac_alias
+multiprocess_packages = libmultiprocess capnp
+multiprocess_native_packages = native_libmultiprocess native_capnp
+
+usdt_linux_packages=systemtap
+
+darwin_native_packages = native_ds_store native_mac_alias
 
 ifneq ($(build_os),darwin)
-darwin_native_packages += native_cctools native_libtapi native_cdrkit native_libdmg-hfsplus
+darwin_native_packages += native_cctools native_libtapi native_libdmg-hfsplus
 
 ifeq ($(strip $(FORCE_USE_SYSTEM_CLANG)),)
 darwin_native_packages+= native_clang

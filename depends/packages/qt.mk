@@ -127,23 +127,19 @@ $(package)_config_opts_linux += -no-feature-sessionmanager
 $(package)_config_opts_linux += -fontconfig
 $(package)_config_opts_linux += -no-opengl
 $(package)_config_opts_arm_linux += -platform linux-g++ -xplatform gulden-linux-g++
-$(package)_config_opts_i686_linux  = -xplatform linux-g++-32
+$(package)_config_opts_i686_linux  = -platform linux-g++ -xplatform gulden-linux-g++
 $(package)_config_opts_x86_64_linux = -xplatform linux-g++-64
 $(package)_config_opts_aarch64_linux = -xplatform linux-aarch64-gnu-g++
 $(package)_config_opts_riscv64_linux = -platform linux-g++ -xplatform gulden-linux-g++
 
-ifeq ($(build_os),mingw32)
-$(package)_config_opts += -bindir $($(package)_staging_prefix_dir)/native/bin
-$(package)_config_opts += -hostprefix $($(package)_staging_prefix_dir)/native
-$(package)_config_opts += -prefix $($(package)_staging_prefix_dir)
-$(package)_config_opts += -extprefix $($(package)_staging_prefix_dir)
-$(package)_config_opts_mingw32 = -no-opengl -platform win32-g++
-else
-$(package)_config_opts += -bindir $(build_prefix)/bin
-$(package)_config_opts += -hostprefix $(build_prefix)
-$(package)_config_opts += -prefix $(host_prefix)
-$(package)_config_opts_mingw32 = -no-opengl -xplatform win32-g++ -device-option CROSS_COMPILE="$(host)-"
-endif
+$(package)_config_opts_mingw32 = -no-opengl
+$(package)_config_opts_mingw32 += -xplatform win32-g++
+$(package)_config_opts_mingw32 += "QMAKE_CFLAGS = '$($(package)_cflags) $($(package)_cppflags)'"
+$(package)_config_opts_mingw32 += "QMAKE_CXX = '$($(package)_cxx)'"
+$(package)_config_opts_mingw32 += "QMAKE_CXXFLAGS = '$($(package)_cflags) $($(package)_cppflags)'"
+$(package)_config_opts_mingw32 += "QMAKE_LFLAGS = '$($(package)_ldflags)'"
+$(package)_config_opts_mingw32 += -device-option CROSS_COMPILE="$(host)-"
+$(package)_config_opts_mingw32 += -pch
 
 $(package)_build_env  = QT_RCC_TEST=1
 $(package)_build_env += QT_RCC_SOURCE_DATE_OVERRIDE=1
@@ -218,10 +214,9 @@ define $(package)_preprocess_cmds
   sed -i.old "s|CONFIG.*=.*build_all||" qwt/qwtbuild.pri && \
   echo "unix|mingw {QWT_CONFIG     += QwtPkgConfig }" >> qwt/qwtconfig.pri && \
   echo "unix|mingw {QMAKE_PKGCONFIG_VERSION = $($(package)_qwt_version) }" >> qwt/qwtconfig.pri && \
-  sed -i.old "s/QT_BEGIN_NAMESPACE/#include <limits>\nQT_BEGIN_NAMESPACE/g" qtbase/src/corelib/tools/qbytearraymatcher.h
+  sed -i.old "s/QT_BEGIN_NAMESPACE/#include <limits>\nQT_BEGIN_NAMESPACE/g" qtbase/src/corelib/tools/qbytearraymatcher.h && \
+  sed -i.old "s/LIBRARY_PATH/(CROSS_)?\0/g" qtbase/mkspecs/features/toolchain.prf
 endef
-#sed qttools/src/linguist/shared/formats.pri -i -re 's/QT \*= xml//' && \
-#sed qttools/src/linguist/shared/formats.pri -i -re 's/    .*xliff.cpp/    /' && \
 
 
 define $(package)_config_cmds

@@ -82,7 +82,7 @@ mkdir -p "$DISTSRC"
             ;;
         *darwin*)
             # Apply detached codesignatures to dist/ (in-place)
-            signapple apply dist/Bitcoin-Qt.app codesignatures/osx/dist
+            signapple apply dist/Gulden-Qt.app codesignatures/osx/dist
 
             # Make an uncompressed DMG from dist/
             xorrisofs -D -l -V "$(< osx_volname)" -no-pad -r -dir-mode 0755 \
@@ -91,7 +91,7 @@ mkdir -p "$DISTSRC"
                       -- -volume_date all_file_dates ="$SOURCE_DATE_EPOCH"
 
             # Compress uncompressed.dmg and output to OUTDIR
-            ./dmg dmg uncompressed.dmg "${OUTDIR}/${DISTNAME}-osx-signed.dmg"
+            ./dmg dmg uncompressed.dmg "${OUTDIR}/${DISTNAME}-${HOST}.dmg"
             ;;
         *)
             exit 1

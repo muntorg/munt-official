@@ -216,9 +216,8 @@ make -C depends --jobs="$JOBS" HOST="$HOST" \
                                    x86_64_linux_RANLIB=x86_64-linux-gnu-ranlib \
                                    x86_64_linux_NM=x86_64-linux-gnu-nm \
                                    x86_64_linux_STRIP=x86_64-linux-gnu-strip \
-                                   qt_config_opts_i686_linux='-platform linux-g++ -xplatform bitcoin-linux-g++' \
-                                   qt_config_opts_x86_64_linux='-platform linux-g++ -xplatform bitcoin-linux-g++' \
-                                   FORCE_USE_SYSTEM_CLANG=1
+                                   FORCE_USE_SYSTEM_CLANG=1 \
+                                   EXTRA_PACKAGES='node_addon_api electron_node_headers'
 
 
 ###########################
@@ -240,7 +239,7 @@ mkdir -p "$OUTDIR"
 ###########################
 
 # CONFIGFLAGS
-CONFIGFLAGS="--enable-reduce-exports --disable-bench --disable-gui-tests --disable-fuzz-binary"
+CONFIGFLAGS="--enable-reduce-exports --disable-bench --disable-gui-tests --disable-fuzz-binary --disable-main --enable-zmq --with-node-js-libs --with-qrencode"
 
 # CFLAGS
 HOST_CFLAGS="-O2 -g"
@@ -283,6 +282,13 @@ mkdir -p "$DISTSRC"
     # Extract the source tarball
     tar --strip-components=1 -xf "${GIT_ARCHIVE}"
 
+    HOST_CXXFLAGS="${HOST_CXXFLAGS} -I/gulden/depends/${HOST}/include/node -I/gulden/depends/${HOST}/include/node-addon-api -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS"
+    HOST_LDFLAGS="${HOST_LDFLAGS} -fPIC -Bsymbolic -Wl,--gc-sections"
+
+    export HOST_CFLAGS=${HOST_CFLAGS} ${EXTRA_FLAGS}
+    export HOST_CXXFLAGS=${HOST_CXXFLAGS} ${EXTRA_FLAGS}
+    #end electron specific setup
+
     ./autogen.sh
 
     # Configure this DISTSRC for $HOST
@@ -299,11 +305,11 @@ mkdir -p "$DISTSRC"
 
     sed -i.old 's/-lstdc++ //g' config.status libtool
 
-    # Build Bitcoin Core
+    # Build Gulden
     make --jobs="$JOBS" ${V:+V=1}
 
     # Check that symbol/security checks tools are sane.
-    make test-security-check ${V:+V=1}
+    #make test-security-check ${V:+V=1}
     # Perform basic security checks on a series of executables.
     make -C src --jobs=1 check-security ${V:+V=1}
     # Check that executables only contain allowed version symbols.
@@ -314,16 +320,16 @@ mkdir -p "$DISTSRC"
     # Make the os-specific installers
     case "$HOST" in
         *mingw*)
-            make deploy ${V:+V=1} BITCOIN_WIN_INSTALLER="${OUTDIR}/${DISTNAME}-win64-setup-unsigned.exe"
+            make deploy ${V:+V=1} GULDEN_WIN_INSTALLER="${OUTDIR}/${DISTNAME}-win64-setup-unsigned.exe"
             ;;
     esac
 
-    # Setup the directory where our Bitcoin Core build for HOST will be
+    # Setup the directory where our Gulden build for HOST will be
     # installed. This directory will also later serve as the input for our
     # binary tarballs.
     INSTALLPATH="${PWD}/installed/${DISTNAME}"
     mkdir -p "${INSTALLPATH}"
-    # Install built Bitcoin Core to $INSTALLPATH
+    # Install built Gulden to $INSTALLPATH
     case "$HOST" in
         *darwin*)
             make install-strip DESTDIR="${INSTALLPATH}" ${V:+V=1}
@@ -333,6 +339,10 @@ mkdir -p "$DISTSRC"
             ;;
     esac
 
+    mkdir ${OUTDIR}/nodelib
+    cp -f src/.libs/lib_unity_node_js.so.0.0.0 ${OUTDIR}/nodelib/libgulden_${HOST}.node
+    ${DISTSRC}/contrib/devtools/split-debug.sh ${OUTDIR}/nodelib/libgulden_${HOST}.node ${OUTDIR}/nodelib/libgulden_${HOST}.node ${OUTDIR}/nodelib/libgulden_${HOST}.node.dbg
+
     case "$HOST" in
         *darwin*)
             make osx_volname ${V:+V=1}
@@ -340,7 +350,7 @@ mkdir -p "$DISTSRC"
             mkdir -p "unsigned-app-${HOST}"
             cp  --target-directory="unsigned-app-${HOST}" \
                 osx_volname \
-                contrib/macdeploy/detached-sig-{apply,create}.sh \
+                contrib/macdeploy/detached-sig-create.sh \
                 "${BASEPREFIX}/${HOST}"/native/bin/dmg
             mv --target-directory="unsigned-app-${HOST}" dist
             (
@@ -348,10 +358,10 @@ mkdir -p "$DISTSRC"
                 find . -print0 \
                     | sort --zero-terminated \
                     | tar --create --no-recursion --mode='u+rw,go+r-w,a+X' --null --files-from=- \
-                    | gzip -9n > "${OUTDIR}/${DISTNAME}-osx-unsigned.tar.gz" \
-                    || ( rm -f "${OUTDIR}/${DISTNAME}-osx-unsigned.tar.gz" && exit 1 )
+                    | gzip -9n > "${OUTDIR}/${DISTNAME}-${HOST}-unsigned.tar.gz" \
+                    || ( rm -f "${OUTDIR}/${DISTNAME}-${HOST}-unsigned.tar.gz" && exit 1 )
             )
-            make deploy ${V:+V=1} OSX_DMG="${OUTDIR}/${DISTNAME}-osx-unsigned.dmg"
+            make deploy ${V:+V=1} OSX_DMG="${OUTDIR}/${DISTNAME}-${HOST}-unsigned.dmg"
             ;;
     esac
     (
@@ -376,9 +386,10 @@ mkdir -p "$DISTSRC"
                 # Split binaries and libraries from their debug symbols
                 {
                     find "${DISTNAME}/bin" -type f -executable -print0
-                    find "${DISTNAME}/lib" -type f -print0
+                    if [ -d ${DISTNAME}/lib ]; then
+                      find "${DISTNAME}/lib" -type f -print0
+                    fi
                 } | xargs -0 -P"$JOBS" -I{} "${DISTSRC}/contrib/devtools/split-debug.sh" {} {} {}.dbg
-                ;;
         esac
 
         case "$HOST" in
@@ -423,8 +434,8 @@ mkdir -p "$DISTSRC"
                 find "${DISTNAME}" -print0 \
                     | sort --zero-terminated \
                     | tar --create --no-recursion --mode='u+rw,go+r-w,a+X' --null --files-from=- \
-                    | gzip -9n > "${OUTDIR}/${DISTNAME}-${HOST//x86_64-apple-darwin/osx64}.tar.gz" \
-                    || ( rm -f "${OUTDIR}/${DISTNAME}-${HOST//x86_64-apple-darwin/osx64}.tar.gz" && exit 1 )
+                    | gzip -9n > "${OUTDIR}/${DISTNAME}-${HOST}.tar.gz" \
+                    || ( rm -f "${OUTDIR}/${DISTNAME}-${HOST}.tar.gz" && exit 1 )
                 ;;
         esac
     )  # $DISTSRC/installed
@@ -439,8 +450,8 @@ mkdir -p "$DISTSRC"
                 find . -print0 \
                     | sort --zero-terminated \
                     | tar --create --no-recursion --mode='u+rw,go+r-w,a+X' --null --files-from=- \
-                    | gzip -9n > "${OUTDIR}/${DISTNAME}-win-unsigned.tar.gz" \
-                    || ( rm -f "${OUTDIR}/${DISTNAME}-win-unsigned.tar.gz" && exit 1 )
+                    | gzip -9n > "${OUTDIR}/${DISTNAME}-win64-unsigned.tar.gz" \
+                    || ( rm -f "${OUTDIR}/${DISTNAME}-win64-unsigned.tar.gz" && exit 1 )
             )
             ;;
     esac

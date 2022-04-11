@@ -7,15 +7,13 @@ default_build_STRIP = strip
 default_build_NM = nm
 default_build_OTOOL = otool
 default_build_INSTALL_NAME_TOOL = install_name_tool
-default_build_SHA256SUM = sha256sum
-default_build_BINARYEXT = 
 
 define add_build_tool_func
 build_$(build_os)_$1 ?= $$(default_build_$1)
 build_$(build_arch)_$(build_os)_$1 ?= $$(build_$(build_os)_$1)
 build_$1=$$(build_$(build_arch)_$(build_os)_$1)
 endef
-$(foreach var,CC CXX AR TAR RANLIB NM STRIP SHA256SUM DOWNLOAD OTOOL INSTALL_NAME_TOOL BINARYEXT,$(eval $(call add_build_tool_func,$(var))))
+$(foreach var,CC CXX AR TAR RANLIB NM STRIP SHA256SUM DOWNLOAD OTOOL INSTALL_NAME_TOOL,$(eval $(call add_build_tool_func,$(var))))
 define add_build_flags_func
 build_$(build_arch)_$(build_os)_$1 += $(build_$(build_os)_$1)
 build_$1=$$(build_$(build_arch)_$(build_os)_$1)
