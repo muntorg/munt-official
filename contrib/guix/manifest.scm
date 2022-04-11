@@ -573,6 +573,7 @@ inspecting signatures in Mach-O binaries.")
         gzip
         xz
         zlib
+        pigz
         (list zlib "static")
         ;; Build tools
         gnu-make
