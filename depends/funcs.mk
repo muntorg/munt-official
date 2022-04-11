@@ -1,18 +1,24 @@
 define int_vars
 #Set defaults for vars which may be overridden per-package
-$(1)_cc=$($($(1)_type)_CC)
-$(1)_cxx=$($($(1)_type)_CXX)
-$(1)_objc=$($($(1)_type)_OBJC)
-$(1)_objcxx=$($($(1)_type)_OBJCXX)
-$(1)_ar=$($($(1)_type)_AR)
-$(1)_ranlib=$($($(1)_type)_RANLIB)
-$(1)_libtool=$($($(1)_type)_LIBTOOL)
-$(1)_nm=$($($(1)_type)_NM)
-$(1)_cflags=$($($(1)_type)_CFLAGS) $($($(1)_type)_$(release_type)_CFLAGS)
-$(1)_cxxflags=$($($(1)_type)_CXXFLAGS) $($($(1)_type)_$(release_type)_CXXFLAGS)
-$(1)_ldflags=$($($(1)_type)_LDFLAGS) $($($(1)_type)_$(release_type)_LDFLAGS) -L$($($(1)_type)_prefix)/lib
-$(1)_cppflags=$($($(1)_type)_CPPFLAGS) $($($(1)_type)_$(release_type)_CPPFLAGS) -I$($($(1)_type)_prefix)/include
-$(1)_binary_ext=$($($(1)_type)_BINARYEXT)
+$(1)_cc=$$($$($(1)_type)_CC)
+$(1)_cxx=$$($$($(1)_type)_CXX)
+$(1)_objc=$$($$($(1)_type)_OBJC)
+$(1)_objcxx=$$($$($(1)_type)_OBJCXX)
+$(1)_ar=$$($$($(1)_type)_AR)
+$(1)_ranlib=$$($$($(1)_type)_RANLIB)
+$(1)_libtool=$$($$($(1)_type)_LIBTOOL)
+$(1)_nm=$$($$($(1)_type)_NM)
+$(1)_cflags=$$($$($(1)_type)_CFLAGS) \
+            $$($$($(1)_type)_$$(release_type)_CFLAGS)
+$(1)_cxxflags=$$($$($(1)_type)_CXXFLAGS) \
+              $$($$($(1)_type)_$$(release_type)_CXXFLAGS)
+$(1)_ldflags=$$($$($(1)_type)_LDFLAGS) \
+             $$($$($(1)_type)_$$(release_type)_LDFLAGS) \
+             -L$$($($(1)_type)_prefix)/lib
+$(1)_cppflags=$$($$($(1)_type)_CPPFLAGS) \
+              $$($$($(1)_type)_$$(release_type)_CPPFLAGS) \
+              -I$$($$($(1)_type)_prefix)/include
+$(1)_binary_ext=$$($$($(1)_type)_BINARYEXT)
 $(1)_recipe_hash:=
 endef
 
@@ -44,7 +50,7 @@ define int_get_build_id
 $(eval $(1)_dependencies += $($(1)_$(host_arch)_$(host_os)_dependencies) $($(1)_$(host_os)_dependencies))
 $(eval $(1)_all_dependencies:=$(call int_get_all_dependencies,$(1),$($($(1)_type)_native_toolchain) $($(1)_dependencies)))
 $(foreach dep,$($(1)_all_dependencies),$(eval $(1)_build_id_deps+=$(dep)-$($(dep)_version)-$($(dep)_recipe_hash)))
-$(eval $(1)_build_id_long:=$(1)-$($(1)_version)-$($(1)_recipe_hash)-$(release_type) $($(1)_build_id_deps) $($($(1)_type)_id_string))
+$(eval $(1)_build_id_long:=$(1)-$($(1)_version)-$($(1)_recipe_hash)-$(release_type) $($(1)_build_id_deps) $($($(1)_type)_id))
 $(eval $(1)_build_id:=$(shell echo -n "$($(1)_build_id_long)" | $(build_SHA256SUM) | cut -c-$(HASH_LENGTH)))
 final_build_id_long+=$($(package)_build_id_long)
 
@@ -79,7 +85,7 @@ $(1)_download_path_fixed=$(subst :,\:,$$($(1)_download_path))
 #default commands
 # The default behavior for tar will try to set ownership when running as uid 0 and may not succeed, --no-same-owner disables this behavior
 $(1)_fetch_cmds ?= $(call fetch_file,$(1),$(subst \:,:,$$($(1)_download_path_fixed)),$$($(1)_download_file),$($(1)_file_name),$($(1)_sha256_hash))
-$(1)_extract_cmds ?= mkdir -p $$($(1)_extract_dir) && echo "$$($(1)_sha256_hash)  $$($(1)_source)" > $$($(1)_extract_dir)/.$$($(1)_file_name).hash &&  $(build_SHA256SUM) -c $$($(1)_extract_dir)/.$$($(1)_file_name).hash && tar --no-same-owner --strip-components=1 -xf $$($(1)_source)
+$(1)_extract_cmds ?= mkdir -p $$($(1)_extract_dir) && echo "$$($(1)_sha256_hash)  $$($(1)_source)" > $$($(1)_extract_dir)/.$$($(1)_file_name).hash &&  $(build_SHA256SUM) -c $$($(1)_extract_dir)/.$$($(1)_file_name).hash && $(build_TAR) --no-same-owner --strip-components=1 -xf $$($(1)_source)
 $(1)_preprocess_cmds ?=
 $(1)_build_cmds ?=
 $(1)_config_cmds ?=
@@ -167,53 +173,53 @@ endef
 
 define int_add_cmds
 $($(1)_fetched):
-	$(AT)mkdir -p $$(@D) $(SOURCES_PATH)
-	$(AT)rm -f $$@
-	$(AT)touch $$@
-	$(AT)cd $$(@D); $(call $(1)_fetch_cmds,$(1))
-	$(AT)cd $($(1)_source_dir); $(foreach source,$($(1)_all_sources),$(build_SHA256SUM) $(source) >> $$(@);)
-	$(AT)touch $$@
+	mkdir -p $$(@D) $(SOURCES_PATH)
+	rm -f $$@
+	touch $$@
+	cd $$(@D); $(call $(1)_fetch_cmds,$(1))
+	cd $($(1)_source_dir); $(foreach source,$($(1)_all_sources),$(build_SHA256SUM) $(source) >> $$(@);)
+	touch $$@
 $($(1)_extracted): | $($(1)_fetched)
-	$(AT)echo Extracting $(1)...
-	$(AT)mkdir -p $$(@D)
-	$(AT)cd $$(@D); $(call $(1)_extract_cmds,$(1))
-	$(AT)touch $$@
+	echo Extracting $(1)...
+	mkdir -p $$(@D)
+	cd $$(@D); $(call $(1)_extract_cmds,$(1))
+	touch $$@
 $($(1)_preprocessed): | $($(1)_dependencies) $($(1)_extracted)
-	$(AT)echo Preprocessing $(1)...
-	$(AT)mkdir -p $$(@D) $($(1)_patch_dir)
-	$(AT)$(foreach patch,$($(1)_patches),cd $(PATCHES_PATH)/$(1); cp $(patch) $($(1)_patch_dir) ;)
-	$(AT)cd $$(@D); $(call $(1)_preprocess_cmds, $(1))
-	$(AT)touch $$@
+	echo Preprocessing $(1)...
+	mkdir -p $$(@D) $($(1)_patch_dir)
+	$(foreach patch,$($(1)_patches),cd $(PATCHES_PATH)/$(1); cp $(patch) $($(1)_patch_dir) ;)
+	cd $$(@D); $(call $(1)_preprocess_cmds, $(1))
+	touch $$@
 $($(1)_configured): | $($(1)_preprocessed)
-	$(AT)echo Configuring $(1)...
-	$(AT)rm -rf $(host_prefix); mkdir -p $(host_prefix)/lib; cd $(host_prefix); $(foreach package,$($(1)_all_dependencies), tar --no-same-owner -xf $($(package)_cached); )
-	$(AT)mkdir -p $$(@D)
-	$(AT)+cd $$(@D); $($(1)_config_env) $(call $(1)_config_cmds, $(1))
-	$(AT)touch $$@
+	echo Configuring $(1)...
+	rm -rf $(host_prefix); mkdir -p $(host_prefix)/lib; cd $(host_prefix); $(foreach package,$($(1)_all_dependencies), $(build_TAR) --no-same-owner -xf $($(package)_cached); )
+	mkdir -p $$(@D)
+	+cd $$(@D); $($(1)_config_env) $(call $(1)_config_cmds, $(1))
+	touch $$@
 $($(1)_built): | $($(1)_configured)
-	$(AT)echo Building $(1)...
-	$(AT)mkdir -p $$(@D)
-	$(AT)+cd $$(@D); $($(1)_build_env) $(call $(1)_build_cmds, $(1))
-	$(AT)touch $$@
+	echo Building $(1)...
+	mkdir -p $$(@D)
+	+cd $$(@D); $($(1)_build_env) $(call $(1)_build_cmds, $(1))
+	touch $$@
 $($(1)_staged): | $($(1)_built)
-	$(AT)echo Staging $(1)...
-	$(AT)mkdir -p $($(1)_staging_dir)/$(host_prefix)
-	$(AT)cd $($(1)_build_dir); $($(1)_stage_env) $(call $(1)_stage_cmds, $(1))
-	$(AT)rm -rf $($(1)_extract_dir)
-	$(AT)touch $$@
+	echo Staging $(1)...
+	mkdir -p $($(1)_staging_dir)/$(host_prefix)
+	cd $($(1)_build_dir); $($(1)_stage_env) $(call $(1)_stage_cmds, $(1))
+	rm -rf $($(1)_extract_dir)
+	touch $$@
 $($(1)_postprocessed): | $($(1)_staged)
-	$(AT)echo Postprocessing $(1)...
-	$(AT)cd $($(1)_staging_prefix_dir); $(call $(1)_postprocess_cmds)
-	$(AT)touch $$@
+	echo Postprocessing $(1)...
+	cd $($(1)_staging_prefix_dir); $(call $(1)_postprocess_cmds)
+	touch $$@
 $($(1)_cached): | $($(1)_dependencies) $($(1)_postprocessed)
-	$(AT)echo Caching $(1)...
-	$(AT)cd $$($(1)_staging_dir)/$(host_prefix); find . | sort | tar --no-recursion -czf $$($(1)_staging_dir)/$$(@F) -T -
-	$(AT)mkdir -p $$(@D)
-	$(AT)rm -rf $$(@D) && mkdir -p $$(@D)
-	$(AT)mv $$($(1)_staging_dir)/$$(@F) $$(@)
-	$(AT)rm -rf $($(1)_staging_dir)
+	echo Caching $(1)...
+	cd $$($(1)_staging_dir)/$(host_prefix); find . | sort | $(build_TAR) --no-recursion -czf $$($(1)_staging_dir)/$$(@F) -T -
+	mkdir -p $$(@D)
+	rm -rf $$(@D) && mkdir -p $$(@D)
+	mv $$($(1)_staging_dir)/$$(@F) $$(@)
+	rm -rf $($(1)_staging_dir)
 $($(1)_cached_checksum): $($(1)_cached)
-	$(AT)cd $$(@D); $(build_SHA256SUM) $$(<F) > $$(@)
+	cd $$(@D); $(build_SHA256SUM) $$(<F) > $$(@)
 
 .PHONY: $(1)
 $(1): | $($(1)_cached_checksum)

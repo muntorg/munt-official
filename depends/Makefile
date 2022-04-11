@@ -1,5 +1,33 @@
 .NOTPARALLEL :
 
+# Pattern rule to print variables, e.g. make print-top_srcdir
+print-%: FORCE
+	@echo '$*'='$($*)'
+
+# When invoking a sub-make, keep only the command line variable definitions
+# matching the pattern in the filter function.
+#
+# e.g. invoking:
+#   $ make A=1 C=1 print-MAKEOVERRIDES print-MAKEFLAGS
+#
+# with the following in the Makefile:
+#   MAKEOVERRIDES := $(filter A=% B=%,$(MAKEOVERRIDES))
+#
+# will print:
+#   MAKEOVERRIDES = A=1
+#   MAKEFLAGS = -- A=1
+#
+# this is because as the GNU make manual says:
+#   The command line variable definitions really appear in the variable
+#   MAKEOVERRIDES, and MAKEFLAGS contains a reference to this variable.
+#
+# and since the GNU make manual also says:
+#   variables defined on the command line are passed to the sub-make through
+#   MAKEFLAGS
+#
+# this means that sub-makes will be invoked as if:
+#   $(MAKE) A=1 blah blah
+MAKEOVERRIDES := $(filter V=%,$(MAKEOVERRIDES))
 SOURCES_PATH ?= $(BASEDIR)/sources
 WORK_PATH = $(BASEDIR)/work
 BASE_CACHE ?= $(BASEDIR)/built
@@ -15,7 +43,7 @@ HOST ?= $(BUILD)
 PATCHES_PATH = $(BASEDIR)/patches
 BASEDIR = $(CURDIR)
 HASH_LENGTH:=11
-DOWNLOAD_CONNECT_TIMEOUT:=10
+DOWNLOAD_CONNECT_TIMEOUT:=30
 DOWNLOAD_RETRIES:=3
 HOST_ID_SALT ?= salt
 BUILD_ID_SALT ?= salt
@@ -68,10 +96,6 @@ host_prefix=$($(host_arch)_$(host_os)_prefix)
 build_prefix=$(host_prefix)/native
 build_host=$(build)
 
-AT_$(V):=
-AT_:=@
-AT:=$(AT_$(V))
-
 all: install
 
 include hosts/$(host_os).mk
@@ -80,19 +104,32 @@ include builders/$(build_os).mk
 include builders/default.mk
 include packages/packages.mk
 
-build_id_string:=$(BUILD_ID_SALT)
-build_id_string+=$(shell $(build_CC) --version 2>/dev/null)
-build_id_string+=$(shell $(build_AR) --version 2>/dev/null)
-build_id_string+=$(shell $(build_CXX) --version 2>/dev/null)
-build_id_string+=$(shell $(build_RANLIB) --version 2>/dev/null)
-build_id_string+=$(shell $(build_STRIP) --version 2>/dev/null)
+# Previously, we directly invoked the well-known programs using $(shell ...)
+# to construct build_id_string. However, that was problematic because:
+#
+# 1. When invoking a shell, GNU Make special-cases exit code 127 (command not
+#    found) by not capturing the output but instead passing it through. This is
+#    not done for any other exit code.
+#
+# 2. Characters like '#' (from these programs' output) would end up in make
+#    variables like build_id_string, which would be wrongly interpreted by make
+#    when these variables were used.
+#
+# Therefore, we should avoid having arbitrary strings in make variables where
+# possible. The gen_id script used here hashes the output to construct a
+# "make-safe" id.
+#
+# Also note that these lines need to be:
+#
+#     1. After including {hosts,builders}/*.mk, since they rely on the tool
+#        variables (e.g. build_CC, host_STRIP, etc.) to be set.
+#
+#     2. Before including packages/*.mk (excluding packages/packages.mk), since
+#        they rely on the build_id variables
+#
+build_id:=$(shell env CC='$(build_CC)' CXX='$(build_CXX)' AR='$(build_AR)' RANLIB='$(build_RANLIB)' STRIP='$(build_STRIP)' SHA256SUM='$(build_SHA256SUM)' DEBUG='$(DEBUG)' ./gen_id '$(BUILD_ID_SALT)' 'GUIX_ENVIRONMENT=$(realpath $(GUIX_ENVIRONMENT))')
+$(host_arch)_$(host_os)_id:=$(shell env CC='$(host_CC)' CXX='$(host_CXX)' AR='$(host_AR)' RANLIB='$(host_RANLIB)' STRIP='$(host_STRIP)' SHA256SUM='$(build_SHA256SUM)' DEBUG='$(DEBUG)' ./gen_id '$(HOST_ID_SALT)' 'GUIX_ENVIRONMENT=$(realpath $(GUIX_ENVIRONMENT))')
 
-$(host_arch)_$(host_os)_id_string:=$(HOST_ID_SALT)
-$(host_arch)_$(host_os)_id_string+=$(shell $(host_CC) --version 2>/dev/null)
-$(host_arch)_$(host_os)_id_string+=$(shell $(host_AR) --version 2>/dev/null)
-$(host_arch)_$(host_os)_id_string+=$(shell $(host_CXX) --version 2>/dev/null)
-$(host_arch)_$(host_os)_id_string+=$(shell $(host_RANLIB) --version 2>/dev/null)
-$(host_arch)_$(host_os)_id_string+=$(shell $(host_STRIP) --version 2>/dev/null)
 
 qt_packages_$(NO_QT) = $(qt_packages) $(qt_$(host_os)_packages) $(qt_$(host_arch)_$(host_os)_packages)
 wallet_packages_$(NO_WALLET) = $(wallet_packages)
@@ -123,16 +160,40 @@ toolchain_path=$($($(host_arch)_$(host_os)_native_toolchain)_prefixbin)
 final_build_id_long+=$(shell $(build_SHA256SUM) config.site.in)
 final_build_id+=$(shell echo -n "$(final_build_id_long)" | $(build_SHA256SUM) | cut -c-$(HASH_LENGTH))
 $(host_prefix)/.stamp_$(final_build_id): $(all_packages)
-	$(AT)rm -rf $(@D)
-	$(AT)mkdir -p $(@D)
-	$(AT)echo copying packages: $^
-	$(AT)echo to: $(@D)
-	$(AT)cd $(@D); $(foreach package,$^, tar xf $($(package)_cached); )
-	$(AT)touch $@
+	rm -rf $(@D)
+	mkdir -p $(@D)
+	echo copying packages: $^
+	echo to: $(@D)
+	cd $(@D); $(foreach package,$^, $(build_TAR) xf $($(package)_cached); )
+	touch $@
 
+# $PATH is not preserved between ./configure and make by convention. Its
+# modification and overriding at ./configure time is (as I understand it)
+# supposed to be captured by the AC_{PROG_{,OBJ}CXX,PATH_{PROG,TOOL}} macros,
+# which will expand the program names to their full absolute paths. The notable
+# exception is command line overriding: ./configure CC=clang, which skips the
+# program name expansion step, and works because the user implicitly indicates
+# with CC=clang that clang will be available in $PATH at all times, and is most
+# likely part of the user's system.
+#
+# Therefore, when we "seed the autoconf cache"/"override well-known program
+# vars" by setting AR=<blah> in our config.site, either one of two things needs
+# to be true for the build system to work correctly:
+#
+#   1. If we refer to the program by name (e.g. AR=riscv64-gnu-linux-ar), the
+#      tool needs to be available in $PATH at all times.
+#
+#   2. If the tool is _**not**_ expected to be available in $PATH at all times
+#      (such as is the case for our native_cctools binutils tools), it needs to
+#      be referred to by its absolute path, such as would be output by the
+#      AC_PATH_{PROG,TOOL} macros.
+#
+# Minor note: it is also okay to refer to tools by their absolute path even if
+# we expect them to be available in $PATH at all times, more specificity does
+# not hurt.
 $(host_prefix)/share/config.site : config.site.in $(host_prefix)/.stamp_$(final_build_id)
-	$(AT)@mkdir -p $(@D)
-	$(AT)sed -e 's|@HOST@|$(host)|' \
+	@mkdir -p $(@D)
+	sed -e 's|@HOST@|$(host)|' \
             -e 's|@CC@|$(toolchain_path)$(host_CC)|' \
             -e 's|@CXX@|$(toolchain_path)$(host_CXX)|' \
             -e 's|@AR@|$(toolchain_path)$(host_AR)|' \
@@ -151,7 +212,7 @@ $(host_prefix)/share/config.site : config.site.in $(host_prefix)/.stamp_$(final_
             -e 's|@no_upnp@|$(NO_UPNP)|' \
             -e 's|@debug@|$(DEBUG)|' \
             $< > $@
-	$(AT)touch $@
+	touch $@
 
 
 define check_or_remove_cached
@@ -197,3 +258,5 @@ download-win:
 download: download-osx download-linux download-win
 
 .PHONY: install cached clean clean-all download-one download-osx download-linux download-win download check-packages check-sources
+.PHONY: FORCE
+$(V).SILENT:
