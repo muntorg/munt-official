@@ -1,4 +1,4 @@
-packages:=boost openssl qrencode protobuf
+packages:=boost openssl qrencode protobuf electron_node_headers node_addon_api
 
 qrencode_linux_packages = qrencode
 qrencode_android_packages = qrencode
