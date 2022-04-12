@@ -132,14 +132,18 @@ $(package)_config_opts_x86_64_linux = -xplatform linux-g++-64
 $(package)_config_opts_aarch64_linux = -xplatform linux-aarch64-gnu-g++
 $(package)_config_opts_riscv64_linux = -platform linux-g++ -xplatform gulden-linux-g++
 
-$(package)_config_opts_mingw32 = -no-opengl
-$(package)_config_opts_mingw32 += -xplatform win32-g++
-$(package)_config_opts_mingw32 += "QMAKE_CFLAGS = '$($(package)_cflags) $($(package)_cppflags)'"
-$(package)_config_opts_mingw32 += "QMAKE_CXX = '$($(package)_cxx)'"
-$(package)_config_opts_mingw32 += "QMAKE_CXXFLAGS = '$($(package)_cflags) $($(package)_cppflags)'"
-$(package)_config_opts_mingw32 += "QMAKE_LFLAGS = '$($(package)_ldflags)'"
-$(package)_config_opts_mingw32 += -device-option CROSS_COMPILE="$(host)-"
-$(package)_config_opts_mingw32 += -pch
+ifeq ($(build_os),mingw32)
+$(package)_config_opts += -bindir $($(package)_staging_prefix_dir)/native/bin
+$(package)_config_opts += -hostprefix $($(package)_staging_prefix_dir)/native
+$(package)_config_opts += -prefix $($(package)_staging_prefix_dir)
+$(package)_config_opts += -extprefix $($(package)_staging_prefix_dir)
+$(package)_config_opts_mingw32 = -no-opengl -platform win32-g++
+else
+$(package)_config_opts += -bindir $(build_prefix)/bin
+$(package)_config_opts += -hostprefix $(build_prefix)
+$(package)_config_opts += -prefix $(host_prefix)
+$(package)_config_opts_mingw32 = -no-opengl -xplatform win32-g++ -device-option CROSS_COMPILE="$(host)-"
+endif
 
 $(package)_build_env  = QT_RCC_TEST=1
 $(package)_build_env += QT_RCC_SOURCE_DATE_OVERRIDE=1
