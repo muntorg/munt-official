@@ -204,6 +204,7 @@ make -C depends --jobs="$JOBS" HOST="$HOST" \
                                    ${SOURCES_PATH+SOURCES_PATH="$SOURCES_PATH"} \
                                    ${BASE_CACHE+BASE_CACHE="$BASE_CACHE"} \
                                    ${SDK_PATH+SDK_PATH="$SDK_PATH"} \
+                                   ${CODESIGN_PATH+CODESIGN_PATH="$CODESIGN_PATH"} \
                                    i686_linux_CC=i686-linux-gnu-gcc \
                                    i686_linux_CXX=i686-linux-gnu-g++ \
                                    i686_linux_AR=i686-linux-gnu-ar \
@@ -282,11 +283,16 @@ mkdir -p "$DISTSRC"
     # Extract the source tarball
     tar --strip-components=1 -xf "${GIT_ARCHIVE}"
 
-    HOST_CXXFLAGS="${HOST_CXXFLAGS} -I/gulden/depends/${HOST}/include/node -I/gulden/depends/${HOST}/include/node-addon-api -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS"
-    HOST_LDFLAGS="${HOST_LDFLAGS} -fPIC -Bsymbolic -Wl,--gc-sections"
-
-    export HOST_CFLAGS=${HOST_CFLAGS} ${EXTRA_FLAGS}
-    export HOST_CXXFLAGS=${HOST_CXXFLAGS} ${EXTRA_FLAGS}
+    case "$HOST" in
+        *mingw*)
+            export HOST_CXXFLAGS="${HOST_CXXFLAGS} -I/gulden/depends/${HOST}/include/node -I/gulden/depends/${HOST}/include/node-addon-api -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS -DNODE_HOST_BINARY=node.exe -DUSING_UV_SHARED=1 -DUSING_V8_SHARED=1 -DV8_DEPRECATION_WARNINGS=1 -DV8_DEPRECATION_WARNINGS -DV8_IMMINENT_DEPRECATION_WARNINGS -DWIN32 -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DBUILDING_NODE_EXTENSION -D_WINDLL -lminiupnpc"
+            export HOST_LDFLAGS="${HOST_LDFLAGS} -fPIC -Bsymbolic -lnode -Wl,--gc-sections"
+        ;;
+        *)
+            export HOST_CXXFLAGS="${HOST_CXXFLAGS} -I/gulden/depends/${HOST}/include/node -I/gulden/depends/${HOST}/include/node-addon-api -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS"
+            export HOST_LDFLAGS="${HOST_LDFLAGS} -fPIC -Bsymbolic -Wl,--gc-sections"
+    esac
+    export HOST_CFLAGS=${HOST_CFLAGS}
     #end electron specific setup
 
     ./autogen.sh
@@ -298,6 +304,7 @@ mkdir -p "$DISTSRC"
                     --disable-ccache \
                     --disable-maintainer-mode \
                     --disable-dependency-tracking \
+                    --with-protoc-bindir=/gulden/depends/${HOST}/native/bin/ \
                     ${CONFIGFLAGS} \
                     ${HOST_CFLAGS:+CFLAGS="${HOST_CFLAGS}"} \
                     ${HOST_CXXFLAGS:+CXXFLAGS="${HOST_CXXFLAGS}"} \
@@ -317,10 +324,20 @@ mkdir -p "$DISTSRC"
 
     mkdir -p "$OUTDIR"
 
-    # Make the os-specific installers
+    #fixme: We do some duplicate work here (split debug symbols and sign then later do this again); we should improve the process so its only done once.
     case "$HOST" in
         *mingw*)
-            make deploy ${V:+V=1} GULDEN_WIN_INSTALLER="${OUTDIR}/${DISTNAME}-win64-setup-unsigned.exe"
+            # Move executables into release folder
+            mkdir release
+            find . -name "*.exe" | xargs --max-procs 32 -i cp {} release/
+            # Split debug symbols
+            find "release" -type f -executable -print0 | xargs -0 -P"$JOBS" -I{} "${DISTSRC}/contrib/devtools/split-debug.sh" {} {} {}.dbg
+            #Sign all executables
+            find release -name "*.exe" | xargs --max-procs 32 -i sh -c "(osslsigncode -spc \"${CODESIGN_PATH}/codesign.spc\" -key \"${CODESIGN_PATH}/codesign.key\" -n \"Gulden\" -i \"https://www.Gulden.com\" -in \"{}\" -out \"{}s\") && (mv {}s {})"
+            # Make os-specific installer
+            make deploy ${V:+V=1}
+            # Sign the installer as well; place result in output folder
+            find -name "*setup*.exe" | xargs -i sh -c "(osslsigncode -spc \"${CODESIGN_PATH}/codesign.spc\" -key \"${CODESIGN_PATH}/codesign.key\" -n \"Gulden\" -i \"https://www.Gulden.com\" -in \"{}\" -out \"${OUTDIR}/${DISTNAME}-win64-setup.exe\")"
             ;;
     esac
 
@@ -340,7 +357,13 @@ mkdir -p "$DISTSRC"
     esac
 
     mkdir ${OUTDIR}/nodelib
-    cp -f src/.libs/lib_unity_node_js.so.0.0.0 ${OUTDIR}/nodelib/libgulden_${HOST}.node
+    case "$HOST" in
+        *mingw*)
+            cp -f src/.libs/lib_unity_node_js-0.dll ${OUTDIR}/nodelib/libgulden_${HOST}.node
+        ;;
+        *)
+            cp -f src/.libs/lib_unity_node_js.so.0.0.0 ${OUTDIR}/nodelib/libgulden_${HOST}.node
+    esac
     ${DISTSRC}/contrib/devtools/split-debug.sh ${OUTDIR}/nodelib/libgulden_${HOST}.node ${OUTDIR}/nodelib/libgulden_${HOST}.node ${OUTDIR}/nodelib/libgulden_${HOST}.node.dbg
 
     case "$HOST" in
@@ -367,12 +390,6 @@ mkdir -p "$DISTSRC"
     (
         cd installed
 
-        case "$HOST" in
-            *mingw*)
-                mv --target-directory="$DISTNAME"/lib/ "$DISTNAME"/bin/*.dll
-                ;;
-        esac
-
         # Prune libtool and object archives
         find . -name "lib*.la" -delete
         find . -name "lib*.a" -delete
@@ -392,13 +409,11 @@ mkdir -p "$DISTSRC"
                 } | xargs -0 -P"$JOBS" -I{} "${DISTSRC}/contrib/devtools/split-debug.sh" {} {} {}.dbg
         esac
 
+        # Sign binaries after debug symbols split
         case "$HOST" in
-            *mingw*)
-                cp "${DISTSRC}/doc/README_windows.txt" "${DISTNAME}/readme.txt"
-                ;;
-            *linux*)
-                cp "${DISTSRC}/README.md" "${DISTNAME}/"
-                ;;
+        *mingw*)
+            find "${DISTNAME}/bin" -name "*.exe" | xargs --max-procs 32 -i sh -c "(osslsigncode -spc \"${CODESIGN_PATH}/codesign.spc\" -key \"${CODESIGN_PATH}/codesign.key\" -n \"Gulden\" -i \"https://www.Gulden.com\" -in \"{}\" -out \"{}s\") && (mv {}s {})"
+            ;;
         esac
 
         # Finally, deterministically produce {non-,}debug binary tarballs ready
@@ -439,22 +454,6 @@ mkdir -p "$DISTSRC"
                 ;;
         esac
     )  # $DISTSRC/installed
-
-    case "$HOST" in
-        *mingw*)
-            cp -rf --target-directory=. contrib/windeploy
-            (
-                cd ./windeploy
-                mkdir -p unsigned
-                cp --target-directory=unsigned/ "${OUTDIR}/${DISTNAME}-win64-setup-unsigned.exe"
-                find . -print0 \
-                    | sort --zero-terminated \
-                    | tar --create --no-recursion --mode='u+rw,go+r-w,a+X' --null --files-from=- \
-                    | pigz -9n > "${OUTDIR}/${DISTNAME}-win64-unsigned.tar.gz" \
-                    || ( rm -f "${OUTDIR}/${DISTNAME}-win64-unsigned.tar.gz" && exit 1 )
-            )
-            ;;
-    esac
 )  # $DISTSRC
 
 rm -rf "$ACTUAL_OUTDIR"

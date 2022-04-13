@@ -235,7 +235,7 @@ SOURCE_DATE_EPOCH="${SOURCE_DATE_EPOCH:-$(git -c log.showSignature=false log --f
 
 # Precious directories are those which should not be cleaned between successive
 # guix builds
-depends_precious_dir_names='SOURCES_PATH BASE_CACHE SDK_PATH'
+depends_precious_dir_names='SOURCES_PATH BASE_CACHE SDK_PATH CODESIGN_PATH'
 precious_dir_names="${depends_precious_dir_names} OUTDIR_BASE PROFILES_BASE"
 
 # Usage: contains IFS-SEPARATED-LIST ITEM
@@ -437,6 +437,7 @@ EOF
                                  ${SOURCES_PATH:+--share="$SOURCES_PATH"} \
                                  ${BASE_CACHE:+--share="$BASE_CACHE"} \
                                  ${SDK_PATH:+--share="$SDK_PATH"} \
+                                 ${CODESIGN_PATH:+--share="$CODESIGN_PATH"} \
                                  --cores="$JOBS" \
                                  --keep-failed \
                                  --fallback \
@@ -452,6 +453,7 @@ EOF
                                         ${SOURCES_PATH:+SOURCES_PATH="$SOURCES_PATH"} \
                                         ${BASE_CACHE:+BASE_CACHE="$BASE_CACHE"} \
                                         ${SDK_PATH:+SDK_PATH="$SDK_PATH"} \
+                                        ${CODESIGN_PATH:+CODESIGN_PATH="$CODESIGN_PATH"} \
                                         DISTSRC="$(DISTSRC_BASE=/distsrc-base && distsrc_for_host "$HOST")" \
                                         OUTDIR="$(OUTDIR_BASE=/outdir-base && outdir_for_host "$HOST")" \
                                         DIST_ARCHIVE_BASE=/outdir-base/dist-archive \
