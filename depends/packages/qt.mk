@@ -215,7 +215,8 @@ define $(package)_preprocess_cmds
   echo "unix|mingw {QWT_CONFIG     += QwtPkgConfig }" >> qwt/qwtconfig.pri && \
   echo "unix|mingw {QMAKE_PKGCONFIG_VERSION = $($(package)_qwt_version) }" >> qwt/qwtconfig.pri && \
   sed -i.old "s/QT_BEGIN_NAMESPACE/#include <limits>\nQT_BEGIN_NAMESPACE/g" qtbase/src/corelib/tools/qbytearraymatcher.h && \
-  sed -i.old "s/LIBRARY_PATH/(CROSS_)?\0/g" qtbase/mkspecs/features/toolchain.prf
+  sed -i.old "s/LIBRARY_PATH/(CROSS_)?\0/g" qtbase/mkspecs/features/toolchain.prf && \
+  sed -i.old 's|pp.macros.*__declspec.*|pp.macros["__declspec"] = dummyVariadicFunctionMacro; pp.macros["_GLIBCXX_VISIBILITY"] = dummyVariadicFunctionMacro;|' qtbase/src/tools/moc/main.cpp
 endef
 
 
