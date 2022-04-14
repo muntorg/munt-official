@@ -1,8 +1,10 @@
 OSX_MIN_VERSION=10.10
 OSX_SDK_VERSION?=12.0
+OSX_SDK=$(SDK_PATH)/MacOSX$(OSX_SDK_VERSION).sdk
+OSX_SYSROOT=--sysroot $(OSX_SDK)
 
-build_darwin_CC:=$(shell xcrun -f clang) -isysroot$(shell xcrun --show-sdk-path)
-build_darwin_CXX:=$(shell xcrun -f clang++) -isysroot$(shell xcrun --show-sdk-path)
+build_darwin_CC:=$(shell xcrun -f clang)
+build_darwin_CXX:=$(shell xcrun -f clang++)
 build_darwin_AR:=$(shell xcrun -f ar)
 build_darwin_RANLIB:=$(shell xcrun -f ranlib)
 build_darwin_STRIP:=$(shell xcrun -f strip)
@@ -13,8 +15,8 @@ build_darwin_SHA256SUM=shasum -a 256
 build_darwin_DOWNLOAD=curl --location --fail --connect-timeout $(DOWNLOAD_CONNECT_TIMEOUT) --retry $(DOWNLOAD_RETRIES) -o
 
 #darwin host on darwin builder. overrides darwin host preferences.
-darwin_CC=$(shell xcrun -f clang) -mmacosx-version-min=$(OSX_MIN_VERSION) -isysroot$(shell xcrun --show-sdk-path)
-darwin_CXX:=$(shell xcrun -f clang++) -mmacosx-version-min=$(OSX_MIN_VERSION) -stdlib=libc++ -isysroot$(shell xcrun --show-sdk-path)
+darwin_CC=$(shell xcrun -f clang) -mmacosx-version-min=$(OSX_MIN_VERSION) $(OSX_SYSROOT)
+darwin_CXX:=$(shell xcrun -f clang++) -mmacosx-version-min=$(OSX_MIN_VERSION) -stdlib=libc++ $(OSX_SYSROOT)
 darwin_AR:=$(shell xcrun -f ar)
 darwin_RANLIB:=$(shell xcrun -f ranlib)
 darwin_STRIP:=$(shell xcrun -f strip)
@@ -24,8 +26,3 @@ darwin_NM:=$(shell xcrun -f nm)
 darwin_INSTALL_NAME_TOOL:=$(shell xcrun -f install_name_tool)
 darwin_native_binutils=
 darwin_native_toolchain=
-
-x86_64_darwin_CFLAGS += -arch x86_64
-x86_64_darwin_CXXFLAGS += -arch x86_64
-aarch64_darwin_CFLAGS += -arch arm64
-aarch64_darwin_CXXFLAGS += -arch arm64
