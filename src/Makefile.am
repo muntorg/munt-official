@@ -1106,7 +1106,6 @@ GuldenD_LDADD = \
   $(LIBUNIVALUE) \
   $(LIB_UTIL) \
   $(LIB_GENERIC) \
-  $(LIB_GENERIC_INIT) \
   $(LIB_GENERIC_INIT_NODE) \
   $(LIB_SERVER) \
   $(LIB_RPC) \
