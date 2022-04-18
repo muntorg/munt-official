@@ -46,7 +46,7 @@ script: |
 
   WRAP_DIR=$HOME/wrapped
   HOSTS="x86_64-apple-darwin14 arm64-apple-darwin21.1.0"
-  CONFIGFLAGS="--enable-reduce-exports --disable-gui-tests GENISOIMAGE=$WRAP_DIR/genisoimage --disable-bench --disable-tests --disable-man --enable-zmq --with-utils=no  --with-daemon=no --with-node-js-libs --with-qrencode --with-gui=no"
+  CONFIGFLAGS="--enable-reduce-exports --disable-gui-tests GENISOIMAGE=$WRAP_DIR/genisoimage --disable-bench --disable-tests --disable-man --enable-zmq --with-utils=no  --with-daemon=no --with-node-js-libs --with-qrencode"
   FAKETIME_HOST_PROGS=""
   FAKETIME_PROGS="ar ranlib date dmg genisoimage"
   HOST_CFLAGS="-O2 -g"
@@ -55,8 +55,6 @@ script: |
 
   export EXTRA_CXX_FLAGS="-DNAPI_VERSION=5 -DDJINNI_NODEJS"
 
-  export QT_RCC_TEST=1
-  export QT_RCC_SOURCE_DATE_OVERRIDE=1
   export GZIP="-9n"
   export TAR_OPTIONS="--mtime="$REFERENCE_DATE\\\ $REFERENCE_TIME""
   export TZ="UTC"
@@ -116,7 +114,7 @@ script: |
   ORIGWRAPPATH="$PATH"
   for i in $HOSTS; do
     export PATH=${BASEPREFIX}/${i}/native/bin:${ORIGWRAPPATH}
-    make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}" GITIAN_BUILD="1" NO_QT=1 NO_UPNP=1 EXTRA_PACKAGES='qrencode'
+    make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}" GITIAN_BUILD="1" NO_UPNP=1 EXTRA_PACKAGES='qrencode'
   done
 
   # Faketime for binaries
