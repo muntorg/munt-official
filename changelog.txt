@@ -1,4 +1,4 @@
-2.4.9
+2.4.11
 
 This build aims to be the final 2.4.x series release after issues were found that prevented 2.4.8 from being so.
 As such it will likely represent the final Qt UI release with 2.5 series of builds replacing Qt with the electron UI.
@@ -13,6 +13,7 @@ CORE      - Update linux builds to GCC 11
 CORE      - Update macOS builds to clang 14 (sdk 12)
 CORE      - Update android builds to clang 12 (ndk r23b)
 CORE      - Update windows builds to GCC 10
+CORE      - Switch to guix instead of gitian for official builds (all except macOS which will switch also for subsequent releases)
 CORE      - With all compilers updated we are now able to target C++20
 CORE      - Update libraries (boost 1.77.0; zmq 4.3.4; univalue 1.0.4; leveldb 1.22+)
 CORE      - Flush chainstate more frequently to prevent nodes having to resync if they terminate uncleanly after a full sync etc.
