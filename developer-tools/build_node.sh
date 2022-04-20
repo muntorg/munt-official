@@ -35,10 +35,6 @@ cd build_node
 export CXXFLAGS="${CXXFLAGS} -I$PWD/../depends/${PLATFORM}/include/node -I$PWD/../depends/${PLATFORM}/include/node-addon-api ${EXTRA_CXX_FLAGS} -O2"
 export CFLAGS=${CXXFLAGS}
 
-if [ ${PLATFORM_OS} = "mingw32" ] || [ ${PLATFORM_OS} = "mingw64" ]; then
-    dlltool -d ${DIR}/node/node.def -y libnode.a
-fi
-
 ../autogen.sh
 #NB! Important to pass exmpty config.site here; otherwise msys2 has a default config.site that messes with (overrides) our own from the depends directory...
 CONFIG_SITE='' ../configure --prefix=$PWD/../depends/${PLATFORM} --disable-bench --disable-tests --disable-man --disable-zmq --without-utils  --without-daemon --with-node-js-libs --with-qrencode --with-gui=no
