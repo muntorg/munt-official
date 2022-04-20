@@ -14,6 +14,7 @@
 
 <script>
 import EventBus from "../EventBus";
+import { formatMoneyForDisplay } from "../util.js";
 import ClipboardField from "./ClipboardField.vue";
 
 export default {
@@ -31,7 +32,7 @@ export default {
       return `${this.formatDate(timestamp)} ${this.formatTime(timestamp)}`;
     },
     computedAmount() {
-      return `${(this.mutation.change / 100000000).toFixed(2)} NLG`;
+      return `${formatMoneyForDisplay(this.mutation.change)} ` + this.$t("common.ticker_symbol");
     }
   },
   methods: {
@@ -50,9 +51,7 @@ export default {
     },
     formatTime(timestamp) {
       let date = new Date(timestamp * 1000);
-      return `${("0" + date.getHours()).slice(-2)}:${(
-        "0" + date.getMinutes()
-      ).slice(-2)}`;
+      return `${("0" + date.getHours()).slice(-2)}:${("0" + date.getMinutes()).slice(-2)}`;
     }
   }
 };

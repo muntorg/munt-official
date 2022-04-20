@@ -1,7 +1,8 @@
 <template>
   <div class="app-wallet">
-    <app-loader v-if="showLoader" />
+    <app-loader />
     <modal-dialog v-model="modal" />
+    <activity-indicator v-if="activityIndicator" />
     <component :is="layout">
       <router-view />
     </component>
@@ -14,6 +15,7 @@ import AppStatus from "./AppStatus";
 import AppLoader from "./components/AppLoader";
 import ModalDialog from "./components/ModalDialog";
 import EventBus from "./EventBus.js";
+import ActivityIndicator from "./components/ActivityIndicator.vue";
 
 import SetupLayout from "./layouts/SetupLayout";
 import WalletLayout from "./layouts/WalletLayout";
@@ -29,7 +31,8 @@ export default {
     AppLoader,
     ModalDialog,
     SetupLayout,
-    WalletLayout
+    WalletLayout,
+    ActivityIndicator
   },
   created() {
     this.onStatusChanged();
@@ -43,15 +46,9 @@ export default {
     EventBus.$off("show-dialog", this.showModal);
   },
   computed: {
-    ...mapState("app", ["splashReady", "status"]),
+    ...mapState("app", ["status", "activityIndicator"]),
     layout() {
       return this.$route.meta.layout || WalletLayout;
-    },
-    showLoader() {
-      return (
-        this.splashReady === false ||
-        (this.status !== AppStatus.ready && this.status !== AppStatus.setup)
-      );
     }
   },
   watch: {
@@ -67,10 +64,10 @@ export default {
           routeName = "setup";
           break;
         case AppStatus.synchronize:
-          routeName = "transactions";
+          routeName = "account";
           break;
         case AppStatus.ready:
-          routeName = "transactions";
+          routeName = "account";
           break;
       }
       if (routeName === undefined || this.$route.name === routeName) return;

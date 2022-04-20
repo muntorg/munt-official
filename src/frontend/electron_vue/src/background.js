@@ -18,12 +18,38 @@ import walletPath from "./walletPath";
 
 import store from "./store";
 import AppStatus from "./AppStatus";
+import axios from "axios";
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let winMain;
 let winDebug;
 let libUnity = new LibUnity({ walletPath });
+
+// Handle URI links (gulden: gulden://)
+// If we are launching a second instance then terminate and let the first instance handle it instead
+//NB! This must happen before all other app related code (especially libulden init) as otherwise second process can crash
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on("second-instance", (_event, _commandLine, _workingDirectory) => {
+    focusMainWindow();
+  });
+  // Protocol handler for osx
+  app.on("open-url", (event, _url) => {
+    event.preventDefault();
+    focusMainWindow();
+  });
+}
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient("gulden", process.execPath, [path.resolve(process.argv[1])]);
+  }
+} else {
+  app.setAsDefaultProtocolClient("gulden");
+}
+// End of URI handling
 
 /* TODO: refactor into function and add option to libgulden to remove existing wallet folder */
 if (isDevelopment) {
@@ -43,9 +69,7 @@ if (isDevelopment) {
 }
 
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([
-  { scheme: "app", privileges: { secure: true, standard: true } }
-]);
+protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
 function createMainWindow() {
   console.log("createMainWindow");
@@ -168,9 +192,7 @@ function createDebugWindow() {
   }
   winDebug = new BrowserWindow(options);
 
-  let url = process.env.WEBPACK_DEV_SERVER_URL
-    ? `${process.env.WEBPACK_DEV_SERVER_URL}#/debug`
-    : `app://./index.html#/debug`;
+  let url = process.env.WEBPACK_DEV_SERVER_URL ? `${process.env.WEBPACK_DEV_SERVER_URL}#/debug` : `app://./index.html#/debug`;
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -246,8 +268,25 @@ app.on("ready", async () => {
   store.dispatch("app/SET_WALLET_VERSION", app.getVersion());
   libUnity.Initialize();
 
+  updateRate(60);
+
   createMainWindow();
 });
+
+async function updateRate(seconds) {
+  try {
+    // use blockhut api instead of https://api.gulden.com/api/v1/ticker
+    const response = await axios.get("https://blockhut.com/gulden/xfleuro.json");
+
+    store.dispatch("app/SET_RATE", response.data.eurxfl);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setTimeout(() => {
+      updateRate(seconds);
+    }, seconds * 1000);
+  }
+}
 
 function EnsureUnityLibTerminated(event) {
   if (libUnity === null || libUnity.isTerminated) return;
@@ -268,5 +307,13 @@ if (isDevelopment) {
     process.on("SIGTERM", () => {
       app.quit();
     });
+  }
+}
+
+function focusMainWindow() {
+  if (winMain) {
+    if (winMain.isMinimized()) winMain.restore();
+    else winMain.show();
+    winMain.focus();
   }
 }

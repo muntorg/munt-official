@@ -1,38 +1,34 @@
 <template>
   <div class="main-header" :class="mainHeaderClass">
-    <div v-if="UIConfig.showHeaderLogo" class="logo" />
-    <div>
-      <div class="title ellipsis">
-        {{ title }}
-      </div>
-      <div class="subtitle ellipsis" v-if="hasSubtitle">
-        {{ subtitle }}
-      </div>
+    <div class="title ellipsis">
+      {{ $t(title) }}
+    </div>
+    <div class="subtitle ellipsis" v-if="hasSubtitle">
+      {{ $t(subtitle) }}
     </div>
   </div>
 </template>
 
 <script>
-import UIConfig from "../../../ui-config.json";
-
 export default {
   name: "MainHeader",
   props: {
-    title: null,
-    subtitle: undefined
+    title: {
+      type: String,
+      default: null
+    },
+    subtitle: {
+      type: String,
+      default: null
+    }
   },
   computed: {
     hasSubtitle() {
-      return this.subtitle !== undefined;
+      return this.subtitle && this.subtitle.trim().length > 0;
     },
     mainHeaderClass() {
       return this.hasSubtitle ? "" : "no-subtitle";
     }
-  },
-  data() {
-    return {
-      UIConfig: UIConfig
-    };
   }
 };
 </script>
@@ -49,17 +45,6 @@ export default {
   &.no-subtitle {
     padding: calc((var(--header-height) - 20px) / 2) 0;
   }
-}
-
-& .logo {
-  width: 22px;
-  min-width: 22px;
-  height: 22px;
-  min-height: 22px;
-  background: url("../../img/logo.svg"),
-    linear-gradient(transparent, transparent);
-  background-size: cover;
-  margin-right: 10px;
 }
 
 .title {

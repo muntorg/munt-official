@@ -25,6 +25,7 @@ export default {
 
   & .left {
     float: left;
+
     & > button:not(:last-child) {
       margin: 0 20px 0 0;
     }
@@ -42,6 +43,7 @@ export default {
 
   & .right {
     text-align: right;
+
     & > button:not(:first-child) {
       margin: 0 0 0 20px;
     }

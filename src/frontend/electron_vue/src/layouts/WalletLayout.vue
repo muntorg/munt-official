@@ -1,22 +1,26 @@
 <template>
   <section class="wallet-layout flex-row" :class="walletLayoutClasses">
-    <section v-if="UIConfig.showSidebar" class="sidebar-left">
+    <section v-if="!isSingleAccount" class="sidebar-left">
       <section class="header flex-row">
         <div class="logo" />
         <div class="total-balance flex-row">
-          <div class="coin">
-            {{ totalBalance == null ? "" : totalBalance.toFixed(2) }}
-          </div>
-          <div class="fiat">{{ totalBalanceFiat }}</div>
+          <account-tooltip type="Wallet" :account="account">
+            <div class="flex-row">
+              <div class="coin">
+                {{ balanceForDisplay }}
+              </div>
+              <div class="fiat">{{ totalBalanceFiat }}</div>
+            </div>
+          </account-tooltip>
         </div>
       </section>
-      <accounts-section v-if="UIConfig.showSidebar" class="accounts" />
+      <accounts-section class="accounts" />
       <section class="footer flex-row">
         <div class="status" />
         <div class="button" @click="changeLockSettings">
           <fa-icon :icon="['fal', lockIcon]" />
         </div>
-        <div class="button" @click="showMining">
+        <div v-if="!isSPV" class="button" @click="showMining">
           <fa-icon :icon="['fal', 'gem']" />
         </div>
         <div class="button" @click="showSettings">
@@ -25,47 +29,34 @@
       </section>
     </section>
     <section class="main">
-      <portal-target
-        ref="headerSlot"
-        name="header-slot"
-        class="header"
-        @change="headerSlotChanged"
-      ></portal-target>
+      <section class="header">
+        <account-header v-if="isSingleAccount" :account="account" :is-single-account="true"></account-header>
+        <portal-target v-else ref="headerSlot" name="header-slot" @change="headerSlotChanged"></portal-target>
+      </section>
       <section class="content scrollable">
         <router-view />
       </section>
-      <portal-target
-        ref="footerSlot"
-        name="footer-slot"
-        class="footer"
-        @change="footerSlotChanged"
-      ></portal-target>
-    </section>
-    <section class="sidebar-right">
-      <section class="header flex-row">
-        <div class="title">
-          <portal-target name="sidebar-right-title" />
+      <section class="footer">
+        <div v-if="isSingleAccount">
+          <footer-button title="buttons.transactions" :icon="['far', 'list-ul']" routeName="account" @click="routeTo" />
+          <footer-button title="buttons.send" :icon="['fal', 'arrow-from-bottom']" routeName="send" @click="routeTo" />
+          <footer-button title="buttons.receive" :icon="['fal', 'arrow-to-bottom']" routeName="receive" @click="routeTo" />
         </div>
-        <div class="close" @click="closeRightSidebar">
-          <fa-icon :icon="['fal', 'times']" />
-        </div>
+        <portal-target v-else ref="footerSlot" name="footer-slot" @change="footerSlotChanged"></portal-target>
       </section>
-      <portal-target
-        class="component"
-        ref="sidebarRight"
-        name="sidebar-right"
-        @change="sidebarRightSlotChanged"
-      />
     </section>
   </section>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import AccountsSection from "./AccountsSection";
+import { formatMoneyForDisplay } from "../util.js";
 import WalletPasswordDialog from "../components/WalletPasswordDialog";
 import EventBus from "../EventBus";
 import UIConfig from "../../ui-config.json";
+import AccountsSection from "./AccountsSection.vue";
+import AccountTooltip from "../components/AccountTooltip.vue";
+import AccountHeader from "../components/AccountHeader.vue";
 
 export default {
   name: "WalletLayout",
@@ -73,23 +64,27 @@ export default {
     return {
       isHeaderSlotEmpty: true,
       isFooterSlotEmpty: true,
-      isSidebarRightSlotEmpty: true,
-      UIConfig: UIConfig
+      isSingleAccount: UIConfig.isSingleAccount,
+      isSPV: UIConfig.isSPV
     };
   },
   components: {
-    AccountsSection
+    AccountsSection,
+    AccountHeader,
+    AccountTooltip
   },
   computed: {
     ...mapState("app", ["progress", "rate"]),
     ...mapState("wallet", ["activeAccount", "walletPassword"]),
-    ...mapGetters("wallet", ["totalBalance", "miningAccount"]),
+    ...mapGetters("wallet", ["totalBalance", "miningAccount", "account"]),
     walletLayoutClasses() {
       let classes = [];
-      if (this.isHeaderSlotEmpty) classes.push("no-header");
-      if (this.isFooterSlotEmpty) classes.push("no-footer");
-      if (this.isSidebarRightSlotEmpty) classes.push("no-sidebar-right");
-      if (this.isHideSidebarLeft) classes.push("no-sidebar-left");
+      if (!this.isSingleAccount) {
+        if (this.isHeaderSlotEmpty) classes.push("no-header");
+        if (this.isFooterSlotEmpty) classes.push("no-footer");
+      } else {
+        classes.push("no-sidebar-left");
+      }
       return classes;
     },
     lockIcon() {
@@ -97,12 +92,11 @@ export default {
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
-      return `€ ${(this.totalBalance * this.rate).toFixed(2)}`;
-    }
-  },
-  watch: {
-    progress() {
-      console.log(`${this.progress}`);
+      return `€ ${formatMoneyForDisplay(this.totalBalance * this.rate, true)}`;
+    },
+    balanceForDisplay() {
+      if (this.totalBalance == null) return "";
+      return formatMoneyForDisplay(this.totalBalance);
     }
   },
   methods: {
@@ -112,12 +106,9 @@ export default {
     footerSlotChanged(newContent) {
       this.isFooterSlotEmpty = !newContent;
     },
-    sidebarRightSlotChanged(newContent) {
-      this.isSidebarRightSlotEmpty = !newContent;
-    },
     showMining() {
       if (this.miningAccount) {
-        if (this.$route.path === `/account/${this.miningAccount.UUID}`) return;
+        if (this.$route.path.indexOf("/account") == 0 && this.miningAccount.UUID === this.activeAccount) return;
         this.$router.push({
           name: "account",
           params: { id: this.miningAccount.UUID }
@@ -149,9 +140,6 @@ export default {
           showButtons: false
         });
       }
-    },
-    closeRightSidebar() {
-      EventBus.$emit("close-right-sidebar");
     }
   }
 };
@@ -180,14 +168,6 @@ export default {
     }
   }
 
-  &.no-sidebar-right {
-    --sidebar-right-width: 0px;
-
-    & > .sidebar-right {
-      display: none;
-    }
-  }
-
   & > .sidebar-left {
     width: var(--sidebar-left-width);
     background: var(--sidebar-left-background-color);
@@ -209,19 +189,27 @@ export default {
   }
 
   & > .main {
-    width: calc(100% - var(--sidebar-left-width) - var(--sidebar-right-width));
+    width: calc(100% - var(--sidebar-left-width));
 
     & > .header {
       height: var(--header-height);
       border-bottom: 1px solid var(--main-border-color);
-      padding: 0 20px;
+      padding: 0 30px;
+
+      & > .logo {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+      }
     }
 
     & > .content {
-      height: calc(
-        100% - var(--header-height-main) - var(--footer-height-main)
-      );
-      padding: 20px;
+      height: calc(100% - var(--header-height-main) - var(--footer-height-main));
+      padding: 40px 30px 30px 30px;
+
+      & > * {
+        height: 100%;
+      }
     }
 
     & > .footer {
@@ -229,12 +217,14 @@ export default {
       border-top: 1px solid var(--main-border-color);
       line-height: calc(var(--footer-height) - 2px);
       padding: 0 20px;
+      text-align: center;
     }
   }
 
-  & > .sidebar-right {
-    width: var(--sidebar-right-width);
-    background: var(--sidebar-right-background-color);
+  &.no-sidebar-left {
+    & > .main {
+      width: 100%;
+    }
   }
 }
 
@@ -242,19 +232,14 @@ export default {
   padding: 20px;
   color: #fff;
 
-  & .logo {
-    width: 22px;
-    min-width: 22px;
-    height: 22px;
-    min-height: 22px;
-    background: url("../img/logo.svg"),
-      linear-gradient(transparent, transparent);
-    background-size: cover;
-  }
-
   & .total-balance {
     padding: 0 0 0 10px;
     line-height: 22px;
+  }
+
+  & .fiat {
+    margin-left: 10px;
+    color: #999;
   }
 }
 
@@ -277,36 +262,23 @@ export default {
   }
 }
 
-.sidebar-right {
-  padding: 0 24px;
-
-  & > .header {
-    line-height: 62px;
-    font-size: 1.1em;
-    font-weight: 500;
-
-    & .title {
-      flex: 1;
-    }
-
-    & .close {
-      cursor: pointer;
-    }
-  }
-
-  & .component {
-    height: calc(100% - 72px);
-  }
+.logo {
+  width: 22px;
+  min-width: 22px;
+  height: 22px;
+  min-height: 22px;
+  background: url("../img/logo.svg"), linear-gradient(transparent, transparent);
+  background-size: cover;
 }
 
-@media (max-width: 900px) {
-  .wallet-layout:not(.no-sidebar-right) {
-    & > .main {
-      display: none;
+@media (max-width: 1000px) {
+  .wallet-layout {
+    & > .sidebar-left {
+      width: var(--sidebar-left-width-small);
     }
 
-    & > .sidebar-right {
-      width: calc(100% - var(--sidebar-left-width));
+    & > .main {
+      width: calc(100% - var(--sidebar-left-width-small));
     }
   }
 }

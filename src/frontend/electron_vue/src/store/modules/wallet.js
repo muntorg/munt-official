@@ -30,6 +30,12 @@ const wallet = {
     },
     SET_WALLET_PASSWORD(state, password) {
       state.walletPassword = password;
+    },
+    SET_WALLET(state, payload) {
+      // batch update state properties from payload
+      for (const [key, value] of Object.entries(payload)) {
+        state[key] = value;
+      }
     }
   },
   actions: {
@@ -44,9 +50,9 @@ const wallet = {
     },
     SET_ACTIVE_ACCOUNT({ commit }, accountUUID) {
       // clear mutations and receive address
-      commit("SET_MUTATIONS", { mutations: null });
       commit("SET_RECEIVE_ADDRESS", { receiveAddress: "" });
       commit("SET_ACTIVE_ACCOUNT", accountUUID);
+      commit("SET_MUTATIONS", { mutations: null });
     },
     SET_BALANCE({ commit }, new_balance) {
       commit("SET_BALANCE", new_balance);
@@ -62,18 +68,36 @@ const wallet = {
     },
     SET_WALLET_PASSWORD({ commit }, password) {
       commit("SET_WALLET_PASSWORD", password);
+    },
+    SET_WALLET({ commit }, payload) {
+      commit("SET_WALLET", payload);
     }
   },
   getters: {
     totalBalance: state => {
       let balance = state.walletBalance;
       if (balance === undefined || balance === null) return null;
-      return (
-        (balance.availableIncludingLocked +
-          balance.unconfirmedIncludingLocked +
-          balance.immatureIncludingLocked) /
-        100000000
-      );
+      return balance.availableIncludingLocked + balance.unconfirmedIncludingLocked + balance.immatureIncludingLocked;
+    },
+    lockedBalance: state => {
+      let balance = state.walletBalance;
+      if (balance === undefined || balance === null) return null;
+      return balance.totalLocked;
+    },
+    spendableBalance: state => {
+      let balance = state.walletBalance;
+      if (balance === undefined || balance === null) return null;
+      return balance.availableExcludingLocked;
+    },
+    pendingBalance: state => {
+      let balance = state.walletBalance;
+      if (balance === undefined || balance === null) return null;
+      return balance.unconfirmedExcludingLocked;
+    },
+    immatureBalance: state => {
+      let balance = state.walletBalance;
+      if (balance === undefined || balance === null) return null;
+      return balance.immatureIncludingLocked;
     },
     accounts: state => {
       return state.accounts
@@ -95,9 +119,7 @@ const wallet = {
       return state.accounts.find(x => x.UUID === state.activeAccount);
     },
     miningAccount: state => {
-      return state.accounts.find(
-        x => x.type === "Mining" && x.state === "Normal"
-      ); // this will retrieve the first account of type Mining
+      return state.accounts.find(x => x.type === "Mining" && x.state === "Normal"); // this will retrieve the first account of type Mining
     }
   }
 };

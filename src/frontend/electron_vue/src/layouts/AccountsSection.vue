@@ -13,7 +13,7 @@
             </div>
             <div class="balance">{{ getBalanceFor(category) }}</div>
           </div>
-          <div class="add" v-if="category !== 'spending'">
+          <div class="add">
             <div class="button" @click="addAccountFor(category)">
               <fa-icon :icon="['fal', 'plus']" />
             </div>
@@ -24,18 +24,15 @@
           <div class="balance">0</div>
         </div>
         <div v-if="opened[category]">
-          <div
-            v-for="account in getAccountsFor(category)"
-            :key="account.UUID"
-            class="account"
-            :class="accountClass(account.UUID)"
-          >
+          <div v-for="account in getAccountsFor(category)" :key="account.UUID" class="account" :class="accountClass(account.UUID)">
             <router-link
+              :disabled="isActiveAccount(account.UUID)"
+              :event="!isActiveAccount(account.UUID) ? 'click' : ''"
               class="flex-col"
               :to="{ name: 'account', params: { id: account.UUID } }"
             >
               <span class="ellipsis">{{ account.label }}</span>
-              <span class="balance">{{ account.balance.toFixed(2) }}</span>
+              <span class="balance">{{ displayBalanceForAccount(account) }}</span>
             </router-link>
           </div>
         </div>
@@ -46,20 +43,28 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import { formatMoneyForDisplay } from "../util.js";
+import UIConfig from "../../ui-config.json";
 
 export default {
   name: "AccountsSection",
   data() {
+    const categories = ["spending"];
+    if (!UIConfig.isSPV) {
+      categories.push("saving");
+    }
+
     return {
-      categories: ["spending", "holding"],
+      categories,
       opened: {
         spending: false,
-        holding: false
+        saving: false
       }
     };
   },
   computed: {
     ...mapState("wallet", ["activeAccount"]),
+    ...mapState("app", ["coreReady"]),
     ...mapGetters("wallet", ["accounts"]),
     activeCategory() {
       if (this.activeAccount === null) return null;
@@ -69,7 +74,8 @@ export default {
         case "Desktop":
           return "spending";
         case "Holding":
-          return "holding";
+        case "Witness":
+          return "saving";
       }
       return null;
     }
@@ -80,11 +86,14 @@ export default {
     }
   },
   methods: {
+    isActiveAccount(accountUUID) {
+      return this.$route.path.indexOf("/account") == 0 && accountUUID === this.activeAccount;
+    },
     accountClass(accountUUID) {
-      return this.$route.name === "account" &&
-        accountUUID === this.activeAccount
-        ? "active"
-        : "";
+      return this.isActiveAccount(accountUUID) ? "active" : "";
+    },
+    displayBalanceForAccount(account) {
+      return formatMoneyForDisplay(account.balance);
     },
     getAccountsFor(category) {
       let types;
@@ -92,14 +101,12 @@ export default {
         case "spending":
           types = ["Desktop"];
           break;
-        case "holding":
-          types = ["Holding"];
+        case "saving":
+          types = ["Witness", "Holding"];
           break;
       }
       if (types === undefined) return [];
-      return this.accounts.filter(
-        x => x.state === "Normal" && types.indexOf(x.type) !== -1
-      );
+      return this.accounts.filter(x => x.state === "Normal" && types.indexOf(x.type) !== -1);
     },
     getCategoryToggleIcon(category) {
       return this.opened[category] ? "chevron-down" : "chevron-right";
@@ -110,24 +117,29 @@ export default {
     },
     getBalanceFor(category) {
       let accounts = this.getAccountsFor(category);
-      return accounts
-        .reduce(function(acc, obj) {
+      return formatMoneyForDisplay(
+        accounts.reduce(function(acc, obj) {
           return acc + obj.balance;
         }, 0)
-        .toFixed(2);
+      );
     },
     showNewAccountFor(category) {
       switch (category) {
-        case "holding":
-          return this.$route.name === "add-holding-account";
+        case "saving":
+          return this.$route.name === "add-saving-account";
+        case "spending":
+          return this.$route.name === "add-spending-account";
         default:
           return false;
       }
     },
     addAccountFor(category) {
       switch (category) {
-        case "holding":
-          this.$router.push({ name: "add-holding-account" });
+        case "saving":
+          this.$router.push({ name: "add-saving-account" });
+          break;
+        case "spending":
+          this.$router.push({ name: "add-spending-account" });
           break;
         default:
           console.log(`add account for ${category} not implemented yet`);

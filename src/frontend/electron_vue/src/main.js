@@ -20,6 +20,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faAngleDoubleLeft,
+  faAngleDoubleRight,
   faArrowFromBottom,
   faArrowLeft,
   faArrowToBottom,
@@ -35,37 +36,7 @@ import {
   faLock,
   faLongArrowLeft,
   faLongArrowRight,
-  faPlus,
-  faSearchMinus,
-  faSearchPlus,
-  faShield,
-  faShieldCheck,
-  faTimes,
-  faUniversity,
-  faUnlock,
-  faUserCircle,
-  faRedoAlt
-} from "@fortawesome/pro-light-svg-icons";
-
-import { faListUl, faLongArrowDown } from "@fortawesome/pro-regular-svg-icons";
-
-library.add([
-  faAngleDoubleLeft,
-  faArrowFromBottom,
-  faArrowLeft,
-  faArrowToBottom,
-  faBan,
-  faChevronDown,
-  faChevronRight,
-  faCog,
-  faCopy,
-  faCreditCard,
-  faEraser,
-  faGem,
-  faHourglassStart,
-  faLock,
-  faLongArrowLeft,
-  faLongArrowRight,
+  faPen,
   faPlus,
   faSearchMinus,
   faSearchPlus,
@@ -76,8 +47,49 @@ library.add([
   faUnlock,
   faUserCircle,
   faRedoAlt,
+  faKey,
+  faInfoCircle,
+  faExclamationTriangle,
+  faUndo
+} from "@fortawesome/pro-light-svg-icons";
+
+import { faListUl, faLongArrowDown } from "@fortawesome/pro-regular-svg-icons";
+
+library.add([
+  faAngleDoubleLeft,
+  faAngleDoubleRight,
+  faArrowFromBottom,
+  faArrowLeft,
+  faArrowToBottom,
+  faBan,
+  faChevronDown,
+  faChevronRight,
+  faCog,
+  faCopy,
+  faCreditCard,
+  faEraser,
+  faGem,
+  faHourglassStart,
+  faLock,
+  faLongArrowLeft,
+  faLongArrowRight,
+  faPen,
+  faPlus,
+  faSearchMinus,
+  faSearchPlus,
+  faShield,
+  faShieldCheck,
+  faTimes,
+  faUniversity,
+  faUnlock,
+  faUserCircle,
+  faRedoAlt,
+  faKey,
   faLongArrowDown,
-  faListUl
+  faListUl,
+  faInfoCircle,
+  faExclamationTriangle,
+  faUndo
 ]);
 
 Vue.component("fa-icon", FontAwesomeIcon);
