@@ -6,7 +6,7 @@
 import { mapGetters } from "vuex";
 
 import SpendingAccount from "./SpendingAccount";
-import HoldingAccount from "./HoldingAccount";
+import SavingAccount from "./SavingAccount";
 import MiningAccount from "./MiningAccount";
 
 export default {
@@ -21,7 +21,7 @@ export default {
   },
   components: {
     SpendingAccount,
-    HoldingAccount,
+    SavingAccount,
     MiningAccount
   },
   computed: {
@@ -43,7 +43,8 @@ export default {
             this.accountType = SpendingAccount;
             break;
           case "Holding":
-            this.accountType = HoldingAccount;
+          case "Witness":
+            this.accountType = SavingAccount;
             break;
           case "Mining":
             this.accountType = MiningAccount;
@@ -53,6 +54,8 @@ export default {
             break;
         }
       }
+      // remove the activity indicator at this point
+      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
     }
   }
 };

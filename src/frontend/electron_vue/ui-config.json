@@ -1,5 +1,5 @@
 {
-  "showSidebar": true,
-  "showHeaderLogo": false,
-  "hasThemes": false
+  "isSingleAccount": false,
+  "isSPV": false,
+  "themes": []
 }

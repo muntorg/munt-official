@@ -943,7 +943,7 @@ ANDROID_DEPS = $(LIB_COMPAT) $(LIB_CONSENSUS) $(LIB_NODE) $(LIB_UTIL) $(LIB_COMM
 
 
 lib_unity_jni_la_LDFLAGS = -shared -module -export-dynamic $(AM_LDFLAGS_NO_THREADS) $(RELDFLAGS) -llog
-lib_unity_jni_la_LIBADD = $(ANDROID_DEPS) $(ANDROID_DEPS) $(LIBSECP256K1) $(SSL_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(PROTOBUF_LIBS) -lqrencode -lcryptopp
+lib_unity_jni_la_LIBADD = $(ANDROID_DEPS) $(ANDROID_DEPS) $(LIBSECP256K1) $(SSL_LIBS) -lcrypto $(BOOST_LIBS) $(BDB_LIBS) $(LIBLEVELDB) $(LIBMEMENV) $(PROTOBUF_LIBS) -lqrencode -lcryptopp
 lib_unity_jni_la_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/unity/djinni/support-lib/jni -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
 lib_unity_jni_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(COMMON_INCLUDES) -I$(srcdir)/unity/djinni/jni -I$(srcdir)/unity/djinni/cpp -I$(builddir)/obj -I$(srcdir)/unity/djinni/support-lib/jni -I$(srcdir)/secp256k1/include -DBUILD_INTERNAL
 endif

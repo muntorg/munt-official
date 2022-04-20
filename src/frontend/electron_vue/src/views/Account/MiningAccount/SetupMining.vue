@@ -1,42 +1,27 @@
 <template>
   <div class="setup-mining">
     <portal to="header-slot">
-      <main-header :title="$t('setup_mining.title')"></main-header>
+      <main-header title="setup_mining.title"></main-header>
     </portal>
 
-    <app-section>
-      <div class="mining-info">
-        {{ $t("setup_mining.information") }}
-      </div>
-    </app-section>
-    <app-form-field :title="$t('common.password')">
-      <input
-        type="password"
-        v-model="password"
-        :class="computedStatus"
-        @keydown="createMiningAccountOnEnter"
-      />
-    </app-form-field>
+    <content-wrapper content="setup_mining.information">
+      <app-form-field title="common.password">
+        <input type="password" v-model="password" :class="computedStatus" @keydown="createMiningAccountOnEnter" />
+      </app-form-field>
+    </content-wrapper>
 
-    <portal to="footer-slot">
-      <app-button-section>
-        <button
-          @click="createMiningAccount(password)"
-          :disabled="!isEnableMiningButtonEnabled"
-        >
-          {{ $t("buttons.create_mining_account") }}
-        </button>
-      </app-button-section>
-    </portal>
+    <div class="flex-1"></div>
+    <app-button-section>
+      <button @click="createMiningAccount(password)" :disabled="!isEnableMiningButtonEnabled">
+        {{ $t("buttons.create_mining_account") }}
+      </button>
+    </app-button-section>
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import {
-  LibraryController,
-  AccountsController
-} from "../../../unity/Controllers";
+import { LibraryController, AccountsController } from "../../../unity/Controllers";
 
 export default {
   name: "SetupMining",
@@ -72,26 +57,37 @@ export default {
       if (event.keyCode === 13) this.createMiningAccount(this.password);
     },
     createMiningAccount(password) {
-      if (LibraryController.UnlockWallet(password) === false) {
-        this.isPasswordInvalid = true;
-        return;
+      let uuid = null;
+
+      try {
+        // NOTE:
+        // Dont' know if it is actually needed to show the activity indicator when unlockking the wallet and creating the account,
+        // but for now I leave it here.
+        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
+        if (LibraryController.UnlockWallet(password, 120) === false) {
+          this.isPasswordInvalid = true;
+          return;
+        }
+
+        uuid = AccountsController.CreateAccount("Gulden Mining", "Mining");
+        LibraryController.LockWallet();
+      } finally {
+        // route to the new account when we have a uuid
+        if (uuid) {
+          // activity indicator is set to true in the router, so no need to remove it here
+          this.$router.push({ name: "account", params: { id: uuid } });
+        } else {
+          // remove the activity indicator
+          this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+        }
       }
-      let uuid = AccountsController.CreateAccount("Gulden Mining", "Mining");
-      LibraryController.LockWallet();
-      this.$router.push({ name: "account", params: { id: uuid } });
     }
   }
 };
 </script>
-
 <style lang="less" scoped>
-.title {
-  font-size: 1.1em;
-  font-weight: 500;
-  line-height: var(--header-height);
-}
-
-.mining-info {
-  line-height: 1.2em;
+.setup-mining {
+  display: flex;
+  flex-direction: column;
 }
 </style>

@@ -21,7 +21,7 @@ $(package)_cross_target_aarch64_ios=arm64
 $(package)_cross_target_x86_64_ios=x86_64
 $(package)_cross_target=$($(package)_cross_target_$(host_arch)_$(host_os))
 
-ifeq ($(host_flavor),android)
+ifeq ($(host_os),android)
 $(package)_env_arch_arm=AOSP_FLAGS="-march=armv7-a -mthumb -mfpu=vfpv3-d16 -mfloat-abi=softfp -DCRYPTOPP_DISABLE_ASM -Wl,--fix-cortex-a8 -funwind-tables -fexceptions -frtti"
 $(package)_env_arch_arm+=AOSP_STL_LIB="$(NDK_ROOT)/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a/libc++_static.a"
 
@@ -56,7 +56,7 @@ endef
 define $(package)_set_vars
 endef
 
-ifeq ($(host_flavor),android)
+ifeq ($(host_os),android)
 define $(package)_config_cmds
    cp "$(NDK_ROOT)/sources/android/cpufeatures/cpu-features.h" . && \
    cp "$(NDK_ROOT)/sources/android/cpufeatures/cpu-features.c" .

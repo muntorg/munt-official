@@ -1,24 +1,13 @@
 <template>
   <div class="app-debug">
     <div class="topbar flex-row">
-      <div
-        v-for="(tab, index) in tabs"
-        :key="index"
-        :class="getTabClass(index)"
-        @click="setTab(index)"
-      >
+      <div v-for="(tab, index) in tabs" :key="index" :class="getTabClass(index)" @click="setTab(index)">
         {{ tab.title }}
       </div>
     </div>
-    <div class="main">
+    <div class="main scrollable">
       <information-page v-if="current === 0" />
-      <debug-console
-        v-if="current === 1"
-        :value="console"
-        :output="console.output"
-        :commands="console.commands"
-        @clear-output="clearOutput"
-      />
+      <debug-console :show="current === 1" />
     </div>
   </div>
 </template>
@@ -38,12 +27,7 @@ export default {
         {
           title: "Console"
         }
-      ],
-      console: {
-        output: [],
-        commands: [],
-        idx: 0
-      }
+      ]
     };
   },
   components: {
@@ -56,9 +40,6 @@ export default {
     },
     setTab(index) {
       this.current = index;
-    },
-    clearOutput() {
-      this.console.output = [];
     }
   }
 };

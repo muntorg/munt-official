@@ -25,6 +25,8 @@
 #include "i_accounts_controller.hpp"
 #include "i_accounts_listener.hpp"
 #include "account_record.hpp"
+#include "balance_record.hpp"
+#include "mutation_record.hpp"
 
 std::shared_ptr<IAccountsListener> accountsListener;
 std::list<boost::signals2::connection> coreSignalConnections;

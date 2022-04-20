@@ -6,14 +6,14 @@ qrencode_darwin_packages = qrencode
 qrencode_mingw32_packages = qrencode
 
 ifneq ($(host_os),ios)
-ifneq ($(host_flavor),android)
+ifneq ($(host_os),android)
 packages += libevent zeromq libcryptopp
 endif
 endif
 
 ios_packages = qrencode djinni libcryptoppunity libevent
-ifeq ($(host_flavor),android)
-packages += libcryptoppunity
+ifeq ($(host_os),android)
+packages += libcryptoppunity protobufunity
 endif
 
 

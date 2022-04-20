@@ -2,8 +2,9 @@
   <div class="confirm-transaction-dialog">
     <div class="tx-amount">{{ computedAmount }}</div>
     <div class="tx-fee">{{ computedFee }}</div>
+    <div class="tx-fee-message" v-if="subtractFee">{{ $t("send_coins.fee_will_be_subtracted") }}</div>
     <div class="tx-to">
-      <fa-icon :icon="['fal', 'long-arrow-down']" />
+      <fa-icon :icon="['far', 'long-arrow-down']" />
     </div>
     <div class="tx-address">{{ address }}</div>
     <button @click="confirm" class="button">
@@ -14,6 +15,7 @@
 
 <script>
 import EventBus from "@/EventBus";
+import { formatMoneyForDisplay } from "../../../util.js";
 import { LibraryController } from "@/unity/Controllers";
 
 export default {
@@ -21,7 +23,8 @@ export default {
   props: {
     amount: null,
     address: null,
-    password: null
+    password: null,
+    subtractFee: null
   },
   computed: {
     computedRequest() {
@@ -30,27 +33,31 @@ export default {
         address: this.address,
         label: "",
         desc: "",
-        amount: this.amount * 100000000
+        amount: this.amount
       };
     },
     computedAmount() {
-      return `${this.amount} NLG`;
+      return `${formatMoneyForDisplay(this.amount, false, 8)} ${this.$t("common.ticker_symbol")}`;
     },
     computedFee() {
-      let fee =
-        LibraryController.FeeForRecipient(this.computedRequest) / 100000000;
-      return `+ ${fee} NLG FEE`;
+      return `${formatMoneyForDisplay(this.fee, false, 8)} ${this.$t("common.ticker_symbol")} FEE`;
+    }
+  },
+  watch: {
+    amount: {
+      immediate: true,
+      handler() {
+        this.fee = LibraryController.FeeForRecipient(this.computedRequest);
+      }
     }
   },
   methods: {
     confirm() {
-      LibraryController.UnlockWallet(this.password);
+      // at this point the password should already be validated
+      LibraryController.UnlockWallet(this.password, 120);
 
       // try to make the payment
-      let result = LibraryController.PerformPaymentToRecipient(
-        this.computedRequest,
-        false
-      );
+      let result = LibraryController.PerformPaymentToRecipient(this.computedRequest, this.subtractFee);
 
       if (result !== 0) {
         // payment failed, log an error. have to make this more robust
@@ -82,6 +89,10 @@ export default {
 }
 .tx-fee {
   font-size: 0.9em;
+}
+.tx-fee-message {
+  font-size: 0.9em;
+  margin-top: 5px;
 }
 .tx-to {
   margin: 20px 0 10px 0;

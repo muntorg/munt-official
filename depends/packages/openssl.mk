@@ -55,6 +55,7 @@ $(package)_config_opts_mips_linux=linux-generic32
 $(package)_config_opts_powerpc_linux=linux-generic32
 $(package)_config_opts_riscv32_linux=linux-generic32
 $(package)_config_opts_riscv64_linux=linux-generic64
+$(package)_config_opts_android=-fPIC -Wa,--noexecstack android
 $(package)_config_opts_x86_64_darwin=darwin64-x86_64-cc
 $(package)_config_opts_aarch64_darwin=darwin64-arm64-cc
 $(package)_config_opts_x86_64_mingw32=mingw64
@@ -69,6 +70,7 @@ define $(package)_preprocess_cmds
   patch -p1 < $($(package)_patch_dir)/0001-Update-configure-for-m1-builds.patch && \
   sed -i.old "/define DATE/d" util/mkbuildinf.pl && \
   sed -i.old "s|engines apps test|engines|" Makefile.org && \
+  sed -i.old "s|-mandroid||" Configure && \
   LC_ALL=C sed -i.old "s|# iPhoneOS/iOS|\"iphoneos-cross-arm64\", \"$(package)_cc:-O3 -fomit-frame-pointer -fno-common -fembed-bitcode::-D_REENTRANT:iOS:-Wl,-search_paths_first%:SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}:::-fPIC -fno-common::\",|" Configure
 endef
 

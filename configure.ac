@@ -975,40 +975,22 @@ fi
 
 fi
 
-if test "$use_pkgconfig" = "yes"; then
-  : dnl
-  m4_ifdef(
-    [PKG_CHECK_MODULES],
-    [
-      PKG_CHECK_MODULES([CRYPTOPP], [libcryptopp],, PKG_CHECK_MODULES([CRYPTOPP], [libcrypto++],, [AC_MSG_ERROR(libcryptopp not found.)]))
-      PKG_CHECK_MODULES([SSL], [libssl],, [AC_MSG_ERROR(openssl  not found.)])
-      PKG_CHECK_MODULES([CRYPTO], [libcrypto],,[AC_MSG_ERROR(libcrypto  not found.)])
-      PKG_CHECK_MODULES([PROTOBUF], [protobuf],[have_protobuf=yes],[have_protobuf=no])
-      if test x$build_utils$build_daemon$use_tests$build_libs_node_js != xnononono; then
-        PKG_CHECK_MODULES([EVENT], [libevent],, [AC_MSG_ERROR(libevent not found.)])
-        if test x$TARGET_OS != xwindows; then
-          PKG_CHECK_MODULES([EVENT_PTHREADS], [libevent_pthreads],, [AC_MSG_ERROR(libevent_pthreads not found.)])
-        fi
+: dnl
+m4_ifdef(
+  [PKG_CHECK_MODULES],
+  [
+    PKG_CHECK_MODULES([CRYPTOPP], [libcryptopp],, PKG_CHECK_MODULES([CRYPTOPP], [libcrypto++],, [AC_MSG_ERROR(libcryptopp not found.)]))
+    PKG_CHECK_MODULES([SSL], [libssl],, [AC_MSG_ERROR(openssl  not found.)])
+    PKG_CHECK_MODULES([CRYPTO], [libcrypto],,[AC_MSG_ERROR(libcrypto  not found.)])
+    PKG_CHECK_MODULES([PROTOBUF], [protobuf],[have_protobuf=yes],[have_protobuf=no])
+    if test x$build_utils$build_daemon$use_tests$build_libs_node_js != xnononono; then
+      PKG_CHECK_MODULES([EVENT], [libevent],, [AC_MSG_ERROR(libevent not found.)])
+      if test x$TARGET_OS != xwindows; then
+        PKG_CHECK_MODULES([EVENT_PTHREADS], [libevent_pthreads],, [AC_MSG_ERROR(libevent_pthreads not found.)])
       fi
-    ]
-  )
-else
-  AC_CHECK_HEADER([cryptopp/config.h],,AC_MSG_ERROR(libcryptopp headers missing))
-  AC_CHECK_LIB([cryptopp],    [main],CRYPTOPP_LIBS=-lcryptopp, AC_MSG_ERROR(libcryptopp missing))
-
-  AC_CHECK_HEADER([openssl/ssl.h],, AC_MSG_ERROR(libssl headers missing),)
-  AC_CHECK_LIB([ssl],         [main],SSL_LIBS=-lssl, AC_MSG_ERROR(libssl missing))
-
-  AC_CHECK_HEADER([openssl/crypto.h],,AC_MSG_ERROR(libcrypto headers missing))
-  AC_CHECK_LIB([crypto],      [main],CRYPTO_LIBS=-lcrypto, AC_MSG_ERROR(libcrypto missing))
-
-  if test x$build_utils$build_daemon$use_tests$build_libs_node_js != xnononono; then
-    AC_CHECK_HEADER([event2/event.h],, AC_MSG_ERROR(libevent headers missing),)
-    AC_CHECK_LIB([event],[main],EVENT_LIBS=-levent,AC_MSG_ERROR(libevent missing))
-    if test x$TARGET_OS != xwindows; then
-      AC_CHECK_LIB([event_pthreads],[main],EVENT_PTHREADS_LIBS=-levent_pthreads,AC_MSG_ERROR(libevent_pthreads missing))
     fi
-  fi
+  ]
+)
 
 dnl ZMQ check
 
@@ -1029,7 +1011,6 @@ if test "$use_zmq" = "yes"; then
       ZMQ_CFLAGS="$ZMQ_CFLAGS -DZMQ_STATIC"
     ;;
   esac
-fi
 fi
 
 save_CXXFLAGS="${CXXFLAGS}"

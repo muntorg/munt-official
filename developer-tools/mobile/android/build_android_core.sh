@@ -111,11 +111,11 @@ do
   cd build_android_${target_host}
   if [ -z "$SKIP_CONFIG" ]
   then
-    ../configure --prefix=$PWD/../depends/$target_host ac_cv_c_bigendian=no ac_cv_sys_file_offset_bits=$target_bits --host=$target_host --disable-bench --enable-experimental-asm --disable-tests --disable-man --disable-zmq --without-utils --with-libs --without-daemon --with-jni-libs --with-qrencode
+    ../configure --prefix=$PWD/../depends/$target_host ac_cv_c_bigendian=no ac_cv_sys_file_offset_bits=$target_bits --host=$target_host --disable-bench --enable-experimental-asm --disable-tests --disable-man --disable-zmq --without-utils --with-libs --without-daemon --with-jni-libs --with-qrencode --with-node-js-libs=no
   else
     echo Skipping explicit configure
   fi
-  make -j ${NUM_PROCS} V=1
+  make V=1 -j ${NUM_PROCS} V=1
   cd ..
 
   mkdir src/frontend/android/unity_wallet/app/src/main/jniLibs/${jni_lib} | true

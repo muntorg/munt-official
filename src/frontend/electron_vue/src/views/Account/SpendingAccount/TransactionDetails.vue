@@ -1,9 +1,5 @@
 <template>
   <div class="transaction-details flex-col">
-    <portal to="sidebar-right-title">
-      {{ $t("transaction_details.title") }}
-    </portal>
-
     <div class="main">
       <h5>{{ $t("transaction_details.hash") }}</h5>
       <div class="tx-hash">{{ txHash }}</div>

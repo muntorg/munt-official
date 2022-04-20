@@ -1,16 +1,8 @@
 <template>
   <div class="send-coins flex-col">
-    <portal to="sidebar-right-title">
-      {{ $t("buttons.renew") }}
-    </portal>
-
     <div class="main">
-      <app-form-field :title="$t('renew_holding_account.funding_account')">
-        <select-list
-          :options="fundingAccounts"
-          :default="fundingAccount"
-          v-model="fundingAccount"
-        />
+      <app-form-field title="renew_saving_account.funding_account">
+        <select-list :options="fundingAccounts" :default="fundingAccount" v-model="fundingAccount" />
       </app-form-field>
 
       <input
@@ -30,11 +22,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import {
-  LibraryController,
-  AccountsController,
-  WitnessController
-} from "../../../unity/Controllers";
+import { LibraryController, AccountsController, WitnessController } from "../../../unity/Controllers";
 import EventBus from "../../../EventBus";
 
 export default {
@@ -57,9 +45,7 @@ export default {
       return this.isPasswordInvalid ? "error" : "";
     },
     fundingAccounts() {
-      return this.accounts.filter(
-        x => x.state === "Normal" && ["Desktop"].indexOf(x.type) !== -1
-      );
+      return this.accounts.filter(x => x.state === "Normal" && ["Desktop"].indexOf(x.type) !== -1);
     },
     hasErrors() {
       return this.isPasswordInvalid;
@@ -85,17 +71,14 @@ export default {
        */
 
       // wallet needs to be unlocked to make a payment
-      if (LibraryController.UnlockWallet(this.computedPassword) === false) {
+      if (LibraryController.UnlockWallet(this.computedPassword, 120) === false) {
         this.isPasswordInvalid = true;
       }
 
       if (this.hasErrors) return;
 
       let accountUUID = AccountsController.GetActiveAccount();
-      let result = WitnessController.RenewWitnessAccount(
-        this.fundingAccount.UUID,
-        accountUUID
-      );
+      let result = WitnessController.RenewWitnessAccount(this.fundingAccount.UUID, accountUUID);
 
       if (result.status === "success") {
         this.password = null;
@@ -120,13 +103,6 @@ export default {
   .main {
     flex: 1;
   }
-}
-
-input {
-  border: 0;
-  margin: 0 0 10px 0;
-  font-style: normal;
-  font-size: 14px;
 }
 
 button {

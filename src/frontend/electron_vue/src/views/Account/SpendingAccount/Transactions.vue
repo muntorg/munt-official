@@ -1,19 +1,11 @@
 <template>
   <div class="transactions-view">
-    <div v-if="hasMutations">
-      <div
-        class="mutation-group"
-        v-for="group in groupedMutations"
-        :key="group.idx"
-      >
-        <h4>{{ formatDate(group.date) }}</h4>
-        <div
-          class="mutation-row flex-row"
-          v-for="mutation in group.mutations"
-          :key="mutation.txHash"
-          @click="showTransactionDetails(mutation)"
-          :class="mutationRowClass(mutation.txHash)"
-        >
+    <div v-if="hasMutations" class="flex">
+      <div class="mutations-list" v-for="(mutation, index) in mutations" :key="mutation.txHash">
+        <h4 v-if="showDateHeader(index)">
+          {{ formatDateHeader(mutation.timestamp) }}
+        </h4>
+        <div class="mutation-row flex-row" @click="showTransactionDetails(mutation)" :class="mutationRowClass(mutation.txHash)">
           <div class="icon">
             <fa-icon :icon="['fal', mutationIcon(mutation)]" />
           </div>
@@ -25,10 +17,9 @@
         </div>
       </div>
     </div>
-    <div v-else class="new-wallet flex-col">
-      <h2>{{ $t("new_wallet.title") }}</h2>
-      <p v-html="$t('new_wallet.information')" class="information"></p>
-      <div class="flex-1" />
+
+    <content-wrapper class="flex" v-else heading="new_wallet.title" content="new_wallet.information">
+      <div class="flex-1"></div>
       <app-button-section>
         <template v-slot:middle>
           <button @click="buyCoins" class="buy-coins" :disabled="buyDisabled">
@@ -36,12 +27,13 @@
           </button>
         </template>
       </app-button-section>
-    </div>
+    </content-wrapper>
   </div>
 </template>
 
 <script>
 import { BackendUtilities } from "@/unity/Controllers";
+import { formatMoneyForDisplay } from "../../../util.js";
 import { mapState } from "vuex";
 import TransactionDetailsDialog from "../../../components/TransactionDetailsDialog";
 import EventBus from "../../../EventBus";
@@ -57,36 +49,6 @@ export default {
     ...mapState("wallet", ["mutations"]),
     hasMutations() {
       return this.mutations ? this.mutations.length > 0 : false;
-    },
-    groupedMutations() {
-      if (this.mutations === null) return [];
-      let groupedMutations = [];
-      let currentGroup = null;
-
-      for (let i = 0; i < this.mutations.length; i++) {
-        let mutation = this.mutations[i];
-        let date = new Date(mutation.timestamp * 1000);
-        let dateStart = new Date(
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate()
-        );
-
-        if (
-          currentGroup === null ||
-          currentGroup.date.toString() !== dateStart.toString()
-        ) {
-          currentGroup = {
-            idx: groupedMutations.length,
-            date: dateStart,
-            mutations: []
-          };
-
-          groupedMutations.push(currentGroup);
-        }
-        currentGroup.mutations.push(mutation);
-      }
-      return groupedMutations;
     }
   },
   methods: {
@@ -103,51 +65,42 @@ export default {
           return "ban";
       }
     },
-    formatDate(d) {
-      let date = new Date(d);
+    showDateHeader(index) {
+      // only show a date header if the current date is different than previous date
+      if (index === 0) return true; // always show the date if it's the first item
+
+      const current = new Date(this.mutations[index].timestamp * 1000);
+      const previous = new Date(this.mutations[index - 1].timestamp * 1000);
+
+      if (current.getDate() !== previous.getDate()) return true;
+      if (current.getMonth() !== previous.getMonth()) return true;
+      if (current.getFullYear() !== previous.getFullYear()) return true;
+
+      return false;
+    },
+    formatDateHeader(timestamp) {
+      let date = new Date(timestamp * 1000);
       let options = {
         year: "numeric",
         month: "long",
         day: "numeric"
       };
       if (date.getFullYear() === new Date().getFullYear()) delete options.year;
-
-      // for now determine localization here. replace by global method
-      let language =
-        process.env.VUE_APP_I18N_LOCALE ||
-        window.navigator.language.slice(0, 2);
-      switch (language) {
-        case "nl":
-        case "en":
-          break;
-        default:
-          language = "en";
-          break;
-      }
-
-      return date.toLocaleString(language, options);
+      return date.toLocaleString(this.$i18n.locale, options);
     },
     formatTime(timestamp) {
       let date = new Date(timestamp * 1000);
-      return `${("0" + date.getHours()).slice(-2)}:${(
-        "0" + date.getMinutes()
-      ).slice(-2)}`;
+      return `${("0" + date.getHours()).slice(-2)}:${("0" + date.getMinutes()).slice(-2)}`;
     },
     formatAmount(amount) {
-      return `${(amount / 100000000).toFixed(2)}`;
+      return `${formatMoneyForDisplay(amount)}`;
     },
     mutationRowClass(txHash) {
       return txHash === this.txHash ? "selected" : "";
     },
     showTransactionDetails(mutation) {
       EventBus.$emit("show-dialog", {
-        title: this.$t(
-          `transaction_details.title.${
-            mutation.change > 0
-              ? "incoming_transaction"
-              : "outgoing_transaction"
-          }`
-        ),
+        title: this.$t(`transaction_details.title.${mutation.change > 0 ? "incoming_transaction" : "outgoing_transaction"}`),
         component: TransactionDetailsDialog,
         componentProps: {
           mutation: mutation
@@ -158,11 +111,8 @@ export default {
     async buyCoins() {
       try {
         this.buyDisabled = true;
-        let url = await BackendUtilities.GetBuySessionUrl();
-        if (!url) {
-          url = "https://gulden.com/buy";
-        }
-        window.open(url, "buy-gulden");
+        const url = await BackendUtilities.GetBuySessionUrl();
+        window.open(url, "buy-coins");
       } finally {
         this.buyDisabled = false;
       }
@@ -174,6 +124,16 @@ export default {
 <style lang="less" scoped>
 .transactions-view {
   height: 100%;
+}
+
+.flex {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mutations-list:not(:first-child) > h4 {
+  margin-top: 30px;
 }
 
 .mutation-group {
@@ -202,6 +162,11 @@ h4 {
 
   & > .tx-details {
     font-size: 0.85em;
+    width: 100%;
+    margin-right: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   & .amount {
