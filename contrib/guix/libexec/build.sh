@@ -240,7 +240,7 @@ mkdir -p "$OUTDIR"
 ###########################
 
 # CONFIGFLAGS
-CONFIGFLAGS="--enable-reduce-exports --disable-bench --disable-gui-tests --disable-fuzz-binary --disable-main --enable-zmq --with-node-js-libs --with-qrencode"
+CONFIGFLAGS="--enable-reduce-exports --disable-bench --disable-gui-tests --disable-fuzz-binary --disable-man --enable-zmq --with-node-js-libs --with-qrencode"
 
 # CFLAGS
 HOST_CFLAGS="-O2 -g"

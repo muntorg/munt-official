@@ -319,19 +319,19 @@ AC_ARG_WITH([utils],
 AC_ARG_WITH([node-js-libs],
   [AS_HELP_STRING([--with-node-js-libs],
   [build node.js library (default=no)])],
-  [build_libs_node_js=yes],
+  [build_libs_node_js=$withval],
   [build_libs_node_js=no])
 
 AC_ARG_WITH([jni-libs],
   [AS_HELP_STRING([--with-jni-libs],
   [build jni library (default=no)])],
-  [build_libs_jni=yes],
+  [build_libs_jni=$withval],
   [build_libs_jni=no])
 
 AC_ARG_WITH([objc-libs],
   [AS_HELP_STRING([--with-objc-libs],
   [build objc library (default=no)])],
-  [build_libs_objc=yes],
+  [build_libs_objc=$withval],
   [build_libs_objc=no])
 
 AC_ARG_WITH([daemon],
@@ -472,12 +472,6 @@ case $host in
      TARGET_OS=linux
      ;;
 esac
-
-AC_ARG_WITH([webview],
-  [AS_HELP_STRING([--with-webview],
-  [Build with embedded webview (webengine|webkit|no, default=webengine except on Windows 32 bit)])],
-  [with_webview=$withval],
-  [with_webview=$default_webview])
 
 if test x$use_extended_functional_tests != xno; then
   AC_SUBST(EXTENDED_FUNCTIONAL_TESTS, --extended)
@@ -1233,7 +1227,6 @@ AC_SUBST(HAVE_MM_PREFETCH)
 AC_SUBST(CRYPTO_LIBS)
 AC_SUBST(QWT_LIBS)
 AC_SUBST(HAVE_WEBENGINE_VIEW)
-AC_SUBST(HAVE_WEBKIT)
 AC_SUBST(SSL_LIBS)
 AC_SUBST(EVENT_LIBS)
 AC_SUBST(EVENT_PTHREADS_LIBS)
