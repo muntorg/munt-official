@@ -11,14 +11,11 @@ Utility to generate the pnSeed[] array that is compiled into the client.
 Build Tools and Keys
 ---------------------
 
-### [Gitian-descriptors](/contrib/gitian-descriptors) ###
-Notes on getting Gitian builds up and running using KVM.
+### [guix(/contrib/guix) ###
+Notes on getting guix builds up and running, scripts for running guix builds.
 
 ### [MacDeploy](/contrib/macdeploy) ###
 Scripts and notes for Mac builds. 
-
-### [Gitian-build](/contrib/gitian-build.sh) ###
-Script for running full Gitian builds.
 
 Test and Verify Tools 
 ---------------------

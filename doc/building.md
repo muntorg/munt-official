@@ -32,7 +32,7 @@ Instructions:
 Platform specific instructions
 -----
 
-The platform specific instructions attempt to minimise compiling by using native system packages where possible. Note that installing these packages may have unintended consequences for other packages on your system; It is your responsibility to  understand package management and your system. If you cannot deal with the possibility of such side effects it is better to follow the Gitian instructions.
+The platform specific instructions attempt to minimise compiling by using native system packages where possible. Note that installing these packages may have unintended consequences for other packages on your system; It is your responsibility to  understand package management and your system. If you cannot deal with the possibility of such side effects it is better to follow the guix instructions.
 
 |Platform|Version|
 |:-----------|:---------|
@@ -89,18 +89,18 @@ Optional dependencies (depending on configure - e.g. qt only for GUI builds):
 
 
 
-Gitian instructions
+guix instructions
 -----
 
-Note work on the automated gitian build script is temporarily ongoing. If the setup doesn't work for you it may be necessary to take manual steps, bug reports and pull requests to improve this are welcome.
-
-When to use gitian for your builds:
+When to use guix for your builds:
 * You want to do reproducible builds like the official builds the developers do
 
 Instructions:
-* ./contrib/gitian-build.sh --setup x.x.x.x    (substitute x.x.x.x for the latest version number e.g. 2.0.0.9)
-* ./contrib/gitian-build.sh --build -o -l x.x.x.x
+* Install guix
+* Decide which host you want to target (e.g. `x86_64-linux-gnu`)
+* `HOSTS="x86_64-linux-gnu" ./contrib/guix/guix_build`
 
+For more detailed instructions see contrib/guix/README.md
 
 
 GuldenCore framework for iOS
