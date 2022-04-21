@@ -273,6 +273,15 @@ declare class NJSIP2pNetworkController
     static declare function enableNetwork();
     /** Get connected peer info */
     static declare function getPeerInfo(): Array<PeerRecord>;
+    /** Get all banned peers */
+    static declare function listBannedPeers(): Array<BannedPeerRecord>;
+    static declare function banPeer(address: string, banTimeInSeconds: number): boolean;
+    /** Unban a single peer */
+    static declare function unbanPeer(address: string): boolean;
+    /** Disconnect a specific peer */
+    static declare function disconnectPeer(nodeid: number): boolean;
+    /** Clear all banned peers */
+    static declare function ClearBanned(): boolean;
 }
 /** Interface to receive updates about network status */
 declare class NJSIP2pNetworkListener

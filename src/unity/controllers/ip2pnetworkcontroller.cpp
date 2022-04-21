@@ -19,6 +19,7 @@
 #include "i_p2p_network_controller.hpp"
 #include "i_p2p_network_listener.hpp"
 #include "peer_record.hpp"
+#include "banned_peer_record.hpp"
 
 std::shared_ptr<IP2pNetworkListener> networkListener;
 boost::signals2::connection enabledConn;
@@ -110,4 +111,69 @@ std::vector<PeerRecord> IP2pNetworkController::getPeerInfo()
     }
 
     return ret;
+}
+
+std::vector<BannedPeerRecord> IP2pNetworkController::listBannedPeers()
+{
+    std::vector<BannedPeerRecord> ret;
+    
+    if (g_connman)
+    {   
+        banmap_t banMap;
+        g_connman->GetBanned(banMap);
+        for (const auto& [subNet, banEntry] : banMap)
+        {
+            BannedPeerRecord rec(subNet.ToString(), banEntry.nBanUntil, banEntry.nCreateTime, banEntry.banReasonToString());
+            ret.push_back(rec);
+        }
+    }
+    return ret;
+}
+
+bool IP2pNetworkController::banPeer(const std::string& address, int64_t banTimeInSeconds)
+{
+    if (g_connman)
+    {
+        CNetAddr netAddr;
+        if (!LookupHost(address.c_str(), netAddr, false))
+            return false;
+        
+        g_connman->Ban(netAddr, BanReasonManuallyAdded, banTimeInSeconds, false);
+        return true;
+    }
+    return false;
+}
+
+bool IP2pNetworkController::unbanPeer(const std::string& address)
+{
+    if (g_connman)
+    {
+        CNetAddr netAddr;
+        if (!LookupHost(address.c_str(), netAddr, false))
+            return false;
+        
+        g_connman->Unban(netAddr);
+        return true;
+    }
+    return false;
+}
+
+bool IP2pNetworkController::disconnectPeer(int64_t nodeID)
+{
+    if (g_connman)
+    {        
+        g_connman->DisconnectNode(nodeID);
+        return true;
+    }
+    return false;
+}
+
+bool IP2pNetworkController::ClearBanned()
+{
+    if (g_connman)
+    {
+        g_connman->ClearBanned();
+        return true;
+    }
+    return false;
 }

@@ -3,6 +3,7 @@
 
 #import "DBIP2pNetworkController+Private.h"
 #import "DBIP2pNetworkController.h"
+#import "DBBannedPeerRecord+Private.h"
 #import "DBIP2pNetworkListener+Private.h"
 #import "DBPeerRecord+Private.h"
 #import "DJICppWrapperCache+Private.h"
@@ -54,6 +55,43 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     try {
         auto objcpp_result_ = ::IP2pNetworkController::getPeerInfo();
         return ::djinni::List<::djinni_generated::PeerRecord>::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull NSArray<DBBannedPeerRecord *> *)listBannedPeers {
+    try {
+        auto objcpp_result_ = ::IP2pNetworkController::listBannedPeers();
+        return ::djinni::List<::djinni_generated::BannedPeerRecord>::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)banPeer:(nonnull NSString *)address
+banTimeInSeconds:(int64_t)banTimeInSeconds {
+    try {
+        auto objcpp_result_ = ::IP2pNetworkController::banPeer(::djinni::String::toCpp(address),
+                                                               ::djinni::I64::toCpp(banTimeInSeconds));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)unbanPeer:(nonnull NSString *)address {
+    try {
+        auto objcpp_result_ = ::IP2pNetworkController::unbanPeer(::djinni::String::toCpp(address));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)disconnectPeer:(int64_t)nodeid {
+    try {
+        auto objcpp_result_ = ::IP2pNetworkController::disconnectPeer(::djinni::I64::toCpp(nodeid));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)ClearBanned {
+    try {
+        auto objcpp_result_ = ::IP2pNetworkController::ClearBanned();
+        return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

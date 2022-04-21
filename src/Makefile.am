@@ -776,6 +776,7 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/mutation_record.hpp \
   unity/djinni/cpp/mnemonic_record.hpp \
   unity/djinni/cpp/peer_record.hpp \
+  unity/djinni/cpp/banned_peer_record.hpp \
   unity/djinni/cpp/qr_code_record.hpp \
   unity/djinni/cpp/transaction_record.hpp \
   unity/djinni/cpp/transaction_status.hpp \
@@ -967,6 +968,7 @@ DJINNI_CPP_GEN = \
   unity/djinni/cpp/mnemonic_record.hpp \
   unity/djinni/cpp/payment_result_status.hpp \
   unity/djinni/cpp/peer_record.hpp \
+  unity/djinni/cpp/banned_peer_record.hpp \
   unity/djinni/cpp/qr_code_record.hpp \
   unity/djinni/cpp/transaction_record.hpp \
   unity/djinni/cpp/transaction_status.hpp \

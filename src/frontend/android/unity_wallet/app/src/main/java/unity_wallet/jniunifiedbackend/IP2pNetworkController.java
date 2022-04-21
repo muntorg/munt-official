@@ -32,6 +32,36 @@ public abstract class IP2pNetworkController {
         return CppProxy.getPeerInfo();
     }
 
+    /** Get all banned peers */
+    public static ArrayList<BannedPeerRecord> listBannedPeers()
+    {
+        return CppProxy.listBannedPeers();
+    }
+
+    public static boolean banPeer(String address, long banTimeInSeconds)
+    {
+        return CppProxy.banPeer(address,
+                                banTimeInSeconds);
+    }
+
+    /** Unban a single peer */
+    public static boolean unbanPeer(String address)
+    {
+        return CppProxy.unbanPeer(address);
+    }
+
+    /** Disconnect a specific peer */
+    public static boolean disconnectPeer(long nodeid)
+    {
+        return CppProxy.disconnectPeer(nodeid);
+    }
+
+    /** Clear all banned peers */
+    public static boolean ClearBanned()
+    {
+        return CppProxy.ClearBanned();
+    }
+
     private static final class CppProxy extends IP2pNetworkController
     {
         private final long nativeRef;
@@ -62,5 +92,15 @@ public abstract class IP2pNetworkController {
         public static native void enableNetwork();
 
         public static native ArrayList<PeerRecord> getPeerInfo();
+
+        public static native ArrayList<BannedPeerRecord> listBannedPeers();
+
+        public static native boolean banPeer(String address, long banTimeInSeconds);
+
+        public static native boolean unbanPeer(String address);
+
+        public static native boolean disconnectPeer(long nodeid);
+
+        public static native boolean ClearBanned();
     }
 }

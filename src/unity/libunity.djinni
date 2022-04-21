@@ -100,6 +100,13 @@ peer_record = record {
     protocol : i64;
 }
 
+banned_peer_record = record {
+    address : string;
+    banned_until : i64;
+    banned_from : i64;
+    reason : string;
+}
+
 block_info_record = record {
     height : i32;
     timeStamp : i64;
@@ -442,6 +449,20 @@ i_p2p_network_controller = interface +c {
     
     # Get connected peer info
     static getPeerInfo() : list<peer_record>;
+    
+    # Get all banned peers
+    static listBannedPeers() : list<banned_peer_record>;
+    
+    static banPeer(address : string, banTimeInSeconds : i64) : bool;
+    
+    # Unban a single peer
+    static unbanPeer(address : string) : bool;
+    
+    # Disconnect a specific peer
+    static disconnectPeer(nodeid : i64) : bool;
+    
+    # Clear all banned peers
+    static ClearBanned() : bool;
 }
 
 # Interface to receive updates about network status

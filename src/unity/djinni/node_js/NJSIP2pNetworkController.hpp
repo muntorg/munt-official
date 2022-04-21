@@ -6,8 +6,11 @@
 
 
 #include "NJSIP2pNetworkListener.hpp"
+#include "banned_peer_record.hpp"
 #include "peer_record.hpp"
+#include <cstdint>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include <napi.h>
@@ -35,6 +38,20 @@ private:
 
     /** Get connected peer info */
     Napi::Value getPeerInfo(const Napi::CallbackInfo& info);
+
+    /** Get all banned peers */
+    Napi::Value listBannedPeers(const Napi::CallbackInfo& info);
+
+    Napi::Value banPeer(const Napi::CallbackInfo& info);
+
+    /** Unban a single peer */
+    Napi::Value unbanPeer(const Napi::CallbackInfo& info);
+
+    /** Disconnect a specific peer */
+    Napi::Value disconnectPeer(const Napi::CallbackInfo& info);
+
+    /** Clear all banned peers */
+    Napi::Value ClearBanned(const Napi::CallbackInfo& info);
 
 };
 #endif //DJINNI_GENERATED_NJSIP2PNETWORKCONTROLLER_HPP

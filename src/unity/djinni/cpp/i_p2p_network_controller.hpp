@@ -3,7 +3,9 @@
 
 #pragma once
 
+#include <cstdint>
 #include <memory>
+#include <string>
 #include <vector>
 
 #ifdef DJINNI_NODEJS
@@ -11,6 +13,7 @@
 #else
 class IP2pNetworkListener;
 #endif
+struct BannedPeerRecord;
 struct PeerRecord;
 
 /** C++ interface to control networking related aspects of the software */
@@ -29,4 +32,18 @@ public:
 
     /** Get connected peer info */
     static std::vector<PeerRecord> getPeerInfo();
+
+    /** Get all banned peers */
+    static std::vector<BannedPeerRecord> listBannedPeers();
+
+    static bool banPeer(const std::string & address, int64_t banTimeInSeconds);
+
+    /** Unban a single peer */
+    static bool unbanPeer(const std::string & address);
+
+    /** Disconnect a specific peer */
+    static bool disconnectPeer(int64_t nodeid);
+
+    /** Clear all banned peers */
+    static bool ClearBanned();
 };
