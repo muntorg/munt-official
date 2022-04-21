@@ -7,21 +7,49 @@
 - (nonnull instancetype)initWithId:(int64_t)id
                                 ip:(nonnull NSString *)ip
                           hostname:(nonnull NSString *)hostname
-                       startHeight:(int32_t)startHeight
-                      syncedHeight:(int32_t)syncedHeight
-                      commonHeight:(int32_t)commonHeight
-                           latency:(int32_t)latency
+                         addrLocal:(nonnull NSString *)addrLocal
+                          addrBind:(nonnull NSString *)addrBind
+                       startHeight:(int64_t)startHeight
+                      syncedHeight:(int64_t)syncedHeight
+                      commonHeight:(int64_t)commonHeight
+                     timeConnected:(int64_t)timeConnected
+                        timeOffset:(int64_t)timeOffset
+                           latency:(int64_t)latency
+                          lastSend:(int64_t)lastSend
+                       lastReceive:(int64_t)lastReceive
+                         sendBytes:(int64_t)sendBytes
+                      receiveBytes:(int64_t)receiveBytes
                          userAgent:(nonnull NSString *)userAgent
-                          protocol:(int64_t)protocol;
+                          protocol:(int64_t)protocol
+                          services:(int64_t)services
+                           inbound:(BOOL)inbound
+                       whitelisted:(BOOL)whitelisted
+                           addnode:(BOOL)addnode
+                         relayTxes:(BOOL)relayTxes
+                          banscore:(int64_t)banscore;
 + (nonnull instancetype)peerRecordWithId:(int64_t)id
                                       ip:(nonnull NSString *)ip
                                 hostname:(nonnull NSString *)hostname
-                             startHeight:(int32_t)startHeight
-                            syncedHeight:(int32_t)syncedHeight
-                            commonHeight:(int32_t)commonHeight
-                                 latency:(int32_t)latency
+                               addrLocal:(nonnull NSString *)addrLocal
+                                addrBind:(nonnull NSString *)addrBind
+                             startHeight:(int64_t)startHeight
+                            syncedHeight:(int64_t)syncedHeight
+                            commonHeight:(int64_t)commonHeight
+                           timeConnected:(int64_t)timeConnected
+                              timeOffset:(int64_t)timeOffset
+                                 latency:(int64_t)latency
+                                lastSend:(int64_t)lastSend
+                             lastReceive:(int64_t)lastReceive
+                               sendBytes:(int64_t)sendBytes
+                            receiveBytes:(int64_t)receiveBytes
                                userAgent:(nonnull NSString *)userAgent
-                                protocol:(int64_t)protocol;
+                                protocol:(int64_t)protocol
+                                services:(int64_t)services
+                                 inbound:(BOOL)inbound
+                             whitelisted:(BOOL)whitelisted
+                                 addnode:(BOOL)addnode
+                               relayTxes:(BOOL)relayTxes
+                                banscore:(int64_t)banscore;
 
 @property (nonatomic, readonly) int64_t id;
 
@@ -29,16 +57,44 @@
 
 @property (nonatomic, readonly, nonnull) NSString * hostname;
 
-@property (nonatomic, readonly) int32_t startHeight;
+@property (nonatomic, readonly, nonnull) NSString * addrLocal;
 
-@property (nonatomic, readonly) int32_t syncedHeight;
+@property (nonatomic, readonly, nonnull) NSString * addrBind;
 
-@property (nonatomic, readonly) int32_t commonHeight;
+@property (nonatomic, readonly) int64_t startHeight;
 
-@property (nonatomic, readonly) int32_t latency;
+@property (nonatomic, readonly) int64_t syncedHeight;
+
+@property (nonatomic, readonly) int64_t commonHeight;
+
+@property (nonatomic, readonly) int64_t timeConnected;
+
+@property (nonatomic, readonly) int64_t timeOffset;
+
+@property (nonatomic, readonly) int64_t latency;
+
+@property (nonatomic, readonly) int64_t lastSend;
+
+@property (nonatomic, readonly) int64_t lastReceive;
+
+@property (nonatomic, readonly) int64_t sendBytes;
+
+@property (nonatomic, readonly) int64_t receiveBytes;
 
 @property (nonatomic, readonly, nonnull) NSString * userAgent;
 
 @property (nonatomic, readonly) int64_t protocol;
+
+@property (nonatomic, readonly) int64_t services;
+
+@property (nonatomic, readonly) BOOL inbound;
+
+@property (nonatomic, readonly) BOOL whitelisted;
+
+@property (nonatomic, readonly) BOOL addnode;
+
+@property (nonatomic, readonly) BOOL relayTxes;
+
+@property (nonatomic, readonly) int64_t banscore;
 
 @end

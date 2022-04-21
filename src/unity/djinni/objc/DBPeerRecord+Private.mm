@@ -13,12 +13,26 @@ auto PeerRecord::toCpp(ObjcType obj) -> CppType
     return {::djinni::I64::toCpp(obj.id),
             ::djinni::String::toCpp(obj.ip),
             ::djinni::String::toCpp(obj.hostname),
-            ::djinni::I32::toCpp(obj.startHeight),
-            ::djinni::I32::toCpp(obj.syncedHeight),
-            ::djinni::I32::toCpp(obj.commonHeight),
-            ::djinni::I32::toCpp(obj.latency),
+            ::djinni::String::toCpp(obj.addrLocal),
+            ::djinni::String::toCpp(obj.addrBind),
+            ::djinni::I64::toCpp(obj.startHeight),
+            ::djinni::I64::toCpp(obj.syncedHeight),
+            ::djinni::I64::toCpp(obj.commonHeight),
+            ::djinni::I64::toCpp(obj.timeConnected),
+            ::djinni::I64::toCpp(obj.timeOffset),
+            ::djinni::I64::toCpp(obj.latency),
+            ::djinni::I64::toCpp(obj.lastSend),
+            ::djinni::I64::toCpp(obj.lastReceive),
+            ::djinni::I64::toCpp(obj.sendBytes),
+            ::djinni::I64::toCpp(obj.receiveBytes),
             ::djinni::String::toCpp(obj.userAgent),
-            ::djinni::I64::toCpp(obj.protocol)};
+            ::djinni::I64::toCpp(obj.protocol),
+            ::djinni::I64::toCpp(obj.services),
+            ::djinni::Bool::toCpp(obj.inbound),
+            ::djinni::Bool::toCpp(obj.whitelisted),
+            ::djinni::Bool::toCpp(obj.addnode),
+            ::djinni::Bool::toCpp(obj.relayTxes),
+            ::djinni::I64::toCpp(obj.banscore)};
 }
 
 auto PeerRecord::fromCpp(const CppType& cpp) -> ObjcType
@@ -26,12 +40,26 @@ auto PeerRecord::fromCpp(const CppType& cpp) -> ObjcType
     return [[DBPeerRecord alloc] initWithId:(::djinni::I64::fromCpp(cpp.id))
                                          ip:(::djinni::String::fromCpp(cpp.ip))
                                    hostname:(::djinni::String::fromCpp(cpp.hostname))
-                                startHeight:(::djinni::I32::fromCpp(cpp.start_height))
-                               syncedHeight:(::djinni::I32::fromCpp(cpp.synced_height))
-                               commonHeight:(::djinni::I32::fromCpp(cpp.common_height))
-                                    latency:(::djinni::I32::fromCpp(cpp.latency))
+                                  addrLocal:(::djinni::String::fromCpp(cpp.addrLocal))
+                                   addrBind:(::djinni::String::fromCpp(cpp.addrBind))
+                                startHeight:(::djinni::I64::fromCpp(cpp.start_height))
+                               syncedHeight:(::djinni::I64::fromCpp(cpp.synced_height))
+                               commonHeight:(::djinni::I64::fromCpp(cpp.common_height))
+                              timeConnected:(::djinni::I64::fromCpp(cpp.time_connected))
+                                 timeOffset:(::djinni::I64::fromCpp(cpp.time_offset))
+                                    latency:(::djinni::I64::fromCpp(cpp.latency))
+                                   lastSend:(::djinni::I64::fromCpp(cpp.last_send))
+                                lastReceive:(::djinni::I64::fromCpp(cpp.last_receive))
+                                  sendBytes:(::djinni::I64::fromCpp(cpp.send_bytes))
+                               receiveBytes:(::djinni::I64::fromCpp(cpp.receive_bytes))
                                   userAgent:(::djinni::String::fromCpp(cpp.userAgent))
-                                   protocol:(::djinni::I64::fromCpp(cpp.protocol))];
+                                   protocol:(::djinni::I64::fromCpp(cpp.protocol))
+                                   services:(::djinni::I64::fromCpp(cpp.services))
+                                    inbound:(::djinni::Bool::fromCpp(cpp.inbound))
+                                whitelisted:(::djinni::Bool::fromCpp(cpp.whitelisted))
+                                    addnode:(::djinni::Bool::fromCpp(cpp.addnode))
+                                  relayTxes:(::djinni::Bool::fromCpp(cpp.relay_txes))
+                                   banscore:(::djinni::I64::fromCpp(cpp.banscore))];
 }
 
 }  // namespace djinni_generated

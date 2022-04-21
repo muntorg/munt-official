@@ -89,23 +89,40 @@ std::vector<PeerRecord> IP2pNetworkController::getPeerInfo()
         {
             int64_t nSyncedHeight = 0;
             int64_t nCommonHeight = 0;
+            int64_t nMisbehavior = 0;
             CNodeStateStats stateStats;
             TRY_LOCK(cs_main, lockMain);
             if (lockMain && GetNodeStateStats(nstat.nodeid, stateStats))
             {
                 nSyncedHeight = stateStats.nSyncHeight;
                 nCommonHeight = stateStats.nCommonHeight;
+                nMisbehavior = stateStats.nMisbehavior;
             }
 
-            PeerRecord rec(nstat.nodeid,
+            PeerRecord rec((int64_t)nstat.nodeid,
                            nstat.addr.ToString(),
                            nstat.addr.HostnameLookup(),
-                           nstat.nStartingHeight,
-                           nSyncedHeight,
-                           nCommonHeight,
-                           int32_t(nstat.dPingTime * 1000),
+                           nstat.addrLocal,
+                           nstat.addrBind.IsValid()?nstat.addrBind.ToString():"",
+                           (int64_t)nstat.nStartingHeight,
+                           (int64_t)nSyncedHeight,
+                           (int64_t)nCommonHeight,
+                           (int64_t)nstat.nTimeConnected,
+                           (int64_t)nstat.nTimeOffset,
+                           (int64_t)(nstat.dPingTime * 1000),
+                           (int64_t)nstat.nLastSend,
+                           (int64_t)nstat.nLastRecv,
+                           (int64_t)nstat.nSendBytes,
+                           (int64_t)nstat.nRecvBytes,
                            nstat.cleanSubVer,
-                           nstat.nVersion);
+                           (int64_t)nstat.nVersion,
+                           (int64_t)nstat.nServices,
+                           nstat.fInbound,
+                           nstat.fWhitelisted,
+                           nstat.fAddnode,
+                           nstat.fRelayTxes,
+                           (int64_t)nMisbehavior
+                           );
             ret.emplace_back(rec);
         }
     }

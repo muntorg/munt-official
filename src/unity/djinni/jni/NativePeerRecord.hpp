@@ -25,16 +25,30 @@ private:
     friend ::djinni::JniClass<NativePeerRecord>;
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/PeerRecord") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(JLjava/lang/String;Ljava/lang/String;IIIILjava/lang/String;J)V") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JJJJJJJJJJLjava/lang/String;JJZZZZJ)V") };
     const jfieldID field_mId { ::djinni::jniGetFieldID(clazz.get(), "mId", "J") };
     const jfieldID field_mIp { ::djinni::jniGetFieldID(clazz.get(), "mIp", "Ljava/lang/String;") };
     const jfieldID field_mHostname { ::djinni::jniGetFieldID(clazz.get(), "mHostname", "Ljava/lang/String;") };
-    const jfieldID field_mStartHeight { ::djinni::jniGetFieldID(clazz.get(), "mStartHeight", "I") };
-    const jfieldID field_mSyncedHeight { ::djinni::jniGetFieldID(clazz.get(), "mSyncedHeight", "I") };
-    const jfieldID field_mCommonHeight { ::djinni::jniGetFieldID(clazz.get(), "mCommonHeight", "I") };
-    const jfieldID field_mLatency { ::djinni::jniGetFieldID(clazz.get(), "mLatency", "I") };
+    const jfieldID field_mAddrLocal { ::djinni::jniGetFieldID(clazz.get(), "mAddrLocal", "Ljava/lang/String;") };
+    const jfieldID field_mAddrBind { ::djinni::jniGetFieldID(clazz.get(), "mAddrBind", "Ljava/lang/String;") };
+    const jfieldID field_mStartHeight { ::djinni::jniGetFieldID(clazz.get(), "mStartHeight", "J") };
+    const jfieldID field_mSyncedHeight { ::djinni::jniGetFieldID(clazz.get(), "mSyncedHeight", "J") };
+    const jfieldID field_mCommonHeight { ::djinni::jniGetFieldID(clazz.get(), "mCommonHeight", "J") };
+    const jfieldID field_mTimeConnected { ::djinni::jniGetFieldID(clazz.get(), "mTimeConnected", "J") };
+    const jfieldID field_mTimeOffset { ::djinni::jniGetFieldID(clazz.get(), "mTimeOffset", "J") };
+    const jfieldID field_mLatency { ::djinni::jniGetFieldID(clazz.get(), "mLatency", "J") };
+    const jfieldID field_mLastSend { ::djinni::jniGetFieldID(clazz.get(), "mLastSend", "J") };
+    const jfieldID field_mLastReceive { ::djinni::jniGetFieldID(clazz.get(), "mLastReceive", "J") };
+    const jfieldID field_mSendBytes { ::djinni::jniGetFieldID(clazz.get(), "mSendBytes", "J") };
+    const jfieldID field_mReceiveBytes { ::djinni::jniGetFieldID(clazz.get(), "mReceiveBytes", "J") };
     const jfieldID field_mUserAgent { ::djinni::jniGetFieldID(clazz.get(), "mUserAgent", "Ljava/lang/String;") };
     const jfieldID field_mProtocol { ::djinni::jniGetFieldID(clazz.get(), "mProtocol", "J") };
+    const jfieldID field_mServices { ::djinni::jniGetFieldID(clazz.get(), "mServices", "J") };
+    const jfieldID field_mInbound { ::djinni::jniGetFieldID(clazz.get(), "mInbound", "Z") };
+    const jfieldID field_mWhitelisted { ::djinni::jniGetFieldID(clazz.get(), "mWhitelisted", "Z") };
+    const jfieldID field_mAddnode { ::djinni::jniGetFieldID(clazz.get(), "mAddnode", "Z") };
+    const jfieldID field_mRelayTxes { ::djinni::jniGetFieldID(clazz.get(), "mRelayTxes", "Z") };
+    const jfieldID field_mBanscore { ::djinni::jniGetFieldID(clazz.get(), "mBanscore", "J") };
 };
 
 }  // namespace djinni_generated

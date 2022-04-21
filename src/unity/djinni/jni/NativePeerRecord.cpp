@@ -16,29 +16,57 @@ auto NativePeerRecord::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::djinni::Lo
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.id)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.ip)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.hostname)),
-                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.start_height)),
-                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.synced_height)),
-                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.common_height)),
-                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.latency)),
+                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.addrLocal)),
+                                                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c.addrBind)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.start_height)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.synced_height)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.common_height)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.time_connected)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.time_offset)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.latency)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.last_send)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.last_receive)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.send_bytes)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.receive_bytes)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.userAgent)),
-                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.protocol)))};
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.protocol)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.services)),
+                                                           ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.inbound)),
+                                                           ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.whitelisted)),
+                                                           ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.addnode)),
+                                                           ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.relay_txes)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.banscore)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
 }
 
 auto NativePeerRecord::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
-    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    ::djinni::JniLocalScope jscope(jniEnv, 24);
     assert(j != nullptr);
     const auto& data = ::djinni::JniClass<NativePeerRecord>::get();
     return {::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mId)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mIp)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mHostname)),
-            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mStartHeight)),
-            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mSyncedHeight)),
-            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mCommonHeight)),
-            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mLatency)),
+            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mAddrLocal)),
+            ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mAddrBind)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mStartHeight)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mSyncedHeight)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mCommonHeight)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mTimeConnected)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mTimeOffset)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mLatency)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mLastSend)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mLastReceive)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mSendBytes)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mReceiveBytes)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mUserAgent)),
-            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mProtocol))};
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mProtocol)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mServices)),
+            ::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_mInbound)),
+            ::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_mWhitelisted)),
+            ::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_mAddnode)),
+            ::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_mRelayTxes)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mBanscore))};
 }
 
 }  // namespace djinni_generated

@@ -92,12 +92,26 @@ peer_record = record {
     id : i64;
     ip : string;
     hostname : string;
-    start_height : i32;
-    synced_height : i32;
-    common_height : i32;
-    latency : i32;
+    addrLocal : string;
+    addrBind : string;
+    start_height : i64;
+    synced_height : i64;
+    common_height : i64;
+    time_connected : i64;
+    time_offset : i64;
+    latency : i64;
+    last_send : i64;
+    last_receive : i64;
+    send_bytes : i64;
+    receive_bytes : i64;
     userAgent : string;
     protocol : i64;
+    services : i64;
+    inbound : bool;
+    whitelisted : bool;
+    addnode : bool;
+    relay_txes : bool;
+    banscore : i64;
 }
 
 banned_peer_record = record {

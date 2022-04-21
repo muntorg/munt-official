@@ -12,37 +12,93 @@ public final class PeerRecord {
 
     /*package*/ final String mHostname;
 
-    /*package*/ final int mStartHeight;
+    /*package*/ final String mAddrLocal;
 
-    /*package*/ final int mSyncedHeight;
+    /*package*/ final String mAddrBind;
 
-    /*package*/ final int mCommonHeight;
+    /*package*/ final long mStartHeight;
 
-    /*package*/ final int mLatency;
+    /*package*/ final long mSyncedHeight;
+
+    /*package*/ final long mCommonHeight;
+
+    /*package*/ final long mTimeConnected;
+
+    /*package*/ final long mTimeOffset;
+
+    /*package*/ final long mLatency;
+
+    /*package*/ final long mLastSend;
+
+    /*package*/ final long mLastReceive;
+
+    /*package*/ final long mSendBytes;
+
+    /*package*/ final long mReceiveBytes;
 
     /*package*/ final String mUserAgent;
 
     /*package*/ final long mProtocol;
 
+    /*package*/ final long mServices;
+
+    /*package*/ final boolean mInbound;
+
+    /*package*/ final boolean mWhitelisted;
+
+    /*package*/ final boolean mAddnode;
+
+    /*package*/ final boolean mRelayTxes;
+
+    /*package*/ final long mBanscore;
+
     public PeerRecord(
             long id,
             String ip,
             String hostname,
-            int startHeight,
-            int syncedHeight,
-            int commonHeight,
-            int latency,
+            String addrLocal,
+            String addrBind,
+            long startHeight,
+            long syncedHeight,
+            long commonHeight,
+            long timeConnected,
+            long timeOffset,
+            long latency,
+            long lastSend,
+            long lastReceive,
+            long sendBytes,
+            long receiveBytes,
             String userAgent,
-            long protocol) {
+            long protocol,
+            long services,
+            boolean inbound,
+            boolean whitelisted,
+            boolean addnode,
+            boolean relayTxes,
+            long banscore) {
         this.mId = id;
         this.mIp = ip;
         this.mHostname = hostname;
+        this.mAddrLocal = addrLocal;
+        this.mAddrBind = addrBind;
         this.mStartHeight = startHeight;
         this.mSyncedHeight = syncedHeight;
         this.mCommonHeight = commonHeight;
+        this.mTimeConnected = timeConnected;
+        this.mTimeOffset = timeOffset;
         this.mLatency = latency;
+        this.mLastSend = lastSend;
+        this.mLastReceive = lastReceive;
+        this.mSendBytes = sendBytes;
+        this.mReceiveBytes = receiveBytes;
         this.mUserAgent = userAgent;
         this.mProtocol = protocol;
+        this.mServices = services;
+        this.mInbound = inbound;
+        this.mWhitelisted = whitelisted;
+        this.mAddnode = addnode;
+        this.mRelayTxes = relayTxes;
+        this.mBanscore = banscore;
     }
 
     public long getId() {
@@ -57,20 +113,52 @@ public final class PeerRecord {
         return mHostname;
     }
 
-    public int getStartHeight() {
+    public String getAddrLocal() {
+        return mAddrLocal;
+    }
+
+    public String getAddrBind() {
+        return mAddrBind;
+    }
+
+    public long getStartHeight() {
         return mStartHeight;
     }
 
-    public int getSyncedHeight() {
+    public long getSyncedHeight() {
         return mSyncedHeight;
     }
 
-    public int getCommonHeight() {
+    public long getCommonHeight() {
         return mCommonHeight;
     }
 
-    public int getLatency() {
+    public long getTimeConnected() {
+        return mTimeConnected;
+    }
+
+    public long getTimeOffset() {
+        return mTimeOffset;
+    }
+
+    public long getLatency() {
         return mLatency;
+    }
+
+    public long getLastSend() {
+        return mLastSend;
+    }
+
+    public long getLastReceive() {
+        return mLastReceive;
+    }
+
+    public long getSendBytes() {
+        return mSendBytes;
+    }
+
+    public long getReceiveBytes() {
+        return mReceiveBytes;
     }
 
     public String getUserAgent() {
@@ -81,18 +169,56 @@ public final class PeerRecord {
         return mProtocol;
     }
 
+    public long getServices() {
+        return mServices;
+    }
+
+    public boolean getInbound() {
+        return mInbound;
+    }
+
+    public boolean getWhitelisted() {
+        return mWhitelisted;
+    }
+
+    public boolean getAddnode() {
+        return mAddnode;
+    }
+
+    public boolean getRelayTxes() {
+        return mRelayTxes;
+    }
+
+    public long getBanscore() {
+        return mBanscore;
+    }
+
     @Override
     public String toString() {
         return "PeerRecord{" +
                 "mId=" + mId +
                 "," + "mIp=" + mIp +
                 "," + "mHostname=" + mHostname +
+                "," + "mAddrLocal=" + mAddrLocal +
+                "," + "mAddrBind=" + mAddrBind +
                 "," + "mStartHeight=" + mStartHeight +
                 "," + "mSyncedHeight=" + mSyncedHeight +
                 "," + "mCommonHeight=" + mCommonHeight +
+                "," + "mTimeConnected=" + mTimeConnected +
+                "," + "mTimeOffset=" + mTimeOffset +
                 "," + "mLatency=" + mLatency +
+                "," + "mLastSend=" + mLastSend +
+                "," + "mLastReceive=" + mLastReceive +
+                "," + "mSendBytes=" + mSendBytes +
+                "," + "mReceiveBytes=" + mReceiveBytes +
                 "," + "mUserAgent=" + mUserAgent +
                 "," + "mProtocol=" + mProtocol +
+                "," + "mServices=" + mServices +
+                "," + "mInbound=" + mInbound +
+                "," + "mWhitelisted=" + mWhitelisted +
+                "," + "mAddnode=" + mAddnode +
+                "," + "mRelayTxes=" + mRelayTxes +
+                "," + "mBanscore=" + mBanscore +
         "}";
     }
 

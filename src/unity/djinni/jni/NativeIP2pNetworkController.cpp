@@ -55,7 +55,7 @@ CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IP2pNetworkContr
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_IP2pNetworkController_00024CppProxy_listBannedPeers(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IP2pNetworkController_00024CppProxy_listBannedPeers(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -64,7 +64,7 @@ CJNIEXPORT jobject JNICALL Java_com_florin_jniunifiedbackend_IP2pNetworkControll
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_IP2pNetworkController_00024CppProxy_banPeer(JNIEnv* jniEnv, jobject /*this*/, jstring j_address, jlong j_banTimeInSeconds)
+CJNIEXPORT jboolean JNICALL Java_unity_1wallet_jniunifiedbackend_IP2pNetworkController_00024CppProxy_banPeer(JNIEnv* jniEnv, jobject /*this*/, jstring j_address, jlong j_banTimeInSeconds)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -74,7 +74,7 @@ CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_IP2pNetworkControl
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_IP2pNetworkController_00024CppProxy_unbanPeer(JNIEnv* jniEnv, jobject /*this*/, jstring j_address)
+CJNIEXPORT jboolean JNICALL Java_unity_1wallet_jniunifiedbackend_IP2pNetworkController_00024CppProxy_unbanPeer(JNIEnv* jniEnv, jobject /*this*/, jstring j_address)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -83,7 +83,7 @@ CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_IP2pNetworkControl
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_IP2pNetworkController_00024CppProxy_disconnectPeer(JNIEnv* jniEnv, jobject /*this*/, jlong j_nodeid)
+CJNIEXPORT jboolean JNICALL Java_unity_1wallet_jniunifiedbackend_IP2pNetworkController_00024CppProxy_disconnectPeer(JNIEnv* jniEnv, jobject /*this*/, jlong j_nodeid)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -92,7 +92,7 @@ CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_IP2pNetworkControl
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_florin_jniunifiedbackend_IP2pNetworkController_00024CppProxy_ClearBanned(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jboolean JNICALL Java_unity_1wallet_jniunifiedbackend_IP2pNetworkController_00024CppProxy_ClearBanned(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
