@@ -8,5 +8,5 @@ make $MAKEJOBS -C depends HOST=$HOST $DEP_OPTS
 
 ./autogen.sh
 mkdir -p build/$HOST && cd build/$HOST
-../../configure LDFLAGS="-static-libstdc++" --cache-file=config.cache --prefix=/work/depends/$HOST --enable-werror --enable-zmq --with-gui=qt5 --enable-glibc-back-compat --enable-reduce-exports
+../../configure LDFLAGS="-static-libstdc++" --cache-file=config.cache --prefix=/work/depends/$HOST --enable-werror --enable-zmq --with-gui=qt5 --enable-reduce-exports
 make $MAKEJOBS

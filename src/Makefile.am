@@ -743,11 +743,6 @@ lib_generic_init_node_a_SOURCES = \
   unity/generic/init_generic_node.cpp \
   $(CORE_H)
 
-if GLIBC_BACK_COMPAT
-lib_util_a_SOURCES += compat/glibc_compat.cpp
-AM_LDFLAGS += $(COMPAT_LDFLAGS)
-endif
-
 # cli: cli client only
 lib_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
 lib_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
