@@ -303,6 +303,16 @@ WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(c
         case WitnessStatus::Expired: accountStatus = "expired"; break;
         case WitnessStatus::Emptying: accountStatus = "emptying"; break;
     }
+    int64_t compoundingPercent = 0;
+    if (witnessAccount->getCompounding() != 0)
+    {
+        compoundingPercent = 100;
+    }
+    else
+    {
+        compoundingPercent = witnessAccount->getCompoundingPercent();
+    }
+            
     return WitnessAccountStatisticsRecord(
         "success",                                                      //request_status
         accountStatus,                                                  //account_status
@@ -318,7 +328,7 @@ WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(c
         infoForAccount.nExpectedWitnessBlockPeriod,                     //account_expected_witness_period_in_blocks
         infoForAccount.nEstimatedWitnessBlockPeriod,                    //account_estimated_witness_period_in_blocks
         infoForAccount.nOriginBlock,                                    //account_initial_lock_creation_block_height
-        (witnessAccount->getCompounding() != 0)                         //account_is_compounding
+        compoundingPercent                                              //compounding_percent
     );
 }
 
