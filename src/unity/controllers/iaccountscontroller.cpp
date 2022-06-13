@@ -265,6 +265,20 @@ bool IAccountsController::renameAccount(const std::string& accountUUID, const st
     return false;
 }
 
+std::vector<std::string> listAccountLinksHelper(CAccount* forAccount)
+{
+    std::vector<std::string> result;
+    if (forAccount)
+    {
+        const auto& setLinks = forAccount->getLinks();
+        for (const auto& link : setLinks)
+        {
+            result.push_back(link);
+        }
+    }
+    return result;
+}
+
 //fixme: (DEDUP) - try share common code with RPC listallaccounts function
 std::vector<AccountRecord> IAccountsController::listAccounts()
 {
@@ -276,11 +290,12 @@ std::vector<AccountRecord> IAccountsController::listAccounts()
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
     for (const auto& accountPair : pactiveWallet->mapAccounts)
     {
-        AccountRecord rec("", "", "", "", false);
+        AccountRecord rec("", "", "", "", false, std::vector<std::string>());
         rec.UUID = getUUIDAsString(accountPair.first);
         rec.label = accountPair.second->getLabel();
         rec.state = GetAccountStateString(accountPair.second->m_State);
         rec.type = GetAccountTypeString(accountPair.second->m_Type);
+        rec.accountLinks = listAccountLinksHelper(accountPair.second);
         if (!accountPair.second->IsHD())
         {
             rec.isHD = false;
@@ -389,4 +404,64 @@ std::string IAccountsController::getReceiveAddress(const std::string & accountUU
         }
     }
     return "";
+}
+
+bool IAccountsController::addAccountLink(const std::string& accountUUID, const std::string& serviceName)
+{
+    if (serviceName.empty())
+    {
+        return false;
+    }
+    if (pactiveWallet)
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            CAccount* forAccount = findIter->second;
+            CWalletDB walletdb(*pactiveWallet->dbw);
+            forAccount->addLink(serviceName, &walletdb);
+            return true;
+        }
+    }
+    return false;
+}
+
+bool IAccountsController::removeAccountLink(const std::string& accountUUID, const std::string& serviceName)
+{
+    if (serviceName.empty())
+    {
+        return false;
+    }
+    if (pactiveWallet)
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            CAccount* forAccount = findIter->second;
+            CWalletDB walletdb(*pactiveWallet->dbw);
+            forAccount->removeLink(serviceName, &walletdb);
+            return true;
+        }
+    }
+    return false;
+}
+
+std::vector<std::string> IAccountsController::listAccountLinks(const std::string& accountUUID)
+{
+    if (pactiveWallet)
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+        
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(accountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            CAccount* forAccount = findIter->second;
+            return listAccountLinksHelper(forAccount);
+        }
+    }
+    return std::vector<std::string>();
 }

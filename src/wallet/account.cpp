@@ -1168,6 +1168,42 @@ void CAccount::setLabel(const std::string& label, CWalletDB* Db)
     }
 }
 
+void CAccount::addLink(const std::string& serviceName, CWalletDB* Db)
+{
+    accountLinks.insert(serviceName);
+    if (accountLinks.count(serviceName) == 0)
+    {
+        if (Db)
+        {
+            Db->EraseAccountLinks(getUUIDAsString(getUUID()));
+            Db->WriteAccountLinks(getUUIDAsString(getUUID()), accountLinks);
+        }   
+    }
+}
+
+void CAccount::removeLink(const std::string& serviceName, CWalletDB* Db)
+{
+    if (accountLinks.count(serviceName) > 0)
+    {
+        accountLinks.erase(serviceName);
+        if (Db)
+        {
+            Db->EraseAccountLinks(getUUIDAsString(getUUID()));
+            Db->WriteAccountLinks(getUUIDAsString(getUUID()), accountLinks);
+        }
+    }
+}
+
+std::set<std::string> CAccount::getLinks() const
+{
+    return accountLinks;
+}
+
+void CAccount::loadLinks(std::set<std::string>& accountLinks_)
+{
+    accountLinks = accountLinks_;
+}
+
 CAmount CAccount::getCompounding() const
 {
     // If compound earnings percent is set in any way then it overrides this, in which case we always set 0.

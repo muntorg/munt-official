@@ -11,6 +11,7 @@
                                state:(nonnull NSString *)state
                                 type:(nonnull NSString *)type
                                 isHD:(BOOL)isHD
+                        accountLinks:(nonnull NSArray<NSString *> *)accountLinks
 {
     if (self = [super init]) {
         _UUID = [UUID copy];
@@ -18,6 +19,7 @@
         _state = [state copy];
         _type = [type copy];
         _isHD = isHD;
+        _accountLinks = [accountLinks copy];
     }
     return self;
 }
@@ -27,17 +29,19 @@
                                         state:(nonnull NSString *)state
                                          type:(nonnull NSString *)type
                                          isHD:(BOOL)isHD
+                                 accountLinks:(nonnull NSArray<NSString *> *)accountLinks
 {
     return [(DBAccountRecord*)[self alloc] initWithUUID:UUID
                                                   label:label
                                                   state:state
                                                    type:type
-                                                   isHD:isHD];
+                                                   isHD:isHD
+                                           accountLinks:accountLinks];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p UUID:%@ label:%@ state:%@ type:%@ isHD:%@>", self.class, (void *)self, self.UUID, self.label, self.state, self.type, @(self.isHD)];
+    return [NSString stringWithFormat:@"<%@ %p UUID:%@ label:%@ state:%@ type:%@ isHD:%@ accountLinks:%@>", self.class, (void *)self, self.UUID, self.label, self.state, self.type, @(self.isHD), self.accountLinks];
 }
 
 @end

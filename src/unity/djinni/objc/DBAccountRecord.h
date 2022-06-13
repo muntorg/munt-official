@@ -8,12 +8,14 @@
                                label:(nonnull NSString *)label
                                state:(nonnull NSString *)state
                                 type:(nonnull NSString *)type
-                                isHD:(BOOL)isHD;
+                                isHD:(BOOL)isHD
+                        accountLinks:(nonnull NSArray<NSString *> *)accountLinks;
 + (nonnull instancetype)accountRecordWithUUID:(nonnull NSString *)UUID
                                         label:(nonnull NSString *)label
                                         state:(nonnull NSString *)state
                                          type:(nonnull NSString *)type
-                                         isHD:(BOOL)isHD;
+                                         isHD:(BOOL)isHD
+                                 accountLinks:(nonnull NSArray<NSString *> *)accountLinks;
 
 @property (nonatomic, readonly, nonnull) NSString * UUID;
 
@@ -25,5 +27,8 @@
 
 /**Is this account 'HD' (i.e. part of what can be recovered from a recovery phrase) */
 @property (nonatomic, readonly) BOOL isHD;
+
+/**Has this account been linked to any other services/wallets; if so which (list will contain names) */
+@property (nonatomic, readonly, nonnull) NSArray<NSString *> * accountLinks;
 
 @end

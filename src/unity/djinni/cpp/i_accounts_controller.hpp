@@ -83,4 +83,13 @@ public:
 
     /** Check balance for all accounts, returns a map of account_uuid->balance_record */
     static std::unordered_map<std::string, BalanceRecord> getAllAccountBalances();
+
+    /**Register with wallet that this account has been "linked" with an external service (e.g. to host holding key) */
+    static bool addAccountLink(const std::string & accountUUID, const std::string & serviceName);
+
+    /**Register with wallet to remove an existing link */
+    static bool removeAccountLink(const std::string & accountUUID, const std::string & serviceName);
+
+    /**List all active account links that we have previously registered */
+    static std::vector<std::string> listAccountLinks(const std::string & accountUUID);
 };

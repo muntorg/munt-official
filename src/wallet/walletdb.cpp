@@ -336,6 +336,16 @@ bool CWalletDB::EraseAccountLabel(const std::string& strUUID)
     return EraseIC(std::pair(std::string("acclabel"), strUUID));
 }
 
+bool CWalletDB::WriteAccountLinks(const std::string& strUUID,  const std::set<std::string>& accountLinks)
+{
+    return WriteIC(std::pair(std::string("acclinks"), strUUID), accountLinks);
+}
+
+bool CWalletDB::EraseAccountLinks(const std::string& strUUID)
+{
+    return EraseIC(std::pair(std::string("acclinks"), strUUID));
+}
+
 bool CWalletDB::WriteAccountCompoundingSettings(const std::string& strUUID, const CAmount compoundAmount)
 {
     return WriteIC(std::pair(std::string("acc_compound"), strUUID), compoundAmount);
@@ -897,6 +907,15 @@ bool ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue, CW
             ssValue >> strAccountLabel;
 
             pwallet->mapAccountLabels[getUUIDFromString(strAccountUUID)] = strAccountLabel;
+        }
+        else if (strType == "acclinks")
+        {
+            std::string strAccountUUID;
+            std::set<std::string> accountLinks;
+            ssKey >> strAccountUUID;
+            ssValue >> accountLinks;
+            
+            pwallet->mapAccounts[getUUIDFromString(strAccountUUID)]->loadLinks(accountLinks);
         }
         else if (strType == "acc_compound")
         {

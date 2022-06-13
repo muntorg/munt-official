@@ -76,4 +76,15 @@
 /** Check balance for all accounts, returns a map of account_uuid->balance_record */
 + (nonnull NSDictionary<NSString *, DBBalanceRecord *> *)getAllAccountBalances;
 
+/**Register with wallet that this account has been "linked" with an external service (e.g. to host holding key) */
++ (BOOL)addAccountLink:(nonnull NSString *)accountUUID
+           serviceName:(nonnull NSString *)serviceName;
+
+/**Register with wallet to remove an existing link */
++ (BOOL)removeAccountLink:(nonnull NSString *)accountUUID
+              serviceName:(nonnull NSString *)serviceName;
+
+/**List all active account links that we have previously registered */
++ (nonnull NSArray<NSString *> *)listAccountLinks:(nonnull NSString *)accountUUID;
+
 @end

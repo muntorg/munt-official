@@ -3,6 +3,8 @@
 
 package unity_wallet.jniunifiedbackend;
 
+import java.util.ArrayList;
+
 public final class AccountRecord {
 
 
@@ -16,17 +18,21 @@ public final class AccountRecord {
 
     /*package*/ final boolean mIsHD;
 
+    /*package*/ final ArrayList<String> mAccountLinks;
+
     public AccountRecord(
             String UUID,
             String label,
             String state,
             String type,
-            boolean isHD) {
+            boolean isHD,
+            ArrayList<String> accountLinks) {
         this.mUUID = UUID;
         this.mLabel = label;
         this.mState = state;
         this.mType = type;
         this.mIsHD = isHD;
+        this.mAccountLinks = accountLinks;
     }
 
     public String getUUID() {
@@ -50,6 +56,11 @@ public final class AccountRecord {
         return mIsHD;
     }
 
+    /**Has this account been linked to any other services/wallets; if so which (list will contain names) */
+    public ArrayList<String> getAccountLinks() {
+        return mAccountLinks;
+    }
+
     @Override
     public String toString() {
         return "AccountRecord{" +
@@ -58,6 +69,7 @@ public final class AccountRecord {
                 "," + "mState=" + mState +
                 "," + "mType=" + mType +
                 "," + "mIsHD=" + mIsHD +
+                "," + "mAccountLinks=" + mAccountLinks +
         "}";
     }
 

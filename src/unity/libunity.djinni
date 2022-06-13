@@ -498,6 +498,8 @@ account_record = record {
     type : string;
     #Is this account 'HD' (i.e. part of what can be recovered from a recovery phrase)
     isHD : bool;
+    #Has this account been linked to any other services/wallets; if so which (list will contain names)
+    accountLinks : list<string>;
 }
 
 # C++ interface to control accounts
@@ -548,6 +550,13 @@ i_accounts_controller = interface +c {
     static getAccountBalance(accountUUID : string): balance_record;
     # Check balance for all accounts, returns a map of account_uuid->balance_record
     static getAllAccountBalances(): map<string, balance_record>;
+    
+    #Register with wallet that this account has been "linked" with an external service (e.g. to host holding key)
+    static addAccountLink(accountUUID : string, serviceName : string) : bool;
+    #Register with wallet to remove an existing link
+    static removeAccountLink(accountUUID : string, serviceName : string) : bool;
+    #List all active account links that we have previously registered
+    static listAccountLinks(accountUUID : string) : list<string>;
 }
 
 # Interface to receive updates about accounts

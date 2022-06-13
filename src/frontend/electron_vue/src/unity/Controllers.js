@@ -528,6 +528,30 @@ class AccountsController {
   static GetAllAccountBalances() {
     return handleError(ipc.sendSync("NJSIAccountsController.getAllAccountBalances"));
   }
+
+  static async AddAccountLinkAsync(accountUUID, serviceName) {
+    return handleError(await ipc.callMain("NJSIAccountsController.addAccountLinkAsync", { accountUUID, serviceName }));
+  }
+
+  static AddAccountLink(accountUUID, serviceName) {
+    return handleError(ipc.sendSync("NJSIAccountsController.addAccountLink", accountUUID, serviceName));
+  }
+
+  static async RemoveAccountLinkAsync(accountUUID, serviceName) {
+    return handleError(await ipc.callMain("NJSIAccountsController.removeAccountLinkAsync", { accountUUID, serviceName }));
+  }
+
+  static RemoveAccountLink(accountUUID, serviceName) {
+    return handleError(ipc.sendSync("NJSIAccountsController.removeAccountLink", accountUUID, serviceName));
+  }
+
+  static async ListAccountLinksAsync(accountUUID) {
+    return handleError(await ipc.callMain("NJSIAccountsController.listAccountLinksAsync", { accountUUID }));
+  }
+
+  static ListAccountLinks(accountUUID) {
+    return handleError(ipc.sendSync("NJSIAccountsController.listAccountLinks", accountUUID));
+  }
 }
 
 class WitnessController {

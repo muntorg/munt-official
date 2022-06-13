@@ -341,6 +341,12 @@ declare class NJSIAccountsController
     static declare function getAccountBalance(accountUUID: string): BalanceRecord;
     /** Check balance for all accounts, returns a map of account_uuid->balance_record */
     static declare function getAllAccountBalances(): Map<string, BalanceRecord>;
+    /**Register with wallet that this account has been "linked" with an external service (e.g. to host holding key) */
+    static declare function addAccountLink(accountUUID: string, serviceName: string): boolean;
+    /**Register with wallet to remove an existing link */
+    static declare function removeAccountLink(accountUUID: string, serviceName: string): boolean;
+    /**List all active account links that we have previously registered */
+    static declare function listAccountLinks(accountUUID: string): Array<string>;
 }
 /** Interface to receive updates about accounts */
 declare class NJSIAccountsListener

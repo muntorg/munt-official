@@ -17,20 +17,22 @@ auto NativeAccountRecord::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::djinni:
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.label)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.state)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.type)),
-                                                           ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.isHD)))};
+                                                           ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.isHD)),
+                                                           ::djinni::get(::djinni::List<::djinni::String>::fromCpp(jniEnv, c.accountLinks)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
 }
 
 auto NativeAccountRecord::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
-    ::djinni::JniLocalScope jscope(jniEnv, 6);
+    ::djinni::JniLocalScope jscope(jniEnv, 7);
     assert(j != nullptr);
     const auto& data = ::djinni::JniClass<NativeAccountRecord>::get();
     return {::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mUUID)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mLabel)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mState)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mType)),
-            ::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_mIsHD))};
+            ::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_mIsHD)),
+            ::djinni::List<::djinni::String>::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_mAccountLinks))};
 }
 
 }  // namespace djinni_generated

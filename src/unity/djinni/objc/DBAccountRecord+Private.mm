@@ -14,7 +14,8 @@ auto AccountRecord::toCpp(ObjcType obj) -> CppType
             ::djinni::String::toCpp(obj.label),
             ::djinni::String::toCpp(obj.state),
             ::djinni::String::toCpp(obj.type),
-            ::djinni::Bool::toCpp(obj.isHD)};
+            ::djinni::Bool::toCpp(obj.isHD),
+            ::djinni::List<::djinni::String>::toCpp(obj.accountLinks)};
 }
 
 auto AccountRecord::fromCpp(const CppType& cpp) -> ObjcType
@@ -23,7 +24,8 @@ auto AccountRecord::fromCpp(const CppType& cpp) -> ObjcType
                                            label:(::djinni::String::fromCpp(cpp.label))
                                            state:(::djinni::String::fromCpp(cpp.state))
                                             type:(::djinni::String::fromCpp(cpp.type))
-                                            isHD:(::djinni::Bool::fromCpp(cpp.isHD))];
+                                            isHD:(::djinni::Bool::fromCpp(cpp.isHD))
+                                    accountLinks:(::djinni::List<::djinni::String>::fromCpp(cpp.accountLinks))];
 }
 
 }  // namespace djinni_generated

@@ -207,6 +207,10 @@ public:
     //! write the account label
     bool WriteAccountLabel(const std::string& strUUID, const std::string& strLabel);
     bool EraseAccountLabel(const std::string& strUUID);
+    
+    //! write the account links
+    bool WriteAccountLinks(const std::string& strUUID, const std::set<std::string>& accountLinks);
+    bool EraseAccountLinks(const std::string& strUUID);
 
     //! Write the account compounding amount settings; used only by witness accounts, controls whether the account should compound earnings or pay them to an external address.
     bool WriteAccountCompoundingSettings(const std::string& strUUID, const CAmount compoundAmount);

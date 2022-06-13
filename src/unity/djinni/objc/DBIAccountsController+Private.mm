@@ -166,6 +166,31 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
++ (BOOL)addAccountLink:(nonnull NSString *)accountUUID
+           serviceName:(nonnull NSString *)serviceName {
+    try {
+        auto objcpp_result_ = ::IAccountsController::addAccountLink(::djinni::String::toCpp(accountUUID),
+                                                                    ::djinni::String::toCpp(serviceName));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (BOOL)removeAccountLink:(nonnull NSString *)accountUUID
+              serviceName:(nonnull NSString *)serviceName {
+    try {
+        auto objcpp_result_ = ::IAccountsController::removeAccountLink(::djinni::String::toCpp(accountUUID),
+                                                                       ::djinni::String::toCpp(serviceName));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull NSArray<NSString *> *)listAccountLinks:(nonnull NSString *)accountUUID {
+    try {
+        auto objcpp_result_ = ::IAccountsController::listAccountLinks(::djinni::String::toCpp(accountUUID));
+        return ::djinni::List<::djinni::String>::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 namespace djinni_generated {
 
 auto IAccountsController::toCpp(ObjcType objc) -> CppType

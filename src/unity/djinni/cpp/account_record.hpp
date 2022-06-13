@@ -5,6 +5,7 @@
 
 #include <string>
 #include <utility>
+#include <vector>
 
 struct AccountRecord final {
     std::string UUID;
@@ -13,16 +14,20 @@ struct AccountRecord final {
     std::string type;
     /**Is this account 'HD' (i.e. part of what can be recovered from a recovery phrase) */
     bool isHD;
+    /**Has this account been linked to any other services/wallets; if so which (list will contain names) */
+    std::vector<std::string> accountLinks;
 
     AccountRecord(std::string UUID_,
                   std::string label_,
                   std::string state_,
                   std::string type_,
-                  bool isHD_)
+                  bool isHD_,
+                  std::vector<std::string> accountLinks_)
     : UUID(std::move(UUID_))
     , label(std::move(label_))
     , state(std::move(state_))
     , type(std::move(type_))
     , isHD(std::move(isHD_))
+    , accountLinks(std::move(accountLinks_))
     {}
 };

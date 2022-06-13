@@ -2037,6 +2037,84 @@ class LibUnity {
       }
     });
 
+    ipc.answerRenderer("NJSIAccountsController.addAccountLinkAsync", async data => {
+      console.log(`IPC: accountsController.addAccountLinkAsync(${data.accountUUID}, ${data.serviceName})`);
+      try {
+        let result = this.accountsController.addAccountLink(data.accountUUID, data.serviceName);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIAccountsController.addAccountLink", (event, accountUUID, serviceName) => {
+      console.log(`IPC: accountsController.addAccountLink(${accountUUID}, ${serviceName})`);
+      try {
+        let result = this.accountsController.addAccountLink(accountUUID, serviceName);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIAccountsController.removeAccountLinkAsync", async data => {
+      console.log(`IPC: accountsController.removeAccountLinkAsync(${data.accountUUID}, ${data.serviceName})`);
+      try {
+        let result = this.accountsController.removeAccountLink(data.accountUUID, data.serviceName);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIAccountsController.removeAccountLink", (event, accountUUID, serviceName) => {
+      console.log(`IPC: accountsController.removeAccountLink(${accountUUID}, ${serviceName})`);
+      try {
+        let result = this.accountsController.removeAccountLink(accountUUID, serviceName);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIAccountsController.listAccountLinksAsync", async data => {
+      console.log(`IPC: accountsController.listAccountLinksAsync(${data.accountUUID})`);
+      try {
+        let result = this.accountsController.listAccountLinks(data.accountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIAccountsController.listAccountLinks", (event, accountUUID) => {
+      console.log(`IPC: accountsController.listAccountLinks(${accountUUID})`);
+      try {
+        let result = this.accountsController.listAccountLinks(accountUUID);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
     // Register NJSIWitnessController ipc handlers
     ipc.answerRenderer("NJSIWitnessController.getNetworkLimitsAsync", async () => {
       console.log(`IPC: witnessController.getNetworkLimitsAsync()`);

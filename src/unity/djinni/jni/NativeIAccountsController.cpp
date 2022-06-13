@@ -188,4 +188,33 @@ CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IAccountsControl
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT jboolean JNICALL Java_unity_1wallet_jniunifiedbackend_IAccountsController_00024CppProxy_addAccountLink(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID, jstring j_serviceName)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::addAccountLink(::djinni::String::toCpp(jniEnv, j_accountUUID),
+                                                       ::djinni::String::toCpp(jniEnv, j_serviceName));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jboolean JNICALL Java_unity_1wallet_jniunifiedbackend_IAccountsController_00024CppProxy_removeAccountLink(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID, jstring j_serviceName)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::removeAccountLink(::djinni::String::toCpp(jniEnv, j_accountUUID),
+                                                          ::djinni::String::toCpp(jniEnv, j_serviceName));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IAccountsController_00024CppProxy_listAccountLinks(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IAccountsController::listAccountLinks(::djinni::String::toCpp(jniEnv, j_accountUUID));
+        return ::djinni::release(::djinni::List<::djinni::String>::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 }  // namespace djinni_generated

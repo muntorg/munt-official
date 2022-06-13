@@ -92,5 +92,14 @@ private:
     /** Check balance for all accounts, returns a map of account_uuid->balance_record */
     Napi::Value getAllAccountBalances(const Napi::CallbackInfo& info);
 
+    /**Register with wallet that this account has been "linked" with an external service (e.g. to host holding key) */
+    Napi::Value addAccountLink(const Napi::CallbackInfo& info);
+
+    /**Register with wallet to remove an existing link */
+    Napi::Value removeAccountLink(const Napi::CallbackInfo& info);
+
+    /**List all active account links that we have previously registered */
+    Napi::Value listAccountLinks(const Napi::CallbackInfo& info);
+
 };
 #endif //DJINNI_GENERATED_NJSIACCOUNTSCONTROLLER_HPP

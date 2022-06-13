@@ -25,12 +25,13 @@ private:
     friend ::djinni::JniClass<NativeAccountRecord>;
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/AccountRecord") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/util/ArrayList;)V") };
     const jfieldID field_mUUID { ::djinni::jniGetFieldID(clazz.get(), "mUUID", "Ljava/lang/String;") };
     const jfieldID field_mLabel { ::djinni::jniGetFieldID(clazz.get(), "mLabel", "Ljava/lang/String;") };
     const jfieldID field_mState { ::djinni::jniGetFieldID(clazz.get(), "mState", "Ljava/lang/String;") };
     const jfieldID field_mType { ::djinni::jniGetFieldID(clazz.get(), "mType", "Ljava/lang/String;") };
     const jfieldID field_mIsHD { ::djinni::jniGetFieldID(clazz.get(), "mIsHD", "Z") };
+    const jfieldID field_mAccountLinks { ::djinni::jniGetFieldID(clazz.get(), "mAccountLinks", "Ljava/util/ArrayList;") };
 };
 
 }  // namespace djinni_generated

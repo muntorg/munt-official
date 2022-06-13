@@ -63,6 +63,14 @@ Napi::Value NJSIAccountsController::listAccounts(const Napi::CallbackInfo& info)
             arg_0_elem.Set("type", arg_0_elem_4);
             auto arg_0_elem_5 = Napi::Value::From(env, result[arg_0_id].isHD);
             arg_0_elem.Set("isHD", arg_0_elem_5);
+            auto arg_0_elem_6 = Napi::Array::New(env);
+            for(size_t arg_0_elem_6_id = 0; arg_0_elem_6_id < result[arg_0_id].accountLinks.size(); arg_0_elem_6_id++)
+            {
+                auto arg_0_elem_6_elem = Napi::String::New(env, result[arg_0_id].accountLinks[arg_0_elem_6_id]);
+                arg_0_elem_6.Set((int)arg_0_elem_6_id,arg_0_elem_6_elem);
+            }
+
+            arg_0_elem.Set("accountLinks", arg_0_elem_6);
 
             arg_0.Set((int)arg_0_id,arg_0_elem);
         }
@@ -757,6 +765,113 @@ Napi::Value NJSIAccountsController::getAllAccountBalances(const Napi::CallbackIn
         return Napi::Value();
     }
 }
+Napi::Value NJSIAccountsController::addAccountLink(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 2)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::addAccountLink needs 2 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+    std::string arg_1 = info[1].As<Napi::String>();
+
+    try
+    {
+        auto result = IAccountsController::addAccountLink(arg_0,arg_1);
+
+        //Wrap result in node object
+        auto arg_2 = Napi::Value::From(env, result);
+
+        return arg_2;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+}
+Napi::Value NJSIAccountsController::removeAccountLink(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 2)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::removeAccountLink needs 2 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+    std::string arg_1 = info[1].As<Napi::String>();
+
+    try
+    {
+        auto result = IAccountsController::removeAccountLink(arg_0,arg_1);
+
+        //Wrap result in node object
+        auto arg_2 = Napi::Value::From(env, result);
+
+        return arg_2;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+}
+Napi::Value NJSIAccountsController::listAccountLinks(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 1)
+    {
+        Napi::Error::New(env, "NJSIAccountsController::listAccountLinks needs 1 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+
+    try
+    {
+        auto result = IAccountsController::listAccountLinks(arg_0);
+
+        //Wrap result in node object
+        auto arg_1 = Napi::Array::New(env);
+        for(size_t arg_1_id = 0; arg_1_id < result.size(); arg_1_id++)
+        {
+            auto arg_1_elem = Napi::String::New(env, result[arg_1_id]);
+            arg_1.Set((int)arg_1_id,arg_1_elem);
+        }
+
+
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+}
 
 Napi::FunctionReference NJSIAccountsController::constructor;
 
@@ -782,6 +897,9 @@ Napi::Object NJSIAccountsController::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("getActiveAccountBalance", &NJSIAccountsController::getActiveAccountBalance),
     InstanceMethod("getAccountBalance", &NJSIAccountsController::getAccountBalance),
     InstanceMethod("getAllAccountBalances", &NJSIAccountsController::getAllAccountBalances),
+    InstanceMethod("addAccountLink", &NJSIAccountsController::addAccountLink),
+    InstanceMethod("removeAccountLink", &NJSIAccountsController::removeAccountLink),
+    InstanceMethod("listAccountLinks", &NJSIAccountsController::listAccountLinks),
     });
     // Create a peristent reference to the class constructor. This will allow a function called on a class prototype and a function called on instance of a class to be distinguished from each other.
     constructor = Napi::Persistent(func);
