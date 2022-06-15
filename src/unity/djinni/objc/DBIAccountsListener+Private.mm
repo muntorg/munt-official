@@ -3,6 +3,7 @@
 
 #import "DBIAccountsListener+Private.h"
 #import "DBIAccountsListener.h"
+#import "DBAccountRecord+Private.h"
 #import "DJIMarshal+Private.h"
 #import "DJIObjcWrapperCache+Private.h"
 #include <stdexcept>
@@ -48,6 +49,13 @@ public:
     {
         @autoreleasepool {
             [djinni_private_get_proxied_objc_object() onAccountDeleted:(::djinni::String::fromCpp(c_accountUUID))];
+        }
+    }
+    void onAccountModified(const std::string & c_accountUUID, const ::AccountRecord & c_accountData) override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() onAccountModified:(::djinni::String::fromCpp(c_accountUUID))
+                                                            accountData:(::djinni_generated::AccountRecord::fromCpp(c_accountData))];
         }
     }
 };

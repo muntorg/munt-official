@@ -5,6 +5,8 @@
 
 #include <string>
 
+struct AccountRecord;
+
 /** Interface to receive updates about accounts */
 #ifdef DJINNI_NODEJS
 #include "NJSIAccountsListener.hpp" 
@@ -29,5 +31,8 @@ public:
 
     /** Notify that an account has been deleted */
     virtual void onAccountDeleted(const std::string & accountUUID) = 0;
+
+    /** Notify that an account has been modified */
+    virtual void onAccountModified(const std::string & accountUUID, const AccountRecord & accountData) = 0;
 };
 #endif

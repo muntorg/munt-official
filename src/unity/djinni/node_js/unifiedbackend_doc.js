@@ -361,6 +361,8 @@ declare class NJSIAccountsListener
     declare function onAccountAdded(accountUUID: string, accountName: string);
     /** Notify that an account has been deleted */
     declare function onAccountDeleted(accountUUID: string);
+    /** Notify that an account has been modified */
+    declare function onAccountModified(accountUUID: string, accountData: AccountRecord);
 }
 /** C++ interface to control witness accounts */
 declare class NJSIWitnessController

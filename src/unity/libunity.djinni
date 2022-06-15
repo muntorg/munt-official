@@ -571,6 +571,8 @@ i_accounts_listener = interface +j +o +n {
     onAccountAdded(accountUUID : string, accountName : string) : &;
     # Notify that an account has been deleted
     onAccountDeleted(accountUUID : string) : &;
+    # Notify that an account has been modified
+    onAccountModified(accountUUID : string, accountData : account_record) : &;
 }
 
 witness_estimate_info_record = record {

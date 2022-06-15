@@ -5,6 +5,7 @@
 #define DJINNI_GENERATED_NJSIACCOUNTSLISTENER_HPP
 
 
+#include "account_record.hpp"
 #include <string>
 
 #include <napi.h>
@@ -35,6 +36,9 @@ public:
     /** Notify that an account has been deleted */
     void onAccountDeleted(const std::string & accountUUID);
 
+    /** Notify that an account has been modified */
+    void onAccountModified(const std::string & accountUUID, const AccountRecord & accountData);
+
 private:
     /** Notify that the active account has changed */
     void onActiveAccountChanged(const Napi::CallbackInfo& info);
@@ -55,6 +59,10 @@ private:
     /** Notify that an account has been deleted */
     void onAccountDeleted(const Napi::CallbackInfo& info);
     void onAccountDeleted_aimpl__(const std::string & accountUUID);
+
+    /** Notify that an account has been modified */
+    void onAccountModified(const Napi::CallbackInfo& info);
+    void onAccountModified_aimpl__(const std::string & accountUUID, const AccountRecord & accountData);
 
 };
 #endif //DJINNI_GENERATED_NJSIACCOUNTSLISTENER_HPP

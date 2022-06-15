@@ -3,6 +3,7 @@
 
 #include "NativeIAccountsListener.hpp"  // my header
 #include "Marshal.hpp"
+#include "NativeAccountRecord.hpp"
 
 namespace djinni_generated {
 
@@ -54,6 +55,15 @@ void NativeIAccountsListener::JavaProxy::onAccountDeleted(const std::string & c_
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeIAccountsListener>::get();
     jniEnv->CallVoidMethod(Handle::get().get(), data.method_onAccountDeleted,
                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c_accountUUID)));
+    ::djinni::jniExceptionCheck(jniEnv);
+}
+void NativeIAccountsListener::JavaProxy::onAccountModified(const std::string & c_accountUUID, const ::AccountRecord & c_accountData) {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeIAccountsListener>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_onAccountModified,
+                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c_accountUUID)),
+                           ::djinni::get(::djinni_generated::NativeAccountRecord::fromCpp(jniEnv, c_accountData)));
     ::djinni::jniExceptionCheck(jniEnv);
 }
 

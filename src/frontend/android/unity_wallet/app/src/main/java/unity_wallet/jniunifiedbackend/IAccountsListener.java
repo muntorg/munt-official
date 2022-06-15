@@ -19,4 +19,7 @@ public abstract class IAccountsListener {
 
     /** Notify that an account has been deleted */
     public abstract void onAccountDeleted(String accountUUID);
+
+    /** Notify that an account has been modified */
+    public abstract void onAccountModified(String accountUUID, AccountRecord accountData);
 }

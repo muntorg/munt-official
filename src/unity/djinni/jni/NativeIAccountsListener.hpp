@@ -38,6 +38,7 @@ private:
         void onAccountNameChanged(const std::string & accountUUID, const std::string & newAccountName) override;
         void onAccountAdded(const std::string & accountUUID, const std::string & accountName) override;
         void onAccountDeleted(const std::string & accountUUID) override;
+        void onAccountModified(const std::string & accountUUID, const ::AccountRecord & accountData) override;
 
     private:
         friend ::djinni::JniInterface<::IAccountsListener, ::djinni_generated::NativeIAccountsListener>;
@@ -49,6 +50,7 @@ private:
     const jmethodID method_onAccountNameChanged { ::djinni::jniGetMethodID(clazz.get(), "onAccountNameChanged", "(Ljava/lang/String;Ljava/lang/String;)V") };
     const jmethodID method_onAccountAdded { ::djinni::jniGetMethodID(clazz.get(), "onAccountAdded", "(Ljava/lang/String;Ljava/lang/String;)V") };
     const jmethodID method_onAccountDeleted { ::djinni::jniGetMethodID(clazz.get(), "onAccountDeleted", "(Ljava/lang/String;)V") };
+    const jmethodID method_onAccountModified { ::djinni::jniGetMethodID(clazz.get(), "onAccountModified", "(Ljava/lang/String;Lunity_wallet/jniunifiedbackend/AccountRecord;)V") };
 };
 
 }  // namespace djinni_generated
