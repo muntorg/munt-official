@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include "diff_common.h"
 
-const int32_t nMaxHeight = 1568201;
+const int32_t nMaxHeight = 1605366;
 const int32_t nDiffArraySize = nMaxHeight + 1;
 const int32_t udiff[nDiffArraySize] = {
  #include "../data/static_diff_data.cpp"
