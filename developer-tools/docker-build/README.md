@@ -1,6 +1,6 @@
 # Docker image to compile the Gulden binaries
 
-The build is for test and development purposes, the official binaries are build with Gitian and not this image.
+The build is for test and development purposes, the official binaries are build with guix and not this image.
 
 This image closely matches the [Travis build](https://travis-ci.org/Gulden/gulden-official/)
 
