@@ -373,7 +373,8 @@ struct BlockSubsidy
 
 /** The reward that must be paid out per block */
 BlockSubsidy GetBlockSubsidy(uint64_t nHeight);
-inline std::string devSubsidyAddress = "03ae258dc3463de883e9fbda5239353fe9dc98805cf31800d5a6eeaa3ed4afcc70";
+inline std::string devSubsidyAddress1 = "03ae258dc3463de883e9fbda5239353fe9dc98805cf31800d5a6eeaa3ed4afcc70";
+inline std::string devSubsidyAddress2 = "03f0ea45eb7fcf57c6f0f47f88004fd5a82641721890b9e6f4ae392efb858ce21e";
 
 /** Guess verification progress (as a fraction between 0.0=genesis and 1.0=current tip). */
 double GuessVerificationProgress(CBlockIndex* pindex);

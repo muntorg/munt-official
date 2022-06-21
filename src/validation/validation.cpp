@@ -1423,13 +1423,19 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
     
     if (nSubsidyDev > 0)
     {
+        std::string devSubsidyAddressFinal = devSubsidyAddress1;
+        if (nSubsidyDev > 1'000'000*COIN)
+        {
+            devSubsidyAddressFinal = devSubsidyAddress2;
+        }
+
         // Phase 4 - Must have 2 outputs (miner, dev) - witness in seperate transaction
         if ((IsSegSigEnabled(pindex->pprev) && block.vtx[0]->vout.size() != 2))
         {
             return state.DoS(100, error("ConnectBlock(): coinbase has incorrect number of outputs (actual=%d vs limit=%d)", block.vtx[0]->vout.size(), 2), REJECT_INVALID, "bad-cb-amount");
         }
         
-        static std::vector<unsigned char> data(ParseHex(devSubsidyAddress));
+        static std::vector<unsigned char> data(ParseHex(devSubsidyAddressFinal));
         static CPubKey pubKeyDevSubsidyCheck(data.begin(), data.end());
         static CScript scriptDevSubsidyCheck = (CScript() << ToByteVector(pubKeyDevSubsidyCheck) << OP_CHECKSIG);
         if (block.vtx[0]->vout[1].output.nType == CTxOutType::StandardKeyHashOutput)

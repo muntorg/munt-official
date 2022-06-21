@@ -449,7 +449,12 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
     
     if (nSubsidyDev > 0)
     {
-        std::vector<unsigned char> data(ParseHex(devSubsidyAddress));
+        std::string devSubsidyAddressFinal = devSubsidyAddress1;
+        if (nSubsidyDev > 1'000'000*COIN)
+        {
+            devSubsidyAddressFinal = devSubsidyAddress2;
+        }
+        std::vector<unsigned char> data(ParseHex(devSubsidyAddressFinal));
         CPubKey addressPubKey(data.begin(), data.end());
         if (bSegSigIsEnabled)
         {
