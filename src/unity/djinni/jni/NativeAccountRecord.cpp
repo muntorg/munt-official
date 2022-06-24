@@ -3,6 +3,7 @@
 
 #include "NativeAccountRecord.hpp"  // my header
 #include "Marshal.hpp"
+#include "NativeAccountLinkRecord.hpp"
 
 namespace djinni_generated {
 
@@ -18,7 +19,7 @@ auto NativeAccountRecord::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::djinni:
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.state)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.type)),
                                                            ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.isHD)),
-                                                           ::djinni::get(::djinni::List<::djinni::String>::fromCpp(jniEnv, c.accountLinks)))};
+                                                           ::djinni::get(::djinni::List<::djinni_generated::NativeAccountLinkRecord>::fromCpp(jniEnv, c.accountLinks)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
 }
@@ -32,7 +33,7 @@ auto NativeAccountRecord::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mState)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mType)),
             ::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_mIsHD)),
-            ::djinni::List<::djinni::String>::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_mAccountLinks))};
+            ::djinni::List<::djinni_generated::NativeAccountLinkRecord>::toCpp(jniEnv, jniEnv->GetObjectField(j, data.field_mAccountLinks))};
 }
 
 }  // namespace djinni_generated

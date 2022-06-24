@@ -66,7 +66,12 @@ Napi::Value NJSIAccountsController::listAccounts(const Napi::CallbackInfo& info)
             auto arg_0_elem_6 = Napi::Array::New(env);
             for(size_t arg_0_elem_6_id = 0; arg_0_elem_6_id < result[arg_0_id].accountLinks.size(); arg_0_elem_6_id++)
             {
-                auto arg_0_elem_6_elem = Napi::String::New(env, result[arg_0_id].accountLinks[arg_0_elem_6_id]);
+                auto arg_0_elem_6_elem = Napi::Object::New(env);
+                auto arg_0_elem_6_elem_1 = Napi::String::New(env, result[arg_0_id].accountLinks[arg_0_elem_6_id].serviceName);
+                arg_0_elem_6_elem.Set("serviceName", arg_0_elem_6_elem_1);
+                auto arg_0_elem_6_elem_2 = Napi::String::New(env, result[arg_0_id].accountLinks[arg_0_elem_6_id].serviceData);
+                arg_0_elem_6_elem.Set("serviceData", arg_0_elem_6_elem_2);
+
                 arg_0_elem_6.Set((int)arg_0_elem_6_id,arg_0_elem_6_elem);
             }
 
@@ -770,23 +775,24 @@ Napi::Value NJSIAccountsController::addAccountLink(const Napi::CallbackInfo& inf
 
 
     //Check if method called with right number of arguments
-    if(info.Length() != 2)
+    if(info.Length() != 3)
     {
-        Napi::Error::New(env, "NJSIAccountsController::addAccountLink needs 2 arguments").ThrowAsJavaScriptException();
+        Napi::Error::New(env, "NJSIAccountsController::addAccountLink needs 3 arguments").ThrowAsJavaScriptException();
     }
 
     //Check if parameters have correct types
     std::string arg_0 = info[0].As<Napi::String>();
     std::string arg_1 = info[1].As<Napi::String>();
+    std::string arg_2 = info[2].As<Napi::String>();
 
     try
     {
-        auto result = IAccountsController::addAccountLink(arg_0,arg_1);
+        auto result = IAccountsController::addAccountLink(arg_0,arg_1,arg_2);
 
         //Wrap result in node object
-        auto arg_2 = Napi::Value::From(env, result);
+        auto arg_3 = Napi::Value::From(env, result);
 
-        return arg_2;
+        return arg_3;
     }
     catch (std::exception& e)
     {
@@ -854,7 +860,12 @@ Napi::Value NJSIAccountsController::listAccountLinks(const Napi::CallbackInfo& i
         auto arg_1 = Napi::Array::New(env);
         for(size_t arg_1_id = 0; arg_1_id < result.size(); arg_1_id++)
         {
-            auto arg_1_elem = Napi::String::New(env, result[arg_1_id]);
+            auto arg_1_elem = Napi::Object::New(env);
+            auto arg_1_elem_1 = Napi::String::New(env, result[arg_1_id].serviceName);
+            arg_1_elem.Set("serviceName", arg_1_elem_1);
+            auto arg_1_elem_2 = Napi::String::New(env, result[arg_1_id].serviceData);
+            arg_1_elem.Set("serviceData", arg_1_elem_2);
+
             arg_1.Set((int)arg_1_id,arg_1_elem);
         }
 

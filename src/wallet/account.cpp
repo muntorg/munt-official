@@ -1168,9 +1168,9 @@ void CAccount::setLabel(const std::string& label, CWalletDB* Db)
     }
 }
 
-void CAccount::addLink(const std::string& serviceName, CWalletDB* Db)
+void CAccount::addLink(const std::string& serviceName, const std::string& serviceData, CWalletDB* Db)
 {
-    accountLinks.insert(serviceName);
+    accountLinks[serviceName] = serviceData;
     if (accountLinks.count(serviceName) == 0)
     {
         if (Db)
@@ -1187,9 +1187,9 @@ void CAccount::addLink(const std::string& serviceName, CWalletDB* Db)
 
 void CAccount::removeLink(const std::string& serviceName, CWalletDB* Db)
 {
-    if (accountLinks.count(serviceName) > 0)
+    if (accountLinks.find(serviceName) != accountLinks.end())
     {
-        accountLinks.erase(serviceName);
+        accountLinks.erase(accountLinks.find(serviceName));
         if (Db)
         {
             Db->EraseAccountLinks(getUUIDAsString(getUUID()));
@@ -1202,12 +1202,12 @@ void CAccount::removeLink(const std::string& serviceName, CWalletDB* Db)
     }
 }
 
-std::set<std::string> CAccount::getLinks() const
+std::map<std::string, std::string> CAccount::getLinks() const
 {
     return accountLinks;
 }
 
-void CAccount::loadLinks(std::set<std::string>& accountLinks_)
+void CAccount::loadLinks(std::map<std::string, std::string>& accountLinks_)
 {
     accountLinks = accountLinks_;
 }

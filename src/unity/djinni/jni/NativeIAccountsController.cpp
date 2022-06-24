@@ -3,6 +3,7 @@
 
 #include "NativeIAccountsController.hpp"  // my header
 #include "Marshal.hpp"
+#include "NativeAccountLinkRecord.hpp"
 #include "NativeAccountRecord.hpp"
 #include "NativeBalanceRecord.hpp"
 #include "NativeIAccountsListener.hpp"
@@ -188,12 +189,13 @@ CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IAccountsControl
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_unity_1wallet_jniunifiedbackend_IAccountsController_00024CppProxy_addAccountLink(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID, jstring j_serviceName)
+CJNIEXPORT jboolean JNICALL Java_unity_1wallet_jniunifiedbackend_IAccountsController_00024CppProxy_addAccountLink(JNIEnv* jniEnv, jobject /*this*/, jstring j_accountUUID, jstring j_serviceName, jstring j_data)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::IAccountsController::addAccountLink(::djinni::String::toCpp(jniEnv, j_accountUUID),
-                                                       ::djinni::String::toCpp(jniEnv, j_serviceName));
+                                                       ::djinni::String::toCpp(jniEnv, j_serviceName),
+                                                       ::djinni::String::toCpp(jniEnv, j_data));
         return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
@@ -213,7 +215,7 @@ CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IAccountsControl
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::IAccountsController::listAccountLinks(::djinni::String::toCpp(jniEnv, j_accountUUID));
-        return ::djinni::release(::djinni::List<::djinni::String>::fromCpp(jniEnv, r));
+        return ::djinni::release(::djinni::List<::djinni_generated::NativeAccountLinkRecord>::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 

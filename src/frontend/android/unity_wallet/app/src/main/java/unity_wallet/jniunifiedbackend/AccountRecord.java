@@ -18,7 +18,7 @@ public final class AccountRecord {
 
     /*package*/ final boolean mIsHD;
 
-    /*package*/ final ArrayList<String> mAccountLinks;
+    /*package*/ final ArrayList<AccountLinkRecord> mAccountLinks;
 
     public AccountRecord(
             String UUID,
@@ -26,7 +26,7 @@ public final class AccountRecord {
             String state,
             String type,
             boolean isHD,
-            ArrayList<String> accountLinks) {
+            ArrayList<AccountLinkRecord> accountLinks) {
         this.mUUID = UUID;
         this.mLabel = label;
         this.mState = state;
@@ -56,8 +56,8 @@ public final class AccountRecord {
         return mIsHD;
     }
 
-    /**Has this account been linked to any other services/wallets; if so which (list will contain names) */
-    public ArrayList<String> getAccountLinks() {
+    /**Has this account been linked to any other services/wallets; if so which see 'account_link_record' for more information */
+    public ArrayList<AccountLinkRecord> getAccountLinks() {
         return mAccountLinks;
     }
 

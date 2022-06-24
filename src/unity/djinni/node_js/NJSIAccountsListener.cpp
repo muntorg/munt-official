@@ -210,7 +210,12 @@ void NJSIAccountsListener::onAccountModified_aimpl__(const std::string & account
     auto arg_1_6 = Napi::Array::New(env);
     for(size_t arg_1_6_id = 0; arg_1_6_id < accountData.accountLinks.size(); arg_1_6_id++)
     {
-        auto arg_1_6_elem = Napi::String::New(env, accountData.accountLinks[arg_1_6_id]);
+        auto arg_1_6_elem = Napi::Object::New(env);
+        auto arg_1_6_elem_1 = Napi::String::New(env, accountData.accountLinks[arg_1_6_id].serviceName);
+        arg_1_6_elem.Set("serviceName", arg_1_6_elem_1);
+        auto arg_1_6_elem_2 = Napi::String::New(env, accountData.accountLinks[arg_1_6_id].serviceData);
+        arg_1_6_elem.Set("serviceData", arg_1_6_elem_2);
+
         arg_1_6.Set((int)arg_1_6_id,arg_1_6_elem);
     }
 

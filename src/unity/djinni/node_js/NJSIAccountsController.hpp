@@ -6,6 +6,7 @@
 
 
 #include "NJSIAccountsListener.hpp"
+#include "account_link_record.hpp"
 #include "account_record.hpp"
 #include "balance_record.hpp"
 #include "input_record.hpp"

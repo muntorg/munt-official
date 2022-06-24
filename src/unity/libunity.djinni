@@ -490,7 +490,15 @@ i_p2p_network_listener = interface +j +o +n {
     # Notify that amount of data sent/received has changed
     onBytesChanged(totalRecv : i32, totalSent : i32): &;
 }
-               
+
+#Data record representing a link between an account and an external service (e.g. Holdin.com)
+account_link_record = record {
+    # What service is it (each service should use a unique string to identify itself) 
+    serviceName : string;
+    # Any data unique to the service, e.g. a key used for secure communication or similar
+    serviceData : string;
+}
+
 account_record = record {
     UUID : string;
     label : string;
@@ -498,8 +506,8 @@ account_record = record {
     type : string;
     #Is this account 'HD' (i.e. part of what can be recovered from a recovery phrase)
     isHD : bool;
-    #Has this account been linked to any other services/wallets; if so which (list will contain names)
-    accountLinks : list<string>;
+    #Has this account been linked to any other services/wallets; if so which see 'account_link_record' for more information
+    accountLinks : list<account_link_record>;
 }
 
 # C++ interface to control accounts
@@ -552,11 +560,11 @@ i_accounts_controller = interface +c {
     static getAllAccountBalances(): map<string, balance_record>;
     
     #Register with wallet that this account has been "linked" with an external service (e.g. to host holding key)
-    static addAccountLink(accountUUID : string, serviceName : string) : bool;
+    static addAccountLink(accountUUID : string, serviceName : string, data : string) : bool;
     #Register with wallet to remove an existing link
     static removeAccountLink(accountUUID : string, serviceName : string) : bool;
     #List all active account links that we have previously registered
-    static listAccountLinks(accountUUID : string) : list<string>;
+    static listAccountLinks(accountUUID : string) : list<account_link_record>;
 }
 
 # Interface to receive updates about accounts

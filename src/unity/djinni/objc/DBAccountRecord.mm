@@ -11,7 +11,7 @@
                                state:(nonnull NSString *)state
                                 type:(nonnull NSString *)type
                                 isHD:(BOOL)isHD
-                        accountLinks:(nonnull NSArray<NSString *> *)accountLinks
+                        accountLinks:(nonnull NSArray<DBAccountLinkRecord *> *)accountLinks
 {
     if (self = [super init]) {
         _UUID = [UUID copy];
@@ -29,7 +29,7 @@
                                         state:(nonnull NSString *)state
                                          type:(nonnull NSString *)type
                                          isHD:(BOOL)isHD
-                                 accountLinks:(nonnull NSArray<NSString *> *)accountLinks
+                                 accountLinks:(nonnull NSArray<DBAccountLinkRecord *> *)accountLinks
 {
     return [(DBAccountRecord*)[self alloc] initWithUUID:UUID
                                                   label:label

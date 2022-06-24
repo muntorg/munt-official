@@ -13,6 +13,7 @@
 #else
 class IAccountsListener;
 #endif
+struct AccountLinkRecord;
 struct AccountRecord;
 struct BalanceRecord;
 struct MutationRecord;
@@ -85,11 +86,11 @@ public:
     static std::unordered_map<std::string, BalanceRecord> getAllAccountBalances();
 
     /**Register with wallet that this account has been "linked" with an external service (e.g. to host holding key) */
-    static bool addAccountLink(const std::string & accountUUID, const std::string & serviceName);
+    static bool addAccountLink(const std::string & accountUUID, const std::string & serviceName, const std::string & data);
 
     /**Register with wallet to remove an existing link */
     static bool removeAccountLink(const std::string & accountUUID, const std::string & serviceName);
 
     /**List all active account links that we have previously registered */
-    static std::vector<std::string> listAccountLinks(const std::string & accountUUID);
+    static std::vector<AccountLinkRecord> listAccountLinks(const std::string & accountUUID);
 };

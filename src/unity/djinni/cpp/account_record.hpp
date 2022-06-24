@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "account_link_record.hpp"
 #include <string>
 #include <utility>
 #include <vector>
@@ -14,15 +15,15 @@ struct AccountRecord final {
     std::string type;
     /**Is this account 'HD' (i.e. part of what can be recovered from a recovery phrase) */
     bool isHD;
-    /**Has this account been linked to any other services/wallets; if so which (list will contain names) */
-    std::vector<std::string> accountLinks;
+    /**Has this account been linked to any other services/wallets; if so which see 'account_link_record' for more information */
+    std::vector<AccountLinkRecord> accountLinks;
 
     AccountRecord(std::string UUID_,
                   std::string label_,
                   std::string state_,
                   std::string type_,
                   bool isHD_,
-                  std::vector<std::string> accountLinks_)
+                  std::vector<AccountLinkRecord> accountLinks_)
     : UUID(std::move(UUID_))
     , label(std::move(label_))
     , state(std::move(state_))

@@ -372,10 +372,10 @@ public:
     //! We store a database of "links" that have been established with other services, below functions manipulate this database
     //! e.g. a user may link his holding account with one or more cloud services
     //! NB! loadLinks is only for wallet load and should not be used elsewhere
-    void loadLinks(std::set<std::string>& accountLinks_);
-    void addLink(const std::string& serviceName, CWalletDB* Db);
+    void loadLinks(std::map<std::string, std::string>& accountLinks_);
+    void addLink(const std::string& serviceName, const std::string& serviceData, CWalletDB* Db);
     void removeLink(const std::string& serviceName, CWalletDB* Db);
-    std::set<std::string> getLinks() const;
+    std::map<std::string, std::string> getLinks() const;
 
     //! Sets whether a witness account should compound earnings or not.
     //! 0 sets compounding off.
@@ -430,7 +430,7 @@ protected:
     boost::uuids::uuid accountUUID;
     boost::uuids::uuid parentUUID;
     std::string accountLabel;
-    std::set<std::string> accountLinks;
+    std::map<std::string, std::string> accountLinks;
     CAmount compoundEarnings = 0;
     int32_t compoundEarningsPercent = std::numeric_limits<int32_t>::max();
     CScript nonCompoundRewardScript;

@@ -3,6 +3,7 @@
 
 #import "DBIAccountsController+Private.h"
 #import "DBIAccountsController.h"
+#import "DBAccountLinkRecord+Private.h"
 #import "DBAccountRecord+Private.h"
 #import "DBBalanceRecord+Private.h"
 #import "DBIAccountsListener+Private.h"
@@ -167,10 +168,12 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
 }
 
 + (BOOL)addAccountLink:(nonnull NSString *)accountUUID
-           serviceName:(nonnull NSString *)serviceName {
+           serviceName:(nonnull NSString *)serviceName
+                  data:(nonnull NSString *)data {
     try {
         auto objcpp_result_ = ::IAccountsController::addAccountLink(::djinni::String::toCpp(accountUUID),
-                                                                    ::djinni::String::toCpp(serviceName));
+                                                                    ::djinni::String::toCpp(serviceName),
+                                                                    ::djinni::String::toCpp(data));
         return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
@@ -184,10 +187,10 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-+ (nonnull NSArray<NSString *> *)listAccountLinks:(nonnull NSString *)accountUUID {
++ (nonnull NSArray<DBAccountLinkRecord *> *)listAccountLinks:(nonnull NSString *)accountUUID {
     try {
         auto objcpp_result_ = ::IAccountsController::listAccountLinks(::djinni::String::toCpp(accountUUID));
-        return ::djinni::List<::djinni::String>::fromCpp(objcpp_result_);
+        return ::djinni::List<::djinni_generated::AccountLinkRecord>::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

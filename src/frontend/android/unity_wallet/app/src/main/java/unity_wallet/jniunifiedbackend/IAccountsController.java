@@ -128,10 +128,11 @@ public abstract class IAccountsController {
     }
 
     /**Register with wallet that this account has been "linked" with an external service (e.g. to host holding key) */
-    public static boolean addAccountLink(String accountUUID, String serviceName)
+    public static boolean addAccountLink(String accountUUID, String serviceName, String data)
     {
         return CppProxy.addAccountLink(accountUUID,
-                                       serviceName);
+                                       serviceName,
+                                       data);
     }
 
     /**Register with wallet to remove an existing link */
@@ -142,7 +143,7 @@ public abstract class IAccountsController {
     }
 
     /**List all active account links that we have previously registered */
-    public static ArrayList<String> listAccountLinks(String accountUUID)
+    public static ArrayList<AccountLinkRecord> listAccountLinks(String accountUUID)
     {
         return CppProxy.listAccountLinks(accountUUID);
     }
@@ -206,10 +207,10 @@ public abstract class IAccountsController {
 
         public static native HashMap<String, BalanceRecord> getAllAccountBalances();
 
-        public static native boolean addAccountLink(String accountUUID, String serviceName);
+        public static native boolean addAccountLink(String accountUUID, String serviceName, String data);
 
         public static native boolean removeAccountLink(String accountUUID, String serviceName);
 
-        public static native ArrayList<String> listAccountLinks(String accountUUID);
+        public static native ArrayList<AccountLinkRecord> listAccountLinks(String accountUUID);
     }
 }

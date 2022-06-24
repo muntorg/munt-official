@@ -5,6 +5,7 @@
 #define DJINNI_GENERATED_NJSIACCOUNTSLISTENER_HPP
 
 
+#include "account_link_record.hpp"
 #include "account_record.hpp"
 #include <string>
 
