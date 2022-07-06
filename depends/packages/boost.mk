@@ -24,7 +24,7 @@ $(package)_toolset_darwin=clang-darwin
 $(package)_toolset_ios=darwin
 $(package)_archiver_$(host_os)=$($(package)_ar)
 $(package)_archiver_darwin=$($(package)_ar)
-$(package)_archiver_ios=$($(package)_libtool)
+$(package)_archiver_ios=libtool
 $(package)_config_libraries=chrono,filesystem,program_options,system,thread,test
 $(package)_cxxflags=-std=c++17
 $(package)_cxxflags_$(host_os)=-fvisibility=hidden

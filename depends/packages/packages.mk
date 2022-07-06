@@ -7,7 +7,7 @@ qrencode_mingw32_packages = qrencode
 
 ifneq ($(host_os),ios)
 ifneq ($(host_os),android)
-packages += libevent zeromq libcryptopp
+packages += libevent libcryptopp
 endif
 endif
 

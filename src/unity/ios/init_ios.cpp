@@ -6,6 +6,8 @@
 #include <boost/thread.hpp>
 #include "chain.h"
 #include "init.h"
+#include "node/context.h"
+
 
 #include "unity/djinni/cpp/legacy_wallet_result.hpp"
 #include "unity/djinni/cpp/i_library_controller.hpp"
@@ -40,7 +42,7 @@ void ServerShutdown(node::NodeContext& nodeContext)
 {
     // After everything has been shut down, but before things get flushed, stop the
     // CScheduler/checkqueue, scheduler and load block thread.
-    if (node.scheduler) node.scheduler->stop();
+    if (nodeContext.scheduler) nodeContext.scheduler->stop();
 }
 
 void InitRPCMining()

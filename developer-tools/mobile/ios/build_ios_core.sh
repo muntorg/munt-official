@@ -12,7 +12,7 @@ do
   source ${i}
 
   cd depends
-  make HOST=$target_host NO_QT=1 NO_UPNP=1 -j $NPROC
+  make HOST=$target_host NO_ZMQ=1 NO_QT=1 NO_UPNP=1 -j $NPROC
   cd ..
 
   mkdir -p build/${target_host}

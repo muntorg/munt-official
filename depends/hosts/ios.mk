@@ -27,3 +27,7 @@ ios_debug_CFLAGS=-O1
 ios_debug_CXXFLAGS=$(ios_debug_CFLAGS)
 
 ios_native_toolchain=
+
+
+ios_AR=ar
+ios_RANLIB=ranlib
