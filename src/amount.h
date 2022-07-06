@@ -18,12 +18,13 @@
 /** Amount in satoshis (Can be negative) */
 typedef int64_t CAmount;
 
-static const CAmount COIN =      100000000;
-static const CAmount CENT =      1000000;
-static const CAmount DECICENT =  100000;
-static const CAmount CENTICENT = 10000;
-static const CAmount MILLICENT = 1000;
-static const CAmount MICROCENT = 100;
+static const CAmount COIN          = 100000000;
+static const CAmount DECI          =  10000000;
+static const CAmount CENT          =   1000000;
+static const CAmount DECICENT      =    100000;
+static const CAmount CENTICENT     =     10000;
+static const CAmount MILLICENT     =      1000;
+static const CAmount MICROCOIN     =       100;
 
 
 /** No amount larger than this (in satoshi) is valid.

@@ -114,8 +114,9 @@ public:
         consensus.devBlockSubsidyActivationHeight=1030001;
         consensus.pow2Phase4FirstBlockHeight=1131652;
         consensus.pow2Phase5FirstBlockHeight=1140958;
-        consensus.pow2WitnessSyncHeight=1400000;
-        consensus.halvingIntroductionHeight=consensus.pow2WitnessSyncHeight;        
+        consensus.pow2WitnessSyncHeight=1'400'000;
+        consensus.halvingIntroductionHeight=consensus.pow2WitnessSyncHeight;     
+        consensus.finalSubsidyBlockHeight=433'009'988;
 
         // Message start string to avoid accidental cross communication with other chains or software.
         pchMessageStart[0] = 0xfc; // 'N' + 0xb0
@@ -318,7 +319,8 @@ public:
             {
                 consensus.pow2WitnessSyncHeight=10;
             }
-            consensus.halvingIntroductionHeight=consensus.pow2WitnessSyncHeight;            
+            consensus.halvingIntroductionHeight=consensus.pow2WitnessSyncHeight;       
+            consensus.finalSubsidyBlockHeight=17727500;
 
             numGenesisWitnesses = 10;
             genesisWitnessWeightDivisor = 100;
@@ -513,6 +515,7 @@ public:
         consensus.pow2Phase4FirstBlockHeight=0;
         consensus.pow2Phase5FirstBlockHeight=0;
         consensus.halvingIntroductionHeight=consensus.pow2WitnessSyncHeight;
+        consensus.finalSubsidyBlockHeight=17727500;
         numGenesisWitnesses = 10;
         genesisWitnessWeightDivisor = 100;
 

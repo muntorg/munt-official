@@ -26,6 +26,8 @@
 extern uint256 insecure_rand_seed;
 extern FastRandomContext insecure_rand_ctx;
 
+class CScheduler;
+
 static inline void SeedInsecureRand(bool fDeterministic = false)
 {
     if (fDeterministic) {
@@ -62,6 +64,8 @@ struct TestingSetup: public BasicTestingSetup {
     fs::path pathTemp;
     boost::thread_group threadGroup;
     CConnman* connman;
+    
+    CScheduler* nodeScheduler=nullptr;
 
     TestingSetup(const std::string& chainName = CBaseChainParams::MAIN);
     ~TestingSetup();

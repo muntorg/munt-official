@@ -289,7 +289,7 @@ mkdir -p "$DISTSRC"
             export HOST_LDFLAGS="${HOST_LDFLAGS} -fPIC -Bsymbolic -lnode -Wl,--gc-sections"
         ;;
         *)
-            export HOST_CXXFLAGS="${HOST_CXXFLAGS} -I/gulden/depends/${HOST}/include/node -I/gulden/depends/${HOST}/include/node-addon-api -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS"
+            export HOST_CXXFLAGS="${HOST_CXXFLAGS} -I/gulden/depends/${HOST}/include/node -I/gulden/depends/${HOST}/include/node-addon-api -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS -lminiupnpc"
             export HOST_LDFLAGS="${HOST_LDFLAGS} -fPIC -Bsymbolic -Wl,--gc-sections"
     esac
     export HOST_CFLAGS=${HOST_CFLAGS}

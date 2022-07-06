@@ -85,6 +85,7 @@ struct Params {
     uint64_t pow2Phase5FirstBlockHeight;
     uint64_t pow2WitnessSyncHeight;
     uint64_t halvingIntroductionHeight;
+    uint64_t finalSubsidyBlockHeight;
     
     /** Proof of work parameters */
     uint256 powLimit;

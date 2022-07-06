@@ -1,3 +1,47 @@
+2.5.0
+
+Introduce reward changes
+    
+At block 1'619'997 chain forks and per block dev reward is removed, with a once off dev payment of 100'000'000 NLG paid into address GSTG9pQ6yRdGurmjUDGwm8FyYc272vP13b
+    
+To keep the eventual supply at exactly 700'000'000 other small changes are then made:
+    * First halving is brought forward to block 2'074'989
+    * We slightly alter the rounding of each halving step to give cleaner numbers
+    * We continue halving for more rounds all the way down to 0.00000001 reward
+    * Final reward amount continues until block 433'009'989 with the 12.2709 NLG for this period being slowly paid out over a very very long period
+
+Halving schedule as follows (every four years):
+    5 mining,          7.5 witness
+    2 mining,          4 witness
+    1 mining,          2 witness
+    0.5 mining,        1 witness
+    0.2 mining,        0.5 witness
+    0.1 mining,        0.2 witness
+    0.05 mining,       0.1 witness
+    0.02 mining,       0.05 witness
+    0.01 mining,       0.02 witness
+    0.005 mining,      0.01 witness
+    0.002 mining,      0.005 witness
+    0.001 mining,      0.002 witness
+    0.0005 mining,     0.001 witness
+    0.0002 mining,     0.0005 witness
+    0.0001 mining,     0.0002 witness
+    0.00005 mining,    0.0001 witness
+    0.00002 mining,    0.00005 witness
+    0.00001 mining,    0.00002 witness
+    0.000005 mining,   0.00001 witness
+    0.000002 mining,   0.000005 witness
+    0.000001 mining,   0.000002 witness
+    0.0000005 mining,  0.000001 witness
+    0.0000002 mining,  0.0000005 witness
+    0.0000001 mining,  0.0000002 witness
+    0.00000005 mining, 0.0000001 witness
+    0.00000002 mining, 0.00000005 witness
+    0.00000001 mining, 0.00000002 witness (Stays here until completion - block 433'009'989)
+
+
+
+
 2.4.11
 
 This build aims to be the final 2.4.x series release after issues were found that prevented 2.4.8 from being so.
