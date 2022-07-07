@@ -13,6 +13,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.gulden.barcodereader.BarcodeCaptureActivity
 import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.unity_wallet.*
@@ -20,9 +22,6 @@ import com.gulden.unity_wallet.util.invokeNowOrOnSuccessfulCompletion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import org.jetbrains.anko.contentView
-import org.jetbrains.anko.design.snackbar
-import org.jetbrains.anko.support.v4.alert
 import kotlin.coroutines.CoroutineContext
 
 
@@ -55,7 +54,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
         (activity as WalletActivity).hideSettingsTitle()
     }
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
         when (preference?.key) {
             "preference_link_wallet" -> {
                 val intent = Intent(context, BarcodeCaptureActivity::class.java)
@@ -77,15 +76,15 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
                 }
             }
             "preference_rescan_wallet" -> {
-                alert(getString(R.string.rescan_confirm_msg), getString(R.string.rescan_confirm_title)) {
-
-                    // on confirmation compose recipient and execute payment
-                    positiveButton(getString(R.string.rescan_confirm_btn)) {
-                        ILibraryController.DoRescan()
-                        activity?.contentView?.snackbar(getString(R.string.rescan_started))
-                    }
-                    negativeButton(getString(R.string.cancel_btn)) {}
-                }.show()
+                val dialog = MaterialAlertDialogBuilder(context!!)
+                        .setTitle(getString(R.string.rescan_confirm_title))
+                        .setMessage(getString(R.string.rescan_confirm_msg))
+                        .setPositiveButton(getString(R.string.rescan_confirm_btn)) { dialogInterface: DialogInterface, i: Int ->
+                            ILibraryController.DoRescan()
+                            Snackbar.make(requireView(), getString(R.string.rescan_started), Snackbar.LENGTH_LONG).show()
+                        }
+                        .setNegativeButton(getString(R.string.cancel_btn)) { dialogInterface: DialogInterface, i: Int -> }
+                        .show()
             }
             "preference_remove_wallet", "preference_unlink_wallet" -> {
                 val msg = "%s%s".format(

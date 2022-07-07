@@ -21,9 +21,6 @@ import kotlinx.android.synthetic.main.content_transaction_info.*
 import kotlinx.android.synthetic.main.transaction_info_item.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.sdk27.coroutines.onClick
-import org.jetbrains.anko.textAppearance
-import org.jetbrains.anko.textColor
 
 class TransactionInfoActivity : AppBaseActivity() {
 
@@ -47,7 +44,7 @@ class TransactionInfoActivity : AppBaseActivity() {
             transactionId.text = tx.txHash
 
             // view transaction in browser
-            transactionId.onClick {
+            transactionId.setOnClickListener() {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Config.BLOCK_EXPLORER_TX_TEMPLATE.format(tx.txHash)))
                 startActivity(intent)
             }
@@ -66,7 +63,7 @@ class TransactionInfoActivity : AppBaseActivity() {
                     v.address.text = output.address
                 else {
                     v.address.text = getString(R.string.tx_detail_address_unavailable)
-                    v.address.textAppearance = R.style.TxDetailMissing
+                    v.address.setTextAppearance(R.style.TxDetailMissing)
                 }
                 if (output.isMine)
                     v.subscript.text = getString(R.string.tx_detail_wallet_address)
@@ -100,7 +97,7 @@ class TransactionInfoActivity : AppBaseActivity() {
                         val v = layoutInflater.inflate(R.layout.transaction_info_item, null)
                         v.address.text = output.address
                         v.subscript.text = getString(R.string.tx_detail_wallet_address)
-                        v.amount.textColor = ContextCompat.getColor(this@TransactionInfoActivity, R.color.change_positive)
+                        v.amount.setTextColor( ContextCompat.getColor(this@TransactionInfoActivity, R.color.change_positive))
                         v.amount.text = formatNativeAndLocal(output.amount, rate, useNativePrefix = true, nativeFirst = false)
                         to_container.addView(v)
                     }
@@ -111,7 +108,7 @@ class TransactionInfoActivity : AppBaseActivity() {
                             v.subscript.text = output.label
                         else
                             v.subscript.text = getString(R.string.tx_detail_payment_address)
-                        v.amount.textColor = ContextCompat.getColor(this@TransactionInfoActivity, R.color.change_negative)
+                        v.amount.setTextColor( ContextCompat.getColor(this@TransactionInfoActivity, R.color.change_negative))
                         v.amount.text = formatNativeAndLocal(-output.amount, rate, useNativePrefix = true, nativeFirst = false)
                         to_container.addView(v)
                     }
@@ -138,11 +135,11 @@ class TransactionInfoActivity : AppBaseActivity() {
     }
 
     private fun setAmountAndColor(textView: TextView, nativeAmount: Long, rate: Double, nativeFirst: Boolean = true) {
-        textView.textColor = ContextCompat.getColor(this,
+        textView.setTextColor( ContextCompat.getColor(this,
                 if (nativeAmount > 0)
                     R.color.change_positive
                 else
-                    R.color.change_negative)
+                    R.color.change_negative))
         textView.text = formatNativeAndLocal(nativeAmount, rate, true, nativeFirst)
     }
 

@@ -42,11 +42,14 @@ import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.util.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.add_address_entry.view.*
 import kotlinx.android.synthetic.main.fragment_send.*
-import org.jetbrains.anko.support.v4.runOnUiThread
+import android.os.Handler
+import android.os.Looper
 import org.json.JSONObject
 
 
 class SendFragment : AppBaseFragment(), UnityCore.Observer {
+
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
@@ -314,7 +317,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
 
     override fun onAddressBookChanged() {
         val newAddresses = ILibraryController.getAddressBookRecords()
-        runOnUiThread {
+        handler.post {
             val adapter = addressBookList.adapter as AddressBookAdapter
             adapter.updateDataSource(newAddresses)
             updateEmptyViewState()

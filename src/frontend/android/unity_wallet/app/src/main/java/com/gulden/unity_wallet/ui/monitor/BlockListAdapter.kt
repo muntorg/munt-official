@@ -19,7 +19,6 @@ import com.gulden.jniunifiedbackend.BlockInfoRecord
 import com.gulden.unity_wallet.Config
 import com.gulden.unity_wallet.R
 import kotlinx.android.synthetic.main.block_row.view.*
-import org.jetbrains.anko.sdk27.coroutines.onClick
 
 class BlockListAdapter : ListAdapter<BlockInfoRecord, BlockListAdapter.ItemViewHolder>(BlockDiffCallback()) {
 
@@ -44,7 +43,7 @@ class BlockListAdapter : ListAdapter<BlockInfoRecord, BlockListAdapter.ItemViewH
                     } else
                         context.getString(R.string.block_row_now)
             itemView.block_list_row_hash.text = item.blockHash
-            itemView.block_list_row_menu.onClick {
+            itemView.block_list_row_menu.setOnClickListener() {
                 val popupMenu = PopupMenu(context, itemView.block_list_row_menu)
                 popupMenu.inflate(R.menu.blocks_context)
                 popupMenu.setOnMenuItemClickListener { menuItem ->

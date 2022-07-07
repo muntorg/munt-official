@@ -20,6 +20,7 @@ import com.android.volley.*
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.jniunifiedbackend.IWalletController
 import com.gulden.unity_wallet.main_activity_fragments.*
@@ -32,8 +33,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.contentView
-import org.jetbrains.anko.design.snackbar
 import org.json.JSONObject
 import kotlin.concurrent.thread
 
@@ -183,7 +182,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
                 else
                 {
                     runOnUiThread {
-                        this.contentView?.snackbar(getString(R.string.rescan_started))
+                        Snackbar.make(View(this@WalletActivity), getString(R.string.rescan_started), Snackbar.LENGTH_SHORT).show()
                         gotoPage(ReceiveFragment())
                     }
                 }

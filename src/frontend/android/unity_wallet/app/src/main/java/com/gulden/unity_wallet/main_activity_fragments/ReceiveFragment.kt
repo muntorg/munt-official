@@ -21,8 +21,6 @@ import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.WalletActivity
 import com.gulden.unity_wallet.util.AppBaseFragment
 import kotlinx.android.synthetic.main.fragment_receive.*
-import org.jetbrains.anko.dimen
-import org.jetbrains.anko.sdk27.coroutines.onLongClick
 import java.nio.ByteBuffer
 
 
@@ -44,23 +42,25 @@ class ReceiveFragment : AppBaseFragment() {
             startActivity(Intent.createChooser(share, getString(R.string.receive_fragment_share_title)))
         }
 
-        currentAddressQrView.onLongClick {
+        currentAddressQrView.setOnLongClickListener {
             copyToClipboard()
         }
 
-        currentAddressLabel.onLongClick {
+        currentAddressLabel.setOnLongClickListener {
             copyToClipboard()
         }
     }
 
-    private fun copyToClipboard() {
+    private fun copyToClipboard(): Boolean {
         val clip: ClipData = ClipData.newPlainText(getString(R.string.gulden_address_clipboard_label), currentAddressLabel.text)
         val clipboard = getSystemService<ClipboardManager>(requireActivity(), ClipboardManager::class.java) as ClipboardManager
         clipboard.setPrimaryClip(clip)
 
         val toast = Toast.makeText(context, getString(R.string.copied_to_clipboard_toast), Toast.LENGTH_SHORT)
-        toast.setGravity(Gravity.TOP, 0, requireContext().dimen(R.dimen.top_toast_offset) )
+        toast.setGravity(Gravity.TOP, 0, requireContext().resources.getDimensionPixelSize(R.dimen.top_toast_offset) )
         toast.show()
+
+        return true
     }
 
     private fun updateAddress()

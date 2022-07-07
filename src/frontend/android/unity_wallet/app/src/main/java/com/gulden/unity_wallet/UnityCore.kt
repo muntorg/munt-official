@@ -246,6 +246,11 @@ class UnityCore {
             // not used
         }
 
+        override fun notifySyncDone() {
+            //not yet used
+        }
+
+
         override fun notifyInitWithoutExistingWallet() {
             try {
                 // There is no wallet yet. Cancel anything that is currently waiting for the wallet to get ready

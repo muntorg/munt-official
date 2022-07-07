@@ -16,9 +16,12 @@ import com.gulden.unity_wallet.UnityCore
 import com.gulden.unity_wallet.util.AppBaseFragment
 import kotlinx.android.synthetic.main.processing_fragment.*
 import kotlinx.android.synthetic.main.processing_fragment.view.*
-import org.jetbrains.anko.support.v4.runOnUiThread
+import android.os.Handler
+import android.os.Looper
 
 class ProcessingFragment : AppBaseFragment() {
+
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -42,7 +45,7 @@ class ProcessingFragment : AppBaseFragment() {
     override fun onResume() {
         super.onResume()
 
-        UnityCore.instance.addMonitorObserver(monitoringListener, fun(callback: () -> Unit) { runOnUiThread { callback() } })
+        UnityCore.instance.addMonitorObserver(monitoringListener, fun(callback: () -> Unit) { handler.post { callback() } })
     }
 
     override fun onPause() {

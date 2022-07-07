@@ -6,6 +6,7 @@
 package com.gulden.unity_wallet
 
 import android.content.Context
+import android.content.DialogInterface
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateUtils
@@ -13,14 +14,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.preference.PreferenceManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.unity_wallet.Constants.ACCESS_CODE_ATTEMPTS_ALLOWED
 import com.gulden.unity_wallet.Constants.ACCESS_CODE_LENGTH
 import kotlinx.android.synthetic.main.access_code_entry.view.*
 import kotlinx.android.synthetic.main.access_code_recovery.view.*
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.appcompat.v7.Appcompat
+import java.util.*
 
 
 private const val TAG = "authentication"
@@ -103,51 +105,53 @@ class Authentication {
     }
 
     fun showBlocking(context: Context) {
-        context.alert(Appcompat) {
-            this.title = context.getString(R.string.authentication_blocked_title)
-            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-            val blockedUntil = preferences.getLong(BLOCKED_UNTIL_KEY, 0)
-            positiveButton(context.getString(R.string.authentication_blocked_later_btn)) {}
-            // TODO: recovery using the mnemonic is not possible because the (core) wallet needs to be unlocked to verify the mnemonic
-            // so this is a chicken egg problem. it could be fixed for example by storing a hashed version of the mnemonic for this purpose
-            if (false /*ILibraryController.IsMnemonicWallet()*/) {
-                this.message = context.getString(R.string.authentication_blocked_msg_recovery).format(
-                        DateUtils.getRelativeTimeSpanString(blockedUntil, System.currentTimeMillis(), 0, 0).toString().toLowerCase())
-                neutralPressed(context.getString(R.string.authentication_blocked_choose_new_btn)) {
-                    chooseNewWithRecovery(context)
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val blockedUntil = preferences.getLong(BLOCKED_UNTIL_KEY, 0)
+        val alert = MaterialAlertDialogBuilder(context)
+                .setTitle(context.getString(R.string.authentication_blocked_title))
+        alert.setPositiveButton(context.getString(R.string.authentication_blocked_later_btn)) { dialog: DialogInterface?, whichButton: Int ->
+                    // TODO: recovery using the mnemonic is not possible because the (core) wallet needs to be unlocked to verify the mnemonic
+                    // so this is a chicken egg problem. it could be fixed for example by storing a hashed version of the mnemonic for this purpose
+                    if (false /*ILibraryController.IsMnemonicWallet()*/) {
+                        alert.setMessage(context.getString(R.string.authentication_blocked_msg_recovery).format(
+                                DateUtils.getRelativeTimeSpanString(blockedUntil, System.currentTimeMillis(), 0, 0).toString().lowercase()))
+
+                        alert.setNeutralButton(context.getString(R.string.authentication_blocked_choose_new_btn)) { dialog: DialogInterface?, whichButton: Int ->
+                            chooseNewWithRecovery(context)
+                        }
+                    } else {
+                        alert.setMessage(context.getString(R.string.authentication_blocked_msg).format(
+                                DateUtils.getRelativeTimeSpanString(blockedUntil, System.currentTimeMillis(), 0, 0).toString().lowercase()))
+                    }
                 }
-            }
-            else {
-                this.message = context.getString(R.string.authentication_blocked_msg).format(
-                        DateUtils.getRelativeTimeSpanString(blockedUntil, System.currentTimeMillis(), 0, 0).toString().toLowerCase())
-            }
-        }.build().show()
+        alert.show()
     }
 
     private fun chooseNewWithRecovery(context: Context) {
         val contentView = LayoutInflater.from(context).inflate(R.layout.access_code_recovery, null)
-        context.alert(Appcompat) {
-            customView = contentView
-            this.title = context.getString(R.string.authentication_blocked_title)
-            negativeButton(android.R.string.cancel) { }
-            positiveButton(android.R.string.ok) {
-                if (UnityCore.instance.walletReady.isCompleted && ILibraryController.IsMnemonicCorrect(contentView.recoveryPhrase.text.toString())) {
-                    chooseAccessCode(
-                            context,
-                            null,
-                            action = fun(password: CharArray) {
-                                unblock(context)
-                            },
-                            cancelled = fun(){}
-                    )
-                } else {
-                    context.alert(Appcompat, context.getString(R.string.access_code_recovery_incorrect),
-                            context.getString(R.string.authentication_blocked_title)) {
-                        positiveButton(android.R.string.ok) {}
-                    }.build().show()
-                }
+
+        val alert = MaterialAlertDialogBuilder(context)
+                .setView(contentView)
+                .setTitle(context.getString(R.string.authentication_blocked_title))
+                .setNegativeButton(android.R.string.cancel) { dialog: DialogInterface?, whichButton: Int -> }
+        alert.setPositiveButton(context.getString(android.R.string.ok)) { dialog: DialogInterface?, whichButton: Int ->
+            if (UnityCore.instance.walletReady.isCompleted && ILibraryController.IsMnemonicCorrect(contentView.recoveryPhrase.text.toString())) {
+                chooseAccessCode(
+                        context,
+                        null,
+                        action = fun(password: CharArray) {
+                            unblock(context)
+                        },
+                        cancelled = fun(){}
+                )
+            } else {
+                MaterialAlertDialogBuilder(context)
+                        .setTitle(context.getString(R.string.authentication_blocked_title))
+                        .setMessage(context.getString(R.string.access_code_recovery_incorrect))
+                        .show()
             }
-        }.build().show()
+        }
+        alert.show()
     }
 
     /**
@@ -165,15 +169,13 @@ class Authentication {
         val contentView = LayoutInflater.from(context).inflate(R.layout.access_code_entry, null)
         msg?.let { contentView.message.text = msg }
 
-        val builder = context.alert(Appcompat) {
-            this.title = title ?: context.getString(R.string.access_code_entry_title)
-            customView = contentView
-            negativeButton("Cancel") {
-            }
-        }
+        val dialog = MaterialAlertDialogBuilder(context)
+                .setTitle(title ?: context.getString(R.string.access_code_entry_title))
+                .setView(contentView)
+                .setNegativeButton("Cancel") { dialogInterface: DialogInterface, i: Int -> }
+                .create()
 
-        val dialog = builder.build()
-        dialog.setOnShowListener {
+        dialog.setOnShowListener() {
             contentView.accessCode.addTextChangedListener(
                     object : TextWatcher {
 
@@ -183,7 +185,7 @@ class Authentication {
                                 var chosenCode = CharArray(ACCESS_CODE_LENGTH)
                                 s.getChars(0, s.length, chosenCode, 0)
 
-                                if (UnityCore.instance.walletReady.isCompleted && ILibraryController.UnlockWallet(chosenCode.joinToString(""))) {
+                                if (UnityCore.instance.walletReady.isCompleted && ILibraryController.UnlockWallet(chosenCode.joinToString(""), 600)) {
                                     Log.i(TAG, "successful authentication")
                                     resetFailedAttempts(context)
                                     it.dismiss()
@@ -223,14 +225,14 @@ class Authentication {
     fun chooseAccessCode(context: Context, title: String?, action: (CharArray) -> Unit, cancelled: () -> Unit) {
         val contentView = LayoutInflater.from(context).inflate(R.layout.access_code_entry, null)
 
-        val builder = context.alert(Appcompat) {
-            this.title = title ?: context.getString(R.string.access_code_choose_title)
-            customView = contentView
-            negativeButton("Cancel") { cancelled()
-            }
-        }
+        val dialog = MaterialAlertDialogBuilder(context)
+                .setTitle(title ?: context.getString(R.string.access_code_choose_title))
+                .setView(contentView)
+                .setNegativeButton("Cancel") { dialogInterface: DialogInterface, i: Int -> 
+                    cancelled()
+                }
+                .create()
 
-        val dialog = builder.build()
         dialog.setOnShowListener {
             contentView.accessCode.addTextChangedListener(
                     object : TextWatcher {

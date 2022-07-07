@@ -50,7 +50,8 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import com.gulden.unity_wallet.R
 import kotlinx.android.synthetic.main.barcode_capture.*
-import org.jetbrains.anko.contentView
+import android.os.Handler
+import android.os.Looper
 
 import java.io.IOException
 
@@ -125,6 +126,8 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
     // helper objects for detecting taps and pinches.
     private var scaleGestureDetector: ScaleGestureDetector? = null
 
+    private val handler = Handler(Looper.getMainLooper())
+
     /**
      * Initializes the UI and creates the detector pipeline.
      */
@@ -145,19 +148,17 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
 
 
         // Below relies on sizing of view items so can only run after the view is visible
-        contentView?.post {
-            runOnUiThread {
-                // Check for the camera permission before accessing the camera.  If the  permission is not granted yet, request permission.
-                val rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                if (rc == PackageManager.PERMISSION_GRANTED)
-                {
-                    createCameraSource(mAutoFocus, mUseFlash)
-                    startCameraSource()
-                }
-                else
-                {
-                    requestCameraPermission()
-                }
+        handler.post {
+            // Check for the camera permission before accessing the camera.  If the  permission is not granted yet, request permission.
+            val rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+            if (rc == PackageManager.PERMISSION_GRANTED)
+            {
+                createCameraSource(mAutoFocus, mUseFlash)
+                startCameraSource()
+            }
+            else
+            {
+                requestCameraPermission()
             }
         }
 

@@ -1,13 +1,13 @@
 package com.gulden.unity_wallet
 
 import android.content.Context
+import android.content.DialogInterface
 import android.net.Uri
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.jniunifiedbackend.UriRecipient
 import com.gulden.jniunifiedbackend.UriRecord
 import org.apache.commons.validator.routines.IBANValidator
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.appcompat.v7.Appcompat
 import java.util.HashMap
 
 fun Uri.getParameters(): HashMap<String, String> {
@@ -83,11 +83,11 @@ fun ellipsizeString(sourceString: String, maxLength: Int): String
 }
 
 fun internalErrorAlert(context: Context, msg: String) {
-    context.alert(Appcompat,
-            "An unexpected error occurred, this is likely a bug. Please contact the developers.\n\n$msg",
-            "Internal error!") {
-        positiveButton(android.R.string.ok) {}
-    }.build().show()
+    MaterialAlertDialogBuilder(context)
+            .setTitle("Internal error!")
+            .setMessage("An unexpected error occurred, this is likely a bug. Please contact the developers.\n\n$msg")
+            .setPositiveButton(android.R.string.ok) { dialogInterface: DialogInterface, i: Int -> }
+            .show()
 }
 
 fun String.toDoubleOrZero(): Double {

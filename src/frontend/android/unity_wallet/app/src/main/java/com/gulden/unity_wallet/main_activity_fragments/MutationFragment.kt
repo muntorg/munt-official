@@ -20,10 +20,13 @@ import com.gulden.unity_wallet.util.AppBaseFragment
 import com.gulden.unity_wallet.util.invokeNowOrOnSuccessfulCompletion
 import kotlinx.android.synthetic.main.fragment_mutation.*
 import kotlinx.coroutines.*
-import org.jetbrains.anko.support.v4.runOnUiThread
+import android.os.Handler
+import android.os.Looper
 
 
 class MutationFragment : AppBaseFragment(), UnityCore.Observer, CoroutineScope {
+
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
@@ -76,7 +79,7 @@ class MutationFragment : AppBaseFragment(), UnityCore.Observer, CoroutineScope {
     override fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {
         //TODO: Update only the single mutation we have received
         val mutations = ILibraryController.getMutationHistory()
-        runOnUiThread {
+        handler.post {
             val adapter = mutationList.adapter as MutationAdapter
             adapter.updateDataSource(mutations)
         }
@@ -86,7 +89,7 @@ class MutationFragment : AppBaseFragment(), UnityCore.Observer, CoroutineScope {
     {
         //TODO: Update only the single mutation we have received
         val mutations = ILibraryController.getMutationHistory()
-        runOnUiThread {
+        handler.post {
             val adapter = mutationList.adapter as MutationAdapter
             adapter.updateDataSource(mutations)
         }

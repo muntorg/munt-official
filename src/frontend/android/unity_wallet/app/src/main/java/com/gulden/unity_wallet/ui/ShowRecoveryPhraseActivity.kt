@@ -21,7 +21,6 @@ import com.gulden.unity_wallet.util.AppBaseActivity
 import com.gulden.unity_wallet.util.gotoWalletActivity
 import com.gulden.unity_wallet.util.setFauxButtonEnabledState
 import kotlinx.android.synthetic.main.activity_show_recovery_phrase.*
-import org.jetbrains.anko.sdk27.coroutines.onClick
 
 private const val TAG = "show-recovery-activity"
 
@@ -46,7 +45,7 @@ class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
         recovery_phrase_text_view.run {
             //TODO: Reintroduce showing birth time here if/when we decide we want it in future
             text = recoveryPhraseTrimmed
-            onClick { setFocusOnRecoveryPhrase() }
+            setOnClickListener() { setFocusOnRecoveryPhrase() }
         }
 
         supportActionBar?.hide()

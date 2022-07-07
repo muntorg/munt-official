@@ -1,15 +1,18 @@
 package com.gulden.unity_wallet.util
 
+import android.content.DialogInterface
 import com.gulden.unity_wallet.UnityCore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.appcompat.v7.Appcompat
-import org.jetbrains.anko.support.v4.runOnUiThread
+import android.os.Handler
+import android.os.Looper
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlin.coroutines.CoroutineContext
 
 abstract class AppBaseFragment : androidx.fragment.app.Fragment(), CoroutineScope {
+
+    private val handlerUI = Handler(Looper.getMainLooper())
 
     /**
      * Called when walletReady is completed, but always after onResume
@@ -26,17 +29,17 @@ abstract class AppBaseFragment : androidx.fragment.app.Fragment(), CoroutineScop
         // schedule onWalletReady
         UnityCore.instance.walletReady.invokeOnCompletion { handler ->
             if (handler == null) {
-                runOnUiThread { onWalletReady() }
+                handlerUI.post { onWalletReady() }
             }
         }
     }
 
     fun errorMessage(msg: String) {
         context?.run {
-            alert(Appcompat, msg) {
-                positiveButton(getString(android.R.string.ok)) {}
-            }.show()
+            MaterialAlertDialogBuilder(context!!)
+                    .setMessage(msg)
+                    .setPositiveButton(android.R.string.ok) { dialogInterface: DialogInterface, i: Int -> }
+                    .show()
         }
     }
-
 }

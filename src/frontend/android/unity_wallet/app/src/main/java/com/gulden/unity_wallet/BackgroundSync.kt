@@ -21,7 +21,8 @@ import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.*
-import org.jetbrains.anko.runOnUiThread
+import android.os.Handler
+import android.os.Looper
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
 
@@ -83,6 +84,8 @@ class SyncService : Service(), UnityCore.Observer
 
     private val channelID = "com.gulden.unity_wallet.service.channel"
 
+    private val handler = Handler(Looper.getMainLooper())
+
     private fun startInForeground()
     {
 
@@ -120,7 +123,7 @@ class SyncService : Service(), UnityCore.Observer
     override fun onCreate() {
         super.onCreate()
 
-        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
+        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { handler.post { callback() }})
         UnityCore.instance.startCore()
     }
     override fun onDestroy() {

@@ -24,9 +24,10 @@ import com.gulden.jniunifiedbackend.TransactionRecord
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import org.jetbrains.anko.runOnUiThread
 import kotlin.coroutines.CoroutineContext
 import kotlin.system.exitProcess
+import android.os.Handler
+import android.os.Looper
 
 
 private const val TAG = "activity-manager"
@@ -36,6 +37,8 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
     override val coroutineContext: CoroutineContext = Dispatchers.Main + SupervisorJob()
 
     private var lastAudibleNotification = 0L
+
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate()
     {
@@ -48,7 +51,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
             UnityConfig(dataDir = applicationContext.applicationInfo.dataDir, apkPath = applicationContext.packageResourcePath, staticFilterOffset = assetFD?.startOffset!!, staticFilterLength = assetFD.length, testnet = Constants.TEST)
         )
 
-        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
+        UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { handler.post { callback() }})
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         preferences.registerOnSharedPreferenceChangeListener(this)

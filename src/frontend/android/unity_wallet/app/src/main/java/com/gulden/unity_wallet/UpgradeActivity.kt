@@ -6,20 +6,20 @@
 package com.gulden.unity_wallet
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.gulden.jniunifiedbackend.ILibraryController
 import com.gulden.jniunifiedbackend.LegacyWalletResult
 import com.gulden.unity_wallet.Constants.OLD_WALLET_PROTOBUF_FILENAME
 import com.gulden.unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.upgrade_password.view.*
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.appcompat.v7.Appcompat
-import org.jetbrains.anko.design.longSnackbar
 import java.io.File
 import kotlin.concurrent.thread
 import kotlin.system.exitProcess
@@ -48,8 +48,8 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
             {
                 when (result)
                 {
-                    LegacyWalletResult.ENCRYPTED_PASSWORD_REQUIRED, LegacyWalletResult.PASSWORD_INVALID -> this.runOnUiThread { view.longSnackbar(getString(R.string.upgrade_wrong_password)) }
-                    LegacyWalletResult.INVALID_OR_CORRUPT -> this.runOnUiThread { view.longSnackbar("Unable to upgrade old wallet, contact support for assistance.") }
+                    LegacyWalletResult.ENCRYPTED_PASSWORD_REQUIRED, LegacyWalletResult.PASSWORD_INVALID -> this.runOnUiThread { Snackbar.make(View(this@UpgradeActivity), getString(R.string.upgrade_wrong_password), Snackbar.LENGTH_LONG).show() }
+                    LegacyWalletResult.INVALID_OR_CORRUPT -> this.runOnUiThread { Snackbar.make(View(this@UpgradeActivity), "Unable to upgrade old wallet, contact support for assistance.", Snackbar.LENGTH_LONG).show() }
                     else -> chooseNewAccessCodeAndUpgrade(oldPassword, view)
                 }
             }
@@ -78,14 +78,14 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
                 {
                     this.runOnUiThread {
                         val upgradeDialogView = layoutInflater.inflate(R.layout.upgrade_password, null)
-                        val builder = alert(Appcompat) {
-                            title = getString(R.string.upgrade_enter_password)
-                            customView = upgradeDialogView
-                            positiveButton("OK") {
-                                onUpgradeWithPassword(view, upgradeDialogView.password.text.toString())
-                            }
-                        }
-                        val dialog = builder.build()
+                        val dialog = MaterialAlertDialogBuilder(this)
+                                .setTitle(getString(R.string.upgrade_enter_password))
+                                .setView(upgradeDialogView)
+                                .setPositiveButton(android.R.string.ok) { dialogInterface: DialogInterface, i: Int ->
+                                    onUpgradeWithPassword(view, upgradeDialogView.password.text.toString())
+                                }
+                                .create()
+
                         dialog.setOnShowListener {
                             upgradeDialogView.password.requestFocus()
                             upgradeDialogView.password.post {
@@ -102,7 +102,9 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
                 }
                 else ->
                 {
-                    this.runOnUiThread { view.longSnackbar("Unable to upgrade old wallet, contact support for assistance.") }
+                    this.runOnUiThread {
+                        Snackbar.make(view, "Unable to upgrade old wallet, contact support for assistance.", Snackbar.LENGTH_LONG).show()
+                    }
                 }
             }
         }
@@ -121,7 +123,9 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
                             ILibraryController.InitWalletFromAndroidLegacyProtoWallet(filesDir.toString() + File.separator + OLD_WALLET_PROTOBUF_FILENAME, oldPassword, newPassword)
                         }
 
-                        this.runOnUiThread { view.longSnackbar("Wallet upgrade in progress") }
+                        this.runOnUiThread {
+                            Snackbar.make(view, "Wallet upgrade in progress", Snackbar.LENGTH_LONG).show()
+                        }
                     },
                     cancelled = {}
             )
@@ -154,16 +158,13 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
     @Suppress("UNUSED_PARAMETER")
     fun onStartFresh(view: View)
     {
-        alert(Appcompat, getString(R.string.upgrade_start_fresh_desription), getString(R.string.upgrade_start_fresh_title))
-        {
-            positiveButton("Start fresh")
-            {
-                gotoActivity(WelcomeActivity::class.java)
-            }
-            negativeButton("Cancel")
-            {
-            }
-        }.show()
+        MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.upgrade_start_fresh_title))
+                .setMessage(getString(R.string.upgrade_start_fresh_desription))
+                .setPositiveButton("Start fresh") { dialogInterface: DialogInterface, i: Int ->
+                    gotoActivity(WelcomeActivity::class.java)
+                }
+                .show()
     }
 
     private fun gotoActivity(cls: Class<*> )

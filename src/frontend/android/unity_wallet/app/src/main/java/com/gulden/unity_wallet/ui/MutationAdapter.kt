@@ -17,7 +17,6 @@ import com.gulden.unity_wallet.R
 import com.gulden.unity_wallet.formatNativeAndLocal
 import kotlinx.android.synthetic.main.mutation_list_item.view.*
 import kotlinx.android.synthetic.main.mutation_list_item_with_header.view.*
-import org.jetbrains.anko.textColor
 import java.util.*
 
 class MutationAdapter(context: Context, private var dataSource: ArrayList<MutationRecord>) : BaseAdapter() {
@@ -89,7 +88,7 @@ class MutationAdapter(context: Context, private var dataSource: ArrayList<Mutati
 
         rowView.textViewTime.text = java.text.SimpleDateFormat("HH:mm").format(java.util.Date(mutationRecord.timestamp * 1000L))
         rowView.textViewAmount.text = formatNativeAndLocal(mutationRecord.change,rate)
-        rowView.textViewAmount.textColor = ContextCompat.getColor(rowView.context, if (mutationRecord.change >= 0) R.color.change_positive else R.color.change_negative)
+        rowView.textViewAmount.setTextColor(ContextCompat.getColor(rowView.context, if (mutationRecord.change >= 0) R.color.change_positive else R.color.change_negative))
 
         if (mutationRecord.status == TransactionStatus.CONFIRMED)
         {
