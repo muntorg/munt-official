@@ -19,6 +19,7 @@ $(package)_config_opts_i686_mingw32=address-model=64
 $(package)_config_opts_i686_mingw64=address-model=64
 $(package)_config_opts_i686_linux=address-model=32 architecture=x86
 $(package)_config_opts_aarch64_ios=architecture=x86 target-os=iphone
+$(package)_config_opts_android=define=BOOST_FILESYSTEM_DISABLE_STATX
 $(package)_toolset_$(host_os)=gcc
 $(package)_toolset_darwin=clang-darwin
 $(package)_toolset_ios=darwin
