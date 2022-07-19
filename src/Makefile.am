@@ -84,7 +84,6 @@ LIB_CRYPTO_ALL = $(LIB_CRYPTO) $(LIB_CRYPTO_INTEL) $(LIB_CRYPTO_ARM)
 # But to build the less dependent modules first, we manually select their order here:
 EXTRA_LIBRARIES += \
   $(LIB_CRYPTO_ALL) \
-  $(LIB_ANDROID_COMPAT) \
   $(LIB_UTIL) \
   $(LIB_GENERIC) \
   $(LIB_GENERIC_INIT) \

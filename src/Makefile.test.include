@@ -97,8 +97,7 @@ TEST_SOURCES =\
   test/txvalidationcache_tests.cpp \
   test/versionbits_tests.cpp \
   test/uint256_tests.cpp \
-  test/util_tests.cpp \
-  test/unity_tests.cpp
+  test/util_tests.cpp
 
 if ENABLE_WALLET
 TEST_SOURCES += \
@@ -118,7 +117,7 @@ endif
 if ENABLE_ZMQ
 test_test_gulden_LDADD += $(LIB_ZMQ) $(ZMQ_LIBS)
 endif
-test_test_gulden_LDADD += $(LIB_CLI) $(LIB_COMMON) $(LIB_UTIL) $(LIB_CONSENSUS) $(LIB_RPC) $(LIB_SERVER) $(LIB_WALLET) $(LIB_NODE) $(LIB_CRYPTO_ALL) $(LIB_GENERIC) $(LIB_GENERIC_INIT) $(LIB_ANDROID_COMPAT) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
+test_test_gulden_LDADD += $(LIB_CLI) $(LIB_COMMON) $(LIB_UTIL) $(LIB_CONSENSUS) $(LIB_RPC) $(LIB_SERVER) $(LIB_WALLET) $(LIB_NODE) $(LIB_CRYPTO_ALL) $(LIB_GENERIC) $(LIB_GENERIC_INIT) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
   $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(LIBSECP256K1) $(EVENT_LIBS) $(EVENT_PTHREADS_LIBS) $(PROTOBUF_LIBS)
 test_test_gulden_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
