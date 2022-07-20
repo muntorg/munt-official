@@ -151,8 +151,11 @@ bool IP2pNetworkController::banPeer(const std::string& address, int64_t banTimeI
 {
     if (g_connman)
     {
+        std::string host;
+        int port;
+        SplitHostPort(address, port, host);
         CNetAddr netAddr;
-        if (!LookupHost(address.c_str(), netAddr, false))
+        if (!LookupHost(host.c_str(), netAddr, false))
             return false;
         
         g_connman->Ban(netAddr, BanReasonManuallyAdded, banTimeInSeconds, false);
@@ -166,11 +169,17 @@ bool IP2pNetworkController::unbanPeer(const std::string& address)
     if (g_connman)
     {
         CNetAddr netAddr;
-        if (!LookupHost(address.c_str(), netAddr, false))
-            return false;
-        
-        g_connman->Unban(netAddr);
-        return true;
+        CSubNet subnet;
+        if (LookupHost(address.c_str(), netAddr, false))
+        {
+            g_connman->Unban(netAddr);
+            return true;
+        }
+        else if(LookupSubNet(address.c_str(), subnet))
+        {
+            g_connman->Unban(subnet);
+            return true;
+        }
     }
     return false;
 }
