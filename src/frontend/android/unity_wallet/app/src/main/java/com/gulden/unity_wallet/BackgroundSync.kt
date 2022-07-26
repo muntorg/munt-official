@@ -39,16 +39,14 @@ fun setupBackgroundSync(context: Context) {
 
     val serviceIntent = Intent(context, SyncService::class.java)
 
+    context.stopService(serviceIntent)
+    WorkManager.getInstance().cancelAllWorkByTag(GULDEN_PERIODIC_SYNC)
+
     when (syncType) {
         "BACKGROUND_SYNC_OFF" -> {
-            context.stopService(serviceIntent)
-            WorkManager.getInstance().cancelAllWorkByTag(GULDEN_PERIODIC_SYNC)
         }
 
         "BACKGROUND_SYNC_DAILY" -> {
-            context.stopService(serviceIntent)
-            WorkManager.getInstance().cancelAllWorkByTag(GULDEN_PERIODIC_SYNC)
-
             val work = PeriodicWorkRequestBuilder<SyncWorker>(24, TimeUnit.HOURS)
                     .addTag(GULDEN_PERIODIC_SYNC)
                     .build()
@@ -56,7 +54,20 @@ fun setupBackgroundSync(context: Context) {
         }
 
         "BACKGROUND_SYNC_CONTINUOUS" -> {
-            ContextCompat.startForegroundService(context, serviceIntent)
+            try {
+                ContextCompat.startForegroundService(context, serviceIntent)
+            }
+            catch (e : ForegroundServiceStartNotAllowedException)
+            {
+                //fixme: (HIGH) - as of API 32 the above is "illegal" and leads to ForegroundServiceStartNotAllowedException
+                //see: https://stackoverflow.com/questions/69604951/getting-android-app-foregroundservicestartnotallowedexception-in-android-12-sdk
+                //
+                //For now instead we just call the periodic sync a lot more frequently, however I don't know if this is the best solution, we should look at something else in future
+                val work = PeriodicWorkRequestBuilder<SyncWorker>(10, TimeUnit.MINUTES)
+                    .addTag(GULDEN_PERIODIC_SYNC)
+                    .build()
+                WorkManager.getInstance().enqueue(work)
+            }
         }
     }
 }
