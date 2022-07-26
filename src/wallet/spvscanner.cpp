@@ -186,7 +186,11 @@ void CSPVScanner::RequestBlocks()
             else {
                 // This block must be on disk, it was processed before.
                 // So pruning has to keep at least as many blocks back as the longest fork we are willing to handle.
-                assert(false);
+                //
+                // Reset the chain as we are clearly in a bad state
+                //fixme: (HIGH) Collect analytics on this.
+                LogPrintf("Error: SPV scanner encountered invalid state and resetting chain sync [Could not find disconnected block on disk.]");
+                ResetScan();
             }
             UpdateLastProcessed(blockLastProcessed->pprev);
             blockRequestTip = blockLastProcessed;
