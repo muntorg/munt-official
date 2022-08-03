@@ -23,12 +23,14 @@ import androidx.work.WorkerParameters
 import kotlinx.coroutines.*
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.RequiresApi
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
 
 private const val TAG = "background_sync"
 const val GULDEN_PERIODIC_SYNC = "GULDEN_PERIODIC_SYNC"
 
+@RequiresApi(Build.VERSION_CODES.S)
 fun setupBackgroundSync(context: Context) {
 
     // get syncType from preferences
@@ -54,18 +56,25 @@ fun setupBackgroundSync(context: Context) {
         }
 
         "BACKGROUND_SYNC_CONTINUOUS" -> {
-            try {
-                ContextCompat.startForegroundService(context, serviceIntent)
+            var tryForeground = true;
+            if (android.os.Build.MANUFACTURER == "samsung")
+                tryForeground = false;
+
+            if (tryForeground) {
+                try {
+                    ContextCompat.startForegroundService(context, serviceIntent)
+                } catch (e: ForegroundServiceStartNotAllowedException) {
+                    tryForeground = false;
+                }
             }
-            catch (e : ForegroundServiceStartNotAllowedException)
-            {
+            if(!tryForeground) {
                 //fixme: (HIGH) - as of API 32 the above is "illegal" and leads to ForegroundServiceStartNotAllowedException
                 //see: https://stackoverflow.com/questions/69604951/getting-android-app-foregroundservicestartnotallowedexception-in-android-12-sdk
                 //
                 //For now instead we just call the periodic sync a lot more frequently, however I don't know if this is the best solution, we should look at something else in future
                 val work = PeriodicWorkRequestBuilder<SyncWorker>(10, TimeUnit.MINUTES)
-                    .addTag(GULDEN_PERIODIC_SYNC)
-                    .build()
+                        .addTag(GULDEN_PERIODIC_SYNC)
+                        .build()
                 WorkManager.getInstance().enqueue(work)
             }
         }

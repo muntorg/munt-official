@@ -191,6 +191,7 @@ void CSPVScanner::RequestBlocks()
                 //fixme: (HIGH) Collect analytics on this.
                 LogPrintf("Error: SPV scanner encountered invalid state and resetting chain sync [Could not find disconnected block on disk.]");
                 ResetScan();
+                return;
             }
             UpdateLastProcessed(blockLastProcessed->pprev);
             blockRequestTip = blockLastProcessed;
