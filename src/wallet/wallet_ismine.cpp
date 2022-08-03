@@ -49,7 +49,7 @@ isminetype CWallet::IsMineWitness(const CTxOut& txout) const
 bool CWallet::IsMine(const CTransaction& tx) const
 {
     for(const CTxOut& txout : tx.vout)
-        if (IsMine(txout)  && txout.nValue >= nMinimumInputValue)
+        if (IsMine(txout))
             return true;
     return false;
 }
