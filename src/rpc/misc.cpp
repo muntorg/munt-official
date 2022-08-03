@@ -120,7 +120,7 @@ static UniValue getinfo(const JSONRPCRequest& request)
     if (pwallet && pwallet->IsCrypted()) {
         obj.pushKV("unlocked_until", pwallet->nRelockTime);
     }
-    obj.pushKV("mininput",      ValueFromAmount(nMinimumInputValue));
+    obj.pushKV("mininput",      ValueFromAmount(0));
     obj.pushKV("paytxfee",      ValueFromAmount(payTxFee.GetFeePerK()));
 #endif
     obj.pushKV("relayfee",      ValueFromAmount(::minRelayTxFee.GetFeePerK()));

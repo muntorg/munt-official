@@ -268,8 +268,6 @@ extern CBlockIndex *pindexBestHeader;
 /** Best header sofar connecting to the partial chain. */
 extern CBlockIndex *pindexBestPartial;
 
-extern int64_t nMinimumInputValue;
-
 /** Minimum disk space required - used in CheckDiskSpace() */
 static const uint64_t nMinDiskSpace = 52428800;
 

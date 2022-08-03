@@ -138,8 +138,6 @@ static void CheckBlockIndex(const Consensus::Params& consensusParams);
 /** Constant stuff for coinbase transactions we create: */
 CScript COINBASE_FLAGS;
 
-int64_t nMinimumInputValue = DUST_HARD_LIMIT;
-
 const std::string strMessageMagic = "Guldencoin Signed Message:\n";
 
 std::set<CBlockIndex*, CBlockIndexWorkComparator> setBlockIndexCandidates;
