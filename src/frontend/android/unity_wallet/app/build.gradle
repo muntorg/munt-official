@@ -55,7 +55,7 @@ android {
     flavorDimensions "default"
     productFlavors {
         gulden_testnet {
-            applicationId 'com.gulden.testnet'
+            applicationId 'gulden.testnet'
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden-testnet"
             buildConfigField "boolean", "TESTNET", "true"
@@ -67,7 +67,7 @@ android {
         }
 
         gulden_mainnet {
-            applicationId 'com.gulden.wallet'
+            applicationId 'gulden.wallet'
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden"
             buildConfigField "boolean", "TESTNET", "false"

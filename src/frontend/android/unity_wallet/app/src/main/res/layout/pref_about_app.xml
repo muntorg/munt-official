@@ -25,7 +25,7 @@ file COPYING
         android:gravity="center_horizontal"
         android:text="@string/about_text_app_name" />
 
-    <com.gulden.unity_wallet.ui.widgets.UnityBuildInfoView
+    <unity_wallet.ui.widgets.UnityBuildInfoView
         android:id="@+id/textUnityCoreBuild"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
