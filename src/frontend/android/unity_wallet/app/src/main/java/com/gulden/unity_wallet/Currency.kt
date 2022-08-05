@@ -122,7 +122,7 @@ val localCurrency: Currency
     }
 
 /**
- * Format native amount using nu thousands separator, no locale (ie. always use "." (dot) for deciaml separator) and PRECISION_SHORT decimals
+ * Format native amount using nu thousands separator, no locale (ie. always use "." (dot) for decimal separator) and PRECISION_SHORT decimals
  */
 fun formatNativeSimple(nativeAmount: Long): String
 {
