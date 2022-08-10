@@ -53,7 +53,7 @@ file COPYING
             android:orientation="horizontal">
 
 
-            <unity_wallet.ui.widgets.HideBalanceView
+            <com.gulden.unity_wallet.ui.widgets.HideBalanceView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -131,7 +131,7 @@ file COPYING
                         tools:ignore="HardcodedText"
                         tools:textColor="@color/colorPrimary" />
                 </LinearLayout>
-            </unity_wallet.ui.widgets.HideBalanceView>
+            </com.gulden.unity_wallet.ui.widgets.HideBalanceView>
 
         </LinearLayout>
 

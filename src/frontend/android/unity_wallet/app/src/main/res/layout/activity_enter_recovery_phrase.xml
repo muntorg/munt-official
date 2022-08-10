@@ -7,7 +7,7 @@ file COPYING
 !-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              tools:context="unity_wallet.ui.EnterRecoveryPhraseActivity"
+              tools:context="com.gulden.unity_wallet.ui.EnterRecoveryPhraseActivity"
               android:layout_width="match_parent"
               android:layout_height="fill_parent"
               android:orientation="vertical"
@@ -37,7 +37,7 @@ file COPYING
             android:paddingRight="20dp"
             />
 
-        <unity_wallet.ui.widgets.ActionMultiAutoCompleteTextView
+        <com.gulden.unity_wallet.ui.widgets.ActionMultiAutoCompleteTextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/recover_from_phrase_text_view"

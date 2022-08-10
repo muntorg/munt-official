@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="unity_wallet">
+    package="com.gulden.unity_wallet">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -81,7 +81,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="barcodereader.BarcodeCaptureActivity"
+            android:name="com.gulden.barcodereader.BarcodeCaptureActivity"
             android:label="@string/title_activity_barcode_capture"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
