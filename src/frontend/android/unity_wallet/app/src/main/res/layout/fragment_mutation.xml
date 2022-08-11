@@ -12,7 +12,7 @@ file COPYING
     android:layout_height="match_parent"
     tools:context=".main_activity_fragments.MutationFragment">
 
-    <com.gulden.unity_wallet.ui.widgets.LockView
+    <unity_wallet.ui.widgets.LockView
         android:id="@+id/viewAnimator"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -81,7 +81,7 @@ file COPYING
             </LinearLayout>
         </FrameLayout>
 
-    </com.gulden.unity_wallet.ui.widgets.LockView>
+    </unity_wallet.ui.widgets.LockView>
 
     <View
         android:id="@+id/divider"
