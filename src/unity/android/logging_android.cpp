@@ -6,6 +6,8 @@
 #include "appname.h"
 #include <string>
 #include <android/log.h>
+#include "../unity_impl.h"
+#include "i_library_listener.hpp"
 
 void OpenDebugLog()
 {
@@ -14,4 +16,12 @@ void OpenDebugLog()
 int LogPrintStr(const std::string &str)
 {
     return __android_log_print(ANDROID_LOG_INFO, GLOBAL_APPNAME"_core_jni_", "%s", str.c_str());
+}
+
+void UnityReportError(const std::string &str)
+{
+    if (signalHandler)
+    {
+        signalHandler->notifyError(str);
+    }
 }

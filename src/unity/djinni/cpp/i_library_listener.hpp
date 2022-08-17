@@ -58,6 +58,8 @@ public:
 
     virtual void notifyCoreReady() = 0;
 
+    virtual void notifyError(const std::string & error) = 0;
+
     virtual void logPrint(const std::string & str) = 0;
 };
 #endif

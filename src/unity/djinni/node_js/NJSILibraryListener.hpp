@@ -64,6 +64,8 @@ public:
 
     void notifyCoreReady();
 
+    void notifyError(const std::string & error);
+
     void logPrint(const std::string & str);
 
 private:
@@ -114,6 +116,9 @@ private:
 
     void notifyCoreReady(const Napi::CallbackInfo& info);
     void notifyCoreReady_aimpl__();
+
+    void notifyError(const Napi::CallbackInfo& info);
+    void notifyError_aimpl__(const std::string & error);
 
     void logPrint(const Napi::CallbackInfo& info);
     void logPrint_aimpl__(const std::string & str);

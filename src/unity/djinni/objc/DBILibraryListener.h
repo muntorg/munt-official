@@ -50,6 +50,8 @@
 
 - (void)notifyCoreReady;
 
+- (void)notifyError:(nonnull NSString *)error;
+
 - (void)logPrint:(nonnull NSString *)str;
 
 @end

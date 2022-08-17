@@ -407,6 +407,42 @@ void NJSILibraryListener::notifyCoreReady()
     );
 }
 
+void NJSILibraryListener::notifyError_aimpl__(const std::string & error)
+{
+    const auto& env = Env();
+    Napi::HandleScope scope(env);
+    //Wrap parameters
+    std::vector<napi_value> args;
+    auto arg_0 = Napi::String::New(env, error);
+    args.push_back(arg_0);
+    Napi::Value calling_function_as_value = Value().Get("notifyError");
+    if(!calling_function_as_value.IsUndefined() && !calling_function_as_value.IsNull())
+    {
+        Napi::Function calling_function = calling_function_as_value.As<Napi::Function>();
+        auto result_notifyError = calling_function.Call(args);
+        if(result_notifyError.IsEmpty())
+        {
+            Napi::Error::New(env, "NJSILibraryListener::notifyError call failed").ThrowAsJavaScriptException();
+            return;
+        }
+    }
+}
+
+void NJSILibraryListener::notifyError(const std::string & error)
+{
+    uv_work_t* request = new uv_work_t;
+    request->data = new std::tuple<NJSILibraryListener*, std::string>(this, error);
+
+    uv_queue_work(uv_default_loop(), request, [](uv_work_t*) -> void{}, [](uv_work_t* req, int status) -> void
+    {
+        NJSILibraryListener* pthis = std::get<0>(*((std::tuple<NJSILibraryListener*, std::string>*)req->data));
+        pthis->notifyError_aimpl__(std::get<1>(*((std::tuple<NJSILibraryListener*, std::string>*)req->data)));
+        delete (std::tuple<NJSILibraryListener*, std::string>*)req->data;
+        req->data = nullptr;
+    }
+    );
+}
+
 void NJSILibraryListener::logPrint_aimpl__(const std::string & str)
 {
     const auto& env = Env();

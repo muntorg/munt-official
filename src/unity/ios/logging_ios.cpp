@@ -16,3 +16,11 @@ int LogPrintStr(const std::string &str)
     signalHandler->logPrint(str);
     return str.size();
 }
+
+void UnityReportError(const std::string &str)
+{
+    if (signalHandler)
+    {
+        signalHandler->notifyError(str);
+    }
+}

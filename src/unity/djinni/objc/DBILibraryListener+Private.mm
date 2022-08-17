@@ -76,6 +76,12 @@ public:
             [djinni_private_get_proxied_objc_object() notifyCoreReady];
         }
     }
+    void notifyError(const std::string & c_error) override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() notifyError:(::djinni::String::fromCpp(c_error))];
+        }
+    }
     void logPrint(const std::string & c_str) override
     {
         @autoreleasepool {

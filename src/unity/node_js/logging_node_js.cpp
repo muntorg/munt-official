@@ -128,4 +128,12 @@ int LogPrintStr(const std::string &str)
     return ret;
 }
 
+void UnityReportError(const std::string &str)
+{
+    if (signalHandler)
+    {
+        signalHandler->notifyError(str);
+    }
+}
+
 

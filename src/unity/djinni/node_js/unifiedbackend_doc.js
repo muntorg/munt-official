@@ -230,6 +230,7 @@ declare class NJSILibraryListener
     declare function notifyInitWithoutExistingWallet();
     declare function notifyShutdown();
     declare function notifyCoreReady();
+    declare function notifyError(error: string);
     declare function logPrint(str: string);
 }
 /** C++ interface to execute RPC commands */

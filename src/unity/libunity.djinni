@@ -402,6 +402,8 @@ i_library_listener = interface +j +o +n {
     notifyShutdown(): &;
     
     notifyCoreReady(): &;
+    
+    notifyError(error : string): &;
 
     logPrint(str : string): &;
 }
