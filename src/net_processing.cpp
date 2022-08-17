@@ -1471,6 +1471,8 @@ inline void static SendBlockTransactions(const CBlock& block, const BlockTransac
     connman.PushMessage(pfrom, msgMaker.Make(nSendFlags, NetMsgType::BLOCKTXN, resp));
 }
 
+extern void UnityReportError(const std::string &str);
+
 static void ProcessPriorityRequests()
 {
     LOCK(cs_main);
@@ -1489,7 +1491,16 @@ static void ProcessPriorityRequests()
             CBlock loadBlock;
             if (!ReadBlockFromDisk(loadBlock, r.pindex, Params()))
             {
-                throw std::runtime_error(std::string(__func__) + "Can't read block from disk");
+                if (fSPV)
+                {
+                    pactiveWallet->ResetSPV();
+                    UnityReportError(std::string(__func__) + "Can't read block from disk");
+                    return;
+                }
+                else
+                {
+                    throw std::runtime_error(std::string(__func__) + "Can't read block from disk");
+                }
             }
             auto currentBlock = std::make_shared<const CBlock>(loadBlock);
 
@@ -1501,7 +1512,16 @@ static void ProcessPriorityRequests()
         }
         else
         {
-            throw std::runtime_error(std::string(__func__) + strprintf(" No data for downloaded block [%s], block index inconsistency.", r.pindex->GetBlockHashPoW2().ToString()));
+            if (fSPV && pactiveWallet)
+            {
+                pactiveWallet->ResetSPV();
+                UnityReportError(std::string(__func__) + "Can't read block from disk");
+                return;
+            }
+            else
+            {
+                throw std::runtime_error(std::string(__func__) + strprintf(" No data for downloaded block [%s], block index inconsistency.", r.pindex->GetBlockHashPoW2().ToString()));
+            }
         }
     }
 }
