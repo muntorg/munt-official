@@ -51,13 +51,13 @@ file COPYING
     <string name="tx_status_confirmed">Confirmé dans le bloc #%d à %s</string>
     <string name="tx_status_unknown">Inconnu (vous avez trouvé un bug)</string>
     <string name="no_tx_details">Pas de détails de transaction pour[%s]</string>
-    <string name="no_guldensync_warning_title">Code QR invalide</string>
-    <string name="no_guldensync_warning">Ce code QR ne contient pas de code de synchronisation Gulden valide, veuillez réessayer avec un code valide.</string>
-    <string name="failed_guldensync_warning_title">Impossible d\'effectuer la liaison</string>
-    <string name="failed_guldensync_unconfirmed_funds_message">Certains de vos fonds sont en attente de confirmation, s\'il vous plaît leur permettre de confirmer pleinement avant de tenter à nouveau le processus de lien.</string>
-    <string name="guldensync_info_title">Lien avec le porte-monnaie de bureau</string>
-    <string name="guldensync_info_message_non_empty_wallet">Vous êtes sur le point d\'établir un lien avec votre portefeuille de bureau. Les adresses actuelles de ce portefeuille seront supprimées et ne seront plus disponibles une fois le lien établi. Les fonds qui se trouvent actuellement dans ce portefeuille seront transférés dans le portefeuille de bureau avant que le lien ne soit établi et seront temporairement indisponibles de ce portefeuille jusqu\'à ce que le lien soit établi. Veuillez vous assurer d\'enregistrer une copie de votre ancienne phrase de récupération quelque part au cas où vous auriez besoin d\'accéder de nouveau à ces adresses.</string>
-    <string name="guldensync_info_message_empty_wallet">Vous êtes sur le point d\'établir un lien avec votre portefeuille de bureau. Les adresses actuelles de ce portefeuille seront supprimées et ne seront plus disponibles une fois le lien établi. Veuillez vous assurer d\'enregistrer une copie de votre ancienne phrase de récupération quelque part au cas où vous auriez besoin d\'accéder de nouveau à ces adresses.</string>
+    <string name="no_qrsync_warning_title">Code QR invalide</string>
+    <string name="no_qrsync_warning">Ce code QR ne contient pas de code de synchronisation Gulden valide, veuillez réessayer avec un code valide.</string>
+    <string name="failed_qrsync_warning_title">Impossible d\'effectuer la liaison</string>
+    <string name="failed_qrsync_unconfirmed_funds_message">Certains de vos fonds sont en attente de confirmation, s\'il vous plaît leur permettre de confirmer pleinement avant de tenter à nouveau le processus de lien.</string>
+    <string name="qrsync_info_title">Lien avec le porte-monnaie de bureau</string>
+    <string name="qrsync_info_message_non_empty_wallet">Vous êtes sur le point d\'établir un lien avec votre portefeuille de bureau. Les adresses actuelles de ce portefeuille seront supprimées et ne seront plus disponibles une fois le lien établi. Les fonds qui se trouvent actuellement dans ce portefeuille seront transférés dans le portefeuille de bureau avant que le lien ne soit établi et seront temporairement indisponibles de ce portefeuille jusqu\'à ce que le lien soit établi. Veuillez vous assurer d\'enregistrer une copie de votre ancienne phrase de récupération quelque part au cas où vous auriez besoin d\'accéder de nouveau à ces adresses.</string>
+    <string name="qrsync_info_message_empty_wallet">Vous êtes sur le point d\'établir un lien avec votre portefeuille de bureau. Les adresses actuelles de ce portefeuille seront supprimées et ne seront plus disponibles une fois le lien établi. Veuillez vous assurer d\'enregistrer une copie de votre ancienne phrase de récupération quelque part au cas où vous auriez besoin d\'accéder de nouveau à ces adresses.</string>
     <string name="preference_fragment_title">Préférences</string>
     <string name="preference_fragment_recovery_label">Phrase de récupération</string>
     <string name="preference_fragment_link_label">Lien avec le portefeuille bureau</string>
@@ -145,6 +145,6 @@ file COPYING
     <string name="notification_service_channel_name">Service</string>
     <string name="notification_service_channel_description">Service pour garder les données synchronisées et surveiller les transactions lorsque l\'application est fermée, peut être activé/désactivé depuis les paramètres de l\'application.</string>
     <string name="dialog_title_add_address">Ajouter une adresse</string>
-    <string name="hint_iban_or_gulden_address">Gulden adresse</string>
+    <string name="hint_iban_or_coin_address">Gulden adresse</string>
     <string name="label_sync_progress_syncing">Concordance %.1f%%</string>
 </resources>

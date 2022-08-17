@@ -46,7 +46,7 @@ class URIHandlerActivity : AppBaseActivity()
     private var intentUri : Uri? = null
     private var scheme : String? = null
 
-    private fun isValidGuldenUri(uri: Uri?): Boolean {
+    private fun isValidCoinUri(uri: Uri?): Boolean {
         uri?.run {
             scheme?.run {
                 toLowerCase().run {
@@ -64,7 +64,7 @@ class URIHandlerActivity : AppBaseActivity()
 
         intentUri = intent.data
         scheme = intentUri?.scheme
-        if (Intent.ACTION_VIEW == intent.action && isValidGuldenUri(intentUri)) {
+        if (Intent.ACTION_VIEW == intent.action && isValidCoinUri(intentUri)) {
             handleURIAndClose()
         } else {
             finish()

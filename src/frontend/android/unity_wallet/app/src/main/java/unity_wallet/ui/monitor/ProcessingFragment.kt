@@ -9,8 +9,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import jniunifiedbackend.MonitorListener
-import jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.MonitorListener
+import unity_wallet.jniunifiedbackend.ILibraryController
 import unity_wallet.R
 import unity_wallet.UnityCore
 import unity_wallet.util.AppBaseFragment

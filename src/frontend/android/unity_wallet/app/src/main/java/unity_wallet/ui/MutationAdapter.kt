@@ -11,8 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
-import jniunifiedbackend.MutationRecord
-import jniunifiedbackend.TransactionStatus
+import unity_wallet.jniunifiedbackend.MutationRecord
+import unity_wallet.jniunifiedbackend.TransactionStatus
 import unity_wallet.R
 import unity_wallet.formatNativeAndLocal
 import kotlinx.android.synthetic.main.mutation_list_item.view.*

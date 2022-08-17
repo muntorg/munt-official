@@ -21,8 +21,8 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
-import jniunifiedbackend.ILibraryController
-import jniunifiedbackend.IWalletController
+import unity_wallet.jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.IWalletController
 import unity_wallet.main_activity_fragments.*
 import unity_wallet.ui.getDisplayDimensions
 import unity_wallet.ui.monitor.NetworkMonitorActivity
@@ -172,8 +172,8 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
                 {
                     runOnUiThread {
                         AlertDialog.Builder(this)
-                                .setTitle(getString(R.string.no_guldensync_warning_title))
-                                .setMessage(getString(R.string.no_guldensync_warning))
+                                .setTitle(getString(R.string.no_qrsync_warning_title))
+                                .setMessage(getString(R.string.no_qrsync_warning))
                                 .setPositiveButton(getString(R.string.button_ok)) {
                                     dialogInterface, i -> dialogInterface.dismiss()
                                 }.setCancelable(true).create().show()

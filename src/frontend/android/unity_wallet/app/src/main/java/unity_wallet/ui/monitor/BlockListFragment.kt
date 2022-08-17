@@ -13,8 +13,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import jniunifiedbackend.MonitorListener
-import jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.MonitorListener
+import unity_wallet.jniunifiedbackend.ILibraryController
 import unity_wallet.R
 import unity_wallet.UnityCore
 import unity_wallet.util.AppBaseFragment

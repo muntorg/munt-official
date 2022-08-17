@@ -11,9 +11,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import jniunifiedbackend.ILibraryController
-import jniunifiedbackend.MutationRecord
-import jniunifiedbackend.TransactionRecord
+import unity_wallet.jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.MutationRecord
+import unity_wallet.jniunifiedbackend.TransactionRecord
 import unity_wallet.*
 import unity_wallet.ui.MutationAdapter
 import unity_wallet.util.AppBaseFragment
@@ -93,5 +93,10 @@ class MutationFragment : AppBaseFragment(), UnityCore.Observer, CoroutineScope {
             val adapter = mutationList.adapter as MutationAdapter
             adapter.updateDataSource(mutations)
         }
+    }
+
+    fun gotoBuyActivity(view: View)
+    {
+        (activity as WalletActivity).gotoBuyActivity()
     }
 }

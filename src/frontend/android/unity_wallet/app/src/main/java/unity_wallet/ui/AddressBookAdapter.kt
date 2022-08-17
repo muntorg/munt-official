@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import jniunifiedbackend.AddressRecord
+import unity_wallet.jniunifiedbackend.AddressRecord
 import unity_wallet.R
 import unity_wallet.UnityCore
 import kotlinx.android.synthetic.main.address_book_list_item.view.*

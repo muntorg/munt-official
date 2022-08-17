@@ -31,10 +31,10 @@ import com.android.volley.toolbox.Volley
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import barcodereader.BarcodeCaptureActivity
-import jniunifiedbackend.AddressRecord
-import jniunifiedbackend.ILibraryController
-import jniunifiedbackend.IWalletController
-import jniunifiedbackend.UriRecipient
+import unity_wallet.jniunifiedbackend.AddressRecord
+import unity_wallet.jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.IWalletController
+import unity_wallet.jniunifiedbackend.UriRecipient
 import unity_wallet.*
 import unity_wallet.ui.AddressBookAdapter
 import unity_wallet.util.AppBaseFragment
@@ -303,7 +303,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
                         createRecipient(qrContent!!)
                     }
                     catch (e: InvalidRecipientException) {
-                        errorMessage(getString(unity_wallet.R.string.not_gulden_qr, qrContent))
+                        errorMessage(getString(unity_wallet.R.string.not_coin_qr, qrContent))
                         return
                     }
                     SendCoinsFragment.newInstance(recipient!!, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)

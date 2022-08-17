@@ -13,7 +13,7 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import barcodereader.BarcodeCaptureActivity
-import jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.ILibraryController
 import unity_wallet.ui.EnterRecoveryPhraseActivity
 import unity_wallet.ui.ShowRecoveryPhraseActivity
 import unity_wallet.util.AppBaseActivity
@@ -101,8 +101,8 @@ class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
 
                             // Got here so there was an error in init or continue linked wallet
                             val dialog = MaterialAlertDialogBuilder(this)
-                                    .setTitle(getString(R.string.no_guldensync_warning_title))
-                                    .setMessage(getString(R.string.no_guldensync_warning))
+                                    .setTitle(getString(R.string.no_qrsync_warning_title))
+                                    .setMessage(getString(R.string.no_qrsync_warning))
                                     .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, i: Int ->
                                         dialog.dismiss()
                                     }

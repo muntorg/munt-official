@@ -15,7 +15,7 @@ import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import jniunifiedbackend.BlockInfoRecord
+import unity_wallet.jniunifiedbackend.BlockInfoRecord
 import unity_wallet.Config
 import unity_wallet.R
 import kotlinx.android.synthetic.main.block_row.view.*

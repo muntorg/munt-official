@@ -55,24 +55,24 @@ android {
     flavorDimensions "default"
     productFlavors {
         gulden_testnet {
-            applicationId 'gulden.testnet'
+            applicationId 'com.gulden.testnet'
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden-testnet"
             buildConfigField "boolean", "TESTNET", "true"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf-testnet"'
-            versionCode 300439
+            versionCode 300444
             versionName = "2.5.0"
             resValue "string", "about_text_app_name", "Gulden testnet $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2021 Centure.com BV"
         }
 
         gulden_mainnet {
-            applicationId 'gulden.wallet'
+            applicationId 'com.gulden.wallet'
             archivesBaseName = 'gulden'
             resValue "string", "app_name", "Gulden"
             buildConfigField "boolean", "TESTNET", "false"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf"'
-            versionCode 439
+            versionCode 444
             versionName = "2.5.0"
             resValue "string", "about_text_app_name", "Gulden $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2021 Centure.com BV"

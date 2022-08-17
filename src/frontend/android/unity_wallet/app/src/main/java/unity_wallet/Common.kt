@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.DialogInterface
 import android.net.Uri
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import jniunifiedbackend.ILibraryController
-import jniunifiedbackend.UriRecipient
-import jniunifiedbackend.UriRecord
+import unity_wallet.jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.UriRecipient
+import unity_wallet.jniunifiedbackend.UriRecord
 import org.apache.commons.validator.routines.IBANValidator
 import java.util.HashMap
 

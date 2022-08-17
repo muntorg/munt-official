@@ -15,8 +15,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import jniunifiedbackend.ILibraryController
-import jniunifiedbackend.LegacyWalletResult
+import unity_wallet.jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.LegacyWalletResult
 import unity_wallet.Constants.OLD_WALLET_PROTOBUF_FILENAME
 import unity_wallet.util.AppBaseActivity
 import kotlinx.android.synthetic.main.upgrade_password.view.*
@@ -48,8 +48,8 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
             {
                 when (result)
                 {
-                    LegacyWalletResult.ENCRYPTED_PASSWORD_REQUIRED, LegacyWalletResult.PASSWORD_INVALID -> this.runOnUiThread { Snackbar.make(View(this@UpgradeActivity), getString(R.string.upgrade_wrong_password), Snackbar.LENGTH_LONG).show() }
-                    LegacyWalletResult.INVALID_OR_CORRUPT -> this.runOnUiThread { Snackbar.make(View(this@UpgradeActivity), "Unable to upgrade old wallet, contact support for assistance.", Snackbar.LENGTH_LONG).show() }
+                    LegacyWalletResult.ENCRYPTED_PASSWORD_REQUIRED, LegacyWalletResult.PASSWORD_INVALID -> this.runOnUiThread { Snackbar.make(view, getString(R.string.upgrade_wrong_password), Snackbar.LENGTH_LONG).show() }
+                    LegacyWalletResult.INVALID_OR_CORRUPT -> this.runOnUiThread { Snackbar.make(view, "Unable to upgrade old wallet, contact support for assistance.", Snackbar.LENGTH_LONG).show() }
                     else -> chooseNewAccessCodeAndUpgrade(oldPassword, view)
                 }
             }

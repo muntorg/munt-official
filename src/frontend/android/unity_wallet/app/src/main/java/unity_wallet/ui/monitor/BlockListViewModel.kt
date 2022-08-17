@@ -8,7 +8,7 @@ package unity_wallet.ui.monitor
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import jniunifiedbackend.BlockInfoRecord
+import unity_wallet.jniunifiedbackend.BlockInfoRecord
 
 class BlockListViewModel : ViewModel() {
     private lateinit var blocks: MutableLiveData<List<BlockInfoRecord>>

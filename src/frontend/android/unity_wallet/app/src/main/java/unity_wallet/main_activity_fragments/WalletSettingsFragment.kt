@@ -16,7 +16,7 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import barcodereader.BarcodeCaptureActivity
-import jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.ILibraryController
 import unity_wallet.*
 import unity_wallet.util.invokeNowOrOnSuccessfulCompletion
 import kotlinx.coroutines.CoroutineScope
@@ -112,8 +112,8 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
 
                     if (!ILibraryController.IsValidLinkURI(barcode?.displayValue)) {
                         AlertDialog.Builder(context!!)
-                                .setTitle(getString(unity_wallet.R.string.no_guldensync_warning_title))
-                                .setMessage(getString(unity_wallet.R.string.no_guldensync_warning))
+                                .setTitle(getString(unity_wallet.R.string.no_qrsync_warning_title))
+                                .setMessage(getString(unity_wallet.R.string.no_qrsync_warning))
                                 .setPositiveButton(getString(unity_wallet.R.string.button_ok)) { dialogInterface, i ->
                                     dialogInterface.dismiss()
                                 }
@@ -140,7 +140,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
                     }
 
                     if (ILibraryController.HaveUnconfirmedFunds()) {
-                        performDialog(R.string.failed_guldensync_warning_title, R.string.failed_guldensync_unconfirmed_funds_message, false) {
+                        performDialog(R.string.failed_qrsync_warning_title, R.string.failed_qrsync_unconfirmed_funds_message, false) {
                             it.dismiss()
                         }
                         return
@@ -149,8 +149,8 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
                     //TODO: Refuse to link if we are in the process of a sync.
 
                     performDialog(
-                            R.string.guldensync_info_title,
-                            if (ILibraryController.GetBalance() > 0) R.string.guldensync_info_message_non_empty_wallet else R.string.guldensync_info_message_empty_wallet, true
+                            R.string.qrsync_info_title,
+                            if (ILibraryController.GetBalance() > 0) R.string.qrsync_info_message_non_empty_wallet else R.string.qrsync_info_message_empty_wallet, true
                     ) {
                         it.dismiss()
                         (activity as WalletActivity).performLink(barcode!!.displayValue!!)

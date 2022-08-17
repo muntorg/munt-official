@@ -18,7 +18,7 @@ import kotlin.math.roundToLong
 
 private const val TAG = "currency"
 
-private const val GULDEN_MARKET_URL = "https://api.gulden.com/api/v1/ticker"
+private const val APP_MARKET_URL = "https://api.gulden.com/api/v1/ticker"
 
 /**
  * Fetch currency conversion rate from server (suspended, use from co-routine)
@@ -53,11 +53,11 @@ private suspend fun reallyfetchAllCurrencyRates(): Map<String, Double> {
     lateinit var data: String
     try {
         data  = withContext(Dispatchers.IO) {
-            URL(GULDEN_MARKET_URL).readText()
+            URL(APP_MARKET_URL).readText()
         }
     }
     catch (e: Throwable) {
-        Log.i(TAG, "Failed to fetch currency rates from $GULDEN_MARKET_URL")
+        Log.i(TAG, "Failed to fetch currency rates from $APP_MARKET_URL")
         throw e
     }
 

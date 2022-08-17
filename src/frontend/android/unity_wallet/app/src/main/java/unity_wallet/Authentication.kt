@@ -16,7 +16,7 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.ILibraryController
 import unity_wallet.Constants.ACCESS_CODE_ATTEMPTS_ALLOWED
 import unity_wallet.Constants.ACCESS_CODE_LENGTH
 import kotlinx.android.synthetic.main.access_code_entry.view.*

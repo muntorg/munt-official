@@ -56,7 +56,7 @@ file COPYING
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/networkMonitorBackButton"
                 android:background="@color/bg_bright"
-                android:contentDescription="@string/image_content_description_gulden_logo"
+                android:contentDescription="@string/image_content_description_logo"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_gulden_logo_text" />
 

@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
 
 private const val TAG = "background_sync"
-const val GULDEN_PERIODIC_SYNC = "GULDEN_PERIODIC_SYNC"
+const val APP_PERIODIC_SYNC = "APP_PERIODIC_SYNC"
 
 @RequiresApi(Build.VERSION_CODES.S)
 fun setupBackgroundSync(context: Context) {
@@ -42,7 +42,7 @@ fun setupBackgroundSync(context: Context) {
     val serviceIntent = Intent(context, SyncService::class.java)
 
     context.stopService(serviceIntent)
-    WorkManager.getInstance().cancelAllWorkByTag(GULDEN_PERIODIC_SYNC)
+    WorkManager.getInstance().cancelAllWorkByTag(APP_PERIODIC_SYNC)
 
     when (syncType) {
         "BACKGROUND_SYNC_OFF" -> {
@@ -50,7 +50,7 @@ fun setupBackgroundSync(context: Context) {
 
         "BACKGROUND_SYNC_DAILY" -> {
             val work = PeriodicWorkRequestBuilder<SyncWorker>(24, TimeUnit.HOURS)
-                    .addTag(GULDEN_PERIODIC_SYNC)
+                    .addTag(APP_PERIODIC_SYNC)
                     .build()
             WorkManager.getInstance().enqueue(work)
         }
@@ -73,7 +73,7 @@ fun setupBackgroundSync(context: Context) {
                 //
                 //For now instead we just call the periodic sync a lot more frequently, however I don't know if this is the best solution, we should look at something else in future
                 val work = PeriodicWorkRequestBuilder<SyncWorker>(10, TimeUnit.MINUTES)
-                        .addTag(GULDEN_PERIODIC_SYNC)
+                        .addTag(APP_PERIODIC_SYNC)
                         .build()
                 WorkManager.getInstance().enqueue(work)
             }
@@ -110,7 +110,7 @@ class SyncService : Service(), UnityCore.Observer
     {
 
         val notificationIntent = Intent(this, WalletActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {

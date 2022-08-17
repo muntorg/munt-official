@@ -23,9 +23,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import jniunifiedbackend.AddressRecord
-import jniunifiedbackend.ILibraryController
-import jniunifiedbackend.UriRecipient
+import unity_wallet.jniunifiedbackend.AddressRecord
+import unity_wallet.jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.UriRecipient
 import unity_wallet.Config.Companion.PRECISION_SHORT
 import unity_wallet.R.layout.text_input_address_label
 import unity_wallet.ui.getDisplayDimensions
@@ -237,7 +237,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         }
     }
 
-    private fun confirmAndCommitGuldenPayment()
+    private fun confirmAndCommitCoinPayment()
     {
         val amountNativeStr = when (entryMode) {
             EntryMode.Local -> (amountEditStr.toDoubleOrZero() / localRate).toString()
@@ -273,7 +273,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
                 // alert dialog for confirmation
                 MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(getString(R.string.send_gulden_title))
+                        .setTitle(getString(R.string.send_coins_title))
                         .setMessage(message)
                         // on confirmation compose recipient and execute payment
                         .setPositiveButton(getString(R.string.send_btn)) { dialogInterface: DialogInterface, i: Int ->
@@ -289,7 +289,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
 
     private fun errorMessage(msg: String) {
         MaterialAlertDialogBuilder(requireContext())
-                .setTitle(getString(R.string.send_gulden_title))
+                .setTitle(getString(R.string.send_coins_title))
                 .setMessage(msg)
                 // on confirmation compose recipient and execute payment
                 .setPositiveButton(getString(R.string.send_coins_error_acknowledge)) { dialogInterface: DialogInterface, i: Int ->
@@ -451,7 +451,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
                 return@run
             }
 
-            confirmAndCommitGuldenPayment()
+            confirmAndCommitCoinPayment()
         }
     }
 

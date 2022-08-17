@@ -15,7 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.ShareActionProvider
 import androidx.core.view.MenuItemCompat
-import jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.ILibraryController
 import unity_wallet.*
 import unity_wallet.util.AppBaseActivity
 import unity_wallet.util.gotoWalletActivity
@@ -154,7 +154,7 @@ class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
             mode.menuInflater.inflate(R.menu.share_menu, menu)
 
             // Handle buy button
-            val itemBuy = menu.findItem(R.id.item_buy_gulden)
+            val itemBuy = menu.findItem(R.id.item_buy_coins)
             itemBuy.isVisible = false
 
             // Handle copy button

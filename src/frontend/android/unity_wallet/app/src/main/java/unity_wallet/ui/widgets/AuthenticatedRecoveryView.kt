@@ -8,7 +8,7 @@ package unity_wallet.ui.widgets
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.ViewSwitcher
-import jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.ILibraryController
 import unity_wallet.Authentication
 import unity_wallet.R
 import kotlinx.android.synthetic.main.pref_view_recovery.view.*

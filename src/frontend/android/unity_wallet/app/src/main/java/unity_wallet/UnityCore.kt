@@ -6,7 +6,7 @@
 package unity_wallet
 
 import android.util.Log
-import jniunifiedbackend.*
+import unity_wallet.jniunifiedbackend.*
 import kotlinx.coroutines.CompletableDeferred
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
@@ -247,9 +247,12 @@ class UnityCore {
         }
 
         override fun notifySyncDone() {
-            //not yet used
+            //TODO: handle sync done based on this instead of our own complex logic (see desktop wallet)
         }
 
+        override fun notifyError(error: String?) {
+            //TODO: submit a crash/analytic report here...
+        }
 
         override fun notifyInitWithoutExistingWallet() {
             try {

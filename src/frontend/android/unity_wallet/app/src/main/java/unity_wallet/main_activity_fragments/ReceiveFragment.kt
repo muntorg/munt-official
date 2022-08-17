@@ -16,7 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
-import jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.ILibraryController
 import unity_wallet.R
 import unity_wallet.WalletActivity
 import unity_wallet.util.AppBaseFragment
@@ -52,7 +52,7 @@ class ReceiveFragment : AppBaseFragment() {
     }
 
     private fun copyToClipboard(): Boolean {
-        val clip: ClipData = ClipData.newPlainText(getString(R.string.gulden_address_clipboard_label), currentAddressLabel.text)
+        val clip: ClipData = ClipData.newPlainText(getString(R.string.coin_address_clipboard_label), currentAddressLabel.text)
         val clipboard = getSystemService<ClipboardManager>(requireActivity(), ClipboardManager::class.java) as ClipboardManager
         clipboard.setPrimaryClip(clip)
 

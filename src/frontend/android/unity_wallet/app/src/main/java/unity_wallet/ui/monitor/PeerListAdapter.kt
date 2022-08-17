@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import jniunifiedbackend.PeerRecord
+import unity_wallet.jniunifiedbackend.PeerRecord
 import unity_wallet.R
 import kotlinx.android.synthetic.main.peer_list_row.view.*
 

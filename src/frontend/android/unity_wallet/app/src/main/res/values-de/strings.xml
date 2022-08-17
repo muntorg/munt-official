@@ -51,13 +51,13 @@ file COPYING
     <string name="tx_status_confirmed">Bestätigt in Block #%d um %s</string>
     <string name="tx_status_unknown">Unbekannt (du hast einen Fehler gefunden)</string>
     <string name="no_tx_details">Keine Transaktionsdetails für [%s]</string>
-    <string name="no_guldensync_warning_title">Ungültiger QR-Code</string>
-    <string name="no_guldensync_warning">Dieser QR-Code enthält keinen gültigen Gulden-Synchronisierungscode. Bitte versuchen Sie es erneut mit einem gültigen Code.</string>
-    <string name="failed_guldensync_warning_title">Verbindung zwischen Mobil und Desktop Wallet fehlgeschlagen</string>
-    <string name="failed_guldensync_unconfirmed_funds_message">Einige deiner Geldmittel warten noch auf ihre Bestätigung. Bitte erlaube Ihnen vollständig bestätigt zu werden, bevor du die Verbindung zwischen Mobil und Destkop Wallet erneut versuchst.</string>
-    <string name="guldensync_info_title">Verbinden mit Desktop Wallet</string>
-    <string name="guldensync_info_message_non_empty_wallet">Du bist im Begriff, eine Verbindung zum Desktop Wallet herzustellen. Die aktuellen Adressen in diesem Wallet werden gelöscht und sind nach der Verbindung nicht länger verfügbar. Die aktuellen Geldmittel werden vor der Verbindung zum Desktop Wallet transferiert und sind kurzfristig nicht verfügbar, bis die Verbindung hergestellt wurde. Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeichert hast, falls du später wieder darauf zugreifen musst.</string>
-    <string name="guldensync_info_message_empty_wallet">Du bist im Begriff, eine Verbindung zum Desktop Wallet herzustellen. Die aktuellen Adressen in diesem Wallet werden gelöscht und sind nach der Verbindung nicht länger verfügbar.
+    <string name="no_qrsync_warning_title">Ungültiger QR-Code</string>
+    <string name="no_qrsync_warning">Dieser QR-Code enthält keinen gültigen Gulden-Synchronisierungscode. Bitte versuchen Sie es erneut mit einem gültigen Code.</string>
+    <string name="failed_qrsync_warning_title">Verbindung zwischen Mobil und Desktop Wallet fehlgeschlagen</string>
+    <string name="failed_qrsync_unconfirmed_funds_message">Einige deiner Geldmittel warten noch auf ihre Bestätigung. Bitte erlaube Ihnen vollständig bestätigt zu werden, bevor du die Verbindung zwischen Mobil und Destkop Wallet erneut versuchst.</string>
+    <string name="qrsync_info_title">Verbinden mit Desktop Wallet</string>
+    <string name="qrsync_info_message_non_empty_wallet">Du bist im Begriff, eine Verbindung zum Desktop Wallet herzustellen. Die aktuellen Adressen in diesem Wallet werden gelöscht und sind nach der Verbindung nicht länger verfügbar. Die aktuellen Geldmittel werden vor der Verbindung zum Desktop Wallet transferiert und sind kurzfristig nicht verfügbar, bis die Verbindung hergestellt wurde. Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeichert hast, falls du später wieder darauf zugreifen musst.</string>
+    <string name="qrsync_info_message_empty_wallet">Du bist im Begriff, eine Verbindung zum Desktop Wallet herzustellen. Die aktuellen Adressen in diesem Wallet werden gelöscht und sind nach der Verbindung nicht länger verfügbar.
 Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeichert hast, falls du später wieder darauf zugreifen musst.</string>
     <string name="preference_fragment_title">Einstellungen</string>
     <string name="preference_fragment_recovery_label">Wiederherstellungsphrase</string>
@@ -150,7 +150,7 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeich
     <string name="notification_service_channel_name">Service</string>
     <string name="notification_service_channel_description">Dienst, der die Daten synchron hält und Transaktionen überwacht, wenn die App geschlossen wird, kann in den App-Einstellungen aktiviert / deaktiviert werden.</string>
     <string name="dialog_title_add_address">Adresse hinzufügen</string>
-    <string name="hint_iban_or_gulden_address">Gulden-Adresse</string>
+    <string name="hint_iban_or_coin_address">Gulden-Adresse</string>
     <string name="toast_warn_uri_attempt_before_wallet_creation">Du musst eine Gulden-Wallet einrichten, bevor du diese URI verwenden kannst</string>
     <string name="preference_fragment_link_summary">Verbinde dein mobiles Wallet mit deinem Desktop-Wallet</string>
     <string name="preference_fragment_remove_summary">Entferne dieses Wallet, um eine anderes Wallet zu starten oder wiederherzustellen</string>

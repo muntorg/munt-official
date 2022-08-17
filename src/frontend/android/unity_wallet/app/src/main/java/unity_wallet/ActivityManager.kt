@@ -18,9 +18,9 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager
-import jniunifiedbackend.ILibraryController
-import jniunifiedbackend.MutationRecord
-import jniunifiedbackend.TransactionRecord
+import unity_wallet.jniunifiedbackend.ILibraryController
+import unity_wallet.jniunifiedbackend.MutationRecord
+import unity_wallet.jniunifiedbackend.TransactionRecord
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -87,7 +87,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
                 val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
                 // The id of the channel.
-                val id = "gulden_transactions_notification_channel"
+                val id = "coin_transactions_notification_channel"
 
                 // The user-visible name of the channel.
                 val name = getString(R.string.notification_transaction_channel_name)
@@ -125,7 +125,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
                 && !selfCommitted
                 && mutation.change != 0L) {
             val notificationIntent = Intent(this, WalletActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+            val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE)
 
             val title = getString(if (mutation.change > 0) R.string.notify_received else R.string.notify_sent)
             val notification = with(NotificationCompat.Builder(this)) {

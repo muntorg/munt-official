@@ -8,7 +8,7 @@ package unity_wallet.ui.monitor
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import jniunifiedbackend.PeerRecord
+import unity_wallet.jniunifiedbackend.PeerRecord
 
 class PeerListViewModel : ViewModel() {
     private lateinit var peers: MutableLiveData<List<PeerRecord>>
