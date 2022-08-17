@@ -24,7 +24,7 @@ private:
     NativeWitnessFundingResultRecord();
     friend ::djinni::JniClass<NativeWitnessFundingResultRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/WitnessFundingResultRecord") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/WitnessFundingResultRecord") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;J)V") };
     const jfieldID field_mStatus { ::djinni::jniGetFieldID(clazz.get(), "mStatus", "Ljava/lang/String;") };
     const jfieldID field_mTxid { ::djinni::jniGetFieldID(clazz.get(), "mTxid", "Ljava/lang/String;") };

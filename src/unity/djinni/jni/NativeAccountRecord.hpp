@@ -24,7 +24,7 @@ private:
     NativeAccountRecord();
     friend ::djinni::JniClass<NativeAccountRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/AccountRecord") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/AccountRecord") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V") };
     const jfieldID field_mUUID { ::djinni::jniGetFieldID(clazz.get(), "mUUID", "Ljava/lang/String;") };
     const jfieldID field_mLabel { ::djinni::jniGetFieldID(clazz.get(), "mLabel", "Ljava/lang/String;") };

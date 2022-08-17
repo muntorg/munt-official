@@ -41,7 +41,7 @@ private:
         friend ::djinni::JniInterface<::IGenerationListener, ::djinni_generated::NativeIGenerationListener>;
     };
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/IGenerationListener") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/IGenerationListener") };
     const jmethodID method_onGenerationStarted { ::djinni::jniGetMethodID(clazz.get(), "onGenerationStarted", "()V") };
     const jmethodID method_onGenerationStopped { ::djinni::jniGetMethodID(clazz.get(), "onGenerationStopped", "()V") };
     const jmethodID method_onStatsUpdated { ::djinni::jniGetMethodID(clazz.get(), "onStatsUpdated", "(DLjava/lang/String;DLjava/lang/String;DLjava/lang/String;D)V") };

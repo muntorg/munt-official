@@ -24,7 +24,7 @@ private:
     NativeBlockInfoRecord();
     friend ::djinni::JniClass<NativeBlockInfoRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/BlockInfoRecord") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/BlockInfoRecord") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(IJLjava/lang/String;)V") };
     const jfieldID field_mHeight { ::djinni::jniGetFieldID(clazz.get(), "mHeight", "I") };
     const jfieldID field_mTimeStamp { ::djinni::jniGetFieldID(clazz.get(), "mTimeStamp", "J") };

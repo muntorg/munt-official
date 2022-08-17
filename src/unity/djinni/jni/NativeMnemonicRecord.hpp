@@ -24,7 +24,7 @@ private:
     NativeMnemonicRecord();
     friend ::djinni::JniClass<NativeMnemonicRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/MnemonicRecord") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/MnemonicRecord") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;J)V") };
     const jfieldID field_mPhraseWithBirthNumber { ::djinni::jniGetFieldID(clazz.get(), "mPhraseWithBirthNumber", "Ljava/lang/String;") };
     const jfieldID field_mPhrase { ::djinni::jniGetFieldID(clazz.get(), "mPhrase", "Ljava/lang/String;") };

@@ -41,7 +41,7 @@ private:
         friend ::djinni::JniInterface<::MonitorListener, ::djinni_generated::NativeMonitorListener>;
     };
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/MonitorListener") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/MonitorListener") };
     const jmethodID method_onPartialChain { ::djinni::jniGetMethodID(clazz.get(), "onPartialChain", "(III)V") };
     const jmethodID method_onPruned { ::djinni::jniGetMethodID(clazz.get(), "onPruned", "(I)V") };
     const jmethodID method_onProcessedSPVBlocks { ::djinni::jniGetMethodID(clazz.get(), "onProcessedSPVBlocks", "(I)V") };

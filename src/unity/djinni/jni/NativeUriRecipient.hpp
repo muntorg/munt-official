@@ -24,7 +24,7 @@ private:
     NativeUriRecipient();
     friend ::djinni::JniClass<NativeUriRecipient>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/UriRecipient") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/UriRecipient") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;J)V") };
     const jfieldID field_mValid { ::djinni::jniGetFieldID(clazz.get(), "mValid", "Z") };
     const jfieldID field_mAddress { ::djinni::jniGetFieldID(clazz.get(), "mAddress", "Ljava/lang/String;") };

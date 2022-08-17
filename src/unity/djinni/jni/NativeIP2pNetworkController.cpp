@@ -8,12 +8,12 @@
 
 namespace djinni_generated {
 
-NativeIP2pNetworkController::NativeIP2pNetworkController() : ::djinni::JniInterface<::IP2pNetworkController, NativeIP2pNetworkController>("com/gulden/jniunifiedbackend/IP2pNetworkController$CppProxy") {}
+NativeIP2pNetworkController::NativeIP2pNetworkController() : ::djinni::JniInterface<::IP2pNetworkController, NativeIP2pNetworkController>("unity_wallet/jniunifiedbackend/IP2pNetworkController$CppProxy") {}
 
 NativeIP2pNetworkController::~NativeIP2pNetworkController() = default;
 
 
-CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IP2pNetworkController_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+CJNIEXPORT void JNICALL Java_unity_1wallet_jniunifiedbackend_IP2pNetworkController_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
@@ -21,7 +21,7 @@ CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IP2pNetworkController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IP2pNetworkController_00024CppProxy_setListener(JNIEnv* jniEnv, jobject /*this*/, jobject j_networklistener)
+CJNIEXPORT void JNICALL Java_unity_1wallet_jniunifiedbackend_IP2pNetworkController_00024CppProxy_setListener(JNIEnv* jniEnv, jobject /*this*/, jobject j_networklistener)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -29,7 +29,7 @@ CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IP2pNetworkController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IP2pNetworkController_00024CppProxy_disableNetwork(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT void JNICALL Java_unity_1wallet_jniunifiedbackend_IP2pNetworkController_00024CppProxy_disableNetwork(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -37,7 +37,7 @@ CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IP2pNetworkController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IP2pNetworkController_00024CppProxy_enableNetwork(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT void JNICALL Java_unity_1wallet_jniunifiedbackend_IP2pNetworkController_00024CppProxy_enableNetwork(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -45,7 +45,7 @@ CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IP2pNetworkController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_IP2pNetworkController_00024CppProxy_getPeerInfo(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IP2pNetworkController_00024CppProxy_getPeerInfo(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);

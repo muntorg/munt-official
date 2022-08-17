@@ -85,6 +85,14 @@ void NativeILibraryListener::JavaProxy::notifyCoreReady() {
     jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyCoreReady);
     ::djinni::jniExceptionCheck(jniEnv);
 }
+void NativeILibraryListener::JavaProxy::notifyError(const std::string & c_error) {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeILibraryListener>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_notifyError,
+                           ::djinni::get(::djinni::String::fromCpp(jniEnv, c_error)));
+    ::djinni::jniExceptionCheck(jniEnv);
+}
 void NativeILibraryListener::JavaProxy::logPrint(const std::string & c_str) {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);

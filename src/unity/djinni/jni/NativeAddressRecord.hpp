@@ -24,7 +24,7 @@ private:
     NativeAddressRecord();
     friend ::djinni::JniClass<NativeAddressRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/AddressRecord") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/AddressRecord") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V") };
     const jfieldID field_mAddress { ::djinni::jniGetFieldID(clazz.get(), "mAddress", "Ljava/lang/String;") };
     const jfieldID field_mName { ::djinni::jniGetFieldID(clazz.get(), "mName", "Ljava/lang/String;") };

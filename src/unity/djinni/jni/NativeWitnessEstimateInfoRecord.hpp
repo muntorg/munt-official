@@ -24,7 +24,7 @@ private:
     NativeWitnessEstimateInfoRecord();
     friend ::djinni::JniClass<NativeWitnessEstimateInfoRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/WitnessEstimateInfoRecord") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/WitnessEstimateInfoRecord") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(JJJDDJJ)V") };
     const jfieldID field_mNetworkWeight { ::djinni::jniGetFieldID(clazz.get(), "mNetworkWeight", "J") };
     const jfieldID field_mWeight { ::djinni::jniGetFieldID(clazz.get(), "mWeight", "J") };

@@ -24,13 +24,13 @@ private:
     NativeMutationRecord();
     friend ::djinni::JniClass<NativeMutationRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/MutationRecord") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(JJLjava/lang/String;Ljava/lang/String;Lcom/gulden/jniunifiedbackend/TransactionStatus;I)V") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/MutationRecord") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(JJLjava/lang/String;Ljava/lang/String;Lunity_wallet/jniunifiedbackend/TransactionStatus;I)V") };
     const jfieldID field_mChange { ::djinni::jniGetFieldID(clazz.get(), "mChange", "J") };
     const jfieldID field_mTimestamp { ::djinni::jniGetFieldID(clazz.get(), "mTimestamp", "J") };
     const jfieldID field_mTxHash { ::djinni::jniGetFieldID(clazz.get(), "mTxHash", "Ljava/lang/String;") };
     const jfieldID field_mRecipientAddresses { ::djinni::jniGetFieldID(clazz.get(), "mRecipientAddresses", "Ljava/lang/String;") };
-    const jfieldID field_mStatus { ::djinni::jniGetFieldID(clazz.get(), "mStatus", "Lcom/gulden/jniunifiedbackend/TransactionStatus;") };
+    const jfieldID field_mStatus { ::djinni::jniGetFieldID(clazz.get(), "mStatus", "Lunity_wallet/jniunifiedbackend/TransactionStatus;") };
     const jfieldID field_mDepth { ::djinni::jniGetFieldID(clazz.get(), "mDepth", "I") };
 };
 

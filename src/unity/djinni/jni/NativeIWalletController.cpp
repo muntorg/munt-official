@@ -8,12 +8,12 @@
 
 namespace djinni_generated {
 
-NativeIWalletController::NativeIWalletController() : ::djinni::JniInterface<::IWalletController, NativeIWalletController>("com/gulden/jniunifiedbackend/IWalletController$CppProxy") {}
+NativeIWalletController::NativeIWalletController() : ::djinni::JniInterface<::IWalletController, NativeIWalletController>("unity_wallet/jniunifiedbackend/IWalletController$CppProxy") {}
 
 NativeIWalletController::~NativeIWalletController() = default;
 
 
-CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IWalletController_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+CJNIEXPORT void JNICALL Java_unity_1wallet_jniunifiedbackend_IWalletController_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
@@ -21,7 +21,7 @@ CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IWalletController_0002
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IWalletController_00024CppProxy_setListener(JNIEnv* jniEnv, jobject /*this*/, jobject j_networklistener)
+CJNIEXPORT void JNICALL Java_unity_1wallet_jniunifiedbackend_IWalletController_00024CppProxy_setListener(JNIEnv* jniEnv, jobject /*this*/, jobject j_networklistener)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -29,7 +29,7 @@ CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IWalletController_0002
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_IWalletController_00024CppProxy_HaveUnconfirmedFunds(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jboolean JNICALL Java_unity_1wallet_jniunifiedbackend_IWalletController_00024CppProxy_HaveUnconfirmedFunds(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -38,7 +38,7 @@ CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_IWalletController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jlong JNICALL Java_com_gulden_jniunifiedbackend_IWalletController_00024CppProxy_GetBalanceSimple(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jlong JNICALL Java_unity_1wallet_jniunifiedbackend_IWalletController_00024CppProxy_GetBalanceSimple(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -47,7 +47,7 @@ CJNIEXPORT jlong JNICALL Java_com_gulden_jniunifiedbackend_IWalletController_000
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_IWalletController_00024CppProxy_GetBalance(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IWalletController_00024CppProxy_GetBalance(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -56,7 +56,7 @@ CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_IWalletController_0
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_IWalletController_00024CppProxy_AbandonTransaction(JNIEnv* jniEnv, jobject /*this*/, jstring j_txHash)
+CJNIEXPORT jboolean JNICALL Java_unity_1wallet_jniunifiedbackend_IWalletController_00024CppProxy_AbandonTransaction(JNIEnv* jniEnv, jobject /*this*/, jstring j_txHash)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -65,7 +65,7 @@ CJNIEXPORT jboolean JNICALL Java_com_gulden_jniunifiedbackend_IWalletController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_IWalletController_00024CppProxy_GetUUID(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jstring JNICALL Java_unity_1wallet_jniunifiedbackend_IWalletController_00024CppProxy_GetUUID(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);

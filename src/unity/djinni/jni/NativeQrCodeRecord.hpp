@@ -24,7 +24,7 @@ private:
     NativeQrCodeRecord();
     friend ::djinni::JniClass<NativeQrCodeRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/QrCodeRecord") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/QrCodeRecord") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(I[B)V") };
     const jfieldID field_mWidth { ::djinni::jniGetFieldID(clazz.get(), "mWidth", "I") };
     const jfieldID field_mPixelData { ::djinni::jniGetFieldID(clazz.get(), "mPixelData", "[B") };

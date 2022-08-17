@@ -43,7 +43,7 @@ private:
         friend ::djinni::JniInterface<::IAccountsListener, ::djinni_generated::NativeIAccountsListener>;
     };
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/IAccountsListener") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/IAccountsListener") };
     const jmethodID method_onActiveAccountChanged { ::djinni::jniGetMethodID(clazz.get(), "onActiveAccountChanged", "(Ljava/lang/String;)V") };
     const jmethodID method_onActiveAccountNameChanged { ::djinni::jniGetMethodID(clazz.get(), "onActiveAccountNameChanged", "(Ljava/lang/String;)V") };
     const jmethodID method_onAccountNameChanged { ::djinni::jniGetMethodID(clazz.get(), "onAccountNameChanged", "(Ljava/lang/String;Ljava/lang/String;)V") };

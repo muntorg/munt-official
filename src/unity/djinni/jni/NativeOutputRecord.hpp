@@ -24,7 +24,7 @@ private:
     NativeOutputRecord();
     friend ::djinni::JniClass<NativeOutputRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/OutputRecord") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/OutputRecord") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V") };
     const jfieldID field_mAmount { ::djinni::jniGetFieldID(clazz.get(), "mAmount", "J") };
     const jfieldID field_mAddress { ::djinni::jniGetFieldID(clazz.get(), "mAddress", "Ljava/lang/String;") };

@@ -13,8 +13,8 @@ rm -rf src/unity/djinni/*
 rm -rf src/frontend/android/unity_wallet/app/src/main/java/com/gulden/jniunifiedbackend/*
 
 djinni/src/run \
- --java-out ./src/frontend/android/unity_wallet/app/src/main/java/com/gulden/jniunifiedbackend/ \
-   --java-package com.gulden.jniunifiedbackend \
+ --java-out ./src/frontend/android/unity_wallet/app/src/main/java/unity_wallet/jniunifiedbackend/ \
+   --java-package unity_wallet.jniunifiedbackend \
    --java-implement-android-os-parcelable true \
    --ident-java-field mFooBar \
    --jni-out src/unity/djinni/jni/ \

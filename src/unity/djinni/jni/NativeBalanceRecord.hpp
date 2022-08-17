@@ -24,7 +24,7 @@ private:
     NativeBalanceRecord();
     friend ::djinni::JniClass<NativeBalanceRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/BalanceRecord") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/BalanceRecord") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(JJJJJJJJJJ)V") };
     const jfieldID field_mAvailableIncludingLocked { ::djinni::jniGetFieldID(clazz.get(), "mAvailableIncludingLocked", "J") };
     const jfieldID field_mAvailableExcludingLocked { ::djinni::jniGetFieldID(clazz.get(), "mAvailableExcludingLocked", "J") };

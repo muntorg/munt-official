@@ -24,7 +24,7 @@ private:
     NativeUriRecord();
     friend ::djinni::JniClass<NativeUriRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/UriRecord") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/UriRecord") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/util/HashMap;)V") };
     const jfieldID field_mScheme { ::djinni::jniGetFieldID(clazz.get(), "mScheme", "Ljava/lang/String;") };
     const jfieldID field_mPath { ::djinni::jniGetFieldID(clazz.get(), "mPath", "Ljava/lang/String;") };

@@ -24,7 +24,7 @@ private:
     NativeWalletLockStatus();
     friend ::djinni::JniClass<NativeWalletLockStatus>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/WalletLockStatus") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/WalletLockStatus") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(ZJ)V") };
     const jfieldID field_mLocked { ::djinni::jniGetFieldID(clazz.get(), "mLocked", "Z") };
     const jfieldID field_mLockTimeout { ::djinni::jniGetFieldID(clazz.get(), "mLockTimeout", "J") };

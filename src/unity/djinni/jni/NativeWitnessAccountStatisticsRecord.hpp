@@ -24,7 +24,7 @@ private:
     NativeWitnessAccountStatisticsRecord();
     friend ::djinni::JniClass<NativeWitnessAccountStatisticsRecord>;
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/WitnessAccountStatisticsRecord") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/WitnessAccountStatisticsRecord") };
     const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(Ljava/lang/String;Ljava/lang/String;JJJJJJJJJJJJI)V") };
     const jfieldID field_mRequestStatus { ::djinni::jniGetFieldID(clazz.get(), "mRequestStatus", "Ljava/lang/String;") };
     const jfieldID field_mAccountStatus { ::djinni::jniGetFieldID(clazz.get(), "mAccountStatus", "Ljava/lang/String;") };

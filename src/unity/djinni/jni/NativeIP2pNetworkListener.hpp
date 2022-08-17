@@ -42,7 +42,7 @@ private:
         friend ::djinni::JniInterface<::IP2pNetworkListener, ::djinni_generated::NativeIP2pNetworkListener>;
     };
 
-    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/gulden/jniunifiedbackend/IP2pNetworkListener") };
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("unity_wallet/jniunifiedbackend/IP2pNetworkListener") };
     const jmethodID method_onNetworkEnabled { ::djinni::jniGetMethodID(clazz.get(), "onNetworkEnabled", "()V") };
     const jmethodID method_onNetworkDisabled { ::djinni::jniGetMethodID(clazz.get(), "onNetworkDisabled", "()V") };
     const jmethodID method_onConnectionCountChanged { ::djinni::jniGetMethodID(clazz.get(), "onConnectionCountChanged", "(I)V") };

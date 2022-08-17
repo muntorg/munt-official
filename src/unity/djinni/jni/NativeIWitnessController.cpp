@@ -9,12 +9,12 @@
 
 namespace djinni_generated {
 
-NativeIWitnessController::NativeIWitnessController() : ::djinni::JniInterface<::IWitnessController, NativeIWitnessController>("com/gulden/jniunifiedbackend/IWitnessController$CppProxy") {}
+NativeIWitnessController::NativeIWitnessController() : ::djinni::JniInterface<::IWitnessController, NativeIWitnessController>("unity_wallet/jniunifiedbackend/IWitnessController$CppProxy") {}
 
 NativeIWitnessController::~NativeIWitnessController() = default;
 
 
-CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+CJNIEXPORT void JNICALL Java_unity_1wallet_jniunifiedbackend_IWitnessController_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
@@ -22,7 +22,7 @@ CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_000
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_00024CppProxy_getNetworkLimits(JNIEnv* jniEnv, jobject /*this*/)
+CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IWitnessController_00024CppProxy_getNetworkLimits(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -31,7 +31,7 @@ CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_00024CppProxy_getEstimatedWeight(JNIEnv* jniEnv, jobject /*this*/, jlong j_amountToLock, jlong j_lockPeriodInBlocks)
+CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IWitnessController_00024CppProxy_getEstimatedWeight(JNIEnv* jniEnv, jobject /*this*/, jlong j_amountToLock, jlong j_lockPeriodInBlocks)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -41,7 +41,7 @@ CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_00024CppProxy_fundWitnessAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_fundingAccountUUID, jstring j_witnessAccountUUID, jlong j_fundingAmount, jlong j_requestedLockPeriodInBlocks)
+CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IWitnessController_00024CppProxy_fundWitnessAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_fundingAccountUUID, jstring j_witnessAccountUUID, jlong j_fundingAmount, jlong j_requestedLockPeriodInBlocks)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -53,7 +53,7 @@ CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_00024CppProxy_renewWitnessAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_fundingAccountUUID, jstring j_witnessAccountUUID)
+CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IWitnessController_00024CppProxy_renewWitnessAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_fundingAccountUUID, jstring j_witnessAccountUUID)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -63,7 +63,7 @@ CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_00024CppProxy_getAccountWitnessStatistics(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID)
+CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IWitnessController_00024CppProxy_getAccountWitnessStatistics(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -72,7 +72,7 @@ CJNIEXPORT jobject JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_00024CppProxy_setAccountCompounding(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID, jint j_percentToCompount)
+CJNIEXPORT void JNICALL Java_unity_1wallet_jniunifiedbackend_IWitnessController_00024CppProxy_setAccountCompounding(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID, jint j_percentToCompount)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -81,7 +81,7 @@ CJNIEXPORT void JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_000
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jint JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_00024CppProxy_isAccountCompounding(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID)
+CJNIEXPORT jint JNICALL Java_unity_1wallet_jniunifiedbackend_IWitnessController_00024CppProxy_isAccountCompounding(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
@@ -90,7 +90,7 @@ CJNIEXPORT jint JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_000
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT jstring JNICALL Java_com_gulden_jniunifiedbackend_IWitnessController_00024CppProxy_getWitnessAddress(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID)
+CJNIEXPORT jstring JNICALL Java_unity_1wallet_jniunifiedbackend_IWitnessController_00024CppProxy_getWitnessAddress(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
