@@ -22,7 +22,7 @@ file COPYING
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    tools:context=".LicenseActivity">
+    tools:context="unity_wallet.LicenseActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topLayoutBarSettingsHeader"

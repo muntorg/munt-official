@@ -10,7 +10,7 @@ file COPYING
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/veryLightGray"
-    tools:context=".TransactionInfoActivity"
+    tools:context="unity_wallet.TransactionInfoActivity"
     tools:showIn="@layout/activity_transaction_info">
 
     <LinearLayout

@@ -10,7 +10,7 @@ file COPYING
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main_activity_fragments.MutationFragment">
+    tools:context="unity_wallet.main_activity_fragments.MutationFragment">
 
     <unity_wallet.ui.widgets.LockView
         android:id="@+id/viewAnimator"

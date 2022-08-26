@@ -12,7 +12,7 @@ file COPYING
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical|center_horizontal"
-    tools:context=".UpgradeActivity">
+    tools:context="unity_wallet.UpgradeActivity">
 
         <ImageView
             android:id="@+id/AppLogo"

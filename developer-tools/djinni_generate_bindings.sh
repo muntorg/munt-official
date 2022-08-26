@@ -10,7 +10,7 @@ else
 	cd ..
 fi
 rm -rf src/unity/djinni/*
-rm -rf src/frontend/android/unity_wallet/app/src/main/java/com/gulden/jniunifiedbackend/*
+rm -rf src/frontend/android/unity_wallet/app/src/main/java/unity_wallet/jniunifiedbackend/*
 
 djinni/src/run \
  --java-out ./src/frontend/android/unity_wallet/app/src/main/java/unity_wallet/jniunifiedbackend/ \

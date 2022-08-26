@@ -13,7 +13,7 @@ file COPYING
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:gravity="center_vertical|center_horizontal"
-    tools:context=".WelcomeActivity">
+    tools:context="unity_wallet.WelcomeActivity">
 
 
     <TableLayout

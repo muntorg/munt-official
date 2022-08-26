@@ -433,10 +433,13 @@ i_rpc_listener = interface +j +o +n {
 i_p2p_network_controller = interface +c {
     # Register listener to be notified of networking events
     static setListener(networklistener : i_p2p_network_listener);
+    
     # Turn p2p networking off
     static disableNetwork();
+    
     # Turn p2p networking on
     static enableNetwork();
+    
     # Get connected peer info
     static getPeerInfo() : list<peer_record>;
 }
@@ -458,6 +461,7 @@ account_record = record {
     label : string;
     state : string;
     type : string;
+    #Is this account 'HD' (i.e. part of what can be recovered from a recovery phrase)
     isHD : bool;
 }
 

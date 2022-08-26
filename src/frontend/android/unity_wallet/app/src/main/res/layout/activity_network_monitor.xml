@@ -12,7 +12,7 @@ file COPYING
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".ui.monitor.NetworkMonitorActivity">
+    tools:context="unity_wallet.ui.monitor.NetworkMonitorActivity">
 
     <LinearLayout
         android:layout_width="0dp"

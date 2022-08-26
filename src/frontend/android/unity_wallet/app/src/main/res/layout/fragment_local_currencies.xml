@@ -11,7 +11,7 @@ file COPYING
     android:id="@+id/frameLayout2"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context=".main_activity_fragments.MutationFragment">
+    tools:context="unity_wallet.main_activity_fragments.MutationFragment">
 
     <ListView
         android:id="@+id/currenciesList"
