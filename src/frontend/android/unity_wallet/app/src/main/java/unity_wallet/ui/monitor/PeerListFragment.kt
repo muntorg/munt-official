@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,7 +35,7 @@ class PeerListFragment : AppBaseFragment(), CoroutineScope {
         val viewModel = ViewModelProviders.of(this).get(PeerListViewModel::class.java)
 
         // observe peer changes
-        viewModel.getPeers().observe(this, Observer { peers ->
+        viewModel.getPeers().observe(viewLifecycleOwner, { peers ->
             if (peers.isEmpty()) {
                 peer_list_group.displayedChild = 1
             } else {

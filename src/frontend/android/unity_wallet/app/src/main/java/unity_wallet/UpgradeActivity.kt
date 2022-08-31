@@ -15,6 +15,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_upgrade.*
 import unity_wallet.jniunifiedbackend.ILibraryController
 import unity_wallet.jniunifiedbackend.LegacyWalletResult
 import unity_wallet.Constants.OLD_WALLET_PROTOBUF_FILENAME
@@ -32,6 +33,9 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
         setContentView(R.layout.activity_upgrade)
 
         UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
+
+        restartFresh.setOnClickListener{  onStartFresh(it) }
+        upgradeButton.setOnClickListener{  onUpgrade(it) }
     }
 
     override fun onDestroy() {
@@ -62,7 +66,7 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
     }
 
     private var processingUpgrade = false
-    fun onUpgrade(view: View)
+    private fun onUpgrade(view: View)
     {
         // TODO ensure core is started and create wallet mode is active
         // TODO fix race here that is not handled properly with the processingUpgrade bool
@@ -137,7 +141,7 @@ class UpgradeActivity : AppBaseActivity(), UnityCore.Observer
         // this prevents prompting for an upgrade again later should the user remove his wallet
         // still the data of the old wallet is retained so if (god forbid) should something go wrong with upgrades
         // in the field a fix can be published which could ignore the upgrade marker
-        val upgradedMarkerFile = getFileStreamPath(OLD_WALLET_PROTOBUF_FILENAME+".upgraded")
+        val upgradedMarkerFile = getFileStreamPath("$OLD_WALLET_PROTOBUF_FILENAME.upgraded")
         if (!upgradedMarkerFile.exists()) {
             val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 packageManager.getPackageInfo(packageName, 0).longVersionCode

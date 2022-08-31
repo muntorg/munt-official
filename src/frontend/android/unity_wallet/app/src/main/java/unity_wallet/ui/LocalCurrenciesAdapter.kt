@@ -26,7 +26,7 @@ class LocalCurrenciesAdapter(context: Context, private val dataSource: TreeMap<S
         return dataSource.size
     }
 
-    override fun getItem(position: Int) : Currency?
+    override fun getItem(position: Int) : Currency
     {
         return dataSource.values.toTypedArray()[position]
     }
@@ -37,7 +37,7 @@ class LocalCurrenciesAdapter(context: Context, private val dataSource: TreeMap<S
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
-        val currencyRecord = getItem(position) as Currency
+        val currencyRecord = getItem(position)
         val rowView = inflater.inflate(R.layout.local_currency_list_item, parent, false)
         rowView.textViewCurrencyName.text = currencyRecord.name
         rowView.textViewCurrencyCode.text = currencyRecord.code
@@ -60,7 +60,9 @@ class LocalCurrenciesAdapter(context: Context, private val dataSource: TreeMap<S
         return rowView
     }
 
-    fun setSelectedPosition(position: Int) = PreferenceManager.getDefaultSharedPreferences(AppContext.instance).edit().putString("preference_local_currency", getItem(position)?.code).apply()
+    fun setSelectedPosition(position: Int) = PreferenceManager.getDefaultSharedPreferences(AppContext.instance).edit().putString("preference_local_currency",
+        getItem(position).code
+    ).apply()
 
     fun updateAllRates(rates: Map<String, Double>) {
         allRates = rates

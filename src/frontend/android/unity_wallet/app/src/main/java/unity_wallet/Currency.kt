@@ -106,7 +106,7 @@ class Currencies {
             val precisions = AppContext.instance.resources.getIntArray(R.array.currency_precisions)
             val ratePrecisions = AppContext.instance.resources.getIntArray(R.array.currency_rate_precisions)
 
-            for (i in 0 until codes.size) {
+            for (i in codes.indices) {
                 val c = Currency(code = codes[i], name = names[i], short = shorts[i], precision = precisions[i], ratePrecision = ratePrecisions[i])
                 knownCurrencies[codes[i]] = c
             }

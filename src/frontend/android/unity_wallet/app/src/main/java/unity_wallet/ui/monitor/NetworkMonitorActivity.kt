@@ -11,7 +11,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import unity_wallet.R
 import unity_wallet.UnityCore
 import unity_wallet.util.AppBaseActivity
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.navigation
+import kotlinx.android.synthetic.main.activity_main.syncProgress
+import kotlinx.android.synthetic.main.activity_network_monitor.*
 import kotlinx.coroutines.Job
 
 class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
@@ -25,6 +27,8 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         syncProgress.max = 1000000
+
+        networkMonitorBackButton.setOnClickListener{  onBackButtonPushed(it) }
     }
 
     override fun onDestroy() {
@@ -52,7 +56,7 @@ class NetworkMonitorActivity : UnityCore.Observer, AppBaseActivity()
         setSyncProgress(UnityCore.instance.progressPercent)
     }
 
-    fun onBackButtonPushed(view : View) {
+    private fun onBackButtonPushed(view : View) {
         finish()
     }
 

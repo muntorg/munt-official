@@ -90,7 +90,7 @@ class TargetBarcodeFocusingProcessor(preview : CameraSourcePreview, detectionBox
     {
         val barcodes = detections?.detectedItems
         heightScaleFactor = mPreview.previewHeight / (detections?.frameMetadata?.height)?.toFloat()!!
-        widthScaleFactor = mPreview.previewWidth / (detections.frameMetadata?.width)?.toFloat()!!
+        widthScaleFactor = mPreview.previewWidth / (detections.frameMetadata.width).toFloat()
 
         for (i in 0 .. barcodes!!.size())
         {
@@ -262,7 +262,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
             builder = builder.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)
 
         if (useFlash)
-            builder.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH)
+            builder.setFlashMode(FLASH_MODE_TORCH)
 
         mCameraSource = builder.build()
     }
@@ -311,7 +311,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
             return
         }
 
-        if (grantResults.size != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
         {
             Log.d(TAG, "Camera permission granted - initialize the camera source")
             // we have permission, so create the camerasource
@@ -320,7 +320,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
             return
         }
 
-        Log.e(TAG, "Permission not granted: results len = " + grantResults.size + " Result code = " + if (grantResults.size > 0) grantResults[0] else "(empty)")
+        Log.e(TAG, "Permission not granted: results len = " + grantResults.size + " Result code = " + if (grantResults.isNotEmpty()) grantResults[0] else "(empty)")
 
         val listener = DialogInterface.OnClickListener { _, id -> finish() }
 

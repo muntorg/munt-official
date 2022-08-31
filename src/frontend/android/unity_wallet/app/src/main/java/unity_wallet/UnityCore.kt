@@ -57,7 +57,7 @@ class UnityCore {
     fun removeObserver(observer: Observer) {
         observersLock.withLock {
             observers.removeAll(
-                    observers.filter { it.observer == observer }
+                observers.filter { it.observer == observer }.toSet()
             )
         }
     }
@@ -137,7 +137,7 @@ class UnityCore {
     fun removeMonitorObserver(observer: MonitorListener) {
         monitorObserversLock.withLock {
             monitorObservers.removeAll(
-                    monitorObservers.filter { it.observer == observer }
+                monitorObservers.filter { it.observer == observer }.toSet()
             )
         }
     }

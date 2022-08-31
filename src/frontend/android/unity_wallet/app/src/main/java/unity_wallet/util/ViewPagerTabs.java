@@ -96,7 +96,7 @@ public class ViewPagerTabs extends View implements OnPageChangeListener {
         canvas.drawPath(path, paint);
 
         paint.setTypeface(Typeface.DEFAULT_BOLD);
-        final float y = getPaddingTop() + -paint.getFontMetrics().top;
+        final float y = getPaddingTop() - paint.getFontMetrics().top;
 
         for (int i = 0; i < labels.size(); i++) {
             final String label = labels.get(i);
@@ -137,7 +137,6 @@ public class ViewPagerTabs extends View implements OnPageChangeListener {
                 width = Math.min(getMeasuredWidth(), widthSize);
                 break;
             case MeasureSpec.UNSPECIFIED:
-                width = 0;
                 break;
         }
 

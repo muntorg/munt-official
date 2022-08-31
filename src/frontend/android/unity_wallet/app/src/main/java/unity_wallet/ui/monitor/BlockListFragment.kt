@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,7 +34,7 @@ class BlockListFragment : AppBaseFragment() {
         viewModel = ViewModelProviders.of(this).get(BlockListViewModel::class.java)
 
         // observe changes
-        viewModel.getBlocks().observe(this, Observer { blocks ->
+        viewModel.getBlocks().observe(viewLifecycleOwner, { blocks ->
             if (blocks.isEmpty()) {
                 block_list_group.displayedChild = 0
             } else {

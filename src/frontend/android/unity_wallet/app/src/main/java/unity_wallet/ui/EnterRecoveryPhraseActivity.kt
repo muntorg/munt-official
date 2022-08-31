@@ -84,6 +84,8 @@ class EnterRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_enter_recovery_phrase)
 
+        recover_from_phrase_proceed_button.setOnClickListener{  onAcceptRecoverFromPhrase(it) }
+
         recover_from_phrase_text_view.run {
             addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable)
@@ -195,7 +197,7 @@ class EnterRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
         builder.create().show()
     }
 
-    fun onAcceptRecoverFromPhrase(view: View)
+    private fun onAcceptRecoverFromPhrase(view: View)
     {
         if (!ILibraryController.IsValidRecoveryPhrase(recoveryPhrase))
         {

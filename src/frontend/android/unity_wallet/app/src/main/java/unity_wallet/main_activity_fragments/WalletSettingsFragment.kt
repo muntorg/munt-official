@@ -55,16 +55,16 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
-        when (preference?.key) {
+        when (preference.key) {
             "preference_link_wallet" -> {
                 val intent = Intent(context, BarcodeCaptureActivity::class.java)
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true)
                 startActivityForResult(intent, REQUEST_CODE_SCAN_FOR_LINK)
             }
             "preference_change_pass_code" -> {
-                Authentication.instance.authenticate(activity!!, getString(R.string.change_passcode_auth_title), getString(R.string.change_passcode_auth_desc)) { oldPassword ->
+                Authentication.instance.authenticate(requireActivity(), getString(R.string.change_passcode_auth_title), getString(R.string.change_passcode_auth_desc)) { oldPassword ->
                     Authentication.instance.chooseAccessCode(
-                            activity!!,
+                            requireActivity(),
                             getString(R.string.change_passcode_auth_title),
                             action = { newPassword ->
                                 if (!ILibraryController.ChangePassword(oldPassword.joinToString(""), newPassword.joinToString(""))) {
@@ -76,7 +76,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
                 }
             }
             "preference_rescan_wallet" -> {
-                val dialog = MaterialAlertDialogBuilder(context!!)
+                val dialog = MaterialAlertDialogBuilder(requireContext())
                         .setTitle(getString(R.string.rescan_confirm_title))
                         .setMessage(getString(R.string.rescan_confirm_msg))
                         .setPositiveButton(getString(R.string.rescan_confirm_btn)) { dialogInterface: DialogInterface, i: Int ->
@@ -92,7 +92,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
                             getString(R.string.remove_wallet_auth_desc_recovery_warn)
                         else "",
                         getString(R.string.remove_wallet_auth_desc))
-                Authentication.instance.authenticate(activity!!, getString(R.string.remove_wallet_auth_title), msg) {
+                Authentication.instance.authenticate(requireActivity(), getString(R.string.remove_wallet_auth_title), msg) {
                     ILibraryController.EraseWalletSeedsAndAccounts()
                     val intent = Intent(activity, WelcomeActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -111,10 +111,10 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
 
                     if (!ILibraryController.IsValidLinkURI(barcode?.displayValue)) {
-                        AlertDialog.Builder(context!!)
-                                .setTitle(getString(unity_wallet.R.string.no_qrsync_warning_title))
-                                .setMessage(getString(unity_wallet.R.string.no_qrsync_warning))
-                                .setPositiveButton(getString(unity_wallet.R.string.button_ok)) { dialogInterface, i ->
+                        AlertDialog.Builder(requireContext())
+                                .setTitle(getString(R.string.no_qrsync_warning_title))
+                                .setMessage(getString(R.string.no_qrsync_warning))
+                                .setPositiveButton(getString(R.string.button_ok)) { dialogInterface, i ->
                                     dialogInterface.dismiss()
                                 }
                                 .setCancelable(true)
@@ -125,15 +125,15 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
 
                     // dialog helper used below
                     fun performDialog(titleResId: Int, msgResId: Int, withCancel: Boolean, action: (dialogInterface: DialogInterface) -> Unit) {
-                        val builder = AlertDialog.Builder(context!!)
+                        val builder = AlertDialog.Builder(requireContext())
                                 .setTitle(getString(titleResId))
                                 .setMessage(getString(msgResId))
-                                .setPositiveButton(getString(unity_wallet.R.string.button_ok)) { dialogInterface, i ->
+                                .setPositiveButton(getString(R.string.button_ok)) { dialogInterface, i ->
                                     action(dialogInterface)
                                 }
                                 .setCancelable(true)
                         if (withCancel)
-                            builder.setNegativeButton(getString(unity_wallet.R.string.button_cancel)) { dialogInterface, i ->
+                            builder.setNegativeButton(getString(R.string.button_cancel)) { dialogInterface, i ->
                                 dialogInterface.dismiss()
                             }
                         builder.create().show()
@@ -153,7 +153,7 @@ class WalletSettingsFragment : androidx.preference.PreferenceFragmentCompat(), C
                             if (ILibraryController.GetBalance() > 0) R.string.qrsync_info_message_non_empty_wallet else R.string.qrsync_info_message_empty_wallet, true
                     ) {
                         it.dismiss()
-                        (activity as WalletActivity).performLink(barcode!!.displayValue!!)
+                        (activity as WalletActivity).performLink(barcode!!.displayValue)
                     }
                 }
             }

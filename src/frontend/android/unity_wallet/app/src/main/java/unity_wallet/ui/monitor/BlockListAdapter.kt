@@ -43,7 +43,7 @@ class BlockListAdapter : ListAdapter<BlockInfoRecord, BlockListAdapter.ItemViewH
                     } else
                         context.getString(R.string.block_row_now)
             itemView.block_list_row_hash.text = item.blockHash
-            itemView.block_list_row_menu.setOnClickListener() {
+            itemView.block_list_row_menu.setOnClickListener {
                 val popupMenu = PopupMenu(context, itemView.block_list_row_menu)
                 popupMenu.inflate(R.menu.blocks_context)
                 popupMenu.setOnMenuItemClickListener { menuItem ->

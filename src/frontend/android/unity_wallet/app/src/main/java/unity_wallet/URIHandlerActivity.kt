@@ -49,7 +49,7 @@ class URIHandlerActivity : AppBaseActivity()
     private fun isValidCoinUri(uri: Uri?): Boolean {
         uri?.run {
             scheme?.run {
-                toLowerCase().run {
+                lowercase().run {
                     return startsWith("gulden")
                             || startsWith("guldencoin")
                             || startsWith("iban")

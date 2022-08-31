@@ -106,14 +106,14 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         mMainlayout = View.inflate(context, R.layout.fragment_send_coins, null)
 
         // test layout using display dimens
-        val outSize = getDisplayDimensions(context!!)
+        val outSize = getDisplayDimensions(requireContext())
         mMainlayout.measure(outSize.x, outSize.y)
 
         // height that the entire bottom sheet wants to be
         val preferredHeight = mMainlayout.measuredHeight
 
         // maximum height that we allow it to be, to be sure that the balance shows through (if not hidden)
-        val allowedHeight = outSize.y - context!!.resources.getDimensionPixelSize(R.dimen.top_space_send_coins)
+        val allowedHeight = outSize.y - requireContext().resources.getDimensionPixelSize(R.dimen.top_space_send_coins)
 
         // programmatically adjust layout, only if needed
         if (preferredHeight > allowedHeight) {
@@ -175,7 +175,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
         val view = super.onCreateView(inflater, container, savedInstanceState)
 
 
-        fragmentActivity = super.getActivity()!!
+        fragmentActivity = super.requireActivity()
 
         arguments?.getParcelable<UriRecipient>(EXTRA_RECIPIENT)?.let {
             recipient = it
@@ -225,7 +225,7 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
     {
         val amountStr = String.format("%.${PRECISION_SHORT}f", request.amount.toDouble() / 100000000)
         val message = msg ?: getString(R.string.send_coins_confirm_template, amountStr, recipientDisplayAddress)
-        Authentication.instance.authenticate(this@SendCoinsFragment.activity!!,
+        Authentication.instance.authenticate(this@SendCoinsFragment.requireActivity(),
                 null, msg = message) {
             try {
                 ILibraryController.performPaymentToRecipient(request, subtractFee)
@@ -484,8 +484,8 @@ class SendCoinsFragment : BottomSheetDialogFragment(), CoroutineScope
             {
                 if (!amountEditStr.contains("."))
                 {
-                    if (amountEditStr.isEmpty()) amountEditStr = "0."
-                    else amountEditStr = "$amountEditStr."
+                    amountEditStr = if (amountEditStr.isEmpty()) "0."
+                    else "$amountEditStr."
                 }
             }
             R.id.button_currency ->

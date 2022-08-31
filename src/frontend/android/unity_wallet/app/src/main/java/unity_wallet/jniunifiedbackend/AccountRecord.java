@@ -45,6 +45,7 @@ public final class AccountRecord {
         return mType;
     }
 
+    /**Is this account 'HD' (i.e. part of what can be recovered from a recovery phrase) */
     public boolean getIsHD() {
         return mIsHD;
     }

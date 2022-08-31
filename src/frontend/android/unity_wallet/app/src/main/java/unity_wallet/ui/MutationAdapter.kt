@@ -53,24 +53,24 @@ class MutationAdapter(context: Context, private var dataSource: ArrayList<Mutati
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
         val mutationRecord = getItem(position) as MutationRecord
-        val date = if (java.util.Date(mutationRecord.timestamp * 1000L).year + 1900 != currentYear)
+        val date = if (Date(mutationRecord.timestamp * 1000L).year + 1900 != currentYear)
         {
-            java.text.SimpleDateFormat("dd MMM. yyyy").format(java.util.Date(mutationRecord.timestamp * 1000L))
+            java.text.SimpleDateFormat("dd MMM. yyyy").format(Date(mutationRecord.timestamp * 1000L))
         }
         else
         {
-            java.text.SimpleDateFormat("MMMM dd").format(java.util.Date(mutationRecord.timestamp * 1000L))
+            java.text.SimpleDateFormat("MMMM dd").format(Date(mutationRecord.timestamp * 1000L))
         }
         var prevDate = ""
         if (position != 0) {
             val prevMutationRecord = getItem(position-1) as MutationRecord
-            prevDate = if (java.util.Date(prevMutationRecord.timestamp * 1000L).year + 1900 != currentYear)
+            prevDate = if (Date(prevMutationRecord.timestamp * 1000L).year + 1900 != currentYear)
             {
-                java.text.SimpleDateFormat("dd MMM. yyyy").format(java.util.Date(prevMutationRecord.timestamp * 1000L))
+                java.text.SimpleDateFormat("dd MMM. yyyy").format(Date(prevMutationRecord.timestamp * 1000L))
             }
             else
             {
-                java.text.SimpleDateFormat("MMMM dd").format(java.util.Date(prevMutationRecord.timestamp * 1000L))
+                java.text.SimpleDateFormat("MMMM dd").format(Date(prevMutationRecord.timestamp * 1000L))
             }
         }
 
@@ -86,29 +86,26 @@ class MutationAdapter(context: Context, private var dataSource: ArrayList<Mutati
             rowView = inflater.inflate(R.layout.mutation_list_item, parent, false)
         }
 
-        rowView.textViewTime.text = java.text.SimpleDateFormat("HH:mm").format(java.util.Date(mutationRecord.timestamp * 1000L))
+        rowView.textViewTime.text = java.text.SimpleDateFormat("HH:mm").format(Date(mutationRecord.timestamp * 1000L))
         rowView.textViewAmount.text = formatNativeAndLocal(mutationRecord.change,rate)
         rowView.textViewAmount.setTextColor(ContextCompat.getColor(rowView.context, if (mutationRecord.change >= 0) R.color.change_positive else R.color.change_negative))
 
-        if (mutationRecord.status == TransactionStatus.CONFIRMED)
-        {
-            rowView.textViewStatus.text = ""
-        }
-        else if (mutationRecord.status == TransactionStatus.CONFIRMING)
-        {
-            rowView.textViewStatus.text = mContext.resources.getQuantityString(R.plurals.transaction_confirmation_text, mutationRecord.depth, mutationRecord.depth)
-        }
-        else if (mutationRecord.status == TransactionStatus.CONFLICTED)
-        {
-            rowView.textViewStatus.text = mContext.resources.getString(R.string.transaction_confirmation_text_conflicted)
-        }
-        else if (mutationRecord.status == TransactionStatus.ABANDONED)
-        {
-            rowView.textViewStatus.text = mContext.resources.getString(R.string.transaction_confirmation_text_abandoned)
-        }
-        else if (mutationRecord.status == TransactionStatus.UNCONFIRMED)
-        {
-            rowView.textViewStatus.text = mContext.resources.getString(R.string.transaction_confirmation_text_pending)
+        when (mutationRecord.status) {
+            TransactionStatus.CONFIRMED -> {
+                rowView.textViewStatus.text = ""
+            }
+            TransactionStatus.CONFIRMING -> {
+                rowView.textViewStatus.text = mContext.resources.getQuantityString(R.plurals.transaction_confirmation_text, mutationRecord.depth, mutationRecord.depth)
+            }
+            TransactionStatus.CONFLICTED -> {
+                rowView.textViewStatus.text = mContext.resources.getString(R.string.transaction_confirmation_text_conflicted)
+            }
+            TransactionStatus.ABANDONED -> {
+                rowView.textViewStatus.text = mContext.resources.getString(R.string.transaction_confirmation_text_abandoned)
+            }
+            TransactionStatus.UNCONFIRMED -> {
+                rowView.textViewStatus.text = mContext.resources.getString(R.string.transaction_confirmation_text_pending)
+            }
         }
         return rowView
     }

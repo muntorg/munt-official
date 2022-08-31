@@ -732,7 +732,7 @@ private constructor()
      * aspect ratio as the preview size or the preview may end up being distorted.  If the picture
      * size is null, then there is no picture size with the same aspect ratio as the preview size.
      */
-    private class SizePair(previewSize: android.hardware.Camera.Size, pictureSize: android.hardware.Camera.Size?)
+    private class SizePair(previewSize: Camera.Size, pictureSize: Camera.Size?)
     {
         private val mPreview: Size = Size(previewSize.width, previewSize.height)
         private var mPicture: Size? = null
@@ -803,8 +803,7 @@ private constructor()
     {
         val windowManager = mContext!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         var degrees = 0
-        val rotation = windowManager.defaultDisplay.rotation
-        when (rotation)
+        when (val rotation = windowManager.defaultDisplay.rotation)
         {
             Surface.ROTATION_0 -> degrees = 0
             Surface.ROTATION_90 -> degrees = 90
@@ -818,7 +817,7 @@ private constructor()
 
         val angle: Int
         val displayAngle: Int
-        if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT)
+        if (cameraInfo.facing == CameraInfo.CAMERA_FACING_FRONT)
         {
             angle = (cameraInfo.orientation + degrees) % 360
             displayAngle = (360 - angle) % 360 // compensate for it being mirrored
@@ -893,12 +892,12 @@ private constructor()
      * associated processing are done for the previous frame, detection on the mostly recently
      * received frame will immediately start on the same thread.
      */
-    private inner class FrameProcessingRunnable internal constructor(private var mDetector: Detector<*>?) : Runnable
+    private inner class FrameProcessingRunnable(private var mDetector: Detector<*>?) : Runnable
     {
         private val mStartTimeMillis = SystemClock.elapsedRealtime()
 
         // This lock guards all of the member variables below.
-        private val mLock = java.lang.Object()
+        private val mLock = Object()
         private var mActive = true
 
         // These pending variables hold the state associated with the new frame awaiting processing.
@@ -911,7 +910,7 @@ private constructor()
          * has completed, which is managed in camera source's release method above.
          */
         @SuppressLint("Assert")
-        internal fun release()
+        fun release()
         {
             assert(mProcessingThread?.state == State.TERMINATED)
             mDetector?.release()
@@ -921,7 +920,7 @@ private constructor()
         /**
          * Marks the runnable as active/not active.  Signals any blocked threads to continue.
          */
-        internal fun setActive(active: Boolean)
+        fun setActive(active: Boolean)
         {
             synchronized(mLock) {
                 mActive = active
@@ -934,7 +933,7 @@ private constructor()
          * (if present) back to the camera, and keeps a pending reference to the frame data for
          * future use.
          */
-        internal fun setNextFrame(data: ByteArray, camera: Camera)
+        fun setNextFrame(data: ByteArray, camera: Camera)
         {
             synchronized(mLock) {
                 if (mPendingFrameData != null)

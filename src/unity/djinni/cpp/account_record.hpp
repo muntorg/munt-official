@@ -11,6 +11,7 @@ struct AccountRecord final {
     std::string label;
     std::string state;
     std::string type;
+    /**Is this account 'HD' (i.e. part of what can be recovered from a recovery phrase) */
     bool isHD;
 
     AccountRecord(std::string UUID_,

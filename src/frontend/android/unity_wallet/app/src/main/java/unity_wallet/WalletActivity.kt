@@ -30,6 +30,7 @@ import unity_wallet.util.AppBaseActivity
 import unity_wallet.util.getAndroidVersion
 import unity_wallet.util.getDeviceName
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.pref_about_app.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -267,7 +268,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
             Response.Listener { response ->
                 try
                 {
-                    var jsonResponse = JSONObject(response);
+                    var jsonResponse = JSONObject(response)
                     if (jsonResponse.getInt("status_code") == 200)
                     {
                         var sessionID = jsonResponse.getString("sessionid")
@@ -312,18 +313,18 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
         {
             override fun getParams(): MutableMap<String, String> {
                 val params = HashMap<String,String>()
-                params["address"] = ILibraryController.GetReceiveAddress().toString();
-                params["uuid"] = IWalletController.GetUUID();
-                params["currency"] = "gulden";
-                params["wallettype"] = "android";
-                return params;
+                params["address"] = ILibraryController.GetReceiveAddress().toString()
+                params["uuid"] = IWalletController.GetUUID()
+                params["currency"] = "gulden"
+                params["wallettype"] = "android"
+                return params
             }
             override fun getHeaders(): MutableMap<String, String> {
-                val params = HashMap<String, String>();
-                params.put("Content-Type","application/x-www-form-urlencoded");
-                return params;
+                val params = HashMap<String, String>()
+                params.put("Content-Type","application/x-www-form-urlencoded")
+                return params
             }
-        };
+        }
 
         // Volley request policy, only one time request to avoid duplicate transaction
         request.retryPolicy = DefaultRetryPolicy(

@@ -36,7 +36,6 @@ file COPYING
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@null"
-            android:onClick="onBackButtonPushed"
             android:padding="24dp"
             android:src="?attr/homeAsUpIndicator"
             android:text=""

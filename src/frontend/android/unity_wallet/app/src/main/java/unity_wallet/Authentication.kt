@@ -21,7 +21,6 @@ import unity_wallet.Constants.ACCESS_CODE_ATTEMPTS_ALLOWED
 import unity_wallet.Constants.ACCESS_CODE_LENGTH
 import kotlinx.android.synthetic.main.access_code_entry.view.*
 import kotlinx.android.synthetic.main.access_code_recovery.view.*
-import java.util.*
 
 
 private const val TAG = "authentication"
@@ -174,7 +173,7 @@ class Authentication {
                 .setNegativeButton("Cancel") { dialogInterface: DialogInterface, i: Int -> }
                 .create()
 
-        dialog.setOnShowListener() {
+        dialog.setOnShowListener {
             contentView.accessCode.addTextChangedListener(
                     object : TextWatcher {
 

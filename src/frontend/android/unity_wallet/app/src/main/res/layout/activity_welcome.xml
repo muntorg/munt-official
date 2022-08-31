@@ -34,31 +34,30 @@ file COPYING
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_rounded_button_with_border"
-            android:onClick="onCreateNewWallet"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="@string/welcome_activity_create_new_wallet"
             android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/recover_wallet_button"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:background="@drawable/shape_rounded_button_with_border"
-            android:onClick="onRecoverExistingWallet"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="@string/welcome_activity_recover_existing_wallet"
             android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/sync_with_desktop_button"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:background="@drawable/shape_rounded_button_with_border"
-            android:onClick="onSyncWithDesktop"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="@string/welcome_activity_sync_with_desktop"

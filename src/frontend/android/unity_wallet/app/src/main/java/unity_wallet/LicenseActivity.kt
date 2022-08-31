@@ -19,9 +19,13 @@ class LicenseActivity : AppCompatActivity() {
         val inStream = resources.openRawResource(R.raw.license)
         licenseTextView.text = IOUtils.toString(inStream, "utf-8")
         inStream.close()
+
+        backButton.setOnClickListener{
+            onBackButtonPushed(it)
+        }
     }
 
-    fun onBackButtonPushed(view: View) {
+    private fun onBackButtonPushed(view: View) {
         finish()
     }
 

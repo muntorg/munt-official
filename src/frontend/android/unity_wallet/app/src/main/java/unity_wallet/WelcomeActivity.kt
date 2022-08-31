@@ -13,12 +13,14 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import barcodereader.BarcodeCaptureActivity
+import kotlinx.android.synthetic.main.activity_welcome.*
 import unity_wallet.jniunifiedbackend.ILibraryController
 import unity_wallet.ui.EnterRecoveryPhraseActivity
 import unity_wallet.ui.ShowRecoveryPhraseActivity
 import unity_wallet.util.AppBaseActivity
 import unity_wallet.util.gotoWalletActivity
 import kotlin.concurrent.thread
+import kotlin.system.exitProcess
 
 class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
 {
@@ -28,6 +30,18 @@ class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
+
+        new_wallet_button.setOnClickListener{
+            onCreateNewWallet(it)
+        }
+
+        recover_wallet_button.setOnClickListener{
+            onRecoverExistingWallet(it)
+        }
+
+        sync_with_desktop_button.setOnClickListener{
+            onSyncWithDesktop(it)
+        }
 
         UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
     }
@@ -47,7 +61,7 @@ class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
         // consider introducing query API in Unity that would allow getting the erased wallet state
         // or some other construct such that logic on the Unity client side can be clearer
         finish()
-        System.exit(0)
+        exitProcess(0)
     }
 
     @Suppress("UNUSED_PARAMETER")

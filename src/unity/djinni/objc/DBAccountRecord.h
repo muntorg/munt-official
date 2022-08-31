@@ -23,6 +23,7 @@
 
 @property (nonatomic, readonly, nonnull) NSString * type;
 
+/**Is this account 'HD' (i.e. part of what can be recovered from a recovery phrase) */
 @property (nonatomic, readonly) BOOL isHD;
 
 @end

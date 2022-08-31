@@ -45,12 +45,15 @@ class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
         recovery_phrase_text_view.run {
             //TODO: Reintroduce showing birth time here if/when we decide we want it in future
             text = recoveryPhraseTrimmed
-            setOnClickListener() { setFocusOnRecoveryPhrase() }
+            setOnClickListener { setFocusOnRecoveryPhrase() }
         }
 
         supportActionBar?.hide()
 
         updateView()
+
+        acknowledge_recovery_phrase.setOnClickListener{  onAcknowledgeRecoveryPhrase(it) }
+        button_accept_recovery_phrase.setOnClickListener{  onAcceptRecoveryPhrase(it) }
 
         UnityCore.instance.addObserver(this, fun (callback:() -> Unit) { runOnUiThread { callback() }})
     }

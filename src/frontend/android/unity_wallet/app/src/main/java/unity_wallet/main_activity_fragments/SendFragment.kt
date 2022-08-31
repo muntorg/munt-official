@@ -184,18 +184,18 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
             {
                 override fun getParams(): MutableMap<String, String> {
                     val params = HashMap<String,String>()
-                    params["address"] = ILibraryController.GetReceiveAddress().toString();
-                    params["uuid"] = IWalletController.GetUUID();
-                    params["currency"] = "gulden";
-                    params["wallettype"] = "android";
-                    return params;
+                    params["address"] = ILibraryController.GetReceiveAddress().toString()
+                    params["uuid"] = IWalletController.GetUUID()
+                    params["currency"] = "gulden"
+                    params["wallettype"] = "android"
+                    return params
                 }
                 override fun getHeaders(): MutableMap<String, String> {
-                    val params = HashMap<String, String>();
-                    params.put("Content-Type","application/x-www-form-urlencoded");
-                    return params;
+                    val params = HashMap<String, String>()
+                    params.put("Content-Type","application/x-www-form-urlencoded")
+                    return params
                 }
-            };
+            }
 
             // Volley request policy, only one time request to avoid duplicate transaction
             request.retryPolicy = DefaultRetryPolicy(
@@ -306,7 +306,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
                         errorMessage(getString(unity_wallet.R.string.not_coin_qr, qrContent))
                         return
                     }
-                    SendCoinsFragment.newInstance(recipient!!, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+                    SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
                 }
             }
         } else {

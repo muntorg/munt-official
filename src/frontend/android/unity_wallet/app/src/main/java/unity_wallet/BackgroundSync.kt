@@ -56,15 +56,15 @@ fun setupBackgroundSync(context: Context) {
         }
 
         "BACKGROUND_SYNC_CONTINUOUS" -> {
-            var tryForeground = true;
-            if (android.os.Build.MANUFACTURER == "samsung")
-                tryForeground = false;
+            var tryForeground = true
+            if (Build.MANUFACTURER == "samsung")
+                tryForeground = false
 
             if (tryForeground) {
                 try {
                     ContextCompat.startForegroundService(context, serviceIntent)
                 } catch (e: ForegroundServiceStartNotAllowedException) {
-                    tryForeground = false;
+                    tryForeground = false
                 }
             }
             if(!tryForeground) {
