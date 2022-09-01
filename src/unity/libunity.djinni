@@ -112,7 +112,7 @@ peer_record = record {
     addnode : bool;
     relay_txes : bool;
     banscore : i64;
-}
+} deriving(eq)
 
 banned_peer_record = record {
     address : string;

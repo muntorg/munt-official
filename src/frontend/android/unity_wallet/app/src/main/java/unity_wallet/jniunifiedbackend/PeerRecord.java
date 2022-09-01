@@ -194,6 +194,67 @@ public final class PeerRecord {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof PeerRecord)) {
+            return false;
+        }
+        PeerRecord other = (PeerRecord) obj;
+        return this.mId == other.mId &&
+                this.mIp.equals(other.mIp) &&
+                this.mHostname.equals(other.mHostname) &&
+                this.mAddrLocal.equals(other.mAddrLocal) &&
+                this.mAddrBind.equals(other.mAddrBind) &&
+                this.mStartHeight == other.mStartHeight &&
+                this.mSyncedHeight == other.mSyncedHeight &&
+                this.mCommonHeight == other.mCommonHeight &&
+                this.mTimeConnected == other.mTimeConnected &&
+                this.mTimeOffset == other.mTimeOffset &&
+                this.mLatency == other.mLatency &&
+                this.mLastSend == other.mLastSend &&
+                this.mLastReceive == other.mLastReceive &&
+                this.mSendBytes == other.mSendBytes &&
+                this.mReceiveBytes == other.mReceiveBytes &&
+                this.mUserAgent.equals(other.mUserAgent) &&
+                this.mProtocol == other.mProtocol &&
+                this.mServices == other.mServices &&
+                this.mInbound == other.mInbound &&
+                this.mWhitelisted == other.mWhitelisted &&
+                this.mAddnode == other.mAddnode &&
+                this.mRelayTxes == other.mRelayTxes &&
+                this.mBanscore == other.mBanscore;
+    }
+
+    @Override
+    public int hashCode() {
+        // Pick an arbitrary non-zero starting value
+        int hashCode = 17;
+        hashCode = hashCode * 31 + ((int) (mId ^ (mId >>> 32)));
+        hashCode = hashCode * 31 + mIp.hashCode();
+        hashCode = hashCode * 31 + mHostname.hashCode();
+        hashCode = hashCode * 31 + mAddrLocal.hashCode();
+        hashCode = hashCode * 31 + mAddrBind.hashCode();
+        hashCode = hashCode * 31 + ((int) (mStartHeight ^ (mStartHeight >>> 32)));
+        hashCode = hashCode * 31 + ((int) (mSyncedHeight ^ (mSyncedHeight >>> 32)));
+        hashCode = hashCode * 31 + ((int) (mCommonHeight ^ (mCommonHeight >>> 32)));
+        hashCode = hashCode * 31 + ((int) (mTimeConnected ^ (mTimeConnected >>> 32)));
+        hashCode = hashCode * 31 + ((int) (mTimeOffset ^ (mTimeOffset >>> 32)));
+        hashCode = hashCode * 31 + ((int) (mLatency ^ (mLatency >>> 32)));
+        hashCode = hashCode * 31 + ((int) (mLastSend ^ (mLastSend >>> 32)));
+        hashCode = hashCode * 31 + ((int) (mLastReceive ^ (mLastReceive >>> 32)));
+        hashCode = hashCode * 31 + ((int) (mSendBytes ^ (mSendBytes >>> 32)));
+        hashCode = hashCode * 31 + ((int) (mReceiveBytes ^ (mReceiveBytes >>> 32)));
+        hashCode = hashCode * 31 + mUserAgent.hashCode();
+        hashCode = hashCode * 31 + ((int) (mProtocol ^ (mProtocol >>> 32)));
+        hashCode = hashCode * 31 + ((int) (mServices ^ (mServices >>> 32)));
+        hashCode = hashCode * 31 + (mInbound ? 1 : 0);
+        hashCode = hashCode * 31 + (mWhitelisted ? 1 : 0);
+        hashCode = hashCode * 31 + (mAddnode ? 1 : 0);
+        hashCode = hashCode * 31 + (mRelayTxes ? 1 : 0);
+        hashCode = hashCode * 31 + ((int) (mBanscore ^ (mBanscore >>> 32)));
+        return hashCode;
+    }
+
+    @Override
     public String toString() {
         return "PeerRecord{" +
                 "mId=" + mId +

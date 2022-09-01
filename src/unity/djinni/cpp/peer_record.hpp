@@ -32,6 +32,9 @@ struct PeerRecord final {
     bool relay_txes;
     int64_t banscore;
 
+    friend bool operator==(const PeerRecord& lhs, const PeerRecord& rhs);
+    friend bool operator!=(const PeerRecord& lhs, const PeerRecord& rhs);
+
     PeerRecord(int64_t id_,
                std::string ip_,
                std::string hostname_,

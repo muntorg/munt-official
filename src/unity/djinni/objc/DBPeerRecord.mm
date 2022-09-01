@@ -107,6 +107,65 @@
                                           banscore:banscore];
 }
 
+- (BOOL)isEqual:(id)other
+{
+    if (![other isKindOfClass:[DBPeerRecord class]]) {
+        return NO;
+    }
+    DBPeerRecord *typedOther = (DBPeerRecord *)other;
+    return self.id == typedOther.id &&
+            [self.ip isEqualToString:typedOther.ip] &&
+            [self.hostname isEqualToString:typedOther.hostname] &&
+            [self.addrLocal isEqualToString:typedOther.addrLocal] &&
+            [self.addrBind isEqualToString:typedOther.addrBind] &&
+            self.startHeight == typedOther.startHeight &&
+            self.syncedHeight == typedOther.syncedHeight &&
+            self.commonHeight == typedOther.commonHeight &&
+            self.timeConnected == typedOther.timeConnected &&
+            self.timeOffset == typedOther.timeOffset &&
+            self.latency == typedOther.latency &&
+            self.lastSend == typedOther.lastSend &&
+            self.lastReceive == typedOther.lastReceive &&
+            self.sendBytes == typedOther.sendBytes &&
+            self.receiveBytes == typedOther.receiveBytes &&
+            [self.userAgent isEqualToString:typedOther.userAgent] &&
+            self.protocol == typedOther.protocol &&
+            self.services == typedOther.services &&
+            self.inbound == typedOther.inbound &&
+            self.whitelisted == typedOther.whitelisted &&
+            self.addnode == typedOther.addnode &&
+            self.relayTxes == typedOther.relayTxes &&
+            self.banscore == typedOther.banscore;
+}
+
+- (NSUInteger)hash
+{
+    return NSStringFromClass([self class]).hash ^
+            (NSUInteger)self.id ^
+            self.ip.hash ^
+            self.hostname.hash ^
+            self.addrLocal.hash ^
+            self.addrBind.hash ^
+            (NSUInteger)self.startHeight ^
+            (NSUInteger)self.syncedHeight ^
+            (NSUInteger)self.commonHeight ^
+            (NSUInteger)self.timeConnected ^
+            (NSUInteger)self.timeOffset ^
+            (NSUInteger)self.latency ^
+            (NSUInteger)self.lastSend ^
+            (NSUInteger)self.lastReceive ^
+            (NSUInteger)self.sendBytes ^
+            (NSUInteger)self.receiveBytes ^
+            self.userAgent.hash ^
+            (NSUInteger)self.protocol ^
+            (NSUInteger)self.services ^
+            (NSUInteger)self.inbound ^
+            (NSUInteger)self.whitelisted ^
+            (NSUInteger)self.addnode ^
+            (NSUInteger)self.relayTxes ^
+            (NSUInteger)self.banscore;
+}
+
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"<%@ %p id:%@ ip:%@ hostname:%@ addrLocal:%@ addrBind:%@ startHeight:%@ syncedHeight:%@ commonHeight:%@ timeConnected:%@ timeOffset:%@ latency:%@ lastSend:%@ lastReceive:%@ sendBytes:%@ receiveBytes:%@ userAgent:%@ protocol:%@ services:%@ inbound:%@ whitelisted:%@ addnode:%@ relayTxes:%@ banscore:%@>", self.class, (void *)self, @(self.id), self.ip, self.hostname, self.addrLocal, self.addrBind, @(self.startHeight), @(self.syncedHeight), @(self.commonHeight), @(self.timeConnected), @(self.timeOffset), @(self.latency), @(self.lastSend), @(self.lastReceive), @(self.sendBytes), @(self.receiveBytes), self.userAgent, @(self.protocol), @(self.services), @(self.inbound), @(self.whitelisted), @(self.addnode), @(self.relayTxes), @(self.banscore)];
