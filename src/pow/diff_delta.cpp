@@ -1,6 +1,6 @@
-// Copyright (c) 2015-2018 The Gulden developers
+// Copyright (c) 2015-2022 The Centure developers
 // Authored by: Frank (dt_cdog@yahoo.com) and Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the GULDEN software license, see the accompanying
+// Distributed under the Libre Chain License, see the accompanying
 // file COPYING
 //
 // This file contains Delta, the Gulden Difficulty Re-adjustment algorithm developed by Frank (dt_cdog@yahoo.com) with various enhancements by Malcolm MacLeod (mmacleod@gmx.com)

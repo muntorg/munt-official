@@ -2,9 +2,9 @@ dnl Copyright (c) 2013-2015 The Bitcoin Core developers
 dnl Distributed under the MIT software license, see the accompanying
 dnl file COPYING or http://www.opensource.org/licenses/mit-license.php.
 dnl
-dnl File contains modifications by: The Gulden developers
+dnl File contains modifications by: The Centure developers
 dnl All modifications:
-dnl Copyright (c) 2016-2018 The Gulden developers
+dnl Copyright (c) 2016-2022 The Centure developers
 
 AC_DEFUN([GULDEN_FIND_BDB48],[
   AC_ARG_VAR([BDB_CFLAGS], [C compiler flags for BerkeleyDB, bypasses autodetection])

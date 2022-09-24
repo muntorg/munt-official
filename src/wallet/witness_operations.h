@@ -1,7 +1,7 @@
-// Copyright (c) 2016-2020 The Gulden developers
+// Copyright (c) 2016-2022 The Centure developers
 // Authored by: Willem de Jonge (willem@isnapp.nl)
 // Modified by: Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the GULDEN software license, see the accompanying
+// Distributed under the Libre Chain License, see the accompanying
 // file COPYING
 
 #ifndef WITNESS_OPERATIONS_H

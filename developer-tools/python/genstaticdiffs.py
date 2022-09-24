@@ -7,7 +7,7 @@ import string
 import os
 
 __copyright__ = 'Copyright (c) 2018 The Gulden developers'
-__license__   = 'Distributed under the GULDEN software license, see the accompanying file COPYING'
+__license__   = 'Distributed under the Libre Chain License, see the accompanying file COPYING'
 __author__    = 'Malcolm MacLeod'
 __email__     = 'mmacleod@gmx.com'
 

@@ -1,7 +1,7 @@
-// Copyright (c) 2018 The Gulden developers
+// Copyright (c) 2018-2022 The Centure developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the MIT software license, see the accompanying
-// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+// Distributed under the Libre Chain License, see the accompanying
+// file COPYING
 
 #include <boost/thread.hpp>
 #include "chain.h"

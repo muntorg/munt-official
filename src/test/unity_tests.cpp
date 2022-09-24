@@ -1,6 +1,6 @@
-// Copyright (c) 2019-2020 The Gulden developers
+// Copyright (c) 2019-2022 The Centure developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the GULDEN software license, see the accompanying
+// Distributed under the Libre Chain License, see the accompanying
 // file COPYING
 
 #include "unity/compat/android_wallet.h"

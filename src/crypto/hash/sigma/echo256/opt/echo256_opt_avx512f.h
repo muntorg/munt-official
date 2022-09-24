@@ -1,6 +1,6 @@
-// Copyright (c) 2019 The Gulden developers
+// Copyright (c) 2019-2022 The Centure developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the GULDEN software license, see the accompanying file COPYING
+// Distributed under the Libre Chain License, see the accompanying file COPYING
 
 // This file is a thin wrapper around the actual 'echo256_aesni_opt', along with various other similarly named files.
 // The build system compiles each file with slightly different optimisation flags so that we have optimised implementations for a wide spread of processors.

@@ -1,6 +1,6 @@
-dnl Copyright (c) 2019 The Gulden developers
+dnl Copyright (c) 2019-2022 The Centure developers
 dnl Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-dnl Distributed under the GULDEN software license, see the accompanying file COPYING
+dnl Distributed under the Libre Chain License, see the accompanying file COPYING
 
 dnl Figure out which intrinsics our compiler can handle for its architecture at compile time and the flag combinations to obtain them
 dnl NB! This is for compile time support, not runtime support, not every cpu will support these flags.

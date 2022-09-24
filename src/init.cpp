@@ -3,11 +3,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 //
-// File contains modifications by: The Gulden developers
+// File contains modifications by: The Centure developers
 // All modifications:
-// Copyright (c) 2016-2018 The Gulden developers
+// Copyright (c) 2016-2022 The Centure developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the GULDEN software license, see the accompanying
+// Distributed under the Libre Chain License, see the accompanying
 // file COPYING
 
 #if defined(HAVE_CONFIG_H)
@@ -399,8 +399,8 @@ std::string LicenseInfo()
     //fixme: (FUT) Mention additional libraries, boost etc.
     //fixme: (FUT) Translate
     //fixme: (FUT) Add code to ensure translations never strip copyrights
-    return helptr("Copyright (C) 2014-2021 The Gulden developers")+ "\n"
-           + helptr("Licensed under the Gulden license")+ "\n"
+    return helptr("Copyright (C) 2014-2022 The Centure developers")+ "\n"
+           + helptr("Licensed under the Libre Chain License")+ "\n"
            + "\n"
            + helptr("This is experimental software.")+ "\n"
            + strprintf(helptr("Please contribute if you find %s useful. Visit %s for further information about the software."), PACKAGE_NAME, URL_WEBSITE)

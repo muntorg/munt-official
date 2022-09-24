@@ -3,12 +3,12 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 //
-// File contains modifications by: The Gulden developers
+// File contains modifications by: The Centure developers
 // All modifications:
-// Copyright (c) 2016-2020 The Gulden developers
+// Copyright (c) 2016-2022 The Centure developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
 // Authored by: Willem de Jonge (willem@isnapp.nl)
-// Distributed under the GULDEN software license, see the accompanying
+// Distributed under the Libre Chain License, see the accompanying
 // file COPYING
 
 #include "net_processing.h"

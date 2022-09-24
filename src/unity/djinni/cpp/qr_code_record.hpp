@@ -10,7 +10,7 @@
 /**
  * Copyright (c) 2018-2020 The Gulden developers
  * Authored by: Malcolm MacLeod (mmacleod@gmx.com)
- * Distributed under the GULDEN software license, see the accompanying
+ * Distributed under the Libre Chain License, see the accompanying
  * file COPYING
  */
 struct QrCodeRecord final {
