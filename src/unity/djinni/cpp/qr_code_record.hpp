@@ -8,7 +8,7 @@
 #include <vector>
 
 /**
- * Copyright (c) 2018-2020 The Gulden developers
+ * Copyright (c) 2018-2022 The Centure developers
  * Authored by: Malcolm MacLeod (mmacleod@gmx.com)
  * Distributed under the Libre Chain License, see the accompanying
  * file COPYING
