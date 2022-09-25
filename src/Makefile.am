@@ -734,7 +734,7 @@ lib_generic_init_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 lib_generic_init_a_SOURCES = \
   unity/generic/init_generic.cpp \
   $(CORE_H)
-  
+
 # generic_init: anything that includes 'generic' library must also include either this or 'generic_init_server' or provide its own init functions depending on if initialisation of http/rpc etc. is required
 lib_generic_init_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
 lib_generic_init_node_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -765,7 +765,9 @@ if BUILD_LIBS_NODE_JS
 DJINNI_CPP_GEN = \
   unity/djinni/cpp/address_record.hpp \
   unity/djinni/cpp/account_record.hpp \
+  unity/djinni/cpp/account_link_record.hpp \
   unity/djinni/cpp/balance_record.hpp \
+  unity/djinni/cpp/result_record.hpp \
   unity/djinni/cpp/block_info_record.hpp \
   unity/djinni/cpp/i_library_controller.cpp \
   unity/djinni/cpp/i_library_controller.hpp \
@@ -905,6 +907,8 @@ lib_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeMnemonicRecord.cpp \
   unity/djinni/jni/NativeMutationRecord.hpp \
   unity/djinni/jni/NativePaymentResultStatus.hpp \
+  unity/djinni/jni/NativeBannedPeerRecord.hpp \
+  unity/djinni/jni/NativeBannedPeerRecord.cpp \
   unity/djinni/jni/NativePeerRecord.hpp \
   unity/djinni/jni/NativePeerRecord.cpp \
   unity/djinni/jni/NativeQrCodeRecord.hpp \
@@ -924,6 +928,7 @@ lib_unity_jni_la_SOURCES = \
   unity/djinni/jni/NativeOutputRecord.cpp \
   unity/djinni/jni/NativeInputRecord.hpp \
   unity/djinni/jni/NativeInputRecord.cpp \
+  unity/djinni/support-lib/jni/djinni_support.hpp \
   unity/djinni/cpp/i_library_controller.hpp \
   unity/djinni/cpp/i_library_controller.cpp \
   unity/djinni/cpp/i_library_listener.hpp \
