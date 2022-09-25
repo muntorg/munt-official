@@ -27,13 +27,14 @@ auto NativeWitnessAccountStatisticsRecord::fromCpp(JNIEnv* jniEnv, const CppType
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_expected_witness_period_in_blocks)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_estimated_witness_period_in_blocks)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_initial_lock_creation_block_height)),
-                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.compounding_percent)))};
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.compounding_percent)),
+                                                           ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.is_optimal)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
 }
 
 auto NativeWitnessAccountStatisticsRecord::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
-    ::djinni::JniLocalScope jscope(jniEnv, 16);
+    ::djinni::JniLocalScope jscope(jniEnv, 17);
     assert(j != nullptr);
     const auto& data = ::djinni::JniClass<NativeWitnessAccountStatisticsRecord>::get();
     return {::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mRequestStatus)),
@@ -50,7 +51,8 @@ auto NativeWitnessAccountStatisticsRecord::toCpp(JNIEnv* jniEnv, JniType j) -> C
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountExpectedWitnessPeriodInBlocks)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountEstimatedWitnessPeriodInBlocks)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountInitialLockCreationBlockHeight)),
-            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mCompoundingPercent))};
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mCompoundingPercent)),
+            ::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_mIsOptimal))};
 }
 
 }  // namespace djinni_generated

@@ -5,6 +5,7 @@
 #define DJINNI_GENERATED_NJSIWITNESSCONTROLLER_HPP
 
 
+#include "result_record.hpp"
 #include "witness_account_statistics_record.hpp"
 #include "witness_estimate_info_record.hpp"
 #include "witness_funding_result_record.hpp"
@@ -12,6 +13,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include <napi.h>
 #include <uv.h>
@@ -50,6 +52,15 @@ private:
 
     /** Get the witness address of the account */
     Napi::Value getWitnessAddress(const Napi::CallbackInfo& info);
+
+    /** Get the optimal distribution amounts for the account; totalNetworkWeight should be the value of "total_weight_eligible_raw" */
+    Napi::Value getOptimalWitnessDistribution(const Napi::CallbackInfo& info);
+
+    /** Same as the above but calculates all the paramaters from the account UUID; its more efficient to use the other call if you already have these values */
+    Napi::Value getOptimalWitnessDistributionForAccount(const Napi::CallbackInfo& info);
+
+    /** Redistribute a witness account to its optimal distribution, call 'getOptimalWitnessDistribution' first to calculate this */
+    Napi::Value optimiseWitnessAccount(const Napi::CallbackInfo& info);
 
 };
 #endif //DJINNI_GENERATED_NJSIWITNESSCONTROLLER_HPP

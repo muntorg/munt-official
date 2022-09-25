@@ -28,6 +28,7 @@
 #include "i_witness_controller.hpp"
 #include "witness_estimate_info_record.hpp"
 #include "witness_funding_result_record.hpp"
+#include "result_record.hpp"
 #include "witness_account_statistics_record.hpp"
 
 #include <consensus/validation.h>
@@ -222,13 +223,12 @@ struct WitnessInfoForAccount
     uint64_t nEarningsToDate = 0;
 };
 
-bool GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoForAccount)
+bool GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoForAccount, CGetWitnessInfo& witnessInfo)
 {
     if (!forAccount->IsPoW2Witness())
         return false;
         
     CWitnessAccountStatus accountStatus;
-    CGetWitnessInfo witnessInfo;
     accountStatus = GetWitnessAccountStatus(pactiveWallet, forAccount, &witnessInfo);
 
     infoForAccount.accountStatus = accountStatus;
@@ -278,19 +278,20 @@ bool GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoF
 WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(const std::string& witnessAccountUUID)
 {
     if (!pactiveWallet)
-        return WitnessAccountStatisticsRecord("no active wallet present", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
+        return WitnessAccountStatisticsRecord("no active wallet present", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
     
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
     
     auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(witnessAccountUUID));
     if (findIter == pactiveWallet->mapAccounts.end())
-        return WitnessAccountStatisticsRecord("invalid witness account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
+        return WitnessAccountStatisticsRecord("invalid witness account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
     CAccount* witnessAccount = findIter->second;
     
+    CGetWitnessInfo witnessInfo;
     WitnessInfoForAccount infoForAccount;
-    if (!GetWitnessInfoForAccount(witnessAccount, infoForAccount))
+    if (!GetWitnessInfoForAccount(witnessAccount, infoForAccount, witnessInfo))
     {
-        return WitnessAccountStatisticsRecord("failed to get witness info for account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
+        return WitnessAccountStatisticsRecord("failed to get witness info for account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
     }
     std::string accountStatus;
     switch (infoForAccount.accountStatus.status)
@@ -312,7 +313,9 @@ WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(c
     {
         compoundingPercent = witnessAccount->getCompoundingPercent();
     }
-            
+
+    bool accountNearOptimal = isWitnessDistributionNearOptimal(pactiveWallet, witnessAccount, witnessInfo);
+    
     return WitnessAccountStatisticsRecord(
         "success",                                                      //request_status
         accountStatus,                                                  //account_status
@@ -328,7 +331,8 @@ WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(c
         infoForAccount.nExpectedWitnessBlockPeriod,                     //account_expected_witness_period_in_blocks
         infoForAccount.nEstimatedWitnessBlockPeriod,                    //account_estimated_witness_period_in_blocks
         infoForAccount.nOriginBlock,                                    //account_initial_lock_creation_block_height
-        compoundingPercent                                              //compounding_percent
+        compoundingPercent,                                             //compounding_percent
+        accountNearOptimal                                              //is_optimal
     );
 }
 
@@ -393,4 +397,63 @@ std::string IWitnessController::getWitnessAddress(const std::string& witnessAcco
         }
     }
     return "";
+}
+
+
+std::vector<int64_t> IWitnessController::getOptimalWitnessDistribution(const int64_t amount, const int64_t durationInBlocks, const int64_t totalNetworkWeight)
+{
+    return optimalWitnessDistribution(amount, durationInBlocks, totalNetworkWeight);
+}
+
+std::vector<int64_t> IWitnessController::getOptimalWitnessDistributionForAccount(const std::string& witnessAccountUUID)
+{
+    if (pactiveWallet)
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+    
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(witnessAccountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            CAccount* witnessAccount = findIter->second;
+            
+            CGetWitnessInfo witnessInfo = GetWitnessInfoWrapper();
+            auto [currentDistribution, duration, totalAmount] = witnessDistribution(pactiveWallet, witnessAccount);
+            return getOptimalWitnessDistribution(totalAmount, duration, witnessInfo.nTotalWeightEligibleRaw);
+        }
+    }
+    return std::vector<int64_t>();
+}
+
+ResultRecord IWitnessController::optimiseWitnessAccount(const std::string& witnessAccountUUID, const std::string& fundingAccountUUID, const std::vector<int64_t>& optimalDistribution)
+{
+    if (pactiveWallet)
+    {
+        LOCK2(cs_main, pactiveWallet->cs_wallet);
+    
+        auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(witnessAccountUUID));
+        if (findIter != pactiveWallet->mapAccounts.end())
+        {
+            auto findFundingIter = pactiveWallet->mapAccounts.find(getUUIDFromString(fundingAccountUUID));
+            if (findFundingIter != pactiveWallet->mapAccounts.end())
+            {
+                CAccount* witnessAccount = findIter->second;
+                CAccount* fundingAccount = findFundingIter->second;
+                
+                try
+                {
+                    redistributewitnessaccount(pactiveWallet, fundingAccount, witnessAccount, optimalDistribution, nullptr, nullptr); // ignore result params      
+                }
+                catch(const std::string& e)
+                {
+                    return ResultRecord(false, e);
+                }
+                catch(...)
+                {
+                    return ResultRecord(false, "unknown error");
+                }
+                return ResultRecord(true, "");
+            }
+        }
+    }
+    return ResultRecord(false, "no wallet available");
 }

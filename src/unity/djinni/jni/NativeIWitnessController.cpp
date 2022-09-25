@@ -3,6 +3,7 @@
 
 #include "NativeIWitnessController.hpp"  // my header
 #include "Marshal.hpp"
+#include "NativeResultRecord.hpp"
 #include "NativeWitnessAccountStatisticsRecord.hpp"
 #include "NativeWitnessEstimateInfoRecord.hpp"
 #include "NativeWitnessFundingResultRecord.hpp"
@@ -96,6 +97,37 @@ CJNIEXPORT jstring JNICALL Java_unity_1wallet_jniunifiedbackend_IWitnessControll
         DJINNI_FUNCTION_PROLOGUE0(jniEnv);
         auto r = ::IWitnessController::getWitnessAddress(::djinni::String::toCpp(jniEnv, j_witnessAccountUUID));
         return ::djinni::release(::djinni::String::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IWitnessController_00024CppProxy_getOptimalWitnessDistribution(JNIEnv* jniEnv, jobject /*this*/, jlong j_amount, jlong j_durationInBlocks, jlong j_totalNetworkWeight)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IWitnessController::getOptimalWitnessDistribution(::djinni::I64::toCpp(jniEnv, j_amount),
+                                                                     ::djinni::I64::toCpp(jniEnv, j_durationInBlocks),
+                                                                     ::djinni::I64::toCpp(jniEnv, j_totalNetworkWeight));
+        return ::djinni::release(::djinni::List<::djinni::I64>::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IWitnessController_00024CppProxy_getOptimalWitnessDistributionForAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IWitnessController::getOptimalWitnessDistributionForAccount(::djinni::String::toCpp(jniEnv, j_witnessAccountUUID));
+        return ::djinni::release(::djinni::List<::djinni::I64>::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_unity_1wallet_jniunifiedbackend_IWitnessController_00024CppProxy_optimiseWitnessAccount(JNIEnv* jniEnv, jobject /*this*/, jstring j_witnessAccountUUID, jstring j_fundingAccountUUID, jobject j_optimalDistribution)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::IWitnessController::optimiseWitnessAccount(::djinni::String::toCpp(jniEnv, j_witnessAccountUUID),
+                                                              ::djinni::String::toCpp(jniEnv, j_fundingAccountUUID),
+                                                              ::djinni::List<::djinni::I64>::toCpp(jniEnv, j_optimalDistribution));
+        return ::djinni::release(::djinni_generated::NativeResultRecord::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 

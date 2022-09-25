@@ -38,6 +38,8 @@ struct WitnessAccountStatisticsRecord final {
     int64_t account_initial_lock_creation_block_height;
     /** How much of the reward that this account earns is set to be compound */
     int32_t compounding_percent;
+    /** Is the account weight split in an optimal way */
+    bool is_optimal;
 
     WitnessAccountStatisticsRecord(std::string request_status_,
                                    std::string account_status_,
@@ -53,7 +55,8 @@ struct WitnessAccountStatisticsRecord final {
                                    int64_t account_expected_witness_period_in_blocks_,
                                    int64_t account_estimated_witness_period_in_blocks_,
                                    int64_t account_initial_lock_creation_block_height_,
-                                   int32_t compounding_percent_)
+                                   int32_t compounding_percent_,
+                                   bool is_optimal_)
     : request_status(std::move(request_status_))
     , account_status(std::move(account_status_))
     , account_weight(std::move(account_weight_))
@@ -69,5 +72,6 @@ struct WitnessAccountStatisticsRecord final {
     , account_estimated_witness_period_in_blocks(std::move(account_estimated_witness_period_in_blocks_))
     , account_initial_lock_creation_block_height(std::move(account_initial_lock_creation_block_height_))
     , compounding_percent(std::move(compounding_percent_))
+    , is_optimal(std::move(is_optimal_))
     {}
 };

@@ -3,12 +3,6 @@
 
 #import <Foundation/Foundation.h>
 
-/**
- * Copyright (c) 2018-2022 The Centure developers
- * Authored by: Malcolm MacLeod (mmacleod@gmx.com)
- * Distributed under the Libre Chain License, see the accompanying
- * file COPYING
- */
 @interface DBQrCodeRecord : NSObject
 - (nonnull instancetype)initWithWidth:(int32_t)width
                             pixelData:(nonnull NSData *)pixelData;

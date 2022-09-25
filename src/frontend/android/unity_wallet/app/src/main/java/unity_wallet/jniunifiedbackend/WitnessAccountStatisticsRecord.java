@@ -36,6 +36,8 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
 
     /*package*/ final int mCompoundingPercent;
 
+    /*package*/ final boolean mIsOptimal;
+
     public WitnessAccountStatisticsRecord(
             String requestStatus,
             String accountStatus,
@@ -51,7 +53,8 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
             long accountExpectedWitnessPeriodInBlocks,
             long accountEstimatedWitnessPeriodInBlocks,
             long accountInitialLockCreationBlockHeight,
-            int compoundingPercent) {
+            int compoundingPercent,
+            boolean isOptimal) {
         this.mRequestStatus = requestStatus;
         this.mAccountStatus = accountStatus;
         this.mAccountWeight = accountWeight;
@@ -67,6 +70,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         this.mAccountEstimatedWitnessPeriodInBlocks = accountEstimatedWitnessPeriodInBlocks;
         this.mAccountInitialLockCreationBlockHeight = accountInitialLockCreationBlockHeight;
         this.mCompoundingPercent = compoundingPercent;
+        this.mIsOptimal = isOptimal;
     }
 
     /** Success if request succeeded, otherwise an error message */
@@ -144,6 +148,11 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         return mCompoundingPercent;
     }
 
+    /** Is the account weight split in an optimal way */
+    public boolean getIsOptimal() {
+        return mIsOptimal;
+    }
+
     @Override
     public String toString() {
         return "WitnessAccountStatisticsRecord{" +
@@ -162,6 +171,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
                 "," + "mAccountEstimatedWitnessPeriodInBlocks=" + mAccountEstimatedWitnessPeriodInBlocks +
                 "," + "mAccountInitialLockCreationBlockHeight=" + mAccountInitialLockCreationBlockHeight +
                 "," + "mCompoundingPercent=" + mCompoundingPercent +
+                "," + "mIsOptimal=" + mIsOptimal +
         "}";
     }
 
@@ -195,6 +205,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         this.mAccountEstimatedWitnessPeriodInBlocks = in.readLong();
         this.mAccountInitialLockCreationBlockHeight = in.readLong();
         this.mCompoundingPercent = in.readInt();
+        this.mIsOptimal = in.readByte() != 0;
     }
 
     @Override
@@ -219,6 +230,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         out.writeLong(this.mAccountEstimatedWitnessPeriodInBlocks);
         out.writeLong(this.mAccountInitialLockCreationBlockHeight);
         out.writeInt(this.mCompoundingPercent);
+        out.writeByte(this.mIsOptimal ? (byte)1 : 0);
     }
 
 }

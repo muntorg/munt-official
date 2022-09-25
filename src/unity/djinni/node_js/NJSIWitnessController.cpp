@@ -225,6 +225,8 @@ Napi::Value NJSIWitnessController::getAccountWitnessStatistics(const Napi::Callb
         arg_1.Set("account_initial_lock_creation_block_height", arg_1_14);
         auto arg_1_15 = Napi::Value::From(env, result.compounding_percent);
         arg_1.Set("compounding_percent", arg_1_15);
+        auto arg_1_16 = Napi::Value::From(env, result.is_optimal);
+        arg_1.Set("is_optimal", arg_1_16);
 
 
         return arg_1;
@@ -334,6 +336,136 @@ Napi::Value NJSIWitnessController::getWitnessAddress(const Napi::CallbackInfo& i
         return Napi::Value();
     }
 }
+Napi::Value NJSIWitnessController::getOptimalWitnessDistribution(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 3)
+    {
+        Napi::Error::New(env, "NJSIWitnessController::getOptimalWitnessDistribution needs 3 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    auto arg_0 = info[0].ToNumber().Int64Value();
+    auto arg_1 = info[1].ToNumber().Int64Value();
+    auto arg_2 = info[2].ToNumber().Int64Value();
+
+    try
+    {
+        auto result = IWitnessController::getOptimalWitnessDistribution(arg_0,arg_1,arg_2);
+
+        //Wrap result in node object
+        auto arg_3 = Napi::Array::New(env);
+        for(size_t arg_3_id = 0; arg_3_id < result.size(); arg_3_id++)
+        {
+            auto arg_3_elem = Napi::Value::From(env, result[arg_3_id]);
+            arg_3.Set((int)arg_3_id,arg_3_elem);
+        }
+
+
+        return arg_3;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+}
+Napi::Value NJSIWitnessController::getOptimalWitnessDistributionForAccount(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 1)
+    {
+        Napi::Error::New(env, "NJSIWitnessController::getOptimalWitnessDistributionForAccount needs 1 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+
+    try
+    {
+        auto result = IWitnessController::getOptimalWitnessDistributionForAccount(arg_0);
+
+        //Wrap result in node object
+        auto arg_1 = Napi::Array::New(env);
+        for(size_t arg_1_id = 0; arg_1_id < result.size(); arg_1_id++)
+        {
+            auto arg_1_elem = Napi::Value::From(env, result[arg_1_id]);
+            arg_1.Set((int)arg_1_id,arg_1_elem);
+        }
+
+
+        return arg_1;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+}
+Napi::Value NJSIWitnessController::optimiseWitnessAccount(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+
+    //Check if method called with right number of arguments
+    if(info.Length() != 3)
+    {
+        Napi::Error::New(env, "NJSIWitnessController::optimiseWitnessAccount needs 3 arguments").ThrowAsJavaScriptException();
+    }
+
+    //Check if parameters have correct types
+    std::string arg_0 = info[0].As<Napi::String>();
+    std::string arg_1 = info[1].As<Napi::String>();
+    vector<int64_t> arg_2;
+    auto arg_2_container = info[2].As<Napi::Array>();
+    for(uint32_t arg_2_id = 0; arg_2_id < arg_2_container.Length(); arg_2_id++)
+    {
+        if(arg_2_container.Get(arg_2_id).IsNumber())
+        {
+            auto arg_2_elem = arg_2_container.Get(arg_2_id).ToNumber().Int64Value();
+            arg_2.emplace_back(arg_2_elem);
+        }
+    }
+
+
+    try
+    {
+        auto result = IWitnessController::optimiseWitnessAccount(arg_0,arg_1,arg_2);
+
+        //Wrap result in node object
+        auto arg_3 = Napi::Object::New(env);
+        auto arg_3_1 = Napi::Value::From(env, result.result);
+        arg_3.Set("result", arg_3_1);
+        auto arg_3_2 = Napi::String::New(env, result.info);
+        arg_3.Set("info", arg_3_2);
+
+
+        return arg_3;
+    }
+    catch (std::exception& e)
+    {
+        Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+    catch (...)
+    {
+        Napi::Error::New(env, "core exception thrown").ThrowAsJavaScriptException();
+        return Napi::Value();
+    }
+}
 
 Napi::FunctionReference NJSIWitnessController::constructor;
 
@@ -349,6 +481,9 @@ Napi::Object NJSIWitnessController::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("setAccountCompounding", &NJSIWitnessController::setAccountCompounding),
     InstanceMethod("isAccountCompounding", &NJSIWitnessController::isAccountCompounding),
     InstanceMethod("getWitnessAddress", &NJSIWitnessController::getWitnessAddress),
+    InstanceMethod("getOptimalWitnessDistribution", &NJSIWitnessController::getOptimalWitnessDistribution),
+    InstanceMethod("getOptimalWitnessDistributionForAccount", &NJSIWitnessController::getOptimalWitnessDistributionForAccount),
+    InstanceMethod("optimiseWitnessAccount", &NJSIWitnessController::optimiseWitnessAccount),
     });
     // Create a peristent reference to the class constructor. This will allow a function called on a class prototype and a function called on instance of a class to be distinguished from each other.
     constructor = Napi::Persistent(func);

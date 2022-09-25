@@ -3,6 +3,7 @@
 
 #import "DBIWitnessController+Private.h"
 #import "DBIWitnessController.h"
+#import "DBResultRecord+Private.h"
 #import "DBWitnessAccountStatisticsRecord+Private.h"
 #import "DBWitnessEstimateInfoRecord+Private.h"
 #import "DBWitnessFundingResultRecord+Private.h"
@@ -97,6 +98,35 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     try {
         auto objcpp_result_ = ::IWitnessController::getWitnessAddress(::djinni::String::toCpp(witnessAccountUUID));
         return ::djinni::String::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull NSArray<NSNumber *> *)getOptimalWitnessDistribution:(int64_t)amount
+                                              durationInBlocks:(int64_t)durationInBlocks
+                                            totalNetworkWeight:(int64_t)totalNetworkWeight {
+    try {
+        auto objcpp_result_ = ::IWitnessController::getOptimalWitnessDistribution(::djinni::I64::toCpp(amount),
+                                                                                  ::djinni::I64::toCpp(durationInBlocks),
+                                                                                  ::djinni::I64::toCpp(totalNetworkWeight));
+        return ::djinni::List<::djinni::I64>::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull NSArray<NSNumber *> *)getOptimalWitnessDistributionForAccount:(nonnull NSString *)witnessAccountUUID {
+    try {
+        auto objcpp_result_ = ::IWitnessController::getOptimalWitnessDistributionForAccount(::djinni::String::toCpp(witnessAccountUUID));
+        return ::djinni::List<::djinni::I64>::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
++ (nonnull DBResultRecord *)optimiseWitnessAccount:(nonnull NSString *)witnessAccountUUID
+                                fundingAccountUUID:(nonnull NSString *)fundingAccountUUID
+                               optimalDistribution:(nonnull NSArray<NSNumber *> *)optimalDistribution {
+    try {
+        auto objcpp_result_ = ::IWitnessController::optimiseWitnessAccount(::djinni::String::toCpp(witnessAccountUUID),
+                                                                           ::djinni::String::toCpp(fundingAccountUUID),
+                                                                           ::djinni::List<::djinni::I64>::toCpp(optimalDistribution));
+        return ::djinni_generated::ResultRecord::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

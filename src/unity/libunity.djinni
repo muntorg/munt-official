@@ -3,6 +3,11 @@
 # Distributed under the Libre Chain License, see the accompanying
 # file COPYING
 
+result_record = record {
+    result : bool;
+    info : string;
+}
+
 qr_code_record = record {
     width: i32;
     pixel_data: binary;
@@ -651,6 +656,9 @@ witness_account_statistics_record = record {
 
     # How much of the reward that this account earns is set to be compound
     compounding_percent : i32;
+    
+    # Is the account weight split in an optimal way
+    is_optimal : bool;
 } deriving(parcelable)
 
 # C++ interface to control witness accounts
@@ -678,6 +686,14 @@ i_witness_controller = interface +c {
     
     # Get the witness address of the account
     static getWitnessAddress(witnessAccountUUID : string): string;
+    
+    # Get the optimal distribution amounts for the account; totalNetworkWeight should be the value of "total_weight_eligible_raw"
+    static getOptimalWitnessDistribution(amount : i64, durationInBlocks : i64, totalNetworkWeight : i64): list<i64>;
+    # Same as the above but calculates all the paramaters from the account UUID; its more efficient to use the other call if you already have these values
+    static getOptimalWitnessDistributionForAccount(witnessAccountUUID : string): list<i64>;
+    
+    # Redistribute a witness account to its optimal distribution, call 'getOptimalWitnessDistribution' first to calculate this
+    static optimiseWitnessAccount(witnessAccountUUID : string, fundingAccountUUID : string, optimalDistribution : list<i64>) : result_record;
 }
 
 # C++ interface to control generation of blocks (proof of work)

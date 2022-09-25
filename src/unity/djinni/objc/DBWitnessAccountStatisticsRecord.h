@@ -18,7 +18,8 @@
          accountExpectedWitnessPeriodInBlocks:(int64_t)accountExpectedWitnessPeriodInBlocks
         accountEstimatedWitnessPeriodInBlocks:(int64_t)accountEstimatedWitnessPeriodInBlocks
         accountInitialLockCreationBlockHeight:(int64_t)accountInitialLockCreationBlockHeight
-                           compoundingPercent:(int32_t)compoundingPercent;
+                           compoundingPercent:(int32_t)compoundingPercent
+                                    isOptimal:(BOOL)isOptimal;
 + (nonnull instancetype)witnessAccountStatisticsRecordWithRequestStatus:(nonnull NSString *)requestStatus
                                                           accountStatus:(nonnull NSString *)accountStatus
                                                           accountWeight:(int64_t)accountWeight
@@ -33,7 +34,8 @@
                                    accountExpectedWitnessPeriodInBlocks:(int64_t)accountExpectedWitnessPeriodInBlocks
                                   accountEstimatedWitnessPeriodInBlocks:(int64_t)accountEstimatedWitnessPeriodInBlocks
                                   accountInitialLockCreationBlockHeight:(int64_t)accountInitialLockCreationBlockHeight
-                                                     compoundingPercent:(int32_t)compoundingPercent;
+                                                     compoundingPercent:(int32_t)compoundingPercent
+                                                              isOptimal:(BOOL)isOptimal;
 
 /** Success if request succeeded, otherwise an error message */
 @property (nonatomic, readonly, nonnull) NSString * requestStatus;
@@ -79,5 +81,8 @@
 
 /** How much of the reward that this account earns is set to be compound */
 @property (nonatomic, readonly) int32_t compoundingPercent;
+
+/** Is the account weight split in an optimal way */
+@property (nonatomic, readonly) BOOL isOptimal;
 
 @end

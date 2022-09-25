@@ -24,7 +24,8 @@ auto WitnessAccountStatisticsRecord::toCpp(ObjcType obj) -> CppType
             ::djinni::I64::toCpp(obj.accountExpectedWitnessPeriodInBlocks),
             ::djinni::I64::toCpp(obj.accountEstimatedWitnessPeriodInBlocks),
             ::djinni::I64::toCpp(obj.accountInitialLockCreationBlockHeight),
-            ::djinni::I32::toCpp(obj.compoundingPercent)};
+            ::djinni::I32::toCpp(obj.compoundingPercent),
+            ::djinni::Bool::toCpp(obj.isOptimal)};
 }
 
 auto WitnessAccountStatisticsRecord::fromCpp(const CppType& cpp) -> ObjcType
@@ -43,7 +44,8 @@ auto WitnessAccountStatisticsRecord::fromCpp(const CppType& cpp) -> ObjcType
                                       accountExpectedWitnessPeriodInBlocks:(::djinni::I64::fromCpp(cpp.account_expected_witness_period_in_blocks))
                                      accountEstimatedWitnessPeriodInBlocks:(::djinni::I64::fromCpp(cpp.account_estimated_witness_period_in_blocks))
                                      accountInitialLockCreationBlockHeight:(::djinni::I64::fromCpp(cpp.account_initial_lock_creation_block_height))
-                                                        compoundingPercent:(::djinni::I32::fromCpp(cpp.compounding_percent))];
+                                                        compoundingPercent:(::djinni::I32::fromCpp(cpp.compounding_percent))
+                                                                 isOptimal:(::djinni::Bool::fromCpp(cpp.is_optimal))];
 }
 
 }  // namespace djinni_generated

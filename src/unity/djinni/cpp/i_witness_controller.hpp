@@ -6,7 +6,9 @@
 #include <cstdint>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
+struct ResultRecord;
 struct WitnessAccountStatisticsRecord;
 struct WitnessEstimateInfoRecord;
 struct WitnessFundingResultRecord;
@@ -39,4 +41,13 @@ public:
 
     /** Get the witness address of the account */
     static std::string getWitnessAddress(const std::string & witnessAccountUUID);
+
+    /** Get the optimal distribution amounts for the account; totalNetworkWeight should be the value of "total_weight_eligible_raw" */
+    static std::vector<int64_t> getOptimalWitnessDistribution(int64_t amount, int64_t durationInBlocks, int64_t totalNetworkWeight);
+
+    /** Same as the above but calculates all the paramaters from the account UUID; its more efficient to use the other call if you already have these values */
+    static std::vector<int64_t> getOptimalWitnessDistributionForAccount(const std::string & witnessAccountUUID);
+
+    /** Redistribute a witness account to its optimal distribution, call 'getOptimalWitnessDistribution' first to calculate this */
+    static ResultRecord optimiseWitnessAccount(const std::string & witnessAccountUUID, const std::string & fundingAccountUUID, const std::vector<int64_t> & optimalDistribution);
 };

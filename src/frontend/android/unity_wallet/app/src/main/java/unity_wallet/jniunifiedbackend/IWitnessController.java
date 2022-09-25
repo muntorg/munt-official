@@ -3,6 +3,7 @@
 
 package unity_wallet.jniunifiedbackend;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -62,6 +63,28 @@ public abstract class IWitnessController {
         return CppProxy.getWitnessAddress(witnessAccountUUID);
     }
 
+    /** Get the optimal distribution amounts for the account; totalNetworkWeight should be the value of "total_weight_eligible_raw" */
+    public static ArrayList<Long> getOptimalWitnessDistribution(long amount, long durationInBlocks, long totalNetworkWeight)
+    {
+        return CppProxy.getOptimalWitnessDistribution(amount,
+                                                      durationInBlocks,
+                                                      totalNetworkWeight);
+    }
+
+    /** Same as the above but calculates all the paramaters from the account UUID; its more efficient to use the other call if you already have these values */
+    public static ArrayList<Long> getOptimalWitnessDistributionForAccount(String witnessAccountUUID)
+    {
+        return CppProxy.getOptimalWitnessDistributionForAccount(witnessAccountUUID);
+    }
+
+    /** Redistribute a witness account to its optimal distribution, call 'getOptimalWitnessDistribution' first to calculate this */
+    public static ResultRecord optimiseWitnessAccount(String witnessAccountUUID, String fundingAccountUUID, ArrayList<Long> optimalDistribution)
+    {
+        return CppProxy.optimiseWitnessAccount(witnessAccountUUID,
+                                               fundingAccountUUID,
+                                               optimalDistribution);
+    }
+
     private static final class CppProxy extends IWitnessController
     {
         private final long nativeRef;
@@ -100,5 +123,11 @@ public abstract class IWitnessController {
         public static native int isAccountCompounding(String witnessAccountUUID);
 
         public static native String getWitnessAddress(String witnessAccountUUID);
+
+        public static native ArrayList<Long> getOptimalWitnessDistribution(long amount, long durationInBlocks, long totalNetworkWeight);
+
+        public static native ArrayList<Long> getOptimalWitnessDistributionForAccount(String witnessAccountUUID);
+
+        public static native ResultRecord optimiseWitnessAccount(String witnessAccountUUID, String fundingAccountUUID, ArrayList<Long> optimalDistribution);
     }
 }
