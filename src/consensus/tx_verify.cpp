@@ -23,7 +23,7 @@
 #include "util/moneystr.h"
 #include "base58.h"
 
-//Gulden dependencies
+//Munt dependencies
 #include "witnessutil.h"
 
 const uint64_t extraLockLengthAllowance=721;
@@ -78,7 +78,7 @@ std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction &tx, int flags
     {
         const CTxIn& txin = tx.vin[txinIndex];
 
-        // Gulden - segsig - if we aren't using relative locktime then we don't have a sequence number at all.
+        // Munt - segsig - if we aren't using relative locktime then we don't have a sequence number at all.
         // Sequence numbers with the most significant bit set are not
         // treated as relative lock-times, nor are they given any
         // consensus-enforced meaning at this point.

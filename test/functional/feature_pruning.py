@@ -13,7 +13,7 @@ import os
 from test_framework.blocktools import create_coinbase
 from test_framework.messages import CBlock, ToHex
 from test_framework.script import CScript, OP_RETURN, OP_NOP
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import assert_equal, assert_greater_than, assert_raises_rpc_error, connect_nodes, disconnect_nodes, sync_blocks, wait_until
 
 MIN_BLOCKS_TO_KEEP = 288
@@ -68,7 +68,7 @@ def mine_large_blocks(node, n):
 def calc_usage(blockdir):
     return sum(os.path.getsize(blockdir + f) for f in os.listdir(blockdir) if os.path.isfile(os.path.join(blockdir, f))) / (1024. * 1024.)
 
-class PruneTest(GuldenTestFramework):
+class PruneTest(MuntTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 6
@@ -106,7 +106,7 @@ class PruneTest(GuldenTestFramework):
         self.add_nodes(self.num_nodes, self.extra_args)
         self.start_nodes()
         for n in self.nodes:
-            n.importprivkey(guldenprivkey=n.get_deterministic_priv_key().key, label='coinbase', rescan=False)
+            n.importprivkey(muntprivkey=n.get_deterministic_priv_key().key, label='coinbase', rescan=False)
 
     def create_big_chain(self):
         # Start by creating some coinbases we can spend later

@@ -2,16 +2,16 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-bin_PROGRAMS += bench/bench_gulden
+bin_PROGRAMS += bench/bench_munt
 BENCH_SRCDIR = bench
-BENCH_BINARY = bench/bench_gulden$(EXEEXT)
+BENCH_BINARY = bench/bench_munt$(EXEEXT)
 
 RAW_TEST_FILES = \
   bench/data/block413567.raw
 GENERATED_TEST_FILES = $(RAW_TEST_FILES:.raw=.raw.h)
 
-bench_bench_gulden_SOURCES = \
-  bench/bench_gulden.cpp \
+bench_bench_munt_SOURCES = \
+  bench/bench_munt.cpp \
   bench/bench.cpp \
   bench/bench.h \
   bench/checkblock.cpp \
@@ -28,46 +28,46 @@ bench_bench_gulden_SOURCES = \
   bench/perf.h \
   bench/prevector_destructor.cpp
 
-nodist_bench_bench_gulden_SOURCES = $(GENERATED_TEST_FILES)
+nodist_bench_bench_munt_SOURCES = $(GENERATED_TEST_FILES)
 
-bench_bench_gulden_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(EVENT_CLFAGS) $(EVENT_PTHREADS_CFLAGS) -I$(builddir)/bench/
-bench_bench_gulden_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-bench_bench_gulden_LDADD = \
-  $(LIBGULDEN_SERVER) \
-  $(LIBGULDEN_COMMON) \
-  $(LIBGULDEN_UTIL) \
-  $(LIBGULDEN_CONSENSUS) \
-  $(LIBGULDEN_CRYPTO_ALL) \
+bench_bench_munt_CPPFLAGS = $(AM_CPPFLAGS) $(MUNT_INCLUDES) $(EVENT_CLFAGS) $(EVENT_PTHREADS_CFLAGS) -I$(builddir)/bench/
+bench_bench_munt_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+bench_bench_munt_LDADD = \
+  $(LIBMUNT_SERVER) \
+  $(LIBMUNT_COMMON) \
+  $(LIBMUNT_UTIL) \
+  $(LIBMUNT_CONSENSUS) \
+  $(LIBMUNT_CRYPTO_ALL) \
   $(LIBLEVELDB) \
   $(LIBMEMENV) \
   $(LIBSECP256K1) \
   $(LIBUNIVALUE)
 
 if ENABLE_ZMQ
-bench_bench_gulden_LDADD += $(LIBGULDEN_ZMQ) $(ZMQ_LIBS)
+bench_bench_munt_LDADD += $(LIBMUNT_ZMQ) $(ZMQ_LIBS)
 endif
 
 if ENABLE_WALLET
-bench_bench_gulden_SOURCES += bench/coin_selection.cpp
-bench_bench_gulden_LDADD += $(LIBGULDEN_WALLET) $(LIBGULDEN_CRYPTO_ALL)
+bench_bench_munt_SOURCES += bench/coin_selection.cpp
+bench_bench_munt_LDADD += $(LIBMUNT_WALLET) $(LIBMUNT_CRYPTO_ALL)
 endif
 
-bench_bench_gulden_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
-bench_bench_gulden_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+bench_bench_munt_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
+bench_bench_munt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
-CLEAN_GULDEN_BENCH = bench/*.gcda bench/*.gcno $(GENERATED_TEST_FILES)
+CLEAN_MUNT_BENCH = bench/*.gcda bench/*.gcno $(GENERATED_TEST_FILES)
 
-CLEANFILES += $(CLEAN_GULDEN_BENCH)
+CLEANFILES += $(CLEAN_MUNT_BENCH)
 
 bench/checkblock.cpp: bench/data/block413567.raw.h
 
-gulden_bench: $(BENCH_BINARY)
+munt_bench: $(BENCH_BINARY)
 
 bench: $(BENCH_BINARY) FORCE
 	$(BENCH_BINARY)
 
-gulden_bench_clean : FORCE
-	rm -f $(CLEAN_GULDEN_BENCH) $(bench_bench_gulden_OBJECTS) $(BENCH_BINARY)
+munt_bench_clean : FORCE
+	rm -f $(CLEAN_MUNT_BENCH) $(bench_bench_munt_OBJECTS) $(BENCH_BINARY)
 
 %.raw.h: %.raw
 	@$(MKDIR_P) $(@D)

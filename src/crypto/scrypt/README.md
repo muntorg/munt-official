@@ -1,4 +1,4 @@
-This implementation of scrypt is taken from the original scrypt author Colin Percival - repo  https://github.com/Tarsnap/scrypt and modified for use in the Gulden codebase.
+This implementation of scrypt is taken from the original scrypt author Colin Percival - repo  https://github.com/Tarsnap/scrypt and modified for use in the Munt codebase.
 For copyright see file COPYING
 
 Currently updated to upstream commit 0d154538000209fb6099ff0356295249b85ea1e0

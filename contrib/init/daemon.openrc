@@ -2,41 +2,41 @@
 
 # backward compatibility for existing gentoo layout 
 #
-if [ -d "/var/lib/gulden/.gulden" ]; then
-	GULDEND_DEFAULT_DATADIR="/var/lib/gulden/.gulden"
+if [ -d "/var/lib/munt/.munt" ]; then
+	DAEMON_DEFAULT_DATADIR="/var/lib/munt/.munt"
 else
-	GULDEND_DEFAULT_DATADIR="/var/lib/GuldenD"
+	DAEMON_DEFAULT_DATADIR="/var/lib/munt_daemon"
 fi
 
-GULDEND_CONFIGFILE=${GULDEND_CONFIGFILE:-/etc/gulden/gulden.conf}
-GULDEND_PIDDIR=${GULDEND_PIDDIR:-/var/run/GuldenD}
-GULDEND_PIDFILE=${GULDEND_PIDFILE:-${GULDEND_PIDDIR}/GuldenD.pid}
-GULDEND_DATADIR=${GULDEND_DATADIR:-${GULDEND_DEFAULT_DATADIR}}
-GULDEND_USER=${GULDEND_USER:-${GULDEN_USER:-gulden}}
-GULDEND_GROUP=${GULDEND_GROUP:-gulden}
-GULDEND_BIN=${GULDEND_BIN:-/usr/bin/GuldenD}
-GULDEND_NICE=${GULDEND_NICE:-${NICELEVEL:-0}}
-GULDEND_OPTS="${GULDEND_OPTS:-${GULDEN_OPTS}}"
+DAEMON_CONFIGFILE=${DAEMON_CONFIGFILE:-/etc/munt/munt.conf}
+DAEMON_PIDDIR=${DAEMON_PIDDIR:-/var/run/munt_daemon}
+DAEMON_PIDFILE=${DAEMON_PIDFILE:-${DAEMON_PIDDIR}/munt_daemon.pid}
+DAEMON_DATADIR=${DAEMON_DATADIR:-${DAEMON_DEFAULT_DATADIR}}
+DAEMON_USER=${DAEMON_USER:-${DAEMON_USER:-munt}}
+DAEMON_GROUP=${DAEMON_GROUP:-munt}
+DAEMON_BIN=${DAEMON_BIN:-/usr/bin/Munt-daemon}
+DAEMON_NICE=${DAEMON_NICE:-${NICELEVEL:-0}}
+DAEMON_OPTS="${DAEMON_OPTS:-${DAEMON_OPTS}}"
 
-name="Gulden Core Daemon"
-description="Gulden cryptocurrency P2P network daemon"
+name="Munt Core Daemon"
+description="Munt cryptocurrency P2P network daemon"
 
-command="/usr/bin/GuldenD"
-command_args="-pid=\"${GULDEND_PIDFILE}\" \
-		-conf=\"${GULDEND_CONFIGFILE}\" \
-		-datadir=\"${GULDEND_DATADIR}\" \
+command="/usr/bin/Munt-daemon"
+command_args="-pid=\"${DAEMON_PIDFILE}\" \
+		-conf=\"${DAEMON_CONFIGFILE}\" \
+		-datadir=\"${DAEMON_DATADIR}\" \
 		-daemon \
-		${GULDEND_OPTS}"
+		${DAEMON_OPTS}"
 
-required_files="${GULDEND_CONFIGFILE}"
-start_stop_daemon_args="-u ${GULDEND_USER} \
-			-N ${GULDEND_NICE} -w 2000"
-pidfile="${GULDEND_PIDFILE}"
+required_files="${DAEMON_CONFIGFILE}"
+start_stop_daemon_args="-u ${DAEMON_USER} \
+			-N ${DAEMON_NICE} -w 2000"
+pidfile="${DAEMON_PIDFILE}"
 
 # The retry schedule to use when stopping the daemon. Could be either
 # a timeout in seconds or multiple signal/timeout pairs (like
 # "SIGKILL/180 SIGTERM/300")
-retry="${GULDEND_SIGTERM_TIMEOUT}"
+retry="${DAEMON_SIGTERM_TIMEOUT}"
 
 depend() {
 	need localmount net
@@ -50,29 +50,29 @@ start_pre() {
 	checkpath \
 	-d \
 	--mode 0750 \
-	--owner "${GULDEND_USER}:${GULDEND_GROUP}" \
-	"${GULDEND_DATADIR}"
+	--owner "${DAEMON_USER}:${DAEMON_GROUP}" \
+	"${DAEMON_DATADIR}"
 
 	checkpath \
 	-d \
 	--mode 0755 \
-	--owner "${GULDEND_USER}:${GULDEND_GROUP}" \
-	"${GULDEND_PIDDIR}"
+	--owner "${DAEMON_USER}:${DAEMON_GROUP}" \
+	"${DAEMON_PIDDIR}"
 
 	checkpath -f \
-	-o ${GULDEND_USER}:${GULDEND_GROUP} \
+	-o ${DAEMON_USER}:${DAEMON_GROUP} \
 	-m 0660 \
-	${GULDEND_CONFIGFILE}
+	${DAEMON_CONFIGFILE}
 
 	checkconfig || return 1
 }
 
 checkconfig()
 {
-	if ! grep -qs '^rpcpassword=' "${GULDEND_CONFIGFILE}" ; then
+	if ! grep -qs '^rpcpassword=' "${DAEMON_CONFIGFILE}" ; then
 		eerror ""
-		eerror "ERROR: You must set a secure rpcpassword to run GuldenD."
-		eerror "The setting must appear in ${GULDEND_CONFIGFILE}"
+		eerror "ERROR: You must set a secure rpcpassword."
+		eerror "The setting must appear in ${DAEMON_CONFIGFILE}"
 		eerror ""
 		eerror "This password is security critical to securing wallets "
 		eerror "and must not be the same as the rpcuser setting."
@@ -84,7 +84,7 @@ checkconfig()
 		eerror "It is also recommended that you also set alertnotify so you are "
 		eerror "notified of problems:"
 		eerror ""
-		eerror "ie: alertnotify=echo %%s | mail -s \"Gulden Alert\"" \
+		eerror "ie: alertnotify=echo %%s | mail -s \"Munt Alert\"" \
 			"admin@foo.com"
 		eerror ""
 		return 1

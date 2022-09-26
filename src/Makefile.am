@@ -107,11 +107,11 @@ TESTS =
 BENCHMARKS =
 
 if BUILD_DAEMON
-  bin_PROGRAMS += GuldenD
+  bin_PROGRAMS += Munt-daemon
 endif
 
 if BUILD_UTILS
-  bin_PROGRAMS += Gulden-cli Gulden-tx
+  bin_PROGRAMS += Munt-cli Munt-tx
 endif
 
 .PHONY: FORCE check-symbols check-security
@@ -1086,16 +1086,16 @@ endif
 
 # Daemon binary #
 if BUILD_DAEMON
-GuldenD_SOURCES = daemon-main.cpp
-GuldenD_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
-GuldenD_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-GuldenD_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+Munt_daemon_SOURCES = daemon-main.cpp
+Munt_daemon_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+Munt_daemon_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+Munt_daemon_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-GuldenD_SOURCES += daemon-res.rc
+Munt_daemon_SOURCES += daemon-res.rc
 endif
 
-GuldenD_LDADD = \
+Munt_daemon_LDADD = \
   $(LIB_SERVER) \
   $(LIB_RPC) \
   $(LIB_NODE) \
@@ -1117,22 +1117,22 @@ GuldenD_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-GuldenD_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(SSL_LIBS)
+Munt_daemon_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(SSL_LIBS)
 endif
 #
 
 # cli binary #
 if BUILD_UTILS
-Gulden_cli_SOURCES = cli-main.cpp
-Gulden_cli_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(EVENT_CFLAGS)
-Gulden_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-Gulden_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+Munt_cli_SOURCES = cli-main.cpp
+Munt_cli_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) $(EVENT_CFLAGS)
+Munt_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+Munt_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-Gulden_cli_SOURCES += cli-res.rc
+Munt_cli_SOURCES += cli-res.rc
 endif
 
-Gulden_cli_LDADD = \
+Munt_cli_LDADD = \
   $(LIB_CLI) \
   $(LIBUNIVALUE) \
   $(LIB_UTIL) \
@@ -1140,22 +1140,22 @@ Gulden_cli_LDADD = \
   $(LIB_GENERIC_INIT) \
   $(LIB_CRYPTO_ALL)
 
-Gulden_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+Munt_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 endif
 #
 
 # tx binary #
 if BUILD_UTILS
-Gulden_tx_SOURCES = tx-main.cpp
-Gulden_tx_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
-Gulden_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-Gulden_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+Munt_tx_SOURCES = tx-main.cpp
+Munt_tx_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+Munt_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+Munt_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-Gulden_tx_SOURCES += tx-res.rc
+Munt_tx_SOURCES += tx-res.rc
 endif
 
-Gulden_tx_LDADD = \
+Munt_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIB_COMMON) \
   $(LIB_UTIL) \
@@ -1171,7 +1171,7 @@ Gulden_tx_LDADD = \
   $(LIB_COMMON) \
   $(LIBSECP256K1)
 
-Gulden_tx_LDADD += $(BOOST_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS)
+Munt_tx_LDADD += $(BOOST_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS)
 endif
 #
 

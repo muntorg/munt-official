@@ -135,7 +135,7 @@ static const char* FEE_ESTIMATES_FILENAME="fee_estimates.dat";
 // 2 - Interrupts the thread groups.
 // 3 - Notifies the UI to disconnect from signals.
 // 4 - Stops all the thread groups, syncs all files to disk etc.
-// 5 - Notifies the App/UI to close themeselves (or in the case of GuldenD to simply exit).
+// 5 - Notifies the App/UI to close themselves (or in the case of the daemon to simply exit).
 
 
 std::atomic<bool> fDumpMempoolLater(false);
@@ -145,7 +145,7 @@ bool fullyEraseDatadirOnShutdown=false;
 /**
  * This is a minimally invasive approach to shutdown on LevelDB read errors from the
  * chainstate, while keeping user interface out of the common library, which is shared
- * between GuldenD, and Gulden (qt) and non-server tools.
+ * between the daemon, UI application, and non-server tools.
 */
 class CCoinsViewErrorCatcher : public CCoinsViewBacked
 {
@@ -394,7 +394,7 @@ extern std::string HelpMessage(HelpMessageMode mode);
 
 std::string LicenseInfo()
 {
-    const std::string URL_WEBSITE = "<https://Gulden.com>";
+    const std::string URL_WEBSITE = "<https://Munt.org>";
 
     //fixme: (FUT) Mention additional libraries, boost etc.
     //fixme: (FUT) Translate
@@ -576,7 +576,7 @@ static void ThreadImport(std::vector<fs::path> vImportFiles)
 }
 
 /** Sanity checks
- *  Ensure that Gulden is running in a usable environment with all
+ *  Ensure that Munt is running in a usable environment with all
  *  necessary library support.
  */
 static bool InitSanityCheck(void)
@@ -996,7 +996,7 @@ bool AppInitParameterInteraction()
     if (!CWallet::ParameterInteraction())
         return false;
 #endif
-    //Gulden - generate private/public key pair for alert or checkpoint system
+    //Munt - generate private/public key pair for alert or checkpoint system
     if (IsArgSet("-genkeypair"))
     {
         ECC_Start();
@@ -1075,10 +1075,10 @@ static bool LockDataDirectory(bool probeOnly)
 {
     std::string strDataDir = GetDataDir().string();
 
-    // Make sure only a single Gulden process is using the data directory.
+    // Make sure only a single Munt process is using the data directory.
     //fixme: (POST-PHASE5)
     (unused) probeOnly;
-    /* (GULDEN) - we do this elsewhere (MERGE) look into this again.
+    /* (MUNT) - we do this elsewhere (MERGE) look into this again.
     FILE* file = fsbridge::fopen(pathLockFile, "a"); // empty lock file; created if it doesn't exist.
     if (file) fclose(file);
 
@@ -1495,7 +1495,7 @@ bool AppInitMain(boost::thread_group& threadGroup, node::NodeContext& node)
                 pcoinsdbview->WriteVersion();
                 
 
-                //GULDEN - version 2.0 upgrade
+                //MUNT - version 2.0 upgrade
                 if (upgradeOnceOnly && pcoinsdbview->nPreviousVersion < pcoinsdbview->nCurrentVersion)
                 {
                     if (fullResyncForUpgrade)

@@ -6,9 +6,9 @@ dnl File contains modifications by: The Centure developers
 dnl All modifications:
 dnl Copyright (c) 2016-2022 The Centure developers
 
-dnl GULDEN_SUBDIR_TO_INCLUDE([CPPFLAGS-VARIABLE-NAME],[SUBDIRECTORY-NAME],[HEADER-FILE])
+dnl CENTURE_SUBDIR_TO_INCLUDE([CPPFLAGS-VARIABLE-NAME],[SUBDIRECTORY-NAME],[HEADER-FILE])
 dnl SUBDIRECTORY-NAME must end with a path separator
-AC_DEFUN([GULDEN_SUBDIR_TO_INCLUDE],[
+AC_DEFUN([CENTURE_SUBDIR_TO_INCLUDE],[
   if test "x$2" = "x"; then
     AC_MSG_RESULT([default])
   else

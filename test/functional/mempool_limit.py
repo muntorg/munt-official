@@ -6,10 +6,10 @@
 
 from decimal import Decimal
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import assert_equal, assert_greater_than, assert_raises_rpc_error, create_confirmed_utxos, create_lots_of_big_transactions, gen_return_txouts
 
-class MempoolLimitTest(GuldenTestFramework):
+class MempoolLimitTest(MuntTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1

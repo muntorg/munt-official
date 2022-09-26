@@ -46,10 +46,10 @@
 
 void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry)
 {
-    // Call into TxToUniv() in Gulden-common to decode the transaction hex.
+    // Call into TxToUniv() in Munt-common to decode the transaction hex.
     //
     // Blockchain contextual information (confirmations and blocktime) is not
-    // available to code in Gulden-common, so we query them here and push the
+    // available to code in Munt-common, so we query them here and push the
     // data into the returned UniValue.
     TxToUniv(tx, uint256(), entry);
 

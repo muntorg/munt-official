@@ -18,7 +18,7 @@
 #include "serialize.h"
 #include "uint256.h"
 
-//Gulden
+//Munt
 #include "pubkey.h"
 #include "streams.h"
 #include "util/strencodings.h"

@@ -50,7 +50,7 @@
 #include <fstream>
 #include <thread>
 
-//Gulden specific includes
+//Munt specific includes
 #include "init.h"
 #include <unity/appmanager.h>
 #include <wallet/mnemonic.h>
@@ -812,7 +812,7 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
         }
         Unlock(strWalletPassphrase);
 
-        //fixme: (FUT) (ACCOUNTS) (HD) Gulden HD - What to do here? We can't really throw the entire seed away...
+        //fixme: (FUT) (ACCOUNTS) (HD) Munt HD - What to do here? We can't really throw the entire seed away...
         /*
         // if we are using HD, replace the HD master key (seed) with a new one
         if (IsHDEnabled()) {
@@ -2227,7 +2227,7 @@ CAmount CWallet::GetMinimumFee(unsigned int nTxBytes, unsigned int nConfirmTarge
 DBErrors CWallet::ZapSelectTx(CWalletDB& walletdb, std::vector<uint256>& vHashIn, std::vector<uint256>& vHashOut)
 {
     AssertLockHeld(cs_wallet); // mapWallet
-    //vchDefaultKey = CPubKey();//GULDEN - no default key.
+    //vchDefaultKey = CPubKey();//MUNT - no default key.
     DBErrors nZapSelectTxRet = walletdb.ZapSelectTx(vHashIn, vHashOut);
     for (uint256 hash : vHashOut)
         mapWallet.erase(hash);
@@ -2260,7 +2260,7 @@ DBErrors CWallet::ZapSelectTx(CWalletDB& walletdb, std::vector<uint256>& vHashIn
 
 DBErrors CWallet::ZapWalletTx(std::vector<CWalletTx>& vWtx)
 {
-    //vchDefaultKey = CPubKey();//GULDEN - no default key.
+    //vchDefaultKey = CPubKey();//MUNT - no default key.
     DBErrors nZapWalletTxRet = CWalletDB(*dbw,"cr+").ZapWalletTx(vWtx);
     if (nZapWalletTxRet == DB_NEED_REWRITE)
     {
@@ -2326,7 +2326,7 @@ bool CWallet::DelAddressBook(const std::string& address)
 
     NotifyAddressBookChanged(this, address, "", ::IsMine(*this, CNativeAddress(address).Get()) != ISMINE_NO, "", CT_DELETED);
 
-    // if address is a valid string encoding of a Gulden address use that for delete key,
+    // if address is a valid string encoding of a Munt address use that for delete key,
     // else it is most likely an IBAN address and then use that directly as key
     CNativeAddress nativeAddress;
     std::string deleteKey = nativeAddress.SetString(address) ? nativeAddress.ToString() : address;

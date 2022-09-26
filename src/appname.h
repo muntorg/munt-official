@@ -10,8 +10,8 @@
 #include "config/build-config.h"
 #endif
 
-#define GLOBAL_APPNAME "Gulden"
-#define GLOBAL_APP_URIPREFIX "gulden"
-#define GLOBAL_COIN_CODE "NLG"
+#define GLOBAL_APPNAME "Munt"
+#define GLOBAL_APP_URIPREFIX "munt"
+#define GLOBAL_COIN_CODE "MUNT"
 
 #endif

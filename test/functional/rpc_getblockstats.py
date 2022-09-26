@@ -6,7 +6,7 @@
 #
 # Test getblockstats rpc call
 #
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
@@ -17,7 +17,7 @@ import time
 
 TESTSDIR = os.path.dirname(os.path.realpath(__file__))
 
-class GetblockstatsTest(GuldenTestFramework):
+class GetblockstatsTest(MuntTestFramework):
 
     start_height = 101
     max_stat_pos = 2

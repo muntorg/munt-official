@@ -355,7 +355,7 @@ public:
         return block;
     }
 
-    //Gulden - phashBlock contains 'legacy' hash for PoW blocks and PoW2 hash for witness blocks.
+    //Munt - phashBlock contains 'legacy' hash for PoW blocks and PoW2 hash for witness blocks.
     //fixme: (PHASE5) (HIGH) - We can get rid of all this legacy/pow2 hash nonsense for 2.1 and just use the same hash everywhere...
     uint256 GetBlockHashLegacy() const
     {

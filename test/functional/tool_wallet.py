@@ -2,14 +2,14 @@
 # Copyright (c) 2018 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-"""Test Gulden-wallet."""
+"""Test Munt-wallet."""
 import subprocess
 import textwrap
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import assert_equal
 
-class ToolWalletTest(GuldenTestFramework):
+class ToolWalletTest(MuntTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.setup_clean_chain = True
@@ -17,20 +17,20 @@ class ToolWalletTest(GuldenTestFramework):
     def skip_test_if_missing_module(self):
         self.skip_if_no_wallet()
 
-    def gulden_wallet_process(self, *args):
-        binary = self.config["environment"]["BUILDDIR"] + '/src/Gulden-wallet' + self.config["environment"]["EXEEXT"]
+    def munt_wallet_process(self, *args):
+        binary = self.config["environment"]["BUILDDIR"] + '/src/Munt-wallet' + self.config["environment"]["EXEEXT"]
         args = ['-datadir={}'.format(self.nodes[0].datadir), '-regtestlegacy'] + list(args)
         return subprocess.Popen([binary] + args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 
     def assert_raises_tool_error(self, error, *args):
-        p = self.gulden_wallet_process(*args)
+        p = self.munt_wallet_process(*args)
         stdout, stderr = p.communicate()
         assert_equal(p.poll(), 1)
         assert_equal(stdout, '')
         assert_equal(stderr.strip(), error)
 
     def assert_tool_output(self, output, *args):
-        p = self.gulden_wallet_process(*args)
+        p = self.munt_wallet_process(*args)
         stdout, stderr = p.communicate()
         assert_equal(p.poll(), 0)
         assert_equal(stderr, '')
@@ -39,7 +39,7 @@ class ToolWalletTest(GuldenTestFramework):
     def run_test(self):
 
         self.assert_raises_tool_error('Invalid command: foo', 'foo')
-        # `Gulden-wallet help` is an error. Use `Gulden-wallet -help`
+        # `Munt-wallet help` is an error. Use `Munt-wallet -help`
         self.assert_raises_tool_error('Invalid command: help', 'help')
         self.assert_raises_tool_error('Error: two methods provided (info and create). Only one method should be provided.', 'info', 'create')
         self.assert_raises_tool_error('Error parsing command line arguments: Invalid parameter -foo', '-foo')

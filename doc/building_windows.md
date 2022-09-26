@@ -12,8 +12,8 @@ It should also be possible to compile via msys or cygwin on windows, there are c
 Binaries
 -----
 There are binaries for every release, please reconsider your need to build and unless you have a very good reason to do so rather just download these.
-Latest binaries can always be found here: https://github.com/Gulden/gulden-official/releases
-Download the latest linux\*.tar.gz extract it and simply copy GuldenD out of it instead of going through the unnecessary hassle of building.
+Latest binaries can always be found here: https://github.com/Munt/munt-official/releases
+Download the latest linux\*.tar.gz extract it and simply copy Munt-daemon out of it instead of going through the unnecessary hassle of building.
 
 
 Installation of msys2
@@ -73,7 +73,7 @@ Clone a copy of this repository
 
 `git checkout -b 2.1_development remotes/origin/2.1_development`
 
-Build Gulden dependencies
+Build Munt dependencies
 
 `cd depends`
 
@@ -81,7 +81,7 @@ Build Gulden dependencies
 
 `cd ..`
 
-Build Gulden
+Build Munt
 
 `./autogen.sh`
 
@@ -139,7 +139,7 @@ After installing vcXsrv. Start XLaunch (with default settings) and then on WSL e
 
 `export DISPLAY=:0`
 
-`LD_LIBRARY_PATH=depends/x86_64-pc-linux-gnu/lib/ ./src/qt/Gulden`
+`LD_LIBRARY_PATH=depends/x86_64-pc-linux-gnu/lib/ ./src/qt/Munt`
 
 Modify the `LD_LIBRARY_PATH` as appropriate for your system.
 

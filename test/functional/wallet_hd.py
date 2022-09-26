@@ -7,7 +7,7 @@
 import os
 import shutil
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import (
     assert_equal,
     connect_nodes_bi,
@@ -15,7 +15,7 @@ from test_framework.util import (
 )
 
 
-class WalletHDTest(GuldenTestFramework):
+class WalletHDTest(MuntTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 2

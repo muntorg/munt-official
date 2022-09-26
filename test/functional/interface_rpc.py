@@ -4,10 +4,10 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Tests some generic aspects of the RPC interface."""
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import assert_equal, assert_greater_than_or_equal
 
-class RPCInterfaceTest(GuldenTestFramework):
+class RPCInterfaceTest(MuntTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.setup_clean_chain = True

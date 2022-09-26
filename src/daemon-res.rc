@@ -23,8 +23,8 @@ BEGIN
             VALUE "InternalName",       GLOBAL_APPNAME"-daemon"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the Libre Chain License, see the accompanying file COPYING or github.com/gulden/gulden-official/COPYING"
-            VALUE "OriginalFilename",   "GuldenD.exe"
-            VALUE "ProductName",        "GuldenD"
+            VALUE "OriginalFilename",   GLOBAL_APPNAME"-daemon.exe"
+            VALUE "ProductName",        GLOBAL_APPNAME"-daemon"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
         END
     END

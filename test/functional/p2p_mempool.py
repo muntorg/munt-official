@@ -10,10 +10,10 @@ filters are not enabled.
 
 from test_framework.messages import msg_mempool
 from test_framework.mininode import P2PInterface
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import assert_equal
 
-class P2PMempoolTests(GuldenTestFramework):
+class P2PMempoolTests(MuntTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1

@@ -1,15 +1,15 @@
-# bash programmable completion for GuldenD(1) and Gulden(1)
+# bash programmable completion for Munt-daemon(1) and Munt(1)
 # Copyright (c) 2012-2016 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-_GuldenD() {
+_Munt_daemon() {
     local cur prev words=() cword
-    local GuldenD
+    local Munt_daemon
 
-    # save and use original argument to invoke GuldenD for -help
+    # save and use original argument to invoke Munt-daemon for -help
     # it might not be in $PATH
-    GuldenD="$1"
+    Munt_daemon="$1"
 
     COMPREPLY=()
     _get_comp_words_by_ref -n = cur prev words cword
@@ -33,7 +33,7 @@ _GuldenD() {
             # only parse -help if senseful
             if [[ -z "$cur" || "$cur" =~ ^- ]]; then
                 local helpopts
-                helpopts=$($GuldenD -help 2>&1 | awk '$1 ~ /^-/ { sub(/=.*/, "="); print $1 }' )
+                helpopts=$($Munt_daemon -help 2>&1 | awk '$1 ~ /^-/ { sub(/=.*/, "="); print $1 }' )
                 COMPREPLY=( $( compgen -W "$helpopts" -- "$cur" ) )
             fi
 
@@ -45,7 +45,7 @@ _GuldenD() {
             ;;
     esac
 } &&
-complete -F _GuldenD GuldenD Gulden
+complete -F _Munt_daemon Munt-daemon Munt
 
 # Local variables:
 # mode: shell-script

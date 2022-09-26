@@ -91,10 +91,10 @@ class CHDSeed
 public:
     enum SeedType
     {
-        BIP44 = 0, // New Gulden standard based on BIP44 for /all/ Gulden wallets (desktop/iOS/android)
-        BIP32 = 1, // Old Gulden android/iOS wallets
+        BIP44 = 0, // New Munt standard based on BIP44 for /all/ Munt wallets (desktop/iOS/android)
+        BIP32 = 1, // Old Munt android/iOS wallets
         BIP32Legacy = 2, // Very old 'guldencoin' wallets
-        BIP44External = 3, //External BIP44 wallets like 'coinomi' (uses a different hash that Gulden BIP44)
+        BIP44External = 3, //External BIP44 wallets like 'coinomi' (uses a different hash that Munt BIP44)
         BIP44NoHardening = 4 // Same as BIP44 however with no hardening on accounts (Users have to be more careful with key security but allows for synced read only wallets... whereas with normal BIP44 only accounts are possible)
     };
 

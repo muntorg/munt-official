@@ -7,7 +7,7 @@ from decimal import Decimal
 from io import BytesIO
 
 from test_framework.messages import COIN, CTransaction
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import (
     assert_array_result,
     assert_equal,
@@ -21,7 +21,7 @@ def tx_from_hex(hexstring):
     tx.deserialize(f)
     return tx
 
-class ListTransactionsTest(GuldenTestFramework):
+class ListTransactionsTest(MuntTestFramework):
     def set_test_params(self):
         self.num_nodes = 2
 

@@ -13,7 +13,7 @@ bench_bench_sigma_SOURCES = \
   util/strencodings.cpp \
   support/cleanse.cpp
 
-bench_bench_sigma_CPPFLAGS = $(AM_CPPFLAGS) $(GULDEN_INCLUDES) $(SSL_CFLAGS) $(EVENT_CLFAGS) $(EVENT_PTHREADS_CFLAGS) -I$(builddir)/bench/
+bench_bench_sigma_CPPFLAGS = $(AM_CPPFLAGS) $(MUNT_INCLUDES) $(SSL_CFLAGS) $(EVENT_CLFAGS) $(EVENT_PTHREADS_CFLAGS) -I$(builddir)/bench/
 bench_bench_sigma_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 bench_bench_sigma_LDADD = \
   $(LIB_SERVER) \
@@ -38,7 +38,7 @@ bench_bench_sigma_LDADD = \
 
 bench_bench_sigma_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
-gulden_sigma: $(BENCH_BINARY)
+munt_sigma: $(BENCH_BINARY)
 
 bench_sigma: $(BENCH_BINARY) FORCE
 	$(BENCH_BINARY)

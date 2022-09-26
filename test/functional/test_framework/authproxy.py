@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this software; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-"""HTTP proxy for opening RPC connection to GuldenD.
+"""HTTP proxy for opening RPC connection to Munt-daemon.
 
 AuthServiceProxy has the following improvements over python-jsonrpc's
 ServiceProxy class:
@@ -46,7 +46,7 @@ import urllib.parse
 HTTP_TIMEOUT = 30
 USER_AGENT = "AuthServiceProxy/0.1"
 
-log = logging.getLogger("GuldenRPC")
+log = logging.getLogger("MuntRPC")
 
 class JSONRPCException(Exception):
     def __init__(self, rpc_error):

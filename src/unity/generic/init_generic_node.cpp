@@ -58,7 +58,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage +=HelpMessageOpt("-assumevalid=<hex>", strprintf(helptr("If this block is in the chain assume that it and its ancestors are valid and potentially skip their script verification (0 to verify all, default: %s, testnet: %s)"), defaultChainParams->GetConsensus().defaultAssumeValid.GetHex(), testnetChainParams->GetConsensus().defaultAssumeValid.GetHex()));
     strUsage += HelpMessageOpt("-fullsync", strprintf(_("Synchronize the whole chain for full validation mode. If used with SPV the sync will start when SPV if catched up. If disabled, blocks will not be requested automatically (default: %u)"), DEFAULT_FULL_SYNC_MODE));
     strUsage += HelpMessageOpt("-conf=<file>", strprintf(helptr("Specify configuration file (default: %s)"), DEFAULT_CONF_FILENAME));
-    if (mode == HMM_GULDEND)
+    if (mode == HMM_DAEMON)
     {
 #if HAVE_DECL_FORK
         strUsage += HelpMessageOpt("-daemon", helptr("Run in the background as a daemon and accept commands"));

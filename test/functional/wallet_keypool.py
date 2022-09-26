@@ -6,10 +6,10 @@
 
 import time
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import assert_equal, assert_raises_rpc_error
 
-class KeyPoolTest(GuldenTestFramework):
+class KeyPoolTest(MuntTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
 

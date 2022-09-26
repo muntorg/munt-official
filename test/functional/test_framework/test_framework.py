@@ -43,7 +43,7 @@ TEST_EXIT_PASSED = 0
 TEST_EXIT_FAILED = 1
 TEST_EXIT_SKIPPED = 77
 
-TMPDIR_PREFIX = "gulden_func_test_"
+TMPDIR_PREFIX = "munt_func_test_"
 
 
 class SkipTest(Exception):
@@ -53,30 +53,30 @@ class SkipTest(Exception):
         self.message = message
 
 
-class GuldenTestMetaClass(type):
-    """Metaclass for GuldenTestFramework.
+class MuntTestMetaClass(type):
+    """Metaclass for MuntTestFramework.
 
-    Ensures that any attempt to register a subclass of `GuldenTestFramework`
+    Ensures that any attempt to register a subclass of `MuntTestFramework`
     adheres to a standard whereby the subclass overrides `set_test_params` and
     `run_test` but DOES NOT override either `__init__` or `main`. If any of
     those standards are violated, a ``TypeError`` is raised."""
 
     def __new__(cls, clsname, bases, dct):
-        if not clsname == 'GuldenTestFramework':
+        if not clsname == 'MuntTestFramework':
             if not ('run_test' in dct and 'set_test_params' in dct):
-                raise TypeError("GuldenTestFramework subclasses must override "
+                raise TypeError("MuntTestFramework subclasses must override "
                                 "'run_test' and 'set_test_params'")
             if '__init__' in dct or 'main' in dct:
-                raise TypeError("GuldenTestFramework subclasses may not override "
+                raise TypeError("MuntTestFramework subclasses may not override "
                                 "'__init__' or 'main'")
 
         return super().__new__(cls, clsname, bases, dct)
 
 
-class GuldenTestFramework(metaclass=GuldenTestMetaClass):
-    """Base class for a Gulden test script.
+class MuntTestFramework(metaclass=MuntTestMetaClass):
+    """Base class for a Munt test script.
 
-    Individual Gulden test scripts should subclass this class and override the set_test_params() and run_test() methods.
+    Individual Munt test scripts should subclass this class and override the set_test_params() and run_test() methods.
 
     Individual tests can also override the following methods to customize the test setup:
 
@@ -106,9 +106,9 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
 
         parser = argparse.ArgumentParser(usage="%(prog)s [options]")
         parser.add_argument("--nocleanup", dest="nocleanup", default=False, action="store_true",
-                            help="Leave GuldenDs and test.* datadir on exit or error")
+                            help="Leave Munt-daemons and test.* datadir on exit or error")
         parser.add_argument("--noshutdown", dest="noshutdown", default=False, action="store_true",
-                            help="Don't stop GuldenDs after the test execution")
+                            help="Don't stop Munt-daemons after the test execution")
         parser.add_argument("--cachedir", dest="cachedir", default=os.path.abspath(os.path.dirname(os.path.realpath(__file__)) + "/../../cache"),
                             help="Directory for caching pregenerated datadirs (default: %(default)s)")
         parser.add_argument("--tmpdir", dest="tmpdir", help="Root directory for datadirs")
@@ -126,7 +126,7 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
         parser.add_argument("--pdbonfailure", dest="pdbonfailure", default=False, action="store_true",
                             help="Attach a python debugger if test fails")
         parser.add_argument("--usecli", dest="usecli", default=False, action="store_true",
-                            help="use Gulden-cli instead of RPC for all commands")
+                            help="use Munt-cli instead of RPC for all commands")
         parser.add_argument("--perf", dest="perf", default=False, action="store_true",
                             help="profile running nodes with perf for the duration of the test")
         self.add_options(parser)
@@ -141,8 +141,8 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
         config = configparser.ConfigParser()
         config.read_file(open(self.options.configfile))
         self.config = config
-        self.options.GuldenD = os.getenv("GuldenD", default=config["environment"]["BUILDDIR"] + '/src/GuldenD' + config["environment"]["EXEEXT"])
-        self.options.guldencli = os.getenv("GULDENCLI", default=config["environment"]["BUILDDIR"] + '/src/Gulden-cli' + config["environment"]["EXEEXT"])
+        self.options.muntdaemon = os.getenv("MUNTDAEMON", default=config["environment"]["BUILDDIR"] + '/src/Munt-daemon' + config["environment"]["EXEEXT"])
+        self.options.muntcli = os.getenv("MUNTCLI", default=config["environment"]["BUILDDIR"] + '/src/Munt-cli' + config["environment"]["EXEEXT"])
 
         os.environ['PATH'] = os.pathsep.join([
             os.path.join(config['environment']['BUILDDIR'], 'src'),
@@ -201,7 +201,7 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
         else:
             for node in self.nodes:
                 node.cleanup_on_exit = False
-            self.log.info("Note: GuldenDs were not stopped and may still be running")
+            self.log.info("Note: Munt-daemons were not stopped and may still be running")
 
         should_clean_up = (
             not self.options.nocleanup and
@@ -298,7 +298,7 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
 
             n.createaccount(name="Legacy", type="Legacy")
             n.setactiveaccount(account="Legacy")
-            n.importprivkey(guldenprivkey=n.get_deterministic_priv_key().key, account="Legacy", label='coinbase')
+            n.importprivkey(muntprivkey=n.get_deterministic_priv_key().key, account="Legacy", label='coinbase')
 
     def run_test(self):
         """Tests must override this method to define test logic"""
@@ -318,7 +318,7 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
         if extra_args is None:
             extra_args = [[]] * num_nodes
         if binary is None:
-            binary = [self.options.GuldenD] * num_nodes
+            binary = [self.options.Munt_daemon] * num_nodes
         assert_equal(len(extra_confs), num_nodes)
         assert_equal(len(extra_args), num_nodes)
         assert_equal(len(binary), num_nodes)
@@ -328,8 +328,8 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
                 get_datadir_path(self.options.tmpdir, i),
                 rpchost=rpchost,
                 timewait=self.rpc_timeout,
-                GuldenD=binary[i],
-                Gulden_cli=self.options.guldencli,
+                Munt_daemon=binary[i],
+                Munt_cli=self.options.muntcli,
                 coverage_dir=self.options.coveragedir,
                 cwd=self.options.tmpdir,
                 extra_conf=extra_confs[i],
@@ -339,7 +339,7 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
             ))
 
     def start_node(self, i, *args, **kwargs):
-        """Start a GuldenD"""
+        """Start a Munt-daemon"""
 
         node = self.nodes[i]
 
@@ -350,7 +350,7 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
             coverage.write_all_rpc_commands(self.options.coveragedir, node.rpc)
 
     def start_nodes(self, extra_args=None, *args, **kwargs):
-        """Start multiple GuldenDs"""
+        """Start multiple Munt-daemons"""
 
         if extra_args is None:
             extra_args = [None] * self.num_nodes
@@ -370,12 +370,12 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
                 coverage.write_all_rpc_commands(self.options.coveragedir, node.rpc)
 
     def stop_node(self, i, expected_stderr='', wait=0):
-        """Stop a GuldenD test node"""
+        """Stop a Munt-deamon test node"""
         self.nodes[i].stop_node(expected_stderr, wait=wait)
         self.nodes[i].wait_until_stopped()
 
     def stop_nodes(self, wait=0):
-        """Stop multiple GuldenD test nodes"""
+        """Stop multiple Munt-daemon test nodes"""
         for node in self.nodes:
             # Issue RPC to stop nodes
             node.stop_node(wait=wait)
@@ -429,7 +429,7 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
         # User can provide log level as a number or string (eg DEBUG). loglevel was caught as a string, so try to convert it to an int
         ll = int(self.options.loglevel) if self.options.loglevel.isdigit() else self.options.loglevel.upper()
         ch.setLevel(ll)
-        # Format logs the same as GuldenD's debug.log with microprecision (so log files can be concatenated and sorted)
+        # Format logs the same as Munt-daemon's debug.log with microprecision (so log files can be concatenated and sorted)
         formatter = logging.Formatter(fmt='%(asctime)s.%(msecs)03d000Z %(name)s (%(levelname)s): %(message)s', datefmt='%Y-%m-%dT%H:%M:%S')
         formatter.converter = time.gmtime
         fh.setFormatter(formatter)
@@ -439,7 +439,7 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
         self.log.addHandler(ch)
 
         if self.options.trace_rpc:
-            rpc_logger = logging.getLogger("GuldenRPC")
+            rpc_logger = logging.getLogger("MuntRPC")
             rpc_logger.setLevel(logging.DEBUG)
             rpc_handler = logging.StreamHandler(sys.stdout)
             rpc_handler.setLevel(logging.DEBUG)
@@ -466,10 +466,10 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
                 if os.path.isdir(get_datadir_path(self.options.cachedir, i)):
                     shutil.rmtree(get_datadir_path(self.options.cachedir, i))
 
-            # Create cache directories, run GuldenDs:
+            # Create cache directories, run Munt-daemons:
             for i in range(MAX_NODES):
                 datadir = initialize_datadir(self.options.cachedir, i)
-                args = [self.options.GuldenD, "-datadir=" + datadir, '-disablewallet']
+                args = [self.options.Munt_daemon, "-datadir=" + datadir, '-disablewallet']
                 if i > 0:
                     args.append("-connect=127.0.0.1:" + str(p2p_port(0)))
                 self.nodes.append(TestNode(
@@ -479,8 +479,8 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
                     extra_args=[],
                     rpchost=None,
                     timewait=self.rpc_timeout,
-                    GuldenD=self.options.GuldenD,
-                    Gulden_cli=self.options.guldencli,
+                    Munt_daemon=self.options.muntdaemon,
+                    Munt_cli=self.options.muntcli,
                     coverage_dir=None,
                     cwd=self.options.tmpdir,
                 ))
@@ -520,7 +520,7 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
             from_dir = get_datadir_path(self.options.cachedir, i)
             to_dir = get_datadir_path(self.options.tmpdir, i)
             shutil.copytree(from_dir, to_dir)
-            initialize_datadir(self.options.tmpdir, i)  # Overwrite port/rpcport in Gulden.conf
+            initialize_datadir(self.options.tmpdir, i)  # Overwrite port/rpcport in munt.conf
 
     def _initialize_chain_clean(self):
         """Initialize empty blockchain for use by the test.
@@ -537,10 +537,10 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
         except ImportError:
             raise SkipTest("python3-zmq module not available.")
 
-    def skip_if_no_GuldenD_zmq(self):
-        """Skip the running test if GuldenD has not been compiled with zmq support."""
+    def skip_if_no_daemon_zmq(self):
+        """Skip the running test if Munt-daemon has not been compiled with zmq support."""
         if not self.is_zmq_compiled():
-            raise SkipTest("GuldenD has not been built with zmq enabled.")
+            raise SkipTest("daemon has not been built with zmq enabled.")
 
     def skip_if_no_wallet(self):
         """Skip the running test if wallet has not been compiled."""
@@ -548,12 +548,12 @@ class GuldenTestFramework(metaclass=GuldenTestMetaClass):
             raise SkipTest("wallet has not been compiled.")
 
     def skip_if_no_cli(self):
-        """Skip the running test if Gulden-cli has not been compiled."""
+        """Skip the running test if Munt-cli has not been compiled."""
         if not self.is_cli_compiled():
-            raise SkipTest("Gulden-cli has not been compiled.")
+            raise SkipTest("Munt-cli has not been compiled.")
 
     def is_cli_compiled(self):
-        """Checks whether Gulden-cli was compiled."""
+        """Checks whether Munt-cli was compiled."""
         config = configparser.ConfigParser()
         config.read_file(open(self.options.configfile))
 

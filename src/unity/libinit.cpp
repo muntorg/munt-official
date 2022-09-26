@@ -155,7 +155,7 @@ int InitUnity()
 
         //fixme: (UNITY) - This is now duplicated, factor this out into a common helper.
         // NB! This has to happen before we deamonise
-        // Make sure only a single Gulden process is using the data directory.
+        // Make sure only a single Munt process is using the data directory.
         {
             fs::path pathLockFile = GetDataDir() / ".lock";
             FILE* file = fopen(pathLockFile.string().c_str(), "a"); // empty lock file; created if it doesn't exist.

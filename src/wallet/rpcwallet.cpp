@@ -571,12 +571,12 @@ UniValue sendtoaddressfromaccount(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 3 || request.params.size() > 6)
         throw std::runtime_error(
-            "sendtoaddressfromaccount \"from_account\" \"guldenaddress\" amount ( \"comment\" \"comment-to\" subtract_fee_from_amount )\n"
-            "\nSend an amount to \"guldenaddress\" using \"account\"\n"
+            "sendtoaddressfromaccount \"from_account\" \"muntaddress\" amount ( \"comment\" \"comment-to\" subtract_fee_from_amount )\n"
+            "\nSend an amount to \"muntaddress\" using \"account\"\n"
             + HelpRequiringPassphrase(pwallet) +
             "\nArguments:\n"
             "1. \"from_account\"           (string, required) The UUID or unique label of the account to move funds from. May be the currently active account using \"\".\n"
-            "2. \"guldenaddress\"            (string, required) The " GLOBAL_APPNAME " address to send to.\n"
+            "2. \"muntaddress\"            (string, required) The " GLOBAL_APPNAME " address to send to.\n"
             "3. \"amount\"                 (numeric or string, required) The amount in " + CURRENCY_UNIT + " to send. eg 0.1\n"
             "4. \"comment\"                (string, optional) A comment used to store what the transaction is for. \n"
             "                            This is not part of the transaction, just kept in your wallet.\n"
@@ -769,7 +769,7 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
 
     DS_LOCK2(cs_main, pwallet->cs_wallet);
 
-    // Gulden address
+    // Munt address
     CNativeAddress address = CNativeAddress(request.params[0].get_str());
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid " GLOBAL_APPNAME " address");
@@ -3404,7 +3404,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "getlockedbalance",         &getlockedbalance,         false,  {} },
     { "wallet",             "getwalletinfo",            &getwalletinfo,            false,  {} },
     { "wallet",             "importmulti",              &importmulti,              true,   {"account","requests","options"} },
-    { "wallet",             "importprivkey",            &importprivkey,            true,   {"guldenprivkey", "account", "label","rescan"} },
+    { "wallet",             "importprivkey",            &importprivkey,            true,   {"muntprivkey", "account", "label","rescan"} },
     { "wallet",             "importwallet",             &importwallet,             true,   {"filename"} },
     { "wallet",             "importaddress",            &importaddress,            true,   {"address","label","rescan","p2sh"} },
     { "wallet",             "importprunedfunds",        &importprunedfunds,        true,   {"rawtransaction","txoutproof"} },

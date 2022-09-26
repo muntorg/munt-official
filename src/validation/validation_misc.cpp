@@ -118,29 +118,29 @@ BlockSubsidy GetBlockSubsidy(uint64_t nHeight)
     }
     else if(nHeight < Params().GetConsensus().fixedRewardReductionHeight)
     {
-        return BlockSubsidy(1000*COIN, 0, 0); // 1000 Gulden per block for first 250k blocks
+        return BlockSubsidy(1000*COIN, 0, 0); // 1000 Munt per block for first 250k blocks
     }
     else if(nHeight < Params().GetConsensus().devBlockSubsidyActivationHeight)
     {
-        return BlockSubsidy(100*COIN, 0, 0); // 100 Gulden per block (fixed reward/no halving)
+        return BlockSubsidy(100*COIN, 0, 0); // 100 Munt per block (fixed reward/no halving)
     }
     else if (nHeight < Params().GetConsensus().pow2Phase4FirstBlockHeight+1)
     {
-        return BlockSubsidy(50*COIN, 20*COIN, 40*COIN); // 110 Gulden per block (fixed reward/no halving) - 50 mining, 40 development, 20 witness.
+        return BlockSubsidy(50*COIN, 20*COIN, 40*COIN); // 110 Munt per block (fixed reward/no halving) - 50 mining, 40 development, 20 witness.
     }
     else if(nHeight <= 1226651)
     {
-        return BlockSubsidy(50*COIN, 30*COIN, 40*COIN); // 120 Gulden per block (fixed reward/no halving) - 50 mining, 40 development, 30 witness.
+        return BlockSubsidy(50*COIN, 30*COIN, 40*COIN); // 120 Munt per block (fixed reward/no halving) - 50 mining, 40 development, 30 witness.
     }
     else if(nHeight <= 1228003)
     {
-        return BlockSubsidy(90*COIN, 30*COIN, 80*COIN); // 200 Gulden per block (fixed reward/no halving) - 90 mining, 80 development, 30 witness.
+        return BlockSubsidy(90*COIN, 30*COIN, 80*COIN); // 200 Munt per block (fixed reward/no halving) - 90 mining, 80 development, 30 witness.
     }
     else if(nHeight <= Params().GetConsensus().halvingIntroductionHeight)
     {
-        return BlockSubsidy(50*COIN, 30*COIN, 80*COIN); // 160 Gulden per block (fixed reward/no halving) - 50 mining, 80 development, 30 witness.
+        return BlockSubsidy(50*COIN, 30*COIN, 80*COIN); // 160 Munt per block (fixed reward/no halving) - 50 mining, 80 development, 30 witness.
     }
-    // 90 Gulden per block; 10 mining, 15 witness, 65 development    
+    // 90 Munt per block; 10 mining, 15 witness, 65 development    
     else if (nHeight < 1619997)
     {
         return BlockSubsidy(1000000*MILLICENT, 1500000*MILLICENT, 6500000*MILLICENT);
@@ -151,7 +151,7 @@ BlockSubsidy GetBlockSubsidy(uint64_t nHeight)
         return BlockSubsidy(1000000*MILLICENT, 1500000*MILLICENT, 100'000'000*COIN); //1619997  56817116000000000
     }
     // From this point on reward is as follows:
-    // 25 Gulden per block; 10 mining, 15 witness
+    // 25 Munt per block; 10 mining, 15 witness
     // Halving every 842500 blocks (roughly 4 years); first halving at block ???
     // We round to force only a single non-zero decimal digit instead of exact halving in order to keep the numbers as clean as possible throughout.
     // Halvings as follows:

@@ -22,7 +22,7 @@ from decimal import Decimal
 import http.client
 import subprocess
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import (
     assert_equal,
     assert_greater_than,
@@ -45,7 +45,7 @@ from test_framework.mininode import (
 )
 
 
-class BlockchainTest(GuldenTestFramework):
+class BlockchainTest(MuntTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1

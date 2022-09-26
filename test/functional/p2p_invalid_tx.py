@@ -14,7 +14,7 @@ from test_framework.messages import (
     CTxOut,
 )
 from test_framework.mininode import P2PDataStore
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import (
     assert_equal,
     wait_until,
@@ -22,7 +22,7 @@ from test_framework.util import (
 from data import invalid_txs
 
 
-class InvalidTxRequestTest(GuldenTestFramework):
+class InvalidTxRequestTest(MuntTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.setup_clean_chain = True

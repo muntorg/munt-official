@@ -22,7 +22,7 @@ from test_framework.mininode import (
     msg_block,
     msg_getdata,
 )
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import (
     assert_equal,
     connect_nodes,
@@ -64,12 +64,12 @@ def custom_function():
 
     If this function is more generally useful for other tests, consider
     moving it to a module in test_framework."""
-    # self.log.info("running custom_function")  # Oops! Can't run self.log outside the GuldenTestFramework
+    # self.log.info("running custom_function")  # Oops! Can't run self.log outside the MuntTestFramework
     pass
 
 
-class ExampleTest(GuldenTestFramework):
-    # Each functional test is a subclass of the GuldenTestFramework class.
+class ExampleTest(MuntTestFramework):
+    # Each functional test is a subclass of the MuntTestFramework class.
 
     # Override the set_test_params(), skip_test_if_missing_module(), add_options(), setup_chain(), setup_network()
     # and setup_nodes() methods to customize the test setup as required.
@@ -129,7 +129,7 @@ class ExampleTest(GuldenTestFramework):
 
         Define it in a method here because you're going to use it repeatedly.
         If you think it's useful in general, consider moving it to the base
-        GuldenTestFramework class so other tests can use it."""
+        MuntTestFramework class so other tests can use it."""
 
         self.log.info("Running custom_method")
 

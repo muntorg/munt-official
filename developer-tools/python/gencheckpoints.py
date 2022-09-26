@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """Generate C++ code for the compiled-in checkpoints.
-   Script will connect to Gulden rpc server.
+   Script will connect to Munt rpc server.
    Generated code goes into chainparams.cpp
 """
 
@@ -11,7 +11,7 @@ import sys
 import string
 import os
 
-__copyright__ = 'Copyright (c) 2018 The Gulden developers'
+__copyright__ = 'Copyright (c) 2018-2022 The Centure developers'
 __license__   = 'Distributed under the Libre Chain License, see the accompanying file COPYING'
 __author__    = 'Willem de Jonge'
 __email__     = 'willem@isnapp.nl'

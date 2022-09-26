@@ -10,8 +10,8 @@
 // Distributed under the Libre Chain License, see the accompanying
 // file COPYING
 
-#ifndef GULDEN_UI_INTERFACE_H
-#define GULDEN_UI_INTERFACE_H
+#ifndef UI_INTERFACE_H
+#define UI_INTERFACE_H
 
 
 #include <stdint.h>
@@ -145,4 +145,4 @@ std::string AmountErrMsg(const char* const optname, const std::string& strValue)
 
 extern CClientUIInterface uiInterface;
 
-#endif // GULDEN_UI_INTERFACE_H
+#endif // UI_INTERFACE_H

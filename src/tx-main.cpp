@@ -68,10 +68,10 @@ static int AppInitRawTx(int argc, char* argv[])
     if (argc<2 || IsArgSet("-?") || IsArgSet("-h") || IsArgSet("-help"))
     {
         // First part of help message is specific to this utility
-        std::string strUsage = strprintf(_("%s Gulden-tx utility version"), _(PACKAGE_NAME)) + " " + FormatFullVersion() + "\n\n" +
+        std::string strUsage = strprintf(_("%s Munt-tx utility version"), _(PACKAGE_NAME)) + " " + FormatFullVersion() + "\n\n" +
             _("Usage:") + "\n" +
-              "  Gulden-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded gulden transaction") + "\n" +
-              "  Gulden-tx [options] -create [commands]   " + _("Create hex-encoded gulden transaction") + "\n" +
+              "  Munt-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded munt transaction") + "\n" +
+              "  Munt-tx [options] -create [commands]   " + _("Create hex-encoded munt transaction") + "\n" +
               "\n";
 
         fprintf(stdout, "%s", strUsage.c_str());
@@ -781,8 +781,8 @@ static int CommandLineRawTx(int argc, char* argv[])
             argv++;
         }
 
-        //fixme: (PHASE4POSTREL) SEGSIG) Some of the MutateTx stuff doesn't work at all for segsig - it is only used by gulden-tx, we should consider just refusing to allow them for now.
-        //fixme: (PHASE4POSTREL) (SEGSIG) (HIGH) (CURRENT_TX_VERSION_POW2) - Hardcoding to 1 below is (probably?) wrong but CURRENT_TX_VERSION_POW2 doesn't work right as it requires symbols that are undefined for Gulden-tx
+        //fixme: (PHASE4POSTREL) SEGSIG) Some of the MutateTx stuff doesn't work at all for segsig - it is only used by munt-tx, we should consider just refusing to allow them for now.
+        //fixme: (PHASE4POSTREL) (SEGSIG) (HIGH) (CURRENT_TX_VERSION_POW2) - Hardcoding to 1 below is (probably?) wrong but CURRENT_TX_VERSION_POW2 doesn't work right as it requires symbols that are undefined for Munt-tx
         CMutableTransaction tx(1);
         int startArg;
 
@@ -791,7 +791,7 @@ static int CommandLineRawTx(int argc, char* argv[])
             if (argc < 2)
                 throw std::runtime_error("too few parameters");
 
-            // param: hex-encoded Gulden transaction
+            // param: hex-encoded Munt transaction
             std::string strHexTx(argv[1]);
             if (strHexTx == "-")                 // "-" implies standard input
                 strHexTx = readStdin();

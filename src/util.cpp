@@ -22,6 +22,7 @@
 #include "serialize.h"
 #include "util/strencodings.h"
 #include "util/time.h"
+#include "appname.h"
 
 #include <stdarg.h>
 
@@ -97,8 +98,8 @@
 #include <openssl/conf.h>
 
 
-const char * const DEFAULT_CONF_FILENAME = "Gulden.conf";
-const char * const DEFAULT_PID_FILENAME = "GuldenD.pid";
+const char * const DEFAULT_CONF_FILENAME = "munt.conf";
+const char * const DEFAULT_PID_FILENAME = "munt_daemon.pid";
 
 ArgsManager gArgs;
 bool fPrintToConsole = false;
@@ -446,7 +447,7 @@ static std::string FormatException(const std::exception* pex, const char* pszThr
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(NULL, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "Gulden";
+    const char* pszModule = GLOBAL_APPNAME;
 #endif
     if (pex)
         return strprintf(
@@ -550,7 +551,7 @@ void ArgsManager::ReadConfigFile(const std::string& confPath)
     static bool fRegTestLegacy = IsArgSet("-regtestlegacy");
     fs::ifstream streamConfig(GetConfigFile(confPath));
     if (!streamConfig.good())
-        return; // No Gulden.conf file is OK
+        return; // No munt.conf file is OK
 
     {
         LOCK(cs_args);
@@ -559,7 +560,7 @@ void ArgsManager::ReadConfigFile(const std::string& confPath)
 
         for (boost::program_options::detail::config_file_iterator it(streamConfig, setOptions), end; it != end; ++it)
         {
-            // Don't overwrite existing settings so command line settings override Gulden.conf
+            // Don't overwrite existing settings so command line settings override munt.conf
             std::string strKey = std::string("-") + it->string_key;
             std::string strValue = it->value[0];
             if (fRegTest)

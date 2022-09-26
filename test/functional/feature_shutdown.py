@@ -2,9 +2,9 @@
 # Copyright (c) 2018 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-"""Test GuldenD shutdown."""
+"""Test Munt-daemon shutdown."""
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import assert_equal, get_rpc_proxy, wait_until
 from threading import Thread
 
@@ -12,7 +12,7 @@ def test_long_call(node):
     block = node.waitfornewblock()
     assert_equal(block['height'], 0)
 
-class ShutdownTest(GuldenTestFramework):
+class ShutdownTest(MuntTestFramework):
 
     def set_test_params(self):
         self.setup_clean_chain = True

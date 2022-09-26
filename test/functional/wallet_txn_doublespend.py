@@ -5,7 +5,7 @@
 """Test the wallet accounts properly when there is a double-spend conflict."""
 from decimal import Decimal
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import (
     assert_equal,
     connect_nodes,
@@ -14,7 +14,7 @@ from test_framework.util import (
     sync_blocks,
 )
 
-class TxnMallTest(GuldenTestFramework):
+class TxnMallTest(MuntTestFramework):
     def set_test_params(self):
         self.num_nodes = 4
 

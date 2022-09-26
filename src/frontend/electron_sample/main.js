@@ -2,8 +2,8 @@
 const {app, BrowserWindow} = require('electron')
 
 // Keep global references of all these objects
-let libgulden
-let guldenbackend
+let libcore
+let corebackend
 let signalhandler
 
 let coreIsRunning=false
@@ -43,7 +43,7 @@ function createWindow () {
       {
           console.log("terminate core from mainWindow close")
           e.preventDefault();
-          guldenbackend.TerminateUnityLib()
+          corebackend.TerminateUnityLib()
       }
       else if (!allowExit)
       {
@@ -57,15 +57,15 @@ function createWindow () {
       }
   })
 
-  guldenUnitySetup();
+  unitySetup();
 }
 
-function guldenUnitySetup() {
+function unitySetup() {
     var basepath = app.getAppPath();
 
-    global.libgulden = libgulden = require('./libgulden_unity_node_js')
-    global.guldenbackend = guldenbackend = new libgulden.NJSILibraryController
-    signalhandler = global.signalhandler = new libgulden.NJSILibraryListener();
+    global.libcore = libcore = require('./lib_unity')
+    global.corebackend = corebackend = new libcore.NJSILibraryController
+    signalhandler = global.signalhandler = new libcore.NJSILibraryListener();
 
     // Receive signals from the core and marshall them as needed to the main window
     signalhandler.notifyCoreReady = function() {
@@ -76,11 +76,11 @@ function guldenUnitySetup() {
         {
             console.log("terminate core immediately after init")
             terminateCore=false
-            guldenbackend.TerminateUnityLib()
+            corebackend.TerminateUnityLib()
         }
     }
     signalhandler.logPrint  = function(message) {
-        console.log("gulden_unity_core: " + message)
+        console.log("unity_core: " + message)
         mainWindow.webContents.send('logPrint', message)
     }
     signalhandler.notifyUnifiedProgress  = function (progress) {
@@ -106,7 +106,7 @@ function guldenUnitySetup() {
     signalhandler.notifyInitWithoutExistingWallet = function () {
         console.log("received: notifyInitWithoutExistingWallet")
         mainWindow.webContents.send('notifyInitWithoutExistingWallet')
-        guldenbackend.InitWalletFromRecoveryPhrase(guldenbackend.GenerateRecoveryMnemonic().phrase_with_birth_number ,"password")
+        corebackend.InitWalletFromRecoveryPhrase(corebackend.GenerateRecoveryMnemonic().phrase_with_birth_number ,"password")
     }
     signalhandler.notifyShutdown = function () {
 
@@ -116,8 +116,8 @@ function guldenUnitySetup() {
         app.quit()
     }
 
-    // Start the Gulden unified backend
-    guldenbackend.InitUnityLibThreaded(basepath+"/"+"wallet", "", -1, -1, false, true, signalhandler, "")
+    // Start the unified backend
+    corebackend.InitUnityLibThreaded(basepath+"/"+"wallet", "", -1, -1, false, true, signalhandler, "")
 }
 
 // This method will be called when Electron has finished
@@ -134,7 +134,7 @@ app.on('window-all-closed', function () {
       if (coreIsRunning)
       {
             console.log("terminate core from window-all-closed")
-          guldenbackend.TerminateUnityLib()
+          corebackend.TerminateUnityLib()
       }
       else
       {

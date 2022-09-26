@@ -8,10 +8,10 @@
 import os
 import shutil
 
-from test_framework.test_framework import GuldenTestFramework, initialize_datadir
+from test_framework.test_framework import MuntTestFramework, initialize_datadir
 
 
-class BlocksdirTest(GuldenTestFramework):
+class BlocksdirTest(MuntTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1

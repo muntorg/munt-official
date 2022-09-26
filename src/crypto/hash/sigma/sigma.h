@@ -41,7 +41,7 @@
 // * Y can also be reduced to balance this equation
 // * Increasing N also increases the time penalty, but every extra N also means slower (full) validation. In some cases nodes could potentially randomly validate only parts of the hash bypassing part of this penalty.
 //
-// Gulden specific details:
+// Munt specific details:
 // Some extra details apply that are specific to our current implementation of SIGMA but could also be done differently:
 // * We use a slightly modified 'argon' which we call 'argon_echo' to break compatibility with any argon specific chip implementations.
 // * We use two different hash algorithms 'shavite' and 'echo' for the fast hashes, the choice of which to use is generated randomly along with the indices.

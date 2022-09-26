@@ -53,9 +53,9 @@ Var StartMenuGroup
 # Installer attributes
 OutFile @abs_top_srcdir@/@PACKAGE_TARNAME@-${VERSION}-win@WINDOWS_BITS@-setup.exe
 !if "@WINDOWS_BITS@" == "64"
-InstallDir $PROGRAMFILES64\Gulden
+InstallDir $PROGRAMFILES64\Munt
 !else
-InstallDir $PROGRAMFILES\Gulden
+InstallDir $PROGRAMFILES\Munt
 !endif
 CRCCheck on
 XPStyle on
@@ -91,7 +91,7 @@ Section -Main SEC0000
     #File @abs_top_srcdir@/release/*.dll
     File /oname=COPYING.txt @abs_top_srcdir@/COPYING
     File /oname=COPYING.txt @abs_top_srcdir@/COPYING_upstream
-    File /oname=COPYING.txt @abs_top_srcdir@/COPYING_gulden
+    File /oname=COPYING.txt @abs_top_srcdir@/COPYING_munt
     #SetOutPath $INSTDIR\platforms
     #File @abs_top_srcdir@/release/platforms/*
     #SetOutPath $INSTDIR\imageformats
@@ -123,13 +123,13 @@ Section -post SEC0001
     WriteRegDWORD HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoModify 1
     WriteRegDWORD HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoRepair 1
     WriteRegStr HKCR "@PACKAGE_TARNAME@" "URL Protocol" ""
-    WriteRegStr HKCR "@PACKAGE_TARNAME@" "" "URL:Gulden"
+    WriteRegStr HKCR "@PACKAGE_TARNAME@" "" "URL:Munt"
     WriteRegStr HKCR "@PACKAGE_TARNAME@\DefaultIcon" "" $INSTDIR\@_GUI_NAME@@EXEEXT@
     WriteRegStr HKCR "@PACKAGE_TARNAME@\shell\open\command" "" '"$INSTDIR\@_GUI_NAME@@EXEEXT@" "%1"'
-    WriteRegStr HKCR "gulden" "URL Protocol" ""
-    WriteRegStr HKCR "gulden" "" "URL:Gulden"
-    WriteRegStr HKCR "gulden\DefaultIcon" "" $INSTDIR\Gulden.exe
-    WriteRegStr HKCR "gulden\shell\open\command" "" '"$INSTDIR\Gulden.exe" "%1"'
+    WriteRegStr HKCR "munt" "URL Protocol" ""
+    WriteRegStr HKCR "munt" "" "URL:Munt"
+    WriteRegStr HKCR "munt\DefaultIcon" "" $INSTDIR\Munt.exe
+    WriteRegStr HKCR "munt\shell\open\command" "" '"$INSTDIR\Munt.exe" "%1"'
 SectionEnd
 
 # Macro for selecting uninstaller sections
@@ -163,7 +163,7 @@ Section -un.post UNSEC0001
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Uninstall $(^Name).lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\$(^Name).lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\@PACKAGE_NAME@ (testnet, @WINDOWS_BITS@-bit).lnk"
-    Delete /REBOOTOK "$SMSTARTUP\Gulden.lnk"
+    Delete /REBOOTOK "$SMSTARTUP\Munt.lnk"
     Delete /REBOOTOK $INSTDIR\uninstall.exe
     Delete /REBOOTOK $INSTDIR\debug.log
     Delete /REBOOTOK $INSTDIR\db.log

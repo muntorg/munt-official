@@ -1,20 +1,20 @@
 //
-//  gulden_static.h
-//  gulden_static
+//  munt_static.h
+//  munt_static
 //
 //  Created by Willem de Jonge on 02/10/2018.
-//  Copyright © 2018 Gulden.com BV. All rights reserved.
+//  Copyright © 2018-2022 Centure.com BV. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-//! Project version number for gulden_static.
-FOUNDATION_EXPORT double gulden_staticVersionNumber;
+//! Project version number for munt_static.
+FOUNDATION_EXPORT double munt_staticVersionNumber;
 
-//! Project version string for gulden_static.
-FOUNDATION_EXPORT const unsigned char gulden_staticVersionString[];
+//! Project version string for munt_static.
+FOUNDATION_EXPORT const unsigned char munt_staticVersionString[];
 
-// In this header, you should import all the public headers of your framework using statements like #import <gulden_static/PublicHeader.h>
+// In this header, you should import all the public headers of your framework using statements like #import <munt_static/PublicHeader.h>
 
 #import "DBAddressRecord.h"
 #import "DBBalanceRecord.h"
@@ -37,4 +37,4 @@ FOUNDATION_EXPORT const unsigned char gulden_staticVersionString[];
 #import "DBMonitorRecord.h"
 #import "DBMutationRecord.h"
 
-#import "GuldenCoreUtil.h"
+#import "MuntCoreUtil.h"

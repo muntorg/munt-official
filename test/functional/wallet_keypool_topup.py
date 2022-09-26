@@ -13,7 +13,7 @@ Two nodes. Node1 is under test. Node0 is providing transactions and generating b
 import os
 import shutil
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import (
     assert_equal,
     connect_nodes_bi,
@@ -21,7 +21,7 @@ from test_framework.util import (
 )
 
 
-class KeypoolRestoreTest(GuldenTestFramework):
+class KeypoolRestoreTest(MuntTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 4

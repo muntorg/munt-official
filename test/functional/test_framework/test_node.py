@@ -2,7 +2,7 @@
 # Copyright (c) 2017-2019 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-"""Class for GuldenD node under test"""
+"""Class for Munt-daemon node under test"""
 
 import contextlib
 import decimal
@@ -31,7 +31,7 @@ from .util import (
     p2p_port,
 )
 
-GuldenD_PROC_WAIT_TIMEOUT = 60
+DAEMON_PROC_WAIT_TIMEOUT = 60
 
 
 class FailedToStartError(Exception):
@@ -46,7 +46,7 @@ class ErrorMatch(Enum):
 
 
 class TestNode():
-    """A class for representing a GuldenD node under test.
+    """A class for representing a Munt-daemon node under test.
 
     This class contains:
 
@@ -59,7 +59,7 @@ class TestNode():
     To make things easier for the test writer, any unrecognised messages will
     be dispatched to the RPC connection."""
 
-    def __init__(self, i, datadir, *, rpchost, timewait, GuldenD, Gulden_cli, coverage_dir, cwd, extra_conf=None, extra_args=None, use_cli=False, start_perf=False):
+    def __init__(self, i, datadir, *, rpchost, timewait, Munt_daemon, Munt_cli, coverage_dir, cwd, extra_conf=None, extra_args=None, use_cli=False, start_perf=False):
         """
         Kwargs:
             start_perf (bool): If True, begin profiling the node with `perf` as soon as
@@ -72,7 +72,7 @@ class TestNode():
         self.stderr_dir = os.path.join(self.datadir, "stderr")
         self.rpchost = rpchost
         self.rpc_timeout = timewait
-        self.binary = GuldenD
+        self.binary = Munt-daemon
         self.coverage_dir = coverage_dir
         self.cwd = cwd
         if extra_conf is not None:
@@ -91,7 +91,7 @@ class TestNode():
             "-uacomment=testnode%d" % i,
         ]
 
-        self.cli = TestNodeCLI(Gulden_cli, self.datadir)
+        self.cli = TestNodeCLI(Munt_cli, self.datadir)
         self.use_cli = use_cli
         self.start_perf = start_perf
 
@@ -152,7 +152,7 @@ class TestNode():
         raise AssertionError(self._node_msg(msg))
 
     def __del__(self):
-        # Ensure that we don't leave any GuldenD processes lying around after
+        # Ensure that we don't leave any Munt-daemon processes lying around after
         # the test ends
         if self.process and self.cleanup_on_exit:
             # Should only happen on test failure
@@ -174,7 +174,7 @@ class TestNode():
         if extra_args is None:
             extra_args = self.extra_args
 
-        # Add a new stdout and stderr file each time GuldenD is started
+        # Add a new stdout and stderr file each time Munt-daemon is started
         if stderr is None:
             stderr = tempfile.NamedTemporaryFile(dir=self.stderr_dir, delete=False)
         if stdout is None:
@@ -186,7 +186,7 @@ class TestNode():
             cwd = self.cwd
 
         # Delete any existing cookie file -- if such a file exists (eg due to
-        # unclean shutdown), it will get overwritten anyway by GuldenD, and
+        # unclean shutdown), it will get overwritten anyway by Munt-daemon, and
         # potentially interfere with our attempt to authenticate
         delete_cookie_file(self.datadir)
 
@@ -196,19 +196,19 @@ class TestNode():
         self.process = subprocess.Popen(self.args + extra_args, env=subp_env, stdout=stdout, stderr=stderr, cwd=cwd, **kwargs)
 
         self.running = True
-        self.log.debug("GuldenD started, waiting for RPC to come up")
+        self.log.debug("Munt-daemon started, waiting for RPC to come up")
 
         if self.start_perf:
             self._start_perf()
 
     def wait_for_rpc_connection(self):
-        """Sets up an RPC connection to the GuldenD process. Returns False if unable to connect."""
+        """Sets up an RPC connection to the Munt-daemon process. Returns False if unable to connect."""
         # Poll at a rate of four times per second
         poll_per_s = 4
         for _ in range(poll_per_s * self.rpc_timeout):
             if self.process.poll() is not None:
                 raise FailedToStartError(self._node_msg(
-                    'GuldenD exited with status {} during initialization'.format(self.process.returncode)))
+                    'Munt-daemon exited with status {} during initialization'.format(self.process.returncode)))
             try:
                 rpc = get_rpc_proxy(rpc_url(self.datadir, self.index, self.rpchost), self.index, timeout=self.rpc_timeout, coveragedir=self.coverage_dir)
                 rpc.getblockcount()
@@ -228,11 +228,11 @@ class TestNode():
                 # -342 Service unavailable, RPC server started but is shutting down due to error
                 if e.error['code'] != -28 and e.error['code'] != -342:
                     raise  # unknown JSON RPC exception
-            except ValueError as e:  # cookie file not found and no rpcuser or rpcassword. GuldenD still starting
+            except ValueError as e:  # cookie file not found and no rpcuser or rpcassword. Munt-daemon still starting
                 if "No RPC credentials" not in str(e):
                     raise
             time.sleep(1.0 / poll_per_s)
-        self._raise_assertion_error("Unable to connect to GuldenD")
+        self._raise_assertion_error("Unable to connect to Munt-daemon")
 
     def generate(self, num_blocks, max_tries=1000000):
         self.log.debug("TestNode.generate() dispatches `generate` call to `generatetoaddress`")
@@ -292,7 +292,7 @@ class TestNode():
         self.log.debug("Node stopped")
         return True
 
-    def wait_until_stopped(self, timeout=GuldenD_PROC_WAIT_TIMEOUT):
+    def wait_until_stopped(self, timeout=DAEMON_PROC_WAIT_TIMEOUT):
         wait_until(self.is_node_stopped, timeout=timeout)
 
     @contextlib.contextmanager
@@ -379,7 +379,7 @@ class TestNode():
 
         if not test_success('readelf -S {} | grep .debug_str'.format(shlex.quote(self.binary))):
             self.log.warning(
-                "perf output won't be very useful without debug symbols compiled into GuldenD")
+                "perf output won't be very useful without debug symbols compiled into Munt-daemon")
 
         output_path = tempfile.NamedTemporaryFile(
             dir=self.datadir,
@@ -420,11 +420,11 @@ class TestNode():
     def assert_start_raises_init_error(self, extra_args=None, expected_msg=None, match=ErrorMatch.FULL_TEXT, *args, **kwargs):
         """Attempt to start the node and expect it to raise an error.
 
-        extra_args: extra arguments to pass through to GuldenD
-        expected_msg: regex that stderr should match when GuldenD fails
+        extra_args: extra arguments to pass through to Munt-daemon
+        expected_msg: regex that stderr should match when Munt-daemon fails
 
-        Will throw if GuldenD starts without an error.
-        Will throw if an expected_msg is provided and it does not match GuldenD's stdout."""
+        Will throw if Munt-daemon starts without an error.
+        Will throw if an expected_msg is provided and it does not match Munt-daemon's stdout."""
         with tempfile.NamedTemporaryFile(dir=self.stderr_dir, delete=False) as log_stderr, \
              tempfile.NamedTemporaryFile(dir=self.stdout_dir, delete=False) as log_stdout:
             try:
@@ -433,7 +433,7 @@ class TestNode():
                 self.stop_node()
                 self.wait_until_stopped()
             except FailedToStartError as e:
-                self.log.debug('GuldenD failed to start: %s', e)
+                self.log.debug('Munt-daemon failed to start: %s', e)
                 self.running = False
                 self.process = None
                 # Check stderr for expected message
@@ -458,9 +458,9 @@ class TestNode():
                                 'Expected message "{}" does not partially text match stderr:\n"{}"'.format(expected_msg, stderr))
             else:
                 if expected_msg is None:
-                    assert_msg = "GuldenD should have exited with an error"
+                    assert_msg = "Munt-daemon should have exited with an error"
                 else:
-                    assert_msg = "GuldenD should have exited with expected error " + expected_msg
+                    assert_msg = "Munt-daemon should have exited with expected error " + expected_msg
                 self._raise_assertion_error(assert_msg)
 
     def add_p2p_connection(self, p2p_conn, *, wait_for_verack=True, **kwargs):
@@ -515,17 +515,17 @@ def arg_to_cli(arg):
         return str(arg)
 
 class TestNodeCLI():
-    """Interface to Gulden-cli for an individual node"""
+    """Interface to Munt-cli for an individual node"""
 
     def __init__(self, binary, datadir):
         self.options = []
         self.binary = binary
         self.datadir = datadir
         self.input = None
-        self.log = logging.getLogger('TestFramework.guldencli')
+        self.log = logging.getLogger('TestFramework.muntcli')
 
     def __call__(self, *options, input=None):
-        # TestNodeCLI is callable with Gulden-cli command-line options
+        # TestNodeCLI is callable with Munt-cli command-line options
         cli = TestNodeCLI(self.binary, self.datadir)
         cli.options = [str(o) for o in options]
         cli.input = input
@@ -544,17 +544,17 @@ class TestNodeCLI():
         return results
 
     def send_cli(self, command=None, *args, **kwargs):
-        """Run Gulden-cli command. Deserializes returned string as python object."""
+        """Run Munt-cli command. Deserializes returned string as python object."""
         pos_args = [arg_to_cli(arg) for arg in args]
         named_args = [str(key) + "=" + arg_to_cli(value) for (key, value) in kwargs.items()]
-        assert not (pos_args and named_args), "Cannot use positional arguments and named arguments in the same Gulden-cli call"
+        assert not (pos_args and named_args), "Cannot use positional arguments and named arguments in the same Munt-cli call"
         p_args = [self.binary, "-datadir=" + self.datadir] + self.options
         if named_args:
             p_args += ["-named"]
         if command is not None:
             p_args += [command]
         p_args += pos_args + named_args
-        self.log.debug("Running Gulden-cli command: %s" % command)
+        self.log.debug("Running Munt-cli command: %s" % command)
         process = subprocess.Popen(p_args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         cli_stdout, cli_stderr = process.communicate(input=self.input)
         returncode = process.poll()

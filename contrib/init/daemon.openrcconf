@@ -1,33 +1,33 @@
-# /etc/conf.d/GuldenD: config file for /etc/init.d/GuldenD
+# /etc/conf.d/munt_daemon: config file for /etc/init.d/munt_daemon
 
 # Config file location
-#GULDEND_CONFIGFILE="/etc/gulden/gulden.conf"
+#DAEMON_CONFIGFILE="/etc/munt/munt.conf"
 
-# What directory to write pidfile to?  (created and owned by $GULDEND_USER)
-#GULDEND_PIDDIR="/var/run/GuldenD"
+# What directory to write pidfile to?  (created and owned by $DAEMON_USER)
+#DAEMON_PIDDIR="/var/run/munt_daemon"
 
 # What filename to give the pidfile
-#GULDEND_PIDFILE="${GULDEND_PIDDIR}/GuldenD.pid"
+#DAEMON_PIDFILE="${DAEMON_PIDDIR}/munt_daemon.pid"
 
-# Where to write GuldenD data (be mindful that the blockchain is large)
-#GULDEND_DATADIR="/var/lib/GuldenD"
+# Where to write data (be mindful that the blockchain is large)
+#DAEMON_DATADIR="/var/lib/munt_daemon"
 
-# User and group to own GuldenD process
-#GULDEND_USER="gulden"
-#GULDEND_GROUP="gulden"
+# User and group to own process
+#DAEMON_USER="munt"
+#DAEMON_GROUP="munt"
 
-# Path to GuldenD executable
-#GULDEND_BIN="/usr/bin/GuldenD"
+# Path to executable
+#DAEMON_BIN="/usr/bin/Munt-daemon"
 
-# Nice value to run GuldenD under
-#GULDEND_NICE=0
+# Nice value to run under
+#DAEMON_NICE=0
 
 # Additional options (avoid -conf and -datadir, use flags above)
-#GULDEND_OPTS=""
+#DAEMON_OPTS=""
 
-# The timeout in seconds OpenRC will wait for GuldenD to terminate
+# The timeout in seconds OpenRC will wait for daemon to terminate
 # after a SIGTERM has been raised.
 # Note that this will be mapped as argument to start-stop-daemon's
 # '--retry' option, which means you can specify a retry schedule
 # here. For more information see man 8 start-stop-daemon.
-GULDEND_SIGTERM_TIMEOUT=60
+DAEMON_SIGTERM_TIMEOUT=60

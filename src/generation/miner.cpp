@@ -59,7 +59,7 @@
 
 #include "txdb.h"
 
-//Gulden includes
+//Munt includes
 #include "streams.h"
 #include <boost/scope_exit.hpp>
 
@@ -526,7 +526,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(CBlockIndex* pPar
         LogPrintf("CreateNewBlock: parent height [%d]; our height [%d]; Difficulty [%d]\n", pParent->nHeight, nHeight, GetHumanDifficultyFromBits(pblock->nBits));
     }
 
-    // (GULDEN) Already done inside UpdateTime - don't need to do it again.
+    // (MUNT) Already done inside UpdateTime - don't need to do it again.
     //pblock->nBits          = GetNextWorkRequired(pParent, pblock, consensusParams);
     pblock->nNonce         = 0;
     pblocktemplate->vTxSigOpsCost[0] = GetLegacySigOpCount(*pblock->vtx[0]);

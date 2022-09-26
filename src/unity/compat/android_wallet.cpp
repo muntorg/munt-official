@@ -109,7 +109,7 @@ android_wallet ParseAndroidProtoWallet(std::string walletPath, std::string walle
                 if (field.type() == 3)
                 {
                     // All valid wallet files should have this field.
-                    if (field.length_delimited() == "com.gulden.production") { walletRet.validWalletProto = true; }
+                    if (field.length_delimited() == "com.munt.production") { walletRet.validWalletProto = true; }
                 }
                 break;
             }

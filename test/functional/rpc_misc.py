@@ -5,7 +5,7 @@
 """Test RPC misc output."""
 import xml.etree.ElementTree as ET
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import (
     assert_raises_rpc_error,
     assert_equal,
@@ -16,7 +16,7 @@ from test_framework.util import (
 from test_framework.authproxy import JSONRPCException
 
 
-class RpcMiscTest(GuldenTestFramework):
+class RpcMiscTest(MuntTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
 

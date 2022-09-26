@@ -6,7 +6,7 @@ import sys
 import string
 import os
 
-__copyright__ = 'Copyright (c) 2018 The Gulden developers'
+__copyright__ = 'Copyright (c) 2018-2022 The Centure developers'
 __license__   = 'Distributed under the Libre Chain License, see the accompanying file COPYING'
 __author__    = 'Malcolm MacLeod'
 __email__     = 'mmacleod@gmx.com'

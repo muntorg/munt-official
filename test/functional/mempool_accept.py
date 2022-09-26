@@ -7,7 +7,7 @@
 from io import BytesIO
 import math
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.messages import (
     BIP125_SEQUENCE_NUMBER,
     COIN,
@@ -31,7 +31,7 @@ from test_framework.util import (
 )
 
 
-class MempoolAcceptanceTest(GuldenTestFramework):
+class MempoolAcceptanceTest(MuntTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.extra_args = [[

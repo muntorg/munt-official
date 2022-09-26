@@ -43,11 +43,11 @@ make V=1 -j ${NUM_PROCS}
 cd ..
 
 if test -f "build_node/src/.libs/lib_unity_node_js-0.dll"; then
-    cp build_node/src/.libs/lib_unity_node_js-0.dll src/frontend/electron_sample/libgulden_unity_node_js.node
+    cp build_node/src/.libs/lib_unity_node_js-0.dll src/frontend/electron_sample/lib_unity.node
     cp build_node/src/.libs/lib_unity_node_js-0.dll src/frontend/electron_vue/src/unity/lib_unity.node
     cp build_node/src/.libs/lib_unity_node_js-0.dll src/frontend/lite/src/unity/lib_unity.node
 elif test -f "build_node/src/.libs/lib_unity_node_js.so"; then
-    cp build_node/src/.libs/lib_unity_node_js.so src/frontend/electron_sample/libgulden_unity_node_js.node
+    cp build_node/src/.libs/lib_unity_node_js.so src/frontend/electron_sample/lib_unity.node
     cp build_node/src/.libs/lib_unity_node_js.so src/frontend/electron_vue/src/unity/lib_unity.node
     cp build_node/src/.libs/lib_unity_node_js.so src/frontend/lite/src/unity/lib_unity.node
 fi

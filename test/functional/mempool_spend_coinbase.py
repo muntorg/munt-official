@@ -12,12 +12,12 @@ in the next block are accepted into the memory pool,
 but less mature coinbase spends are NOT.
 """
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.blocktools import create_raw_transaction
 from test_framework.util import assert_equal, assert_raises_rpc_error
 
 
-class MempoolSpendCoinbaseTest(GuldenTestFramework):
+class MempoolSpendCoinbaseTest(MuntTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
 

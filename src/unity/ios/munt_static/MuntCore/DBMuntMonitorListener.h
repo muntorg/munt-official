@@ -5,7 +5,7 @@
 
 
 /** Monitoring events */
-@protocol DBGuldenMonitorListener
+@protocol DBMuntMonitorListener
 
 - (void)onPartialChain:(int32_t)height
         probableHeight:(int32_t)probableHeight

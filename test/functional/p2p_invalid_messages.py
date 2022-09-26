@@ -8,7 +8,7 @@ import struct
 
 from test_framework import messages
 from test_framework.mininode import P2PDataStore
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 
 
 class msg_unrecognized:
@@ -26,7 +26,7 @@ class msg_unrecognized:
         return "{}(data={})".format(self.command, self.str_data)
 
 
-class InvalidMessagesTest(GuldenTestFramework):
+class InvalidMessagesTest(MuntTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.setup_clean_chain = True
@@ -65,7 +65,7 @@ class InvalidMessagesTest(GuldenTestFramework):
         assert len(msg_at_size.serialize()) == msg_limit
 
         increase_allowed = 0.5
-        if [s for s in os.environ.get("GULDEN_CONFIG", "").split(" ") if "--with-sanitizers" in s and "address" in s]:
+        if [s for s in os.environ.get("MUNT_CONFIG", "").split(" ") if "--with-sanitizers" in s and "address" in s]:
             increase_allowed = 3.5
         with node.assert_memory_usage_stable(increase_allowed=increase_allowed):
             self.log.info(

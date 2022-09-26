@@ -348,7 +348,7 @@ CScript _createmultisig_redeemScript(CAccount* const forAccount, const UniValue&
         CNativeAddress address(ks);
         if (forAccount && address.IsValid())
         {
-            // Case 1: Gulden address and we have full public key:
+            // Case 1: Munt address and we have full public key:
             CKeyID keyID;
             CPubKey vchPubKey;
             if (!address.GetKeyID(keyID)) { throw std::runtime_error(strprintf("%s does not refer to a key",ks)); }

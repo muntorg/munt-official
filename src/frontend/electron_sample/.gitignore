@@ -1,4 +1,4 @@
 wallet
 node_modules
-libgulden_unity_node_js.node
+*.node
 package-lock.json

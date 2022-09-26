@@ -51,7 +51,7 @@
 
 #include "txdb.h"
 
-//Gulden includes
+//Munt includes
 #include "streams.h"
 
 RecursiveMutex processBlockCS;
@@ -474,7 +474,7 @@ void TryPopulateAndSignWitnessBlock(CBlockIndex* candidateIter, CChainParams& ch
                 {
                     std::string strErrorMessage = strprintf("Failed to create payout for witness block [%d] current chain tip [%d].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
                     CAlert::Notify(strErrorMessage, true, true);
-                    LogPrintf("GuldenWitness: [Error] %s\n", strErrorMessage.c_str());
+                    LogPrintf("MuntWitness: [Error] %s\n", strErrorMessage.c_str());
                     encounteredError=true;
                     return;
                 }
@@ -505,7 +505,7 @@ void TryPopulateAndSignWitnessBlock(CBlockIndex* candidateIter, CChainParams& ch
             {
                 std::string strErrorMessage = strprintf("Failed to get block template [%d] current chain tip [%d].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
                 CAlert::Notify(strErrorMessage, true, true);
-                LogPrintf("GuldenWitness: [Error] %s\n", strErrorMessage.c_str());
+                LogPrintf("MuntWitness: [Error] %s\n", strErrorMessage.c_str());
                 encounteredError=true;
                 return;
             }
@@ -574,7 +574,7 @@ void TryPopulateAndSignWitnessBlock(CBlockIndex* candidateIter, CChainParams& ch
                     {
                         std::string strErrorMessage = strprintf("Failed to compute UTXO for prev block [%d] current chain tip [%d].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
                         CAlert::Notify(strErrorMessage, true, true);
-                        LogPrintf("GuldenWitness: [Error] %s\n", strErrorMessage.c_str());
+                        LogPrintf("MuntWitness: [Error] %s\n", strErrorMessage.c_str());
                         encounteredError=true;
                         return;
                     }
@@ -582,7 +582,7 @@ void TryPopulateAndSignWitnessBlock(CBlockIndex* candidateIter, CChainParams& ch
                     {
                         std::string strErrorMessage = strprintf("Failed to compute UTXO delta for block [%d] current chain tip [%d].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
                         CAlert::Notify(strErrorMessage, true, true);
-                        LogPrintf("GuldenWitness: [Error] %s\n", strErrorMessage.c_str());
+                        LogPrintf("MuntWitness: [Error] %s\n", strErrorMessage.c_str());
                         encounteredError=true;
                         return;
                     }
@@ -601,7 +601,7 @@ void TryPopulateAndSignWitnessBlock(CBlockIndex* candidateIter, CChainParams& ch
             {
                 std::string strErrorMessage = strprintf("Signature error, failed to witness block [%d] current chain tip [%d].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0);
                 CAlert::Notify(strErrorMessage, true, true);
-                LogPrintf("GuldenWitness: [Error] %s\n", strErrorMessage.c_str());
+                LogPrintf("MuntWitness: [Error] %s\n", strErrorMessage.c_str());
                 encounteredError=true;
                 return;
             }
@@ -610,7 +610,7 @@ void TryPopulateAndSignWitnessBlock(CBlockIndex* candidateIter, CChainParams& ch
         {
             std::string strErrorMessage = strprintf("Coinbase error, failed to create coinbase for witness block [%d] current chain tip [%d] address [%s].\n", candidateIter->nHeight, chainActive.Tip()? chainActive.Tip()->nHeight : 0, CNativeAddress(CPoW2WitnessDestination(witnessInfo.selectedWitnessTransaction.output.witnessDetails.spendingKeyID, witnessInfo.selectedWitnessTransaction.output.witnessDetails.witnessKeyID)).ToString());
             CAlert::Notify(strErrorMessage, true, true);
-            LogPrintf("GuldenWitness: [Error] %s\n", strErrorMessage.c_str());
+            LogPrintf("MuntWitness: [Error] %s\n", strErrorMessage.c_str());
             encounteredError=true;
             return;
         }
@@ -635,7 +635,7 @@ std::set<CBlockIndex*, CBlockIndexCacheComparator> cacheAlreadySeenWitnessCandid
 bool witnessScriptsAreDirty = false;
 bool witnessingEnabled = true;
 
-void static GuldenWitness()
+void static MuntWitness()
 {
     LogPrintf("Witness thread started\n");
     util::ThreadRename(GLOBAL_APPNAME"-witness");
@@ -677,7 +677,7 @@ void static GuldenWitness()
             {
                 MilliSleep(200);
             }
-            DO_BENCHMARK("WIT: GuldenWitness", BCLog::BENCH|BCLog::WITNESS);
+            DO_BENCHMARK("WIT: MuntWitness", BCLog::BENCH|BCLog::WITNESS);
 
             CBlockIndex* pindexTip = nullptr;
             {
@@ -724,7 +724,7 @@ void static GuldenWitness()
                     {
                         secondsLastAbsentWitnessTip = nSecondsAbsent;
                         GetMainSignals().StalledWitness(pindexTip, nSecondsAbsent);
-                        LogPrint(BCLog::WITNESS, "GuldenWitness: absent witness at tip [%s] [%d] %d seconds\n", hashLastAbsentWitnessTip.ToString(), pindexTip->nHeight, nSecondsAbsent);
+                        LogPrint(BCLog::WITNESS, "MuntWitness: absent witness at tip [%s] [%d] %d seconds\n", hashLastAbsentWitnessTip.ToString(), pindexTip->nHeight, nSecondsAbsent);
                     }
                 }
                 else
@@ -741,7 +741,7 @@ void static GuldenWitness()
             std::vector<CBlockIndex*> candidateOrphans;
             if (cacheAlreadySeenWitnessCandidates.find(pindexTip) == cacheAlreadySeenWitnessCandidates.end())
             {
-                LogPrint(BCLog::WITNESS, "GuldenWitness: Add witness candidate from chain tip [%s]\n", pindexTip->GetBlockHashPoW2().ToString());
+                LogPrint(BCLog::WITNESS, "MuntWitness: Add witness candidate from chain tip [%s]\n", pindexTip->GetBlockHashPoW2().ToString());
                 candidateOrphans.push_back(pindexTip);
             }
             if (candidateOrphans.size() == 0)
@@ -750,7 +750,7 @@ void static GuldenWitness()
                 {
                     if (cacheAlreadySeenWitnessCandidates.find(candidateIter) == cacheAlreadySeenWitnessCandidates.end())
                     {
-                        LogPrint(BCLog::WITNESS, "GuldenWitness: Add witness candidate from top level pow orphans [%s]\n", candidateIter->GetBlockHashPoW2().ToString());
+                        LogPrint(BCLog::WITNESS, "MuntWitness: Add witness candidate from top level pow orphans [%s]\n", candidateIter->GetBlockHashPoW2().ToString());
                         candidateOrphans.push_back(candidateIter);
                     }
                 }
@@ -788,7 +788,7 @@ void static GuldenWitness()
 
                         if (!GetWitness(chainActive, chainparams, nullptr, candidateIter->pprev, *pWitnessBlock, witnessInfo))
                         {
-                            LogPrintf("GuldenWitness: Invalid candidate witness [%s]\n", candidateIter->GetBlockHashPoW2().ToString());
+                            LogPrintf("MuntWitness: Invalid candidate witness [%s]\n", candidateIter->GetBlockHashPoW2().ToString());
                             static int64_t nLastErrorHeight = -1;
 
                             if (nLastErrorHeight == -1 || candidateIter->nHeight - nLastErrorHeight > 10)
@@ -835,6 +835,6 @@ void static GuldenWitness()
 void StartPoW2WitnessThread(boost::thread_group& threadGroup)
 {
     #ifdef ENABLE_WALLET
-    threadGroup.create_thread(boost::bind(&util::TraceThread, "pow2_witness", &GuldenWitness));
+    threadGroup.create_thread(boost::bind(&util::TraceThread, "pow2_witness", &MuntWitness));
     #endif
 }

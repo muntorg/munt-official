@@ -3,7 +3,7 @@
 // Distributed under the Libre Chain License, see the accompanying
 // file COPYING
 //
-// This file contains Delta, the Gulden Difficulty Re-adjustment algorithm developed by Frank (dt_cdog@yahoo.com) with various enhancements by Malcolm MacLeod (mmacleod@gmx.com)
+// This file contains Delta, the Munt Difficulty Re-adjustment algorithm developed by Frank (dt_cdog@yahoo.com) with various enhancements by Malcolm MacLeod (mmacleod@gmx.com)
 // The core algorithm works by taking time measurements of four periods (last block; short window; medium window; long window) and then apply a weighting to them.
 // This allows the algorithm to react to short term fluctuations while still taking long term block targets into account, which helps prevent it from overreacting.
 //

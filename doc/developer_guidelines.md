@@ -154,4 +154,4 @@ Strings and formatting
 
 - For `strprintf`, `LogPrint`, `LogPrintf` formatting characters don't need size specifiers
 
-  - *Rationale*: Gulden Core uses tinyformat, which is type safe. Leave them out to avoid confusion
+  - *Rationale*: Munt Core uses tinyformat, which is type safe. Leave them out to avoid confusion

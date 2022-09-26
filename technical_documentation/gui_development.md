@@ -1,4 +1,4 @@
-Amongst various other frontends, Gulden has an electron based frontend that sits on top of our unified backend.
+Amongst various other frontends, Munt has an electron based frontend that sits on top of our unified backend.
 This makes contributing toward the user interface more accessible to a wider audience of developers.
 
 To get started tinkering with the electron frontend and/or contributing changes, these are the required steps:
@@ -11,7 +11,7 @@ To get started tinkering with the electron frontend and/or contributing changes,
 7. Type `yarn electron:serve` to launch the program
 
 Notes:
-* Development version runs in a different data directory (gulden_dev) than your regular wallet
+* Development version runs in a different data directory (munt_dev) than your regular wallet
 * You can't/shouldn't run both versions simultaneously unless you change the ports of one of them 
 
 Troubleshooting:

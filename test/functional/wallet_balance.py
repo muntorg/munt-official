@@ -6,7 +6,7 @@
 import time
 from decimal import Decimal
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
@@ -38,7 +38,7 @@ def create_transactions(node, address, amt, fees):
 
     return txs
 
-class WalletTest(GuldenTestFramework):
+class WalletTest(MuntTestFramework):
     def set_test_params(self):
         self.num_nodes = 2
         self.setup_clean_chain = True

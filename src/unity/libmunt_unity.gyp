@@ -1,7 +1,7 @@
 {
     "targets": [
         {
-            "target_name": "libgulden_unity_objc",
+            "target_name": "libmunt_unity_objc",
             "type": 'static_library',
             "dependencies": [
               "../../djinni/djinni/support-lib/support_lib.gyp:djinni_objc",

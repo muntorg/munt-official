@@ -10,11 +10,11 @@
 # file COPYING
 
 
-TESTS += test/test_gulden
-bin_PROGRAMS += test/test_gulden
-noinst_PROGRAMS += test/test_gulden_fuzzy
+TESTS += test/test_munt
+bin_PROGRAMS += test/test_munt
+noinst_PROGRAMS += test/test_munt_fuzzy
 TEST_SRCDIR = test
-TEST_BINARY=test/test_gulden$(EXEEXT)
+TEST_BINARY=test/test_munt$(EXEEXT)
 
 TEST_EXTRA_DIST = \
   test/data/wallet-seed-no-password-protobuf \
@@ -36,7 +36,7 @@ RAW_TEST_FILES =
 
 GENERATED_TEST_FILES = $(JSON_TEST_FILES:.json=.json.h) $(RAW_TEST_FILES:.raw=.raw.h)
 
-# test_gulden binary #
+# test_munt binary #
 TEST_SOURCES =\
   test/arith_uint256_tests.cpp \
   test/scriptnum10.h \
@@ -109,39 +109,39 @@ TEST_SOURCES += \
   wallet/test/crypto_tests.cpp
 endif
 
-test_test_gulden_SOURCES = $(TEST_SOURCES) $(JSON_TEST_FILES) $(RAW_TEST_FILES)
-test_test_gulden_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) -DTESTDATADIR=\"$(abs_top_srcdir)/src/test/data/\" -I$(builddir)/test/ $(TESTDEFS) $(EVENT_CFLAGS)
-test_test_gulden_LDADD = $(LIB_SERVER) $(LIB_NODE) $(LIB_SERVER) $(LIB_NODE)
+test_test_munt_SOURCES = $(TEST_SOURCES) $(JSON_TEST_FILES) $(RAW_TEST_FILES)
+test_test_munt_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES) -DTESTDATADIR=\"$(abs_top_srcdir)/src/test/data/\" -I$(builddir)/test/ $(TESTDEFS) $(EVENT_CFLAGS)
+test_test_munt_LDADD = $(LIB_SERVER) $(LIB_NODE) $(LIB_SERVER) $(LIB_NODE)
 if ENABLE_WALLET
-test_test_gulden_LDADD += $(LIB_WALLET)
+test_test_munt_LDADD += $(LIB_WALLET)
 endif
 if ENABLE_ZMQ
-test_test_gulden_LDADD += $(LIB_ZMQ) $(ZMQ_LIBS)
+test_test_munt_LDADD += $(LIB_ZMQ) $(ZMQ_LIBS)
 endif
-test_test_gulden_LDADD += $(LIB_CLI) $(LIB_COMMON) $(LIB_UTIL) $(LIB_CONSENSUS) $(LIB_RPC) $(LIB_SERVER) $(LIB_WALLET) $(LIB_NODE) $(LIB_CRYPTO_ALL) $(LIB_GENERIC) $(LIB_GENERIC_INIT) $(LIB_ANDROID_COMPAT) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
+test_test_munt_LDADD += $(LIB_CLI) $(LIB_COMMON) $(LIB_UTIL) $(LIB_CONSENSUS) $(LIB_RPC) $(LIB_SERVER) $(LIB_WALLET) $(LIB_NODE) $(LIB_CRYPTO_ALL) $(LIB_GENERIC) $(LIB_GENERIC_INIT) $(LIB_ANDROID_COMPAT) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
   $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(LIBSECP256K1) $(EVENT_LIBS) $(EVENT_PTHREADS_LIBS) $(PROTOBUF_LIBS)
-test_test_gulden_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+test_test_munt_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
-test_test_gulden_LDADD += $(BDB_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
-test_test_gulden_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) -static
+test_test_munt_LDADD += $(BDB_LIBS) $(SSL_LIBS) $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
+test_test_munt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) -static
 
 
 #
 
-# test_gulden_fuzzy binary #
-test_test_gulden_fuzzy_SOURCES = test/test_fuzzy.cpp
-test_test_gulden_fuzzy_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
-test_test_gulden_fuzzy_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-test_test_gulden_fuzzy_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# test_munt_fuzzy binary #
+test_test_munt_fuzzy_SOURCES = test/test_fuzzy.cpp
+test_test_munt_fuzzy_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
+test_test_munt_fuzzy_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+test_test_munt_fuzzy_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
-test_test_gulden_fuzzy_LDADD = $(LIB_SERVER) $(LIB_NODE) $(LIB_SERVER) $(LIB_NODE) $(MINIUPNPC_LIBS)
+test_test_munt_fuzzy_LDADD = $(LIB_SERVER) $(LIB_NODE) $(LIB_SERVER) $(LIB_NODE) $(MINIUPNPC_LIBS)
 if ENABLE_WALLET
-test_test_gulden_fuzzy_LDADD += $(LIB_WALLET)
+test_test_munt_fuzzy_LDADD += $(LIB_WALLET)
 endif
 if ENABLE_ZMQ
-test_test_gulden_fuzzy_LDADD += $(LIB_ZMQ) $(ZMQ_LIBS)
+test_test_munt_fuzzy_LDADD += $(LIB_ZMQ) $(ZMQ_LIBS)
 endif
-test_test_gulden_fuzzy_LDADD += \
+test_test_munt_fuzzy_LDADD += \
   $(LIB_COMMON) \
   $(LIB_GENERIC) \
   $(LIB_GENERIC_INIT) \
@@ -175,7 +175,7 @@ test_test_gulden_fuzzy_LDADD += \
   $(CRYPTOPP_LIBS) \
   $(CRYPTO_LIBS)
 
-nodist_test_test_gulden_SOURCES = $(GENERATED_TEST_FILES)
+nodist_test_test_munt_SOURCES = $(GENERATED_TEST_FILES)
 
 $(TEST_SOURCES): $(GENERATED_TEST_FILES)
 
@@ -183,17 +183,17 @@ CLEAN_TEST = test/*.gcda test/*.gcno $(GENERATED_TEST_FILES)
 
 CLEANFILES += $(CLEAN_TEST)
 
-gulden_test: $(TEST_BINARY)
+munt_test: $(TEST_BINARY)
 
-gulden_test_check: $(TEST_BINARY) FORCE
+munt_test_check: $(TEST_BINARY) FORCE
 	$(MAKE) check-TESTS TESTS=$^
 
-gulden_test_clean : FORCE
-	rm -f $(CLEAN_TEST) $(test_test_gulden_OBJECTS) $(TEST_BINARY)
+munt_test_clean : FORCE
+	rm -f $(CLEAN_TEST) $(test_test_munt_OBJECTS) $(TEST_BINARY)
 
 check-local:
-	@echo "Running test/util/gulden-util-test.py..."
-	$(top_builddir)/test/util/gulden-util-test.py
+	@echo "Running test/util/util-test.py..."
+	$(top_builddir)/test/util/util-test.py
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C secp256k1 check
 
 %.json.h: %.json

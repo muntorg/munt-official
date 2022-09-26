@@ -119,7 +119,7 @@ enum SigVersion
 enum ScriptVersion
 {
     SCRIPT_V1, // V1 (bitcoin) transaction format
-    SCRIPT_V2  // Gulden V2 transaction format (SegSig)
+    SCRIPT_V2  // Munt V2 transaction format (SegSig)
 };
 
 uint256 SignatureHash(const CScript &scriptCode, const CTransaction& txTo, unsigned int nIn, int nHashType, const CAmount& amount, SigVersion sigversion, const PrecomputedTransactionData* cache = NULL);

@@ -244,7 +244,7 @@ bool CWalletDB::WriteOrderPosNext(int64_t nOrderPosNext)
 {
     return WriteIC(std::string("orderposnext"), nOrderPosNext);
 }
-/*GULDEN - no default key (accounts)
+/*MUNT - no default key (accounts)
 bool CWalletDB::WriteDefaultKey(const CPubKey& vchPubKey)
 {
     return WriteIC(std::string("defaultkey"), vchPubKey);

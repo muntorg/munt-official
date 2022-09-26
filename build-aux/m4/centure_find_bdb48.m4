@@ -6,7 +6,7 @@ dnl File contains modifications by: The Centure developers
 dnl All modifications:
 dnl Copyright (c) 2016-2022 The Centure developers
 
-AC_DEFUN([GULDEN_FIND_BDB48],[
+AC_DEFUN([CENTURE_FIND_BDB48],[
   AC_ARG_VAR([BDB_CFLAGS], [C compiler flags for BerkeleyDB, bypasses autodetection])
   AC_ARG_VAR([BDB_LIBS], [Linker flags for BerkeleyDB, bypasses autodetection])
 
@@ -56,7 +56,7 @@ AC_DEFUN([GULDEN_FIND_BDB48],[
       AC_MSG_WARN(AC_PACKAGE_NAME[ requires this library for BDB (legacy) wallet support])
       AC_MSG_WARN([Passing --without-bdb will suppress this warning])
     elif test "$bdb48path" = "X"; then
-      GULDEN_SUBDIR_TO_INCLUDE(BDB_CPPFLAGS,[${bdbpath}],db_cxx)
+      CENTURE_SUBDIR_TO_INCLUDE(BDB_CPPFLAGS,[${bdbpath}],db_cxx)
       AC_ARG_WITH([incompatible-bdb],[AS_HELP_STRING([--with-incompatible-bdb], [allow using a bdb version other than 4.8])],[
         AC_MSG_WARN([Found Berkeley DB other than 4.8])
         AC_MSG_WARN([BDB (legacy) wallets opened by this build will not be portable!])
@@ -69,7 +69,7 @@ AC_DEFUN([GULDEN_FIND_BDB48],[
         use_bdb=no
       ])
     else
-     GULDEN_SUBDIR_TO_INCLUDE(BDB_CPPFLAGS,[${bdb48path}],db_cxx)
+     CENTURE_SUBDIR_TO_INCLUDE(BDB_CPPFLAGS,[${bdb48path}],db_cxx)
       bdbpath="${bdb48path}"
       use_bdb=yes
     fi

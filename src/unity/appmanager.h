@@ -19,7 +19,7 @@
 #include <node/context.h>
 
 
-/** Class encapsulating Gulden startup and shutdown.
+/** Class encapsulating Munt startup and shutdown.
  * Allows running startup and shutdown in a different thread from the UI thread.
  */
 class AppLifecycleManager

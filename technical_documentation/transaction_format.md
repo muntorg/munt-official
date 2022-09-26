@@ -1,6 +1,6 @@
 Version 1 transaction format
 ======
-The original Gulden transaction format is not overly interesting, it is based on [the Bitcoin transaction format](https://en.bitcoin.it/wiki/Transaction) (before the introduction of "SegWit") which is well documented elsewhere so there is no need to go into detail on it here.
+The original Munt transaction format is not overly interesting, it is based on [the Bitcoin transaction format](https://en.bitcoin.it/wiki/Transaction) (before the introduction of "SegWit") which is well documented elsewhere so there is no need to go into detail on it here.
 For our version 2.0 release we have implemented a completely new transaction format which replaces the original transaction format as well as fixing transaction malleability in a different way to "SegWit".
 
 

@@ -42,7 +42,7 @@ typedef CWallet* CWalletRef;
 extern std::vector<CWalletRef> vpwallets;
 extern CWalletRef pactiveWallet;
 
-//Gulden specific includes
+//Munt specific includes
 #include "wallet/walletdberrors.h"
 #include "wallet/extwallet.h"
 #include "wallet/account.h"
@@ -704,7 +704,7 @@ public:
 
     bool Unlock(const SecureString& strWalletPassphrase);
     bool UnlockWithTimeout(const SecureString& strWalletPassphrase, int64_t lockTimeoutSeconds);
-    //fixme: (FUT) Handle this better with global scheduler (after we merge latest gulden changes
+    //fixme: (FUT) Handle this better with global scheduler (after we merge latest munt changes
     private:
     CScheduler* schedulerForLock=nullptr;
     public:

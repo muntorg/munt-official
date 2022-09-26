@@ -49,7 +49,7 @@ from test_framework.script import (
     SignatureHash,
     hash160,
 )
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import assert_equal
 from data import invalid_txs
 
@@ -74,7 +74,7 @@ class CBrokenBlock(CBlock):
     def normal_serialize(self):
         return super().serialize()
 
-class FullBlockTest(GuldenTestFramework):
+class FullBlockTest(MuntTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.setup_clean_chain = True
@@ -357,7 +357,7 @@ class FullBlockTest(GuldenTestFramework):
         b26 = self.update_block(26, [])
         self.sync_blocks([b26], success=False, reject_reason='bad-cb-length', reconnect=True)
 
-        # Extend the b26 chain to make sure GuldenD isn't accepting b26
+        # Extend the b26 chain to make sure Munt-daemon isn't accepting b26
         b27 = self.next_block(27, spend=out[7])
         self.sync_blocks([b27], False)
 
@@ -369,7 +369,7 @@ class FullBlockTest(GuldenTestFramework):
         b28 = self.update_block(28, [])
         self.sync_blocks([b28], success=False, reject_reason='bad-cb-length', reconnect=True)
 
-        # Extend the b28 chain to make sure GuldenD isn't accepting b28
+        # Extend the b28 chain to make sure Munt-daemon isn't accepting b28
         b29 = self.next_block(29, spend=out[7])
         self.sync_blocks([b29], False)
 
@@ -877,7 +877,7 @@ class FullBlockTest(GuldenTestFramework):
         assert_equal(len(b64a.serialize()), MAX_BLOCK_BASE_SIZE + 8)
         self.sync_blocks([b64a], success=False, reject_reason='non-canonical ReadCompactSize()')
 
-        # GuldenD doesn't disconnect us for sending a bloated block, but if we subsequently
+        # Munt-daemon doesn't disconnect us for sending a bloated block, but if we subsequently
         # resend the header message, it won't send us the getdata message again. Just
         # disconnect and reconnect and then call sync_blocks.
         # TODO: improve this test to be less dependent on P2P DOS behaviour.
@@ -1098,7 +1098,7 @@ class FullBlockTest(GuldenTestFramework):
         #
         #    The tx'es must be unsigned and pass the node's mempool policy.  It is unsigned for the
         #    rather obscure reason that the Python signature code does not distinguish between
-        #    Low-S and High-S values (whereas the Gulden code has custom code which does so);
+        #    Low-S and High-S values (whereas the Munt code has custom code which does so);
         #    as a result of which, the odds are 50% that the python code will use the right
         #    value and the transaction will be accepted into the mempool. Until we modify the
         #    test framework to support low-S signing, we are out of luck.

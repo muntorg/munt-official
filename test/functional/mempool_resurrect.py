@@ -5,11 +5,11 @@
 """Test resurrection of mined transactions when the blockchain is re-organized."""
 
 from test_framework.blocktools import create_raw_transaction
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import assert_equal
 
 
-class MempoolCoinbaseTest(GuldenTestFramework):
+class MempoolCoinbaseTest(MuntTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
 

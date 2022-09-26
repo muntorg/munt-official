@@ -72,7 +72,7 @@ public:
 
 struct VersionBitsCache
 {
-    // A little bit of 'nasty' trickery to make this a drop in replacement for the single cache Gulden code.
+    // A little bit of 'nasty' trickery to make this a drop in replacement for the single cache Munt code.
     VersionBitsCache() : caches(*this) {};
     VersionBitsCache& caches;
     ThresholdConditionCache& operator [](int idx)

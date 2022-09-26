@@ -7,7 +7,7 @@ define(_CLIENT_VERSION_IS_RELEASE, false)
 define(_COPYRIGHT_YEAR, 2022)
 define(_COPYRIGHT_HOLDERS,[The %s developers])
 define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[Centure]])
-AC_INIT([Gulden],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[info@gulden.com],[Gulden])
+AC_INIT([Munt],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[info@munt.org],[Munt])
 AC_CONFIG_SRCDIR([src/init.cpp])
 AC_CONFIG_HEADERS([src/config/build-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -19,10 +19,10 @@ if test "$PKG_CONFIG" = ""; then
   AC_MSG_ERROR([pkg-config not found])
 fi
 
-m4_define([_DAEMON_NAME], [GuldenD])
-m4_define([_CLI_NAME], [Gulden-cli])
-m4_define([_GUI_NAME], [Gulden])
-m4_define([_TX_NAME], [Gulden-tx])
+m4_define([_DAEMON_NAME], [Munt-daemon])
+m4_define([_CLI_NAME], [Munt-cli])
+m4_define([_GUI_NAME], [Munt])
+m4_define([_TX_NAME], [Munt-tx])
 [_DAEMON_NAME]=_DAEMON_NAME
 [_CLI_NAME]=_CLI_NAME
 [_GUI_NAME]=_GUI_NAME
@@ -203,7 +203,7 @@ AC_ARG_ENABLE([ccache],
 
 dnl Suppress warnings from external headers (e.g. Boost, Qt).
 dnl May be useful if warnings from external headers clutter the build output
-dnl too much, so that it becomes difficult to spot Gulden Core warnings
+dnl too much, so that it becomes difficult to spot Core warnings
 dnl or if they cause a build failure with --enable-werror.
 AC_ARG_ENABLE([suppress-external-warnings],
   [AS_HELP_STRING([--enable-suppress-external-warnings],
@@ -426,7 +426,7 @@ case $host in
 
          if test "$use_bdb" != "no" && $BREW list --versions berkeley-db@4 >/dev/null && test "$BDB_CFLAGS" = "" && test "$BDB_LIBS" = ""; then
            bdb_prefix=$($BREW --prefix berkeley-db@4 2>/dev/null)
-           dnl This must precede the call to GULDEN_FIND_BDB48 below.
+           dnl This must precede the call to CENTURE_FIND_BDB48 below.
            BDB_CFLAGS="-I$bdb_prefix/include"
            BDB_LIBS="-L$bdb_prefix/lib -ldb_cxx-4.8"
          fi
@@ -590,7 +590,7 @@ AC_CHECK_DECLS([getifaddrs, freeifaddrs],,,
 )
 AC_CHECK_DECLS([strnlen])
 
-dnl These are used for daemonization in GuldenD
+dnl These are used for daemonization in daemon binary
 AC_CHECK_DECLS([fork])
 
 AC_CHECK_DECLS([le16toh, le32toh, le64toh, htole16, htole32, htole64, be16toh, be32toh, be64toh, htobe16, htobe32, htobe64],,,
@@ -761,7 +761,7 @@ fi
 if test "$enable_wallet" != "no"; then
     dnl Check for libdb_cxx only if wallet enabled
     if test "$use_bdb" != "no"; then
-      GULDEN_FIND_BDB48
+      CENTURE_FIND_BDB48
     fi
     dnl Disable wallet if --without-bdb
     if test "$use_bdb" = "no"; then
@@ -1093,7 +1093,7 @@ fi
 
 AM_CONDITIONAL([ENABLE_ZMQ], [test "$use_zmq" = "yes"])
 
-AC_MSG_CHECKING([whether to build test_gulden])
+AC_MSG_CHECKING([whether to build test_munt])
 if test "$use_tests" = "yes"; then
   AC_MSG_RESULT([yes])
   BUILD_TEST="yes"
@@ -1183,7 +1183,7 @@ AC_SUBST(EVENT_PTHREADS_LIBS)
 AC_SUBST(ZMQ_LIBS)
 AC_SUBST(PROTOBUF_LIBS)
 AC_SUBST(QR_LIBS)
-AC_CONFIG_FILES([Makefile src/Makefile doc/man/Makefile share/setup.nsi test/config.ini])
+AC_CONFIG_FILES([Makefile src/Makefile share/setup.nsi test/config.ini])
 AC_CONFIG_FILES([contrib/devtools/split-debug.sh],[chmod +x contrib/devtools/split-debug.sh])
 AC_CONFIG_FILES([doc/Doxyfile])
 AC_CONFIG_LINKS([test/functional/test_runner.py:test/functional/test_runner.py])

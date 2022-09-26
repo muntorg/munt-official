@@ -285,11 +285,11 @@ mkdir -p "$DISTSRC"
 
     case "$HOST" in
         *mingw*)
-            export HOST_CXXFLAGS="${HOST_CXXFLAGS} -I/gulden/depends/${HOST}/include/node -I/gulden/depends/${HOST}/include/node-addon-api -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS -DNODE_HOST_BINARY=node.exe -DUSING_UV_SHARED=1 -DUSING_V8_SHARED=1 -DV8_DEPRECATION_WARNINGS=1 -DV8_DEPRECATION_WARNINGS -DV8_IMMINENT_DEPRECATION_WARNINGS -DWIN32 -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DBUILDING_NODE_EXTENSION -D_WINDLL -lminiupnpc"
+            export HOST_CXXFLAGS="${HOST_CXXFLAGS} -I/munt/depends/${HOST}/include/node -I/munt/depends/${HOST}/include/node-addon-api -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS -DNODE_HOST_BINARY=node.exe -DUSING_UV_SHARED=1 -DUSING_V8_SHARED=1 -DV8_DEPRECATION_WARNINGS=1 -DV8_DEPRECATION_WARNINGS -DV8_IMMINENT_DEPRECATION_WARNINGS -DWIN32 -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DBUILDING_NODE_EXTENSION -D_WINDLL -lminiupnpc"
             export HOST_LDFLAGS="${HOST_LDFLAGS} -fPIC -Bsymbolic -lnode -Wl,--gc-sections"
         ;;
         *)
-            export HOST_CXXFLAGS="${HOST_CXXFLAGS} -I/gulden/depends/${HOST}/include/node -I/gulden/depends/${HOST}/include/node-addon-api -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS -lminiupnpc"
+            export HOST_CXXFLAGS="${HOST_CXXFLAGS} -I/munt/depends/${HOST}/include/node -I/munt/depends/${HOST}/include/node-addon-api -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS -lminiupnpc"
             export HOST_LDFLAGS="${HOST_LDFLAGS} -fPIC -Bsymbolic -Wl,--gc-sections"
     esac
     export HOST_CFLAGS=${HOST_CFLAGS}
@@ -304,7 +304,7 @@ mkdir -p "$DISTSRC"
                     --disable-ccache \
                     --disable-maintainer-mode \
                     --disable-dependency-tracking \
-                    --with-protoc-bindir=/gulden/depends/${HOST}/native/bin/ \
+                    --with-protoc-bindir=/munt/depends/${HOST}/native/bin/ \
                     ${CONFIGFLAGS} \
                     ${HOST_CFLAGS:+CFLAGS="${HOST_CFLAGS}"} \
                     ${HOST_CXXFLAGS:+CXXFLAGS="${HOST_CXXFLAGS}"} \
@@ -312,7 +312,7 @@ mkdir -p "$DISTSRC"
 
     sed -i.old 's/-lstdc++ //g' config.status libtool
 
-    # Build Gulden
+    # Build Munt
     make --jobs="$JOBS" ${V:+V=1}
 
     # Check that symbol/security checks tools are sane.
@@ -333,20 +333,20 @@ mkdir -p "$DISTSRC"
             # Split debug symbols
             find "release" -type f -executable -print0 | xargs -0 -P"$JOBS" -I{} "${DISTSRC}/contrib/devtools/split-debug.sh" {} {} {}.dbg
             #Sign all executables
-            find release -name "*.exe" | xargs --max-procs 32 -i sh -c "(osslsigncode -spc \"${CODESIGN_PATH}/codesign.spc\" -key \"${CODESIGN_PATH}/codesign.key\" -n \"Gulden\" -i \"https://www.Gulden.com\" -in \"{}\" -out \"{}s\") && (mv {}s {})"
+            find release -name "*.exe" | xargs --max-procs 32 -i sh -c "(osslsigncode -spc \"${CODESIGN_PATH}/codesign.spc\" -key \"${CODESIGN_PATH}/codesign.key\" -n \"Munt\" -i \"https://www.Munt.org\" -in \"{}\" -out \"{}s\") && (mv {}s {})"
             # Make os-specific installer
             make deploy ${V:+V=1}
             # Sign the installer as well; place result in output folder
-            find -name "*setup*.exe" | xargs -i sh -c "(osslsigncode -spc \"${CODESIGN_PATH}/codesign.spc\" -key \"${CODESIGN_PATH}/codesign.key\" -n \"Gulden\" -i \"https://www.Gulden.com\" -in \"{}\" -out \"${OUTDIR}/${DISTNAME}-win64-setup.exe\")"
+            find -name "*setup*.exe" | xargs -i sh -c "(osslsigncode -spc \"${CODESIGN_PATH}/codesign.spc\" -key \"${CODESIGN_PATH}/codesign.key\" -n \"Munt\" -i \"https://www.Munt.org\" -in \"{}\" -out \"${OUTDIR}/${DISTNAME}-win64-setup.exe\")"
             ;;
     esac
 
-    # Setup the directory where our Gulden build for HOST will be
+    # Setup the directory where our Munt build for HOST will be
     # installed. This directory will also later serve as the input for our
     # binary tarballs.
     INSTALLPATH="${PWD}/installed/${DISTNAME}"
     mkdir -p "${INSTALLPATH}"
-    # Install built Gulden to $INSTALLPATH
+    # Install built Munt to $INSTALLPATH
     case "$HOST" in
         *darwin*)
             make install-strip DESTDIR="${INSTALLPATH}" ${V:+V=1}
@@ -359,12 +359,12 @@ mkdir -p "$DISTSRC"
     mkdir ${OUTDIR}/nodelib
     case "$HOST" in
         *mingw*)
-            cp -f src/.libs/lib_unity_node_js-0.dll ${OUTDIR}/nodelib/libgulden_${HOST}.node
+            cp -f src/.libs/lib_unity_node_js-0.dll ${OUTDIR}/nodelib/libmunt_${HOST}.node
         ;;
         *)
-            cp -f src/.libs/lib_unity_node_js.so.0.0.0 ${OUTDIR}/nodelib/libgulden_${HOST}.node
+            cp -f src/.libs/lib_unity_node_js.so.0.0.0 ${OUTDIR}/nodelib/libmunt_${HOST}.node
     esac
-    ${DISTSRC}/contrib/devtools/split-debug.sh ${OUTDIR}/nodelib/libgulden_${HOST}.node ${OUTDIR}/nodelib/libgulden_${HOST}.node ${OUTDIR}/nodelib/libgulden_${HOST}.node.dbg
+    ${DISTSRC}/contrib/devtools/split-debug.sh ${OUTDIR}/nodelib/libmunt_${HOST}.node ${OUTDIR}/nodelib/libmunt_${HOST}.node ${OUTDIR}/nodelib/libmunt_${HOST}.node.dbg
 
     case "$HOST" in
         *darwin*)
@@ -412,7 +412,7 @@ mkdir -p "$DISTSRC"
         # Sign binaries after debug symbols split
         case "$HOST" in
         *mingw*)
-            find "${DISTNAME}/bin" -name "*.exe" | xargs --max-procs 32 -i sh -c "(osslsigncode -spc \"${CODESIGN_PATH}/codesign.spc\" -key \"${CODESIGN_PATH}/codesign.key\" -n \"Gulden\" -i \"https://www.Gulden.com\" -in \"{}\" -out \"{}s\") && (mv {}s {})"
+            find "${DISTNAME}/bin" -name "*.exe" | xargs --max-procs 32 -i sh -c "(osslsigncode -spc \"${CODESIGN_PATH}/codesign.spc\" -key \"${CODESIGN_PATH}/codesign.key\" -n \"Munt\" -i \"https://www.Munt.org\" -in \"{}\" -out \"{}s\") && (mv {}s {})"
             ;;
         esac
 

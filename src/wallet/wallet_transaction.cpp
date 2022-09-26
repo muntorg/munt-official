@@ -323,7 +323,7 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
     // now we ensure code won't be written that makes assumptions about
     // nLockTime that preclude a fix later.
     //fixme: (PHASE4POSTREL) (SEGSIG) (LOCKTIME) (SEQUENCE) - Look closer into the various lock mechanisms again, temporarily set as non standard
-    //if (GetRandInt(10) == 0)//Gulden - we only set this on 10% of blocks to avoid unnecessary space wastage. //fixme: (PHASE5) (only set this for high fee [per byte] transactions?)
+    //if (GetRandInt(10) == 0)//Munt - we only set this on 10% of blocks to avoid unnecessary space wastage. //fixme: (PHASE5) (only set this for high fee [per byte] transactions?)
         //txNew.nLockTime = chainActive.Height();
 
     // Secondly occasionally randomly pick a nLockTime even further back, so
@@ -429,7 +429,7 @@ bool CWallet::CreateTransaction(std::vector<CKeyStore*>& accountsToTry, const st
                     {
                         // Fill a vout to ourself
                         // TODO: pass in scriptChange instead of reservekey so
-                        // change transaction isn't always pay-to-Gulden-address
+                        // change transaction isn't always pay-to-Munt-address
                         CScript scriptChange;
 
                         // coin control: send change to custom address
@@ -767,7 +767,7 @@ bool CWallet::AddFeeForTransaction(CAccount* forAccount, CMutableTransaction& tx
                     {
                         // Fill a vout to ourself
                         // TODO: pass in scriptChange instead of reservekey so
-                        // change transaction isn't always pay-to-Gulden-address
+                        // change transaction isn't always pay-to-Munt-address
                         CScript scriptChange;
 
                         // coin control: send change to custom address

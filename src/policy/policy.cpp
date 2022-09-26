@@ -31,7 +31,7 @@ CAmount GetDustThreshold(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
     // If you'd pay more than 1/3 in fees
     // to spend something, then we consider it dust.
     */
-    // Gulden: IsDust() detection disabled, allows any valid dust to be relayed.
+    // Munt: IsDust() detection disabled, allows any valid dust to be relayed.
     // The fees imposed on each dust txo is considered sufficient spam deterrant. 
     return 0;
 }

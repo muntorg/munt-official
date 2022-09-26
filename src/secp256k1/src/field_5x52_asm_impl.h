@@ -14,7 +14,7 @@
 #ifndef _SECP256K1_FIELD_INNER5X52_IMPL_H_
 #define _SECP256K1_FIELD_INNER5X52_IMPL_H_
 
-/* It is desirable to be able to build Gulden with -fno-omit-frame-pointer (for tools like ASAN) but the code in this file won't compile without frame pointers.
+/* It is desirable to be able to build Munt with -fno-omit-frame-pointer (for tools like ASAN) but the code in this file won't compile without frame pointers.
  * So we force frame pointers to be on for this file only.
  */
 #if !defined(__clang__)

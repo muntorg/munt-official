@@ -25,7 +25,7 @@
 #include <string>
 #include <vector>
 
-//Gulden
+//Munt
 class CTxOutPoW2Witness;
 class CKeyID;
 

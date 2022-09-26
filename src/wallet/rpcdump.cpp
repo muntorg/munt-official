@@ -782,7 +782,7 @@ UniValue dumpwallet(const JSONRPCRequest& request)
     file << "\n";
 
     // add the base58check encoded extended master if the wallet uses HD 
-    /*GULDEN - no masterkeyid...
+    /*MUNT - no masterkeyid...
     CKeyID masterKeyID = pwallet->GetHDChain().masterKeyID;
     if (!masterKeyID.IsNull())
     {

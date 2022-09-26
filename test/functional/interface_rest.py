@@ -14,7 +14,7 @@ from struct import pack, unpack
 import http.client
 import urllib.parse
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import (
     assert_equal,
     assert_greater_than,
@@ -39,7 +39,7 @@ def filter_output_indices_by_value(vouts, value):
         if vout['value'] == value:
             yield vout['n']
 
-class RESTTest (GuldenTestFramework):
+class RESTTest (MuntTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 2
@@ -76,7 +76,7 @@ class RESTTest (GuldenTestFramework):
 
     def run_test(self):
         self.url = urllib.parse.urlparse(self.nodes[0].url)
-        self.log.info("Mine blocks and send Gulden to node 1")
+        self.log.info("Mine blocks and send Munt to node 1")
 
         # Random address so node1's balance doesn't increase
         not_related_address = "RHTNonta4EXNSiT12wCrzjjrZqcGFFoVxa"

@@ -28,7 +28,7 @@ cmd_usage() {
     cat <<EOF
 Synopsis:
 
-    env DETACHED_SIGS_REPO=<path/to/gulden-detached-sigs> \\
+    env DETACHED_SIGS_REPO=<path/to/munt-detached-sigs> \\
       ./contrib/guix/guix-codesign
 
 EOF
@@ -256,7 +256,7 @@ output directory.
 EOF
 }
 
-# Deterministically build Gulden
+# Deterministically build Munt
 # shellcheck disable=SC2153
 for host in $HOSTS; do
 
@@ -273,7 +273,7 @@ cat << EOF
 INFO: Codesigning ${VERSION:?not set} for platform triple ${HOST:?not set}:
       ...using reference timestamp: ${SOURCE_DATE_EPOCH:?not set}
       ...from worktree directory: '${PWD}'
-          ...bind-mounted in container to: '/gulden'
+          ...bind-mounted in container to: '/munt'
       ...in build directory: '$(distsrc_for_host "$HOST")'
           ...bind-mounted in container to: '$(DISTSRC_BASE=/distsrc-base && distsrc_for_host "$HOST")'
       ...outputting in: '$(outdir_for_host "$HOST" codesigned)'
@@ -302,24 +302,24 @@ EOF
         #
         #     When --container is specified, the default behavior is to share
         #     the current working directory with the isolated container at the
-        #     same exact path (e.g. mapping '/home/satoshi/gulden/' to
-        #     '/home/satoshi/gulden/'). This means that the $PWD inside the
+        #     same exact path (e.g. mapping '/home/satoshi/munt/' to
+        #     '/home/satoshi/munt/'). This means that the $PWD inside the
         #     container becomes a source of irreproducibility. --no-cwd disables
         #     this behaviour.
         #
         #   --share=SPEC       for containers, share writable host file system
         #                      according to SPEC
         #
-        #   --share="$PWD"=/gulden
+        #   --share="$PWD"=/munt
         #
-        #                     maps our current working directory to /gulden
+        #                     maps our current working directory to /munt
         #                     inside the isolated container, which we later cd
         #                     into.
         #
         #     While we don't want to map our current working directory to the
         #     same exact path (as this introduces irreproducibility), we do want
         #     it to be at a _fixed_ path _somewhere_ inside the isolated
-        #     container so that we have something to build. '/gulden' was
+        #     container so that we have something to build. '/munt' was
         #     chosen arbitrarily.
         #
         #   ${SOURCES_PATH:+--share="$SOURCES_PATH"}
@@ -347,7 +347,7 @@ EOF
                                  --container \
                                  --pure \
                                  --no-cwd \
-                                 --share="$PWD"=/gulden \
+                                 --share="$PWD"=/munt \
                                  --share="$DISTSRC_BASE"=/distsrc-base \
                                  --share="$OUTDIR_BASE"=/outdir-base \
                                  --share="$DETACHED_SIGS_REPO"=/detached-sigs \
@@ -372,7 +372,7 @@ EOF
                                         DIST_ARCHIVE_BASE=/outdir-base/dist-archive \
                                         DETACHED_SIGS_REPO=/detached-sigs \
                                         UNSIGNED_TARBALL="$(OUTDIR_BASE=/outdir-base && unsigned_tarball_for_host "$HOST")" \
-                                      bash -c "cd /gulden && bash contrib/guix/libexec/codesign.sh"
+                                      bash -c "cd /munt && bash contrib/guix/libexec/codesign.sh"
     )
 
 done

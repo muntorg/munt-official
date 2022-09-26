@@ -6,9 +6,9 @@ set -x
 source `dirname $0`/ndk_definitions.conf
 
 #Load private config
-GULDEN_DEVTOOLS_CONF=${GULDEN_DEVTOOLS_CONF:-developer-tools/private.conf}
-if [ -f $GULDEN_DEVTOOLS_CONF ]; then
-  source ${GULDEN_DEVTOOLS_CONF}
+MUNT_DEVTOOLS_CONF=${MUNT_DEVTOOLS_CONF:-developer-tools/private.conf}
+if [ -f $MUNT_DEVTOOLS_CONF ]; then
+  source ${MUNT_DEVTOOLS_CONF}
 fi
 
 TARGETS_PATH=$(dirname ${BASH_SOURCE[0]})/build_targets
@@ -59,7 +59,7 @@ cp src/data/staticfiltercp ${ASSETS}Mainnet/staticfiltercp
 cp src/data/staticfiltercptestnet ${ASSETS}Testnet/staticfiltercp
 cp src/data/core-packages.licenses ${ASSETS}/core-packages.licenses
 
-export NDK_ROOT=${NDK_ROOT:-${PWD}/developer-tools/android-ndk-gulden/${NDK_VERSION}}
+export NDK_ROOT=${NDK_ROOT:-${PWD}/developer-tools/android-ndk/${NDK_VERSION}}
 
 case "$OSTYPE" in
   darwin*)

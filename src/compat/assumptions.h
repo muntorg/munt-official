@@ -14,7 +14,7 @@
 // Example(s): We use assert(...) extensively with the assumption of it never
 //             being a noop at runtime.
 #if defined(NDEBUG)
-# error "Gulden cannot be compiled without assertions."
+# error "Cannot be compiled without assertions."
 #endif
 
 // Assumption: We assume a C++17 (ISO/IEC 14882:2017) compiler (minimum requirement).

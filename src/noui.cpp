@@ -99,7 +99,7 @@ static void NotifyRequestUnlockWithCallbackS(CWallet* wallet, std::string reason
 
 void noui_connect()
 {
-    // Connect GuldenD signal handlers
+    // Connect daemon signal handlers
     uiInterface.ThreadSafeMessageBox.connect(noui_ThreadSafeMessageBox);
     uiInterface.ThreadSafeQuestion.connect(noui_ThreadSafeQuestion);
     uiInterface.InitMessage.connect(noui_InitMessage);

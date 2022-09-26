@@ -1,15 +1,15 @@
 [Unit]
-Description=Gulden's distributed currency daemon
+Description=Munt distributed currency daemon
 After=network.target
 
 [Service]
-User=gulden
-Group=gulden
+User=munt
+Group=munt
 
 Type=forking
-PIDFile=/var/lib/GuldenD/GuldenD.pid
-ExecStart=/usr/bin/GuldenD -daemon -pid=/var/lib/GuldenD/GuldenD.pid \
--conf=/etc/gulden/gulden.conf -datadir=/var/lib/GuldenD -disablewallet
+PIDFile=/var/lib/munt_daemon/munt_daemon.pid
+ExecStart=/usr/bin/Munt-daemon -daemon -pid=/var/lib/munt_daemon/munt_daemon.pid \
+-conf=/etc/munt/munt.conf -datadir=/var/lib/munt_daemon -disablewallet
 
 Restart=always
 PrivateTmp=true

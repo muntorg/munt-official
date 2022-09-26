@@ -42,7 +42,7 @@ void InitAppSpecificConfigParamaters();
 //!Parameter interaction: change current parameters depending on various rules
 void InitParameterInteraction();
 
-/** Initialize Gulden: Basic context setup.
+/** Initialize Munt: Basic context setup.
  *  @note This can be done before daemonization.
  *  @pre Parameters should be parsed and config file should be read.
  */
@@ -60,7 +60,7 @@ bool AppInitParameterInteraction();
  */
 bool AppInitSanityChecks();
 /**
- * Gulden main initialization.
+ * Munt main initialization.
  * @note This should only be done after daemonization.
  * @pre Parameters should be parsed and config file should be read, AppInitSanityChecks should have been called.
  */
@@ -68,8 +68,8 @@ bool AppInitMain(boost::thread_group& threadGroup, node::NodeContext& node);
 
 /** The help message mode determines what help message to show */
 enum HelpMessageMode {
-    HMM_GULDEND,
-    HMM_GULDEN_QT
+    HMM_DAEMON,
+    HMM_UI
 };
 
 /** Help for options shared between UI and daemon (for -help) */

@@ -1,7 +1,7 @@
-Contributing to Gulden
+Contributing to Munt
 ============================
 
-Want to contribute to Gulden? There are many ways you can contribute, see below.
+Want to contribute to Munt? There are many ways you can contribute, see below.
 
 Opening issues
 --------------------
@@ -11,7 +11,7 @@ Note please first check for existing issues before reporting new ones; and ideal
 
 Contributing code
 ---------------------------
-Code contributions are always welcome, simply submit a pull request for it to be reviewed. For larger changes first check with the developers and Gulden community whether the changes are ones that fit the vision of the project and are not already being worked on by someone else, to avoid dissapointment and/or wasting your time.
+Code contributions are always welcome, simply submit a pull request for it to be reviewed. For larger changes first check with the developers and Munt community whether the changes are ones that fit the vision of the project and are not already being worked on by someone else, to avoid dissapointment and/or wasting your time.
 
 Keep your pull requests as clean as possible, don't mix multiple issues into one request, don't make unnecesssary formatting or name changes that make the patch larger than it needs to be, these can rather be split into multiple requests.
 
@@ -26,5 +26,5 @@ Read here about our [testnet](./technical_documentation/accelerated_testnet.md) 
 Localisation/Translation
 -----------------------
 
-Improvements/additions to the localisations are always welcome, however please don't modify the .ts files directly - the correct place to participate in translation is our translation portal translate.gulden.com
+Improvements/additions to the localisations are always welcome, however please don't modify the .ts files directly - the correct place to participate in translation is our translation portal translate.munt.org
 Discussion around translation can be had in the #translate channel on our slack.

@@ -732,7 +732,7 @@ CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth, cons
     CAmount balance = 0;
 
 
-    //checkme: (GULDEN) - Is fee handled right?
+    //checkme: (MUNT) - Is fee handled right?
     for (const auto& entry : mapWallet)
     {
         const CWalletTx& wtx = entry.second;

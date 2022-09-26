@@ -19,7 +19,7 @@ importing nodes pick up the new transactions regardless of whether rescans
 happened previously.
 """
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import (assert_raises_rpc_error, connect_nodes, sync_blocks, assert_equal, set_node_times)
 
 import collections
@@ -119,7 +119,7 @@ IMPORT_NODES = [ImportNode(*fields) for fields in itertools.product((False, True
 TIMESTAMP_WINDOW = 2 * 60 * 60
 
 
-class ImportRescanTest(GuldenTestFramework):
+class ImportRescanTest(MuntTestFramework):
     def set_test_params(self):
         self.num_nodes = 2 + len(IMPORT_NODES)
 
@@ -137,7 +137,7 @@ class ImportRescanTest(GuldenTestFramework):
         # Import keys with pruning disabled
         self.start_nodes(extra_args=[[]] * self.num_nodes)
         for n in self.nodes:
-            n.importprivkey(guldenprivkey=n.get_deterministic_priv_key().key, label='coinbase')
+            n.importprivkey(muntprivkey=n.get_deterministic_priv_key().key, label='coinbase')
         self.stop_nodes()
 
         self.start_nodes()

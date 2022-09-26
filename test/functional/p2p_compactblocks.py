@@ -14,10 +14,10 @@ from test_framework.blocktools import create_block, create_coinbase, add_witness
 from test_framework.messages import BlockTransactions, BlockTransactionsRequest, calculate_shortid, CBlock, CBlockHeader, CInv, COutPoint, CTransaction, CTxIn, CTxInWitness, CTxOut, FromHex, HeaderAndShortIDs, msg_block, msg_blocktxn, msg_cmpctblock, msg_getblocktxn, msg_getdata, msg_getheaders, msg_headers, msg_inv, msg_sendcmpct, msg_sendheaders, msg_tx, msg_witness_block, msg_witness_blocktxn, MSG_WITNESS_FLAG, NODE_NETWORK, NODE_WITNESS, P2PHeaderAndShortIDs, PrefilledTransaction, ser_uint256, ToHex
 from test_framework.mininode import mininode_lock, P2PInterface
 from test_framework.script import CScript, OP_TRUE, OP_DROP
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import assert_equal, get_bip9_status, satoshi_round, sync_blocks, wait_until
 
-# TestP2PConn: A peer we use to send messages to GuldenD, and store responses.
+# TestP2PConn: A peer we use to send messages to Munt-daemon, and store responses.
 class TestP2PConn(P2PInterface):
     def __init__(self):
         super().__init__()
@@ -91,7 +91,7 @@ class TestP2PConn(P2PInterface):
         self.send_message(message)
         wait_until(lambda: not self.is_connected, timeout=timeout, lock=mininode_lock)
 
-class CompactBlocksTest(GuldenTestFramework):
+class CompactBlocksTest(MuntTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         # Node0 = pre-segwit, node1 = segwit-aware
@@ -240,7 +240,7 @@ class CompactBlocksTest(GuldenTestFramework):
             old_node.request_headers_and_sync(locator=[tip])
             check_announcement_of_new_block(node, old_node, lambda p: "cmpctblock" in p.last_message)
 
-    # This test actually causes GuldenD to (reasonably!) disconnect us, so do this last.
+    # This test actually causes Munt-daemon to (reasonably!) disconnect us, so do this last.
     def test_invalid_cmpctblock_message(self):
         self.nodes[0].generate(101)
         block = self.build_block_on_tip(self.nodes[0])
@@ -255,7 +255,7 @@ class CompactBlocksTest(GuldenTestFramework):
         assert_equal(int(self.nodes[0].getbestblockhash(), 16), block.hashPrevBlock)
 
     # Compare the generated shortids to what we expect based on BIP 152, given
-    # GuldenD's choice of nonce.
+    # Munt-daemon's choice of nonce.
     def test_compactblock_construction(self, node, test_node, version, use_witness_address):
         # Generate a bunch of transactions.
         node.generate(101)
@@ -369,7 +369,7 @@ class CompactBlocksTest(GuldenTestFramework):
                 header_and_shortids.shortids.pop(0)
             index += 1
 
-    # Test that GuldenD requests compact blocks when we announce new blocks
+    # Test that Munt-daemon requests compact blocks when we announce new blocks
     # via header or inv, and that responding to getblocktxn causes the block
     # to be successfully reconstructed.
     # Post-segwit: upgraded nodes would only make this request of cb-version-2,
@@ -550,7 +550,7 @@ class CompactBlocksTest(GuldenTestFramework):
         assert_equal(absolute_indexes, [6, 7, 8, 9, 10])
 
         # Now give an incorrect response.
-        # Note that it's possible for GuldenD to be smart enough to know we're
+        # Note that it's possible for Munt-daemon to be smart enough to know we're
         # lying, since it could check to see if the shortid matches what we're
         # sending, and eg disconnect us for misbehavior.  If that behavior
         # change was made, we could just modify this test by having a
@@ -580,7 +580,7 @@ class CompactBlocksTest(GuldenTestFramework):
         assert_equal(int(node.getbestblockhash(), 16), block.sha256)
 
     def test_getblocktxn_handler(self, node, test_node, version):
-        # GuldenD will not send blocktxn responses for blocks whose height is
+        # Munt-daemon will not send blocktxn responses for blocks whose height is
         # more than 10 blocks deep.
         MAX_GETBLOCKTXN_DEPTH = 10
         chain_height = node.getblockcount()

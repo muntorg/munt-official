@@ -9,7 +9,7 @@ Tests correspond to code in rpc/net.cpp.
 
 from decimal import Decimal
 
-from test_framework.test_framework import GuldenTestFramework
+from test_framework.test_framework import MuntTestFramework
 from test_framework.util import (
     assert_equal,
     assert_greater_than_or_equal,
@@ -22,7 +22,7 @@ from test_framework.util import (
 from test_framework.mininode import P2PInterface
 from test_framework.messages import CAddress, msg_addr, NODE_NETWORK, NODE_WITNESS
 
-class NetTest(GuldenTestFramework):
+class NetTest(MuntTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 2
@@ -34,7 +34,7 @@ class NetTest(GuldenTestFramework):
         self._test_getnetworkinginfo()
         self._test_getaddednodeinfo()
         self._test_getpeerinfo()
-        #fixme: Gulden doesn't have this RPC command yet
+        #fixme: Munt doesn't have this RPC command yet
         #self._test_getnodeaddresses()
 
     def _test_connection_count(self):
