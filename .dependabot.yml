@@ -1,0 +1,13 @@
+# Specify a non-default branch for pull requests
+
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "src/frontend/electron_vue"
+    schedule:
+      interval: "daily"
+    # Raise pull requests for version updates against the `develop` branch
+    target-branch: "2.5_development"
+    # Labels on pull requests for version updates only
+    labels:
+      - "electron frontend dependencies"
