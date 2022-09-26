@@ -1,11 +1,10 @@
 Sample configuration files for:
 ```
-SystemD: GuldenD.service
-Upstart: GuldenD.conf
-OpenRC:  GuldenD.openrc
-         GuldenD.openrcconf
-CentOS:  GuldenD.init
-OS X:    com.gulden.GuldenD.plist
+SystemD: daemon.service
+Upstart: daemon.conf
+OpenRC:  daemon.openrc
+         daemon.openrcconf
+CentOS:  daemon.init
 ```
 have been made available to assist packagers in creating node packages here.
 
