@@ -32,6 +32,40 @@
 std::shared_ptr<IAccountsListener> accountsListener;
 std::list<boost::signals2::connection> coreSignalConnections;
 
+std::vector<AccountLinkRecord> listAccountLinksHelper(CAccount* forAccount)
+{
+    std::vector<AccountLinkRecord> result;
+    if (forAccount)
+    {
+        const auto& accountLinks = forAccount->getLinks();
+        for (const auto& [serviceName, serviceData] : accountLinks)
+        {
+            result.push_back(AccountLinkRecord(serviceName, serviceData));
+        }
+    }
+    return result;
+}
+
+//fixme: (DEDUP) - try share common code with RPC listallaccounts function
+AccountRecord GetAccountRecord(const boost::uuids::uuid& accountUUID, CAccount* forAccount)
+{
+    AccountRecord rec("", "", "", "", false, std::vector<AccountLinkRecord>());
+    rec.UUID = getUUIDAsString(accountUUID);
+    rec.label = forAccount->getLabel();
+    rec.state = GetAccountStateString(forAccount->m_State);
+    rec.type = GetAccountTypeString(forAccount->m_Type);
+    rec.accountLinks = listAccountLinksHelper(forAccount);
+    if (!forAccount->IsHD())
+    {
+        rec.isHD = false;
+    }
+    else
+    {
+        rec.isHD = true;
+    }
+    return rec;
+}
+
 void IAccountsController::setListener(const std::shared_ptr<IAccountsListener>& accountsListener_)
 {
     accountsListener = accountsListener_;
@@ -270,21 +304,7 @@ bool IAccountsController::renameAccount(const std::string& accountUUID, const st
     return false;
 }
 
-std::vector<AccountLinkRecord> listAccountLinksHelper(CAccount* forAccount)
-{
-    std::vector<AccountLinkRecord> result;
-    if (forAccount)
-    {
-        const auto& accountLinks = forAccount->getLinks();
-        for (const auto& [serviceName, serviceData] : accountLinks)
-        {
-            result.push_back(AccountLinkRecord(serviceName, serviceData));
-        }
-    }
-    return result;
-}
 
-//fixme: (DEDUP) - try share common code with RPC listallaccounts function
 std::vector<AccountRecord> IAccountsController::listAccounts()
 {
     std::vector<AccountRecord> ret;
@@ -295,21 +315,7 @@ std::vector<AccountRecord> IAccountsController::listAccounts()
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
     for (const auto& accountPair : pactiveWallet->mapAccounts)
     {
-        AccountRecord rec("", "", "", "", false, std::vector<AccountLinkRecord>());
-        rec.UUID = getUUIDAsString(accountPair.first);
-        rec.label = accountPair.second->getLabel();
-        rec.state = GetAccountStateString(accountPair.second->m_State);
-        rec.type = GetAccountTypeString(accountPair.second->m_Type);
-        rec.accountLinks = listAccountLinksHelper(accountPair.second);
-        if (!accountPair.second->IsHD())
-        {
-            rec.isHD = false;
-        }
-        else
-        {
-            rec.isHD = true;
-        }
-        ret.emplace_back(rec);
+        ret.emplace_back(GetAccountRecord(accountPair.first, accountPair.second));
     }
     return ret;
 }
