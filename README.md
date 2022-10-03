@@ -1,50 +1,50 @@
 <table cellspacing="0" cellpadding="0" color="grey" border="1px">
   <tr border=0>
     <td border="0px" width="80%" rowspan="7">
-      <a href="https://www.Gulden.com">
-        <img align="left" src="https://gulden.com/img/design/g-111444.svg" alt="Gulden"/>
+      <a href="https://www.munt.org">
+        <img align="left" src="https://munt.org/img/design/g-111444.svg" alt="Munt"/>
       </a>
-      <p>Gulden is a <i>revolutionary</i> next generation blockchain based currency and payment system.<br/>
-      Gulden takes the blockchain concept to a whole new level; improving on multiple downsides and deficiencies in the earlier implementations of blockchain.</p>
-      <p>The project is driven at the core by a focus on key concepts like <i>usability</i> and <i>quality</i> which shows through in our software.</p><p>Join the Gulden project today and help build the future!</p>
+      <p>Munt is a witness-secured decentralized network for payments, digital assets, finance and more<br/>
+      Munt takes the basic blockchain concept and improves on the areas where it has shortcomings in order to make a product that is more suitable for every day use.</p>
+      <p>The project is driven at the core by a focus on key concepts of <i>usability</i> and <i>quality</i>.</p><p>Join the Munt project today and help build the future!</p>
     </td>
     <td width="20%" border=0>
       <a href="#">
-        <img height="20px" src="https://travis-ci.org/Gulden/gulden-official.svg?branch=master" alt="ci build status"/>
+        <img height="20px" src="https://travis-ci.org/muntorg/munt-official.svg?branch=master" alt="ci build status"/>
       </a>
     </td>
   </tr>
   <tr border=0>
     <td>
-      <a href="https://github.com/Gulden/gulden-official/issues">
-        <img  height="20px" src="https://img.shields.io/github/issues/gulden/gulden-official.svg?color=blue" alt="open issues"/>
+      <a href="https://github.com/muntorg/munt-official/issues">
+        <img  height="20px" src="https://img.shields.io/github/issues/muntorg/munt-official.svg?color=blue" alt="open issues"/>
     </td>
   </tr>
   <tr border=0>
     <td>
-      <a href="https://github.com/Gulden/gulden-official/issues?q=is%3Aissue+is%3Aclosed">
-        <img  height="20px" src="https://img.shields.io/github/issues-closed/gulden/gulden-official.svg?color=blue" alt="closed issues"/>
+      <a href="https://github.com/muntorg/munt-official/issues?q=is%3Aissue+is%3Aclosed">
+        <img  height="20px" src="https://img.shields.io/github/issues-closed/muntorg/munt-official.svg?color=blue" alt="closed issues"/>
       </a>
     </td>
   </tr>
   <tr border=0>
     <td border=0>
-      <a href="https://github.com/Gulden/gulden-official/releases">
-        <img height="20px" src="https://img.shields.io/github/downloads/gulden/gulden-official/total.svg?color=blue" alt="total downloads"/>
+      <a href="https://github.com/muntorg/munt-official/releases">
+        <img height="20px" src="https://img.shields.io/github/downloads/muntorg/munt-official/total.svg?color=blue" alt="total downloads"/>
       </a>
     </td>
   </tr>
   <tr border=0>
     <td>
-      <a href="https://github.com/Gulden/gulden-official/commits/master">
-        <img height="20px" src="https://img.shields.io/github/commit-activity/y/gulden/gulden-official.svg" alt="commits 1y"/>
+      <a href="https://github.com/munt/munt-official/commits/master">
+        <img height="20px" src="https://img.shields.io/github/commit-activity/y/muntorg/munt-official.svg" alt="commits 1y"/>
       </a>
     </td>
   </tr>
   <tr>
     <td>
-      <a href="https://github.com/Gulden/gulden-official/compare/master@%7B12month%7D...2.4_development">
-        <img height="20px" src="https://img.shields.io/badge/dev%20branch-2.4_development-blue.svg" alt="active_branch"/>
+      <a href="https://github.com/muntorg/munt-official/compare/master@%7B12month%7D...develop">
+        <img height="20px" src="https://img.shields.io/badge/dev%20branch-develop-blue.svg" alt="active_branch"/>
       </a>
     </td>
   </tr>
@@ -53,20 +53,26 @@
 
 
 ### License
-All code, binaries and other assets in this repository are subject to [The Libre Chain License](https://github.com/Gulden/gulden-official/blob/master/COPYING_munt) except where explicitely stated otherwise.
+All code, binaries and other assets in this repository are subject to [The Libre Chain License](https://github.com/muntorg/munt-official/blob/master/COPYING_munt) except where explicitely stated otherwise.
 
 ### Branches
 `master` branch tracks the current public release; is generally updated only for each release (with accompanying tag) and very occasionally for minor documentation or other commits. If all you want is to build/track the current version of the sofrware than use the `master` branch.
 
-Each major version of the software gets its own branch e.g. `2.5_development`, `2.4_development` where if `2.5` were the next major release than both `2.5` and `2.4` may see some activity with `2.4` getting minor backports and updates while `2.5` development continues.
+`develop` branch tracks current major development branch
+This is where most development that will go into the next major release is always taking place (feature branches are merged into here) and is linked in the table at the top of this README as the `dev branch`. For development changes you will generally want to work on this branch.
 
-Major features are worked on in temporary feature branches until they can be merged back into one of the development branches. The currently most active branch, where most development that will go into the next major release is taking place is linked in the table at the top of this README as the `dev branch` and may be updated as development mandates seperate branches, for development changes you will generally want to work on this branch.
+
+Major features are worked on in temporary feature branches until they can be merged back into one of the development branches. 
+The currently most active branch, where most development that will go into the next major release is taking place is linked in the table at the top of this README as the `dev branch` and may be updated as development mandates seperate branches, for development changes you will generally want to work on this branch.
+
+Old versions that are still maintained get their own version branch e.g. there might be `2.4_development` even if we are already on `3.x` development series
+
 
 ### Contributing
-If you are thinking about contributing toward the development of Gulden in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
+If you are thinking about contributing toward the development of Munt in some capacity whether small or large, code or translating; Please read [this guide](./CONTRIBUTING.md) first for information on how to do so.
 
 ### Technical documentation
-* [PoW² whitepaper](.//technical_documentation/Gulden_PoW2.pdf); [PoW² activation](./technical_documentation/PoW2_activation.md)
+* [PoW² whitepaper](.//technical_documentation/PoW2.pdf); [PoW² activation](./technical_documentation/PoW2_activation.md)
 * [Transaction format](./technical_documentation/transaction_format.md)
 * [Account system](./technical_documentation/account_system.md)
 * [Accelerated testnet](./technical_documentation/accelerated_testnet.md)
@@ -77,15 +83,15 @@ If you are thinking about contributing toward the development of Gulden in some 
 
 Connect with the community through one or more of the following:
 
-[Website](https://gulden.com) ◾ [Slack](https://gulden.com/join) ◾ [Twitter](http://twitter.com/gulden) ◾ [Facebook](http://facebook.com/gulden) ◾ [Meetup](https://www.meetup.com/gulden) ◾ [Reddit](https://www.reddit.com/r/GuldenCommunity) ◾ [IRC](https://webchat.freenode.net/?channels=Gulden)
+[Website](https://munt.org) ◾ [Slack](https://munt.org/join) ◾ [Twitter](https://twitter.com/munt_org) ◾ [Facebook](http://facebook.com/gulden) ◾ [Meetup](https://www.meetup.com/gulden) ◾ [Reddit](https://www.reddit.com/r/munt) ◾ [IRC](https://web.libera.chat/?channels=Muntorg)
 
 
 ### Downloading
 
-The latest binaries and installers can be found [here](https://github.com/Gulden/gulden-official/releases) for all platforms, including raspbian.
+The latest binaries and installers can be found [here](https://github.com/muntorg/munt-official/releases) for all platforms, including raspbian.
 
 ### Building
-[Binaries](https://github.com/Gulden/gulden-official/releases) for both the UI as well as the daemon and command line interface for multiple architectures.
+[Binaries](https://github.com/munt/munt-official/releases) for both the UI as well as the daemon and command line interface for multiple architectures.
 
 For those who really need too or are technically inclined it is of course possible to build the software yourself. Please read the [build instructions](./doc/building.md) before attempting to build the software and/or seeking support.
 
@@ -109,7 +115,7 @@ For those who really need too or are technically inclined it is of course possib
 |P2SH version byte|98 (g)|127 (t)|
 |BIP44 coin type|87 0x80000057|87 0x80000057|
 |**Infrastructure**|**Main network**|**[Testnet](./technical_documentation/accelerated_testnet.md#official-testnet)**|
-|Official block explorer|blockchain.gulden.com|-|
+|Official block explorer|blockchain.munt.org|-|
 |Community block explorer|www.dactual.com|-|
 |DNS Seed 1|seed.gulden.com|-|
 |DNS Seed 2|amsterdam.gulden.com|-|

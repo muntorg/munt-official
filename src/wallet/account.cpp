@@ -140,7 +140,7 @@ void CHDSeed::Init()
     static const std::vector<unsigned char> hashkey = {'G','u','l','d','e','n',' ','b','i','p','3','2'};
     static const std::vector<unsigned char> hashkeylegacy = {'B','i','t','c','o','i','n',' ','s','e','e','d'};
 
-    // Legacy support for old iOS and android 'Guldencoin' wallets.
+    // Legacy support for old iOS and android wallets.
     if (m_type == BIP32Legacy || m_type == BIP44External)
     {
         masterKeyPriv.SetMaster(hashkeylegacy, seed, 64);

@@ -2446,7 +2446,7 @@ class LibUnity {
       try {
         var formData = new FormData();
         formData.append("address", store.state.wallet.receiveAddress);
-        formData.append("currency", "gulden");
+        formData.append("currency", "munt");
         formData.append("wallettype", "lite");
         formData.append("uuid", this.walletController.GetUUID());
 
@@ -2471,7 +2471,7 @@ class LibUnity {
       try {
         var formData = new FormData();
         formData.append("address", store.state.wallet.receiveAddress);
-        formData.append("currency", "gulden");
+        formData.append("currency", "munt");
         formData.append("wallettype", "lite");
         formData.append("uuid", this.walletController.GetUUID());
 

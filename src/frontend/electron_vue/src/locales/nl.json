@@ -28,6 +28,7 @@
     "buy_your_first_coins": "Koop Munt",
     "clear": "Wissen",
     "confirm": "Bevestig",
+    "cancel": "Cancel",
     "change_password": "Verander wachtwoord",
     "create_mining_account": "Mining rekening aanmaken",
     "finish": "Klaar",
@@ -45,7 +46,8 @@
     "unlock": "Ontgrendelen",
     "done": "Klaar",
     "saving_key": "Witness key",
-    "info": "Info"
+    "info": "Info",
+    "optimise": "Optimise"
   },
   "clipboard_field": {
     "copied_to_clipboard": "Gekopieërd naar klembord"
@@ -84,7 +86,10 @@
     "account_weight": "Gewicht",
     "network_weight": "Netwerk gewicht",
     "empty": "Deze witness rekening is leeg",
-    "percent": "%"
+    "percent": "%",
+    "add_to_holdin": "Add to holdin.com",
+    "remove_from_holdin": "Remove from holdin.com",
+    "optimise_holding_account": "Select Funding Account"
   },
   "loader": {
     "shutdown": "Bezig met afsluiten...",
@@ -168,6 +173,43 @@
     "title": "Jouw witness key",
     "information": "Gebruik je witness key alleen voor vertrouwde cloud witness services. Jouw witness key geeft toegang tot jouw beloningen, laat deze dus nooit aan andere mensen zien.",
     "no_funds": "Witness rekening moet worden gevuld met vastgezette Munt voordat het mogelijk is om deze te koppelen met andere wallets."
+  },
+  "peers": {
+    "node_id": "Node ID",
+    "node_service": "Node/Service",
+    "user_agent": "User Agent",
+    "address": "Address",
+    "reason": "Reason",
+    "peers": "Peers:",
+    "banned_peers": "Banned Peers",
+    "whitelisted": "Whitelisted",
+    "direction": "Direction",
+    "services": "Services",
+    "starting_block": "Starting Block",
+    "synced_headers": "Synced Headers",
+    "synced_blocks": "Synced Blocks",
+    "ban_score": "Ban Score",
+    "connection_time": "Connection Time",
+    "last_send": "Last Send",
+    "last_receive": "Last Receive",
+    "sent": "Sent",
+    "received": "Received",
+    "ping_time": "Ping Time",
+    "time_offset": "Time Offset",
+    "banned_from": "Banned From",
+    "banned_until": "Banned Until",
+    "peer_details": "Peer Details",
+    "ban": "Ban",
+    "buttons": {
+      "clear_banned": "Clear banned",
+      "disconnect": "Disconnect",
+      "ban_hour": "1 Hour",
+      "ban_day": "1 Day",
+      "ban_week": "1 Week",
+      "ban_year": "1 Year",
+      "un_ban": "Unban Peer",
+      "optimise": "Optimise"
+    }
   },
   "tooltip": {
     "account_balance": "Account balans",

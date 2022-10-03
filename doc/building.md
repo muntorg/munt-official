@@ -12,7 +12,7 @@ Please read all the below instructions before attempting to build the software o
 Binaries
 -----
 There are binaries for every release, please reconsider your need to build and unless you have a very good reason to do so rather just download these.
-Latest binaries can always be found here: https://github.com/Gulden/gulden-official/releases
+Latest binaries can always be found here: https://github.com/muntorg/munt-official/releases
 Download the latest linux*.tar.gz extract it and simply copy Munt-daemon out of it instead of going through the unnecessary hassle of building.
 
 Generic docker instructions

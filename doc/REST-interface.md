@@ -50,8 +50,6 @@ Only supports JSON as output format.
 `GET /rest/getutxos/<checkmempool>/<txid>-<n>/<txid>-<n>/.../<txid>-<n>.<bin|hex|json>`
 
 The getutxo command allows querying of the UTXO set given a set of outpoints.
-See BIP64 for input and output serialisation:
-https://github.com/gulden/bips/blob/master/bip-0064.mediawiki
 
 Example:
 ```

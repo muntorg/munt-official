@@ -1,4 +1,4 @@
-# Set API key from translate.gulden.com here to be able to run translation scripts
+# Set API key from translate.munt.org here to be able to run translation scripts
 #ONESKY_API_KEY=
 
 # Set this to a system or custom NDK path to have android build scripts use this as opposed to the ones fetched by fetch_android.sh

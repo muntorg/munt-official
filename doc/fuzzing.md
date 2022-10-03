@@ -65,7 +65,7 @@ Fuzzing
 
 To start the actual fuzzing use:
 ```
-$AFLPATH/afl-fuzz -i ${AFLIN} -o ${AFLOUT} -m52 -- test/test_gulden_fuzzy
+$AFLPATH/afl-fuzz -i ${AFLIN} -o ${AFLOUT} -m52 -- test/test_munt_fuzzy
 ```
 
 You may have to change a few kernel parameters to test optimally - `afl-fuzz`

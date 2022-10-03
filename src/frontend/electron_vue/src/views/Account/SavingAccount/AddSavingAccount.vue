@@ -136,7 +136,7 @@ export default {
           try {
             this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
 
-            uuid = AccountsController.CreateAccount(this.accountName, "Holding");
+            uuid = AccountsController.CreateAccount(this.accountName, "Witness");
 
             // Always lock for slightly longer than the minimum to allow a bit of time for transaction to enter the chain
             // If we don't then its possible that the transaction becomes invalid before entering the chain

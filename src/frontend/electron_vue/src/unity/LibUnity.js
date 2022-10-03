@@ -2834,19 +2834,19 @@ class LibUnity {
 
         if (params.action == "payoutaddress") {
           data = JSON.stringify({
-            holdingkey: params.witnessKey,
+            witnesskey: params.witnessKey,
             action: params.action,
             payoutaddress: params.data
           });
         } else if (params.action == "distribution") {
           data = JSON.stringify({
-            holdingkey: params.witnessKey,
+            witnesskey: params.witnessKey,
             action: params.action,
             compoundpercentage: params.data
           });
         } else {
           data = JSON.stringify({
-            holdingkey: params.witnessKey,
+            witnesskey: params.witnessKey,
             action: params.action
           });
         }

@@ -27,14 +27,14 @@ Installation of msys2
 
 Building under msys2 (nodejs addon)
 -----
-* `git clone https://github.com/Gulden/gulden-official`
-* `cd gulden-official`
+* `git clone https://github.com/muntorg/munt-official`
+* `cd munt-official`
 * `./developer-tools/build_node.sh`
 
 Building under msys2
 -----
-* `git clone https://github.com/Gulden/gulden-official`
-* `cd gulden-official/depends`
+* `git clone https://github.com/muntorg/munt-official`
+* `cd munt-official/depends`
 * `make`
 * `cd ..`
 * `./autogen.sh`
@@ -65,9 +65,9 @@ Install build prerequisites, git and some build dependencies
 
 Clone a copy of this repository
 
-`git clone https://github.com/gulden/gulden-official.git`
+`git clone https://github.com/muntorg/munt-official.git`
 
-`cd gulden-official`
+`cd munt-official`
 
 (Optional) If you want to contribute towards development you may want to check out a development branch
 

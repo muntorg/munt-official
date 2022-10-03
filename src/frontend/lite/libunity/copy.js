@@ -1,7 +1,7 @@
 var os = require("os");
 
 let repo =
-  "https://github.com/gulden/gulden-official/releases/download/development/";
+  "https://github.com/muntorg/munt-official/releases/download/development/";
 
 let file = "";
 if (os.platform() === "win32") {

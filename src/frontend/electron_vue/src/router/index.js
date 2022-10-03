@@ -42,7 +42,7 @@ const routes = [
       {
         path: "optimise-account",
         name: "optimise-account",
-        component: () => import(/* webpackChunkName: "optimise-account" */ "../views/Account/HoldingAccount/OptimiseAccount.vue")
+        component: () => import(/* webpackChunkName: "optimise-account" */ "../views/Account/SavingAccount/OptimiseAccount.vue")
       },
       {
         path: "transactions",
