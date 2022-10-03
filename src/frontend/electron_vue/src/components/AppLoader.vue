@@ -152,7 +152,7 @@ export default {
 
 .logo-outer {
   margin: 0 0 50px 0;
-  background: var(--secondary-color);
+  background: transparent;
   width: 128px;
   height: 128px;
   border-radius: 50%;
@@ -162,9 +162,9 @@ export default {
 }
 
 .logo-inner {
-  width: 78px;
-  height: 78px;
-  background: url("../img/logo.svg");
+  width: 128px;
+  height: 128px;
+  background: url("../img/logo-black.svg");
   background-size: cover;
 }
 
