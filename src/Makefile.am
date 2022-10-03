@@ -53,7 +53,6 @@ LIB_CRYPTO_ARM_CORTEX_A72_AES=crypto/lib_crypto_arm_cortex_a72_aes.a
 LIB_CRYPTO_ARM_THUNDERX_AES=crypto/lib_crypto_arm_thunderx_aes.a
 LIB_CRYPTO_ARM_V8_CRYPTO=crypto/lib_crypto_arm_v8_crypto.a
 LIB_CRYPTO=crypto/lib_crypto.a
-LIB_ANDROID_COMPAT=lib_android_compat.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 
 if ENABLE_ZMQ
@@ -64,6 +63,7 @@ LIB_UNITY_NODE_JS=lib_unity_node_js.la
 endif
 if BUILD_LIBS_JNI
 LIB_UNITY_JNI=lib_unity_jni.la
+LIB_ANDROID_COMPAT=lib_android_compat.a
 endif
 if BUILD_LIBS_OBJC
 LIB_UNITY_OBJC=lib_unity_objc.a
@@ -624,12 +624,14 @@ EXTRA_crypto_lib_crypto_a_SOURCES = \
   crypto/hash/sigma/shavite3_256/shavite3_256_opt.h \
   llvm-cpumodel-hack.cpp
 
+if BUILD_LIBS_JNI
 # android compat library; shared between unity and testing framework.
 lib_android_compat_a_CPPFLAGS = $(AM_CPPFLAGS) $(CONFIG_INCLUDES) $(PROTOBUF_CFLAGS)
 lib_android_compat_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 lib_android_compat_a_SOURCES = \
   unity/compat/android_wallet.cpp \
   unity/compat/android_wallet.h
+endif
 
 # consensus: Included by all executables except CLI; also all unity libraries
 lib_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(COMMON_INCLUDES)
