@@ -1,3 +1,15 @@
+3.0.0
+
+Software rebrands to Munt name.
+This build represents our final switch from Qt to Electron for UI builds, Qt is completely removed from the codebase, users who require Qt specific functionality should remain on 2.5.0 until the 3.x series matures and gains more features
+
+UI        - New electron based UI
+CORE      - Switch to guix for macOS builds as well; all official builds now done on guix
+CORE      - Update various library dependencies to latest versions
+
+
+
+
 2.5.0
 
 Introduce reward changes
