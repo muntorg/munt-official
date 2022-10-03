@@ -171,11 +171,11 @@ echo "Attesting to build outputs for version: '${VERSION}'"
 echo ""
 
 # Given a SHA256SUMS file as stdin that has lines like:
-#     0ba536819b221a91d3d42e978be016aac918f40984754d74058aa0c921cd3ea6  a/b/d/c/d/s/gulden-22.0rc2-riscv64-linux-gnu.tar.gz
+#     0ba536819b221a91d3d42e978be016aac918f40984754d74058aa0c921cd3ea6  a/b/d/c/d/s/munt-22.0rc2-riscv64-linux-gnu.tar.gz
 #     ...
 #
 # Replace each line's file name with its basename:
-#     0ba536819b221a91d3d42e978be016aac918f40984754d74058aa0c921cd3ea6  gulden-22.0rc2-riscv64-linux-gnu.tar.gz
+#     0ba536819b221a91d3d42e978be016aac918f40984754d74058aa0c921cd3ea6  munt-22.0rc2-riscv64-linux-gnu.tar.gz
 #     ...
 #
 basenameify_SHA256SUMS() {

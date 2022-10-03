@@ -79,19 +79,6 @@ prepend_to_search_env_var() {
     export "${1}=${2}${!1:+:}${!1}"
 }
 
-case "$HOST" in
-    *darwin*)
-        # When targeting darwin, zlib is required by native_libdmg-hfsplus.
-        zlib_store_path=$(store_path "zlib")
-        zlib_static_store_path=$(store_path "zlib" static)
-
-        prepend_to_search_env_var LIBRARY_PATH "${zlib_static_store_path}/lib:${zlib_store_path}/lib"
-        prepend_to_search_env_var C_INCLUDE_PATH "${zlib_store_path}/include"
-        prepend_to_search_env_var CPLUS_INCLUDE_PATH "${zlib_store_path}/include"
-        prepend_to_search_env_var OBJC_INCLUDE_PATH "${zlib_store_path}/include"
-        prepend_to_search_env_var OBJCPLUS_INCLUDE_PATH "${zlib_store_path}/include"
-esac
-
 # Set environment variables to point the CROSS toolchain to the right
 # includes/libs for $HOST
 case "$HOST" in
@@ -244,6 +231,7 @@ CONFIGFLAGS="--enable-reduce-exports --disable-bench --disable-gui-tests --disab
 
 # CFLAGS
 HOST_CFLAGS="-O2 -g"
+HOST_CFLAGS+=$(find /gnu/store -maxdepth 1 -mindepth 1 -type d -exec echo -n " -ffile-prefix-map={}=/usr" \;)
 case "$HOST" in
     *linux*)  HOST_CFLAGS+=" -ffile-prefix-map=${PWD}=." ;;
     *mingw*)  HOST_CFLAGS+=" -fno-ident" ;;
@@ -288,9 +276,14 @@ mkdir -p "$DISTSRC"
             export HOST_CXXFLAGS="${HOST_CXXFLAGS} -I/munt/depends/${HOST}/include/node -I/munt/depends/${HOST}/include/node-addon-api -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS -DNODE_HOST_BINARY=node.exe -DUSING_UV_SHARED=1 -DUSING_V8_SHARED=1 -DV8_DEPRECATION_WARNINGS=1 -DV8_DEPRECATION_WARNINGS -DV8_IMMINENT_DEPRECATION_WARNINGS -DWIN32 -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DBUILDING_NODE_EXTENSION -D_WINDLL -lminiupnpc"
             export HOST_LDFLAGS="${HOST_LDFLAGS} -fPIC -Bsymbolic -lnode -Wl,--gc-sections"
         ;;
-        *)
+        *darwin*)
+            export HOST_CXXFLAGS="${HOST_CXXFLAGS} -I/munt/depends/${HOST}/include/node -I/munt/depends/${HOST}/include/node-addon-api -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS -D_HAS_EXCEPTIONS=1"
+            export HOST_LDFLAGS="${HOST_LDFLAGS} -fPIC -Bsymbolic -Wl,-undefined -Wl,dynamic_lookup"
+        ;;
+        *linux*)
             export HOST_CXXFLAGS="${HOST_CXXFLAGS} -I/munt/depends/${HOST}/include/node -I/munt/depends/${HOST}/include/node-addon-api -fPIC -fdata-sections -ffunction-sections -fomit-frame-pointer -DNAPI_VERSION=5 -DDJINNI_NODEJS -lminiupnpc"
             export HOST_LDFLAGS="${HOST_LDFLAGS} -fPIC -Bsymbolic -Wl,--gc-sections"
+        ;;
     esac
     export HOST_CFLAGS=${HOST_CFLAGS}
     #end electron specific setup
@@ -361,32 +354,14 @@ mkdir -p "$DISTSRC"
         *mingw*)
             cp -f src/.libs/lib_unity_node_js-0.dll ${OUTDIR}/nodelib/libmunt_${HOST}.node
         ;;
+        *darwin*)
+            cp -f src/.libs/lib_unity_node_js.0.so ${OUTDIR}/nodelib/libmunt_${HOST}.node
+        ;;
         *)
             cp -f src/.libs/lib_unity_node_js.so.0.0.0 ${OUTDIR}/nodelib/libmunt_${HOST}.node
     esac
-    ${DISTSRC}/contrib/devtools/split-debug.sh ${OUTDIR}/nodelib/libmunt_${HOST}.node ${OUTDIR}/nodelib/libmunt_${HOST}.node ${OUTDIR}/nodelib/libmunt_${HOST}.node.dbg
+    #${DISTSRC}/contrib/devtools/split-debug.sh ${OUTDIR}/nodelib/libmunt_${HOST}.node ${OUTDIR}/nodelib/libmunt_${HOST}.node ${OUTDIR}/nodelib/libmunt_${HOST}.node.dbg
 
-    case "$HOST" in
-        *darwin*)
-            make osx_volname ${V:+V=1}
-            make deploydir ${V:+V=1}
-            mkdir -p "unsigned-app-${HOST}"
-            cp  --target-directory="unsigned-app-${HOST}" \
-                osx_volname \
-                contrib/macdeploy/detached-sig-create.sh \
-                "${BASEPREFIX}/${HOST}"/native/bin/dmg
-            mv --target-directory="unsigned-app-${HOST}" dist
-            (
-                cd "unsigned-app-${HOST}"
-                find . -print0 \
-                    | sort --zero-terminated \
-                    | tar --create --no-recursion --mode='u+rw,go+r-w,a+X' --null --files-from=- \
-                    | pigz -9n > "${OUTDIR}/${DISTNAME}-${HOST}-unsigned.tar.gz" \
-                    || ( rm -f "${OUTDIR}/${DISTNAME}-${HOST}-unsigned.tar.gz" && exit 1 )
-            )
-            make deploy ${V:+V=1} OSX_DMG="${OUTDIR}/${DISTNAME}-${HOST}-unsigned.dmg"
-            ;;
-    esac
     (
         cd installed
 
