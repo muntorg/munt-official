@@ -102,8 +102,8 @@ For those who really need too or are technically inclined it is of course possib
 |:-----------|:---------|:---------|
 |Consensus algorithm:|PoW² SIGMA/Witness|PoW² SIGMA/Witness|
 |Recommended transaction confirmations:|2|2|
-|Block reward SIGMA:|75 (10|65) NLG|1000 NLG|
-|Block reward witness:|15 NLG|20 NLG|
+|Block reward SIGMA:|75 (10|65) MUNT|1000 MUNT|
+|Block reward witness:|15 MUNT|20 MUNT|
 |Block interval target:|150 seconds (2.5 minutes)|Configurable|
 |Difficulty adjustment period:|Every block|Every block|
 |Difficulty adjustment algorithm:|Delta|Delta|
@@ -116,7 +116,7 @@ For those who really need too or are technically inclined it is of course possib
 |BIP44 coin type|87 0x80000057|87 0x80000057|
 |**Infrastructure**|**Main network**|**[Testnet](./technical_documentation/accelerated_testnet.md#official-testnet)**|
 |Official block explorer|blockchain.munt.org|-|
-|Community block explorer|www.dactual.com|-|
+|Community block explorer|https://munt.chainviewer.org/|-|
 |DNS Seed 1|seed.gulden.com|-|
 |DNS Seed 2|amsterdam.gulden.com|-|
 |DNS Seed 3|rotterdam.gulden.network|-|
