@@ -2,7 +2,7 @@
   <tr border=0>
     <td border="0px" width="80%" rowspan="7">
       <a href="https://www.munt.org">
-        <img align="left" src="https://munt.org/img/design/munt-000000.svg" alt="Munt"/>
+        <img height=260px align="left" src="https://munt.org/img/design/munt-000000.svg" alt="Munt"/>
       </a>
       <p>Munt is a witness-secured decentralized network for payments, digital assets, finance and more<br/>
       Munt takes the basic blockchain concept and improves on the areas where it has shortcomings in order to make a product that is more suitable for every day use.</p>
