@@ -365,7 +365,14 @@ mkdir -p "$DISTSRC"
         *)
             cp -f src/.libs/lib_unity_node_js.so.0.0.0 ${OUTDIR}/nodelib/libmunt_${HOST}.node
     esac
-    #${DISTSRC}/contrib/devtools/split-debug.sh ${OUTDIR}/nodelib/libmunt_${HOST}.node ${OUTDIR}/nodelib/libmunt_${HOST}.node ${OUTDIR}/nodelib/libmunt_${HOST}.node.dbg
+
+    #darwin builds choke one split-debug.sh script, but other platforms need to run it or we have giant binaries to deal with
+    #run for every platform except darwin for now until we can make this work also on darwin
+    case "$HOST" in
+        *darwin*) ;;
+        *)
+            ${DISTSRC}/contrib/devtools/split-debug.sh ${OUTDIR}/nodelib/libmunt_${HOST}.node ${OUTDIR}/nodelib/libmunt_${HOST}.node ${OUTDIR}/nodelib/libmunt_${HOST}.node.dbg
+    esac
 
     (
         cd installed
