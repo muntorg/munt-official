@@ -2,7 +2,7 @@
   "isSingleAccount": true,
   "isSPV": true,
   "themes": [
-    { "name": "blue", "color": "#0039cc" },
+    { "name": "black", "color": "#000000" },
     { "name": "orange", "color": "#ee6622" }
   ]
 }
