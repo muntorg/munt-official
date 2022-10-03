@@ -28,6 +28,7 @@
     "buy_your_first_coins": "Buy Munt",
     "clear": "Clear",
     "confirm": "Confirm",
+    "cancel": "Cancel",
     "change_password": "Change password",
     "create_mining_account": "Create mining account",
     "finish": "Finish",
@@ -45,7 +46,8 @@
     "unlock": "Unlock",
     "done": "Done",
     "saving_key": "Witness Key",
-    "info": "Info"
+    "info": "Info",
+    "optimise": "Optimise"
   },
   "clipboard_field": {
     "copied_to_clipboard": "Copied to clipboard"
@@ -62,14 +64,14 @@
     "password": "Password",
     "receiving_address": "Receiving address",
     "days": "days",
-    "ticker_symbol": "NLG"
+    "ticker_symbol": "MUNT"
   },
   "new_wallet": {
     "title": "Welcome to your Munt wallet",
     "information": "This wallet is only stored on your device.\nNever give anyone else access to your wallet.\nKeep the backup phrase you see at installation in a safe place.\nLose phrase or someone else with access to the phrase = lose Munt."
   },
   "saving_account": {
-    "compound_earnings": "compound earnings",
+    "compound_earnings": "Compound Earnings",
     "status": "Status",
     "parts": "Parts",
     "coins_locked": "Initial amount locked",
@@ -83,7 +85,11 @@
     "expected_earnings_frequency": "Expected earnings frequency",
     "account_weight": "Account weight",
     "network_weight": "Network weight",
-    "empty": "This witness account is empty"
+    "empty": "This witness account is empty",
+    "percent": "%",
+    "add_to_holdin": "Add to holdin.com",
+    "remove_from_holdin": "Remove from holdin.com",
+    "optimise_holding_account": "Select Funding Account"
   },
   "loader": {
     "shutdown": "Shutting down...",
@@ -157,14 +163,65 @@
     "enter_coins_address": "Enter Munt address",
     "confirm_transaction": "Confirm transaction",
     "target_account": "Send to account",
-    "fee_will_be_subtracted": "fee will be subtracted from the amount"
+    "fee_will_be_subtracted": "Fee will be subtracted from the amount",
+    "unlock_your_wallet_to_complete_the_transaction": "Unlock your wallet to complete the transaction"
   },
   "renew_saving_account": {
     "funding_account": "Pay renewal fee from account"
   },
   "link_saving_account": {
     "title": "Your witness key",
-    "information": "Use your witness key only for trusted cloud holding services. Your witness key provides access to your rewards, so never show it to other people.",
+    "information": "Use your witness key only for trusted cloud witness services. Your witness key provides access to your rewards, so never show it to other people.",
     "no_funds": "Witness account must be funded with locked funds before it is possible to link it with other wallets."
+  },
+  "peers": {
+    "node_id": "Node ID",
+    "node_service": "Node/Service",
+    "user_agent": "User Agent",
+    "address": "Address",
+    "reason": "Reason",
+    "peers": "Peers:",
+    "banned_peers": "Banned Peers",
+    "whitelisted": "Whitelisted",
+    "direction": "Direction",
+    "services": "Services",
+    "starting_block": "Starting Block",
+    "synced_headers": "Synced Headers",
+    "synced_blocks": "Synced Blocks",
+    "ban_score": "Ban Score",
+    "connection_time": "Connection Time",
+    "last_send": "Last Send",
+    "last_receive": "Last Receive",
+    "sent": "Sent",
+    "received": "Received",
+    "ping_time": "Ping Time",
+    "time_offset": "Time Offset",
+    "banned_from": "Banned From",
+    "banned_until": "Banned Until",
+    "peer_details": "Peer Details",
+    "ban": "Ban",
+    "buttons": {
+      "clear_banned": "Clear banned",
+      "disconnect": "Disconnect",
+      "ban_hour": "1 Hour",
+      "ban_day": "1 Day",
+      "ban_week": "1 Week",
+      "ban_year": "1 Year",
+      "un_ban": "Unban Peer",
+      "optimise": "Optimise"
+    }
+  },
+  "tooltip": {
+    "account_balance": "Account Balance",
+    "wallet_balance": "Wallet Balance",
+    "total": "Total",
+    "locked": "Locked",
+    "spendable": "Spendable",
+    "pending": "Pending"
+  },
+  "unlock_wallet_dialog": {
+    "title": "Unlock wallet",
+    "unlock_for": "Unlock for...",
+    "minute": "{n} minute | {n} minutes"
   }
 }
