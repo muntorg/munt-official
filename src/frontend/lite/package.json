@@ -2,7 +2,7 @@
   "name": "Munt-lite",
   "description": "Munt currency, light/SPV based wallet",
   "author": "Centure.com BV",
-  "version": "2.5.0",
+  "version": "3.0.0",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

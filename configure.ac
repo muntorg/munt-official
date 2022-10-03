@@ -1,6 +1,6 @@
 AC_PREREQ([2.69])
-define(_CLIENT_VERSION_MAJOR,       2)
-define(_CLIENT_VERSION_MINOR,       5)
+define(_CLIENT_VERSION_MAJOR,       3)
+define(_CLIENT_VERSION_MINOR,       0)
 define(_CLIENT_VERSION_REVISION, 0)
 define(_CLIENT_VERSION_BUILD,       0)
 define(_CLIENT_VERSION_IS_RELEASE, false)
