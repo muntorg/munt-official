@@ -7,6 +7,8 @@ UI        - New electron based UI
 CORE      - Switch to guix for macOS builds as well; all official builds now done on guix
 CORE      - Update various library dependencies to latest versions
 NET       - Bump MIN_PEER_PROTO_VERSION to 70020; This will disconnect from network all peers not on 2.5.0 or above
+UI        - Native M1/arm64 builds for macOS
+
 
 
 
