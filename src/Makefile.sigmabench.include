@@ -43,6 +43,6 @@ munt_sigma: $(BENCH_BINARY)
 bench_sigma: $(BENCH_BINARY) FORCE
 	$(BENCH_BINARY)
 
-gulden_bench_clean : FORCE
+munt_bench_clean : FORCE
 	rm -f $(bench_bench_sigma_OBJECTS) $(BENCH_BINARY)
 

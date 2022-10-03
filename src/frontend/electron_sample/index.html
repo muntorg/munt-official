@@ -2,10 +2,10 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Gulden electron sample</title>
+    <title>Munt electron sample</title>
   </head>
   <body>
-    <h1>Gulden electron sample</h1>
+    <h1>Munt electron sample</h1>
 
     Node.js: <script>document.write(process.versions.node)</script>,
     Chromium: <script>document.write(process.versions.chrome)</script>,
@@ -17,7 +17,7 @@
     <p>last log message: <span id="lastlog"></span></p>
     <script>
     require('electron').ipcRenderer.on('notifyCoreReady', (event) => {
-        document.getElementById("address").innerHTML = require('electron').remote.getGlobal("guldenbackend").GetReceiveAddress()
+        document.getElementById("address").innerHTML = require('electron').remote.getGlobal("corebackend").GetReceiveAddress()
     })
     require('electron').ipcRenderer.on('logPrint', (event, message) => {
         document.getElementById("lastlog").innerHTML = message

@@ -1,6 +1,6 @@
 {
-  "name": "Gulden",
-  "description": "Gulden currency",
+  "name": "Munt",
+  "description": "Munt currency",
   "author": "Centure.com BV",
   "version": "2.5.0",
   "scripts": {

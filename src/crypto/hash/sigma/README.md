@@ -1,3 +1,3 @@
 This directory contains SIGMA and several component hash functions (argon/echo/shavite) that form parts of SIGMA.
 NB! The implementations of these hash functions have been specifically tailored to SIGMAs specific use case. Assumptions are made about their operating conditions (operating on already publically known data; not needing to be concerned about side channel attacks and various other things)
-They are not appropriate for and should not be reused for other cryptographic purposes (even within the Gulden code base), but rather a regular/different implementation should be used in their place.
+They are not appropriate for and should not be reused for other cryptographic purposes (even within the Munt code base), but rather a regular/different implementation should be used in their place.

@@ -5,11 +5,11 @@ let repo =
 
 let file = "";
 if (os.platform() === "win32") {
-  file = "libgulden_win_" + os.arch() + ".node";
+  file = "libmunt_win_" + os.arch() + ".node";
 } else if (os.platform() === "linux") {
-  file = "libgulden_linux_" + os.arch() + ".node";
+  file = "libmunt_linux_" + os.arch() + ".node";
 } else if (os.platform() === "darwin") {
-    file = "libgulden_macos_" + os.arch() + ".node";
+    file = "libmunt_macos_" + os.arch() + ".node";
 } else {
   throw "Unable to determine platform";
 }

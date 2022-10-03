@@ -69,7 +69,7 @@ export default {
           return;
         }
 
-        uuid = AccountsController.CreateAccount("Gulden Mining", "Mining");
+        uuid = AccountsController.CreateAccount("Munt Mining", "Mining");
         LibraryController.LockWallet();
       } finally {
         // route to the new account when we have a uuid
