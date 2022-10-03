@@ -234,7 +234,12 @@ HOST_CFLAGS="-O2 -g"
 HOST_CFLAGS+=$(find /gnu/store -maxdepth 1 -mindepth 1 -type d -exec echo -n " -ffile-prefix-map={}=/usr" \;)
 case "$HOST" in
     *linux*)  HOST_CFLAGS+=" -ffile-prefix-map=${PWD}=." ;;
-    *mingw*)  HOST_CFLAGS+=" -fno-ident" ;;
+    *mingw*)
+        HOST_CFLAGS+=" -fno-ident"
+        # Hardening currently breaks mingw builds because it pulls libssp in as a dep; even though this isn't meant to happen (gcc is meant to be providing these symbols)
+        # disable for now until we can investigate further
+        CONFIGFLAGS+=" --disable-hardening "
+    ;;
     *darwin*) unset HOST_CFLAGS ;;
 esac
 
