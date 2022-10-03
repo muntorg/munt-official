@@ -167,10 +167,11 @@ int InitUnity()
                     {
                         try { fs::rename((oldPath / entry.path().filename()).string(), (GetDataDir() / entry.path().filename()).string() ); } catch(...) {}
                     }
-                    if (fs::exists(oldPath / "gulden.conf"))
-                        fs::rename((oldPath / "gulden.conf").string(), (GetDataDir() / "munt.conf").string());
-                    if (fs::exists(oldPath / "Gulden.conf"))
-                        fs::rename((oldPath / "Gulden.conf").string(), (GetDataDir() / "munt.conf").string());
+                    boost::filesystem::path newPath(newPathString); 
+                    if (fs::exists(GetDataDir() / "gulden.conf"))
+                        fs::rename((GetDataDir() / "gulden.conf").string(), (GetDataDir() / "munt.conf").string());
+                    if (fs::exists(GetDataDir() / "Gulden.conf"))
+                        fs::rename((GetDataDir() / "Gulden.conf").string(), (GetDataDir() / "munt.conf").string());
                 }
                 else
                 {
@@ -185,10 +186,10 @@ int InitUnity()
                         {
        	                    try { fs::rename((oldPath / entry.path().filename()).string(), (GetDataDir() / entry.path().filename()).string() ); } catch(...) {}
                         }
-                        if (fs::exists(oldPath / "gulden.conf"))
-	                    fs::rename((oldPath / "gulden.conf").string(), (GetDataDir() / "munt.conf").string());
-                        if (fs::exists(oldPath / "Gulden.conf"))
-                            fs::rename((oldPath / "Gulden.conf").string(), (GetDataDir() / "munt.conf").string());
+                        if (fs::exists(GetDataDir() / "gulden.conf"))
+	                    fs::rename((GetDataDir() / "gulden.conf").string(), (GetDataDir() / "munt.conf").string());
+                        if (fs::exists(GetDataDir() / "Gulden.conf"))
+                            fs::rename((GetDataDir() / "Gulden.conf").string(), (GetDataDir() / "munt.conf").string());
                     }
                 }
             }
