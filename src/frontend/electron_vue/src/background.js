@@ -278,7 +278,7 @@ async function updateRate(seconds) {
     // use blockhut api instead of https://api.munt.org/api/v1/ticker
     const response = await axios.get("https://blockhut.com/munt/munteuro.json");
 
-    store.dispatch("app/SET_RATE", response.data.eurxfl);
+    store.dispatch("app/SET_RATE", response.data.eurmunt);
   } catch (error) {
     console.error(error);
   } finally {
