@@ -8,16 +8,16 @@ module.exports = {
       mainProcessWatch: [],
       mainProcessArgs: [],
       builderOptions: {
-        appId: "com.gulden.lite-desktop-wallet",
-        productName: "Gulden-lite",
+        appId: "org.munt.lite-desktop-wallet",
+        productName: "Munt-lite",
         extraFiles: [],
         publish: null,
         afterSign: "./notarize.js",
         protocols: [
           {
-            name: "guldenlite",
+            name: "muntlite",
             role: "Viewer",
-            schemes: ["guldenlite", "gulden"]
+            schemes: ["muntlite", "munt"]
           }
         ],
         mac: {

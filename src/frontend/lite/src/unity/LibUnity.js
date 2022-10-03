@@ -2461,7 +2461,7 @@ class LibUnity {
       } catch (e) {
         event.returnValue = {
           success: true,
-          result: "https://gulden.com/buy"
+          result: "https://munt.org/buy"
         };
       }
     });
@@ -2486,7 +2486,7 @@ class LibUnity {
       } catch (e) {
         event.returnValue = {
           success: true,
-          result: "https://gulden.com/sell"
+          result: "https://munt.org/sell"
         };
       }
     });

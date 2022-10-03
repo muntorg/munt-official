@@ -26,7 +26,7 @@ let winMain;
 let winDebug;
 let libUnity = new LibUnity({ walletPath });
 
-// Handle URI links (gulden: guldenlite://)
+// Handle URI links (munt: muntlite://)
 // If we are launching a second instance then terminate and let the first instance handle it instead
 //NB! This must happen before all other app related code (especially libulden init) as otherwise second process can crash
 const gotTheLock = app.requestSingleInstanceLock();
@@ -44,14 +44,14 @@ if (!gotTheLock) {
 }
 if (process.defaultApp) {
   if (process.argv.length >= 2) {
-    app.setAsDefaultProtocolClient("guldenlite", process.execPath, [path.resolve(process.argv[1])]);
+    app.setAsDefaultProtocolClient("muntlite", process.execPath, [path.resolve(process.argv[1])]);
   }
 } else {
-  app.setAsDefaultProtocolClient("guldenlite");
+  app.setAsDefaultProtocolClient("muntlite");
 }
 // End of URI handling
 
-/* TODO: refactor into function and add option to libgulden to remove existing wallet folder */
+/* TODO: refactor into function and add option to libmunt to remove existing wallet folder */
 if (isDevelopment) {
   let args = process.argv.slice(2);
   for (var i = 0; i < args.length; i++) {
@@ -79,7 +79,7 @@ function createMainWindow() {
     height: 600,
     minHeight: 600,
     show: false,
-    title: "Gulden-lite",
+    title: "Munt-lite",
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -175,7 +175,7 @@ function createDebugWindow() {
     minHeight: 400,
     show: false,
     parent: winMain,
-    title: "Gulden Debug Window",
+    title: "Munt Debug Window",
     skipTaskBar: true,
     autoHideMenuBar: true,
     webPreferences: {

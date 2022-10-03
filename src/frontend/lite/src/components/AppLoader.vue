@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="version-container">
-      <span>Gulden LITE</span>
+      <span>Munt LITE</span>
       <span class="divider">|</span>
       <span>Unity: {{ unityVersion }}</span>
       <span class="divider">|</span>

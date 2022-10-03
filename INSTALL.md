@@ -14,4 +14,4 @@ Download and install the latest .dmg file from [releases](https://github.com/Gul
 Building
 ================
 
-See [build instructions](./doc/building.md) for instructions on building Gulden.
+See [build instructions](./doc/building.md) for instructions on building Munt.

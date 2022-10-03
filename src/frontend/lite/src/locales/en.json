@@ -25,7 +25,7 @@
     "back": "Back",
     "buy": "Buy",
     "sell": "Sell",
-    "buy_your_first_coins": "Buy Gulden",
+    "buy_your_first_coins": "Buy Munt",
     "clear": "Clear",
     "confirm": "Confirm",
     "change_password": "Change password",
@@ -65,8 +65,8 @@
     "ticker_symbol": "NLG"
   },
   "new_wallet": {
-    "title": "Welcome to your Gulden wallet",
-    "information": "This wallet is only stored on your device.\nNever give anyone else access to your wallet.\nKeep the backup phrase you see at installation in a safe place.\nLose phrase or someone else with access to the phrase = lose Gulden."
+    "title": "Welcome to your Munt wallet",
+    "information": "This wallet is only stored on your device.\nNever give anyone else access to your wallet.\nKeep the backup phrase you see at installation in a safe place.\nLose phrase or someone else with access to the phrase = lose Munt."
   },
   "saving_account": {
     "compound_earnings": "compound earnings",
@@ -87,7 +87,7 @@
   },
   "loader": {
     "shutdown": "Shutting down...",
-    "synchronizing": "Your wallet is now synchronizing with the Gulden network. This may take some time to complete."
+    "synchronizing": "Your wallet is now synchronizing with the Munt network. This may take some time to complete."
   },
   "mining": {
     "arena_setup_time": "Arena setup time",
@@ -120,22 +120,22 @@
   "setup": {
     "choose_password": "Choose a password of at least 6 characters",
     "choose_password_information": "You will need your password to unlock your wallet. Make sure it is not easy to guess because anyone who knows your password can access your funds.",
-    "create_new": "I do not have a Gulden wallet yet",
-    "enter_existing_recovery_phrase": "Gulden LITE is not suitable for a full desktop wallet recovery phrase (with witness and mining functionality).",
+    "create_new": "I do not have a Munt wallet yet",
+    "enter_existing_recovery_phrase": "Munt LITE is not suitable for a full desktop wallet recovery phrase (with witness and mining functionality).",
     "enter_recovery_phrase": "Enter recovery phrase",
     "invalid_recovery_phrase": {
       "title": "Invalid recovery phrase",
       "message": "This combination is not a valid recovery phrase. Correct the error(s) and try again."
     },
-    "recover_existing": "I already have a Gulden wallet",
+    "recover_existing": "I already have a Munt wallet",
     "repeat_password": "Repeat password",
     "repeat_your_recovery_phrase": "To make sure you have correctly written down your recovery phrase, enter your phrase in the boxes below.",
     "setup_your_wallet": "Make a choice",
-    "this_is_your_recovery_phrase": "This is your recovery phrase. Keep your backup phrase in a safe place. Lose phrase or someone else with access to the phrase = lose Gulden."
+    "this_is_your_recovery_phrase": "This is your recovery phrase. Keep your backup phrase in a safe place. Lose phrase or someone else with access to the phrase = lose Munt."
   },
   "setup_mining": {
     "title": "Setup mining",
-    "information": "Before you can start mining Gulden a mining account needs to be created. Enter your password to unlock your wallet and create a mining account."
+    "information": "Before you can start mining Munt a mining account needs to be created. Enter your password to unlock your wallet and create a mining account."
   },
   "transaction_details": {
     "title": {
@@ -146,15 +146,15 @@
   },
   "receive_coins": {
     "address_copied_to_clipboard": "Address copied to clipboard",
-    "buy_or_receive_coins": "Buy or receive Gulden",
+    "buy_or_receive_coins": "Buy or receive Munt",
     "click_to_copy_qr": "Click to copy QR",
     "information": "After each transaction you will receive a new address, but the previous address will still work.",
-    "your_address": "Your Gulden address",
+    "your_address": "Your Munt address",
     "qr_copied_to_clipboard": "QR copied to clipboard"
   },
   "send_coins": {
     "enter_label": "Enter label",
-    "enter_coins_address": "Enter Gulden address",
+    "enter_coins_address": "Enter Munt address",
     "confirm_transaction": "Confirm transaction",
     "target_account": "Send to account",
     "fee_will_be_subtracted": "fee will be subtracted from the amount"
