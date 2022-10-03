@@ -82,7 +82,7 @@ class WalletTest(MuntTestFramework):
         txout = self.nodes[0].gettxout(txid=confirmed_txid, n=confirmed_index, include_mempool=True)
         assert_equal(txout['value'], 50)
 
-        # Send 21 NLG from 0 to 2 using sendtoaddress call.
+        # Send 21 MUNT from 0 to 2 using sendtoaddress call.
         self.nodes[0].sendtoaddress(self.nodes[2].getnewaddress(), 11)
         mempool_txid = self.nodes[0].sendtoaddress(self.nodes[2].getnewaddress(), 10)
 
@@ -146,7 +146,7 @@ class WalletTest(MuntTestFramework):
         self.nodes[1].generate(100)
         self.sync_all([self.nodes[0:3]])
 
-        # node0 should end up with 100 NLG in block rewards plus fees, but
+        # node0 should end up with 100 MUNT in block rewards plus fees, but
         # minus the 21 plus fees sent to node2
         assert_equal(self.nodes[0].getbalance(), 100 - 21)
         assert_equal(self.nodes[2].getbalance(), 21)
@@ -182,7 +182,7 @@ class WalletTest(MuntTestFramework):
         ###spent_0 = {"txid": node0utxos[0]["txid"], "vout": node0utxos[0]["vout"]}
         ###assert_raises_rpc_error(-8, "Invalid parameter, expected unspent output", self.nodes[0].lockunspent, False, [spent_0])
 
-        # Send 10 NLG normal
+        # Send 10 MUNT normal
         address = self.nodes[0].getnewaddress()
         fee_per_byte = Decimal('0.001') / 1000
         self.nodes[2].settxfee(fee_per_byte * 1000)
@@ -192,7 +192,7 @@ class WalletTest(MuntTestFramework):
         ###node_2_bal = self.check_fee_amount(self.nodes[2].getbalance(), Decimal('84'), fee_per_byte, self.get_vsize(self.nodes[2].gettransaction(txid)['hex']))
         assert_equal(self.nodes[0].getbalance(), Decimal('10'))
 
-        # Send 10 NLG with subtract fee from amount
+        # Send 10 MUNT with subtract fee from amount
         txid = self.nodes[2].sendtoaddress(address, 10, "", "", True)
         self.nodes[2].generate(1)
         self.sync_all([self.nodes[0:3]])
@@ -200,7 +200,7 @@ class WalletTest(MuntTestFramework):
         ###assert_equal(self.nodes[2].getbalance(), node_2_bal)
         ###node_0_bal = self.check_fee_amount(self.nodes[0].getbalance(), Decimal('20'), fee_per_byte, self.get_vsize(self.nodes[2].gettransaction(txid)['hex']))
 
-        # Sendmany 10 NLG
+        # Sendmany 10 MUNT
         txid = self.nodes[2].sendmany('', {address: 10}, 0, "", [])
         self.nodes[2].generate(1)
         self.sync_all([self.nodes[0:3]])
@@ -208,7 +208,7 @@ class WalletTest(MuntTestFramework):
         ###node_2_bal = self.check_fee_amount(self.nodes[2].getbalance(), node_2_bal - Decimal('10'), fee_per_byte, self.get_vsize(self.nodes[2].gettransaction(txid)['hex']))
         ###assert_equal(self.nodes[0].getbalance(), node_0_bal)
 
-        # Sendmany 10 NLG with subtract fee from amount
+        # Sendmany 10 MUNT with subtract fee from amount
         txid = self.nodes[2].sendmany('', {address: 10}, 0, "", [address])
         self.nodes[2].generate(1)
         self.sync_all([self.nodes[0:3]])
