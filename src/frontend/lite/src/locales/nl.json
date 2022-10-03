@@ -2,7 +2,7 @@
   "accounts_section": {
     "accounts": "Rekeningen",
     "categories": {
-      "spending": "Spending",
+      "spending": "Betalen",
       "saving": "Witness"
     }
   },
@@ -28,7 +28,7 @@
     "buy_your_first_coins": "Koop Munt",
     "clear": "Wissen",
     "confirm": "Bevestig",
-    "cancel": "Cancel",
+    "cancel": "Annuleren",
     "change_password": "Verander wachtwoord",
     "create_mining_account": "Mining rekening aanmaken",
     "finish": "Klaar",
@@ -36,7 +36,7 @@
     "next": "Volgende",
     "ok": "OK",
     "previous": "Vorige",
-    "ready": "Ready",
+    "ready": "Klaar",
     "receive": "Ontvangen",
     "renew": "Vernieuwen",
     "send": "Versturen",
@@ -50,7 +50,7 @@
     "optimise": "Optimise"
   },
   "clipboard_field": {
-    "copied_to_clipboard": "Copied to clipboard"
+    "copied_to_clipboard": "Gekopieërd naar klembord"
   },
   "common": {
     "account_name": "Rekeningnaam",
@@ -67,8 +67,8 @@
     "ticker_symbol": "MUNT"
   },
   "new_wallet": {
-    "title": "Welkom bij jouw Munt portemonnee",
-    "information": "Deze portemonnee staat alleen op jouw apparaat.\nGeef nooit iemand anders toegang tot jouw portemonnee.\nBewaar de herstelzin die je te zien krijgt tijdens installatie op een veilige plek.\nHerstelzin kwijt of iemand toegang tot je herstelzin = Munt weg."
+    "title": "Welkom bij jouw Munt wallet",
+    "information": "Deze wallet staat alleen op jouw apparaat.\nGeef nooit iemand anders toegang tot jouw wallet.\nBewaar de herstelzin die je te zien krijgt tijdens installatie op een veilige plek.\nHerstelzin kwijt of iemand toegang tot je herstelzin = Munt weg."
   },
   "saving_account": {
     "compound_earnings": "Cumulatieve Inkomsten",
@@ -93,7 +93,7 @@
   },
   "loader": {
     "shutdown": "Bezig met afsluiten...",
-    "synchronizing": "Jouw portemonnee is aan het synchroniseren met het Munt netwerk. Dit kan enige tijd duren."
+    "synchronizing": "Jouw wallet is aan het synchroniseren met het Munt netwerk. Dit kan enige tijd duren."
   },
   "mining": {
     "arena_setup_time": "Arena setup tijd",
@@ -111,7 +111,7 @@
     "address": "Mining adres"
   },
   "password_dialog": {
-    "unlock_wallet": "Ontgrendel portemonnee"
+    "unlock_wallet": "Ontgrendel wallet"
   },
   "settings": {
     "header": "Instellingen",
@@ -125,23 +125,23 @@
   },
   "setup": {
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
-    "choose_password_information": "Een wachtwoord is vereist voor het ontgrendelen van jouw portemonnee. Kies een sterk wachtwoord, zodat niemand anders toegang kan krijgen tot jouw Munt.",
-    "create_new": "Ik wil een nieuwe portemonnee starten",
-    "enter_existing_recovery_phrase": "Voer jouw herstelzin in om jouw portemonnee te herstellen.",
+    "choose_password_information": "Een wachtwoord is vereist voor het ontgrendelen van jouw wallet. Kies een sterk wachtwoord, zodat niemand anders toegang kan krijgen tot jouw Munt.",
+    "create_new": "Ik wil een nieuwe wallet starten",
+    "enter_existing_recovery_phrase": "Voer jouw herstelzin in om jouw wallet te herstellen.",
     "enter_recovery_phrase": "Voer herstelzin in",
     "invalid_recovery_phrase": {
       "title": "Ongeldige herstelzin",
       "message": "Deze combinatie vormt geen geldige herstelzin. Corrigeer de fout(en) en probeer het nogmaals."
     },
-    "recover_existing": "Ik wil mijn portemonnee herstellen met mijn herstelzin",
+    "recover_existing": "Ik wil mijn wallet herstellen met mijn herstelzin",
     "repeat_password": "Herhaal wachtwoord",
     "repeat_your_recovery_phrase": "Voer jouw herstelzin in om te controleren dat je deze goed hebt opgeschreven.",
-    "setup_your_wallet": "Installeer jouw Munt portemonnee",
+    "setup_your_wallet": "Installeer jouw Munt wallet",
     "this_is_your_recovery_phrase": "Dit is jouw herstelzin. Bewaar de herstelzin op een veilige plek. Zin kwijt of iemand toegang tot je zin = Munt weg."
   },
   "setup_mining": {
     "title": "Mining instellen",
-    "information": "Voordat je kunt beginnen met minen van Munt moet een mining rekening worden aangemaakt. Voer je wachtwoord in om je wallet te ontgrendelen en een mining account aan te maken."
+    "information": "Voordat je kunt beginnen met minen van Munt moet een mining rekening worden aangemaakt. Voer je wachtwoord in om je wallet te ontgrendelen en een mining rekening aan te maken."
   },
   "transaction_details": {
     "title": {
@@ -151,12 +151,12 @@
     "hash": "Hash"
   },
   "receive_coins": {
-    "address_copied_to_clipboard": "Adres gekopieerd naar klembord",
+    "address_copied_to_clipboard": "Adres gekopieërd naar klembord",
     "buy_or_receive_coins": "Koop of ontvang Munt",
     "click_to_copy_qr": "Klik om QR te kopiëren",
     "information": "Na iedere transactie krijg je een nieuw adres, maar het vorige adres blijft werken.",
     "your_address": "Jouw Munt adres",
-    "qr_copied_to_clipboard": "QR gekopieerd naar klembord"
+    "qr_copied_to_clipboard": "QR gekopieërd naar klembord"
   },
   "send_coins": {
     "enter_label": "Voer label in",
@@ -178,37 +178,37 @@
     "node_id": "Node ID",
     "node_service": "Node/Service",
     "user_agent": "User Agent",
-    "address": "Address",
-    "reason": "Reason",
+    "address": "Adres",
+    "reason": "Reden",
     "peers": "Peers:",
-    "banned_peers": "Banned Peers",
+    "banned_peers": "Geblokeerde Peers",
     "whitelisted": "Whitelisted",
-    "direction": "Direction",
+    "direction": "Richting",
     "services": "Services",
-    "starting_block": "Starting Block",
-    "synced_headers": "Synced Headers",
-    "synced_blocks": "Synced Blocks",
-    "ban_score": "Ban Score",
-    "connection_time": "Connection Time",
-    "last_send": "Last Send",
-    "last_receive": "Last Receive",
-    "sent": "Sent",
-    "received": "Received",
+    "starting_block": "Startende block",
+    "synced_headers": "Gesyncroniseerde Headers",
+    "synced_blocks": "Gesyncroniseerde Blocks",
+    "ban_score": "Blokeer Score",
+    "connection_time": "Connectietijd",
+    "last_send": "Laatst verzonden",
+    "last_receive": "Laatst ontvangen",
+    "sent": "Verzonden",
+    "received": "Ontvangen",
     "ping_time": "Ping Time",
     "time_offset": "Time Offset",
-    "banned_from": "Banned From",
-    "banned_until": "Banned Until",
+    "banned_from": "Geblokkeerd sinds",
+    "banned_until": "Geblokkeerd tot",
     "peer_details": "Peer Details",
-    "ban": "Ban",
+    "ban": "Blokkeren",
     "buttons": {
-      "clear_banned": "Clear banned",
-      "disconnect": "Disconnect",
-      "ban_hour": "1 Hour",
-      "ban_day": "1 Day",
+      "clear_banned": "Alles deblokkeren",
+      "disconnect": "Verbinden verbreken",
+      "ban_hour": "1 Uur",
+      "ban_day": "1 Dag",
       "ban_week": "1 Week",
-      "ban_year": "1 Year",
-      "un_ban": "Unban Peer",
-      "optimise": "Optimise"
+      "ban_year": "1 Jaar",
+      "un_ban": "Deblokkeren",
+      "optimise": "Optimaliseren"
     }
   },
   "tooltip": {
