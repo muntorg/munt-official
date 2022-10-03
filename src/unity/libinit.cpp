@@ -149,6 +149,52 @@ int InitUnity()
             return EXIT_FAILURE;
         }
 
+        std::string walletFile = GetArg("-wallet", DEFAULT_WALLET_DAT);
+        if (!fs::exists(GetDataDir() / walletFile))
+        {
+            //Temporary - migrate old 'Gulden' wallets to new 'Munt' wallets.
+            try
+            {
+                std::string newPathString = GetDataDir().string();
+                std::string oldPathString = newPathString;
+
+                boost::replace_all(oldPathString, "Munt", "Gulden");
+                boost::replace_all(oldPathString, "munt", "Gulden");
+                boost::filesystem::path oldPath(oldPathString);
+                if (fs::exists( (oldPath / walletFile).string() ))
+                {
+                    for(auto& entry : boost::make_iterator_range(boost::filesystem::directory_iterator(oldPath), {}))
+                    {
+                        try { fs::rename((oldPath / entry.path().filename()).string(), (GetDataDir() / entry.path().filename()).string() ); } catch(...) {}
+                    }
+                    if (fs::exists(oldPath / "gulden.conf"))
+                        fs::rename((oldPath / "gulden.conf").string(), (GetDataDir() / "munt.conf").string());
+                    if (fs::exists(oldPath / "Gulden.conf"))
+                        fs::rename((oldPath / "Gulden.conf").string(), (GetDataDir() / "munt.conf").string());
+                }
+                else
+                {
+                    std::string newPathString = GetDataDir().string();
+                    std::string oldPathString = newPathString;
+                    boost::replace_all(oldPathString, "Munt", "gulden");
+                    boost::replace_all(oldPathString, "munt", "gulden");
+                    oldPath = boost::filesystem::path(boost::filesystem::path(oldPathString));
+                    if (fs::exists( (oldPath / walletFile).string() ))
+                    {
+                        for(auto& entry : boost::make_iterator_range(boost::filesystem::directory_iterator(oldPath), {}))
+                        {
+       	                    try { fs::rename((oldPath / entry.path().filename()).string(), (GetDataDir() / entry.path().filename()).string() ); } catch(...) {}
+                        }
+                        if (fs::exists(oldPath / "gulden.conf"))
+	                    fs::rename((oldPath / "gulden.conf").string(), (GetDataDir() / "munt.conf").string());
+                        if (fs::exists(oldPath / "Gulden.conf"))
+                            fs::rename((oldPath / "Gulden.conf").string(), (GetDataDir() / "munt.conf").string());
+                    }
+                }
+            }
+            catch(...){}
+        }
+
         // Set this early so that parameter interactions go to console
         InitLogging();
         InitParameterInteraction();
@@ -180,7 +226,6 @@ int InitUnity()
             }
         }
 
-        std::string walletFile = GetArg("-wallet", DEFAULT_WALLET_DAT);
         bool havePrimary = false;
         if (fs::exists(GetDataDir() / walletFile))
         {
