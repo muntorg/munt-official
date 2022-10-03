@@ -50,7 +50,9 @@ import {
   faKey,
   faInfoCircle,
   faExclamationTriangle,
-  faUndo
+  faUndo,
+  faTrash,
+  faFileSearch
 } from "@fortawesome/pro-light-svg-icons";
 
 import { faListUl, faLongArrowDown } from "@fortawesome/pro-regular-svg-icons";
@@ -89,7 +91,9 @@ library.add([
   faListUl,
   faInfoCircle,
   faExclamationTriangle,
-  faUndo
+  faUndo,
+  faTrash,
+  faFileSearch
 ]);
 
 Vue.component("fa-icon", FontAwesomeIcon);

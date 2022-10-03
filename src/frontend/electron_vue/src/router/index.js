@@ -3,7 +3,6 @@ import VueRouter from "vue-router";
 import Account from "../views/Account";
 
 import { AccountsController } from "../unity/Controllers";
-import EventBus from "../EventBus";
 import store from "../store";
 
 Vue.use(VueRouter);
@@ -41,16 +40,16 @@ const routes = [
         component: () => import(/* webpackChunkName: "renew-account" */ "../views/Account/SavingAccount/RenewAccount.vue")
       },
       {
+        path: "optimise-account",
+        name: "optimise-account",
+        component: () => import(/* webpackChunkName: "optimise-account" */ "../views/Account/HoldingAccount/OptimiseAccount.vue")
+      },
+      {
         path: "transactions",
         name: "transactions",
         component: () => import(/* webpackChunkName: "transactions" */ "../views/Account/SpendingAccount/Transactions.vue")
       }
     ]
-  },
-  {
-    path: "/setup-mining",
-    name: "setup-mining",
-    component: () => import(/* webpackChunkName: "setup-mining" */ "../views/Account/MiningAccount/SetupMining.vue")
   },
   {
     path: "/add-saving-account",
@@ -121,9 +120,6 @@ router.beforeEach((to, from, next) => {
       // 1. AccountsController.SetActiveAccount tells the backend to change the account (but it isn't changed immediately).
       // 2. When the account has been changed the onActiveAccountChanged handler in unity/LibUnity.js will update the store with new account data.
       // 3. After the account in the store has been changed the onAccountChanged handler in views/Account/index.vue will set the activity indicator to false.
-
-      // close the right sidebar when switching accounts
-      EventBus.$emit("close-right-sidebar");
     }
   }
 

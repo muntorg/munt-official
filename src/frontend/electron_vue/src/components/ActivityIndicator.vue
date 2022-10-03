@@ -1,12 +1,23 @@
 <template>
-  <div class="modal-mask flex-col">
+  <div :class="modalClass" class="flex-col">
     <div class="spinner"></div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "ActivityIndicator"
+  name: "ActivityIndicator",
+  props: {
+    paddingHidden: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    modalClass() {
+      return this.paddingHidden ? "modal-no-padding" : "modal-mask";
+    }
+  }
 };
 </script>
 
@@ -16,6 +27,19 @@ export default {
   top: 0;
   left: var(--sidebar-left-width);
   width: calc(100% - var(--sidebar-left-width));
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  margin-top: 0;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+}
+
+.modal-no-padding {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
   height: 100%;
   background-color: rgba(255, 255, 255, 0.8);
   margin-top: 0;

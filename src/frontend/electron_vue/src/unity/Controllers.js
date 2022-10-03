@@ -390,6 +390,46 @@ class P2pNetworkController {
   static GetPeerInfo() {
     return handleError(ipc.sendSync("NJSIP2pNetworkController.getPeerInfo"));
   }
+
+  static async ListBannedPeersAsync() {
+    return handleError(await ipc.callMain("NJSIP2pNetworkController.listBannedPeersAsync"));
+  }
+
+  static ListBannedPeers() {
+    return handleError(ipc.sendSync("NJSIP2pNetworkController.listBannedPeers"));
+  }
+
+  static async BanPeerAsync(address, banTimeInSeconds) {
+    return handleError(await ipc.callMain("NJSIP2pNetworkController.banPeerAsync", { address, banTimeInSeconds }));
+  }
+
+  static BanPeer(address, banTimeInSeconds) {
+    return handleError(ipc.sendSync("NJSIP2pNetworkController.banPeer", address, banTimeInSeconds));
+  }
+
+  static async UnbanPeerAsync(address) {
+    return handleError(await ipc.callMain("NJSIP2pNetworkController.unbanPeerAsync", { address }));
+  }
+
+  static UnbanPeer(address) {
+    return handleError(ipc.sendSync("NJSIP2pNetworkController.unbanPeer", address));
+  }
+
+  static async DisconnectPeerAsync(nodeid) {
+    return handleError(await ipc.callMain("NJSIP2pNetworkController.disconnectPeerAsync", { nodeid }));
+  }
+
+  static DisconnectPeer(nodeid) {
+    return handleError(ipc.sendSync("NJSIP2pNetworkController.disconnectPeer", nodeid));
+  }
+
+  static async ClearBannedAsync() {
+    return handleError(await ipc.callMain("NJSIP2pNetworkController.ClearBannedAsync"));
+  }
+
+  static ClearBanned() {
+    return handleError(ipc.sendSync("NJSIP2pNetworkController.ClearBanned"));
+  }
 }
 
 class AccountsController {
@@ -529,12 +569,12 @@ class AccountsController {
     return handleError(ipc.sendSync("NJSIAccountsController.getAllAccountBalances"));
   }
 
-  static async AddAccountLinkAsync(accountUUID, serviceName) {
-    return handleError(await ipc.callMain("NJSIAccountsController.addAccountLinkAsync", { accountUUID, serviceName }));
+  static async AddAccountLinkAsync(accountUUID, serviceName, data) {
+    return handleError(await ipc.callMain("NJSIAccountsController.addAccountLinkAsync", { accountUUID, serviceName, data }));
   }
 
-  static AddAccountLink(accountUUID, serviceName) {
-    return handleError(ipc.sendSync("NJSIAccountsController.addAccountLink", accountUUID, serviceName));
+  static AddAccountLink(accountUUID, serviceName, data) {
+    return handleError(ipc.sendSync("NJSIAccountsController.addAccountLink", accountUUID, serviceName, data));
   }
 
   static async RemoveAccountLinkAsync(accountUUID, serviceName) {
@@ -627,6 +667,32 @@ class WitnessController {
   static GetWitnessAddress(witnessAccountUUID) {
     return handleError(ipc.sendSync("NJSIWitnessController.getWitnessAddress", witnessAccountUUID));
   }
+
+  static async GetOptimalWitnessDistributionAsync(amount, durationInBlocks, totalNetworkWeight) {
+    return handleError(await ipc.callMain("NJSIWitnessController.getOptimalWitnessDistributionAsync", { amount, durationInBlocks, totalNetworkWeight }));
+  }
+
+  static GetOptimalWitnessDistribution(amount, durationInBlocks, totalNetworkWeight) {
+    return handleError(ipc.sendSync("NJSIWitnessController.getOptimalWitnessDistribution", amount, durationInBlocks, totalNetworkWeight));
+  }
+
+  static async GetOptimalWitnessDistributionForAccountAsync(witnessAccountUUID) {
+    return handleError(await ipc.callMain("NJSIWitnessController.getOptimalWitnessDistributionForAccountAsync", { witnessAccountUUID }));
+  }
+
+  static GetOptimalWitnessDistributionForAccount(witnessAccountUUID) {
+    return handleError(ipc.sendSync("NJSIWitnessController.getOptimalWitnessDistributionForAccount", witnessAccountUUID));
+  }
+
+  static async OptimiseWitnessAccountAsync(witnessAccountUUID, fundingAccountUUID, optimalDistribution) {
+    return handleError(
+      await ipc.callMain("NJSIWitnessController.optimiseWitnessAccountAsync", { witnessAccountUUID, fundingAccountUUID, optimalDistribution })
+    );
+  }
+
+  static OptimiseWitnessAccount(witnessAccountUUID, fundingAccountUUID, optimalDistribution) {
+    return handleError(ipc.sendSync("NJSIWitnessController.optimiseWitnessAccount", witnessAccountUUID, fundingAccountUUID, optimalDistribution));
+  }
 }
 
 class GenerationController {
@@ -704,6 +770,9 @@ class BackendUtilities {
   }
   static GetSellSessionUrl() {
     return handleError(ipc.sendSync("BackendUtilities.GetSellSessionUrl"));
+  }
+  static holdinAPIActions(witnessKey, action, data) {
+    return handleError(ipc.sendSync("BackendUtilities.holdinAPIActions", { witnessKey, action, data }));
   }
 }
 

@@ -217,7 +217,7 @@ struct WitnessInfoForAccount
     uint64_t nExpectedWitnessBlockPeriod = 0;
     uint64_t nEstimatedWitnessBlockPeriod = 0;
     uint64_t nLockBlocksRemaining = 0;
-    int64_t nOriginNetworkWeight = 0;
+    int64_t  nOriginNetworkWeight = 0;
     uint64_t nOriginBlock = 0;
     uint64_t nOriginLength = 0;
     uint64_t nEarningsToDate = 0;
@@ -239,6 +239,7 @@ bool GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoF
     infoForAccount.nOriginLength = accountStatus.nLockPeriodInBlocks;
     infoForAccount.nOriginBlock = accountStatus.nLockFromBlock;
     
+    #if 0 //unused and potentially quite slow
     LOCK(cs_main);
     CBlockIndex* originIndex = chainActive[infoForAccount.nOriginBlock];
 
@@ -250,21 +251,23 @@ bool GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoF
         std::string strErrorMessage = "Error in witness dialog, failed to get weight for account";
         return false;
     }
-
-    infoForAccount.nWitnessLength = infoForAccount.nOriginLength;
+    
     if (infoForAccount.nOriginNetworkWeight == 0)
         infoForAccount.nOriginNetworkWeight = gStartingWitnessNetworkWeightEstimate;
+    #endif
+
+    infoForAccount.nWitnessLength = infoForAccount.nOriginLength;
 
     const auto& parts = infoForAccount.accountStatus.parts;
     if (!parts.empty())
     {
         uint64_t networkWeight = infoForAccount.nTotalNetworkWeightTip;
         // Worst case all parts witness at latest opportunity so part with maximum weight will be the first to be required to witness
-        infoForAccount.nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(*std::max_element(parts.begin(), parts.end()), networkWeight);
+        infoForAccount.nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(std::get<0>(*std::max_element(parts.begin(), parts.end(), [](std::tuple<uint64_t, uint64_t> l, std::tuple<uint64_t, uint64_t> r) {return std::get<0>(l) > std::get<0>(r);})), networkWeight);
 
         // Combine estimated witness frequency f for part frequencies f1..fN: 1/f = 1/f1 + .. 1/fN
-        double fInv = std::accumulate(parts.begin(), parts.end(), 0.0, [=](const double acc, const uint64_t w){
-            uint64_t fn = estimatedWitnessBlockPeriod(w, networkWeight);
+        double fInv = std::accumulate(parts.begin(), parts.end(), 0.0, [=](const double acc, const std::tuple<uint64_t, uint64_t> w){
+            uint64_t fn = estimatedWitnessBlockPeriod(std::get<0>(w), networkWeight);
             return acc + 1.0/fn;
         });
         infoForAccount.nEstimatedWitnessBlockPeriod = uint64_t(1.0/fInv);
@@ -278,20 +281,20 @@ bool GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoF
 WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(const std::string& witnessAccountUUID)
 {
     if (!pactiveWallet)
-        return WitnessAccountStatisticsRecord("no active wallet present", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
+        return WitnessAccountStatisticsRecord("no active wallet present", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
     
     DS_LOCK2(cs_main, pactiveWallet->cs_wallet);
     
     auto findIter = pactiveWallet->mapAccounts.find(getUUIDFromString(witnessAccountUUID));
     if (findIter == pactiveWallet->mapAccounts.end())
-        return WitnessAccountStatisticsRecord("invalid witness account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
+        return WitnessAccountStatisticsRecord("invalid witness account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
     CAccount* witnessAccount = findIter->second;
     
     CGetWitnessInfo witnessInfo;
     WitnessInfoForAccount infoForAccount;
     if (!GetWitnessInfoForAccount(witnessAccount, infoForAccount, witnessInfo))
     {
-        return WitnessAccountStatisticsRecord("failed to get witness info for account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
+        return WitnessAccountStatisticsRecord("failed to get witness info for account", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
     }
     std::string accountStatus;
     switch (infoForAccount.accountStatus.status)
@@ -316,9 +319,12 @@ WitnessAccountStatisticsRecord IWitnessController::getAccountWitnessStatistics(c
 
     bool accountNearOptimal = isWitnessDistributionNearOptimal(pactiveWallet, witnessAccount, witnessInfo);
     
+    uint64_t nBlocksSinceLastActivity = std::get<1>(*std::min_element(infoForAccount.accountStatus.parts.begin(), infoForAccount.accountStatus.parts.end(), [](std::tuple<uint64_t, uint64_t> l, std::tuple<uint64_t, uint64_t> r) {return std::get<1>(l) < std::get<1>(r);}));
+    
     return WitnessAccountStatisticsRecord(
         "success",                                                      //request_status
         accountStatus,                                                  //account_status
+        nBlocksSinceLastActivity,                                       //account_blocks_since_last_activity
         infoForAccount.nOurWeight,                                      //account_weight
         infoForAccount.accountStatus.originWeight,                      //account_weight_at_creation
         infoForAccount.accountStatus.parts.size(),                      //account_parts

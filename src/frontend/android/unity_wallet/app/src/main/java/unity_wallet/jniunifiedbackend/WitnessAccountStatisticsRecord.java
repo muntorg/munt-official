@@ -10,6 +10,8 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
 
     /*package*/ final String mAccountStatus;
 
+    /*package*/ final long mBlocksSinceLastActivity;
+
     /*package*/ final long mAccountWeight;
 
     /*package*/ final long mAccountWeightAtCreation;
@@ -41,6 +43,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
     public WitnessAccountStatisticsRecord(
             String requestStatus,
             String accountStatus,
+            long blocksSinceLastActivity,
             long accountWeight,
             long accountWeightAtCreation,
             long accountParts,
@@ -57,6 +60,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
             boolean isOptimal) {
         this.mRequestStatus = requestStatus;
         this.mAccountStatus = accountStatus;
+        this.mBlocksSinceLastActivity = blocksSinceLastActivity;
         this.mAccountWeight = accountWeight;
         this.mAccountWeightAtCreation = accountWeightAtCreation;
         this.mAccountParts = accountParts;
@@ -81,6 +85,11 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
     /** Current state of the witness account, one of: "empty", "empty_with_remainder", "pending", "witnessing", "ended", "expired", "emptying" */
     public String getAccountStatus() {
         return mAccountStatus;
+    }
+
+    /** Account weight */
+    public long getBlocksSinceLastActivity() {
+        return mBlocksSinceLastActivity;
     }
 
     /** Account weight */
@@ -158,6 +167,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
         return "WitnessAccountStatisticsRecord{" +
                 "mRequestStatus=" + mRequestStatus +
                 "," + "mAccountStatus=" + mAccountStatus +
+                "," + "mBlocksSinceLastActivity=" + mBlocksSinceLastActivity +
                 "," + "mAccountWeight=" + mAccountWeight +
                 "," + "mAccountWeightAtCreation=" + mAccountWeightAtCreation +
                 "," + "mAccountParts=" + mAccountParts +
@@ -192,6 +202,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
     public WitnessAccountStatisticsRecord(android.os.Parcel in) {
         this.mRequestStatus = in.readString();
         this.mAccountStatus = in.readString();
+        this.mBlocksSinceLastActivity = in.readLong();
         this.mAccountWeight = in.readLong();
         this.mAccountWeightAtCreation = in.readLong();
         this.mAccountParts = in.readLong();
@@ -217,6 +228,7 @@ public final class WitnessAccountStatisticsRecord implements android.os.Parcelab
     public void writeToParcel(android.os.Parcel out, int flags) {
         out.writeString(this.mRequestStatus);
         out.writeString(this.mAccountStatus);
+        out.writeLong(this.mBlocksSinceLastActivity);
         out.writeLong(this.mAccountWeight);
         out.writeLong(this.mAccountWeightAtCreation);
         out.writeLong(this.mAccountParts);

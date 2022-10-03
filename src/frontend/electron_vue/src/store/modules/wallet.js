@@ -7,7 +7,8 @@ const wallet = {
     mutations: null,
     receiveAddress: null,
     walletBalance: null,
-    walletPassword: null
+    walletPassword: null,
+    unlocked: false
   },
   mutations: {
     SET_ACCOUNTS(state, accounts) {
@@ -30,6 +31,9 @@ const wallet = {
     },
     SET_WALLET_PASSWORD(state, password) {
       state.walletPassword = password;
+    },
+    SET_UNLOCKED(state, unlocked) {
+      state.unlocked = unlocked;
     },
     SET_WALLET(state, payload) {
       // batch update state properties from payload
@@ -68,6 +72,9 @@ const wallet = {
     },
     SET_WALLET_PASSWORD({ commit }, password) {
       commit("SET_WALLET_PASSWORD", password);
+    },
+    SET_UNLOCKED({ commit }, unlocked) {
+      commit("SET_UNLOCKED", unlocked);
     },
     SET_WALLET({ commit }, payload) {
       commit("SET_WALLET", payload);

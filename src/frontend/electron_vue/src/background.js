@@ -276,7 +276,7 @@ app.on("ready", async () => {
 async function updateRate(seconds) {
   try {
     // use blockhut api instead of https://api.gulden.com/api/v1/ticker
-    const response = await axios.get("https://blockhut.com/gulden/xfleuro.json");
+    const response = await axios.get("https://blockhut.com/munt/munteuro.json");
 
     store.dispatch("app/SET_RATE", response.data.eurxfl);
   } catch (error) {

@@ -23,7 +23,6 @@ export default {
   props: {
     amount: null,
     address: null,
-    password: null,
     subtractFee: null
   },
   computed: {
@@ -53,22 +52,21 @@ export default {
   },
   methods: {
     confirm() {
-      // at this point the password should already be validated
-      LibraryController.UnlockWallet(this.password, 120);
+      EventBus.$emit("unlock-wallet", {
+        message: "send_coins.unlock_your_wallet_to_complete_the_transaction",
+        callback: async () => {
+          // try to make the payment
+          let result = LibraryController.PerformPaymentToRecipient(this.computedRequest, this.subtractFee);
 
-      // try to make the payment
-      let result = LibraryController.PerformPaymentToRecipient(this.computedRequest, this.subtractFee);
+          if (result !== 0) {
+            // payment failed, log an error. have to make this more robust
+            console.error(result);
+          }
 
-      if (result !== 0) {
-        // payment failed, log an error. have to make this more robust
-        console.error(result);
-      }
-
-      // lock the wallet again
-      LibraryController.LockWallet();
-
-      EventBus.$emit("transaction-succeeded");
-      EventBus.$emit("close-dialog");
+          EventBus.$emit("transaction-succeeded");
+          EventBus.$emit("close-dialog");
+        }
+      });
     }
   }
 };

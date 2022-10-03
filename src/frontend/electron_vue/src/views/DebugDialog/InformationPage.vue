@@ -13,12 +13,22 @@
       </div>
       <div class="flex-row">
         <div>Data dir</div>
-        <div class="selectable">{{ clientInfo.datadir_path }}</div>
+        <div class="path-row">
+          <div @click="openFile(clientInfo.datadir_path)" class="list-item-icon">
+            <fa-icon :icon="['fal', 'file-search']" />
+          </div>
+          <div class="selectable">{{ clientInfo.datadir_path }}</div>
+        </div>
       </div>
       <div class="flex-row">
         <div>Log file</div>
-        <div class="selectable">
-          {{ clientInfo.logfile_path }}
+        <div class="path-row">
+          <div @click="openFile(clientInfo.logfile_path)" class="list-item-icon">
+            <fa-icon :icon="['fal', 'file-search']" />
+          </div>
+          <div class="selectable">
+            {{ clientInfo.logfile_path }}
+          </div>
         </div>
       </div>
       <div class="flex-row">
@@ -71,13 +81,15 @@
 
 <script>
 import { LibraryController } from "../../unity/Controllers";
+const { shell } = require("electron"); // deconstructing assignment
+
 let timeout;
 
 export default {
   data() {
     return {
       clientInfo: null,
-      enableTimeout: true
+      isDestroyed: false
     };
   },
   name: "InformationPage",
@@ -96,29 +108,18 @@ export default {
     }
   },
   created() {
-    document.addEventListener("webkitvisibilitychange", this.visibilityChange);
     this.updateClientInfo();
   },
   beforeDestroy() {
-    this.enableTimeout = false;
+    this.isDestroyed = true;
     clearTimeout(timeout);
-    document.removeEventListener("webkitvisibilitychange", this.visibilityChange);
   },
   methods: {
     updateClientInfo() {
       clearTimeout(timeout);
-      if (this.enableTimeout === false) return;
-      console.log("call update GetClientInfo");
       this.clientInfo = LibraryController.GetClientInfo();
-      timeout = setTimeout(this.updateClientInfo, 5000);
-    },
-    visibilityChange() {
-      if (document["webkitHidden"]) {
-        this.enableTimeout = false;
-      } else {
-        this.enableTimeout = true;
-        this.updateClientInfo();
-      }
+      if (this.isDestroyed) return;
+      timeout = setTimeout(this.updateClientInfo, 10 * 1000);
     },
     formatDate(timestamp) {
       const date = new Date(timestamp * 1000);
@@ -131,6 +132,9 @@ export default {
         minute: "2-digit",
         second: "2-digit"
       });
+    },
+    openFile(path) {
+      shell.openPath(path);
     }
   }
 };
@@ -151,6 +155,7 @@ export default {
   & .flex-row > div {
     font-size: 0.85rem;
     line-height: 20px;
+    margin-bottom: 5px;
   }
   & .flex-row :first-child {
     flex: 0 0 180px;
@@ -160,6 +165,16 @@ export default {
     overflow-wrap: break-word;
     word-break: break-word;
   }
+}
+
+.list-item-icon {
+  max-width: 30px;
+  cursor: pointer;
+}
+
+.path-row {
+  display: flex;
+  flex-direction: row;
 }
 
 .selectable {

@@ -221,52 +221,59 @@ TransactionRecord calculateTransactionRecordForWalletTransaction(const CWalletTx
 
     for (const CTxIn& txin: tx.vin)
     {
-        std::string address;
         CNativeAddress addr;
         CTxDestination dest = CNoDestination();
 
         // Try to extract destination, this is not possible in general. Only if the previous
         // ouput of our input happens to be in our wallet. Which will usually only be the case for
         // our own transactions.
-
-        uint256 txHash;
+        uint256 txHashPrev;
+        bool havePrevOut=true;
         if (txin.GetPrevOut().isHash)
         {
-            txHash = txin.GetPrevOut().getTransactionHash();
+            txHashPrev = txin.GetPrevOut().getTransactionHash();
         }
         else
         {
-            if (!pwallet->GetTxHash(txin.GetPrevOut(), txHash))
+            if (!pwallet->GetTxHash(txin.GetPrevOut(), txHashPrev))
             {
-                LogPrintf("Transaction with no corresponding hash found, txid [%d] [%d]\n", txin.GetPrevOut().getTransactionBlockNumber(), txin.GetPrevOut().getTransactionIndex());
-                continue;
-            }
-        }
-        std::map<uint256, CWalletTx>::const_iterator mi = pwallet->mapWallet.find(txHash);
-        if (mi != pwallet->mapWallet.end())
-        {
-            const CWalletTx& prev = (*mi).second;
-            if (txin.GetPrevOut().n < prev.tx->vout.size())
-            {
-                const auto& prevOut =  prev.tx->vout[txin.GetPrevOut().n];
-                if (!ExtractDestination(prevOut, dest) && !prevOut.IsUnspendable())
+                if (!fSPV)
                 {
-                    LogPrintf("Unknown transaction type found, txid %s\n", wtx.GetHash().ToString());
-                    dest = CNoDestination();
+                    LogPrintf("Transaction with no corresponding hash found, txid [%d] [%d]\n", txin.GetPrevOut().getTransactionBlockNumber(), txin.GetPrevOut().getTransactionIndex());
                 }
+                havePrevOut = false;
             }
         }
-        if (addr.Set(dest))
-        {
-            address = addr.ToString();
-        }
+
+        std::string address;
         std::string label;
         std::string description;
-        if (pwallet->mapAddressBook.count(address))
+        if (havePrevOut)
         {
-            const auto& data = pwallet->mapAddressBook[address];
-            label = data.name;
-            description = data.description;
+            std::map<uint256, CWalletTx>::const_iterator mi = pwallet->mapWallet.find(txHashPrev);
+            if (mi != pwallet->mapWallet.end())
+            {
+                const CWalletTx& prev = (*mi).second;
+                if (txin.GetPrevOut().n < prev.tx->vout.size())
+                {
+                    const auto& prevOut =  prev.tx->vout[txin.GetPrevOut().n];
+                    if (!ExtractDestination(prevOut, dest) && !prevOut.IsUnspendable())
+                    {
+                        LogPrintf("Unknown transaction type found, txid %s\n", wtx.GetHash().ToString());
+                        dest = CNoDestination();
+                    }
+                }
+            }
+            if (addr.Set(dest))
+            {
+                address = addr.ToString();
+            }
+            if (pwallet->mapAddressBook.count(address))
+            {
+                const auto& data = pwallet->mapAddressBook[address];
+                label = data.name;
+                description = data.description;
+            }
         }
         bool isMine = false;
         for (const auto& account : forAccounts)

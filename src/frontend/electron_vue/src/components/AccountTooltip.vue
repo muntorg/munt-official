@@ -1,27 +1,27 @@
 <template>
-  <div @mouseenter="showTooltip" @mouseleave="showTooltip" class="tooltip">
-    <slot></slot>
-    <div v-if="show">
-      <div class="tooltip-container">
-        <div class="tooltip-heading" v-if="type === 'Account'">Account Balances</div>
-        <div class="tooltip-heading" v-else>Wallet Balances</div>
-        <div>
-          <div class="tooltip-row">
-            <div class="tooltip-content" style="flex: 1">Total</div>
-            <div class="tooltip-content">{{ accountObject.total }}</div>
-          </div>
-          <div v-if="account.type === 'Holding' || account.type === 'Witness' || type === 'Wallet'" class="tooltip-row">
-            <div class="tooltip-content" style="flex: 1">Locked</div>
-            <div class="tooltip-content">{{ accountObject.locked }}</div>
-          </div>
-          <div class="tooltip-row">
-            <div class="tooltip-content" style="flex: 1">Spendable</div>
-            <div class="tooltip-content">{{ accountObject.spendable }}</div>
-          </div>
-          <div class="tooltip-row">
-            <div class="tooltip-content" style="flex: 1">Pending</div>
-            <div class="tooltip-content">{{ accountObject.pending }}</div>
-          </div>
+  <div class="tooltip" @mouseleave="hideTooltip">
+    <div @mouseenter="showTooltip">
+      <slot></slot>
+    </div>
+    <div @mouseenter="showTooltip" class="tooltip-container" v-if="show">
+      <div class="tooltip-heading" v-if="type == 'Account'">{{ $t("tooltip.account_balance") }}</div>
+      <div class="tooltip-heading" v-else>{{ $t("tooltip.wallet_balance") }}</div>
+      <div>
+        <div class="tooltip-row">
+          <div class="tooltip-content" style="flex: 1">{{ $t("tooltip.total") }}</div>
+          <div class="tooltip-content">{{ accountObject.total }}</div>
+        </div>
+        <div v-if="account.type === 'Holding' || account.type === 'Witness' || type === 'Wallet'" class="tooltip-row">
+          <div class="tooltip-content" style="flex: 1">{{ $t("tooltip.locked") }}</div>
+          <div class="tooltip-content">{{ accountObject.locked }}</div>
+        </div>
+        <div class="tooltip-row">
+          <div class="tooltip-content" style="flex: 1">{{ $t("tooltip.spendable") }}</div>
+          <div class="tooltip-content">{{ accountObject.spendable }}</div>
+        </div>
+        <div class="tooltip-row">
+          <div class="tooltip-content" style="flex: 1">{{ $t("tooltip.pending") }}</div>
+          <div class="tooltip-content">{{ accountObject.pending }}</div>
         </div>
       </div>
     </div>
@@ -31,31 +31,36 @@
 <script>
 import { mapGetters } from "vuex";
 import { formatMoneyForDisplay } from "../util.js";
+
 export default {
   name: "AccountTooltip",
   data() {
     return {
       show: false,
-      accountObject: {}
+      accountObject: {},
+      timeout: undefined
     };
   },
   computed: {
     ...mapGetters("wallet", ["totalBalance", "lockedBalance", "spendableBalance", "pendingBalance", "immatureBalance"])
   },
   props: {
-    account: {
-      type: Object
-    },
+    account: {},
     type: {
       type: String
     }
   },
   methods: {
     showTooltip: function() {
-      this.show = !this.show;
-      if (this.show) {
-        this.getValues();
-      }
+      clearTimeout(this.timeout);
+      this.show = true;
+      this.getValues();
+    },
+    hideTooltip() {
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        this.show = false;
+      }, 100);
     },
     getValues() {
       if (this.type === "Account") {
@@ -96,11 +101,14 @@ export default {
 <style lang="less" scoped>
 .tooltip {
   position: relative;
+  z-index: 99;
 }
 .tooltip-container {
+  position: fixed;
+  z-index: 9990;
   display: flex;
   flex-direction: column;
-  margin-top: 6fpx;
+  margin-top: 6px;
   padding: 5px;
   border-radius: 2px;
   background-color: #fff;
@@ -113,10 +121,12 @@ export default {
   font-weight: bold;
   margin-bottom: 12px;
   color: #000;
+  line-height: 22px;
 }
 .tooltip-content {
   font-size: 0.85em;
   color: #000;
+  line-height: 22px;
 }
 .tooltip-row {
   display: flex;

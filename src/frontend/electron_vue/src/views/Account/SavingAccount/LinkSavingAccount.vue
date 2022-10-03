@@ -1,11 +1,7 @@
 <template>
   <div class="link-saving-account flex-col">
     <div class="main">
-      <content-wrapper v-if="needsUnlock" heading="link_saving_account.title" content="link_saving_account.information">
-        <app-form-field style="text-align: left;" title="common.password">
-          <input v-model="password" type="password" :class="passwordClass" @keydown="onPasswordKeydown" />
-        </app-form-field>
-      </content-wrapper>
+      <content-wrapper v-if="!hasWitnessKey" heading="link_saving_account.title" content="link_saving_account.information"> </content-wrapper>
 
       <content-wrapper v-else heading="link_saving_account.title">
         <div v-if="account.balance > 0">
@@ -24,17 +20,19 @@
       </content-wrapper>
     </div>
     <app-button-section>
-      <button @click="unlockAccount" v-if="needsUnlock">
+      <button @click="tryGetWitnessKey" v-if="!hasWitnessKey">
         {{ $t("buttons.next") }}
       </button>
     </app-button-section>
   </div>
 </template>
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import { clipboard, nativeImage } from "electron";
-import { LibraryController, AccountsController } from "../../../unity/Controllers";
+import { AccountsController } from "../../../unity/Controllers";
 import VueQrcode from "vue-qrcode";
+import EventBus from "../../../EventBus";
+
 export default {
   name: "LinkSavingAccount",
   components: {
@@ -42,65 +40,26 @@ export default {
   },
   data() {
     return {
-      witnessKey: "",
-      isPasswordInvalid: false,
-      password: "",
-      needsUnlock: true
+      witnessKey: null
     };
   },
   computed: {
-    ...mapState("wallet", ["walletPassword"]),
     ...mapGetters("wallet", ["account"]),
-    computedPassword() {
-      return this.walletPassword ? this.walletPassword : this.password || "";
-    },
-    passwordClass() {
-      return this.isPasswordInvalid ? "error" : "";
-    },
-    hasErrors() {
-      return this.isPasswordInvalid;
-    }
-  },
-  mounted() {
-    if (!LibraryController.IsWalletLocked()) {
-      this.getWitnessKey();
-      this.needsUnlock = false;
-      return;
-    }
-
-    if (this.witnessKey !== "") {
-      this.needsUnlock = false;
-      return;
-    }
-
-    this.needsUnlock = true;
-    if (this.walletPassword) {
-      this.password = this.walletPassword;
-      this.unlockAccount(this.walletPassword);
+    hasWitnessKey() {
+      return this.witnessKey !== null;
     }
   },
   methods: {
-    getWitnessKey() {
-      this.witnessKey = AccountsController.GetWitnessKeyURI(this.account.UUID);
-      this.needsUnlock = false;
+    tryGetWitnessKey() {
+      EventBus.$emit("unlock-wallet", {
+        callback: async () => {
+          this.witnessKey = AccountsController.GetWitnessKeyURI(this.account.UUID);
+        }
+      });
     },
     copyQr() {
       let img = nativeImage.createFromDataURL(this.$refs.qrcode.$el.src);
       clipboard.writeImage(img);
-    },
-    onPasswordKeydown(e) {
-      if (e.keyCode === 13 && this.password.length > 0) this.unlockAccount();
-    },
-    unlockAccount() {
-      if (LibraryController.UnlockWallet(this.password, 120)) {
-        this.getWitnessKey();
-        setTimeout(function() {
-          LibraryController.LockWallet();
-        }, 10);
-        this.password = "";
-      } else {
-        this.isPasswordInvalid = true;
-      }
     }
   }
 };

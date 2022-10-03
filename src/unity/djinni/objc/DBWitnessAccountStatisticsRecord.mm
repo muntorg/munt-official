@@ -8,6 +8,7 @@
 
 - (nonnull instancetype)initWithRequestStatus:(nonnull NSString *)requestStatus
                                 accountStatus:(nonnull NSString *)accountStatus
+                      blocksSinceLastActivity:(int64_t)blocksSinceLastActivity
                                 accountWeight:(int64_t)accountWeight
                       accountWeightAtCreation:(int64_t)accountWeightAtCreation
                                  accountParts:(int64_t)accountParts
@@ -26,6 +27,7 @@
     if (self = [super init]) {
         _requestStatus = [requestStatus copy];
         _accountStatus = [accountStatus copy];
+        _blocksSinceLastActivity = blocksSinceLastActivity;
         _accountWeight = accountWeight;
         _accountWeightAtCreation = accountWeightAtCreation;
         _accountParts = accountParts;
@@ -46,6 +48,7 @@
 
 + (nonnull instancetype)witnessAccountStatisticsRecordWithRequestStatus:(nonnull NSString *)requestStatus
                                                           accountStatus:(nonnull NSString *)accountStatus
+                                                blocksSinceLastActivity:(int64_t)blocksSinceLastActivity
                                                           accountWeight:(int64_t)accountWeight
                                                 accountWeightAtCreation:(int64_t)accountWeightAtCreation
                                                            accountParts:(int64_t)accountParts
@@ -63,6 +66,7 @@
 {
     return [(DBWitnessAccountStatisticsRecord*)[self alloc] initWithRequestStatus:requestStatus
                                                                     accountStatus:accountStatus
+                                                          blocksSinceLastActivity:blocksSinceLastActivity
                                                                     accountWeight:accountWeight
                                                           accountWeightAtCreation:accountWeightAtCreation
                                                                      accountParts:accountParts
@@ -81,7 +85,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p requestStatus:%@ accountStatus:%@ accountWeight:%@ accountWeightAtCreation:%@ accountParts:%@ accountAmountLocked:%@ accountAmountLockedAtCreation:%@ networkTipTotalWeight:%@ networkTotalWeightAtCreation:%@ accountInitialLockPeriodInBlocks:%@ accountRemainingLockPeriodInBlocks:%@ accountExpectedWitnessPeriodInBlocks:%@ accountEstimatedWitnessPeriodInBlocks:%@ accountInitialLockCreationBlockHeight:%@ compoundingPercent:%@ isOptimal:%@>", self.class, (void *)self, self.requestStatus, self.accountStatus, @(self.accountWeight), @(self.accountWeightAtCreation), @(self.accountParts), @(self.accountAmountLocked), @(self.accountAmountLockedAtCreation), @(self.networkTipTotalWeight), @(self.networkTotalWeightAtCreation), @(self.accountInitialLockPeriodInBlocks), @(self.accountRemainingLockPeriodInBlocks), @(self.accountExpectedWitnessPeriodInBlocks), @(self.accountEstimatedWitnessPeriodInBlocks), @(self.accountInitialLockCreationBlockHeight), @(self.compoundingPercent), @(self.isOptimal)];
+    return [NSString stringWithFormat:@"<%@ %p requestStatus:%@ accountStatus:%@ blocksSinceLastActivity:%@ accountWeight:%@ accountWeightAtCreation:%@ accountParts:%@ accountAmountLocked:%@ accountAmountLockedAtCreation:%@ networkTipTotalWeight:%@ networkTotalWeightAtCreation:%@ accountInitialLockPeriodInBlocks:%@ accountRemainingLockPeriodInBlocks:%@ accountExpectedWitnessPeriodInBlocks:%@ accountEstimatedWitnessPeriodInBlocks:%@ accountInitialLockCreationBlockHeight:%@ compoundingPercent:%@ isOptimal:%@>", self.class, (void *)self, self.requestStatus, self.accountStatus, @(self.blocksSinceLastActivity), @(self.accountWeight), @(self.accountWeightAtCreation), @(self.accountParts), @(self.accountAmountLocked), @(self.accountAmountLockedAtCreation), @(self.networkTipTotalWeight), @(self.networkTotalWeightAtCreation), @(self.accountInitialLockPeriodInBlocks), @(self.accountRemainingLockPeriodInBlocks), @(self.accountExpectedWitnessPeriodInBlocks), @(self.accountEstimatedWitnessPeriodInBlocks), @(self.accountInitialLockCreationBlockHeight), @(self.compoundingPercent), @(self.isOptimal)];
 }
 
 @end

@@ -27,4 +27,7 @@ pnpm-debug.log*
 # Exclude libunity .node file
 /src/unity/*.node
 
+# Confidential Credentials
+holdinAPI.js
+
 yarn.lock

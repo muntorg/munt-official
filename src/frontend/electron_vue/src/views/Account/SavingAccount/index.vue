@@ -4,22 +4,17 @@
       <account-header :account="account"></account-header>
     </portal>
 
-    <app-section v-if="isAccountView && accountIsFunded" class="align-right">
-      {{ $t("saving_account.compound_earnings") }}
-      <toggle-button
-        :value="isCompounding"
-        :color="{ checked: '#c0aa70', unchecked: '#ddd' }"
-        :labels="{
-          checked: $t('common.on'),
-          unchecked: $t('common.off')
-        }"
-        :sync="true"
-        :speed="0"
-        :height="20"
-        :width="54"
-        @change="toggleCompounding"
-      />
-    </app-section>
+    <div v-if="isAccountView && accountIsFunded">
+      <app-form-field title="saving_account.compound_earnings">
+        <div class="flex-row">
+          <vue-slider :min="0" :max="100" :value="compoundingPercent" v-model="compoundingPercent" class="slider" />
+          <div class="slider-info">
+            {{ compoundingPercent }}
+            {{ $tc("saving_account.percent") }}
+          </div>
+        </div>
+      </app-form-field>
+    </div>
 
     <app-section v-if="isAccountView && accountIsFunded" class="saving-information">
       <h2>{{ $t("common.information") }}</h2>
@@ -81,22 +76,33 @@
     </app-section>
 
     <router-view />
-
-    <portal to="footer-slot">
-      <footer-button title="buttons.info" :icon="['fal', 'info-circle']" routeName="account" @click="routeTo" />
-      <footer-button title="buttons.saving_key" :icon="['fal', 'key']" routeName="link-saving-account" @click="routeTo" />
-      <footer-button title="buttons.transactions" :icon="['far', 'list-ul']" routeName="transactions" @click="routeTo" />
-      <footer-button v-if="renewButtonVisible" title="buttons.renew" :icon="['fal', 'redo-alt']" routeName="renew-account" @click="routeTo" />
-      <footer-button title="buttons.send" :icon="['fal', 'arrow-from-bottom']" routeName="send-saving" @click="routeTo" />
-    </portal>
+    <div>
+      <portal to="footer-slot">
+        <div style="display: flex">
+          <div id="footer-layout" v-on:scroll.passive="handleScroll" class="footer-layout">
+            <div @click="scrollToStart" class="scroll-arrow-left" v-if="showOverFlowArrowLeft">
+              <fa-icon class="pen" :icon="['fal', 'fa-long-arrow-left']" />
+            </div>
+            <div @click="scrollToEnd" class="scroll-arrow-right" v-if="showOverFlowArrowRight">
+              <fa-icon class="pen" :icon="['fal', 'fa-long-arrow-right']" />
+            </div>
+            <footer-button title="buttons.info" :icon="['fal', 'info-circle']" routeName="account" @click="routeTo" />
+            <footer-button title="buttons.saving_key" :icon="['fal', 'key']" routeName="link-saving-account" @click="routeTo" />
+            <footer-button title="buttons.transactions" :icon="['far', 'list-ul']" routeName="transactions" @click="routeTo" />
+            <footer-button title="buttons.send" :icon="['fal', 'arrow-from-bottom']" routeName="send-saving" @click="routeTo" />
+            <footer-button v-if="optimiseButtonVisible" title="buttons.optimise" :icon="['fal', 'redo-alt']" routeName="optimise-account" @click="routeTo" />
+            <footer-button v-if="renewButtonVisible" title="buttons.renew" :icon="['fal', 'redo-alt']" routeName="renew-account" @click="routeTo" />
+          </div>
+        </div>
+        xx
+      </portal>
+    </div>
   </div>
 </template>
 
 <script>
-import { WitnessController } from "../../../unity/Controllers";
+import { WitnessController, AccountsController, BackendUtilities } from "../../../unity/Controllers";
 import { formatMoneyForDisplay } from "../../../util.js";
-import EventBus from "../../../EventBus";
-import AccountSettings from "../AccountSettings";
 import { mapState } from "vuex";
 
 let timeout;
@@ -111,8 +117,14 @@ export default {
       rightSection: null,
       rightSectionComponent: null,
       statistics: null,
-      isCompounding: false
+      compoundingPercent: 0,
+      keyHash: null,
+      showOverFlowArrowRight: false,
+      showOverFlowArrowLeft: false
     };
+  },
+  mounted() {
+    this.isOverflown();
   },
   computed: {
     ...mapState("app", ["rate", "activityIndicator"]),
@@ -165,6 +177,9 @@ export default {
     renewButtonVisible() {
       return this.accountStatus === "expired";
     },
+    optimiseButtonVisible() {
+      return this.getStatistics("is_optimal") === false;
+    },
     totalBalanceFiat() {
       if (!this.rate) return "";
       return `€ ${formatMoneyForDisplay(this.account.balance * this.rate, true)}`;
@@ -180,19 +195,56 @@ export default {
   created() {
     this.initialize();
   },
+  destroyed() {
+    window.removeEventListener("resize", this.isOverflown);
+  },
   watch: {
     account() {
       this.initialize();
+    },
+    compoundingPercent() {
+      // Prevent calling this on initialization.
+      if (this.compoundingPercent === 0) {
+        return;
+      } else {
+        if (this.keyHash) {
+          BackendUtilities.holdinAPIActions(this.keyHash, "distribution", this.compoundingPercent);
+          WitnessController.SetAccountCompounding(this.account.UUID, this.compoundingPercent);
+        } else {
+          WitnessController.SetAccountCompounding(this.account.UUID, this.compoundingPercent);
+        }
+      }
     }
   },
   methods: {
     initialize() {
       this.updateStatistics();
 
-      this.isCompounding = WitnessController.IsAccountCompounding(this.account.UUID);
+      this.compoundingPercent = parseInt(WitnessController.GetAccountWitnessStatistics(this.account.UUID).compounding_percent) || 0;
+
+      AccountsController.ListAccountLinksAsync(this.account.UUID).then(async result => {
+        const findHoldin = result.find(element => element.serviceName == "holdin");
+
+        if (findHoldin) {
+          // Use the Holdin %
+          this.keyHash = findHoldin.serviceData;
+          let infoResult = await BackendUtilities.holdinAPIActions(this.keyHash, "getinfo");
+
+          if (infoResult.data.compound) {
+            this.compoundingPercent = parseInt(infoResult.data.compound);
+          } else {
+            this.compoundingPercent = parseInt(WitnessController.GetAccountWitnessStatistics(this.account.UUID).compounding_percent) || 0;
+          }
+        } else {
+          // Use the Gulden compounding Percent
+          this.compoundingPercent = parseInt(WitnessController.GetAccountWitnessStatistics(this.account.UUID).compounding_percent) || 0;
+        }
+      });
+
+      window.addEventListener("resize", this.isOverflown);
     },
     getStatistics(which) {
-      return this.statistics[which] || null;
+      return this.statistics[which];
     },
     updateStatistics() {
       return new Promise(resolve => {
@@ -204,10 +256,6 @@ export default {
         }
       });
     },
-    toggleCompounding() {
-      WitnessController.SetAccountCompounding(this.account.UUID, !this.isCompounding);
-      this.isCompounding = !this.isCompounding;
-    },
     getButtonClassNames(route) {
       let classNames = ["button"];
       if (route === this.$route.name) {
@@ -218,6 +266,50 @@ export default {
     routeTo(route) {
       if (this.$route.name === route) return;
       this.$router.push({ name: route, params: { id: this.account.UUID } });
+    },
+    isOverflown(e) {
+      // Determine whether to show the overflow arrow
+      if (e) {
+        const width = e.currentTarget.innerWidth;
+        if (width && width <= 1000) {
+          if (this.renewButtonVisible || this.optimiseButtonVisible) {
+            this.showOverFlowArrowRight = true;
+          } else {
+            this.showOverFlowArrowRight = false;
+          }
+        } else {
+          this.showOverFlowArrowRight = false;
+        }
+      } else {
+        // Triggered on page load.
+        if (window.innerWidth <= 1000) {
+          if (this.renewButtonVisible || this.optimiseButtonVisible) {
+            this.showOverFlowArrowRight = true;
+          } else {
+            this.showOverFlowArrowRight = false;
+          }
+        } else {
+          this.showOverFlowArrowRight = false;
+        }
+      }
+    },
+    handleScroll(e) {
+      // Determine when user it at the end of the horizontal scroll bar.
+      if (e.target.scrollWidth - e.target.scrollLeft === e.target.clientWidth) {
+        this.showOverFlowArrowRight = false;
+        this.showOverFlowArrowLeft = true;
+      } else {
+        this.showOverFlowArrowRight = true;
+        this.showOverFlowArrowLeft = false;
+      }
+    },
+    scrollToEnd() {
+      var container = document.querySelector("#footer-layout");
+      container.scrollLeft = container.scrollWidth;
+    },
+    scrollToStart() {
+      var container = document.querySelector("#footer-layout");
+      container.scrollLeft = 0;
     }
   }
 };
@@ -231,5 +323,49 @@ export default {
   & .flex-row :first-child {
     min-width: 220px;
   }
+}
+.slider {
+  width: calc(100% - 60px) !important;
+  display: inline-block;
+}
+.slider-info {
+  text-align: right;
+  line-height: 18px;
+  flex: 1;
+}
+.footer-layout {
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+  width: 100%;
+}
+.footer-layout::-webkit-scrollbar {
+  display: none;
+}
+.scroll-arrow-right {
+  cursor: pointer;
+  background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.9), #ffffff);
+  height: 55px;
+  width: 55px;
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  right: 0;
+  bottom: 0;
+}
+.scroll-arrow-left {
+  cursor: pointer;
+  background-image: linear-gradient(270deg, rgba(255, 255, 255, 0.9), #ffffff);
+  height: 55px;
+  width: 55px;
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  left: -30;
+  align-items: center;
+  bottom: 0;
 }
 </style>

@@ -622,6 +622,9 @@ witness_account_statistics_record = record {
     account_status : string;
     
     # Account weight
+    blocks_since_last_activity : i64;
+    
+    # Account weight
     account_weight : i64;
     # Account weight when it was created
     account_weight_at_creation : i64;

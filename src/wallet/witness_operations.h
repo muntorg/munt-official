@@ -98,7 +98,7 @@ struct CWitnessAccountStatus
     uint64_t nLockFromBlock;
     uint64_t nLockUntilBlock;
     uint64_t nLockPeriodInBlocks;
-    std::vector<uint64_t> parts; // individual weights of all parts
+    std::vector<std::tuple<uint64_t, uint64_t>> parts; // individual weight and age of all parts
 };
 
 /** Get account witness status and accompanying details

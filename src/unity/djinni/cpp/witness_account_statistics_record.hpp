@@ -13,6 +13,8 @@ struct WitnessAccountStatisticsRecord final {
     /** Current state of the witness account, one of: "empty", "empty_with_remainder", "pending", "witnessing", "ended", "expired", "emptying" */
     std::string account_status;
     /** Account weight */
+    int64_t blocks_since_last_activity;
+    /** Account weight */
     int64_t account_weight;
     /** Account weight when it was created */
     int64_t account_weight_at_creation;
@@ -43,6 +45,7 @@ struct WitnessAccountStatisticsRecord final {
 
     WitnessAccountStatisticsRecord(std::string request_status_,
                                    std::string account_status_,
+                                   int64_t blocks_since_last_activity_,
                                    int64_t account_weight_,
                                    int64_t account_weight_at_creation_,
                                    int64_t account_parts_,
@@ -59,6 +62,7 @@ struct WitnessAccountStatisticsRecord final {
                                    bool is_optimal_)
     : request_status(std::move(request_status_))
     , account_status(std::move(account_status_))
+    , blocks_since_last_activity(std::move(blocks_since_last_activity_))
     , account_weight(std::move(account_weight_))
     , account_weight_at_creation(std::move(account_weight_at_creation_))
     , account_parts(std::move(account_parts_))

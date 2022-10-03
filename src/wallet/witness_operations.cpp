@@ -792,8 +792,8 @@ CWitnessAccountStatus GetWitnessAccountStatus(CWallet* pWallet, CAccount* accoun
 
     bool hasScriptLegacyOutput = std::any_of(accountItems.begin(), accountItems.end(), [](const RouletteItem& ri){ return ri.coin.out.GetType() == CTxOutType::ScriptLegacyOutput; });
 
-    std::vector<uint64_t> parts;
-    std::transform(accountItems.begin(), accountItems.end(), std::back_inserter(parts), [](const auto& ri) { return ri.nWeight; });
+    std::vector<std::tuple<uint64_t, uint64_t>> parts;
+    std::transform(accountItems.begin(), accountItems.end(), std::back_inserter(parts), [](const auto& ri) { return std::tuple(ri.nWeight, ri.nAge); });
 
     CWitnessAccountStatus result {
         account,

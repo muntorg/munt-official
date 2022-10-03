@@ -19,6 +19,7 @@
 
 BOOST_FIXTURE_TEST_SUITE(unity_tests, BasicTestingSetup)
 
+#ifdef ANDROID
 bool retrieveWallet(std::string sFile, std::string sPassword, std::string phraseCheck)
 {
     android_wallet wallet = ParseAndroidProtoWallet(sFile, sPassword);
@@ -51,7 +52,9 @@ bool retrieveEncryptedWalletWithWrongPassword(std::string sFile, std::string sPa
 
     return false;
 }
+#endif
 
+#ifdef ANDROID
 // Issues using protobuf with _GLIBCXX_DEBUG enabled on travis
 #ifndef _GLIBCXX_DEBUG
 BOOST_AUTO_TEST_CASE(unity_android_wallet_import)
@@ -65,6 +68,7 @@ BOOST_AUTO_TEST_CASE(unity_android_wallet_import)
     BOOST_CHECK(retrieveEncryptedWalletWithoutPassword(TESTDATADIR"wallet-seed-password-1234-protobuf","","umbrella dune genuine busy whip core famous pattern impulse solid nice film"));
     BOOST_CHECK(retrieveEncryptedWalletWithWrongPassword(TESTDATADIR"wallet-seed-password-1234-protobuf","4321","umbrella dune genuine busy whip core famous pattern impulse solid nice film"));
 }
+#endif
 #endif
 
 

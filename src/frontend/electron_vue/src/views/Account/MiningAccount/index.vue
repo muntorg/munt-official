@@ -126,9 +126,11 @@
     </button>
 
     <portal to="footer-slot">
-      <footer-button title="buttons.info" :icon="['fal', 'info-circle']" routeName="account" @click="routeTo" />
-      <footer-button title="buttons.transactions" :icon="['far', 'list-ul']" routeName="transactions" @click="routeTo" />
-      <footer-button title="buttons.send" :icon="['fal', 'arrow-from-bottom']" routeName="send-saving" @click="routeTo" />
+      <div style="display: flex">
+        <footer-button title="buttons.info" :icon="['fal', 'info-circle']" routeName="account" @click="routeTo" />
+        <footer-button title="buttons.transactions" :icon="['far', 'list-ul']" routeName="transactions" @click="routeTo" />
+        <footer-button title="buttons.send" :icon="['fal', 'arrow-from-bottom']" routeName="send-saving" @click="routeTo" />
+      </div>
     </portal>
   </div>
 </template>
@@ -138,7 +140,6 @@ import { mapState } from "vuex";
 import { formatMoneyForDisplay } from "../../../util.js";
 import { GenerationController, LibraryController } from "../../../unity/Controllers";
 import { clipboard } from "electron";
-import Send from "./Send";
 
 export default {
   name: "MiningAccount",

@@ -4,6 +4,7 @@ import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
 import store from "../store";
+import { apiKey } from "../../holdinAPI";
 
 import libUnity from "native-ext-loader!./lib_unity.node";
 
@@ -35,6 +36,8 @@ class LibUnity {
     this.witnessController = new libUnity.NJSIWitnessController();
 
     this.rpcController = new libUnity.NJSIRpcController();
+
+    this.p2pNetworkController = new libUnity.NJSIP2pNetworkController();
 
     let buildInfo = this.libraryController.BuildInfo();
 
@@ -72,6 +75,28 @@ class LibUnity {
     this.walletListener.notifyBalanceChange = function(new_balance) {
       console.log(`walletListener.notifyBalanceChange`);
       store.dispatch("wallet/SET_WALLET_BALANCE", new_balance);
+    };
+
+    this.walletListener.notifyWalletUnlocked = function() {
+      console.log("receive: notifyWalletUnlocked");
+      store.dispatch("wallet/SET_UNLOCKED", true);
+    };
+
+    this.walletListener.notifyWalletLocked = function() {
+      console.log("receive: notifyWalletLocked");
+      store.dispatch("wallet/SET_UNLOCKED", false);
+    };
+
+    /** Core wants the wallet to unlock; UI should respond to this by calling 'UnlockWallet' */
+    this.walletListener.notifyCoreWantsUnlock = function(reason) {
+      console.log("receive: notifyCoreWantsUnlock", reason);
+      // TODO: show unlock dialog with reason (localized?)
+    };
+
+    /** Core wants display info to the user, type can be one of "MSG_ERROR", "MSG_WARNING", "MSG_INFORMATION"; caption is the suggested caption and message the suggested message to display */
+    this.walletListener.notifyCoreInfo = function(type, caption, message) {
+      console.log("receive: notifyCoreInfo", type, caption, message);
+      // TODO: dispatch message event. add message to queue??
     };
 
     this.walletController.setListener(this.walletListener);
@@ -1594,6 +1619,136 @@ class LibUnity {
       }
     });
 
+    ipc.answerRenderer("NJSIP2pNetworkController.listBannedPeersAsync", async () => {
+      console.log(`IPC: p2pNetworkController.listBannedPeersAsync()`);
+      try {
+        let result = this.p2pNetworkController.listBannedPeers();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIP2pNetworkController.listBannedPeers", event => {
+      console.log(`IPC: p2pNetworkController.listBannedPeers()`);
+      try {
+        let result = this.p2pNetworkController.listBannedPeers();
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIP2pNetworkController.banPeerAsync", async data => {
+      console.log(`IPC: p2pNetworkController.banPeerAsync(${data.address}, ${data.banTimeInSeconds})`);
+      try {
+        let result = this.p2pNetworkController.banPeer(data.address, data.banTimeInSeconds);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIP2pNetworkController.banPeer", (event, address, banTimeInSeconds) => {
+      console.log(`IPC: p2pNetworkController.banPeer(${address}, ${banTimeInSeconds})`);
+      try {
+        let result = this.p2pNetworkController.banPeer(address, banTimeInSeconds);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIP2pNetworkController.unbanPeerAsync", async data => {
+      console.log(`IPC: p2pNetworkController.unbanPeerAsync(${data.address})`);
+      try {
+        let result = this.p2pNetworkController.unbanPeer(data.address);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIP2pNetworkController.unbanPeer", (event, address) => {
+      console.log(`IPC: p2pNetworkController.unbanPeer(${address})`);
+      try {
+        let result = this.p2pNetworkController.unbanPeer(address);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIP2pNetworkController.disconnectPeerAsync", async data => {
+      console.log(`IPC: p2pNetworkController.disconnectPeerAsync(${data.nodeid})`);
+      try {
+        let result = this.p2pNetworkController.disconnectPeer(data.nodeid);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIP2pNetworkController.disconnectPeer", (event, nodeid) => {
+      console.log(`IPC: p2pNetworkController.disconnectPeer(${nodeid})`);
+      try {
+        let result = this.p2pNetworkController.disconnectPeer(nodeid);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIP2pNetworkController.ClearBannedAsync", async () => {
+      console.log(`IPC: p2pNetworkController.ClearBannedAsync()`);
+      try {
+        let result = this.p2pNetworkController.ClearBanned();
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIP2pNetworkController.ClearBanned", event => {
+      console.log(`IPC: p2pNetworkController.ClearBanned()`);
+      try {
+        let result = this.p2pNetworkController.ClearBanned();
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
     // Register NJSIAccountsController ipc handlers
     ipc.answerRenderer("NJSIAccountsController.listAccountsAsync", async () => {
       console.log(`IPC: accountsController.listAccountsAsync()`);
@@ -2038,9 +2193,9 @@ class LibUnity {
     });
 
     ipc.answerRenderer("NJSIAccountsController.addAccountLinkAsync", async data => {
-      console.log(`IPC: accountsController.addAccountLinkAsync(${data.accountUUID}, ${data.serviceName})`);
+      console.log(`IPC: accountsController.addAccountLinkAsync(${data.accountUUID}, ${data.serviceName}, ${data.data})`);
       try {
-        let result = this.accountsController.addAccountLink(data.accountUUID, data.serviceName);
+        let result = this.accountsController.addAccountLink(data.accountUUID, data.serviceName, data.data);
         return {
           success: true,
           result: result
@@ -2050,10 +2205,10 @@ class LibUnity {
       }
     });
 
-    ipc.on("NJSIAccountsController.addAccountLink", (event, accountUUID, serviceName) => {
-      console.log(`IPC: accountsController.addAccountLink(${accountUUID}, ${serviceName})`);
+    ipc.on("NJSIAccountsController.addAccountLink", (event, accountUUID, serviceName, data) => {
+      console.log(`IPC: accountsController.addAccountLink(${accountUUID}, ${serviceName}, ${data})`);
       try {
-        let result = this.accountsController.addAccountLink(accountUUID, serviceName);
+        let result = this.accountsController.addAccountLink(accountUUID, serviceName, data);
         event.returnValue = {
           success: true,
           result: result
@@ -2333,6 +2488,84 @@ class LibUnity {
       }
     });
 
+    ipc.answerRenderer("NJSIWitnessController.getOptimalWitnessDistributionAsync", async data => {
+      console.log(`IPC: witnessController.getOptimalWitnessDistributionAsync(${data.amount}, ${data.durationInBlocks}, ${data.totalNetworkWeight})`);
+      try {
+        let result = this.witnessController.getOptimalWitnessDistribution(data.amount, data.durationInBlocks, data.totalNetworkWeight);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIWitnessController.getOptimalWitnessDistribution", (event, amount, durationInBlocks, totalNetworkWeight) => {
+      console.log(`IPC: witnessController.getOptimalWitnessDistribution(${amount}, ${durationInBlocks}, ${totalNetworkWeight})`);
+      try {
+        let result = this.witnessController.getOptimalWitnessDistribution(amount, durationInBlocks, totalNetworkWeight);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIWitnessController.getOptimalWitnessDistributionForAccountAsync", async data => {
+      console.log(`IPC: witnessController.getOptimalWitnessDistributionForAccountAsync(${data.witnessAccountUUID})`);
+      try {
+        let result = this.witnessController.getOptimalWitnessDistributionForAccount(data.witnessAccountUUID);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIWitnessController.getOptimalWitnessDistributionForAccount", (event, witnessAccountUUID) => {
+      console.log(`IPC: witnessController.getOptimalWitnessDistributionForAccount(${witnessAccountUUID})`);
+      try {
+        let result = this.witnessController.getOptimalWitnessDistributionForAccount(witnessAccountUUID);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
+    ipc.answerRenderer("NJSIWitnessController.optimiseWitnessAccountAsync", async data => {
+      console.log(`IPC: witnessController.optimiseWitnessAccountAsync(${data.witnessAccountUUID}, ${data.fundingAccountUUID}, ${data.optimalDistribution})`);
+      try {
+        let result = this.witnessController.optimiseWitnessAccount(data.witnessAccountUUID, data.fundingAccountUUID, data.optimalDistribution);
+        return {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        return handleError(e);
+      }
+    });
+
+    ipc.on("NJSIWitnessController.optimiseWitnessAccount", (event, witnessAccountUUID, fundingAccountUUID, optimalDistribution) => {
+      console.log(`IPC: witnessController.optimiseWitnessAccount(${witnessAccountUUID}, ${fundingAccountUUID}, ${optimalDistribution})`);
+      try {
+        let result = this.witnessController.optimiseWitnessAccount(witnessAccountUUID, fundingAccountUUID, optimalDistribution);
+        event.returnValue = {
+          success: true,
+          result: result
+        };
+      } catch (e) {
+        event.returnValue = handleError(e);
+      }
+    });
+
     // Register NJSIGenerationController ipc handlers
     ipc.answerRenderer("NJSIGenerationController.startGenerationAsync", async data => {
       console.log(`IPC: generationController.startGenerationAsync(${data.numThreads}, ${data.numArenaThreads}, ${data.memoryLimit})`);
@@ -2548,7 +2781,7 @@ class LibUnity {
       try {
         var formData = new FormData();
         formData.append("address", store.state.wallet.receiveAddress);
-        formData.append("currency", "gulden");
+        formData.append("currency", "munt");
         formData.append("wallettype", "pro");
         formData.append("uuid", this.walletController.GetUUID());
 
@@ -2573,7 +2806,7 @@ class LibUnity {
       try {
         var formData = new FormData();
         formData.append("address", store.state.wallet.receiveAddress);
-        formData.append("currency", "gulden");
+        formData.append("currency", "munt");
         formData.append("wallettype", "pro");
         formData.append("uuid", this.walletController.GetUUID());
 
@@ -2590,6 +2823,56 @@ class LibUnity {
           success: true,
           result: "https://munt.org/sell"
         };
+      }
+    });
+
+    ipc.on("BackendUtilities.holdinAPIActions", async (event, params) => {
+      console.log(`IPC: BackendUtilities.holdinAPIActions()`);
+
+      try {
+        let data = {};
+
+        if (params.action == "payoutaddress") {
+          data = JSON.stringify({
+            holdingkey: params.witnessKey,
+            action: params.action,
+            payoutaddress: params.data
+          });
+        } else if (params.action == "distribution") {
+          data = JSON.stringify({
+            holdingkey: params.witnessKey,
+            action: params.action,
+            compoundpercentage: params.data
+          });
+        } else {
+          data = JSON.stringify({
+            holdingkey: params.witnessKey,
+            action: params.action
+          });
+        }
+
+        var config = {
+          method: "post",
+          url: "https://api.holdin.com/api/v1/",
+          headers: {
+            Authorization: apiKey,
+            "Content-Type": "application/json"
+          },
+          data: data
+        };
+
+        axios(config)
+          .then(function(response) {
+            event.returnValue = {
+              success: response.data.status_code === 200,
+              result: response.data
+            };
+          })
+          .catch(function(error) {
+            event.returnValue = handleError(error);
+          });
+      } catch (e) {
+        event.returnValue = handleError(e);
       }
     });
   }

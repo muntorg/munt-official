@@ -15,6 +15,7 @@ auto NativeWitnessAccountStatisticsRecord::fromCpp(JNIEnv* jniEnv, const CppType
     auto r = ::djinni::LocalRef<JniType>{jniEnv->NewObject(data.clazz.get(), data.jconstructor,
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.request_status)),
                                                            ::djinni::get(::djinni::String::fromCpp(jniEnv, c.account_status)),
+                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.blocks_since_last_activity)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_weight)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_weight_at_creation)),
                                                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.account_parts)),
@@ -34,11 +35,12 @@ auto NativeWitnessAccountStatisticsRecord::fromCpp(JNIEnv* jniEnv, const CppType
 }
 
 auto NativeWitnessAccountStatisticsRecord::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
-    ::djinni::JniLocalScope jscope(jniEnv, 17);
+    ::djinni::JniLocalScope jscope(jniEnv, 18);
     assert(j != nullptr);
     const auto& data = ::djinni::JniClass<NativeWitnessAccountStatisticsRecord>::get();
     return {::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mRequestStatus)),
             ::djinni::String::toCpp(jniEnv, (jstring)jniEnv->GetObjectField(j, data.field_mAccountStatus)),
+            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mBlocksSinceLastActivity)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountWeight)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountWeightAtCreation)),
             ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mAccountParts)),

@@ -9,13 +9,13 @@
           </span>
         </div>
       </div>
-      <div :class="contentClass">
+      <div class="content">
         {{ message }}
-        <component v-if="component" :is="component" v-bind="componentProps"></component>
       </div>
       <app-button-section class="buttons" v-if="showButtons">
         <template v-slot:right>
-          <button @click="closeModal">{{ $t("buttons.ok") }}</button>
+          <button @click="closeModal">{{ $t("buttons.cancel") }}</button>
+          <button @click="confirm">{{ $t("buttons.confirm") }}</button>
         </template>
       </app-button-section>
     </div>
@@ -23,10 +23,8 @@
 </template>
 
 <script>
-import EventBus from "../EventBus";
-
 export default {
-  name: "ModalDialog",
+  name: "ConfirmDialog",
   props: {
     value: {
       type: Object,
@@ -38,10 +36,7 @@ export default {
       return this.value !== null;
     },
     title() {
-      return this.value.title || "title";
-    },
-    contentClass() {
-      return `content ${this.value.noMargin ? "no-margin" : ""}`;
+      return this.value.title || "Are you sure?";
     },
     showButtons() {
       return typeof this.value.showButtons === "boolean" ? this.value.showButtons : true;
@@ -61,7 +56,10 @@ export default {
   },
   methods: {
     closeModal() {
-      EventBus.$emit("close-dialog");
+      this.value.closeModal();
+    },
+    confirm() {
+      this.value.confirm();
     }
   }
 };
@@ -121,10 +119,10 @@ export default {
   }
 }
 
-.content:not(.no-margin) {
+.content {
   margin: 30px 0;
   padding: 0 30px;
-  overflow-y: auto;
+  height: auto;
 }
 
 .buttons {

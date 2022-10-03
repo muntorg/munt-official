@@ -62,14 +62,14 @@
     "password": "Wachtwoord",
     "receiving_address": "Ontvangstadres",
     "days": "Dagen",
-    "ticker_symbol": "NLG"
+    "ticker_symbol": "MUNT"
   },
   "new_wallet": {
     "title": "Welkom bij jouw Munt wallet",
     "information": "Deze wallet staat alleen op jouw apparaat.\nGeef nooit iemand anders toegang tot jouw wallet.\nBewaar de herstelzin die je te zien krijgt tijdens installatie op een veilige plek.\nHerstelzin kwijt of iemand toegang tot je herstelzin = Munt weg."
   },
   "saving_account": {
-    "compound_earnings": "cumulatieve inkomsten",
+    "compound_earnings": "Cumulatieve Inkomsten",
     "status": "Status",
     "parts": "Delen",
     "coins_locked": "Primair vastgezette aantal",
@@ -83,7 +83,8 @@
     "expected_earnings_frequency": "Verwachte beloningstijd",
     "account_weight": "Gewicht",
     "network_weight": "Netwerk gewicht",
-    "empty": "Deze witness rekening is leeg"
+    "empty": "Deze witness rekening is leeg",
+    "percent": "%"
   },
   "loader": {
     "shutdown": "Bezig met afsluiten...",
@@ -157,7 +158,8 @@
     "enter_coins_address": "Voer Munt adres in",
     "confirm_transaction": "Bevestig transactie",
     "target_account": "Verstuur naar rekening",
-    "fee_will_be_subtracted": "De transactie fee wordt van het bedrag afgehaald"
+    "fee_will_be_subtracted": "De transactie fee wordt van het bedrag afgehaald",
+    "unlock_your_wallet_to_complete_the_transaction": "Ontgrendel je portemonnee om de transactie af te ronden"
   },
   "renew_saving_account": {
     "funding_account": "Betaal vergoeding van rekening"
@@ -166,5 +168,18 @@
     "title": "Jouw witness key",
     "information": "Gebruik je witness key alleen voor vertrouwde cloud witness services. Jouw witness key geeft toegang tot jouw beloningen, laat deze dus nooit aan andere mensen zien.",
     "no_funds": "Witness rekening moet worden gevuld met vastgezette Munt voordat het mogelijk is om deze te koppelen met andere wallets."
+  },
+  "tooltip": {
+    "account_balance": "Account balans",
+    "wallet_balance": "Portemonnee balans",
+    "total": "Totaal",
+    "locked": "Vastgezet",
+    "spendable": "Te spenderen",
+    "pending": "In afwachting"
+  },
+  "unlock_wallet_dialog": {
+    "title": "Portemonnee ontgrendelen",
+    "unlock_for": "Ontgrendelen voor...",
+    "minute": "{n} minuut | {n} minuten"
   }
 }

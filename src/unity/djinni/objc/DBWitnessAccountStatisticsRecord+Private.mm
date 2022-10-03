@@ -12,6 +12,7 @@ auto WitnessAccountStatisticsRecord::toCpp(ObjcType obj) -> CppType
     assert(obj);
     return {::djinni::String::toCpp(obj.requestStatus),
             ::djinni::String::toCpp(obj.accountStatus),
+            ::djinni::I64::toCpp(obj.blocksSinceLastActivity),
             ::djinni::I64::toCpp(obj.accountWeight),
             ::djinni::I64::toCpp(obj.accountWeightAtCreation),
             ::djinni::I64::toCpp(obj.accountParts),
@@ -32,6 +33,7 @@ auto WitnessAccountStatisticsRecord::fromCpp(const CppType& cpp) -> ObjcType
 {
     return [[DBWitnessAccountStatisticsRecord alloc] initWithRequestStatus:(::djinni::String::fromCpp(cpp.request_status))
                                                              accountStatus:(::djinni::String::fromCpp(cpp.account_status))
+                                                   blocksSinceLastActivity:(::djinni::I64::fromCpp(cpp.blocks_since_last_activity))
                                                              accountWeight:(::djinni::I64::fromCpp(cpp.account_weight))
                                                    accountWeightAtCreation:(::djinni::I64::fromCpp(cpp.account_weight_at_creation))
                                                               accountParts:(::djinni::I64::fromCpp(cpp.account_parts))

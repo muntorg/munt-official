@@ -6,6 +6,7 @@
 @interface DBWitnessAccountStatisticsRecord : NSObject
 - (nonnull instancetype)initWithRequestStatus:(nonnull NSString *)requestStatus
                                 accountStatus:(nonnull NSString *)accountStatus
+                      blocksSinceLastActivity:(int64_t)blocksSinceLastActivity
                                 accountWeight:(int64_t)accountWeight
                       accountWeightAtCreation:(int64_t)accountWeightAtCreation
                                  accountParts:(int64_t)accountParts
@@ -22,6 +23,7 @@
                                     isOptimal:(BOOL)isOptimal;
 + (nonnull instancetype)witnessAccountStatisticsRecordWithRequestStatus:(nonnull NSString *)requestStatus
                                                           accountStatus:(nonnull NSString *)accountStatus
+                                                blocksSinceLastActivity:(int64_t)blocksSinceLastActivity
                                                           accountWeight:(int64_t)accountWeight
                                                 accountWeightAtCreation:(int64_t)accountWeightAtCreation
                                                            accountParts:(int64_t)accountParts
@@ -42,6 +44,9 @@
 
 /** Current state of the witness account, one of: "empty", "empty_with_remainder", "pending", "witnessing", "ended", "expired", "emptying" */
 @property (nonatomic, readonly, nonnull) NSString * accountStatus;
+
+/** Account weight */
+@property (nonatomic, readonly) int64_t blocksSinceLastActivity;
 
 /** Account weight */
 @property (nonatomic, readonly) int64_t accountWeight;
