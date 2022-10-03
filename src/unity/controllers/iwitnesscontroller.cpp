@@ -263,14 +263,21 @@ bool GetWitnessInfoForAccount(CAccount* forAccount, WitnessInfoForAccount& infoF
     {
         uint64_t networkWeight = infoForAccount.nTotalNetworkWeightTip;
         // Worst case all parts witness at latest opportunity so part with maximum weight will be the first to be required to witness
-        infoForAccount.nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(std::get<0>(*std::max_element(parts.begin(), parts.end(), [](std::tuple<uint64_t, uint64_t> l, std::tuple<uint64_t, uint64_t> r) {return std::get<0>(l) > std::get<0>(r);})), networkWeight);
-
-        // Combine estimated witness frequency f for part frequencies f1..fN: 1/f = 1/f1 + .. 1/fN
-        double fInv = std::accumulate(parts.begin(), parts.end(), 0.0, [=](const double acc, const std::tuple<uint64_t, uint64_t> w){
-            uint64_t fn = estimatedWitnessBlockPeriod(std::get<0>(w), networkWeight);
-            return acc + 1.0/fn;
-        });
+        if (parts.size() > 0)
+        {
+            infoForAccount.nExpectedWitnessBlockPeriod = expectedWitnessBlockPeriod(std::get<0>(*std::max_element(parts.begin(), parts.end(), [](std::tuple<uint64_t, uint64_t> l, std::tuple<uint64_t, uint64_t> r) {return std::get<0>(l) > std::get<0>(r);})), networkWeight);
+                // Combine estimated witness frequency f for part frequencies f1..fN: 1/f = 1/f1 + .. 1/fN
+                double fInv = std::accumulate(parts.begin(), parts.end(), 0.0, [=](const double acc, const std::tuple<uint64_t, uint64_t> w){
+                uint64_t fn = estimatedWitnessBlockPeriod(std::get<0>(w), networkWeight);
+                return acc + 1.0/fn;
+            });
         infoForAccount.nEstimatedWitnessBlockPeriod = uint64_t(1.0/fInv);
+        }
+        else
+        {
+            infoForAccount.nExpectedWitnessBlockPeriod = 0;
+            infoForAccount.nEstimatedWitnessBlockPeriod = 0;
+        }
     }
 
     infoForAccount.nLockBlocksRemaining = GetPoW2RemainingLockLengthInBlocks(accountStatus.nLockUntilBlock, chainActive.Tip()->nHeight);
