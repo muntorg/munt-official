@@ -1,4 +1,11 @@
-3.0.0
+3.0.2
+
+CORE      - Fix a crash that was triggering on windows builds
+
+
+
+
+3.0.1
 
 Software rebrands to Munt name.
 This build represents our final switch from Qt to Electron for UI builds, Qt is completely removed from the codebase, users who require Qt specific functionality should remain on 2.5.0 until the 3.x series matures and gains more features
