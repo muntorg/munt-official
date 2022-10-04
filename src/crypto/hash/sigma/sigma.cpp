@@ -1039,7 +1039,13 @@ template<int verifyLevel> bool sigma_verify_context::verifyHeader(CBlockHeader h
     argonContext.pwdlen = 80;
 
     argonContext.lanes = settings.numVerifyThreads;
+    #ifdef WIN32
+    //fixme: (HIGH) argon threading code is causing crashes on win32 since we switched to the new GUIX based toolchain (not when called from mining thread though...)
+    //We use 1 thread for now to prevent this, but we should look into this more when time allows
+    argonContext.threads = 1;
+    #else
     argonContext.threads = numUserVerifyThreads;
+    #endif
 
     if (selected_argon2_echo_hash(&argonContext, true) != ARGON2_OK)
         assert(0);
