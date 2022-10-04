@@ -378,7 +378,7 @@ void handlePostInitMain()
         boost::chrono::microseconds ms  = boost::chrono::duration_cast<boost::chrono::microseconds>(boost::chrono::thread_clock::now() - tpStart);
         uint64_t nTotal = ms.count();
 #else
-        uint64_t nTotal = GetTimeMicros() - nStart;
+        uint64_t nTotal = std::max(GetTimeMicros() - nStart, (uint64_t)1);
 #endif
         uint64_t nPerSec = 1000000/nTotal;
         if (nPerSec > 1000) // Fast enough to do most the blocks
