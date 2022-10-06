@@ -9,14 +9,14 @@
         />
     <item
         android:id="@+id/item_copy_to_clipboard"
-        android:icon="@drawable/ic_glyphicons_512_copy"
+        android:icon="@drawable/ic_fontawesome_copy"
         app:showAsAction="ifRoom|withText"
         android:title="@string/action_bar_copy_long"
         android:titleCondensed="@string/action_bar_copy"
         />
     <item
         android:id="@+id/action_share"
-        android:icon="@drawable/ic_glyphicons_309_share_alt"
+        android:icon="@drawable/ic_fontawesome_share_nodes"
         app:showAsAction="always"
         android:title="@string/action_bar_share"
         android:titleCondensed="@string/action_bar_share"

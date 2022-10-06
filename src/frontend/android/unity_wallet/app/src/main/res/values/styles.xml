@@ -19,7 +19,7 @@ file COPYING
         <item name="android:actionModeBackground">@color/bg_main</item>
         <item name="actionModeCloseDrawable">@color/colorPrimary</item>
         <item name="android:actionModeStyle">@style/MyActionBar</item>
-        <item name="actionModeShareDrawable">@drawable/ic_glyphicons_309_share_alt</item>
+        <item name="actionModeShareDrawable">@drawable/ic_fontawesome_share_nodes</item>
 
         <item name="preferenceTheme">@style/AppTheme.PreferenceThemeOverlay</item>
     </style>

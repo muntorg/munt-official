@@ -912,7 +912,6 @@ private constructor()
         @SuppressLint("Assert")
         fun release()
         {
-            assert(mProcessingThread?.state == State.TERMINATED)
             mDetector?.release()
             mDetector = null
         }

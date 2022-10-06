@@ -66,9 +66,9 @@ file COPYING
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
+        android:layout_width="@dimen/top_logo_size"
+        android:layout_height="@dimen/top_logo_size"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/image_content_description_logo"
         android:src="@drawable/ic_logo"
