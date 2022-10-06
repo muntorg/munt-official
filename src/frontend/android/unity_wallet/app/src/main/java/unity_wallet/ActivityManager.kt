@@ -129,7 +129,7 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
 
             val title = getString(if (mutation.change > 0) R.string.notify_received else R.string.notify_sent)
             val notification = with(NotificationCompat.Builder(this)) {
-                setSmallIcon(R.drawable.ic_g_logo)
+                setSmallIcon(R.drawable.ic_logo)
                 setContentTitle(title)
                 setTicker(title)
                 setContentText(formatNative(mutation.change))

@@ -325,7 +325,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), BarcodeTracker.BarcodeUpdate
         val listener = DialogInterface.OnClickListener { _, id -> finish() }
 
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Gulden").setMessage("Unable to get camera permission").setPositiveButton("ok", listener).show()
+        builder.setTitle("Munt").setMessage("Unable to get camera permission").setPositiveButton("ok", listener).show()
     }
 
     /**

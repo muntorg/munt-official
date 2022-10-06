@@ -15,9 +15,9 @@ file COPYING
     <string name="welcome_activity_recover_existing_wallet">Recuperar monedero</string>
     <string name="welcome_activity_sync_with_desktop">Contectar a computadora</string>
     <string name="recover_from_phrase_intro">Entre su frase de recuperación para realizar una recuperación</string>
-    <string name="show_recovery_phrase_EULA">Al usar la aplicación Gulden acuerdas explícita e incondicionalmente que cargas con la responsabilidad de la gestión y del depósito de tus Guldens.</string>
+    <string name="show_recovery_phrase_EULA">Al usar la aplicación Munt acuerdas explícita e incondicionalmente que cargas con la responsabilidad de la gestión y del depósito de tus Munt.</string>
     <string name="recovery_phrase_continue">Continuar</string>
-    <string name="show_recovery_phrase_introtext">Abajo está su frase de recuperación secreta, anótala y manténgala segura. Perder frase = perder Guldens. Otra persona tiene acceso a la frase = perder Guldens.</string>
+    <string name="show_recovery_phrase_introtext">Abajo está su frase de recuperación secreta, anótala y manténgala segura. Perder frase = perder Munt. Otra persona tiene acceso a la frase = perder Munt.</string>
     <string name="recovery_phrase_acknowledge_writing_down">La he anotado</string>
     <string name="recovery_phrase_copy">Frase de recuperación copiada al portapapeles</string>
     <string name="peer_list_fragment_empty">No hay pares conectados</string>

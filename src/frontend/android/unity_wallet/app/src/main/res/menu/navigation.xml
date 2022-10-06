@@ -9,22 +9,22 @@ file COPYING
 
     <item
         android:id="@+id/navigation_send"
-        android:icon="@drawable/ic_glyphicons_219_circle_arrow_top"
+        android:icon="@drawable/ic_fontawesome_circle_arrow_up"
         android:title="@string/title_send" />
 
     <item
         android:id="@+id/navigation_receive"
-        android:icon="@drawable/ic_glyphicons_220_circle_arrow_down"
+        android:icon="@drawable/ic_fontawesome_circle_arrow_down"
         android:title="@string/title_receive" />
 
     <item
         android:id="@+id/navigation_transactions"
-        android:icon="@drawable/ic_glyphicons_115_list"
+        android:icon="@drawable/ic_fontawesome_square_list"
         android:title="@string/title_transactions" />
 
     <item
         android:id="@+id/navigation_settings"
-        android:icon="@drawable/ic_glyphicons_137_cogwheel"
+        android:icon="@drawable/ic_fontawesome_gear"
         android:title="@string/title_settings" />
 
 </menu>

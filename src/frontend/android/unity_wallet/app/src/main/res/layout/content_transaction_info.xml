@@ -9,7 +9,7 @@ file COPYING
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/veryLightGray"
+    android:background="@color/bg_main"
     tools:context="unity_wallet.TransactionInfoActivity"
     tools:showIn="@layout/activity_transaction_info">
 

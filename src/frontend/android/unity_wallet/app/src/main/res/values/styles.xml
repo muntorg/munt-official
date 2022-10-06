@@ -10,17 +10,13 @@ file COPYING
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorSurface">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
         <item name="coordinatorLayoutStyle">@style/Widget.Support.CoordinatorLayout</item>
         <item name="floatingActionButtonStyle">@style/Widget.Design.FloatingActionButton</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
 
 
 
-        <item name="android:actionModeBackground">@color/colorPrimary</item>
+        <item name="android:actionModeBackground">@color/bg_main</item>
         <item name="actionModeCloseDrawable">@color/colorPrimary</item>
         <item name="android:actionModeStyle">@style/MyActionBar</item>
         <item name="actionModeShareDrawable">@drawable/ic_glyphicons_309_share_alt</item>
@@ -34,15 +30,12 @@ file COPYING
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.BlueBackground.NoActionBar" parent="AppTheme.NoActionBar">
-        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:windowBackground">@color/bg_main</item>
     </style>
 
     <style name="Theme.Transparent" parent="AppTheme">
@@ -55,10 +48,6 @@ file COPYING
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
-        <item name="colorControlNormal">@color/colorPrimary</item>
-        <item name="android:background">@color/bg_bright</item>
-        <item name="android:textColor">@color/colorPrimary</item>
-        <item name="titleTextColor">@color/colorPrimary</item>
         <!-- remove shadow below action bar -->
         <item name="android:elevation">0dp</item>
         <!-- Support library compatibility -->
@@ -69,7 +58,7 @@ file COPYING
     </style>
 
     <style name="MyActionBar" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">@color/bg_main</item>
     </style>
 
     <style name="NumPadDigit">
@@ -80,17 +69,23 @@ file COPYING
     <style name="ThinHorizontalDivider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1px</item>
-        <item name="android:background">@color/lightGray</item>
+        <item name="android:background">@color/text_main</item>
     </style>
 
     <style name="TxDetailHeader">
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_main</item>
+        <item name="android:colorControlNormal">@color/text_main</item>
     </style>
 
     <style name="TxDetailParagraph">
+        <item name="android:textColor">@color/text_main</item>
+        <item name="android:colorControlNormal">@color/text_main</item>
     </style>
 
     <style name="TxDetailMissing">
+        <item name="android:textColor">@color/text_main</item>
+        <item name="android:colorControlNormal">@color/text_main</item>
         <item name="android:textStyle">italic</item>
     </style>
 

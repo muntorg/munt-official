@@ -22,16 +22,16 @@ file COPYING
     <string name="welcome_activity_recover_existing_wallet">Wallet wiederherstellen</string>
     <string name="welcome_activity_sync_with_desktop">Wallet verbinden</string>
     <string name="recover_from_phrase_intro">Wiederherstellungsphrase eingeben, mit der eine Wiederherstellung durchgeführt werden soll</string>
-    <string name="show_recovery_phrase_EULA">Mit Benutzung der Gulden App erklärst du dich ausdrücklich und bedingungslos einverstanden, dass du alle Verantwortung für die Verwaltung und Speicherung deiner Gulden übernimmst.</string>
+    <string name="show_recovery_phrase_EULA">Mit Benutzung der Munt App erklärst du dich ausdrücklich und bedingungslos einverstanden, dass du alle Verantwortung für die Verwaltung und Speicherung deiner Munt übernimmst.</string>
     <string name="recovery_phrase_continue">Fortsetzen</string>
     <string name="title_activity_enter_recovery_phrase">Wiederherstellungsphrase eingeben</string>
-    <string name="show_recovery_phrase_introtext">Unten angezeigt steht deine geheime Wiederherstellungsphrase; schreibe sie dir auf und verwahre sie sicher. Wiederherstellungsphrase verlieren = Gulden verlieren. Jemand anders Zugang zu deiner Phrase = auch Gulden weg.</string>
+    <string name="show_recovery_phrase_introtext">Unten angezeigt steht deine geheime Wiederherstellungsphrase; schreibe sie dir auf und verwahre sie sicher. Wiederherstellungsphrase verlieren = Munt verlieren. Jemand anders Zugang zu deiner Phrase = auch Munt weg.</string>
     <string name="recovery_phrase_acknowledge_writing_down">Ich habe es aufgeschrieben</string>
     <string name="recovery_phrase_copy">Wiederherstellungsphrase in die Zwischenablage kopiert</string>
     <string name="address_book_empty_message">Um eine Adresse hinzuzufügen, starte eine Bezahlung und tippe auf \"Zum Adressbuch hinzufügen\"</string>
     <string name="address_book_title">Adressbuch</string>
     <string name="transaction_list_empty_title">Keine Überweisungen erhalten</string>
-    <string name="transaction_list_empty_message">Hier tippen um deine ersten Gulden zu kaufen.</string>
+    <string name="transaction_list_empty_message">Hier tippen um deine ersten Munt zu kaufen.</string>
     <string name="send_coins_confirm_template">%1$s NLG\n\nnach %2$s</string>
     <string name="peer_list_fragment_empty">Keine Peers verbunden</string>
     <string name="block_row_now">gerade eben</string>
@@ -52,7 +52,7 @@ file COPYING
     <string name="tx_status_unknown">Unbekannt (du hast einen Fehler gefunden)</string>
     <string name="no_tx_details">Keine Transaktionsdetails für [%s]</string>
     <string name="no_qrsync_warning_title">Ungültiger QR-Code</string>
-    <string name="no_qrsync_warning">Dieser QR-Code enthält keinen gültigen Gulden-Synchronisierungscode. Bitte versuchen Sie es erneut mit einem gültigen Code.</string>
+    <string name="no_qrsync_warning">Dieser QR-Code enthält keinen gültigen Munt-Synchronisierungscode. Bitte versuchen Sie es erneut mit einem gültigen Code.</string>
     <string name="failed_qrsync_warning_title">Verbindung zwischen Mobil und Desktop Wallet fehlgeschlagen</string>
     <string name="failed_qrsync_unconfirmed_funds_message">Einige deiner Geldmittel warten noch auf ihre Bestätigung. Bitte erlaube Ihnen vollständig bestätigt zu werden, bevor du die Verbindung zwischen Mobil und Destkop Wallet erneut versuchst.</string>
     <string name="qrsync_info_title">Verbinden mit Desktop Wallet</string>
@@ -87,7 +87,7 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeich
     <string name="cancel_btn">Abbrechen</string>
     <string name="rescan_started">Erneuter Scan gestartet</string>
     <string name="upgrade_wrong_password">Falsches Passwort?</string>
-    <string name="upgrade_explanation">Gulden benötigt eine Aktualisierung. Dies kann einige Minuten dauern. Danach ist Gulden schneller, einfacher zu verwenden und eine leichtgewichtigere Anwendung.</string>
+    <string name="upgrade_explanation">Munt benötigt eine Aktualisierung. Dies kann einige Minuten dauern. Danach ist Munt schneller, einfacher zu verwenden und eine leichtgewichtigere Anwendung.</string>
     <string name="upgrade_btn">Aktualisierung</string>
     <string name="upgrade_enter_password">Passwort eingeben</string>
     <string name="upgrade_enter_password_hint">PIN</string>
@@ -97,16 +97,16 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeich
     <string name="notify_received">Geldmittel erhalten</string>
     <string name="notify_sent">Geldmittel gesendet</string>
     <string name="unlock">Entsperren</string>
-    <string name="access_code_entry_title">Zugangscode für \"Gulden\"</string>
+    <string name="access_code_entry_title">Zugangscode für \"Munt\"</string>
     <plurals name="access_code_entry_remaining">
         <item quantity="one">Noch %d Versuch</item>
         <item quantity="other">%d verbleibende Versuche</item>
     </plurals>
-    <string name="access_code_choose_upgrade_title">Wähle deinen neuen \"Gulden\" Zugangscode</string>
-    <string name="access_code_choose_title">Wähle deinen \"Gulden\" Zugangscode</string>
+    <string name="access_code_choose_upgrade_title">Wähle deinen neuen \"Munt\" Zugangscode</string>
+    <string name="access_code_choose_title">Wähle deinen \"Munt\" Zugangscode</string>
     <string name="access_code_choose_verify">Bestätige deinen Zugangscode</string>
     <string name="access_code_choose_hint">6-stelliger PIN</string>
-    <string name="show_recovery_msg">Zeige deine Wiederherstellungsphrase niemandem, sonst können sie deine Gulden ausgeben.</string>
+    <string name="show_recovery_msg">Zeige deine Wiederherstellungsphrase niemandem, sonst können sie deine Munt ausgeben.</string>
     <string name="send_coins_error_acknowledge">OK</string>
     <string name="authentication_blocked_title">Wallet deaktiviert</string>
     <string name="authentication_blocked_msg_recovery">Versuche %s erneut, oder wähle einen neuen Zugangscode unter Verwendung deiner Wiederherstellungsphrase.</string>
@@ -128,11 +128,11 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeich
     <string name="numeric_keypad_send_button">Senden</string>
     <string name="preferences_support_button">Hilfe</string>
     <string name="preferences_advanced_button">Fortgeschritten</string>
-    <string name="clipboard_no_valid_address">Keine gültige Gulden-Adresse in der Zwischenablage</string>
+    <string name="clipboard_no_valid_address">Keine gültige Munt-Adresse in der Zwischenablage</string>
     <string name="transaction_confirmation_text_conflicted">In Konflikt geraten</string>
     <string name="transaction_confirmation_text_abandoned">Verlassen</string>
     <string name="transaction_confirmation_text_pending">Steht aus</string>
-    <string name="receive_fragment_share_title">Gulden Adresse teilen</string>
+    <string name="receive_fragment_share_title">Munt Adresse teilen</string>
     <plurals name="transaction_confirmation_text">
         <item quantity="one">%d Bestätigung</item>
         <item quantity="other">%d Bestätigungen</item>
@@ -142,7 +142,7 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeich
     <string name="tx_detail_wallet_address">Wallet Adresse</string>
     <string name="tx_detail_sending_address">Sendeadresse</string>
     <string name="tx_detail_payment_address">Zahlungsadresse</string>
-    <string name="tx_detail_network_fee">Gulden Netzwerk-Gebühr</string>
+    <string name="tx_detail_network_fee">Munt Netzwerk-Gebühr</string>
     <string name="iban_account_holder_name">Name</string>
     <string name="tx_detail_address_unavailable">nicht verfügbar</string>
     <string name="notification_transaction_channel_name">Transaktionen</string>
@@ -150,8 +150,8 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeich
     <string name="notification_service_channel_name">Service</string>
     <string name="notification_service_channel_description">Dienst, der die Daten synchron hält und Transaktionen überwacht, wenn die App geschlossen wird, kann in den App-Einstellungen aktiviert / deaktiviert werden.</string>
     <string name="dialog_title_add_address">Adresse hinzufügen</string>
-    <string name="hint_iban_or_coin_address">Gulden-Adresse</string>
-    <string name="toast_warn_uri_attempt_before_wallet_creation">Du musst eine Gulden-Wallet einrichten, bevor du diese URI verwenden kannst</string>
+    <string name="hint_iban_or_coin_address">Munt-Adresse</string>
+    <string name="toast_warn_uri_attempt_before_wallet_creation">Du musst eine Munt-Wallet einrichten, bevor du diese URI verwenden kannst</string>
     <string name="preference_fragment_link_summary">Verbinde dein mobiles Wallet mit deinem Desktop-Wallet</string>
     <string name="preference_fragment_remove_summary">Entferne dieses Wallet, um eine anderes Wallet zu starten oder wiederherzustellen</string>
     <string name="preference_fragment_unlink_label">Verbindung aufheben</string>

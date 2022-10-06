@@ -28,36 +28,20 @@ file COPYING
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="0dp"
-            android:background="@color/bg_bright">
+            android:background="@color/bg_main">
 
             <ImageButton
                 android:id="@+id/networkMonitorBackButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="@null"
-                android:tint="@color/colorPrimary"
+                android:tint="@color/text_main"
                 android:padding="24dp"
                 android:src="?attr/homeAsUpIndicator"
                 android:text=""
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 />
-
-            <ImageView
-                android:id="@+id/walletLogo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="0dp"
-                android:paddingTop="12dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="12dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/networkMonitorBackButton"
-                android:background="@color/bg_bright"
-                android:contentDescription="@string/image_content_description_logo"
-                android:visibility="visible"
-                app:srcCompat="@drawable/ic_gulden_logo_text" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -108,12 +92,13 @@ file COPYING
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/bg_bright"
+        android:layout_height="60dp"
+        android:background="@color/bg_main"
+        android:paddingTop="4dp"
         app:elevation="0dp"
-        app:itemIconSize="50dp"
-        app:itemIconTint="@color/bottom_nav_color_selector"
-        app:itemTextColor="@color/bottom_nav_color_selector"
+        app:itemIconSize="@dimen/bottom_nav_icon_size"
+        app:itemIconTint="@color/text_main"
+        app:itemTextColor="@color/text_main"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

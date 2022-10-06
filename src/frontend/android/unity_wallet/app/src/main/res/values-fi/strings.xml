@@ -15,9 +15,9 @@ file COPYING
     <string name="welcome_activity_recover_existing_wallet">Palauta lompakko</string>
     <string name="welcome_activity_sync_with_desktop">Yhdistä pöytäkoneeseen</string>
     <string name="recover_from_phrase_intro">Syötä palautuksessa käytettävä palautuslauseke</string>
-    <string name="show_recovery_phrase_EULA">Gulden-sovellusta käyttämällä ilmaiset ottavasi kaiken vastuun guldeniesi hallinnoinnista ja talletuksesta.</string>
+    <string name="show_recovery_phrase_EULA">Munt-sovellusta käyttämällä ilmaiset ottavasi kaiken vastuun Muntiesi hallinnoinnista ja talletuksesta.</string>
     <string name="recovery_phrase_continue">Jatka</string>
-    <string name="show_recovery_phrase_introtext">Alla on salainen palautuslausekkeesi; kirjoita se muistiin ja pidä hyvässä tallessa. Lausekkeen menetys = guldenien menetys. Joku toinen saa lausekkeen haltuunsa = guldenien menetys.</string>
+    <string name="show_recovery_phrase_introtext">Alla on salainen palautuslausekkeesi; kirjoita se muistiin ja pidä hyvässä tallessa. Lausekkeen menetys = Muntien menetys. Joku toinen saa lausekkeen haltuunsa = Muntien menetys.</string>
     <string name="recovery_phrase_acknowledge_writing_down">Kirjoitin sen muistiin</string>
     <string name="recovery_phrase_copy">Palauta leikepöydälle kopioitu lauseke</string>
     <string name="peer_list_fragment_empty">Ei yhteyksiä vertaisiin</string>

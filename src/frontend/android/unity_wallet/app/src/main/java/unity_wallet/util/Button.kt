@@ -12,8 +12,8 @@ import unity_wallet.R
 fun setFauxButtonEnabledState(button : Button, enabled : Boolean)
 {
     // Toggle button visual disabled/enabled indicator while still keeping it clickable
-    var buttonBackground = R.drawable.shape_rounded_button_disabled
+    var buttonBackground = R.drawable.shape_square_button_disabled
     if (enabled)
-        buttonBackground = R.drawable.shape_rounded_button_enabled
+        buttonBackground = R.drawable.shape_square_button_enabled
     button.setBackgroundResource(buttonBackground)
 }

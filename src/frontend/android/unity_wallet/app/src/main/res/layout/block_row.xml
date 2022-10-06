@@ -55,12 +55,13 @@
 
         <ImageButton
             android:id="@+id/block_list_row_menu"
-            android:layout_width="wrap_content"
+            android:layout_width="28dp"
             android:layout_height="match_parent"
             android:background="?android:attr/panelBackground"
             android:paddingLeft="8dp"
             android:paddingRight="0dp"
-            android:src="@drawable/outline_open_in_new_24px" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_fontawesome_arrow_up_right_from_square" />
     </LinearLayout>
 
 </FrameLayout>

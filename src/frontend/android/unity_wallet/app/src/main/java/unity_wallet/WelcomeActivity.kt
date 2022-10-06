@@ -73,7 +73,7 @@ class WelcomeActivity : AppBaseActivity(), UnityCore.Observer
             this.runOnUiThread()
             {
                 val newIntent = Intent(this, ShowRecoveryPhraseActivity::class.java)
-                //TODO: (GULDEN) Probably not the greatest way to do this - snooping?
+                //TODO: (MUNT) Probably not the greatest way to do this - snooping?
                 newIntent.putExtra(this.packageName + "recovery_phrase_with_birth", recoveryMnemonic.phraseWithBirthNumber)
                 newIntent.putExtra(this.packageName + "recovery_phrase", recoveryMnemonic.phrase)
                 startActivity(newIntent)

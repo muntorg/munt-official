@@ -107,7 +107,7 @@
     <string name="send_keypad_button_delete">⌫</string>
 
     <!-- Only visible in case of major error, or via things like screen readers so avoid burdening translators !-->
-    <string name="image_content_description_logo">Gulden logo</string>
+    <string name="image_content_description_logo">Munt logo</string>
     <string name="image_content_description_qr_scan_target_rectangle">QR scan target rectangle</string>
 
     <!-- Platform provides default translations so avoid unnecessary translation by translators !-->

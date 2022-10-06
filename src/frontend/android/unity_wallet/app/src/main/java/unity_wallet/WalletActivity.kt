@@ -119,7 +119,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
             val i = Intent(Intent.ACTION_SENDTO)
             i.type = "message/rfc822"
             i.data = Uri.parse("mailto:")
-            i.putExtra(Intent.EXTRA_EMAIL, arrayOf("support@gulden.com"))
+            i.putExtra(Intent.EXTRA_EMAIL, arrayOf("support@munt.org"))
             i.putExtra(Intent.EXTRA_SUBJECT, "Support request")
             i.putExtra(Intent.EXTRA_TEXT, getDeviceName() + " / " + getAndroidVersion() + " / " +  getString(R.string.about_text_app_name) + System.getProperty("line.separator") )
             startActivity(Intent.createChooser(i, "Send mail..."))
@@ -212,7 +212,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
     private fun setWalletBalance(balance : Long)
     {
         val coins = balance.toDouble() / Config.COIN
-        walletBalance.text = String.format("G %.2f", coins)
+        walletBalance.text = String.format("%.2f", coins)
         walletBalance.visibility = View.VISIBLE
 
         this.launch( Dispatchers.Main) {
@@ -263,7 +263,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
     {
         // Send a post request to blockhut with our wallet/address info; and then launch the site if we get a positive response.
         val MyRequestQueue = Volley.newRequestQueue(this)
-        val failURL = "https://gulden.com/buy"
+        val failURL = "https://munt.org/buy"
         val request = object : StringRequest(Request.Method.POST,"https://blockhut.com/buysession.php",
             Response.Listener { response ->
                 try
@@ -315,7 +315,7 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
                 val params = HashMap<String,String>()
                 params["address"] = ILibraryController.GetReceiveAddress().toString()
                 params["uuid"] = IWalletController.GetUUID()
-                params["currency"] = "gulden"
+                params["currency"] = "munt"
                 params["wallettype"] = "android"
                 return params
             }

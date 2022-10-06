@@ -20,13 +20,15 @@ file COPYING
         app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/bg_main">
 
         <!-- 62dp margin to offset the bottom navigation bar, so that lock icon aligns with same one on transaction screen (where there is no bar)-->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="61dp">
+            android:layout_marginTop="61dp"
+            android:background="@color/bg_main">
 
             <ImageView
                 android:id="@+id/unlockImage"
@@ -36,7 +38,8 @@ file COPYING
                 android:layout_margin="0dp"
                 android:clickable="false"
                 android:contentDescription="@string/unlock"
-                android:src="@drawable/ic_lock_solid" />
+                android:tint="@color/text_main"
+                android:src="@drawable/ic_fontawesome_lock_solid" />
         </FrameLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,10 +70,12 @@ file COPYING
                     android:layout_marginTop="18dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="0dp"
+                    android:layout_marginBottom="14dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    >
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -109,7 +114,6 @@ file COPYING
                     android:id="@+id/addressBookList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="50dp"
                     android:divider="@null"
                     android:dividerHeight="0dp">
                 </androidx.recyclerview.widget.RecyclerView>
@@ -143,7 +147,7 @@ file COPYING
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/bg_bright"
+        android:background="@color/bg_main"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -163,11 +167,11 @@ file COPYING
             android:layout_marginRight="4dp"
             android:layout_marginBottom="4dp"
             android:layout_weight="1"
-            android:background="@drawable/shape_rounded_button"
+            android:background="@drawable/shape_square_button"
             android:ellipsize="middle"
             android:text="@string/send_fragment_scan_label"
             android:textAllCaps="false"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/text_button" />
 
         <Button
             android:id="@+id/sellButton"
@@ -181,14 +185,15 @@ file COPYING
             android:layout_marginRight="4dp"
             android:layout_marginBottom="4dp"
             android:layout_weight="1"
-            android:background="@drawable/shape_rounded_button"
+            android:background="@drawable/shape_square_button"
             android:ellipsize="middle"
             android:text="@string/send_fragment_sell_label"
             android:textAllCaps="false"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/text_button" />
 
         <Button
             android:id="@+id/clipboardButton"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="4dp"
@@ -198,12 +203,11 @@ file COPYING
             android:layout_marginRight="8dp"
             android:layout_marginBottom="4dp"
             android:layout_weight="1"
-            android:background="@drawable/shape_rounded_button"
-            android:maxLines="2"
+            android:background="@drawable/shape_square_button"
             android:text="@string/send_fragment_clipboard_label"
             android:textAllCaps="false"
-            style="?android:attr/borderlessButtonStyle"
-            android:textColor="@android:color/white" />
+            android:maxLines="2"
+            android:textColor="@color/text_button" />
 
     </LinearLayout>
 

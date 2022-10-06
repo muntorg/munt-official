@@ -22,16 +22,16 @@ file COPYING
     <string name="welcome_activity_recover_existing_wallet">Herstel portemonnee</string>
     <string name="welcome_activity_sync_with_desktop">Koppel met desktop</string>
     <string name="recover_from_phrase_intro">Vul je herstelzin in</string>
-    <string name="show_recovery_phrase_EULA">Wanneer je de Gulden-app gebruikt ga je er uitdrukkelijk en onvoorwaardelijk mee akkoord dat alleen jij verantwoordelijk bent voor het beheren en bewaren van je Gulden.</string>
+    <string name="show_recovery_phrase_EULA">Wanneer je de Munt-app gebruikt ga je er uitdrukkelijk en onvoorwaardelijk mee akkoord dat alleen jij verantwoordelijk bent voor het beheren en bewaren van je Munt.</string>
     <string name="recovery_phrase_continue">Verder</string>
     <string name="title_activity_enter_recovery_phrase">Voer herstelzin in</string>
-    <string name="show_recovery_phrase_introtext">Dit is je herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Guldens weg. Iemand toegang tot je zin = Guldens weg.</string>
+    <string name="show_recovery_phrase_introtext">Dit is je herstelzin, bewaar deze op een veilige plek. Zin kwijtraken = Munt weg. Iemand toegang tot je zin = Munt weg.</string>
     <string name="recovery_phrase_acknowledge_writing_down">Ik heb het opgeschreven</string>
     <string name="recovery_phrase_copy">Herstelzin gekopieerd naar klembord</string>
     <string name="address_book_empty_message">Om een adres toe te voegen, start een betaling en tap op \"Aan adresboek toevoegen\"</string>
     <string name="address_book_title">Adresboek</string>
     <string name="transaction_list_empty_title">Geen transacties ontvangen</string>
-    <string name="transaction_list_empty_message">Tik hier om je eerste Guldens te kopen</string>
+    <string name="transaction_list_empty_message">Tik hier om je eerste Munt te kopen</string>
     <string name="send_coins_confirm_template">%1$s NLG\n\nnaar %2$s</string>
     <string name="peer_list_fragment_empty">Geen connecties</string>
     <string name="block_row_now">alleen nu</string>
@@ -52,7 +52,7 @@ file COPYING
     <string name="tx_status_unknown">Onbekend (je hebt een bug gevonden)</string>
     <string name="no_tx_details">Geen transactiedetails voor [%s]</string>
     <string name="no_qrsync_warning_title">Onjuiste QR-code</string>
-    <string name="no_qrsync_warning">Deze QR-code bevat geen geldige Gulden sync code, probeer het opnieuw met een geldige code.</string>
+    <string name="no_qrsync_warning">Deze QR-code bevat geen geldige Munt sync code, probeer het opnieuw met een geldige code.</string>
     <string name="failed_qrsync_warning_title">Koppelen niet geslaagd</string>
     <string name="failed_qrsync_unconfirmed_funds_message">Een deel van je saldo wacht nog op bevestiging. Wacht tot deze volledig bevestigd zijn voordat je nogmaals probeert te koppelen.</string>
     <string name="qrsync_info_title">Koppelen met desktop portemonnee</string>
@@ -86,7 +86,7 @@ file COPYING
     <string name="cancel_btn">Annuleren</string>
     <string name="rescan_started">Herscan gestart</string>
     <string name="upgrade_wrong_password">Onjuist wachtwoord?</string>
-    <string name="upgrade_explanation">Gulden moet worden geüpdatet. Dit kan enkele minuten duren, maar Gulden zal daar sneller, makkelijker en lichter door werken.</string>
+    <string name="upgrade_explanation">Munt moet worden geüpdatet. Dit kan enkele minuten duren, maar Munt zal daar sneller, makkelijker en lichter door werken.</string>
     <string name="upgrade_btn">Bijwerken</string>
     <string name="upgrade_enter_password">Voer je wachtwoord in</string>
     <string name="upgrade_enter_password_hint">PIN</string>
@@ -96,12 +96,12 @@ file COPYING
     <string name="notify_received">Bedrag ontvangen</string>
     <string name="notify_sent">Bedrag verstuurd</string>
     <string name="unlock">Openen</string>
-    <string name="access_code_entry_title">Toegangscode voor \"Gulden\"</string>
-    <string name="access_code_choose_upgrade_title">Kies je nieuwe \"Gulden\"-toegangscode</string>
-    <string name="access_code_choose_title">Kies je \"Gulden\"-toegangscode</string>
+    <string name="access_code_entry_title">Toegangscode voor \"Munt\"</string>
+    <string name="access_code_choose_upgrade_title">Kies je nieuwe \"Munt\"-toegangscode</string>
+    <string name="access_code_choose_title">Kies je \"Munt\"-toegangscode</string>
     <string name="access_code_choose_verify">Verifiëer je toegangscode</string>
     <string name="access_code_choose_hint">6 cijferige PIN</string>
-    <string name="show_recovery_msg">Toon je herstelzin aan NIEMAND, of ze kunnen met je Gulden aan de haal gaan!</string>
+    <string name="show_recovery_msg">Toon je herstelzin aan NIEMAND, of ze kunnen met je Munt aan de haal gaan!</string>
     <string name="send_coins_error_acknowledge">OK</string>
     <string name="authentication_blocked_title">Portemonnee uitgeschakeld</string>
     <string name="authentication_blocked_msg_recovery">Probeer nogmaals %s of kies een nieuwe toegangscode met behulp van je herstelzin.</string>
@@ -123,11 +123,11 @@ file COPYING
     <string name="numeric_keypad_send_button">Verstuur</string>
     <string name="preferences_support_button">Support</string>
     <string name="preferences_advanced_button">Geavanceerd</string>
-    <string name="clipboard_no_valid_address">Geen geldig Gulden-adres op het klembord</string>
+    <string name="clipboard_no_valid_address">Geen geldig Munt-adres op het klembord</string>
     <string name="transaction_confirmation_text_conflicted">Conflicterend</string>
     <string name="transaction_confirmation_text_abandoned">Verlaten</string>
     <string name="transaction_confirmation_text_pending">In behandeling</string>
-    <string name="receive_fragment_share_title">Deel Gulden-adres</string>
+    <string name="receive_fragment_share_title">Deel Munt-adres</string>
     <plurals name="transaction_confirmation_text">
         <item quantity="one">%d bevestiging</item>
         <item quantity="other">%d bevestigingen</item>
@@ -137,7 +137,7 @@ file COPYING
     <string name="tx_detail_wallet_address">Adres portemonnee</string>
     <string name="tx_detail_sending_address">Verzendadres</string>
     <string name="tx_detail_payment_address">Betaaladres</string>
-    <string name="tx_detail_network_fee">Gulden-netwerkkosten</string>
+    <string name="tx_detail_network_fee">Munt-netwerkkosten</string>
     <string name="iban_account_holder_name">Naam</string>
     <string name="tx_detail_address_unavailable">niet beschikbaar</string>
     <string name="notification_transaction_channel_name">Transacties</string>
@@ -145,8 +145,8 @@ file COPYING
     <string name="notification_service_channel_name">Service</string>
     <string name="notification_service_channel_description">Service om data te synchroniseren en transacties te signaleren terwijl de app afgesloten is, kan aan/uit gezet worden in de instellingen van de app.</string>
     <string name="dialog_title_add_address">Adres toevoegen</string>
-    <string name="hint_iban_or_coin_address">Gulden adres</string>
-    <string name="toast_warn_uri_attempt_before_wallet_creation">Je moet een Gulden-portemonnee instellen voordat je deze URI kunt gebruiken</string>
+    <string name="hint_iban_or_coin_address">Munt adres</string>
+    <string name="toast_warn_uri_attempt_before_wallet_creation">Je moet een Munt-portemonnee instellen voordat je deze URI kunt gebruiken</string>
     <string name="preference_fragment_link_summary">Koppel je mobiele portemonnee aan je desktop portemonnee</string>
     <string name="preference_fragment_remove_summary">Verwijder deze portemonnee om een nieuwe te starten of te herstellen</string>
     <string name="preference_fragment_unlink_label">Ontkoppel portemonnee</string>

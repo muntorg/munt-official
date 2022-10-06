@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.ShareActionProvider
 import androidx.core.view.MenuItemCompat
+import com.google.android.material.color.MaterialColors
 import unity_wallet.jniunifiedbackend.ILibraryController
 import unity_wallet.*
 import unity_wallet.util.AppBaseActivity
@@ -28,7 +29,7 @@ class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
 {
     private val erasedWallet = UnityCore.instance.isCoreReady()
 
-    //fixme: (GULDEN) Change to char[] to we can securely wipe.
+    //fixme: (MUNT) Change to char[] to we can securely wipe.
     private var recoveryPhrase: String? = null
     internal var recoveryPhraseTrimmed: String? = null
 
@@ -75,7 +76,7 @@ class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
     override fun onDestroy()
     {
         UnityCore.instance.removeObserver(this)
-        //fixme: (GULDEN) Securely wipe.
+        //fixme: (MUNT) Securely wipe.
         recoveryPhrase = ""
         recoveryPhraseTrimmed = ""
         super.onDestroy()
@@ -174,7 +175,7 @@ class ShowRecoveryPhraseActivity : AppBaseActivity(), UnityCore.Observer
             shareActionProvider!!.setShareIntent(intent)
 
             @Suppress("DEPRECATION")
-            val color = resources.getColor(R.color.colorPrimary)
+            val color = MaterialColors.getColor(recovery_phrase_text_view, R.attr.colorControlHighlight)
             val spannableString = SpannableString(recovery_phrase_text_view.text)
             spannableString.setSpan(BackgroundColorSpan(color), 0, recovery_phrase_text_view.text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             recovery_phrase_text_view.text = spannableString

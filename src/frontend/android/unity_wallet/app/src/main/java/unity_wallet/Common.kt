@@ -53,7 +53,7 @@ fun createRecipient(text: String): UriRecipient {
         uri = Uri.parse(text.replaceFirst(":", "://"))
 
     if (uri.scheme == null)
-        uri = Uri.parse("gulden://$text")
+        uri = Uri.parse("munt://$text")
 
     val address = uri.host ?: throw InvalidRecipientException("No recipient address")
     val amount = uri.getQueryParameter("amount")?.toDoubleOrZero()?.toNative() ?: 0
@@ -63,7 +63,7 @@ fun createRecipient(text: String): UriRecipient {
     if (IBANValidator.getInstance().isValid(address))
         return UriRecipient(false, address, label, description, amount)
 
-    // if there is a scheme it should equal gulden or guldencoin, but that will be checked inside C++, so just pass it through
+    // if there is a scheme it should equal munt, but that will be checked inside C++, so just pass it through
     val coreRecipient = ILibraryController.IsValidRecipient(UriRecord(uri.scheme, address, HashMap<String, String>()))
     if (!coreRecipient.valid)
         throw InvalidRecipientException("Core deemed recipient invalid")

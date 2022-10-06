@@ -30,7 +30,7 @@ file COPYING
             android:layout_marginBottom="20dp"
             android:clickable="false"
             android:focusable="false"
-            android:textColor="#000000"
+            android:textColor="@color/text_main"
             android:focusableInTouchMode="false"
             android:enabled="false"
             android:paddingLeft="20dp"
@@ -48,13 +48,13 @@ file COPYING
             android:gravity="center_vertical|center_horizontal"
             android:maxLines="4"
             android:minLines="4"
-            android:background="@android:color/white"
+            android:background="@color/bg_sub"
+            android:textColor="@color/text_main"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:layout_marginBottom="20dp"
-            android:textColor="@android:color/darker_gray"
             />
 
         <TextView
@@ -67,7 +67,7 @@ file COPYING
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:enabled="false"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/text_main"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             />
@@ -89,8 +89,8 @@ file COPYING
             android:padding="10dp"
             android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"
-            android:textColor="@android:color/white"
-            android:background="@drawable/shape_rounded_button"
+            android:textColor="@color/text_button"
+            android:background="@drawable/shape_square_button"
             tools:ignore="RelativeOverlap" />
 
     </RelativeLayout>

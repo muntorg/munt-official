@@ -18,14 +18,14 @@ import kotlin.math.roundToLong
 
 private const val TAG = "currency"
 
-private const val APP_MARKET_URL = "https://api.gulden.com/api/v1/ticker"
+private const val APP_MARKET_URL = "https://api.munt.org/api/v1/ticker"
 
 /**
  * Fetch currency conversion rate from server (suspended, use from co-routine)
  *
  * @param code currency code
  * @throws Throwable on any error
- * @return conversion rate to convert from gulden to specified currency (ie. value = gulden * rate)
+ * @return conversion rate to convert from munt to specified currency (ie. value = munt * rate)
  */
 suspend fun fetchCurrencyRate(code: String): Double
 {
@@ -131,7 +131,7 @@ fun formatNativeSimple(nativeAmount: Long): String
 
 fun formatNative(nativeAmount: Long, useNativePrefix: Boolean = true): String
 {
-    return "%s %s".format(if (useNativePrefix) "G" else "",
+    return "%s %s".format(if (useNativePrefix) "" else "",
             (DecimalFormat("+#,##0.00;-#").format(nativeAmount.toDouble() / 100000000)))
 }
 

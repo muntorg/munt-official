@@ -22,16 +22,16 @@ file COPYING
     <string name="welcome_activity_recover_existing_wallet">Récupérer le portefeuille</string>
     <string name="welcome_activity_sync_with_desktop">Lien avec le bureau</string>
     <string name="recover_from_phrase_intro">Entrez votre phrase de récupération afin d\'effectuer une récupération</string>
-    <string name="show_recovery_phrase_EULA">En utilisant l\'application Gulden, vous acceptez explicitement et inconditionnellement que vous assumez toute la responsabilité de la gestion et du stockage de vos Gulden.</string>
+    <string name="show_recovery_phrase_EULA">En utilisant l\'application Munt, vous acceptez explicitement et inconditionnellement que vous assumez toute la responsabilité de la gestion et du stockage de vos Munt.</string>
     <string name="recovery_phrase_continue">Continuer</string>
     <string name="title_activity_enter_recovery_phrase">Entrer la phrase de récupération</string>
-    <string name="show_recovery_phrase_introtext">Voici votre phrase de récupération, écrivez-la et gardez-la en sécurité. Si vous perdez votre phrase vous perdez vos gulden. Si une autre personne a accès à la phrase vous perdez vos Gulden.</string>
+    <string name="show_recovery_phrase_introtext">Voici votre phrase de récupération, écrivez-la et gardez-la en sécurité. Si vous perdez votre phrase vous perdez vos Munt. Si une autre personne a accès à la phrase vous perdez vos Munt.</string>
     <string name="recovery_phrase_acknowledge_writing_down">Je l\'ai écrit</string>
     <string name="recovery_phrase_copy">La phrase de récupération est copiée dans le presse-papier</string>
     <string name="address_book_empty_message">Pour ajouter une adresse, lancez un paiement et touchez \"Ajouter au carnet d\'adresses\".</string>
     <string name="address_book_title">Carnet d\'adresses</string>
     <string name="transaction_list_empty_title">Aucun transaction n\'a reçu jusqu\'à présent.</string>
-    <string name="transaction_list_empty_message">Touchez ici pour acheter votre premier Gulden.</string>
+    <string name="transaction_list_empty_message">Touchez ici pour acheter votre premier Munt.</string>
     <string name="send_coins_confirm_template">%1$s NLG\n\nà %2$s</string>
     <string name="peer_list_fragment_empty">Aucun pair connecté</string>
     <string name="block_row_now">Maintenant</string>
@@ -52,7 +52,7 @@ file COPYING
     <string name="tx_status_unknown">Inconnu (vous avez trouvé un bug)</string>
     <string name="no_tx_details">Pas de détails de transaction pour[%s]</string>
     <string name="no_qrsync_warning_title">Code QR invalide</string>
-    <string name="no_qrsync_warning">Ce code QR ne contient pas de code de synchronisation Gulden valide, veuillez réessayer avec un code valide.</string>
+    <string name="no_qrsync_warning">Ce code QR ne contient pas de code de synchronisation Munt valide, veuillez réessayer avec un code valide.</string>
     <string name="failed_qrsync_warning_title">Impossible d\'effectuer la liaison</string>
     <string name="failed_qrsync_unconfirmed_funds_message">Certains de vos fonds sont en attente de confirmation, s\'il vous plaît leur permettre de confirmer pleinement avant de tenter à nouveau le processus de lien.</string>
     <string name="qrsync_info_title">Lien avec le porte-monnaie de bureau</string>
@@ -86,7 +86,7 @@ file COPYING
     <string name="cancel_btn">Annuler</string>
     <string name="rescan_started">Rescan a commencé</string>
     <string name="upgrade_wrong_password">Mot de passe erroné?</string>
-    <string name="upgrade_explanation">Gulden a besoin d\'une mise à jour. Cela peut prendre quelques minutes, mais Gulden sera plus rapide, plus facile à utiliser et plus léger.</string>
+    <string name="upgrade_explanation">Munt a besoin d\'une mise à jour. Cela peut prendre quelques minutes, mais Munt sera plus rapide, plus facile à utiliser et plus léger.</string>
     <string name="upgrade_btn">Mise à niveau</string>
     <string name="upgrade_enter_password">Entrez votre mot de passe</string>
     <string name="upgrade_enter_password_hint">NIP</string>
@@ -96,12 +96,12 @@ file COPYING
     <string name="notify_received">Fonds reçus</string>
     <string name="notify_sent">Fonds envoyés</string>
     <string name="unlock">Déverrouiller</string>
-    <string name="access_code_entry_title">Code d\'accès pour \"Gulden\"</string>
-    <string name="access_code_choose_upgrade_title">Choisissez votre nouveau code d\'accès \"Gulden\"</string>
-    <string name="access_code_choose_title">Choisissez votre code d\'accès \"Gulden\"</string>
+    <string name="access_code_entry_title">Code d\'accès pour \"Munt\"</string>
+    <string name="access_code_choose_upgrade_title">Choisissez votre nouveau code d\'accès \"Munt\"</string>
+    <string name="access_code_choose_title">Choisissez votre code d\'accès \"Munt\"</string>
     <string name="access_code_choose_verify">Vérifiez votre code d\'accès</string>
     <string name="access_code_choose_hint">NIP à 6 chiffres</string>
-    <string name="show_recovery_msg">Ne montrez votre phrase de récupération à personne, ou ils pourront dépenser votre Gulden.</string>
+    <string name="show_recovery_msg">Ne montrez votre phrase de récupération à personne, ou ils pourront dépenser votre Munt.</string>
     <string name="send_coins_error_acknowledge">OK</string>
     <string name="authentication_blocked_title">Portefeuille desactivé</string>
     <string name="authentication_blocked_msg_recovery">Essayez à nouveau %s ou choisissez un nouveau code d\'accès en utilisant votre phrase de récupération.</string>
@@ -123,11 +123,11 @@ file COPYING
     <string name="numeric_keypad_send_button">Envoyer</string>
     <string name="preferences_support_button">Support</string>
     <string name="preferences_advanced_button">Avancé</string>
-    <string name="clipboard_no_valid_address">Pas d\'adresse Gulden valide dans le presse-papiers</string>
+    <string name="clipboard_no_valid_address">Pas d\'adresse Munt valide dans le presse-papiers</string>
     <string name="transaction_confirmation_text_conflicted">Conflit</string>
     <string name="transaction_confirmation_text_abandoned">Abandonné</string>
     <string name="transaction_confirmation_text_pending">En attente</string>
-    <string name="receive_fragment_share_title">Partager l\'adresse de Gulden</string>
+    <string name="receive_fragment_share_title">Partager l\'adresse de Munt</string>
     <plurals name="transaction_confirmation_text">
         <item quantity="one">%d confirmation</item>
         <item quantity="other">%d confirmations</item>
@@ -137,7 +137,7 @@ file COPYING
     <string name="tx_detail_wallet_address">Adresse du portefeuille</string>
     <string name="tx_detail_sending_address">Adresse d\'envoi</string>
     <string name="tx_detail_payment_address">Adresse de paiement</string>
-    <string name="tx_detail_network_fee">Frais de réseau Gulden</string>
+    <string name="tx_detail_network_fee">Frais de réseau Munt</string>
     <string name="iban_account_holder_name">Nom</string>
     <string name="tx_detail_address_unavailable">indisponible</string>
     <string name="notification_transaction_channel_name">Transactions</string>
@@ -145,6 +145,6 @@ file COPYING
     <string name="notification_service_channel_name">Service</string>
     <string name="notification_service_channel_description">Service pour garder les données synchronisées et surveiller les transactions lorsque l\'application est fermée, peut être activé/désactivé depuis les paramètres de l\'application.</string>
     <string name="dialog_title_add_address">Ajouter une adresse</string>
-    <string name="hint_iban_or_coin_address">Gulden adresse</string>
+    <string name="hint_iban_or_coin_address">Munt adresse</string>
     <string name="label_sync_progress_syncing">Concordance %.1f%%</string>
 </resources>

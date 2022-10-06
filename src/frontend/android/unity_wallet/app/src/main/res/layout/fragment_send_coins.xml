@@ -32,6 +32,7 @@ file COPYING
             android:layout_gravity="center_vertical"
             android:textSize="18sp"
             android:hint="(€ 0,00)"
+            android:gravity="end"
             android:inputType="none"
             tools:clickable="false"
             tools:ignore="HardcodedText" />
@@ -45,8 +46,9 @@ file COPYING
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:gravity="end"
             android:textSize="24sp"
-            android:hint="G 0,00"
+            android:hint="0,00"
             android:inputType="none"
             tools:clickable="false"
             tools:ignore="HardcodedText" />
@@ -113,7 +115,7 @@ file COPYING
                 android:layout_marginEnd="8dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/lightText"
+                android:textColor="@color/text_main"
                 android:singleLine="false"
                 android:textStyle="bold" />
 
@@ -123,7 +125,7 @@ file COPYING
                 android:layout_height="wrap_content"
                 android:ellipsize="middle"
                 android:singleLine="true"
-                android:textColor="@color/lightText" />
+                android:textColor="@color/text_main" />
 
         </LinearLayout>
 
@@ -132,7 +134,8 @@ file COPYING
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/darkText"
+            android:textColor="@color/text_main"
+            android:textStyle="bold"
             android:text="@string/send_coins_label_add_to_address_book" />
 
         <TextView
@@ -140,6 +143,8 @@ file COPYING
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/text_main"
+            android:textStyle="bold"
             android:text="@string/send_coins_label_remove_from_address_book" />
 
     </LinearLayout>

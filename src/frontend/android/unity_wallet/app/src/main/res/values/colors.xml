@@ -6,29 +6,31 @@ Distributed under the Libre Chain License, see the accompanying
 file COPYING
 !-->
 <resources>
-
     <!-- general -->
-    <color name="colorPrimary">#111444</color>
+    <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#909090</color>
-    <color name="colorAccent">#575ba0</color>
-    <color name="darkText">#111444</color>
-    <color name="lightText">#909090</color>
+    <color name="colorAccent">#000000</color>
+    <color name="colorhighlight">#575ba0</color>
 
     <!-- buttons -->
-    <color name="buttonBorder">#40FFFFFF</color>
+    <color name="buttonBorder">#FFFFFF</color>
 
-    <!-- background -->
-    <color name="bg_bright">#FFFFFF</color>
+    <!-- foreground text on button-->
+    <color name="text_button">#FFFFFF</color>
+    <!-- foreground colour of secondary text on button; e.g. address line on clipboard button-->
+    <color name="text_button_secondary">#40ffffff</color>
+    <!-- Colour of action bar icons -->
+    <color name="action_icon_main">#000000</color>
+    <!-- default background colour of all screens -->
+    <color name="bg_main">#FFFFFF</color>
+    <!-- default background colour of sub area of screen that needs to stand out; e.g. the password phrase area of password phrase screen, rest of the screen is regular background colour -->
+    <color name="bg_sub">#F5F5F5</color>
+    <!-- default text colour of all screens -->
+    <color name="text_main">#000000</color>
+    <!-- background of popup list selection dialogs -->
     <color name="bg_list">#40ffffff</color>
-    <color name="bg_main">#f3f3f3</color>
 
     <!-- mutation depending on balance effect -->
     <color name="change_positive">#4CAF50</color>
-    <color name="change_negative">#ff000000</color>
-
-    <!-- mutation depending on balance effect -->
-    <color name="mediumGray">#7f7f7f</color>
-    <color name="lightGray">#cccccc</color>
-    <color name="veryLightGray">#f3f3f3</color>
-
+    <color name="change_negative">#AF4C50</color>
 </resources>

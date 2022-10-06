@@ -17,12 +17,13 @@ file COPYING
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/bg_bright"
+        android:layout_height="60dp"
+        android:background="@color/bg_main"
+        android:paddingTop="6dp"
         app:elevation="0dp"
-        app:itemIconSize="50dp"
-        app:itemIconTint="@color/bottom_nav_color_selector"
-        app:itemTextColor="@color/bottom_nav_color_selector"
+        app:itemIconSize="@dimen/bottom_nav_icon_size"
+        app:itemIconTint="@color/text_main"
+        app:itemTextColor="@color/text_main"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -49,7 +50,7 @@ file COPYING
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="0dp"
-            android:background="@color/bg_bright"
+            android:background="@color/bg_main"
             android:orientation="horizontal">
 
 
@@ -67,15 +68,13 @@ file COPYING
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/bg_bright"
+                        android:layout_width="@dimen/top_logo_size"
+                        android:layout_height="@dimen/top_logo_size"
+                        android:layout_marginLeft="16dp"
                         android:contentDescription="@string/image_content_description_logo"
-                        android:paddingLeft="16dp"
-                        android:paddingTop="18dp"
-                        android:paddingBottom="12dp"
+                        android:tint="@color/text_main"
                         android:visibility="visible"
-                        app:srcCompat="@drawable/ic_gulden_logo_text" />
+                        app:srcCompat="@drawable/ic_logo" />
 
                     <TextView
                         android:id="@+id/syncProgressTextual"
@@ -86,22 +85,31 @@ file COPYING
                         android:paddingLeft="8dp"
                         android:paddingRight="16dp"
                         android:text="@string/label_sync_progress_connecting"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/text_main"
                         android:textSize="14sp"
                         android:translationY="3sp"
                         app:layout_constraintBottom_toBottomOf="@+id/walletLogo"
                         app:layout_constraintEnd_toEndOf="parent"
                         tools:ignore="HardcodedText"
-                        tools:textColor="@color/colorPrimaryDark" />
+                        tools:textColor="@color/text_main" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
                     android:id="@+id/balanceSection"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingTop="4dp">
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/top_logo_size"
+                        android:layout_height="@dimen/top_logo_size"
+                        android:layout_marginLeft="16dp"
+                        android:contentDescription="@string/image_content_description_logo"
+                        android:tint="@color/text_main"
+                        android:layout_gravity="center_vertical"
+                        android:visibility="visible"
+                        app:srcCompat="@drawable/ic_logo" />
 
                     <TextView
                         android:id="@+id/walletBalance"
@@ -114,6 +122,7 @@ file COPYING
                         android:textSize="22sp"
                         android:maxLines="1"
                         android:visibility="invisible"
+                        android:paddingLeft="6dp"
                         tools:ignore="HardcodedText"
                         tools:textColor="@color/colorPrimary" />
 
@@ -141,7 +150,7 @@ file COPYING
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="0dp"
-            android:background="@color/bg_bright">
+            android:background="@color/bg_main">
 
             <ImageButton
                 android:id="@+id/topLayoutBarSettingsBackButton"

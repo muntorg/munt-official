@@ -9,17 +9,17 @@ file COPYING
 
     <item
         android:id="@+id/navigation_peers"
-        android:icon="@drawable/ic_glyphicons_508_cluster"
+        android:icon="@drawable/ic_fontawesome_chart_network"
         android:title="@string/title_peers" />
 
     <item
         android:id="@+id/navigation_blocks"
-        android:icon="@drawable/ic_glyphicons_115_list"
+        android:icon="@drawable/ic_fontawesome_cube"
         android:title="@string/title_blocks" />
 
     <item
         android:id="@+id/navigation_processing"
-        android:icon="@drawable/ic_glyphicons_basic_51_pulse"
+        android:icon="@drawable/ic_fontawesome_wave_pulse"
         android:title="@string/title_processing" />
 
 </menu>

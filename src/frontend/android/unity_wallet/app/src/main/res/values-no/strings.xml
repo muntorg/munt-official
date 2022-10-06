@@ -15,9 +15,9 @@ file COPYING
     <string name="welcome_activity_recover_existing_wallet">Gjenopprett lommebok</string>
     <string name="welcome_activity_sync_with_desktop">Koble med datamaskinen</string>
     <string name="recover_from_phrase_intro">Skriv inn gjenopprettelsesetningen som skal brukes til gjenopprettelse</string>
-    <string name="show_recovery_phrase_EULA">Ved å bruke Gulden-appen gir du ditt uforbeholdne samtykke til at du tar ditt fulle ansvar for å administrere og oppbevare dine Gulden.</string>
+    <string name="show_recovery_phrase_EULA">Ved å bruke Munt-appen gir du ditt uforbeholdne samtykke til at du tar ditt fulle ansvar for å administrere og oppbevare dine Munt.</string>
     <string name="recovery_phrase_continue">Fortsett</string>
-    <string name="show_recovery_phrase_introtext">Nedenfor er din hemmelige gjenopprettelsesetning, skriv den ned og hold den sikker. Tapt setning = tapte Guldens. Andre som har tilgang til setningen = tapte Guldens.</string>
+    <string name="show_recovery_phrase_introtext">Nedenfor er din hemmelige gjenopprettelsesetning, skriv den ned og hold den sikker. Tapt setning = tapte Munt. Andre som har tilgang til setningen = tapte Munt.</string>
     <string name="recovery_phrase_acknowledge_writing_down">Jeg skrev den ned</string>
     <string name="recovery_phrase_copy">Gjenopprettelsesetning kopiert til utklippstavlen</string>
     <string name="peer_list_fragment_empty">Ingen peers tilkoblet</string>

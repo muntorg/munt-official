@@ -48,11 +48,13 @@ file COPYING
         <ImageButton
             android:id="@+id/scanCancelButton"
             android:background="@android:color/transparent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:padding="8dp"
-            app:srcCompat="@drawable/ic_cancel" />
+            android:scaleType="fitCenter"
+            android:tint="@color/bg_main"
+            app:srcCompat="@drawable/ic_fontawesome_square_x" />
 
         <Space
             android:layout_width="wrap_content"
@@ -62,11 +64,13 @@ file COPYING
         <ImageButton
             android:id="@+id/scanToggleFlashButton"
             android:background="@android:color/transparent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:padding="8dp"
-            app:srcCompat="@drawable/ic_flash" />
+            android:scaleType="fitCenter"
+            android:tint="@color/bg_main"
+            app:srcCompat="@drawable/ic_fontawesome_bolt_lightning" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

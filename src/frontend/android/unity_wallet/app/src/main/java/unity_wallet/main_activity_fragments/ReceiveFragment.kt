@@ -68,7 +68,7 @@ class ReceiveFragment : AppBaseFragment() {
         if (currentAddressQrView != null)
         {
             val address = ILibraryController.GetReceiveAddress()
-            val imageData = ILibraryController.QRImageFromString("gulden://$address", 600)
+            val imageData = ILibraryController.QRImageFromString("munt://$address", 600)
             val bitmap = Bitmap.createBitmap(imageData.width, imageData.width, Bitmap.Config.ALPHA_8)
             bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageData.pixelData))
             currentAddressQrView.setImageBitmap(bitmap)

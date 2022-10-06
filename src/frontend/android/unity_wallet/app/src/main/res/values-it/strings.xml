@@ -22,9 +22,9 @@ file COPYING
     <string name="welcome_activity_sync_with_desktop">Collega con il desktop</string>
     <string name="recover_from_phrase_intro">Inserisci la frase di recupero da usare</string>
     <string name="show_recovery_phrase_EULA">"
-Usando l'app Gulden accetti in maniera esplicita ed incondizionata di essere responsabile della gestione e del deposito dei tuoi Gulden."</string>
+Usando l'app Munt accetti in maniera esplicita ed incondizionata di essere responsabile della gestione e del deposito dei tuoi Munt."</string>
     <string name="recovery_phrase_continue">Continua</string>
-    <string name="show_recovery_phrase_introtext">Di seguito trovi la tua frase segreta di recupero, ricopiala e conservala per futuro riferimento. Se perdi la frase, perderai Gulden. Se qualcun altro ha accesso alla frase, perderai Gulden.</string>
+    <string name="show_recovery_phrase_introtext">Di seguito trovi la tua frase segreta di recupero, ricopiala e conservala per futuro riferimento. Se perdi la frase, perderai Munt. Se qualcun altro ha accesso alla frase, perderai Munt.</string>
     <string name="recovery_phrase_acknowledge_writing_down">L\'ho ricopiata</string>
     <string name="recovery_phrase_copy">Fase di recupero copiata negli appunti</string>
     <string name="peer_list_fragment_empty">Nessun peer connesso</string>

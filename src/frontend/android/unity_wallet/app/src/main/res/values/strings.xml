@@ -23,16 +23,16 @@ file COPYING
     <string name="welcome_activity_recover_existing_wallet">Recover wallet</string>
     <string name="welcome_activity_sync_with_desktop">Link wallet</string>
     <string name="recover_from_phrase_intro">Enter your recovery phrase from which to perform a recovery</string>
-    <string name="show_recovery_phrase_EULA">By using the Gulden app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Gulden.</string>
+    <string name="show_recovery_phrase_EULA">By using the Munt app you explicitly and unconditionally agree that you carry all responsibility for the management and storage of your Munt.</string>
     <string name="recovery_phrase_continue">Continue</string>
     <string name="title_activity_enter_recovery_phrase">Enter recovery phrase</string>
-    <string name="show_recovery_phrase_introtext">Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Guldens. Someone else with access to the phrase = lose Guldens.</string>
+    <string name="show_recovery_phrase_introtext">Below is your secret recovery phrase, write it down and keep it safe. Lose phrase = lose Munt. Someone else with access to the phrase = lose Munt.</string>
     <string name="recovery_phrase_acknowledge_writing_down">I wrote it down</string>
     <string name="recovery_phrase_copy">Recovery phrase copied to clipboard</string>
     <string name="address_book_empty_message">To add an address, start a payment and tap \"Add to address book\".</string>
     <string name="address_book_title">Address book</string>
     <string name="transaction_list_empty_title">No Transactions received</string>
-    <string name="transaction_list_empty_message">Touch here to buy your first Gulden</string>
+    <string name="transaction_list_empty_message">Touch here to buy your first Munt</string>
     <string name="send_coins_confirm_template">%1$s NLG\n\nto %2$s</string>
     <string name="peer_list_fragment_empty">No peers connected</string>
     <string name="block_row_now">just now</string>
@@ -53,7 +53,7 @@ file COPYING
     <string name="tx_status_unknown">Unknown (you found a bug)</string>
     <string name="no_tx_details">No transaction details for [%s]</string>
     <string name="no_qrsync_warning_title">Invalid QR code</string>
-    <string name="no_qrsync_warning">This QR code does not contain a valid Gulden sync code, please try again with a valid code.</string>
+    <string name="no_qrsync_warning">This QR code does not contain a valid Munt sync code, please try again with a valid code.</string>
     <string name="failed_qrsync_warning_title">Could not perform link</string>
     <string name="failed_qrsync_unconfirmed_funds_message">Some of your funds are awaiting confirmation, please allow for them to fully confirm before attempting the link process again.</string>
     <string name="qrsync_info_title">Link with desktop wallet</string>
@@ -87,7 +87,7 @@ file COPYING
     <string name="cancel_btn">Cancel</string>
     <string name="rescan_started">Rescan started</string>
     <string name="upgrade_wrong_password">Wrong password?</string>
-    <string name="upgrade_explanation">Gulden requires an update. This can take a few minutes, but Gulden will be faster, easier to use and more lightweight as a result.</string>
+    <string name="upgrade_explanation">Munt requires an update. This can take a few minutes, but Munt will be faster, easier to use and more lightweight as a result.</string>
     <string name="upgrade_btn">Upgrade</string>
     <string name="upgrade_enter_password">Enter your password</string>
     <string name="upgrade_enter_password_hint">PIN</string>
@@ -97,16 +97,16 @@ file COPYING
     <string name="notify_received">Funds received</string>
     <string name="notify_sent">Funds sent</string>
     <string name="unlock">Unlock</string>
-    <string name="access_code_entry_title">Access code for \"Gulden\"</string>
+    <string name="access_code_entry_title">Access code for \"Munt\"</string>
     <plurals name="access_code_entry_remaining">
         <item quantity="one">%d attempt remaining</item>
         <item quantity="other">%d attempts remaining</item>
     </plurals>
-    <string name="access_code_choose_upgrade_title">Choose your new \"Gulden\" access code</string>
-    <string name="access_code_choose_title">Choose your \"Gulden\" access code</string>
+    <string name="access_code_choose_upgrade_title">Choose your new \"Munt\" access code</string>
+    <string name="access_code_choose_title">Choose your \"Munt\" access code</string>
     <string name="access_code_choose_verify">Verify your access code</string>
     <string name="access_code_choose_hint">6 digit PIN</string>
-    <string name="show_recovery_msg">Don\'t show your recovery phrase to anyone, or they will be able to spend your Gulden.</string>
+    <string name="show_recovery_msg">Don\'t show your recovery phrase to anyone, or they will be able to spend your Munt.</string>
     <string name="send_coins_error_acknowledge">OK</string>
     <string name="authentication_blocked_title">Wallet disabled</string>
     <string name="authentication_blocked_msg_recovery">Try again %s or choose a new access code using your recovery phrase.</string>
@@ -128,11 +128,11 @@ file COPYING
     <string name="numeric_keypad_send_button">Send</string>
     <string name="preferences_support_button">Support</string>
     <string name="preferences_advanced_button">Advanced</string>
-    <string name="clipboard_no_valid_address">No valid Gulden address on clipboard</string>
+    <string name="clipboard_no_valid_address">No valid Munt address on clipboard</string>
     <string name="transaction_confirmation_text_conflicted">Conflicted</string>
     <string name="transaction_confirmation_text_abandoned">Abandoned</string>
     <string name="transaction_confirmation_text_pending">Pending</string>
-    <string name="receive_fragment_share_title">Share Gulden address</string>
+    <string name="receive_fragment_share_title">Share Munt address</string>
     <plurals name="transaction_confirmation_text">
         <item quantity="one">%d confirmation</item>
         <item quantity="other">%d confirmations</item>
@@ -142,7 +142,7 @@ file COPYING
     <string name="tx_detail_wallet_address">Wallet address</string>
     <string name="tx_detail_sending_address">Sending address</string>
     <string name="tx_detail_payment_address">Payment address</string>
-    <string name="tx_detail_network_fee">Gulden network fee</string>
+    <string name="tx_detail_network_fee">Munt network fee</string>
     <string name="iban_account_holder_name">Name</string>
     <string name="tx_detail_address_unavailable">unavailable</string>
     <string name="notification_transaction_channel_name">Transactions</string>
@@ -150,8 +150,8 @@ file COPYING
     <string name="notification_service_channel_name">Service</string>
     <string name="notification_service_channel_description">Service to keep data synchronised and monitor for transactions when the app is closed, can be turned on/off from inside the app settings</string>
     <string name="dialog_title_add_address">Add address</string>
-    <string name="hint_iban_or_coin_address">Gulden address</string>
-    <string name="toast_warn_uri_attempt_before_wallet_creation">You need to set up a Gulden wallet before you can use this URI</string>
+    <string name="hint_iban_or_coin_address">Munt address</string>
+    <string name="toast_warn_uri_attempt_before_wallet_creation">You need to set up a Munt wallet before you can use this URI</string>
     <string name="preference_fragment_link_summary">Link your mobile wallet with your desktop wallet</string>
     <string name="preference_fragment_remove_summary">Remove this wallet in order to start or recover another wallet</string>
     <string name="preference_fragment_unlink_label">Unlink wallet</string>
@@ -163,15 +163,15 @@ file COPYING
     <string name="preference_fragment_hide_balance">Hide balance</string>
     <string name="show_balance_when_synced">Balance not visible. Please wait.</string>
     <string name="copied_to_clipboard_toast">Copied</string>
-    <string name="coin_address_clipboard_label">Gulden address</string>
+    <string name="coin_address_clipboard_label">Munt address</string>
     <string name="send_all_instead_title">Insufficient balance</string>
-    <string name="send_all_instead_msg">Lower the amount and send all your Gulden instead? Amount transferred will be all your gulden minus network fee.</string>
+    <string name="send_all_instead_msg">Lower the amount and send all your Munt instead? Amount transferred will be all your Munt minus network fee.</string>
     <string name="send_all_btn">Send all</string>
-    <string name="send_coins_title">Send Gulden?</string>
+    <string name="send_coins_title">Send Munt?</string>
     <string name="send_btn">Send</string>
     <string name="core_not_ready_yet">Unity core not ready yet, please try again in a few seconds</string>
     <string name="send_insufficient_balance">Insufficient balance</string>
-    <string name="not_coin_qr">Not a valid Gulden QR:\n\n%1$s</string>
+    <string name="not_coin_qr">Not a valid Munt QR:\n\n%1$s</string>
     <string name="error_check_internet_connection">Please check your internet connection</string>
     <string name="send_fragment_sell_label">Sell</string>
 </resources>

@@ -137,7 +137,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
         sellButton.setOnClickListener {
             // Send a post request to blockhut with our wallet/address info; and then launch the site if we get a positive response.
             val MyRequestQueue = Volley.newRequestQueue(context)
-            val failURL = "https://gulden.com/sell"
+            val failURL = "https://munt.org/sell"
             val request = object : StringRequest(Request.Method.POST,"https://blockhut.com/buysession.php",
                 Response.Listener { response ->
                     try
@@ -186,7 +186,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
                     val params = HashMap<String,String>()
                     params["address"] = ILibraryController.GetReceiveAddress().toString()
                     params["uuid"] = IWalletController.GetUUID()
-                    params["currency"] = "gulden"
+                    params["currency"] = "munt"
                     params["wallettype"] = "android"
                     return params
                 }
@@ -276,13 +276,13 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
 
     private fun setClipButtonText(text : String)
     {
-        val styledText = SpannableString(Html.fromHtml(getString(unity_wallet.R.string.send_fragment_clipboard_label) + "<br/>" + "<small> <font color='"+resources.getColor(unity_wallet.R.color.lightText)+"'>" + ellipsizeString(text, 18) + "</font> </small>"))
+        val styledText = SpannableString(Html.fromHtml(getString(unity_wallet.R.string.send_fragment_clipboard_label) + "<br/>" + "<small> <font color='"+resources.getColor(unity_wallet.R.color.text_button_secondary)+"'>" + ellipsizeString(text, 18) + "</font> </small>"))
         clipboardButton.text = styledText
     }
 
     private fun checkClipboardEnable()
     {
-        // Enable clipboard button if it contains a valid IBAN, Gulden address or Uri
+        // Enable clipboard button if it contains a valid IBAN, Munt address or Uri
         val text = clipboardText()
         try {
             setClipButtonText(createRecipient(text).address)

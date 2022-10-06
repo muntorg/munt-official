@@ -49,7 +49,8 @@ file COPYING
                     android:layout_gravity="center"
                     android:clickable="false"
                     android:contentDescription="@string/unlock"
-                    android:src="@drawable/ic_lock_solid" />
+                    android:tint="@color/text_main"
+                    android:src="@drawable/ic_fontawesome_lock_solid" />
             </FrameLayout>
 
             <TextView
