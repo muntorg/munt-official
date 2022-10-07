@@ -16,7 +16,6 @@
     "libunity:copy": "node ./libunity/copy.js",
     "libunity:generate": "node ./libunity/generate.js && yarn lint"
   },
-  "main": "background.js",
   "dependencies": {
     "@fortawesome/fontawesome-pro": "^5.15.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
