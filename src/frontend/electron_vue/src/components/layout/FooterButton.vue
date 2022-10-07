@@ -65,8 +65,9 @@ export default {
   letter-spacing: 0.03em;
   line-height: calc(var(--footer-height) - 20px);
   max-width: 160px;
-  height: 50px;
+  height: 45px;
   white-space: nowrap;
+  margin-top: 5px;
   cursor: pointer;
 
   & svg {

@@ -79,7 +79,12 @@
     <div>
       <portal to="footer-slot">
         <div style="display: flex">
-          <div id="footer-layout" v-on:scroll.passive="handleScroll" class="footer-layout">
+          <div
+            id="footer-layout"
+            v-on:scroll.passive="handleScroll"
+            class="footer-layout"
+            :style="{ justifyContent: !showOverFlowArrowRight && !showOverFlowArrowLeft ? 'center' : null }"
+          >
             <div @click="scrollToStart" class="scroll-arrow-left" v-if="showOverFlowArrowLeft">
               <fa-icon class="pen" :icon="['fal', 'fa-long-arrow-left']" />
             </div>
@@ -336,6 +341,7 @@ export default {
 .footer-layout {
   display: flex;
   flex-direction: row;
+  align-items: center;
   overflow-x: scroll;
   width: 100%;
 }
