@@ -2,6 +2,7 @@
   <div class="app-wallet">
     <app-loader />
     <modal-dialog v-model="modal" />
+    <unlock-wallet-dialog />
     <activity-indicator v-if="activityIndicator" />
     <component :is="layout">
       <router-view />
@@ -16,6 +17,7 @@ import AppLoader from "./components/AppLoader";
 import ModalDialog from "./components/ModalDialog";
 import EventBus from "./EventBus.js";
 import ActivityIndicator from "./components/ActivityIndicator.vue";
+import UnlockWalletDialog from "./components/UnlockWalletDialog";
 
 import SetupLayout from "./layouts/SetupLayout";
 import WalletLayout from "./layouts/WalletLayout";
@@ -32,7 +34,8 @@ export default {
     ModalDialog,
     SetupLayout,
     WalletLayout,
-    ActivityIndicator
+    ActivityIndicator,
+    UnlockWalletDialog
   },
   created() {
     this.onStatusChanged();

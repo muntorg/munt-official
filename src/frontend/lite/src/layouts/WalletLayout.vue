@@ -17,7 +17,7 @@
       <accounts-section class="accounts" />
       <section class="footer flex-row">
         <div class="status" />
-        <div class="button" @click="changeLockSettings">
+        <div class="button" @click="handleWalletLock">
           <fa-icon :icon="['fal', lockIcon]" />
         </div>
         <div v-if="!isSPV" class="button" @click="showMining">
@@ -37,7 +37,7 @@
         <router-view />
       </section>
       <section class="footer">
-        <div v-if="isSingleAccount">
+        <div v-if="isSingleAccount" style="display: flex">
           <footer-button title="buttons.transactions" :icon="['far', 'list-ul']" routeName="account" @click="routeTo" />
           <footer-button title="buttons.send" :icon="['fal', 'arrow-from-bottom']" routeName="send" @click="routeTo" />
           <footer-button title="buttons.receive" :icon="['fal', 'arrow-to-bottom']" routeName="receive" @click="routeTo" />
@@ -51,9 +51,9 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import { formatMoneyForDisplay } from "../util.js";
-import WalletPasswordDialog from "../components/WalletPasswordDialog";
 import EventBus from "../EventBus";
 import UIConfig from "../../ui-config.json";
+import { AccountsController } from "../unity/Controllers";
 import AccountsSection from "./AccountsSection.vue";
 import AccountTooltip from "../components/AccountTooltip.vue";
 import AccountHeader from "../components/AccountHeader.vue";
@@ -75,7 +75,7 @@ export default {
   },
   computed: {
     ...mapState("app", ["progress", "rate"]),
-    ...mapState("wallet", ["activeAccount", "walletPassword"]),
+    ...mapState("wallet", ["activeAccount", "unlocked"]),
     ...mapGetters("wallet", ["totalBalance", "miningAccount", "account"]),
     walletLayoutClasses() {
       let classes = [];
@@ -88,7 +88,7 @@ export default {
       return classes;
     },
     lockIcon() {
-      return this.walletPassword ? "unlock" : "lock";
+      return this.unlocked ? "unlock" : "lock";
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
@@ -114,8 +114,29 @@ export default {
           params: { id: this.miningAccount.UUID }
         });
       } else {
-        if (this.$route.name === "setup-mining") return;
-        this.$router.push({ name: "setup-mining" });
+        EventBus.$emit("unlock-wallet", {
+          timeout: 5,
+          title: "setup_mining.title",
+          message: "setup_mining.information",
+          callback: async () => {
+            let uuid = null;
+            try {
+              // NOTE:
+              // Dont' know if it is actually needed to show the activity indicator when unlocking the wallet and creating the account, but for now I leave it here.
+              this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
+              uuid = AccountsController.CreateAccount("Mining", "Mining");
+            } finally {
+              // route to the new account when we have a uuid
+              if (uuid) {
+                // activity indicator is set to true in the router, so no need to remove it here
+                this.$router.push({ name: "account", params: { id: uuid } });
+              } else {
+                // remove the activity indicator
+                this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+              }
+            }
+          }
+        });
       }
     },
     routeTo(route) {
@@ -130,16 +151,8 @@ export default {
       if (this.$route.path === "/settings/") return;
       this.$router.push({ name: "settings" });
     },
-    changeLockSettings() {
-      if (this.walletPassword) {
-        this.$store.dispatch("wallet/SET_WALLET_PASSWORD", null);
-      } else {
-        EventBus.$emit("show-dialog", {
-          title: this.$t("password_dialog.unlock_wallet"),
-          component: WalletPasswordDialog,
-          showButtons: false
-        });
-      }
+    handleWalletLock() {
+      EventBus.$emit(this.unlocked ? "lock-wallet" : "unlock-wallet");
     }
   }
 };
@@ -216,7 +229,6 @@ export default {
       height: var(--footer-height);
       border-top: 1px solid var(--main-border-color);
       line-height: calc(var(--footer-height) - 2px);
-      padding: 0 20px;
       text-align: center;
     }
   }

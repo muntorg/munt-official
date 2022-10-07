@@ -1,86 +1,64 @@
 <template>
   <div class="view-recovery-phrase-view">
     <div>
-      <!-- step 1: Enter password -->
-      <content-wrapper v-if="current === 1" heading="common.enter_your_password">
-        <app-form-field>
-          <input ref="password" type="password" v-model="password" @keydown="getRecoveryPhraseOnEnter" :class="computedStatus" />
-        </app-form-field>
-      </content-wrapper>
-
-      <!-- step 2: Show recovery phrase -->
-      <content-wrapper v-else heading="common.important" heading-style="warning" content="setup.this_is_your_recovery_phrase">
+      <content-wrapper heading="common.important" heading-style="warning" content="setup.this_is_your_recovery_phrase">
         <app-section class="phrase">
-          {{ recoveryPhrase }}
+          {{ computedPhrase }}
         </app-section>
       </content-wrapper>
     </div>
 
-    <div class="flex-1" />
+    <div class="flex-1"></div>
+
     <app-button-section>
-      <template v-slot:left>
-        <button v-if="current === 1" @click="routeTo('settings')">
-          {{ $t("buttons.back") }}
-        </button>
-      </template>
-      <template v-slot:right>
-        <button v-if="current === 1" @click="getRecoveryPhrase" :disabled="isNextDisabled">
-          {{ $t("buttons.next") }}
-        </button>
-        <button v-if="current === 2" @click="ready">
-          {{ $t("buttons.ready") }}
-        </button>
-      </template>
+      <button @click="viewRecoveryPhrase" v-if="!recoveryPhrase">
+        {{ $t("buttons.unlock") }}
+      </button>
+      <button @click="back">
+        {{ $t("buttons.back") }}
+      </button>
     </app-button-section>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import EventBus from "../../EventBus";
 import { LibraryController } from "../../unity/Controllers";
 
 export default {
   data() {
     return {
-      recoveryPhrase: null,
-      password: "",
-      isPasswordInvalid: false
+      recoveryPhrase: null
     };
   },
-  mounted() {
-    if (this.walletPassword) {
-      this.password = this.walletPassword;
-      this.getRecoveryPhrase();
-    } else {
-      this.$refs.password.focus();
+  computed: {
+    ...mapState("wallet", ["unlocked"]),
+    computedPhrase() {
+      if (this.recoveryPhrase !== null) return this.recoveryPhrase;
+      else return "In order to see your recovery phrase you need to unlock your wallet";
     }
   },
-  computed: {
-    ...mapState("wallet", ["walletPassword"]),
-    current() {
-      return this.recoveryPhrase ? 2 : 1;
-    },
-    computedStatus() {
-      return this.isPasswordInvalid ? "error" : "";
-    },
-    isNextDisabled() {
-      return this.password.trim().length === 0;
+  watch: {
+    unlocked: {
+      immediate: true,
+      handler() {
+        if (this.unlocked) {
+          this.viewRecoveryPhrase();
+        }
+      }
     }
   },
   methods: {
-    getRecoveryPhraseOnEnter() {
-      this.isPasswordInvalid = false;
-      if (event.keyCode === 13) this.getRecoveryPhrase();
+    viewRecoveryPhrase() {
+      if (this.recoveryPhrase) return;
+      EventBus.$emit("unlock-wallet", {
+        callback: async () => {
+          this.recoveryPhrase = LibraryController.GetRecoveryPhrase().phrase;
+        }
+      });
     },
-    getRecoveryPhrase() {
-      if (LibraryController.UnlockWallet(this.password, 120)) {
-        this.recoveryPhrase = LibraryController.GetRecoveryPhrase().phrase;
-        LibraryController.LockWallet();
-      } else {
-        this.isPasswordInvalid = true;
-      }
-    },
-    ready() {
+    back() {
       this.$router.push({ name: "settings" });
     },
     routeTo(route) {

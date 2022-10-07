@@ -3,7 +3,6 @@ import VueRouter from "vue-router";
 import Account from "../views/Account";
 
 import { AccountsController } from "../unity/Controllers";
-import EventBus from "../EventBus";
 import store from "../store";
 
 Vue.use(VueRouter);
@@ -25,21 +24,6 @@ const routes = [
         name: "receive",
         component: () => import(/* webpackChunkName: "account-receive" */ "../views/Account/SpendingAccount/Receive.vue")
       },
-      // {
-      //   path: "link-saving-account",
-      //   name: "link-saving-account",
-      //   component: () => import(/* webpackChunkName: "link-saving-account" */ "../views/Account/SavingAccount/LinkSavingAccount.vue")
-      // },
-      // {
-      //   path: "send-saving",
-      //   name: "send-saving",
-      //   component: () => import(/* webpackChunkName: "send-saving" */ "../views/Account/MiningAccount/Send.vue")
-      // },
-      // {
-      //   path: "renew-account",
-      //   name: "renew-account",
-      //   component: () => import(/* webpackChunkName: "renew-account" */ "../views/Account/SavingAccount/RenewAccount.vue")
-      // },
       {
         path: "transactions",
         name: "transactions",
@@ -47,21 +31,6 @@ const routes = [
       }
     ]
   },
-  // {
-  //   path: "/setup-mining",
-  //   name: "setup-mining",
-  //   component: () => import(/* webpackChunkName: "setup-mining" */ "../views/Account/MiningAccount/SetupMining.vue")
-  // },
-  // {
-  //   path: "/add-saving-account",
-  //   name: "add-saving-account",
-  //   component: () => import(/* webpackChunkName: "add-saving-account" */ "../views/Account/SavingAccount/AddSavingAccount.vue")
-  // },
-  // {
-  //   path: "/add-spending-account",
-  //   name: "add-spending-account",
-  //   component: () => import(/* webpackChunkName: "add-saving-account" */ "../views/Account/SpendingAccount/AddSpendingAccount.vue")
-  // },
   {
     path: "/setup",
     name: "setup",
@@ -121,9 +90,6 @@ router.beforeEach((to, from, next) => {
       // 1. AccountsController.SetActiveAccount tells the backend to change the account (but it isn't changed immediately).
       // 2. When the account has been changed the onActiveAccountChanged handler in unity/LibUnity.js will update the store with new account data.
       // 3. After the account in the store has been changed the onAccountChanged handler in views/Account/index.vue will set the activity indicator to false.
-
-      // close the right sidebar when switching accounts
-      EventBus.$emit("close-right-sidebar");
     }
   }
 

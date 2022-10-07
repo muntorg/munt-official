@@ -53,13 +53,21 @@ export default {
 
 <style lang="less" scoped>
 .footer-button {
-  display: inline-block;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: nowrap;
+  align-items: center;
   padding: 0 20px;
   font-weight: 600;
   font-size: 0.85em;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   line-height: calc(var(--footer-height) - 20px);
+  max-width: 160px;
+  height: 45px;
+  white-space: nowrap;
+  margin-top: 5px;
   cursor: pointer;
 
   & svg {

@@ -1,5 +1,6 @@
 <template>
   <div class="app-debug">
+    <modal-dialog v-model="modal" />
     <div class="topbar flex-row">
       <div v-for="(tab, index) in tabs" :key="index" :class="getTabClass(index)" @click="setTab(index)">
         {{ tab.title }}
@@ -8,6 +9,7 @@
     <div class="main scrollable">
       <information-page v-if="current === 0" />
       <debug-console :show="current === 1" />
+      <peers-page v-if="current === 2" />
     </div>
   </div>
 </template>
@@ -15,6 +17,9 @@
 <script>
 import InformationPage from "./InformationPage";
 import DebugConsole from "./DebugConsole";
+import PeersPage from "./PeersPage";
+import ModalDialog from "../../components/ModalDialog";
+import EventBus from "../../EventBus.js";
 
 export default {
   data() {
@@ -26,13 +31,27 @@ export default {
         },
         {
           title: "Console"
+        },
+        {
+          title: "Peers"
         }
-      ]
+      ],
+      modal: null
     };
   },
   components: {
     InformationPage,
-    DebugConsole
+    DebugConsole,
+    PeersPage,
+    ModalDialog
+  },
+  mounted() {
+    EventBus.$on("close-dialog", this.closeModal);
+    EventBus.$on("show-dialog", this.showModal);
+  },
+  beforeDestroy() {
+    EventBus.$off("close-dialog", this.closeModal);
+    EventBus.$off("show-dialog", this.showModal);
   },
   methods: {
     getTabClass(index) {
@@ -40,6 +59,12 @@ export default {
     },
     setTab(index) {
       this.current = index;
+    },
+    closeModal() {
+      this.modal = null;
+    },
+    showModal(modal) {
+      this.modal = modal;
     }
   }
 };

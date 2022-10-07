@@ -166,10 +166,5 @@ export default {
 .word-input {
   width: calc(25% - 10px);
   margin: 5px;
-
-  &.success,
-  &.success:focus {
-    border-color: #ccc;
-  }
 }
 </style>

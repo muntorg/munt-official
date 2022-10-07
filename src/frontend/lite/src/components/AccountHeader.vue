@@ -1,59 +1,86 @@
 <template>
-  <div class="account-header">
-    <div v-if="!editMode" class="flex-row">
-      <div v-if="isSingleAccount" class="flex-row flex-1">
-        <div class="logo" />
-        <div class="balance-row flex-1">
-          <span>{{ balanceForDisplay }}</span>
-          <span>{{ totalBalanceFiat }}</span>
-        </div>
-      </div>
-      <div v-else class="left-colum" @click="editName">
-        <account-tooltip type="Account" :account="account">
-          <div class="flex-row flex-1">
-            <div class="accountname ellipsis">{{ name }}</div>
-            <fa-icon class="pen" :icon="['fal', 'fa-pen']" />
-          </div>
-          <div class="balance-row">
+  <div>
+    <confirm-dialog v-model="modal" />
+    <div class="account-header">
+      <div v-if="!editMode" class="flex-row">
+        <div v-if="isSingleAccount" class="flex-row flex-1">
+          <div class="logo" />
+          <div class="balance-row flex-1">
             <span>{{ balanceForDisplay }}</span>
             <span>{{ totalBalanceFiat }}</span>
           </div>
-        </account-tooltip>
-      </div>
-      <div v-if="showBuySellButtons">
-        <button outlined class="small" @click="buyCoins" :disabled="buyDisabled">{{ $t("buttons.buy") }}</button>
-        <button outlined class="small" @click="sellCoins" :disabled="sellDisabled">{{ $t("buttons.sell") }}</button>
-      </div>
-      <div v-if="isSingleAccount" class="flex-row icon-buttons">
-        <div class="icon-button">
-          <fa-icon :icon="['fal', 'cog']" @click="showSettings" />
         </div>
-        <div class="icon-button">
-          <fa-icon :icon="['fal', lockIcon]" @click="changeLockSettings" />
+        <div v-else class="left-colum">
+          <div>
+            <account-tooltip type="Account" :account="account">
+              <div style="display: flex; flex-direction: row">
+                <div style="width: calc(100% - 45px)" @click="editName" class="flex-row flex-1">
+                  <div class="accountname ellipsis">{{ name }}</div>
+                  <fa-icon class="pen" :icon="['fal', 'fa-pen']" />
+                </div>
+                <div style=" width: 40px; text-align: center" @click="deleteAccount" class="trash flex-row ">
+                  <fa-icon :icon="['fal', 'fa-trash']" />
+                </div>
+              </div>
+              <div class="balance-row">
+                <span>{{ balanceForDisplay }}</span>
+                <span>{{ totalBalanceFiat }}</span>
+              </div>
+            </account-tooltip>
+          </div>
+        </div>
+        <div v-if="showBuySellButtons">
+          <button outlined class="small" @click="buyCoins" :disabled="buyDisabled">{{ $t("buttons.buy") }}</button>
+          <button outlined class="small" @click="sellCoins" :disabled="sellDisabled">{{ $t("buttons.sell") }}</button>
+        </div>
+        <div v-if="!showBuySellButtons && showHoldinButtons">
+          <div v-if="!isLinkedToHoldin">
+            <button outlined class="small" @click="linkToHoldin('add')" :disabled="sellDisabled">
+              {{ $t("saving_account.add_to_holdin") }}
+            </button>
+          </div>
+          <div v-else>
+            <button outlined class="small" @click="linkToHoldin('remove')" :disabled="sellDisabled">
+              {{ $t("saving_account.remove_from_holdin") }}
+            </button>
+          </div>
+        </div>
+        <div v-if="isSingleAccount" class="flex-row icon-buttons">
+          <div class="icon-button">
+            <fa-icon :icon="['fal', 'cog']" @click="showSettings" />
+          </div>
+          <div class="icon-button">
+            <fa-icon :icon="['fal', lockIcon]" @click="changeLockSettings" />
+          </div>
         </div>
       </div>
+      <input v-else ref="accountNameInput" type="text" v-model="newAccountName" @keydown="onKeydown" @blur="cancelEdit" />
     </div>
-    <input v-else ref="accountNameInput" type="text" v-model="newAccountName" @keydown="onKeydown" @blur="cancelEdit" />
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import { AccountsController, BackendUtilities } from "../unity/Controllers";
+import { AccountsController, BackendUtilities, WitnessController, GenerationController } from "../unity/Controllers";
 import { formatMoneyForDisplay } from "../util.js";
 import AccountTooltip from "./AccountTooltip.vue";
 import EventBus from "../EventBus";
-import WalletPasswordDialog from "../components/WalletPasswordDialog";
+import { apiKey } from "../../holdinAPI";
+import ConfirmDialog from "./ConfirmDialog.vue";
 
 export default {
-  components: { AccountTooltip },
+  components: { AccountTooltip, ConfirmDialog },
   name: "AccountHeader",
   data() {
     return {
       editMode: false,
       newAccountName: null,
       buyDisabled: false,
-      sellDisabled: false
+      sellDisabled: false,
+      requestLinkToHoldin: false,
+      isLinkedToHoldin: false,
+      keyHash: "",
+      modal: null
     };
   },
   props: {
@@ -68,7 +95,7 @@ export default {
   },
   computed: {
     ...mapState("app", ["rate"]),
-    ...mapState("wallet", ["walletPassword"]),
+    ...mapState("wallet", ["walletPassword", "unlocked"]),
     name() {
       return this.account ? this.account.label : null;
     },
@@ -83,8 +110,11 @@ export default {
     showBuySellButtons() {
       return !this.account || (this.account.type === "Desktop" && !this.editMode);
     },
+    showHoldinButtons() {
+      return apiKey;
+    },
     lockIcon() {
-      return this.walletPassword ? "unlock" : "lock";
+      return this.unlocked ? "unlock" : "lock";
     }
   },
   watch: {
@@ -93,15 +123,53 @@ export default {
       handler() {
         this.editMode = false;
       }
+    },
+    unlocked: {
+      immediate: true,
+      handler() {
+        if (this.unlocked && this.requestLinkToHoldin) {
+          // Check if add or remove.
+          if (this.isLinkedToHoldin) {
+            this.holdinAPI("remove");
+          } else {
+            this.holdinAPI("add");
+          }
+        }
+      }
+    },
+    account: {
+      immediate: true,
+      handler() {
+        if (!this.showBuySellButtons) {
+          this.checkForHoldinLink();
+        }
+      }
+    }
+  },
+  mounted() {
+    if (!this.showBuySellButtons) {
+      this.checkForHoldinLink();
     }
   },
   methods: {
+    checkForHoldinLink() {
+      AccountsController.ListAccountLinksAsync(this.account.UUID).then(result => {
+        const findHoldin = result.find(element => element.serviceName == "holdin");
+        this.isLinkedToHoldin = findHoldin && findHoldin.serviceName === "holdin";
+        if (this.isLinkedToHoldin) {
+          this.keyHash = findHoldin.serviceData;
+        }
+      });
+    },
     editName() {
       this.newAccountName = this.name;
       this.editMode = true;
       this.$nextTick(() => {
         this.$refs["accountNameInput"].focus();
       });
+    },
+    deleteAccount() {
+      this.showConfirmModal();
     },
     onKeydown(e) {
       switch (e.keyCode) {
@@ -121,6 +189,11 @@ export default {
     },
     cancelEdit() {
       this.editMode = false;
+    },
+    dismissIndicator() {
+      setTimeout(() => {
+        this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+      }, 1000);
     },
     async sellCoins() {
       try {
@@ -145,15 +218,132 @@ export default {
       this.$router.push({ name: "settings" });
     },
     changeLockSettings() {
-      if (this.walletPassword) {
-        this.$store.dispatch("wallet/SET_WALLET_PASSWORD", null);
+      EventBus.$emit(this.unlocked ? "lock-wallet" : "unlock-wallet");
+    },
+    linkToHoldin(action) {
+      this.requestLinkToHoldin = true;
+
+      if (!this.unlocked) {
+        EventBus.$emit("unlock-wallet");
       } else {
-        EventBus.$emit("show-dialog", {
-          title: this.$t("password_dialog.unlock_wallet"),
-          component: WalletPasswordDialog,
-          showButtons: false
-        });
+        this.holdinAPI(action);
       }
+    },
+    async holdinAPI(action) {
+      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
+      AccountsController.GetWitnessKeyURIAsync(this.account.UUID).then(async key => {
+        let result = null;
+
+        if (action === "add") {
+          let infoResult = await BackendUtilities.holdinAPIActions(key, "getinfo");
+          const keyHashLocal = infoResult.data.keyhash;
+
+          if (infoResult.data.available === 1 && infoResult.data.active === "1") {
+            // Account was linked elsewhere. Note that on Gulden and update the compound value.
+            GenerationController.GetGenerationAddressAsync()
+              .then(async payoutAddress => {
+                // Add payout address to Holdin..
+                await BackendUtilities.holdinAPIActions(key, "payoutaddress", payoutAddress);
+                this.addAccountLink(this.account.UUID, keyHashLocal, infoResult.data.compound);
+              })
+              .catch(err => {
+                alert(err.message);
+                this.dismissIndicator();
+              });
+          } else if (infoResult.data.available === 1 && infoResult.data.active === "0") {
+            // Account was linked and then removed. Reactivate.
+            GenerationController.GetGenerationAddressAsync()
+              .then(async payoutAddress => {
+                result = await BackendUtilities.holdinAPIActions(key, "activate");
+                if (result.status_code === 200) {
+                  await BackendUtilities.holdinAPIActions(key, "payoutaddress", payoutAddress);
+                  this.addAccountLink(this.account.UUID, keyHashLocal);
+                } else {
+                  alert(`Holdin: ${result.status_message}`);
+                }
+              })
+              .catch(err => {
+                alert(err.message);
+                this.dismissIndicator();
+              });
+          } else if (infoResult.data.available === 0) {
+            // Add account for the first time.
+            result = await BackendUtilities.holdinAPIActions(key, "add");
+            if (result.status_code === 200) {
+              this.addAccountLink(this.account.UUID, keyHashLocal);
+            } else {
+              this.dismissIndicator();
+              alert(`Holdin: ${result.status_message}`);
+            }
+          } else {
+            this.dismissIndicator();
+            alert("Holdin: API Error");
+          }
+        } else {
+          result = await BackendUtilities.holdinAPIActions(key, "remove");
+          if (result.status_code === 200) {
+            AccountsController.RemoveAccountLinkAsync(this.account.UUID, "holdin")
+              .then(() => {
+                this.isLinkedToHoldin = false;
+                this.requestLinkToHoldin = false;
+                this.dismissIndicator();
+              })
+              .catch(err => {
+                alert(err.message);
+                this.dismissIndicator();
+              });
+          } else {
+            alert(`Holdin: ${result.status_message}`);
+          }
+        }
+      });
+    },
+    addAccountLink(accountUID, keyHash, compound) {
+      AccountsController.AddAccountLinkAsync(accountUID, "holdin", keyHash)
+        .then(() => {
+          if (compound) {
+            WitnessController.SetAccountCompoundingAsync(accountUID, compound).then(() => {
+              this.dismissIndicator();
+              this.requestLinkToHoldin = false;
+              this.isLinkedToHoldin = true;
+            });
+          } else {
+            this.dismissIndicator();
+            this.requestLinkToHoldin = false;
+            this.isLinkedToHoldin = true;
+          }
+        })
+        .catch(err => {
+          alert(err.message);
+        });
+    },
+    showConfirmModal() {
+      if (
+        this.account.allBalances.availableIncludingLocked === 0 &&
+        this.account.allBalances.unconfirmedIncludingLocked === 0 &&
+        this.account.allBalances.immatureIncludingLocked === 0
+      ) {
+        this.modal = { title: "Confirm Delete", message: "Are you sure you want to delete the account?", closeModal: this.closeModal, confirm: this.confirm };
+      } else {
+        this.modal = { title: "Error", message: "Your account needs to be empty before you can delete it", showButtons: false, closeModal: this.closeModal };
+      }
+    },
+    closeModal() {
+      this.modal = null;
+    },
+    confirm() {
+      this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", true);
+      this.modal = null;
+      setTimeout(() => {
+        AccountsController.DeleteAccountAsync(this.account.UUID)
+          .then(() => {
+            this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+          })
+          .catch(err => {
+            this.$store.dispatch("app/SET_ACTIVITY_INDICATOR", false);
+            alert(err.message);
+          });
+      }, 1000);
     }
   }
 };
@@ -168,6 +358,7 @@ export default {
   & > div {
     align-items: center;
     justify-content: center;
+    height: var(--header-height);
   }
 }
 
@@ -210,8 +401,20 @@ button.small {
 .pen {
   display: none;
   position: absolute;
-  right: 5px;
+  right: 45px;
   line-height: 20px;
+}
+
+.trash {
+  display: none;
+  position: absolute;
+  right: 5px;
+  line-height: 18px;
+}
+
+.left-colum:hover .trash {
+  display: block;
+  color: #ff0000;
 }
 
 .left-colum:hover .pen {

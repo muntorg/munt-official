@@ -64,6 +64,7 @@ export default {
   font-weight: 500;
   font-size: 14px;
   color: #000;
+  padding-bottom: 10px;
 }
 
 .select-list-wrapper .selected {

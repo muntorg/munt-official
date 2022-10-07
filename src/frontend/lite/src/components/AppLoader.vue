@@ -164,7 +164,7 @@ export default {
 .logo-inner {
   width: 128px;
   height: 128px;
-  background: url("../img/logo-start.svg");
+  background: url("../img/logo-black.svg");
   background-size: cover;
 }
 

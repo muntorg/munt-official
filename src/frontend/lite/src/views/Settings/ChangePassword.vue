@@ -1,15 +1,13 @@
 <template>
   <div class="change-password-view">
-    <!-- step 1:  Enter old password -->
-    <content-wrapper v-if="current === 1" heading="common.enter_your_password">
+    <content-wrapper heading="common.enter_your_password">
       <app-form-field>
-        <input ref="password" type="password" v-model="passwordold" @keydown="validatePasswordOnEnter" :class="passwordOldStatus" />
+        <input ref="currentPassword" type="password" v-model="currentPassword" @keydown="resetStatus" :class="currentPasswordStatus" />
       </app-form-field>
     </content-wrapper>
 
-    <!-- step 2: enter new password -->
-    <content-wrapper v-else content="setup.choose_password">
-      <app-form-field title="common.password">
+    <content-wrapper>
+      <app-form-field title="setup.choose_password">
         <input ref="password1" type="password" v-model="password1" :class="password2Status" />
       </app-form-field>
       <app-form-field title="setup.repeat_password">
@@ -20,25 +18,19 @@
     <div class="flex-1" />
     <portal v-if="!isSingleAccount" to="footer-slot">
       <app-button-section>
-        <button v-if="current === 1" @click="nextStep" :disabled="isNextDisabled">
-          {{ $t("buttons.next") }}
-        </button>
-        <button v-if="current === 2" @click="nextStep" :disabled="isNextDisabled">
+        <button @click="tryChangePassword" :disabled="isButtonDisabled">
           {{ $t("buttons.change_password") }}
         </button>
       </app-button-section>
     </portal>
     <app-button-section v-else>
       <template v-slot:left>
-        <button v-if="current === 1" @click="routeTo('settings')">
+        <button @click="routeTo('settings')">
           {{ $t("buttons.back") }}
         </button>
       </template>
       <template v-slot:right>
-        <button v-if="current === 1" @click="nextStep" :disabled="isNextDisabled">
-          {{ $t("buttons.next") }}
-        </button>
-        <button v-if="current === 2" @click="nextStep" :disabled="isNextDisabled">
+        <button @click="tryChangePassword" :disabled="isButtonDisabled">
           {{ $t("buttons.change_password") }}
         </button>
       </template>
@@ -54,18 +46,17 @@ import UIConfig from "../../../ui-config.json";
 export default {
   data() {
     return {
-      current: 1,
-      passwordold: "",
+      currentPassword: "",
       password1: "",
       password2: "",
-      isPasswordInvalid: false,
+      isCurrentPasswordInvalid: false,
       isSingleAccount: UIConfig.isSingleAccount
     };
   },
   computed: {
     ...mapState("wallet", ["walletPassword"]),
-    passwordOldStatus() {
-      return this.isPasswordInvalid ? "error" : "";
+    currentPasswordStatus() {
+      return this.isCurrentPasswordInvalid ? "error" : "";
     },
     password2Status() {
       if (this.password2.length === 0) return "";
@@ -78,52 +69,29 @@ export default {
 
       return this.password1 === this.password2;
     },
-    isNextDisabled() {
-      switch (this.current) {
-        case 1:
-          return this.passwordold.trim().length === 0;
-        case 2:
-          return this.passwordsValidated === false;
-      }
-      return true;
+    isButtonDisabled() {
+      return this.currentPassword.trim().length === 0 || this.passwordsValidated === false;
     }
   },
   mounted() {
-    this.$refs.passwordold.focus();
+    this.$refs.currentPassword.focus();
   },
   methods: {
-    nextStep() {
-      switch (this.current) {
-        case 1:
-          this.validatePassword();
-          break;
-        case 2:
-          if (LibraryController.ChangePassword(this.passwordold, this.password2)) {
-            if (this.walletPassword) {
-              this.$store.dispatch("wallet/SET_WALLET_PASSWORD", this.password2);
-            }
-            this.$router.push({ name: "account" });
-          }
-          break;
-      }
-    },
-    validatePasswordOnEnter() {
-      this.isPasswordInvalid = false;
-      if (event.keyCode === 13) this.validatePassword();
-    },
-    validatePasswordRepeatOnEnter() {
-      if (event.keyCode === 13 && this.passwordsValidated) this.nextStep();
-    },
-    validatePassword() {
-      if (LibraryController.UnlockWallet(this.passwordold, 120)) {
-        LibraryController.LockWallet();
-        this.current++;
-        this.$nextTick(() => {
-          this.$refs.password1.focus();
-        });
+    tryChangePassword() {
+      if (LibraryController.UnlockWallet(this.currentPassword, 10)) {
+        if (LibraryController.ChangePassword(this.currentPassword, this.password2)) {
+          LibraryController.LockWallet();
+          this.routeTo("account");
+        }
       } else {
-        this.isPasswordInvalid = true;
+        this.isCurrentPasswordInvalid = true;
       }
+    },
+    async resetStatus() {
+      this.isCurrentPasswordInvalid = false;
+    },
+    validatePasswordRepeatOnEnter(e) {
+      if (e.keyCode === 13 && this.passwordsValidated) this.tryChangePassword();
     },
     routeTo(route) {
       this.$router.push({ name: route });
