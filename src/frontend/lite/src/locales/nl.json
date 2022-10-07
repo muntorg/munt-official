@@ -126,17 +126,17 @@
   "setup": {
     "choose_password": "Kies een wachtwoord van minimaal 6 karakters.",
     "choose_password_information": "Een wachtwoord is vereist voor het ontgrendelen van jouw wallet. Kies een sterk wachtwoord, zodat niemand anders toegang kan krijgen tot jouw Munt.",
-    "create_new": "Ik wil een nieuwe wallet starten",
-    "enter_existing_recovery_phrase": "Voer jouw herstelzin in om jouw wallet te herstellen.",
+    "create_new": "I do not have a Munt wallet yet",
+    "enter_existing_recovery_phrase": "Munt LITE is not suitable for a full desktop wallet recovery phrase (with witness and mining functionality).",
     "enter_recovery_phrase": "Voer herstelzin in",
     "invalid_recovery_phrase": {
       "title": "Ongeldige herstelzin",
       "message": "Deze combinatie vormt geen geldige herstelzin. Corrigeer de fout(en) en probeer het nogmaals."
     },
-    "recover_existing": "Ik wil mijn wallet herstellen met mijn herstelzin",
+    "recover_existing": "I already have a Munt wallet",
     "repeat_password": "Herhaal wachtwoord",
     "repeat_your_recovery_phrase": "Voer jouw herstelzin in om te controleren dat je deze goed hebt opgeschreven.",
-    "setup_your_wallet": "Installeer jouw Munt wallet",
+    "setup_your_wallet": "Make a choice",
     "this_is_your_recovery_phrase": "Dit is jouw herstelzin. Bewaar de herstelzin op een veilige plek. Zin kwijt of iemand toegang tot je zin = Munt weg."
   },
   "setup_mining": {
