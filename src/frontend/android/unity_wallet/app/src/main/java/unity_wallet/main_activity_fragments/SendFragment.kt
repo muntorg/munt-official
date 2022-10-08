@@ -175,6 +175,9 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
                    }
                    else
                    {
+                       // Redirect user to the default fallback site
+                       //fixme: Do something with the status message here
+                       //var statusMessage = jsonResponse.getString("status_message")
                        val intent = Intent(failURL)
                        startActivity(intent)
                    }
