@@ -1,6 +1,6 @@
 {
   "name": "electron-sample",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "A minimal Electron application using unified backend",
   "author": "Malcolm MacLeod",
   "license": "Libre Chain License",
