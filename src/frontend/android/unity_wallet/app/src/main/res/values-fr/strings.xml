@@ -32,7 +32,7 @@ file COPYING
     <string name="address_book_title">Carnet d\'adresses</string>
     <string name="transaction_list_empty_title">Aucun transaction n\'a reçu jusqu\'à présent.</string>
     <string name="transaction_list_empty_message">Touchez ici pour acheter votre premier Munt.</string>
-    <string name="send_coins_confirm_template">%1$s NLG\n\nà %2$s</string>
+    <string name="send_coins_confirm_template">%1$s MUNT\n\nà %2$s</string>
     <string name="peer_list_fragment_empty">Aucun pair connecté</string>
     <string name="block_row_now">Maintenant</string>
     <string name="action_browse">Naviguer</string>

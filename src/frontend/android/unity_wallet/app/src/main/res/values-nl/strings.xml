@@ -32,7 +32,7 @@ file COPYING
     <string name="address_book_title">Adresboek</string>
     <string name="transaction_list_empty_title">Geen transacties ontvangen</string>
     <string name="transaction_list_empty_message">Tik hier om je eerste Munt te kopen</string>
-    <string name="send_coins_confirm_template">%1$s NLG\n\nnaar %2$s</string>
+    <string name="send_coins_confirm_template">%1$s MUNT\n\nnaar %2$s</string>
     <string name="peer_list_fragment_empty">Geen connecties</string>
     <string name="block_row_now">alleen nu</string>
     <string name="action_browse">Bladeren</string>
