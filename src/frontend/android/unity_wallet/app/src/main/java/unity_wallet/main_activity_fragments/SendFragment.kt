@@ -113,7 +113,15 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
         dialog.show()
     }
 
-    override fun onWalletReady() {
+    fun setupAddressBookButton()
+    {
+        imageViewAddToAddressBook.setOnClickListener {
+            handleAddToAddressBookButtonClick(requireView())
+        }
+    }
+
+    fun setupClipboardButton()
+    {
         clipboardButton.setOnClickListener {
             val text = clipboardText()
             try {
@@ -123,17 +131,19 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
                 errorMessage(getString(unity_wallet.R.string.clipboard_no_valid_address))
             }
         }
+    }
 
-        imageViewAddToAddressBook.setOnClickListener {
-            handleAddToAddressBookButtonClick(requireView())
-        }
-
+    fun setupQRButton()
+    {
         qrButton.setOnClickListener {
             val intent = Intent(context, BarcodeCaptureActivity::class.java)
             intent.putExtra(BarcodeCaptureActivity.AutoFocus, true)
             startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
         }
+    }
 
+    fun setupSellButton()
+    {
         sellButton.setOnClickListener {
             // Send a post request to blockhut with our wallet/address info; and then launch the site if we get a positive response.
             val MyRequestQueue = Volley.newRequestQueue(context)
@@ -168,19 +178,19 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
                 },
                 Response.ErrorListener
                 {
-                   // If we are sure its a local connectivity issue, alert the user, otherwise send them to the default fallback site
-                   if (it is NetworkError || it is AuthFailureError || it is NoConnectionError)
-                   {
-                       Toast.makeText(context, getString(unity_wallet.R.string.error_check_internet_connection), Toast.LENGTH_SHORT).show()
-                   }
-                   else
-                   {
-                       // Redirect user to the default fallback site
-                       //fixme: Do something with the status message here
-                       //var statusMessage = jsonResponse.getString("status_message")
-                       val intent = Intent(failURL)
-                       startActivity(intent)
-                   }
+                    // If we are sure its a local connectivity issue, alert the user, otherwise send them to the default fallback site
+                    if (it is NetworkError || it is AuthFailureError || it is NoConnectionError)
+                    {
+                        Toast.makeText(context, getString(unity_wallet.R.string.error_check_internet_connection), Toast.LENGTH_SHORT).show()
+                    }
+                    else
+                    {
+                        // Redirect user to the default fallback site
+                        //fixme: Do something with the status message here
+                        //var statusMessage = jsonResponse.getString("status_message")
+                        val intent = Intent(failURL)
+                        startActivity(intent)
+                    }
                 }
             )
             // Force values to be send at x-www-form-urlencoded
@@ -202,17 +212,23 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
 
             // Volley request policy, only one time request to avoid duplicate transaction
             request.retryPolicy = DefaultRetryPolicy(
-                    DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
-                    1, // DefaultRetryPolicy.DEFAULT_MAX_RETRIES = 2
-                    1f // DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
+                1, // DefaultRetryPolicy.DEFAULT_MAX_RETRIES = 2
+                1f // DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
             )
 
             // Add the volley post request to the request queue
             MyRequestQueue.add(request)
         }
+    }
 
+    fun setupClipboardManager()
+    {
         ClipboardManager.OnPrimaryClipChangedListener { checkClipboardEnable() }
+    }
 
+    fun setupAddressbook()
+    {
         val addresses = ILibraryController.getAddressBookRecords()
         val adapter = AddressBookAdapter(addresses) { position, address ->
             val recipient = UriRecipient(true, address.address, address.name, address.desc, 0)
@@ -229,10 +245,20 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(addressBookList)
+    }
 
-        updateEmptyViewState()
-
-        checkClipboardEnable()
+    override fun onWalletReady()
+    {
+        if (clipboardButton != null) {
+            setupClipboardButton();
+            setupAddressBookButton();
+            setupQRButton();
+            setupSellButton();
+            setupClipboardManager();
+            setupAddressbook();
+            updateEmptyViewState()
+            checkClipboardEnable()
+        }
     }
 
     private fun updateEmptyViewState()
