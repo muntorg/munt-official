@@ -115,7 +115,7 @@ For those who really need too or are technically inclined it is of course possib
 |P2SH version byte|98 (g)|127 (t)|
 |BIP44 coin type|87 0x80000057|87 0x80000057|
 |**Infrastructure**|**Main network**|**[Testnet](./technical_documentation/accelerated_testnet.md#official-testnet)**|
-|Official block explorer|blockchain.munt.org|-|
+|Official block explorer|explorer.munt.org|-|
 |Community block explorer|https://guldenbook.com/|-|
 |Community block explorer|https://munt.chainviewer.org/|-|
 |DNS Seed 1|seed.gulden.com|-|
