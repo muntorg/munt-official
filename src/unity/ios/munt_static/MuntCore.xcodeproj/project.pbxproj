@@ -10,33 +10,48 @@
 		5509BD3E25B4E08100FB8734 /* DBMnemonicRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = 5509BD3D25B4E08100FB8734 /* DBMnemonicRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5509BD4025B4E1C600FB8734 /* DBIP2pNetworkController.h in Headers */ = {isa = PBXBuildFile; fileRef = 5509BD3F25B4E1C600FB8734 /* DBIP2pNetworkController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		553E2B0A28F745B8008B506A /* DBWalletLockStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 553E2B0928F745B8008B506A /* DBWalletLockStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		55C0638D25B30AC300A9871A /* DBILibraryController.h in Headers */ = {isa = PBXBuildFile; fileRef = 55C0638C25B30AC300A9871A /* DBILibraryController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		553E2B2728F748C4008B506A /* libboost_filesystem-mt-s-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B2128F7486F008B506A /* libboost_filesystem-mt-s-x64.a */; };
+		553E2B2828F748C4008B506A /* libboost_program_options-mt-s-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B2328F7487E008B506A /* libboost_program_options-mt-s-x64.a */; };
+		553E2B2928F748C4008B506A /* libboost_system-mt-s-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B1F28F74861008B506A /* libboost_system-mt-s-x64.a */; };
+		553E2B2A28F748C4008B506A /* libboost_thread-mt-s-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B2528F7488B008B506A /* libboost_thread-mt-s-x64.a */; };
+		553E2B4728F748D1008B506A /* libboost_atomic-mt-s-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B4128F748C9008B506A /* libboost_atomic-mt-s-x64.a */; };
+		553E2B4828F748D1008B506A /* libboost_atomic-mt-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B4028F748C9008B506A /* libboost_atomic-mt-x64.a */; };
+		553E2B4928F748D2008B506A /* libboost_chrono-mt-s-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B2C28F748C5008B506A /* libboost_chrono-mt-s-x64.a */; };
+		553E2B4A28F748D2008B506A /* libboost_chrono-mt-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3928F748C7008B506A /* libboost_chrono-mt-x64.a */; };
+		553E2B4B28F748D3008B506A /* libboost_filesystem-mt-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3728F748C7008B506A /* libboost_filesystem-mt-x64.a */; };
+		553E2B4C28F748D3008B506A /* libboost_prg_exec_monitor-mt-s-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B4328F748CA008B506A /* libboost_prg_exec_monitor-mt-s-x64.a */; };
+		553E2B4D28F748D4008B506A /* libboost_prg_exec_monitor-mt-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3528F748C7008B506A /* libboost_prg_exec_monitor-mt-x64.a */; };
+		553E2B4E28F748D4008B506A /* libboost_program_options-mt-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3B28F748C8008B506A /* libboost_program_options-mt-x64.a */; };
+		553E2B4F28F748D5008B506A /* libboost_system-mt-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3E28F748C8008B506A /* libboost_system-mt-x64.a */; };
+		553E2B5028F748D6008B506A /* libboost_test_exec_monitor-mt-s-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3028F748C6008B506A /* libboost_test_exec_monitor-mt-s-x64.a */; };
+		553E2B5128F748D7008B506A /* libboost_test_exec_monitor-mt-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B4428F748CA008B506A /* libboost_test_exec_monitor-mt-x64.a */; };
+		553E2B5228F748D7008B506A /* libboost_thread-mt-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3C28F748C8008B506A /* libboost_thread-mt-x64.a */; };
+		553E2B5328F748D8008B506A /* libboost_unit_test_framework-mt-s-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3A28F748C8008B506A /* libboost_unit_test_framework-mt-s-x64.a */; };
+		553E2B5428F748D9008B506A /* libboost_unit_test_framework-mt-x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3F28F748C9008B506A /* libboost_unit_test_framework-mt-x64.a */; };
+		553E2B5528F748DA008B506A /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B4528F748CA008B506A /* libcrypto.a */; };
+		553E2B5628F748DB008B506A /* libcryptopp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B4228F748C9008B506A /* libcryptopp.a */; };
+		553E2B5728F748DC008B506A /* libdb_cxx-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3228F748C6008B506A /* libdb_cxx-4.8.a */; };
+		553E2B5828F748DD008B506A /* libdb_cxx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B2D28F748C5008B506A /* libdb_cxx.a */; };
+		553E2B5928F748DF008B506A /* libdb-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B2E28F748C5008B506A /* libdb-4.8.a */; };
+		553E2B5A28F748E0008B506A /* libdb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B2B28F748C5008B506A /* libdb.a */; };
+		553E2B5B28F748E1008B506A /* libdjinni_support_lib_UNIVERSAL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3828F748C7008B506A /* libdjinni_support_lib_UNIVERSAL.a */; };
+		553E2B5C28F748E3008B506A /* libevent_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3428F748C6008B506A /* libevent_core.a */; };
+		553E2B5D28F748E4008B506A /* libevent_extra.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3128F748C6008B506A /* libevent_extra.a */; };
+		553E2B5E28F748E6008B506A /* libevent_pthreads.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3328F748C6008B506A /* libevent_pthreads.a */; };
+		553E2B5F28F748E7008B506A /* libevent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B3D28F748C8008B506A /* libevent.a */; };
+		553E2B6028F748E9008B506A /* libqrencode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B4628F748CA008B506A /* libqrencode.a */; };
+		553E2B6128F748EA008B506A /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E2B2F28F748C5008B506A /* libssl.a */; };
+		553E2B6328F7490A008B506A /* DBBannedPeerRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = 553E2B6228F7490A008B506A /* DBBannedPeerRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		553E2B6528F7494B008B506A /* DBILibraryController.h in Headers */ = {isa = PBXBuildFile; fileRef = 553E2B6428F7494B008B506A /* DBILibraryController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		55C0638F25B30ACF00A9871A /* DBILibraryListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 55C0638E25B30ACE00A9871A /* DBILibraryListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		55C0639125B30AE200A9871A /* DBMonitorListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 55C0639025B30AE200A9871A /* DBMonitorListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E61A12842171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */; };
 		E61A12862171360F000069F0 /* dummy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E61A12852171360F000069F0 /* dummy.cpp */; };
 		E61A1288217136DE000069F0 /* dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E61A1287217136DE000069F0 /* dummy.m */; };
 		E64203F121638CD6004A77FF /* MuntCore.h in Headers */ = {isa = PBXBuildFile; fileRef = E64203EF21638CD6004A77FF /* MuntCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E65D1678218A22540080637D /* libsecp256k1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65D1677218A22540080637D /* libsecp256k1.a */; };
-		E65D167A218A229F0080637D /* libleveldb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65D1679218A229F0080637D /* libleveldb.a */; };
-		E65D167C218A22B70080637D /* libmemenv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65D167B218A22B70080637D /* libmemenv.a */; };
 		E67BA0882209C84600223B01 /* DBTransactionStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = E67BA0862209C84600223B01 /* DBTransactionStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E67BA0892209C84600223B01 /* DBMutationRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E67BA0872209C84600223B01 /* DBMutationRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E67CDA64224A22F100CC9F6E /* DBInputRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E67CDA63224A22F100CC9F6E /* DBInputRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E67CDA66224A263400CC9F6E /* DBLegacyWalletResult.h in Headers */ = {isa = PBXBuildFile; fileRef = E67CDA65224A263400CC9F6E /* DBLegacyWalletResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E68FAE04216C964E0038C745 /* libdb-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADF8216C964D0038C745 /* libdb-4.8.a */; };
-		E68FAE05216C964E0038C745 /* libboost_system-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADF9216C964D0038C745 /* libboost_system-mt-s.a */; };
-		E68FAE06216C964E0038C745 /* libboost_filesystem-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADFA216C964D0038C745 /* libboost_filesystem-mt-s.a */; };
-		E68FAE07216C964E0038C745 /* libboost_program_options-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADFB216C964D0038C745 /* libboost_program_options-mt-s.a */; };
-		E68FAE08216C964E0038C745 /* libboost_thread-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADFC216C964E0038C745 /* libboost_thread-mt-s.a */; };
-		E68FAE09216C964E0038C745 /* libboost_timer-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADFD216C964E0038C745 /* libboost_timer-mt-s.a */; };
-		E68FAE0A216C964E0038C745 /* libqrencode.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADFE216C964E0038C745 /* libqrencode.a */; };
-		E68FAE0B216C964E0038C745 /* libboost_chrono-mt-s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FADFF216C964E0038C745 /* libboost_chrono-mt-s.a */; };
-		E68FAE0C216C964E0038C745 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE00216C964E0038C745 /* libcrypto.a */; };
-		E68FAE0D216C964E0038C745 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE01216C964E0038C745 /* libssl.a */; };
-		E68FAE0F216C964E0038C745 /* libdb_cxx-4.8.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68FAE03216C964E0038C745 /* libdb_cxx-4.8.a */; };
-		E698B375233E670A00458186 /* libcryptopp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E698B374233E66D700458186 /* libcryptopp.a */; };
-		E698B376233E674900458186 /* lib_unity_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E65180AD218A1080009283A8 /* lib_unity_objc.a */; };
 		E6CEA4252264AA2D00C87DC5 /* DBOutputRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6CEA4232264AA2D00C87DC5 /* DBOutputRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6CEA4262264AA2D00C87DC5 /* DBPaymentResultStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = E6CEA4242264AA2D00C87DC5 /* DBPaymentResultStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6EBCA222254B2BA00B02F24 /* staticfiltercp in Resources */ = {isa = PBXBuildFile; fileRef = E6EBCA212254B2BA00B02F24 /* staticfiltercp */; };
@@ -53,14 +68,46 @@
 		E6EC7D0E21EF24A900320806 /* DBTransactionRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = E6EC7D0121EF24A800320806 /* DBTransactionRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6ED8385228ED8F700DD0BC9 /* core-packages.licenses in Resources */ = {isa = PBXBuildFile; fileRef = E6ED8384228ED8F700DD0BC9 /* core-packages.licenses */; };
 		E6EFA49E22735748002484C6 /* staticfiltercptestnet in Resources */ = {isa = PBXBuildFile; fileRef = E6EFA49D227352BB002484C6 /* staticfiltercptestnet */; };
-		E6F2DCA42343609F002B3CEA /* lib_unity_crypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F2DCA32343609F002B3CEA /* lib_unity_crypto.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5509BD3D25B4E08100FB8734 /* DBMnemonicRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBMnemonicRecord.h; path = ../../../djinni/objc/DBMnemonicRecord.h; sourceTree = "<group>"; };
 		5509BD3F25B4E1C600FB8734 /* DBIP2pNetworkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBIP2pNetworkController.h; path = ../../../djinni/objc/DBIP2pNetworkController.h; sourceTree = "<group>"; };
 		553E2B0928F745B8008B506A /* DBWalletLockStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBWalletLockStatus.h; path = ../../../djinni/objc/DBWalletLockStatus.h; sourceTree = "<group>"; };
-		55C0638C25B30AC300A9871A /* DBILibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBILibraryController.h; path = ../../../djinni/objc/DBILibraryController.h; sourceTree = "<group>"; };
+		553E2B1F28F74861008B506A /* libboost_system-mt-s-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_system-mt-s-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_system-mt-s-x64.a"; sourceTree = "<group>"; };
+		553E2B2128F7486F008B506A /* libboost_filesystem-mt-s-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_filesystem-mt-s-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_filesystem-mt-s-x64.a"; sourceTree = "<group>"; };
+		553E2B2328F7487E008B506A /* libboost_program_options-mt-s-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_program_options-mt-s-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_program_options-mt-s-x64.a"; sourceTree = "<group>"; };
+		553E2B2528F7488B008B506A /* libboost_thread-mt-s-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_thread-mt-s-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_thread-mt-s-x64.a"; sourceTree = "<group>"; };
+		553E2B2B28F748C5008B506A /* libdb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdb.a; path = "../../../../depends/x86_64-ios/lib/libdb.a"; sourceTree = "<group>"; };
+		553E2B2C28F748C5008B506A /* libboost_chrono-mt-s-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_chrono-mt-s-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_chrono-mt-s-x64.a"; sourceTree = "<group>"; };
+		553E2B2D28F748C5008B506A /* libdb_cxx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdb_cxx.a; path = "../../../../depends/x86_64-ios/lib/libdb_cxx.a"; sourceTree = "<group>"; };
+		553E2B2E28F748C5008B506A /* libdb-4.8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdb-4.8.a"; path = "../../../../depends/x86_64-ios/lib/libdb-4.8.a"; sourceTree = "<group>"; };
+		553E2B2F28F748C5008B506A /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "../../../../depends/x86_64-ios/lib/libssl.a"; sourceTree = "<group>"; };
+		553E2B3028F748C6008B506A /* libboost_test_exec_monitor-mt-s-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_test_exec_monitor-mt-s-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_test_exec_monitor-mt-s-x64.a"; sourceTree = "<group>"; };
+		553E2B3128F748C6008B506A /* libevent_extra.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libevent_extra.a; path = "../../../../depends/x86_64-ios/lib/libevent_extra.a"; sourceTree = "<group>"; };
+		553E2B3228F748C6008B506A /* libdb_cxx-4.8.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdb_cxx-4.8.a"; path = "../../../../depends/x86_64-ios/lib/libdb_cxx-4.8.a"; sourceTree = "<group>"; };
+		553E2B3328F748C6008B506A /* libevent_pthreads.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libevent_pthreads.a; path = "../../../../depends/x86_64-ios/lib/libevent_pthreads.a"; sourceTree = "<group>"; };
+		553E2B3428F748C6008B506A /* libevent_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libevent_core.a; path = "../../../../depends/x86_64-ios/lib/libevent_core.a"; sourceTree = "<group>"; };
+		553E2B3528F748C7008B506A /* libboost_prg_exec_monitor-mt-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_prg_exec_monitor-mt-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_prg_exec_monitor-mt-x64.a"; sourceTree = "<group>"; };
+		553E2B3628F748C7008B506A /* libqrencode.la */ = {isa = PBXFileReference; lastKnownFileType = text; name = libqrencode.la; path = "../../../../depends/x86_64-ios/lib/libqrencode.la"; sourceTree = "<group>"; };
+		553E2B3728F748C7008B506A /* libboost_filesystem-mt-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_filesystem-mt-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_filesystem-mt-x64.a"; sourceTree = "<group>"; };
+		553E2B3828F748C7008B506A /* libdjinni_support_lib_UNIVERSAL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdjinni_support_lib_UNIVERSAL.a; path = "../../../../depends/x86_64-ios/lib/libdjinni_support_lib_UNIVERSAL.a"; sourceTree = "<group>"; };
+		553E2B3928F748C7008B506A /* libboost_chrono-mt-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_chrono-mt-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_chrono-mt-x64.a"; sourceTree = "<group>"; };
+		553E2B3A28F748C8008B506A /* libboost_unit_test_framework-mt-s-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_unit_test_framework-mt-s-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_unit_test_framework-mt-s-x64.a"; sourceTree = "<group>"; };
+		553E2B3B28F748C8008B506A /* libboost_program_options-mt-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_program_options-mt-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_program_options-mt-x64.a"; sourceTree = "<group>"; };
+		553E2B3C28F748C8008B506A /* libboost_thread-mt-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_thread-mt-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_thread-mt-x64.a"; sourceTree = "<group>"; };
+		553E2B3D28F748C8008B506A /* libevent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libevent.a; path = "../../../../depends/x86_64-ios/lib/libevent.a"; sourceTree = "<group>"; };
+		553E2B3E28F748C8008B506A /* libboost_system-mt-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_system-mt-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_system-mt-x64.a"; sourceTree = "<group>"; };
+		553E2B3F28F748C9008B506A /* libboost_unit_test_framework-mt-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_unit_test_framework-mt-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_unit_test_framework-mt-x64.a"; sourceTree = "<group>"; };
+		553E2B4028F748C9008B506A /* libboost_atomic-mt-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_atomic-mt-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_atomic-mt-x64.a"; sourceTree = "<group>"; };
+		553E2B4128F748C9008B506A /* libboost_atomic-mt-s-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_atomic-mt-s-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_atomic-mt-s-x64.a"; sourceTree = "<group>"; };
+		553E2B4228F748C9008B506A /* libcryptopp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcryptopp.a; path = "../../../../depends/x86_64-ios/lib/libcryptopp.a"; sourceTree = "<group>"; };
+		553E2B4328F748CA008B506A /* libboost_prg_exec_monitor-mt-s-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_prg_exec_monitor-mt-s-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_prg_exec_monitor-mt-s-x64.a"; sourceTree = "<group>"; };
+		553E2B4428F748CA008B506A /* libboost_test_exec_monitor-mt-x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libboost_test_exec_monitor-mt-x64.a"; path = "../../../../depends/x86_64-ios/lib/libboost_test_exec_monitor-mt-x64.a"; sourceTree = "<group>"; };
+		553E2B4528F748CA008B506A /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../../../../depends/x86_64-ios/lib/libcrypto.a"; sourceTree = "<group>"; };
+		553E2B4628F748CA008B506A /* libqrencode.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqrencode.a; path = "../../../../depends/x86_64-ios/lib/libqrencode.a"; sourceTree = "<group>"; };
+		553E2B6228F7490A008B506A /* DBBannedPeerRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBBannedPeerRecord.h; path = ../../../djinni/objc/DBBannedPeerRecord.h; sourceTree = "<group>"; };
+		553E2B6428F7494B008B506A /* DBILibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBILibraryController.h; path = ../../../djinni/objc/DBILibraryController.h; sourceTree = "<group>"; };
 		55C0638E25B30ACE00A9871A /* DBILibraryListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBILibraryListener.h; path = ../../../djinni/objc/DBILibraryListener.h; sourceTree = "<group>"; };
 		55C0639025B30AE200A9871A /* DBMonitorListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DBMonitorListener.h; path = ../../../djinni/objc/DBMonitorListener.h; sourceTree = "<group>"; };
 		E61A12832171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdjinni_support_lib_UNIVERSAL.a; path = "../../../../depends/aarch64-ios/lib/libdjinni_support_lib_UNIVERSAL.a"; sourceTree = "<group>"; };
@@ -114,24 +161,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6F2DCA42343609F002B3CEA /* lib_unity_crypto.a in Frameworks */,
-				E65D167C218A22B70080637D /* libmemenv.a in Frameworks */,
-				E65D167A218A229F0080637D /* libleveldb.a in Frameworks */,
-				E65D1678218A22540080637D /* libsecp256k1.a in Frameworks */,
-				E61A12842171355A000069F0 /* libdjinni_support_lib_UNIVERSAL.a in Frameworks */,
-				E698B375233E670A00458186 /* libcryptopp.a in Frameworks */,
-				E68FAE04216C964E0038C745 /* libdb-4.8.a in Frameworks */,
-				E68FAE05216C964E0038C745 /* libboost_system-mt-s.a in Frameworks */,
-				E68FAE06216C964E0038C745 /* libboost_filesystem-mt-s.a in Frameworks */,
-				E68FAE07216C964E0038C745 /* libboost_program_options-mt-s.a in Frameworks */,
-				E68FAE08216C964E0038C745 /* libboost_thread-mt-s.a in Frameworks */,
-				E68FAE09216C964E0038C745 /* libboost_timer-mt-s.a in Frameworks */,
-				E68FAE0A216C964E0038C745 /* libqrencode.a in Frameworks */,
-				E68FAE0B216C964E0038C745 /* libboost_chrono-mt-s.a in Frameworks */,
-				E68FAE0C216C964E0038C745 /* libcrypto.a in Frameworks */,
-				E68FAE0D216C964E0038C745 /* libssl.a in Frameworks */,
-				E68FAE0F216C964E0038C745 /* libdb_cxx-4.8.a in Frameworks */,
-				E698B376233E674900458186 /* lib_unity_objc.a in Frameworks */,
+				553E2B6128F748EA008B506A /* libssl.a in Frameworks */,
+				553E2B2728F748C4008B506A /* libboost_filesystem-mt-s-x64.a in Frameworks */,
+				553E2B4928F748D2008B506A /* libboost_chrono-mt-s-x64.a in Frameworks */,
+				553E2B5928F748DF008B506A /* libdb-4.8.a in Frameworks */,
+				553E2B5A28F748E0008B506A /* libdb.a in Frameworks */,
+				553E2B4F28F748D5008B506A /* libboost_system-mt-x64.a in Frameworks */,
+				553E2B5028F748D6008B506A /* libboost_test_exec_monitor-mt-s-x64.a in Frameworks */,
+				553E2B5628F748DB008B506A /* libcryptopp.a in Frameworks */,
+				553E2B5828F748DD008B506A /* libdb_cxx.a in Frameworks */,
+				553E2B6028F748E9008B506A /* libqrencode.a in Frameworks */,
+				553E2B5728F748DC008B506A /* libdb_cxx-4.8.a in Frameworks */,
+				553E2B5E28F748E6008B506A /* libevent_pthreads.a in Frameworks */,
+				553E2B5C28F748E3008B506A /* libevent_core.a in Frameworks */,
+				553E2B4A28F748D2008B506A /* libboost_chrono-mt-x64.a in Frameworks */,
+				553E2B4728F748D1008B506A /* libboost_atomic-mt-s-x64.a in Frameworks */,
+				553E2B5328F748D8008B506A /* libboost_unit_test_framework-mt-s-x64.a in Frameworks */,
+				553E2B5F28F748E7008B506A /* libevent.a in Frameworks */,
+				553E2B2828F748C4008B506A /* libboost_program_options-mt-s-x64.a in Frameworks */,
+				553E2B4D28F748D4008B506A /* libboost_prg_exec_monitor-mt-x64.a in Frameworks */,
+				553E2B5128F748D7008B506A /* libboost_test_exec_monitor-mt-x64.a in Frameworks */,
+				553E2B5428F748D9008B506A /* libboost_unit_test_framework-mt-x64.a in Frameworks */,
+				553E2B5528F748DA008B506A /* libcrypto.a in Frameworks */,
+				553E2B5D28F748E4008B506A /* libevent_extra.a in Frameworks */,
+				553E2B5228F748D7008B506A /* libboost_thread-mt-x64.a in Frameworks */,
+				553E2B5B28F748E1008B506A /* libdjinni_support_lib_UNIVERSAL.a in Frameworks */,
+				553E2B4B28F748D3008B506A /* libboost_filesystem-mt-x64.a in Frameworks */,
+				553E2B2928F748C4008B506A /* libboost_system-mt-s-x64.a in Frameworks */,
+				553E2B4C28F748D3008B506A /* libboost_prg_exec_monitor-mt-s-x64.a in Frameworks */,
+				553E2B4828F748D1008B506A /* libboost_atomic-mt-x64.a in Frameworks */,
+				553E2B2A28F748C4008B506A /* libboost_thread-mt-s-x64.a in Frameworks */,
+				553E2B4E28F748D4008B506A /* libboost_program_options-mt-x64.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +220,7 @@
 		E64203EE21638CD6004A77FF /* MuntCore */ = {
 			isa = PBXGroup;
 			children = (
+				553E2B6228F7490A008B506A /* DBBannedPeerRecord.h */,
 				E67CDA65224A263400CC9F6E /* DBLegacyWalletResult.h */,
 				E67CDA63224A22F100CC9F6E /* DBInputRecord.h */,
 				E67BA0872209C84600223B01 /* DBMutationRecord.h */,
@@ -169,7 +230,7 @@
 				E6EC7CFC21EF24A800320806 /* DBBlockInfoRecord.h */,
 				E6CEA4232264AA2D00C87DC5 /* DBOutputRecord.h */,
 				E6CEA4242264AA2D00C87DC5 /* DBPaymentResultStatus.h */,
-				55C0638C25B30AC300A9871A /* DBILibraryController.h */,
+				553E2B6428F7494B008B506A /* DBILibraryController.h */,
 				55C0638E25B30ACE00A9871A /* DBILibraryListener.h */,
 				5509BD3D25B4E08100FB8734 /* DBMnemonicRecord.h */,
 				55C0639025B30AE200A9871A /* DBMonitorListener.h */,
@@ -190,6 +251,38 @@
 		E64203F721638D34004A77FF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				553E2B4128F748C9008B506A /* libboost_atomic-mt-s-x64.a */,
+				553E2B4028F748C9008B506A /* libboost_atomic-mt-x64.a */,
+				553E2B2C28F748C5008B506A /* libboost_chrono-mt-s-x64.a */,
+				553E2B3928F748C7008B506A /* libboost_chrono-mt-x64.a */,
+				553E2B3728F748C7008B506A /* libboost_filesystem-mt-x64.a */,
+				553E2B4328F748CA008B506A /* libboost_prg_exec_monitor-mt-s-x64.a */,
+				553E2B3528F748C7008B506A /* libboost_prg_exec_monitor-mt-x64.a */,
+				553E2B3B28F748C8008B506A /* libboost_program_options-mt-x64.a */,
+				553E2B3E28F748C8008B506A /* libboost_system-mt-x64.a */,
+				553E2B3028F748C6008B506A /* libboost_test_exec_monitor-mt-s-x64.a */,
+				553E2B4428F748CA008B506A /* libboost_test_exec_monitor-mt-x64.a */,
+				553E2B3C28F748C8008B506A /* libboost_thread-mt-x64.a */,
+				553E2B3A28F748C8008B506A /* libboost_unit_test_framework-mt-s-x64.a */,
+				553E2B3F28F748C9008B506A /* libboost_unit_test_framework-mt-x64.a */,
+				553E2B4528F748CA008B506A /* libcrypto.a */,
+				553E2B4228F748C9008B506A /* libcryptopp.a */,
+				553E2B3228F748C6008B506A /* libdb_cxx-4.8.a */,
+				553E2B2D28F748C5008B506A /* libdb_cxx.a */,
+				553E2B2E28F748C5008B506A /* libdb-4.8.a */,
+				553E2B2B28F748C5008B506A /* libdb.a */,
+				553E2B3828F748C7008B506A /* libdjinni_support_lib_UNIVERSAL.a */,
+				553E2B3428F748C6008B506A /* libevent_core.a */,
+				553E2B3128F748C6008B506A /* libevent_extra.a */,
+				553E2B3328F748C6008B506A /* libevent_pthreads.a */,
+				553E2B3D28F748C8008B506A /* libevent.a */,
+				553E2B4628F748CA008B506A /* libqrencode.a */,
+				553E2B3628F748C7008B506A /* libqrencode.la */,
+				553E2B2F28F748C5008B506A /* libssl.a */,
+				553E2B2528F7488B008B506A /* libboost_thread-mt-s-x64.a */,
+				553E2B2328F7487E008B506A /* libboost_program_options-mt-s-x64.a */,
+				553E2B2128F7486F008B506A /* libboost_filesystem-mt-s-x64.a */,
+				553E2B1F28F74861008B506A /* libboost_system-mt-s-x64.a */,
 				E6F2DCA32343609F002B3CEA /* lib_unity_crypto.a */,
 				E6ED7E97234216F3009C4DAB /* libmunt_crypto.a */,
 				E698B374233E66D700458186 /* libcryptopp.a */,
@@ -246,13 +339,14 @@
 				E6EC7D0E21EF24A900320806 /* DBTransactionRecord.h in Headers */,
 				E6EC7D0B21EF24A900320806 /* DBBalanceRecord.h in Headers */,
 				5509BD3E25B4E08100FB8734 /* DBMnemonicRecord.h in Headers */,
-				55C0638D25B30AC300A9871A /* DBILibraryController.h in Headers */,
+				553E2B6528F7494B008B506A /* DBILibraryController.h in Headers */,
 				E6EC7D0221EF24A900320806 /* DBMonitorRecord.h in Headers */,
 				E6EC7D0721EF24A900320806 /* DBUriRecord.h in Headers */,
 				E6EC7D0C21EF24A900320806 /* DBPeerRecord.h in Headers */,
 				E6EC7D0921EF24A900320806 /* DBBlockInfoRecord.h in Headers */,
 				55C0639125B30AE200A9871A /* DBMonitorListener.h in Headers */,
 				55C0638F25B30ACF00A9871A /* DBILibraryListener.h in Headers */,
+				553E2B6328F7490A008B506A /* DBBannedPeerRecord.h in Headers */,
 				553E2B0A28F745B8008B506A /* DBWalletLockStatus.h in Headers */,
 				E6CEA4262264AA2D00C87DC5 /* DBPaymentResultStatus.h in Headers */,
 				E6CEA4252264AA2D00C87DC5 /* DBOutputRecord.h in Headers */,
