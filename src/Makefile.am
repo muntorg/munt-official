@@ -1001,6 +1001,10 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBILibraryController+Private.mm \
   unity/djinni/objc/DBILibraryController.h \
   unity/djinni/objc/DBILibraryController.mm \
+  unity/djinni/objc/DBWalletLockStatus.h \
+  unity/djinni/objc/DBWalletLockStatus.mm \
+  unity/djinni/objc/DBWalletLockStatus+Private.h \
+  unity/djinni/objc/DBWalletLockStatus+Private.mm \
   unity/djinni/objc/DBILibraryListener+Private.h \
   unity/djinni/objc/DBILibraryListener+Private.mm \
   unity/djinni/objc/DBILibraryController.h \
@@ -1040,6 +1044,10 @@ DJINNI_OBJC_GEN = \
   unity/djinni/objc/DBPeerRecord+Private.mm \
   unity/djinni/objc/DBPeerRecord.h \
   unity/djinni/objc/DBPeerRecord.mm \
+  unity/djinni/objc/DBBannedPeerRecord+Private.h \
+  unity/djinni/objc/DBBannedPeerRecord+Private.mm \
+  unity/djinni/objc/DBBannedPeerRecord.h \
+  unity/djinni/objc/DBBannedPeerRecord.mm \
   unity/djinni/objc/DBQrCodeRecord+Private.h \
   unity/djinni/objc/DBQrCodeRecord+Private.mm \
   unity/djinni/objc/DBQrCodeRecord.h \
@@ -1073,6 +1081,7 @@ lib_unity_objc_a_SOURCES = \
   unity/unity_impl.h \
   unity/unity_impl.cpp \
   unity/controllers/ip2pnetworkcontroller.cpp \
+  unity/controllers/iwalletcontroller.cpp \
   $(DJINNI_CPP_GEN) \
   $(DJINNI_OBJC_GEN) \
   $(CORE_H)
