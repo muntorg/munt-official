@@ -352,7 +352,7 @@ static void HandleSIGTERM(int)
     // We call a sigterm safe 'shutdown' function that does nothing but write to a socket.
     // The shutdown thread then safely handles the rest from within the already existing shutdown thread.
     if (AppLifecycleManager::gApp)
-        AppLifecycleManager::gApp->shutdown();
+        AppLifecycleManager::gApp->shutdown(true);
 }
 
 static void HandleSIGHUP(int)
@@ -561,6 +561,7 @@ static void ThreadImport(std::vector<fs::path> vImportFiles)
     CValidationState state;
     if (!ActivateBestChain(state, chainparams)) {
         LogPrintf("Failed to connect best block\n");
+        LogPrintf("shutdown: terminating app due to block connect failiure");
         AppLifecycleManager::gApp->shutdown();
     }
 

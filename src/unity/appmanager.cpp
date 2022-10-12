@@ -28,9 +28,10 @@
 AppLifecycleManager* AppLifecycleManager::gApp = nullptr;
 
 AppLifecycleManager::AppLifecycleManager()
-: fShutDownHasBeenInitiated(false),
-  shutdownDidFinish(false),
-  recoveryBirthNumber(0)
+: fShutDownHasBeenInitiated(false)
+, fShutDownFromSigterm(false)
+, shutdownDidFinish(false)
+, recoveryBirthNumber(0)
 {
     if (gApp)
         assert(0);
@@ -90,6 +91,7 @@ void AppLifecycleManager::initialize()
             //However we should just use a custom combiner and boolean && the results to be future safe for other ports.
             if (!signalAboutToInitMain())
             {
+                LogPrintf("shutdown: AppLifecycleManager, signalAboutToInitMain returned false, terminating app");
                 //Start shutdown process.
                 shutdown();
                 return;
@@ -115,11 +117,13 @@ void AppLifecycleManager::initialize()
 // We use a socket here to signal shutdown to the main app.
 // As we (may) have been called from sigterm it is not safe to do anything else here.
 // See http://doc.qt.io/qt-5/unix-signals.html for more information.
-void AppLifecycleManager::shutdown()
+void AppLifecycleManager::shutdown(bool fromSigTerm)
 {
     // Let the core know that we are in the early process of shutting down.
     // Do this before the mutex so that if we are still in init we can abandon the init.
     fShutDownHasBeenInitiated = true;
+    
+    fShutDownFromSigterm = fromSigTerm;
 
     #ifdef WIN32
     sigtermCv.notify_one();
@@ -237,6 +241,8 @@ void AppLifecycleManager::shutdownThread()
         ::read(sigtermFd[1], &signalClose, sizeof(signalClose));
         #pragma GCC diagnostic pop
         LogPrintf("shutdown thread: App shutdown requested\n");
+        if (fShutDownFromSigterm)
+            LogPrintf("shutdown thread: App shutdown requested from SIGTERM\n");
         std::lock_guard<std::mutex> lock(appManagerInitShutDownMutex);
         #endif
 

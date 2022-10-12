@@ -2761,6 +2761,7 @@ static UniValue resetdatadirfull(const JSONRPCRequest& request)
     
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
+    LogPrintf("shutdown: terminating app for full datadir wipe");
     AppLifecycleManager::gApp->shutdown();
     return "Stopping application and fully resetting data directory (excluding wallet)";
 }
@@ -2783,6 +2784,7 @@ static UniValue resetdatadirpartial(const JSONRPCRequest& request)
     witnessingEnabled = false;
     partiallyEraseDatadirOnShutdown=true;
     
+    LogPrintf("shutdown: terminating app for partial datadir wipe");
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
     AppLifecycleManager::gApp->shutdown();

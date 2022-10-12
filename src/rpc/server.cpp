@@ -264,6 +264,7 @@ static UniValue stop(const JSONRPCRequest& jsonRequest)
             "\nStop " GLOBAL_APPNAME " server.");
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
+    LogPrintf("shutdown: 'stop' called via RPC, terminating app");
     AppLifecycleManager::gApp->shutdown();
     if (jsonRequest.params[0].isNum()) {
         MilliSleep(jsonRequest.params[0].get_int());

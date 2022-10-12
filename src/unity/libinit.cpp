@@ -52,6 +52,7 @@ static void handleAppInitResult(bool bResult)
     if (!bResult)
     {
         // InitError will have been called with detailed error, which ends up on console
+        LogPrintf("shutdown: handleAppInitResult called with error, terminating app");
         AppLifecycleManager::gApp->shutdown();
         return;
     }
@@ -121,6 +122,8 @@ int InitUnity()
 
     try
     {
+        InitAppSpecificDatadirParamaters();
+        
         if (!fs::is_directory(GetDataDir(false)))
         {
             fprintf(stderr, "Error: Specified data directory \"%s\" does not exist.\n", GetArg("-datadir", "").c_str());
@@ -135,7 +138,7 @@ int InitUnity()
             fprintf(stderr,"Error reading configuration file: %s\n", e.what());
             return EXIT_FAILURE;
         }
-
+        
         InitAppSpecificConfigParamaters();
 
         // Check for -testnet or -regtest parameter (Params() calls are only valid after this clause)

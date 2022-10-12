@@ -39,6 +39,7 @@ void InitLogging();
 //!Initialize any app specific hardcoded paramaters here (e.g. the android wallet will set -spv)
 //!This is called after loading the config file
 void InitAppSpecificConfigParamaters();
+void InitAppSpecificDatadirParamaters();
 //!Parameter interaction: change current parameters depending on various rules
 void InitParameterInteraction();
 

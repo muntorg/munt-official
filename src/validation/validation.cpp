@@ -666,6 +666,7 @@ bool AbortNode(const std::string& strMessage, const std::string& userMessage="")
     SetMiscWarning(strMessage);
     LogPrintf("*** %s\n", strMessage);
     uiInterface.ThreadSafeMessageBox(userMessage.empty() ? _("Error: A fatal internal error occurred, see debug.log for details") : userMessage, "", CClientUIInterface::MSG_ERROR);
+    LogPrintf("shutdown: triggering shutdown from AbortNode");
     AppLifecycleManager::gApp->shutdown();
     return false;
 }
@@ -2252,7 +2253,10 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
         }
 
         if (nStopAtHeight && pindexNewTip && pindexNewTip->nHeight >= nStopAtHeight)
+        {
+            LogPrintf("shutdown: triggering shutdown because ActivateBestChain reached stopatheight [%d]", nStopAtHeight);
             AppLifecycleManager::gApp->shutdown();
+        }
     } while (pindexNewTip != pindexMostWork);
     CheckBlockIndex(chainparams.GetConsensus());
 

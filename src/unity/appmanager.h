@@ -35,7 +35,7 @@ public:
 
     //! NB! This signals, in a sigterm safe way, to shutdownThread that it should start the shutdown process.
     //! All actual work takes places inside shutdownThread which is a detached thread
-    void shutdown();
+    void shutdown(bool fromSigTerm=false);
 
     //! Explicitly wait for shutdown to complete
     void waitForShutDown();
@@ -45,6 +45,7 @@ public:
     bool daemonise();
 
     std::atomic<bool> fShutDownHasBeenInitiated;
+    std::atomic<bool> fShutDownFromSigterm;
 
     //NB! The below signals are -not- from UI thread, if the UI handles them it should take this into account.
     boost::signals2::signal<void (bool initializeResult)> signalAppInitializeResult;
