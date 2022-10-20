@@ -91,11 +91,20 @@ class SyncService : Service(), UnityCore.Observer
 
     override fun syncProgressChanged(percent: Float) {
         Log.i(TAG, "sync progress = $percent")
-        if (builder != null) {
-            val b: NotificationCompat.Builder = builder!!
-            builder!!.setContentText("progress $percent")
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.notify(NOTIFICATION_ID_FOREGROUND_SERVICE, b.build())
+        try
+        {
+            if (builder != null)
+            {
+                val b: NotificationCompat.Builder = builder!!
+                builder!!.setContentText("progress $percent")
+                val notificationManager =
+                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.notify(NOTIFICATION_ID_FOREGROUND_SERVICE, b.build())
+            }
+        }
+        catch (e : Exception)
+        {
+            //TODO - analytics
         }
     }
 
@@ -108,20 +117,29 @@ class SyncService : Service(), UnityCore.Observer
     private fun startInForeground()
     {
 
-        val notificationIntent = Intent(this, WalletActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        try
         {
-            val notificationChannel = NotificationChannel(channelID, getString(R.string.notification_service_channel_name), NotificationManager.IMPORTANCE_LOW)
-            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(notificationChannel)
-            notificationChannel.description = getString(R.string.notification_service_channel_description)
-            notificationChannel.enableLights(false)
-            notificationChannel.setShowBadge(false)
-        }
+            val notificationIntent = Intent(this, WalletActivity::class.java)
+            val pendingIntent =
+                PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val notificationChannel = NotificationChannel(
+                    channelID,
+                    getString(R.string.notification_service_channel_name),
+                    NotificationManager.IMPORTANCE_LOW
+                )
+                (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
+                    notificationChannel
+                )
+                notificationChannel.description =
+                    getString(R.string.notification_service_channel_description)
+                notificationChannel.enableLights(false)
+                notificationChannel.setShowBadge(false)
+            }
 
 
-        builder = NotificationCompat.Builder(this, channelID)
+            builder = NotificationCompat.Builder(this, channelID)
                 .setContentTitle("Munt")
                 .setTicker("Munt")
                 .setContentText("Munt")
@@ -129,8 +147,13 @@ class SyncService : Service(), UnityCore.Observer
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
 
-        val notification = builder?.build()
-        startForeground(NOTIFICATION_ID_FOREGROUND_SERVICE, notification)
+            val notification = builder?.build()
+            startForeground(NOTIFICATION_ID_FOREGROUND_SERVICE, notification)
+        }
+        catch (e : Exception)
+        {
+            //TODO - Analytics
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int

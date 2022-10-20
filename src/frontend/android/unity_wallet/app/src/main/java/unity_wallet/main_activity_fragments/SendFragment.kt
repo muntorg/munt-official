@@ -156,24 +156,45 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
                         if (jsonResponse.getInt("status_code") == 200)
                         {
                             var sessionID = jsonResponse.getString("sessionid")
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://blockhut.com/sell.php?sessionid=%s".format(sessionID)))
-                            startActivity(intent)
+                            try
+                            {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://blockhut.com/sell.php?sessionid=%s".format(sessionID)))
+                                startActivity(intent)
+                            }
+                            catch (e:IllegalStateException)
+                            {
+                                //TODO: Add analytics here to figure out why this happens
+                            }
                         }
                         else
                         {
                             // Redirect user to the default fallback site
                             //fixme: Do something with the status message here
                             //var statusMessage = jsonResponse.getString("status_message")
-                            val intent = Intent(failURL)
-                            startActivity(intent)
+                            try
+                            {
+                                val intent = Intent(failURL)
+                                startActivity(intent)
+                            }
+                            catch (e:IllegalStateException)
+                            {
+                                //TODO: Add analytics here to figure out why this happens
+                            }
                         }
                     }
                     catch (e:Exception)
                     {
                         // Redirect user to the default fallback site
                         //fixme: Do something with the error message here
-                        val intent = Intent(failURL)
-                        startActivity(intent)
+                        try
+                        {
+                            val intent = Intent(failURL)
+                            startActivity(intent)
+                        }
+                        catch (e:IllegalStateException)
+                        {
+                            //TODO: Add analytics here to figure out why this happens
+                        }
                     }
                 },
                 Response.ErrorListener
@@ -188,8 +209,15 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
                         // Redirect user to the default fallback site
                         //fixme: Do something with the status message here
                         //var statusMessage = jsonResponse.getString("status_message")
-                        val intent = Intent(failURL)
-                        startActivity(intent)
+                        try
+                        {
+                            val intent = Intent(failURL)
+                            startActivity(intent)
+                        }
+                        catch (e:IllegalStateException)
+                        {
+                            //TODO: Add analytics here to figure out why this happens
+                        }
                     }
                 }
             )

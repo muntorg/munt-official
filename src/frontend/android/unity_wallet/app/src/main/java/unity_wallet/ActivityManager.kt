@@ -118,40 +118,51 @@ class ActivityManager : Application(), LifecycleObserver, UnityCore.Observer, Sh
     }
 
     override fun onNewMutation(mutation: MutationRecord, selfCommitted: Boolean) {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        // only notify of mutations that are not initiated by our own payments, have a net change effect != 0
-        // and when notifications are enabled in preferences
-        if (preferences.getBoolean("preference_notify_transaction_activity", true)
-                && !selfCommitted
-                && mutation.change != 0L) {
-            val notificationIntent = Intent(this, WalletActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE)
+        try
+        {
+            val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+            // only notify of mutations that are not initiated by our own payments, have a net change effect != 0
+            // and when notifications are enabled in preferences
+            if (preferences.getBoolean("preference_notify_transaction_activity", true)
+                    && !selfCommitted
+                    && mutation.change != 0L) {
+                val notificationIntent = Intent(this, WalletActivity::class.java)
+                val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE)
+                } else {
+                    PendingIntent.getActivity(this, 0, notificationIntent, 0)
+                }
 
-            val title = getString(if (mutation.change > 0) R.string.notify_received else R.string.notify_sent)
-            val notification = with(NotificationCompat.Builder(this)) {
-                setSmallIcon(R.drawable.ic_logo)
-                setContentTitle(title)
-                setTicker(title)
-                setContentText(formatNative(mutation.change))
-                //setPublicVersion()
-                //setTimeoutAfter()
-                if (getNotificationChannelID() != "")
-                    setChannelId(getNotificationChannelID())
-                setContentIntent(pendingIntent)
-                setOngoing(false)
-                setAutoCancel(true)
-                setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                setDefaults(Notification.DEFAULT_ALL)
-                //setLargeIcon(Bitmap.createScaledBitmap(R.drawable.ic_g_logo, 128, 128, false))
-                val now = System.currentTimeMillis()
-                if (now - lastAudibleNotification > Config.AUDIBLE_NOTIFICATIONS_INTERVAL)
-                    lastAudibleNotification = now
-                else
-                    setOnlyAlertOnce(true)
-                build()
+                val title = getString(if (mutation.change > 0) R.string.notify_received else R.string.notify_sent)
+                val notification = with(NotificationCompat.Builder(this)) {
+                    setSmallIcon(R.drawable.ic_logo)
+                    setContentTitle(title)
+                    setTicker(title)
+                    setContentText(formatNative(mutation.change))
+                    //setPublicVersion()
+                    //setTimeoutAfter()
+                    if (getNotificationChannelID() != "")
+                        setChannelId(getNotificationChannelID())
+                    setContentIntent(pendingIntent)
+                    setOngoing(false)
+                    setAutoCancel(true)
+                    setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    setDefaults(Notification.DEFAULT_ALL)
+                    //setLargeIcon(Bitmap.createScaledBitmap(R.drawable.ic_g_logo, 128, 128, false))
+                    val now = System.currentTimeMillis()
+                    if (now - lastAudibleNotification > Config.AUDIBLE_NOTIFICATIONS_INTERVAL)
+                        lastAudibleNotification = now
+                    else
+                        setOnlyAlertOnce(true)
+                    build()
+                }
+                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.notify(1, notification)
             }
-            val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.notify(1, notification)
+        }
+        catch(e : Exception)
+        {
+            //TODO - analytics
         }
     }
 
