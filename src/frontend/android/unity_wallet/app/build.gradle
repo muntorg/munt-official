@@ -66,7 +66,7 @@ android {
             resValue "string", "app_name", "Munt-testnet"
             buildConfigField "boolean", "TESTNET", "true"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf-testnet"'
-            versionCode 300503
+            versionCode 300504
             versionName = "3.0.2"
             resValue "string", "about_text_app_name", "Munt testnet $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2022 Centure.com BV"
@@ -78,7 +78,7 @@ android {
             resValue "string", "app_name", "Munt"
             buildConfigField "boolean", "TESTNET", "false"
             buildConfigField "String", "OLD_WALLET_PROTOBUF_FILENAME", '"wallet-protobuf"'
-            versionCode 503
+            versionCode 504
             versionName = "3.0.2"
             resValue "string", "about_text_app_name", "Munt $versionName ($versionCode)"
             resValue "string", "about_text_app_copyright", "© 2022 Centure.com BV"
