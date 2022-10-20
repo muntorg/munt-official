@@ -37,7 +37,7 @@ file COPYING
             tools:clickable="false"
             tools:ignore="HardcodedText" />
 
-        <Space
+        <android.widget.Space
             android:layout_width="12dp"
             android:layout_height="0dp" />
 

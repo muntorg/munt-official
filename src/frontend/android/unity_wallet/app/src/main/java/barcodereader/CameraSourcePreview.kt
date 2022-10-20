@@ -74,7 +74,7 @@ class CameraSourcePreview(private val mContext: Context, attrs: AttributeSet) : 
         {
             startIfReady()
         }
-        catch (e: IOException)
+        catch (e: Exception)
         {
             Log.e(TAG, "Could not start camera source.", e)
         }

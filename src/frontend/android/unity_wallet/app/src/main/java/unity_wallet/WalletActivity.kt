@@ -8,6 +8,7 @@ package unity_wallet
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -222,17 +223,20 @@ class WalletActivity : UnityCore.Observer, AppBaseActivity(),
                         coins * rate)
                 walletBalanceLocal.visibility = View.VISIBLE
 
-                // set auto size text if native and local amounts will not fity on a single line
+                // set auto size text if native and local amounts will not fit on a single line
                 // this will only kick in in very very rare circumstances
                 // like huge balance (> G 10M and very limited device with largest font setting)
                 // (before the sync text was moved out of balance display it was a lot easier to trigger)
-                val outSize = getDisplayDimensions(this@WalletActivity)
-                balanceSection.measure(outSize.x, outSize.y)
-                val preferredWidth = balanceSection.measuredWidth
-                TextViewCompat.setAutoSizeTextTypeWithDefaults(
-                        walletBalanceLocal,
-                        if (preferredWidth > outSize.x)  TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM else TextView.AUTO_SIZE_TEXT_TYPE_NONE)
-                balanceSection.invalidate()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                {
+                    val outSize = getDisplayDimensions(this@WalletActivity)
+                    balanceSection.measure(outSize.x, outSize.y)
+                    val preferredWidth = balanceSection.measuredWidth
+                    TextViewCompat.setAutoSizeTextTypeWithDefaults(
+                            walletBalanceLocal,
+                            if (preferredWidth > outSize.x)  TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM else TextView.AUTO_SIZE_TEXT_TYPE_NONE)
+                    balanceSection.invalidate()
+                }
             }
             catch (e: Throwable) {
                 walletBalanceLocal.text = ""

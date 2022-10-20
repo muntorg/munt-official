@@ -7,6 +7,7 @@ package unity_wallet
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -63,7 +64,9 @@ class TransactionInfoActivity : AppBaseActivity() {
                     v.address.text = output.address
                 else {
                     v.address.text = getString(R.string.tx_detail_address_unavailable)
-                    v.address.setTextAppearance(R.style.TxDetailMissing)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        v.address.setTextAppearance(R.style.TxDetailMissing)
+                    }
                 }
                 if (output.isMine)
                     v.subscript.text = getString(R.string.tx_detail_wallet_address)

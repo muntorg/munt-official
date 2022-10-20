@@ -23,7 +23,7 @@ file COPYING
         android:text="10:00"
         tools:ignore="HardcodedText" />
 
-    <Space
+    <android.widget.Space
         android:layout_width="20dp"
         android:layout_height="wrap_content"
         android:layout_weight="0" />
@@ -36,7 +36,7 @@ file COPYING
         android:text="0.00"
         tools:ignore="HardcodedText" />
 
-    <Space
+    <android.widget.Space
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="10" />

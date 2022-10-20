@@ -14,10 +14,12 @@ file COPYING
     tools:context="unity_wallet.main_activity_fragments.ReceiveFragment"
     android:background="@color/bg_main">
 
-    <Space
+    <android.widget.Space
         android:id="@+id/top"
         android:layout_width="match_parent"
-        android:layout_height="24dp" />
+        android:layout_height="24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <ImageView
         android:id="@+id/currentAddressQrView"

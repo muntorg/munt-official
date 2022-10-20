@@ -12,7 +12,7 @@ import android.widget.TextView
 import unity_wallet.BuildConfig
 import unity_wallet.UnityCore
 
-class UnityBuildInfoView(context: Context?, attrs: AttributeSet?) : TextView(context, attrs) {
+class UnityBuildInfoView(context: Context?, attrs: AttributeSet?) : androidx.appcompat.widget.AppCompatTextView(context!!, attrs) {
     init {
         @Suppress("ConstantConditionIf")
         if (BuildConfig.TESTNET) {

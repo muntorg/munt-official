@@ -72,7 +72,7 @@ file COPYING
                         android:layout_height="@dimen/top_logo_size"
                         android:layout_marginLeft="16dp"
                         android:contentDescription="@string/image_content_description_logo"
-                        android:tint="@color/text_main"
+                        app:tint="@color/text_main"
                         android:visibility="visible"
                         app:srcCompat="@drawable/ic_logo" />
 
@@ -106,7 +106,7 @@ file COPYING
                         android:layout_height="@dimen/top_logo_size"
                         android:layout_marginLeft="16dp"
                         android:contentDescription="@string/image_content_description_logo"
-                        android:tint="@color/text_main"
+                        app:tint="@color/text_main"
                         android:layout_gravity="center_vertical"
                         android:visibility="visible"
                         app:srcCompat="@drawable/ic_logo" />
@@ -160,7 +160,7 @@ file COPYING
                 android:padding="24dp"
                 android:src="?attr/homeAsUpIndicator"
                 android:text=""
-                android:tint="@color/colorPrimary"
+                app:tint="@color/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 

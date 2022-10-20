@@ -597,7 +597,6 @@ private constructor()
      * @param cb the callback to run
      * @return `true` if the operation is supported (i.e. from Jelly Bean), `false` otherwise
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     fun setAutoFocusMoveCallback(cb: AutoFocusMoveCallback?): Boolean
     {
         synchronized(mCameraLock) {
@@ -632,7 +631,6 @@ private constructor()
     /**
      * Wraps the camera1 auto focus move callback so that the deprecated API isn't exposed.
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private inner class CameraAutoFocusMoveCallback : Camera.AutoFocusMoveCallback
     {
         var mDelegate: AutoFocusMoveCallback? = null

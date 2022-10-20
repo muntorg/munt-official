@@ -27,7 +27,7 @@ class SettingsFragment : androidx.preference.PreferenceFragmentCompat()
 
             // require authentication to disable hide balance
             if (!hide) {
-                Authentication.instance.authenticate(context!!, null,null) {
+                Authentication.instance.authenticate(requireContext(), null,null) {
                     switch.isChecked = false
                 }
                 return@setOnPreferenceChangeListener false

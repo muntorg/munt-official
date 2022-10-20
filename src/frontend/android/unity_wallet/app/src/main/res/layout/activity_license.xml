@@ -39,7 +39,7 @@ file COPYING
             android:padding="24dp"
             android:src="?attr/homeAsUpIndicator"
             android:text=""
-            android:tint="@color/text_main"
+            app:tint="@color/text_main"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="ContentDescription" />

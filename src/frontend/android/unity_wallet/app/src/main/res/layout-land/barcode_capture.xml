@@ -53,10 +53,10 @@ file COPYING
             android:layout_weight="1"
             android:padding="8dp"
             android:scaleType="fitCenter"
-            android:tint="@color/bg_main"
-            app:srcCompat="@drawable/ic_fontawesome_square_x" />
+            app:srcCompat="@drawable/ic_fontawesome_square_x"
+            app:tint="@color/bg_main" />
 
-        <Space
+        <android.widget.Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1000" />
@@ -69,8 +69,8 @@ file COPYING
             android:layout_weight="1"
             android:padding="8dp"
             android:scaleType="fitCenter"
-            android:tint="@color/bg_main"
-            app:srcCompat="@drawable/ic_fontawesome_bolt_lightning" />
+            app:srcCompat="@drawable/ic_fontawesome_bolt_lightning"
+            app:tint="@color/bg_main" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

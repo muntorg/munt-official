@@ -46,7 +46,7 @@ file COPYING
         android:paddingBottom="18dp"
         android:orientation="horizontal">
 
-        <Space
+        <android.widget.Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="10" />
@@ -81,7 +81,7 @@ file COPYING
             android:text="@string/preferences_license_button"
             android:textColor="@color/colorPrimary" />
 
-        <Space
+        <android.widget.Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="10" />

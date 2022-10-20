@@ -293,7 +293,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
     {
         try
         {
-            val clipboard = ContextCompat.getSystemService(context!!, ClipboardManager::class.java)
+            val clipboard = ContextCompat.getSystemService(requireContext(), ClipboardManager::class.java)
             return (clipboard?.primaryClip?.getItemAt(0)?.coerceToText(context)).toString()
         }
         catch (e : Exception)
@@ -335,7 +335,7 @@ class SendFragment : AppBaseFragment(), UnityCore.Observer {
                         errorMessage(getString(unity_wallet.R.string.not_coin_qr, qrContent))
                         return
                     }
-                    SendCoinsFragment.newInstance(recipient, false).show(activity!!.supportFragmentManager, SendCoinsFragment::class.java.simpleName)
+                    SendCoinsFragment.newInstance(recipient, false).show(requireActivity().supportFragmentManager, SendCoinsFragment::class.java.simpleName)
                 }
             }
         } else {

@@ -34,7 +34,7 @@
                     android:layout_weight="1"
                     android:textStyle="bold" />
 
-                <Space
+                <android.widget.Space
                     android:layout_width="24dp"
                     android:layout_height="0px"
                     android:layout_weight="1" />

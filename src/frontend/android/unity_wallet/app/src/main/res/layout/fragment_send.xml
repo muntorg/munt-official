@@ -38,8 +38,8 @@ file COPYING
                 android:layout_margin="0dp"
                 android:clickable="false"
                 android:contentDescription="@string/unlock"
-                android:tint="@color/text_main"
-                android:src="@drawable/ic_fontawesome_lock_solid" />
+                android:src="@drawable/ic_fontawesome_lock_solid"
+                app:tint="@color/text_main" />
         </FrameLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -84,7 +84,7 @@ file COPYING
                         android:textColor="@android:color/black"
                         android:text="@string/address_book_title" />
 
-                    <Space
+                    <android.widget.Space
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="10" />

@@ -36,7 +36,7 @@ abstract class AppBaseFragment : androidx.fragment.app.Fragment(), CoroutineScop
 
     fun errorMessage(msg: String) {
         context?.run {
-            MaterialAlertDialogBuilder(context!!)
+            MaterialAlertDialogBuilder(requireContext())
                     .setMessage(msg)
                     .setPositiveButton(android.R.string.ok) { dialogInterface: DialogInterface, i: Int -> }
                     .show()

@@ -158,7 +158,7 @@ Bitte stelle sicher, dass du eine Kopie deiner Wiederherstellungsphrase gespeich
     <string name="preference_fragment_unlink_summary">Verbindung aufheben, um eine anderes Wallet zu starten oder wiederherzustellen</string>
     <string name="title_wallet_settings">Wallet-Einstellungen</string>
     <string name="title_select_currency">Währung auswählen</string>
-    <string name="label_sync_progress_connecting">Verbinde...</string>
+    <string name="label_sync_progress_connecting">Verbinde…</string>
     <string name="label_sync_progress_syncing">Synchronisiere %.1f%%</string>
     <string name="preference_fragment_hide_balance">Kontostand verbergen</string>
     <string name="show_balance_when_synced">Kontostand nicht sichtbar. Bitte warten.</string>

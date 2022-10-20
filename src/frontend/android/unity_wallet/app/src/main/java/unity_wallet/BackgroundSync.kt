@@ -30,7 +30,6 @@ import kotlin.coroutines.CoroutineContext
 private const val TAG = "background_sync"
 const val APP_PERIODIC_SYNC = "APP_PERIODIC_SYNC"
 
-@RequiresApi(Build.VERSION_CODES.S)
 fun setupBackgroundSync(context: Context) {
 
     // get syncType from preferences
@@ -63,7 +62,7 @@ fun setupBackgroundSync(context: Context) {
             if (tryForeground) {
                 try {
                     ContextCompat.startForegroundService(context, serviceIntent)
-                } catch (e: ForegroundServiceStartNotAllowedException) {
+                } catch (e: Exception) {
                     tryForeground = false
                 }
             }

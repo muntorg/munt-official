@@ -52,7 +52,7 @@ class LocalCurrencyFragment : androidx.fragment.app.Fragment() {
             }
         }
 
-        val adapter = LocalCurrenciesAdapter(this.context!!, Currencies.knownCurrencies)
+        val adapter = LocalCurrenciesAdapter(this.requireContext(), Currencies.knownCurrencies)
         currenciesList.adapter = adapter
         currenciesList.setOnItemClickListener { parent, _, position, _ ->
             adapter.setSelectedPosition(position)
