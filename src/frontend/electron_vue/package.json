@@ -50,7 +50,7 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "babel-eslint": "^10.1.0",
     "babel-plugin-import": "^1.13.3",
-    "electron": "^17.1.0",
+    "electron": "^18.3.7",
     "electron-builder": "^22.9.1",
     "electron-icon-builder": "^2.0.1",
     "eslint": "^6.7.2",
