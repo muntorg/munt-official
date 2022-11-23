@@ -9,4 +9,5 @@ public enum TransactionStatus {
     CONFIRMED,
     ABANDONED,
     CONFLICTED,
+    ;
 }

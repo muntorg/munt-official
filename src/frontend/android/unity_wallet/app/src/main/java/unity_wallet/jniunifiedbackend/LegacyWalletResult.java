@@ -9,4 +9,5 @@ public enum LegacyWalletResult {
     ENCRYPTED_PASSWORD_REQUIRED,
     PASSWORD_INVALID,
     VALID,
+    ;
 }

@@ -43,13 +43,13 @@ class MutationFragment : AppBaseFragment(), UnityCore.Observer, CoroutineScope {
             mutationList?.emptyView = emptyMutationListView
             val mutations = ILibraryController.getMutationHistory()
 
-            val adapter = MutationAdapter(this@MutationFragment.requireContext(), mutations)
+            val adapter = MutationAdapter(requireContext(), mutations)
             mutationList.adapter = adapter
 
             mutationList.setOnItemClickListener { parent, _, position, _ ->
                 val mutation = parent.adapter.getItem(position) as MutationRecord
                 val intent =
-                    Intent(this@MutationFragment.context, TransactionInfoActivity::class.java)
+                    Intent(requireContext(), TransactionInfoActivity::class.java)
                 intent.putExtra(TransactionInfoActivity.EXTRA_TRANSACTION, mutation.txHash)
                 startActivity(intent)
             }
