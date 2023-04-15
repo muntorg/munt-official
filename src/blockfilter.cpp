@@ -479,7 +479,7 @@ void getBlockFilterBirthAndRanges(uint64_t nHardBirthDate, uint64_t& nSoftBirthD
         uint64_t nCrossOver = Params().IsTestnet() ? 200000 : 500000;
         uint32_t nRanges=0;
         dataFile.seekg(nStaticFilterOffset);
-        while (((uint64_t)dataFile.tellg() - nStaticFilterOffset < nStaticFilterLength) && (dataFile.peek() != EOF))
+        while (((uint64_t)dataFile.tellg() - nStaticFilterOffset < nStaticFilterLength) && (dataFile.peek()))
         {
             int nInterval = nInterval1;
             if (nStartIndex >= nCrossOver)

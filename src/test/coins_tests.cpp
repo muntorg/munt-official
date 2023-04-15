@@ -711,6 +711,7 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
                                     bool found = false;
                                     for (const auto& [hashOutPoint, indexOutPoint] : allCoins)
                                     {
+                                        (unused) hashOutPoint;
                                         if (removedTransaction.vin[inputIndex].GetPrevOut() == COutPoint(std::get<0>(indexOutPoint), std::get<1>(indexOutPoint), std::get<2>(indexOutPoint)))
                                         {
                                             found = true;
@@ -966,7 +967,7 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             std::vector<COutPoint> allCoinsIndexBasedTracked;
             for (const auto& [key, value] : allCoins)
             {
-                (unused) value;
+                (unused) key;
                 allCoinsIndexBasedTracked.push_back(COutPoint(std::get<0>(value), std::get<1>(value), std::get<2>(value)));
             }
             std::sort(allCoinsIndexBasedTracked.begin(), allCoinsIndexBasedTracked.end());
@@ -980,6 +981,7 @@ BOOST_AUTO_TEST_CASE(indexbased_simulation_test)
             std::vector<COutPoint> allCoinsIndexBasedUTXODirect;
             for (const auto& [outPoint, coins] : utxoAllCoinsIndexBased)
             {
+                (unused) coins;
                 allCoinsIndexBasedUTXODirect.push_back(outPoint);
             }
             BOOST_REQUIRE_EQUAL_COLLECTIONS(allCoinsIndexBasedUTXODirect.begin(), allCoinsIndexBasedUTXODirect.end(), allCoinsIndexBasedTracked.begin(), allCoinsIndexBasedTracked.end());

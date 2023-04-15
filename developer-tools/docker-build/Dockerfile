@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install  -y \
     git \
     ca-certificates \
     ccache \
+    gawk \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* 
 

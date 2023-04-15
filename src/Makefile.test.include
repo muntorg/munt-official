@@ -136,7 +136,7 @@ test_test_munt_fuzzy_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 test_test_munt_fuzzy_LDADD = $(LIB_SERVER) $(LIB_NODE) $(LIB_SERVER) $(LIB_NODE) $(MINIUPNPC_LIBS)
 if ENABLE_WALLET
-test_test_munt_fuzzy_LDADD += $(LIB_WALLET)
+test_test_munt_fuzzy_LDADD +=  $(CRYPTOPP_LIBS) $(CRYPTO_LIBS) $(LIB_WALLET)
 endif
 if ENABLE_ZMQ
 test_test_munt_fuzzy_LDADD += $(LIB_ZMQ) $(ZMQ_LIBS)
