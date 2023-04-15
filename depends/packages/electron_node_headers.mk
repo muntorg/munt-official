@@ -1,8 +1,8 @@
 package=electron_node_headers
-$(package)_version=12.0.2
-$(package)_download_path=https://atom.io/download/electron/v$($(package)_version)/
-$(package)_file_name=iojs-v$($(package)_version).tar.gz
-$(package)_sha256_hash=a2fdef516c393eba4e7db2c846bf7af612e64cadca6bd07c5d34529fcb2a091c
+$(package)_version=14.0.0
+$(package)_download_path=https://nodejs.org/dist/v$($(package)_version)/
+$(package)_file_name=node-v$($(package)_version)-headers.tar.gz
+$(package)_sha256_hash=3391dfc99db10c02540db8eabecb61794be8045587c3b4ce0aab40db810e8b61
 
 $(package)_patches=node.def
 
