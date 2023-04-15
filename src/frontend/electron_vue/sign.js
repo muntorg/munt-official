@@ -1,4 +1,4 @@
-exports.default = async function(configuration) {
+exports.default = async function (configuration) {
   const CERTIFICATE_PATH = process.env.CERTIFICATE_PATH;
   const CERTIFICATE_KEY = process.env.CERTIFICATE_KEY;
   const CERTIFICATE_NAME = process.env.CERTIFICATE_NAME;

@@ -53,7 +53,8 @@ module.exports = {
     loaderOptions: {
       less: {
         javascriptEnabled: true
-      }
+      },
+      postcss: { postcssOptions: { config: false } }
     }
   }
 };

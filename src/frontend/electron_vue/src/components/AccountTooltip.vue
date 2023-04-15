@@ -51,7 +51,7 @@ export default {
     }
   },
   methods: {
-    showTooltip: function() {
+    showTooltip: function () {
       clearTimeout(this.timeout);
       this.show = true;
       this.getValues();

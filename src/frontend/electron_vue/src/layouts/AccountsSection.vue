@@ -118,7 +118,7 @@ export default {
     getBalanceFor(category) {
       let accounts = this.getAccountsFor(category);
       return formatMoneyForDisplay(
-        accounts.reduce(function(acc, obj) {
+        accounts.reduce(function (acc, obj) {
           return acc + obj.balance;
         }, 0)
       );
