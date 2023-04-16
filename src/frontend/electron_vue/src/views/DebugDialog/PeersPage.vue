@@ -1,6 +1,7 @@
 <template>
   <div class="layout">
-    <div>
+    <activity-indicator v-if="loading" :paddingHidden="true" />
+    <div v-else>
       <div class="header">
         <h4>{{ $t("peers.node_id") }}</h4>
         <h4>{{ $t("peers.node_service") }}</h4>
@@ -38,6 +39,7 @@
 import { P2pNetworkController } from "@/unity/Controllers";
 import PeerDetailsDialog from "./PeerDetailsDialog";
 import EventBus from "@/EventBus";
+import ActivityIndicator from "@/components/ActivityIndicator.vue";
 
 let timeout;
 
@@ -48,10 +50,14 @@ export default {
         peers: [],
         banned: []
       },
-      isDestroyed: false
+      isDestroyed: false,
+      loading: true
     };
   },
   name: "PeersPage2",
+  components: {
+    ActivityIndicator
+  },
   computed: {
     hasBannedPeers() {
       return this.peerInfo.banned.length;
@@ -62,13 +68,17 @@ export default {
       // TODO: Right Click
       // Add Context menu on Right Click
     },
-    getPeers() {
+    async getPeers() {
       clearTimeout(timeout);
 
       this.peerInfo = {
-        peers: P2pNetworkController.GetPeerInfo(),
-        banned: P2pNetworkController.ListBannedPeers()
+        peers: await P2pNetworkController.GetPeerInfoAsync(),
+        banned: await P2pNetworkController.ListBannedPeersAsync()
       };
+
+      setTimeout(() => {
+        this.loading = false;
+      }, 1000);
 
       if (this.isDestroyed) return;
       timeout = setTimeout(this.getPeers, 10 * 1000);

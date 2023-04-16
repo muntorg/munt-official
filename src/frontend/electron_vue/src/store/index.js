@@ -22,7 +22,8 @@ if (process.type !== "renderer") {
       // only store the paths listed below
       "mining.settings",
       "app.language",
-      "app.decimals"
+      "app.decimals",
+      "app.currency"
     ],
     ignoredCommits: [
       // only update persisted state on commits listed below
@@ -30,6 +31,7 @@ if (process.type !== "renderer") {
       "mining/SET_THREAD_COUNT",
       "mining/SET_ARENA_THREAD_COUNT",
       "app/SET_LANGUAGE",
+      "app/SET_CURRENCY",
       "app/SET_DECIMALS"
     ]
   });

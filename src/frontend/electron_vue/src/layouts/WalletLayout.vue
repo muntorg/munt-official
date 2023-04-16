@@ -74,7 +74,7 @@ export default {
     AccountTooltip
   },
   computed: {
-    ...mapState("app", ["progress", "rate"]),
+    ...mapState("app", ["progress", "rate", "currency"]),
     ...mapState("wallet", ["activeAccount", "unlocked"]),
     ...mapGetters("wallet", ["totalBalance", "miningAccount", "account"]),
     walletLayoutClasses() {
@@ -92,7 +92,7 @@ export default {
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
-      return `€ ${formatMoneyForDisplay(this.totalBalance * this.rate, true)}`;
+      return `${this.currency.symbol || ""} ${formatMoneyForDisplay(this.totalBalance * this.rate, true)}`;
     },
     balanceForDisplay() {
       if (this.totalBalance == null) return "";

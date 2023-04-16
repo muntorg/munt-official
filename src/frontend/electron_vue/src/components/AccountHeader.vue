@@ -94,14 +94,14 @@ export default {
     }
   },
   computed: {
-    ...mapState("app", ["rate"]),
+    ...mapState("app", ["rate", "currency"]),
     ...mapState("wallet", ["walletPassword", "unlocked"]),
     name() {
       return this.account ? this.account.label : null;
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
-      return `€ ${formatMoneyForDisplay(this.account.balance * this.rate, true)}`;
+      return `${this.currency.symbol || ""} ${formatMoneyForDisplay(this.account.balance * this.rate, true)}`;
     },
     balanceForDisplay() {
       if (!this.account || this.account.balance === undefined) return "";

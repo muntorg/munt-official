@@ -19,8 +19,23 @@
           {{ this.useMax ? $t("send_coins.fee_will_be_subtracted") : "&nbsp;" }}
         </p>
       </content-wrapper>
-      <input v-model="address" type="text" :placeholder="$t('send_coins.enter_coins_address')" :class="getAddressClass()" />
-      <input v-model="label" type="text" :placeholder="$t('send_coins.enter_label')" />
+      <div class="flex-row">
+        <div @click="selectedTab = 'address'" :class="selectedTab === 'address' ? 'selected-tab' : 'unselected-tab'">
+          <h4>Receiving Address</h4>
+        </div>
+        <div @click="selectedTab = 'accounts'" :class="selectedTab === 'accounts' ? 'selected-tab' : 'unselected-tab'">
+          <h4>My Accounts</h4>
+        </div>
+      </div>
+      <div v-if="selectedTab === 'address'">
+        <input v-model="address" type="text" :placeholder="$t('send_coins.enter_coins_address')" :class="getAddressClass()" />
+        <input v-model="label" type="text" :placeholder="$t('send_coins.enter_label')" />
+      </div>
+      <div v-else>
+        <app-form-field title="send_coins.select_account">
+          <select-list :options="accountsList" :default="accountsList[0]" v-model="selectedAccount" />
+        </app-form-field>
+      </div>
     </div>
     <div class="flex-row">
       <button class="send" @click="showConfirmation" :disabled="disableSendButton">
@@ -34,7 +49,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import { displayToMonetary, formatMoneyForDisplay } from "../../../util.js";
-import { LibraryController } from "@/unity/Controllers";
+import { LibraryController, AccountsController } from "@/unity/Controllers";
 import ConfirmTransactionDialog from "./ConfirmTransactionDialog";
 import EventBus from "@/EventBus";
 
@@ -48,12 +63,15 @@ export default {
       label: "",
       isAddressInvalid: false,
       sellDisabled: false,
-      useMax: false
+      useMax: false,
+      selectedTab: "address",
+      accountsList: [],
+      selectedAccount: []
     };
   },
   computed: {
     ...mapState("app", ["decimals"]),
-    ...mapGetters("wallet", ["account"]),
+    ...mapGetters("wallet", ["account", "accounts"]),
     computedAmountPlaceholder() {
       return `0.${"0".repeat(this.decimals)}`;
     },
@@ -79,6 +97,7 @@ export default {
   },
   mounted() {
     this.$refs.amount.focus();
+    this.accountsList = this.accounts.filter(item => item.UUID !== this.account.UUID);
     EventBus.$on("transaction-succeeded", this.onTransactionSucceeded);
   },
   beforeDestroy() {
@@ -90,6 +109,10 @@ export default {
       handler() {
         this.maxAmount = this.account.spendable;
       }
+    },
+    selectedAccount(value) {
+      this.address = AccountsController.GetReceiveAddress(value.UUID);
+      this.label = value.label;
     },
     maxAmount() {
       if (this.useMax) {
@@ -169,6 +192,26 @@ export default {
   .main {
     flex: 1;
   }
+}
+.selected-tab {
+  border-bottom: 2px solid #000000;
+  margin: 0px 10px 10px 10px;
+}
+.unselected-tab {
+  margin: 0px 10px 10px 10px;
+}
+.account-name {
+  font-size: 0.85em;
+  width: 100%;
+  margin-right: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.accounts-list {
+  padding-left: 10px;
+  height: 50%;
+  overflow: scroll;
 }
 
 button.max,

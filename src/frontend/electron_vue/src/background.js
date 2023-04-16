@@ -157,7 +157,7 @@ function createMainWindow() {
   });
 
   // Force external hrefs to open in external browser
-  winMain.webContents.on("new-window", function(e, url) {
+  winMain.webContents.on("new-window", function (e, url) {
     e.preventDefault();
     shell.openExternal(url);
   });
@@ -276,9 +276,12 @@ app.on("ready", async () => {
 async function updateRate(seconds) {
   try {
     // use blockhut api instead of https://api.munt.org/api/v1/ticker
-    const response = await axios.get("https://blockhut.com/munt/munteuro.json");
+    //const response = await axios.get("https://blockhut.com/munt/munteuro.json");
+    const response = await axios.get("https://munt.chainviewer.org/api/v1/ticker");
+    const currentRate = response.data.data.find(item => item.code.toLowerCase() === store.state.app.currency.value.toLowerCase());
 
-    store.dispatch("app/SET_RATE", response.data.eurmunt);
+    store.dispatch("app/SET_RATE", currentRate.rate);
+    store.dispatch("app/SET_CURRENCIES", response.data.data);
   } catch (error) {
     console.error(error);
   } finally {

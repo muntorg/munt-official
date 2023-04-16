@@ -9,7 +9,7 @@
     <router-view />
 
     <portal to="footer-slot">
-      <div style="display: flex">
+      <div style="display: flex; justify-content: center">
         <footer-button title="buttons.transactions" :icon="['far', 'list-ul']" routeName="account" @click="routeTo" />
         <footer-button title="buttons.send" :icon="['fal', 'arrow-from-bottom']" routeName="send" @click="routeTo" />
         <footer-button title="buttons.receive" :icon="['fal', 'arrow-to-bottom']" routeName="receive" @click="routeTo" />

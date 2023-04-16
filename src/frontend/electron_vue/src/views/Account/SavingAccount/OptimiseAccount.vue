@@ -5,6 +5,9 @@
     </portal>
 
     <div class="main">
+      <p>
+        {{ $t("saving_account.optimise_info", { parts: parts, futureOptimalAmount: futureOptimalAmount }) }}
+      </p>
       <app-form-field title="saving_account.optimise_holding_account">
         <select-list :options="fundingAccounts" :default="fundingAccount" v-model="fundingAccount" />
       </app-form-field>
@@ -36,7 +39,9 @@ export default {
       password: null,
       fundingAccount: null,
       isAmountInvalid: false,
-      isPasswordInvalid: false
+      isPasswordInvalid: false,
+      parts: null,
+      futureOptimalAmount: null
     };
   },
   computed: {
@@ -57,9 +62,18 @@ export default {
     disableSendButton() {
       if (this.computedPassword.trim().length === 0) return true;
       return false;
+    },
+    accountParts() {
+      return this.getStatistics("account_parts");
     }
   },
   mounted() {
+    const stats = WitnessController.GetAccountWitnessStatistics(this.account.UUID);
+    this.parts = stats["account_parts"];
+
+    let optimalAmounts = WitnessController.GetOptimalWitnessDistributionForAccount(this.account.UUID);
+    this.futureOptimalAmount = optimalAmounts.length;
+
     if (this.fundingAccounts.length) {
       this.fundingAccount = this.fundingAccounts[0];
     }

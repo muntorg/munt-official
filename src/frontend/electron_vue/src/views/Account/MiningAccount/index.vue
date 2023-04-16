@@ -192,14 +192,14 @@ export default {
       settings: "settings",
       totalBalanceFiat() {
         if (!this.rate) return "";
-        return `€ ${formatMoneyForDisplay(this.account.balance * this.rate, true)}`;
+        return `${this.currency.symbol || ""} ${formatMoneyForDisplay(this.account.balance * this.rate, true)}`;
       },
       balanceForDisplay() {
         if (this.account.balance == null) return "";
         return formatMoneyForDisplay(this.account.balance);
       }
     }),
-    ...mapState("app", ["rate"]),
+    ...mapState("app", ["rate", "currency"]),
     isMiningView() {
       return this.$route.name === "account";
     },
