@@ -7,7 +7,7 @@
 // All modifications:
 // Copyright (c) 2018-2022 The Centure developers
 // Authored by: Willem de Jonge (willem@isnapp.nl)
-// Distributed under the Libre Chain License, see the accompanying
+// Distributed under the GNU Lesser General Public License v3, see the accompanying
 // file COPYING
 
 #ifndef NET_PROCESSING_H

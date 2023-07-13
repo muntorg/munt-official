@@ -3,7 +3,7 @@
   "version": "3.0.2",
   "description": "A minimal Electron application using unified backend",
   "author": "Malcolm MacLeod",
-  "license": "Libre Chain License",
+  "license": "GNU Lesser General Public License v3",
   "main": "main.js",
   "homepage": "https://www.Munt.org",
   "repository": {

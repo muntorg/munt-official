@@ -1,6 +1,6 @@
 // Copyright (c) 2019-2022 The Centure developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the Libre Chain License, see the accompanying file COPYING
+// Distributed under the GNU Lesser General Public License v3, see the accompanying file COPYING
 
 // This file is a thin wrapper around the actual 'shavite3_256_aesni_opt', along with various other similarly named files.
 // The build system compiles each file with slightly different optimisation flags so that we have optimised implementations for a wide spread of processors.

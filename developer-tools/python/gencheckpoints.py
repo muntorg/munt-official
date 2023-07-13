@@ -12,7 +12,7 @@ import string
 import os
 
 __copyright__ = 'Copyright (c) 2018-2022 The Centure developers'
-__license__   = 'Distributed under the Libre Chain License, see the accompanying file COPYING'
+__license__   = 'Distributed under the GNU Lesser General Public License v3, see the accompanying file COPYING'
 __author__    = 'Willem de Jonge'
 __email__     = 'willem@isnapp.nl'
 

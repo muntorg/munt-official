@@ -7,7 +7,7 @@
 // All modifications:
 // Copyright (c) 2016-2022 The Centure developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the Libre Chain License, see the accompanying
+// Distributed under the GNU Lesser General Public License v3, see the accompanying
 // file COPYING
 
 #if defined(HAVE_CONFIG_H)
@@ -400,7 +400,7 @@ std::string LicenseInfo()
     //fixme: (FUT) Translate
     //fixme: (FUT) Add code to ensure translations never strip copyrights
     return helptr("Copyright (C) 2014-2022 The Centure developers")+ "\n"
-           + helptr("Licensed under the Libre Chain License")+ "\n"
+           + helptr("Licensed under the GNU Lesser General Public License v3")+ "\n"
            + "\n"
            + helptr("This is experimental software.")+ "\n"
            + strprintf(helptr("Please contribute if you find %s useful. Visit %s for further information about the software."), PACKAGE_NAME, URL_WEBSITE)

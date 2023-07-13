@@ -7,7 +7,7 @@
 // All modifications:
 // Copyright (c) 2016-2022 The Centure developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the Libre Chain License, see the accompanying
+// Distributed under the GNU Lesser General Public License v3, see the accompanying
 // file COPYING
 
 #if defined(HAVE_CONFIG_H)
@@ -51,7 +51,7 @@ using namespace boost::placeholders;
  * which enables instant payments to anyone, anywhere in the world. Munt uses peer-to-peer technology to operate
  * with no central authority: managing transactions and issuing money are carried out collectively by the network.
  *
- * The software is a community-driven open source project, released under the Libre Chain License.
+ * The software is a community-driven open source project, released under the GNU Lesser General Public License v3.
  *
  * \section Navigation
  * Use the buttons <code>Namespaces</code>, <code>Classes</code> or <code>Files</code> at the top of the page to start navigating the code.
