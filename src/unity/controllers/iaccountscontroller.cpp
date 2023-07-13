@@ -1,6 +1,6 @@
 // Copyright (c) 2020-2022 The Centure developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the Libre Chain License, see the accompanying
+// Distributed under the GNU Lesser General Public License v3, see the accompanying
 // file COPYING
 
 //Workaround braindamaged 'hack' in libtool.m4 that defines DLL_EXPORT when building a dll via libtool (this in turn imports unwanted symbols from e.g. pthread that breaks static pthread linkage)

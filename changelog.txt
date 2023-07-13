@@ -1,3 +1,9 @@
+3.0.x
+
+Relicensed under the GNU Lesser General Public License v3
+
+
+
 3.0.4
 
 Maintenence release, no major changes.

@@ -31,7 +31,7 @@
 // All modifications:
 // Copyright (c) 2019-2022 The Centure developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the Libre Chain License, see the accompanying
+// Distributed under the GNU Lesser General Public License v3, see the accompanying
 // file COPYING in the root of this repository
 
 #ifndef _CRYPTO_SCRYPT_SMIX_SSE2_H_

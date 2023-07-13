@@ -7,7 +7,7 @@
 // All modifications:
 // Copyright (c) 2017-2022 The Centure developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the Libre Chain License, see the accompanying
+// Distributed under the GNU Lesser General Public License v3, see the accompanying
 // file COPYING
 
 // NOTE: This file is intended to be customised by the end user, and includes only local node policy logic

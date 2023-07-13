@@ -1,6 +1,6 @@
 // Copyright (c) 2019-2022 The Centure developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the Libre Chain License, see the accompanying
+// Distributed under the GNU Lesser General Public License v3, see the accompanying
 // file COPYING
 
 #include "unity/compat/android_wallet.h"

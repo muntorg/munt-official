@@ -1,6 +1,6 @@
 // Copyright (c) 2016-2022 The Centure developers
 // Authored by: Malcolm MacLeod (mmacleod@gmx.com)
-// Distributed under the Libre Chain License, see the accompanying
+// Distributed under the GNU Lesser General Public License v3, see the accompanying
 // file COPYING
 
 // The below file implements the various Mnemonic/Seed/Entropy relations required to create a BIP39 compliant HD wallet.
