@@ -2,7 +2,6 @@ import { app } from "electron";
 import { ipcMain as ipc } from "electron-better-ipc";
 import fs from "fs";
 import axios from "axios";
-import FormData from "form-data";
 import store from "../store";
 import { apiKey } from "../../holdinAPI";
 
@@ -2778,52 +2777,18 @@ class LibUnity {
 
     ipc.on("BackendUtilities.GetBuySessionUrl", async event => {
       console.log(`IPC: BackendUtilities.GetBuySessionUrl()`);
-      try {
-        var formData = new FormData();
-        formData.append("address", store.state.wallet.receiveAddress);
-        formData.append("currency", "munt");
-        formData.append("wallettype", "pro");
-        formData.append("uuid", this.walletController.GetUUID());
-
-        let response = await axios.post("https://www.blockhut.com/buysession.php", formData, {
-          headers: formData.getHeaders()
-        });
-
-        event.returnValue = {
-          success: response.data.status_message === "OK",
-          result: `https://blockhut.com/buy.php?sessionid=${response.data.sessionid}`
-        };
-      } catch (e) {
-        event.returnValue = {
-          success: true,
-          result: "https://munt.org/buy"
-        };
-      }
+      event.returnValue = {
+        success: true,
+        result: "https://munt.org/buy"
+      };
     });
 
     ipc.on("BackendUtilities.GetSellSessionUrl", async event => {
       console.log(`IPC: BackendUtilities.GetSellSessionUrl()`);
-      try {
-        var formData = new FormData();
-        formData.append("address", store.state.wallet.receiveAddress);
-        formData.append("currency", "munt");
-        formData.append("wallettype", "pro");
-        formData.append("uuid", this.walletController.GetUUID());
-
-        let response = await axios.post("https://www.blockhut.com/buysession.php", formData, {
-          headers: formData.getHeaders()
-        });
-
-        event.returnValue = {
-          success: response.data.status_message === "OK",
-          result: `https://blockhut.com/sell.php?sessionid=${response.data.sessionid}`
-        };
-      } catch (e) {
-        event.returnValue = {
-          success: true,
-          result: "https://munt.org/sell"
-        };
-      }
+      event.returnValue = {
+        success: true,
+        result: "https://munt.org/sell"
+      };
     });
 
     ipc.on("BackendUtilities.holdinAPIActions", async (event, params) => {

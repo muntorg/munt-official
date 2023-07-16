@@ -1,6 +1,9 @@
-3.0.x
+3.0.5
 
+Final release by Centure developers
 Relicensed under the GNU Lesser General Public License v3
+General maintanence, version bump of most electron/vue/node libraries, update of checkpoints and other data etc.
+UI - Transaction export functionality
 
 
 

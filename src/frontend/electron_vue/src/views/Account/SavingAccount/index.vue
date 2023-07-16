@@ -97,6 +97,7 @@
             <footer-button title="buttons.send" :icon="['fal', 'arrow-from-bottom']" routeName="send-saving" @click="routeTo" />
             <footer-button :class="optimiseButtonClass" title="buttons.optimise" :icon="['fal', 'redo-alt']" routeName="optimise-account" @click="routeTo" />
             <footer-button v-if="renewButtonVisible" title="buttons.renew" :icon="['fal', 'redo-alt']" routeName="renew-account" @click="routeTo" />
+            <footer-button title="buttons.download" :icon="['fal', 'download']" @click="downloadCSV" />
           </div>
         </div>
         xx
@@ -109,6 +110,7 @@
 import { WitnessController, AccountsController, BackendUtilities } from "../../../unity/Controllers";
 import { formatMoneyForDisplay } from "../../../util.js";
 import { mapState } from "vuex";
+import { downloadTransactionList } from "../../../util.js";
 
 let timeout;
 
@@ -133,6 +135,7 @@ export default {
   },
   computed: {
     ...mapState("app", ["rate", "activityIndicator", "currency"]),
+    ...mapState("wallet", ["mutations"]),
     isAccountView() {
       return this.$route.name === "account";
     },
@@ -333,6 +336,9 @@ export default {
     scrollToStart() {
       var container = document.querySelector("#footer-layout");
       container.scrollLeft = 0;
+    },
+    downloadCSV() {
+      downloadTransactionList(this.mutations, this.account.label);
     }
   }
 };

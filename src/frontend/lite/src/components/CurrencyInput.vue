@@ -28,7 +28,7 @@ export default {
   },
   computed: {
     displayValue: {
-      get: function() {
+      get: function () {
         if (this.innerValue === null || this.innerValue === undefined || this.innerValue.toString().trim() === "") return null;
 
         if (this.isFocussed) {
@@ -37,7 +37,7 @@ export default {
           return `${this.currency} ${this.innerValue.toString().replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1 ")}`.trim();
         }
       },
-      set: function(modifiedValue) {
+      set: function (modifiedValue) {
         let newValue = modifiedValue.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
 
         let periodIdx = newValue.indexOf(".");

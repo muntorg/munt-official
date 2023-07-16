@@ -36,15 +36,9 @@
     </div>
     <div class="settings-row-no-hover flex-row">
       <div class="flex-1">{{ $t("settings.choose_decimal_places") }}</div>
-      <div :class="`decimal-select ${this.decimals === 2 ? 'selected' : ''}`" @click="changeDecimals(2)">
-        2
-      </div>
-      <div :class="`decimal-select ${this.decimals === 3 ? 'selected' : ''}`" @click="changeDecimals(3)">
-        3
-      </div>
-      <div :class="`decimal-select ${this.decimals === 4 ? 'selected' : ''}`" @click="changeDecimals(4)">
-        4
-      </div>
+      <div :class="`decimal-select ${this.decimals === 2 ? 'selected' : ''}`" @click="changeDecimals(2)">2</div>
+      <div :class="`decimal-select ${this.decimals === 3 ? 'selected' : ''}`" @click="changeDecimals(3)">3</div>
+      <div :class="`decimal-select ${this.decimals === 4 ? 'selected' : ''}`" @click="changeDecimals(4)">4</div>
     </div>
   </div>
 </template>

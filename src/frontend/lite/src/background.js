@@ -157,7 +157,7 @@ function createMainWindow() {
   });
 
   // Force external hrefs to open in external browser
-  winMain.webContents.on("new-window", function(e, url) {
+  winMain.webContents.on("new-window", function (e, url) {
     e.preventDefault();
     shell.openExternal(url);
   });

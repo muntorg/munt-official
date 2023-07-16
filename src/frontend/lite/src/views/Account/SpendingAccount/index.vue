@@ -21,6 +21,7 @@
 <script>
 import { mapState } from "vuex";
 import Transactions from "./Transactions";
+import { downloadTransactionList } from "../../../util.js";
 
 export default {
   name: "SpendingAccount",
@@ -48,6 +49,9 @@ export default {
     },
     onTxHash(txHash) {
       this.txHash = txHash;
+    },
+    downloadCSV() {
+      downloadTransactionList(this.mutations, this.account.label);
     }
   }
 };

@@ -83,7 +83,7 @@ export default {
   methods: {
     moveToEnd() {
       let command = this.$refs.command;
-      setTimeout(function() {
+      setTimeout(function () {
         command.selectionStart = command.selectionEnd = command.value.length;
       }, 0);
     },
