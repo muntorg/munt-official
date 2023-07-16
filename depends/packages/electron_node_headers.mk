@@ -1,8 +1,8 @@
 package=electron_node_headers
-$(package)_version=14.0.0
+$(package)_version=18.15.0
 $(package)_download_path=https://nodejs.org/dist/v$($(package)_version)/
 $(package)_file_name=node-v$($(package)_version)-headers.tar.gz
-$(package)_sha256_hash=3391dfc99db10c02540db8eabecb61794be8045587c3b4ce0aab40db810e8b61
+$(package)_sha256_hash=5ada31143933f0443d20769ae5942c4b1c5c80fe9f8a8221dae12ed9bec2ad2d
 
 $(package)_patches=node.def
 

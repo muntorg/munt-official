@@ -1,8 +1,8 @@
 package=node_addon_api
-$(package)_version=6.0.0
+$(package)_version=7.0.0
 $(package)_download_path=https://registry.npmjs.org/node-addon-api/-/
 $(package)_file_name=node-addon-api-$($(package)_version).tgz
-$(package)_sha256_hash=16c0b0e9fbb10a79250b4dc8a4ab6e712e9cd918d17bc59e1034699ac8336f4a
+$(package)_sha256_hash=0535f2f93f0d3f0d94b6724884bae940f1b45b08ee4dd5b0b5b85525c1f7748d
 
 define $(package)_stage_cmds
   mkdir -p $($(package)_staging_prefix_dir)/include && \
