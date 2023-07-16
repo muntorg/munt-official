@@ -24,6 +24,7 @@ import axios from "axios";
 // be closed automatically when the JavaScript object is garbage collected.
 let winMain;
 let winDebug;
+let winAbout;
 let libUnity = new LibUnity({ walletPath });
 
 // Handle URI links (munt: munt://)
@@ -111,6 +112,12 @@ function createMainWindow() {
           enabled: store.state.app.coreReady,
           click() {
             createDebugWindow();
+          }
+        },
+        {
+          label: "About",
+          click() {
+            createAboutWindow();
           }
         }
       ]
@@ -218,6 +225,64 @@ function createDebugWindow() {
   winDebug.on("closed", () => {
     console.log("winDebug.on:closed");
     winDebug = null;
+  });
+}
+
+function createAboutWindow() {
+  if (winAbout) {
+    return winAbout.show();
+  }
+
+  let options = {
+    width: 600,
+    minWidth: 400,
+    height: 600,
+    minHeight: 400,
+    show: false,
+    parent: winMain,
+    title: "About Florin",
+    skipTaskBar: true,
+    autoHideMenuBar: true,
+    webPreferences: {
+      // Use pluginOptions.nodeIntegration, leave this alone
+      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
+      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      contextIsolation: false
+    }
+  };
+  if (os.platform() === "linux") {
+    options = Object.assign({}, options, {
+      icon: path.join(__static, "icon.png")
+    });
+  }
+  winAbout = new BrowserWindow(options);
+
+  let url = process.env.WEBPACK_DEV_SERVER_URL ? `${process.env.WEBPACK_DEV_SERVER_URL}#/about` : `app://./index.html#/about`;
+
+  if (process.env.WEBPACK_DEV_SERVER_URL) {
+    // Load the url of the dev server if in development mode
+    winAbout.loadURL(url);
+    //if (!process.env.IS_TEST) win.webContents.openDevTools();
+  } else {
+    createProtocol("app");
+    // Load the index.html when not in development
+    winAbout.loadURL(url);
+  }
+
+  winAbout.on("ready-to-show", () => {
+    winAbout.show();
+  });
+
+  winAbout.on("close", event => {
+    console.log("winAbout.on:close");
+    if (libUnity === null || libUnity.isTerminated) return;
+    event.preventDefault();
+    winAbout.hide();
+  });
+
+  winAbout.on("closed", () => {
+    console.log("winAbout.on:closed");
+    winAbout = null;
   });
 }
 

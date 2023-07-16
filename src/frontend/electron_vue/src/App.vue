@@ -32,6 +32,8 @@ export default {
       switch (window.location.hash.toLowerCase()) {
         case "#/debug":
           return false;
+        case "#/about":
+          return false;
         default:
           return true;
       }
