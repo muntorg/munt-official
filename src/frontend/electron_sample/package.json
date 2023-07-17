@@ -1,6 +1,6 @@
 {
   "name": "electron-sample",
-  "version": "3.0.2",
+  "version": "3.0.5",
   "description": "A minimal Electron application using unified backend",
   "author": "Malcolm MacLeod",
   "license": "GNU Lesser General Public License v3",
