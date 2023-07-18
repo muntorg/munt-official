@@ -1124,6 +1124,7 @@ void CWallet::HandleTransactionsLoaded()
 {
     for  (const auto& [hash, wtx] : mapWallet)
     {
+        (unused) hash;
         for (const CTxIn& txin : wtx.tx->vin)
         {
             const CWalletTx* prevtx = GetWalletTx(txin.GetPrevOut());

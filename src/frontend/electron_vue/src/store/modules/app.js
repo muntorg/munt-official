@@ -25,7 +25,8 @@ const app = {
     walletVersion: null,
     rate: null,
     language: "en",
-    decimals: 2
+    decimals: 2,
+    currency: { value: "Eur", label: "Euro", symbol: "€" }
   },
   mutations: {
     SET_CORE_READY(state) {
@@ -50,6 +51,9 @@ const app = {
     SET_RATE(state, rate) {
       state.rate = rate;
     },
+    SET_CURRENCIES(state, currencies) {
+      state.currencies = currencies;
+    },
     SET_WALLET_EXISTS(state, walletExists) {
       state.walletExists = walletExists;
     },
@@ -61,6 +65,9 @@ const app = {
     },
     SET_LANGUAGE(state, language) {
       state.language = language;
+    },
+    SET_CURRENCY(state, currency) {
+      state.currency = currency;
     },
     SET_DECIMALS(state, decimal) {
       state.decimals = decimal;
@@ -90,11 +97,17 @@ const app = {
     SET_RATE({ commit }, rate) {
       commit("SET_RATE", rate);
     },
+    SET_CURRENCIES({ commit }, currencies) {
+      commit("SET_CURRENCIES", currencies);
+    },
     SET_ACTIVITY_INDICATOR({ commit }, activityIndicator) {
       commit("SET_ACTIVITY_INDICATOR", activityIndicator);
     },
     SET_LANGUAGE({ commit }, language) {
       commit("SET_LANGUAGE", language);
+    },
+    SET_CURRENCY({ commit }, currency) {
+      commit("SET_CURRENCY", currency);
     },
     SET_DECIMALS({ commit }, decimal) {
       commit("SET_DECIMALS", decimal);

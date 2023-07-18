@@ -1,4 +1,5 @@
 import store from "./store";
+import { Parser } from "@json2csv/plainjs";
 
 export function formatMoneyForDisplay(monetaryAmount, isFiat = false, minimumAmountOfDecimals = 0) {
   // default use 2 decimals;
@@ -39,4 +40,36 @@ export function displayToMonetary(displayAmount) {
   str = str.substring(0, idx + 9);
   // now remove the . and then parse the string to integer
   return parseInt(str.replace(".", ""));
+}
+
+function formatTime(timestamp) {
+  let date = new Date(timestamp * 1000);
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}, ${("0" + date.getHours()).slice(-2)}:${("0" + date.getMinutes()).slice(-2)}`;
+}
+
+export function downloadTransactionList(transactions, fileName) {
+  var transformedTransactionArray = [];
+  transactions.forEach(async (tx, index) => {
+    transformedTransactionArray.push({
+      ...tx,
+      timestamp: formatTime(tx.timestamp),
+      change: formatMoneyForDisplay(tx.change)
+    });
+
+    if (index + 1 === transactions.length) {
+      try {
+        const parser = new Parser();
+        const csv = parser.parse(transformedTransactionArray);
+        var blob = new Blob([csv], { type: "text/csv" });
+        var url = URL.createObjectURL(blob);
+
+        var downloadLink = document.createElement("a");
+        downloadLink.href = url;
+        downloadLink.setAttribute("download", `${fileName}.csv`);
+        downloadLink.click();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+  });
 }

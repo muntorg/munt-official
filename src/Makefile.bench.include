@@ -41,7 +41,8 @@ bench_bench_munt_LDADD = \
   $(LIBLEVELDB) \
   $(LIBMEMENV) \
   $(LIBSECP256K1) \
-  $(LIBUNIVALUE)
+  $(LIBUNIVALUE) \
+  $(LIBMUNT_COMMON)
 
 if ENABLE_ZMQ
 bench_bench_munt_LDADD += $(LIBMUNT_ZMQ) $(ZMQ_LIBS)

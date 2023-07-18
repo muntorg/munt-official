@@ -94,6 +94,11 @@ const routes = [
     path: "/debug",
     name: "debug",
     component: () => import(/* webpackChunkName: "debug-dialog" */ "../views/DebugDialog")
+  },
+  {
+    path: "/about",
+    name: "about",
+    component: () => import(/* webpackChunkName: "about-dialog" */ "../views/AboutDialog")
   }
 ];
 

@@ -314,8 +314,8 @@ int64_t GetVirtualTransactionSizeDiscounted(int64_t nWeight, uint64_t numCoinbas
     uint64_t coinbaseInputsToDiscount=(numCoinbaseInputs>2?numCoinbaseInputs-2:numCoinbaseInputs);
     uint64_t weightDiscount = STANDARD_COINBASE_INPUT_SIZE_DISCOUNT * coinbaseInputsToDiscount;
     uint64_t sigOpCostDiscount = STANDARD_COINBASE_SIGOP_COST_DISCOUNT * coinbaseInputsToDiscount;
-    uint64_t discountedWeight = nWeight>weightDiscount?nWeight-weightDiscount:nWeight;
-    uint64_t discountedSigOps = nSigOpCost>sigOpCostDiscount?nSigOpCost-sigOpCostDiscount:nSigOpCost;
+    uint64_t discountedWeight = (uint64_t)nWeight>weightDiscount?(uint64_t)nWeight-weightDiscount:(uint64_t)nWeight;
+    uint64_t discountedSigOps = (uint64_t)nSigOpCost>sigOpCostDiscount?(uint64_t)nSigOpCost-sigOpCostDiscount:(uint64_t)nSigOpCost;
     
     return (std::max(discountedWeight, discountedSigOps * nBytesPerSigOp));
 }

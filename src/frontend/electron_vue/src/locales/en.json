@@ -38,6 +38,7 @@
     "previous": "Previous",
     "ready": "Ready",
     "receive": "Receive",
+    "download": "Download",
     "renew": "Renew",
     "send": "Send",
     "start": "Start",
@@ -89,7 +90,8 @@
     "percent": "%",
     "add_to_holdin": "Add to holdin.com",
     "remove_from_holdin": "Remove from holdin.com",
-    "optimise_holding_account": "Select Funding Account"
+    "optimise_holding_account": "Select Funding Account",
+    "optimise_info": "Your account currently has {parts} parts. After optimisation, your account will have {futureOptimalAmount} parts."
   },
   "loader": {
     "shutdown": "Shutting down...",
@@ -121,7 +123,8 @@
     "choose_language": "Language",
     "choose_decimal_places": "Decimal places",
     "english": "EN",
-    "dutch": "NL"
+    "dutch": "NL",
+    "select_display_currency": "Select Display Currency"
   },
   "setup": {
     "choose_password": "Choose a password of at least 6 characters",
@@ -164,7 +167,8 @@
     "confirm_transaction": "Confirm transaction",
     "target_account": "Send to account",
     "fee_will_be_subtracted": "Fee will be subtracted from the amount",
-    "unlock_your_wallet_to_complete_the_transaction": "Unlock your wallet to complete the transaction"
+    "unlock_your_wallet_to_complete_the_transaction": "Unlock your wallet to complete the transaction",
+    "select_account": "Select Account"
   },
   "renew_saving_account": {
     "funding_account": "Pay renewal fee from account"

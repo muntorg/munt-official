@@ -9,10 +9,11 @@
     <router-view />
 
     <portal to="footer-slot">
-      <div style="display: flex">
+      <div style="display: flex; justify-content: center">
         <footer-button title="buttons.transactions" :icon="['far', 'list-ul']" routeName="account" @click="routeTo" />
         <footer-button title="buttons.send" :icon="['fal', 'arrow-from-bottom']" routeName="send" @click="routeTo" />
         <footer-button title="buttons.receive" :icon="['fal', 'arrow-to-bottom']" routeName="receive" @click="routeTo" />
+        <footer-button v-if="mutations.length > 0" title="buttons.download" :icon="['fal', 'download']" @click="downloadCSV" />
       </div>
     </portal>
   </div>
@@ -21,6 +22,7 @@
 <script>
 import { mapState } from "vuex";
 import Transactions from "./Transactions";
+import { downloadTransactionList } from "../../../util.js";
 
 export default {
   name: "SpendingAccount",
@@ -48,6 +50,9 @@ export default {
     },
     onTxHash(txHash) {
       this.txHash = txHash;
+    },
+    downloadCSV() {
+      downloadTransactionList(this.mutations, this.account.label);
     }
   }
 };

@@ -63,7 +63,7 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
     return CreateGenesisBlock(ParseHex("4f6e206a616e756172692031737420746865204475746368206c6f73742074686572652062656c6f7665642047756c64656e"), genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
 
-CChainParams::CChainParams(): fIsOfficialTestnetV1(false), fIsTestnet(false), fIsRegtestLegacy(false), fIsRegtest(false) {}
+CChainParams::CChainParams(): fIsOfficialTestnetV1(false), fIsTestnet(false), fIsRegtest(false), fIsRegtestLegacy(false) {}
 
 void CChainParams::UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout)
 {

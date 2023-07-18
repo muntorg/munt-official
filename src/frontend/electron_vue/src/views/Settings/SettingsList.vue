@@ -36,16 +36,14 @@
     </div>
     <div class="settings-row-no-hover flex-row">
       <div class="flex-1">{{ $t("settings.choose_decimal_places") }}</div>
-      <div :class="`decimal-select ${this.decimals === 2 ? 'selected' : ''}`" @click="changeDecimals(2)">
-        2
-      </div>
-      <div :class="`decimal-select ${this.decimals === 3 ? 'selected' : ''}`" @click="changeDecimals(3)">
-        3
-      </div>
-      <div :class="`decimal-select ${this.decimals === 4 ? 'selected' : ''}`" @click="changeDecimals(4)">
-        4
-      </div>
+      <div :class="`decimal-select ${this.decimals === 2 ? 'selected' : ''}`" @click="changeDecimals(2)">2</div>
+      <div :class="`decimal-select ${this.decimals === 3 ? 'selected' : ''}`" @click="changeDecimals(3)">3</div>
+      <div :class="`decimal-select ${this.decimals === 4 ? 'selected' : ''}`" @click="changeDecimals(4)">4</div>
     </div>
+    <div class="settings-row-no-hover flex-row"></div>
+    <app-form-field title="settings.select_display_currency">
+      <select-list :options="currencyOptions" :default="this.currency" v-model="currencyLocal" />
+    </app-form-field>
   </div>
 </template>
 
@@ -57,13 +55,25 @@ export default {
   data() {
     return {
       isSingleAccount: UIConfig.isSingleAccount,
-      themes: UIConfig.themes
+      themes: UIConfig.themes,
+      currencyLocal: this.currency
     };
   },
   computed: {
-    ...mapState("app", ["theme", "language", "decimals"]),
+    ...mapState("app", ["theme", "language", "decimals", "currency", "currencies"]),
     hasThemes() {
       return this.themes && this.themes.length;
+    },
+    currencyOptions() {
+      var currencyArray = [];
+      this.currencies.forEach(item => {
+        currencyArray.push({
+          value: item.code,
+          label: item.name,
+          rate: item.rate
+        });
+      });
+      return currencyArray;
     }
   },
   methods: {
@@ -86,8 +96,38 @@ export default {
       this.$store.dispatch("app/SET_DECIMALS", decimal);
       this.$forceUpdate();
     },
+    changeCurrency(currency) {
+      this.$store.dispatch("app/SET_CURRENCY", currency);
+      this.$store.dispatch("app/SET_RATE", currency.rate);
+
+      this.$forceUpdate();
+    },
     routeTo(route) {
       this.$router.push({ name: route });
+    }
+  },
+  watch: {
+    currencyLocal(newValue, oldValue) {
+      const symbolArray = [
+        { value: "Eur", symbol: "€" },
+        { value: "BTC", symbol: "₿" },
+        { value: "AUD", symbol: "A$" },
+        { value: "BRL", symbol: "R$" },
+        { value: "CNT", symbol: "CN¥" },
+        { value: "GBP", symbol: "£" },
+        { value: "RUB", symbol: "₽" },
+        { value: "USD", symbol: "$" },
+        { value: "ZAR", symbol: "R" },
+        { value: "KRW", symbol: "₩" },
+        { value: "JPY", symbol: "¥" }
+      ];
+      if (newValue.value !== oldValue.value) {
+        newValue.symbol = symbolArray.find(item => item.value.toLowerCase() === newValue.value.toLowerCase()).symbol;
+        this.changeCurrency(newValue);
+      } else {
+        this.currency.symbol = symbolArray.find(item => item.value.toLowerCase() === this.currency.value.toLowerCase()).symbol;
+        this.changeCurrency(this.currency);
+      }
     }
   }
 };

@@ -51,11 +51,7 @@ export default {
       return typeof this.validate !== "string";
     },
     words() {
-      return this.isRecovery
-        ? Array(this.validate.length)
-            .join(".")
-            .split(".")
-        : this.validate.split(" ");
+      return this.isRecovery ? Array(this.validate.length).join(".").split(".") : this.validate.split(" ");
     }
   },
   methods: {

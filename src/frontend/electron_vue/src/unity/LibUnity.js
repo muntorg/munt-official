@@ -2,7 +2,6 @@ import { app } from "electron";
 import { ipcMain as ipc } from "electron-better-ipc";
 import fs from "fs";
 import axios from "axios";
-import FormData from "form-data";
 import store from "../store";
 import { apiKey } from "../../holdinAPI";
 
@@ -72,29 +71,29 @@ class LibUnity {
   _initializeWalletController() {
     console.log("_initializeWalletController");
 
-    this.walletListener.notifyBalanceChange = function(new_balance) {
+    this.walletListener.notifyBalanceChange = function (new_balance) {
       console.log(`walletListener.notifyBalanceChange`);
       store.dispatch("wallet/SET_WALLET_BALANCE", new_balance);
     };
 
-    this.walletListener.notifyWalletUnlocked = function() {
+    this.walletListener.notifyWalletUnlocked = function () {
       console.log("receive: notifyWalletUnlocked");
       store.dispatch("wallet/SET_UNLOCKED", true);
     };
 
-    this.walletListener.notifyWalletLocked = function() {
+    this.walletListener.notifyWalletLocked = function () {
       console.log("receive: notifyWalletLocked");
       store.dispatch("wallet/SET_UNLOCKED", false);
     };
 
     /** Core wants the wallet to unlock; UI should respond to this by calling 'UnlockWallet' */
-    this.walletListener.notifyCoreWantsUnlock = function(reason) {
+    this.walletListener.notifyCoreWantsUnlock = function (reason) {
       console.log("receive: notifyCoreWantsUnlock", reason);
       // TODO: show unlock dialog with reason (localized?)
     };
 
     /** Core wants display info to the user, type can be one of "MSG_ERROR", "MSG_WARNING", "MSG_INFORMATION"; caption is the suggested caption and message the suggested message to display */
-    this.walletListener.notifyCoreInfo = function(type, caption, message) {
+    this.walletListener.notifyCoreInfo = function (type, caption, message) {
       console.log("receive: notifyCoreInfo", type, caption, message);
       // TODO: dispatch message event. add message to queue??
     };
@@ -129,14 +128,14 @@ class LibUnity {
     let self = this;
     let libraryController = this.libraryController;
 
-    this.accountsListener.onAccountNameChanged = function(accountUUID, newAccountName) {
+    this.accountsListener.onAccountNameChanged = function (accountUUID, newAccountName) {
       store.dispatch("wallet/SET_ACCOUNT_NAME", {
         accountUUID,
         newAccountName
       });
     };
 
-    this.accountsListener.onActiveAccountChanged = function(accountUUID) {
+    this.accountsListener.onActiveAccountChanged = function (accountUUID) {
       // combine all properties into one payload object
       const receiveAddress = libraryController.GetReceiveAddress();
       const mutations = libraryController.getMutationHistory();
@@ -150,11 +149,11 @@ class LibUnity {
       store.dispatch("wallet/SET_WALLET", payload);
     };
 
-    this.accountsListener.onAccountAdded = function() {
+    this.accountsListener.onAccountAdded = function () {
       self._updateAccounts();
     };
 
-    this.accountsListener.onAccountDeleted = function() {
+    this.accountsListener.onAccountDeleted = function () {
       self._updateAccounts();
     };
 
@@ -164,19 +163,19 @@ class LibUnity {
   _initializeGenerationController() {
     console.log("_initializeGenerationController");
 
-    this.generationListener.onGenerationStarted = function() {
+    this.generationListener.onGenerationStarted = function () {
       console.log("GENERATION STARTED");
       store.dispatch("mining/SET_ACTIVE", true);
     };
 
-    this.generationListener.onGenerationStopped = function() {
+    this.generationListener.onGenerationStopped = function () {
       console.log("GENERATION STOPPED");
 
       store.dispatch("mining/SET_ACTIVE", false);
       store.dispatch("mining/SET_STATS", null);
     };
 
-    this.generationListener.onStatsUpdated = function(
+    this.generationListener.onStatsUpdated = function (
       hashesPerSecond,
       hashesPerSecondUnit,
       rollingHashesPerSecond,
@@ -243,7 +242,7 @@ class LibUnity {
     let walletController = this.walletController;
     let accountsController = this.accountsController;
 
-    libraryListener.notifyCoreReady = function() {
+    libraryListener.notifyCoreReady = function () {
       console.log("received: notifyCoreReady");
 
       self._initializeWalletController();
@@ -254,7 +253,7 @@ class LibUnity {
       self._setStateWhenCoreAndMainWindowReady();
     };
 
-    libraryListener.notifySyncDone = function() {
+    libraryListener.notifySyncDone = function () {
       console.log("received: notifySyncDone");
 
       console.log("get the wallet balance");
@@ -289,12 +288,12 @@ class LibUnity {
     //   console.log("unity_core: " + message);
     // };
 
-    libraryListener.notifyBalanceChange = function(new_balance) {
+    libraryListener.notifyBalanceChange = function (new_balance) {
       console.log("received: notifyBalanceChange");
       store.dispatch("wallet/SET_BALANCE", new_balance);
     };
 
-    libraryListener.notifyNewMutation = function(/*mutation, self_committed*/) {
+    libraryListener.notifyNewMutation = function (/*mutation, self_committed*/) {
       console.log("received: notifyNewMutation");
       store.dispatch("wallet/SET_MUTATIONS", libraryController.getMutationHistory());
       store.dispatch("wallet/SET_RECEIVE_ADDRESS", libraryController.GetReceiveAddress());
@@ -302,23 +301,23 @@ class LibUnity {
       self._updateAccounts();
     };
 
-    libraryListener.notifyUpdatedTransaction = function(/*transaction*/) {
+    libraryListener.notifyUpdatedTransaction = function (/*transaction*/) {
       console.log("received: notifyUpdatedTransaction");
       store.dispatch("wallet/SET_MUTATIONS", libraryController.getMutationHistory());
     };
 
-    libraryListener.notifyInitWithExistingWallet = function() {
+    libraryListener.notifyInitWithExistingWallet = function () {
       console.log("received: notifyInitWithExistingWallet");
       store.dispatch("app/SET_WALLET_EXISTS", true);
     };
 
-    libraryListener.notifyInitWithoutExistingWallet = function() {
+    libraryListener.notifyInitWithoutExistingWallet = function () {
       console.log("received: notifyInitWithoutExistingWallet");
       self.newRecoveryPhrase = libraryController.GenerateRecoveryMnemonic();
       store.dispatch("app/SET_WALLET_EXISTS", false);
     };
 
-    libraryListener.notifyShutdown = function() {
+    libraryListener.notifyShutdown = function () {
       //NB! It is important to set the libraryListener to null here as this is the last thing the core lib is waiting on for clean exit; once we set this to null we are free to quit the app
       libraryListener = null;
       console.log("received: notifyShutdown");
@@ -326,7 +325,7 @@ class LibUnity {
 
       // We call this inside a timeout because if we don't we get a crash on macOS; its not yet 100% clear why but for now its better to just avoid the crash until we can debug further
       // TODO: Investigate this further
-      setTimeout(function() {
+      setTimeout(function () {
         app.quit();
       }, 1000);
     };
@@ -2778,52 +2777,18 @@ class LibUnity {
 
     ipc.on("BackendUtilities.GetBuySessionUrl", async event => {
       console.log(`IPC: BackendUtilities.GetBuySessionUrl()`);
-      try {
-        var formData = new FormData();
-        formData.append("address", store.state.wallet.receiveAddress);
-        formData.append("currency", "munt");
-        formData.append("wallettype", "pro");
-        formData.append("uuid", this.walletController.GetUUID());
-
-        let response = await axios.post("https://www.blockhut.com/buysession.php", formData, {
-          headers: formData.getHeaders()
-        });
-
-        event.returnValue = {
-          success: response.data.status_message === "OK",
-          result: `https://blockhut.com/buy.php?sessionid=${response.data.sessionid}`
-        };
-      } catch (e) {
-        event.returnValue = {
-          success: true,
-          result: "https://munt.org/buy"
-        };
-      }
+      event.returnValue = {
+        success: true,
+        result: "https://munt.org/buy"
+      };
     });
 
     ipc.on("BackendUtilities.GetSellSessionUrl", async event => {
       console.log(`IPC: BackendUtilities.GetSellSessionUrl()`);
-      try {
-        var formData = new FormData();
-        formData.append("address", store.state.wallet.receiveAddress);
-        formData.append("currency", "munt");
-        formData.append("wallettype", "pro");
-        formData.append("uuid", this.walletController.GetUUID());
-
-        let response = await axios.post("https://www.blockhut.com/buysession.php", formData, {
-          headers: formData.getHeaders()
-        });
-
-        event.returnValue = {
-          success: response.data.status_message === "OK",
-          result: `https://blockhut.com/sell.php?sessionid=${response.data.sessionid}`
-        };
-      } catch (e) {
-        event.returnValue = {
-          success: true,
-          result: "https://munt.org/sell"
-        };
-      }
+      event.returnValue = {
+        success: true,
+        result: "https://munt.org/sell"
+      };
     });
 
     ipc.on("BackendUtilities.holdinAPIActions", async (event, params) => {
@@ -2862,13 +2827,13 @@ class LibUnity {
         };
 
         axios(config)
-          .then(function(response) {
+          .then(function (response) {
             event.returnValue = {
               success: response.data.status_code === 200,
               result: response.data
             };
           })
-          .catch(function(error) {
+          .catch(function (error) {
             event.returnValue = handleError(error);
           });
       } catch (e) {

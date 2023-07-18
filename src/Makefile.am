@@ -1113,7 +1113,11 @@ Munt_daemon_LDADD = \
   $(LIB_SERVER) \
   $(LIB_RPC) \
   $(LIB_NODE) \
+  $(CRYPTOPP_LIBS) \
+  $(CRYPTO_LIBS) \
   $(LIB_WALLET) \
+  $(CRYPTOPP_LIBS) \
+  $(CRYPTO_LIBS) \
   $(LIB_COMMON) \
   $(LIBUNIVALUE) \
   $(LIB_UTIL) \

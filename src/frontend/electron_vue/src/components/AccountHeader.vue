@@ -18,7 +18,7 @@
                   <div class="accountname ellipsis">{{ name }}</div>
                   <fa-icon class="pen" :icon="['fal', 'fa-pen']" />
                 </div>
-                <div style=" width: 40px; text-align: center" @click="deleteAccount" class="trash flex-row ">
+                <div style="width: 40px; text-align: center" @click="deleteAccount" class="trash flex-row">
                   <fa-icon :icon="['fal', 'fa-trash']" />
                 </div>
               </div>
@@ -94,14 +94,14 @@ export default {
     }
   },
   computed: {
-    ...mapState("app", ["rate"]),
+    ...mapState("app", ["rate", "currency"]),
     ...mapState("wallet", ["walletPassword", "unlocked"]),
     name() {
       return this.account ? this.account.label : null;
     },
     totalBalanceFiat() {
       if (!this.rate) return "";
-      return `€ ${formatMoneyForDisplay(this.account.balance * this.rate, true)}`;
+      return `${this.currency.symbol || ""} ${formatMoneyForDisplay(this.account.balance * this.rate, true)}`;
     },
     balanceForDisplay() {
       if (!this.account || this.account.balance === undefined) return "";

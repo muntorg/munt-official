@@ -18,7 +18,7 @@
                   <div class="accountname ellipsis">{{ name }}</div>
                   <fa-icon class="pen" :icon="['fal', 'fa-pen']" />
                 </div>
-                <div style=" width: 40px; text-align: center" @click="deleteAccount" class="trash flex-row ">
+                <div style="width: 40px; text-align: center" @click="deleteAccount" class="trash flex-row">
                   <fa-icon :icon="['fal', 'fa-trash']" />
                 </div>
               </div>
