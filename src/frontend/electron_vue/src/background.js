@@ -236,11 +236,11 @@ function createAboutWindow() {
   let options = {
     width: 600,
     minWidth: 400,
-    height: 600,
+    height: 635,
     minHeight: 400,
     show: false,
     parent: winMain,
-    title: "About Florin",
+    title: "About Munt",
     skipTaskBar: true,
     autoHideMenuBar: true,
     webPreferences: {
