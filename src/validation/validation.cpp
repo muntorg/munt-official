@@ -918,6 +918,11 @@ void LogWitnessInfo(CGetWitnessInfo witInfo)
 bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, CBlockIndex* pindex,
                   CCoinsViewCache& view, const CChainParams& chainparams, bool fJustCheck, bool fVerifyWitness, bool fVerifyWitnessDelta, bool fDoScriptChecks)
 {
+    //Force disable witness delta for now
+    if (fVerifyWitnessDelta)
+        fVerifyWitness = true;
+    fVerifyWitnessDelta = false;
+
     if (!ContextualCheckBlock(block, state, chainparams, pindex->pprev, chain, &view, true))
         return error("%s: Consensus::CheckBlock, failed ContextualCheckBlock with utxo check: %s", __func__, FormatStateMessage(state));
 
