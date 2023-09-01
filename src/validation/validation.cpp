@@ -919,8 +919,6 @@ bool ConnectBlock(CChain& chain, const CBlock& block, CValidationState& state, C
                   CCoinsViewCache& view, const CChainParams& chainparams, bool fJustCheck, bool fVerifyWitness, bool fVerifyWitnessDelta, bool fDoScriptChecks)
 {
     //Force disable witness delta for now
-    if (fVerifyWitnessDelta)
-        fVerifyWitness = true;
     fVerifyWitnessDelta = false;
 
     if (!ContextualCheckBlock(block, state, chainparams, pindex->pprev, chain, &view, true))
@@ -1954,7 +1952,7 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
         // 2) An attacker would still have to meet all other PoW check *and* keep all witness states intact
         // This is enough to ensure that an attacker would have to go to great lengths for what would amount to a minor nuisance (having to refetch some more headers after detecting wrong chain)
         // So this is not really a major weakening of security in any way and still more than sufficient.
-        if (((uint64_t)pindexNew->nHeight < (uint64_t)Checkpoints::LastCheckPointHeight()))
+        if ((uint64_t)pindexNew->nHeight < std::max((uint64_t)Checkpoints::LastCheckPointHeight(), (uint64_t)1859000))
             fValidateWitness = false;
         bool rv = ConnectBlock(chainActive, blockConnecting, state, pindexNew, view, chainparams, fJustCheck, fValidateWitness);
         GetMainSignals().BlockChecked(blockConnecting, state);
