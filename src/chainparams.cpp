@@ -138,6 +138,10 @@ public:
         //vSeeds.push_back(CDNSSeedData("seed 3",  "seed.gulden.network"));
         //vSeeds.push_back(CDNSSeedData("seed 4",  "seed.gulden.blue"));
 
+        // Add working seed nodes for the Munt network
+        vSeeds.push_back(CDNSSeedData("seed 3",  "node1.abyte.eu", false));
+        vSeeds.push_back(CDNSSeedData("seed 4",  "node2.abyte.eu", false));
+
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,38);// 'G'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,98);// 'g'
         base58Prefixes[POW2_WITNESS_ADDRESS] = std::vector<unsigned char>(1,73);// 'W'
